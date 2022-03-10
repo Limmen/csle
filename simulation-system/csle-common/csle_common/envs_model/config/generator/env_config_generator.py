@@ -553,7 +553,10 @@ class EnvConfigGenerator:
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
-        #TODO
+        ContainerManager.start_docker_stats_manager(port=50051)
+        ContainerManager.start_docker_stats_thread(
+            log_sink_config=emulation_env_config.log_sink_config,
+            containers_config=emulation_env_config.containers_config, emulation_name=emulation_env_config.name)
 
 
     @staticmethod

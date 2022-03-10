@@ -275,16 +275,10 @@ def start_docker_stats_manager() -> None:
 
     :return: None
     """
-    # Check if stats manager is already running
-    cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-          + constants.COMMANDS.SPACE_DELIM + "statsmanager"
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    (output, err) = p.communicate()
     port = 50051
-    if not constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in str(output):
+    started = ContainerManager.start_docker_stats_manager(port=port)
+    if started:
         click.secho(f"Starting docker stats manager on port:{port}", bold=False)
-        cmd = constants.COMMANDS.START_DOCKER_STATS_MANAGER.format(port)
-        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
     else:
         click.secho(f"Docker stats manager is already running on port:{port}", bold=False)
 

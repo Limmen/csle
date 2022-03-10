@@ -4,6 +4,10 @@ import time
 import docker
 import re
 import os
+import grpc
+import socket
+import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
+import csle_collector.docker_stats_manager.query_docker_stats_manager
 from csle_common.envs_model.config.generator.env_info import EnvInfo
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.util.experiments_util import util
@@ -392,9 +396,41 @@ class ContainerManager:
 
 
     @staticmethod
-    def start_docker_stats_thread(log_sink_config: LogSinkConfig) -> None:
-        docker_stats_thread = DockerStatsThread(jumphost_ip=None)
-        docker_stats_thread.start()
+    def start_docker_stats_manager(port: int = 50051) -> bool:
+        """
+        Starts the docker stats manager on the docker host if it is not already started
+
+        :param port: the port that the docker stats manager will listen to
+        :return: True if it was started, False otherwise
+        """
+
+        # Check if stats manager is already running
+        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+              + constants.COMMANDS.SPACE_DELIM + "statsmanager"
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        if not constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in str(output):
+            cmd = constants.COMMANDS.START_DOCKER_STATS_MANAGER.format(port)
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+            return True
+        else:
+            return False
+
+
+    @staticmethod
+    def start_docker_stats_thread(log_sink_config: LogSinkConfig, containers_config: ContainersConfig,
+                                  emulation_name: str, port: int = 50051, time_step_len_seconds: int = 15):
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
+            containers = list(map(lambda x: x.name, containers_config.containers))
+            csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
+                stub=stub,
+                emulation=emulation_name, sink_ip=log_sink_config.container.get_ips()[0],
+                stats_queue_maxsize=1000,
+                time_step_len_seconds=time_step_len_seconds, sink_port=log_sink_config.kafka_port,
+                containers=containers)
 
 
     @staticmethod

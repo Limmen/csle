@@ -38,10 +38,10 @@ class DockerStatsThread(threading.Thread):
         self.client_1 = docker.from_env()
         self.client2 = docker.APIClient(base_url=constants.DOCKER_STATS.UNIX_DOCKER_SOCK_URL)
         self.containers = self.client_1.containers.list()
-        self.containers = list(filter(lambda x: x.name in self.containers, self.containers))
+        self.containers = list(filter(lambda x: x.name in self.container_names, self.containers))
         streams = []
         for container in self.containers:
-            stream = container.container_handle.stats(decode=True, stream=True)
+            stream = container.stats(decode=True, stream=True)
             streams.append((stream, container))
         self.stats_queue_maxsize = stats_queue_maxsize
         self.streams = streams
@@ -52,8 +52,11 @@ class DockerStatsThread(threading.Thread):
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {'bootstrap.servers': f"{self.kafka_ip}:{self.port}", 'client.id': self.hostname}
+        logging.info(f"conf:{self.conf}")
         self.producer = Producer(**self.conf)
         self.stopped = False
+        logging.info(f"Producer thread starting, emulation:{self.emulation}, kafka ip: {self.kafka_ip}, "
+                     f"kafka port:{self.port}, time_step_len_seconds: {self.time_step_len_seconds}")
 
     def run(self) -> None:
         """
@@ -66,21 +69,20 @@ class DockerStatsThread(threading.Thread):
             if time.time()-start >= self.time_step_len_seconds:
                 aggregated_stats, avg_stats_dict = self.compute_averages()
                 ts = time.time()
-                self.producer.produce(
-                    "client_population", f"{ts},{self.ip},{aggregated_stats.cpu_percent},"
-                                         f"{aggregated_stats.mem_current},{aggregated_stats.mem_total},"
-                                         f"{aggregated_stats.mem_percent},{aggregated_stats.mem_percent},"
-                                         f"{aggregated_stats.blk_read},{aggregated_stats.blk_write},"
-                                         f"{aggregated_stats.net_rx},{aggregated_stats.net_tx}")
+                record = f"{ts},{self.ip},{aggregated_stats.cpu_percent},{aggregated_stats.mem_current}," \
+                         f"{aggregated_stats.mem_total},{aggregated_stats.mem_percent},{aggregated_stats.mem_percent}," \
+                         f"{aggregated_stats.blk_read},{aggregated_stats.blk_write}," \
+                         f"{aggregated_stats.net_rx},{aggregated_stats.net_tx}"
+                self.producer.produce("docker_stats", record)
                 self.stats_queues = {}
                 start = time.time()
 
             for stream, container in self.streams:
                 stats_dict = next(stream)
-                parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container)
-                if parsed_stats.container_ip not in self.stats_queues:
-                    self.stats_queues[parsed_stats.container_ip] = deque([], maxlen=self.stats_queue_maxsize)
-                self.stats_queues[parsed_stats.container_ip].append(parsed_stats)
+                parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
+                if parsed_stats.container_name not in self.stats_queues:
+                    self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
+                self.stats_queues[parsed_stats.container_name].append(parsed_stats)
 
     def compute_averages(self) -> Tuple[DockerStats, dict]:
         """

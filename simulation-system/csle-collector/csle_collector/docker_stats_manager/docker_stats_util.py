@@ -119,7 +119,6 @@ class DockerStatsUtil:
         net_r, net_w = DockerStatsUtil.calculate_network_bytes(stats_dict)
         mem_current = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.USAGE]
         mem_total = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.LIMIT]
-
         try:
             cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total, cpu_system)
         except KeyError:
