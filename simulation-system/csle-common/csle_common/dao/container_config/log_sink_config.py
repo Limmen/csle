@@ -9,25 +9,24 @@ class LogSinkConfig:
     Represents the configuration of a LogSink in CSLE
     """
 
-    def __init__(self, container: NodeContainerConfig,
-                 resources: NodeResourcesConfig,
-                 topics: List[KafkaTopic],
-                 kafka_port: int= 9092,
-                 kafka_manager_port=50051,
-                 version: str = "0.0.1"):
+    def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig, topics: List[KafkaTopic],
+                 kafka_port: int= 9092, time_step_len_seconds = 15, default_grpc_port = 50051,
+                 version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
         :param container: the container for the Kafka server
         :param network: the network
         :param kafka_port: the port that the Kafka server is listening to
-        :param kafka_manager_port: the port that the Kafka manager is listening to
+        :param default_grpc_port: the default port for gRPC
+        :param time_step_len_seconds: the length of a time-step (period for logging)
         :param container: the container
         :param topics: list of kafka topics
         :param version: the version
         """
         self.kafka_port = kafka_port
-        self.kafka_manager_port = kafka_manager_port
+        self.default_grpc_port = default_grpc_port
+        self.time_step_len_seconds = time_step_len_seconds
         self.version = version
         self.container = container
         self.resources = resources
@@ -41,7 +40,8 @@ class LogSinkConfig:
         d["container"] = self.container.to_dict()
         d["resources"] = self.resources.to_dict()
         d["kafka_port"] = self.kafka_port
-        d["kafka_manager_port"] = self.kafka_manager_port
+        d["default_grpc_port"] = self.default_grpc_port
+        d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
         d["topics"] = list(map(lambda x: x.to_dict(), self.topics))
         return d
@@ -53,5 +53,5 @@ class LogSinkConfig:
         return f"container: {self.container}, " \
                f"port:{self.kafka_port}, version: {self.version}, resources: {self.resources}, " \
                f"topics: {','.join(list(map(lambda x: str(x), self.topics)))}, " \
-               f"kafka_manager_port:{self.kafka_manager_port}"
+               f"default_grpc_port:{self.default_grpc_port}, time_step_len_seconds: {self.time_step_len_seconds}"
 

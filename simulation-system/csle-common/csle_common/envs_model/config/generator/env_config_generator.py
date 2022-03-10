@@ -526,13 +526,13 @@ class EnvConfigGenerator:
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Creating topology --")
-        TopologyGenerator.create_topology(topology=emulation_env_config.topology_config,
-                                          emulation_config=emulation_config)
+        TopologyGenerator.create_topology(
+            topology=emulation_env_config.topology_config, emulation_config=emulation_config)
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Creating resource constraints --")
-        ResourceConstraintsGenerator.apply_resource_constraints(resources_config=emulation_env_config.resources_config,
-                                                                emulation_config=emulation_config)
+        ResourceConstraintsGenerator.apply_resource_constraints(
+            resources_config=emulation_env_config.resources_config, emulation_config=emulation_config)
 
         if not no_traffic:
             current_step += 1
@@ -554,9 +554,11 @@ class EnvConfigGenerator:
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
         ContainerManager.start_docker_stats_manager(port=50051)
+        time.sleep(10)
         ContainerManager.start_docker_stats_thread(
             log_sink_config=emulation_env_config.log_sink_config,
-            containers_config=emulation_env_config.containers_config, emulation_name=emulation_env_config.name)
+            containers_config=emulation_env_config.containers_config,
+            emulation_name=emulation_env_config.name)
 
 
     @staticmethod

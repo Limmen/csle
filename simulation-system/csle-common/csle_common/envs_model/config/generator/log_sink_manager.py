@@ -55,7 +55,7 @@ class LogSinkManager:
 
             # Start the kafka_manager
             cmd = constants.COMMANDS.START_KAFKA_MANAGER.format(
-                log_sink_config.kafka_manager_port)
+                log_sink_config.default_grpc_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
             time.sleep(5)
 
@@ -76,7 +76,7 @@ class LogSinkManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{log_sink_config.container.get_ips()[0]}:'
-                f'{log_sink_config.kafka_manager_port}') as channel:
+                f'{log_sink_config.default_grpc_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.get_kafka_status(stub)
             if not kafka_dto.running:
@@ -107,7 +107,7 @@ class LogSinkManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{log_sink_config.container.get_ips()[0]}:'
-                f'{log_sink_config.kafka_manager_port}') as channel:
+                f'{log_sink_config.default_grpc_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.get_kafka_status(stub)
             return kafka_dto
@@ -130,7 +130,7 @@ class LogSinkManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{log_sink_config.container.get_ips()[0]}:'
-                f'{log_sink_config.kafka_manager_port}') as channel:
+                f'{log_sink_config.default_grpc_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub)
             return kafka_dto
@@ -153,7 +153,7 @@ class LogSinkManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{log_sink_config.container.get_ips()[0]}:'
-                f'{log_sink_config.kafka_manager_port}') as channel:
+                f'{log_sink_config.default_grpc_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
             return kafka_dto

@@ -10,7 +10,7 @@ class ClientPopulationConfig:
 
     def __init__(self, ip: str, networks: List[ContainerNetwork], client_process_type: ClientPopulationProcessType,
                  lamb: int, mu: float, client_manager_port: int, num_commands: int = 5,
-                 client_time_step_len_seconds: int = 1, producer_time_step_len_seconds: int = 15):
+                 client_time_step_len_seconds: int = 1):
         """
         Creates a ClientPopulationConfig DTO Object
 
@@ -20,7 +20,6 @@ class ClientPopulationConfig:
         :param lamb: the lambda parameter of the arrival process
         :param mu: the service-time parameter of the arrivals
         :param client_time_step_len_seconds: time-step length to measure the arrival process
-        :param producer_time_step_len_seconds: time-step length for pushing to Kafka
         """
         self.networks = networks
         self.ip = ip
@@ -30,7 +29,6 @@ class ClientPopulationConfig:
         self.client_manager_port = client_manager_port
         self.num_commands = num_commands
         self.client_time_step_len_seconds = client_time_step_len_seconds
-        self.producer_time_step_len_seconds = producer_time_step_len_seconds
 
 
     def to_dict(self) -> dict:
@@ -46,7 +44,6 @@ class ClientPopulationConfig:
         d["num_commands"] = self.num_commands
         d["client_manager_port"] = self.client_manager_port
         d["client_time_step_len_seconds"] = self.client_time_step_len_seconds
-        d["producer_time_step_len_seconds"] = self.producer_time_step_len_seconds
         return d
 
     def __str__(self) -> str:
@@ -56,5 +53,4 @@ class ClientPopulationConfig:
         return f"ip:{self.ip}, client_population_process_type: {self.client_process_type.name}, lamb:{self.lamb}, " \
                f"mu:{self.mu}, self.networks:{list(map(lambda x: str(x), self.networks))}, " \
                f"client_manager_port: {self.client_manager_port}, num_commands:{self.num_commands}, " \
-               f"client_time_step_len_seconds: {self.client_time_step_len_seconds}," \
-               f"producer_time_step_len_seconds: {self.producer_time_step_len_seconds}"
+               f"client_time_step_len_seconds: {self.client_time_step_len_seconds}"

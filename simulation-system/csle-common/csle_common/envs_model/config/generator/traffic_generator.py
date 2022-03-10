@@ -223,7 +223,7 @@ class TrafficGenerator:
             csle_collector.client_manager.query_clients.start_producer(
                 stub=stub, ip=log_sink_config.container.get_ips()[0],
                 port=log_sink_config.kafka_port,
-                time_step_len_seconds=traffic_config.client_population_config.producer_time_step_len_seconds)
+                time_step_len_seconds=log_sink_config.time_step_len_seconds)
 
 
     @staticmethod

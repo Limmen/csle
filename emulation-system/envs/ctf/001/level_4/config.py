@@ -686,9 +686,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         )],
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb=1, mu=0.1, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=1,
-        producer_time_step_len_seconds = 15
-    )
+        lamb=1, mu=0.1, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=1)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf
@@ -768,7 +766,7 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
     ]
 
     config = LogSinkConfig(container=container, resources=resources, topics=topics,
-                           version=version, kafka_port=9092, kafka_manager_port=50051)
+                           version=version, kafka_port=9092, default_grpc_port=50051, time_step_len_seconds=15)
     return config
 
 
