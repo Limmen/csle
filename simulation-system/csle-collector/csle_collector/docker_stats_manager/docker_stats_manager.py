@@ -52,7 +52,6 @@ class DockerStatsThread(threading.Thread):
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {'bootstrap.servers': f"{self.kafka_ip}:{self.port}", 'client.id': self.hostname}
-        logging.info(f"conf:{self.conf}")
         self.producer = Producer(**self.conf)
         self.stopped = False
         logging.info(f"Producer thread starting, emulation:{self.emulation}, kafka ip: {self.kafka_ip}, "

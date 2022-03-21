@@ -23,6 +23,7 @@ from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
+from csle_common.envs_model.config.generator.ids_manager import IDSManager
 from csle_common.envs_model.config.generator.log_sink_manager import LogSinkManager
 from csle_common.envs_model.config.generator.users_generator import UsersGenerator
 from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
@@ -550,6 +551,10 @@ class EnvConfigGenerator:
         print(f"-- Step {current_step}/{steps}: Starting the Intrusion Detection System --")
         ContainerGenerator.start_ids(containers_cfg=emulation_env_config.containers_config,
                                      emulation_config=emulation_config)
+        IDSManager.start_ids_monitor_thread(containers_cfg=emulation_env_config.containers_config,
+                                            emulation_config=emulation_config,
+                                            log_sink_config=emulation_env_config.log_sink_config)
+
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")

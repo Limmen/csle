@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service IdsManager {
+  rpc getIdsAlerts(GetIdsAlertsMsg) returns (IdsLogDTO) {}
+  rpc stopIdsMonitor(StopIdsMonitorMsg) returns (IdsMonitorDTO) {}
+  rpc startIdsMonitor(StartIdsMonitorMsg) returns (IdsMonitorDTO) {}
+  rpc getIdsMonitorStatus(GetIdsMonitorStatusMsg) returns (IdsMonitorDTO) {}
+}
+
+// Message that the client sends to extract the IDS log statistics from a given timestamp
+message GetIdsAlertsMsg {
+  float timestamp = 1;
+  string log_file_path = 2;
+}
+
+// Message that the client sends to stop the IdsMonitor
+message StopIdsMonitorMsg {}
+
+// Message that the client sends to start the IdsMonitor
+message StartIdsMonitorMsg {
+  string kafka_ip = 1;
+  int32 kafka_port = 2;
+  string log_file_path = 3;
+  int32 time_step_len_seconds = 4;
+}
+
+// Message that the client sends to get the status of the IdsMonitor
+message GetIdsMonitorStatusMsg {}
+
+//Message that the server returns when asked about the status of the IDS Monitor thread
+message IdsMonitorDTO {
+  bool running = 1;
+}
+
+// Message that the server returns when requested by the client, contains info about the IDS log
+message IdsLogDTO {
+  float timestamp = 1;
+  string ip =2;
+  int32 attempted_admin_alerts = 3;
+  int32 attempted_user_alerts = 4;
+  int32 inappropriate_content_alerts = 5;
+  int32 policy_violation_alerts = 6;
+  int32 shellcode_detect_alerts = 7;
+  int32 successful_admin_alerts = 8;
+  int32 successful_user_alerts = 9;
+  int32 trojan_activity_alerts = 10;
+  int32 unsuccessful_user_alerts = 11;
+  int32 web_application_attack_alerts = 12;
+  int32 attempted_dos_alerts = 13;
+  int32 attempted_recon_alerts = 14;
+  int32 bad_unknown_alerts = 15;
+  int32 default_login_attempt_alerts = 16;
+  int32 denial_of_service_alerts = 17;
+  int32 misc_attack_alerts = 18;
+  int32 non_standard_protocol_alerts = 19;
+  int32 rpc_portman_decode_alerts = 20;
+  int32 successful_dos_alerts = 21;
+  int32 successful_recon_largescale_alerts = 22;
+  int32 successful_recon_limited_alerts = 23;
+  int32 suspicious_filename_detect_alerts = 24;
+  int32 suspicious_login_alerts = 25;
+  int32 system_call_detect_alerts = 26;
+  int32 unusual_client_port_connection_alerts = 27;
+  int32 web_application_activity_alerts = 28;
+  int32 icmp_event_alerts = 29;
+  int32 misc_activity_alerts = 30;
+  int32 network_scan_alerts = 31;
+  int32 not_suspicious_alerts = 32;
+  int32 protocol_command_decode_alerts = 33;
+  int32 string_detect_alerts = 34;
+  int32 unknown_alerts = 35;
+  int32 tcp_connection_alerts = 36;
+  int32 warning_alerts = 37;
+  int32 severe_alerts = 38;
+}

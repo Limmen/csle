@@ -649,7 +649,9 @@ class COMMANDS:
     START_CLIENT_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /client_manager.py --port {} &"
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
     START_KAFKA_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /kafka_manager.py --port {} &"
+    START_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ids_manager.py --port {} &"
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
+    SEARCH_IDS_MANAGER = "/root/miniconda3/bin/python3 /ids_manager.py"
     START_DOCKER_STATS_MANAGER = "nohup csle statsmanager {} &"
     SEARCH_DOCKER_STATS_MANAGER = "csle statsmanager"
 
@@ -674,7 +676,7 @@ class LOG_SINK:
                                 "suspicious-filename-detect", "suspicious-login", "system-call-detect",
                                 "unusual-client-port-connection", "web-application-activity", "icmp-event",
                                 "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode", "string-detect",
-                                "unknown", "tcp-connection"]
+                                "unknown", "tcp-connection", "warning", "severe"]
     LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_login_attempts"]
     TCP_CONNECTIONS_TOPIC_ATTRIBUTES=["timestamp", "ip", "num_tcp_connections"]
     PROCESSES_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_processes"]
@@ -833,6 +835,7 @@ class TRAFFIC_COMMANDS:
     BASH_PREAMBLE = "#!/bin/bash"
     CLIENT_MANAGER_FILE_NAME = "client_manager.py"
     KAFKA_MANAGER_FILE_NAME = "kafka_manager.py"
+    IDS_MANAGER_FILE_NAME = "ids_manager.py"
     GENERIC_COMMANDS = "generic_commands"
     CLIENT_1_SUBNET = "client_1_subnet"
     DEFAULT_COMMANDS = {
