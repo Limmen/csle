@@ -130,7 +130,7 @@ RUN gcc -c -fpic bindshell-samba.c &&\
 SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
 #RUN conda activate samba
 RUN pip install pycrypto==2.6 &&\
-    pip install git+git://github.com/opsxcq/impacket.git &&\
+    pip install git+https://github.com/opsxcq/impacket.git &&\
     pip install pyasn1
 
 # Web server HTTP
@@ -211,6 +211,10 @@ RUN chmod 777 /client_manager.py
 # Kafka manager
 ADD docker_files/common/kafka_manager.py /kafka_manager.py
 RUN chmod 777 /kafka_manager.py
+
+# IDS manager
+ADD docker_files/common/ids_manager.py /ids_manager.py
+RUN chmod 777 /ids_manager.py
 
 # Setup Sysstat
 RUN mv /etc/default/sysstat /etc/default/sysstat.bak

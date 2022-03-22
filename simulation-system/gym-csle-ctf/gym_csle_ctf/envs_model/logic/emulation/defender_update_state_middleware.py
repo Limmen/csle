@@ -6,7 +6,7 @@ from csle_common.envs_model.logic.emulation.util.common.emulation_util import Em
 from csle_common.dao.state_representation.state_type import StateType
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
@@ -20,7 +20,7 @@ class DefenderUpdateStateMiddleware:
 
     @staticmethod
     def update_belief_state(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                            env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+                            env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Updates the defender's state by measuring the emulation
 
@@ -129,7 +129,7 @@ class DefenderUpdateStateMiddleware:
 
     @staticmethod
     def initialize_state(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                         env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+                         env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Initializes the defender's state by measuring the emulation
 
@@ -287,7 +287,7 @@ class DefenderUpdateStateMiddleware:
         return s_prime, 0, False
 
     @staticmethod
-    def reset_state(s: EnvState, defender_action: DefenderAction, env_config: csleEnvConfig,
+    def reset_state(s: EnvState, defender_action: DefenderAction, env_config: CSLEEnvConfig,
                     attacker_action: AttackerAction) -> Tuple[EnvState, float, bool]:
         """
         Resets the defender's state

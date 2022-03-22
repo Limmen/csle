@@ -1,4 +1,3 @@
-from typing import List
 import csle_collector.ids_manager.ids_manager_pb2_grpc
 import csle_collector.ids_manager.ids_manager_pb2
 

@@ -1,6 +1,6 @@
 from typing import Tuple, List
 import math
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.network.env_state import EnvState
 from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -14,7 +14,7 @@ class EnvUtil:
     """
 
     @staticmethod
-    def is_defense_action_legal(defense_action_id: int, env_config: csleEnvConfig, env_state: EnvState) -> bool:
+    def is_defense_action_legal(defense_action_id: int, env_config: CSLEEnvConfig, env_state: EnvState) -> bool:
         """
         Checks if a given defense action is legal in the current state of the environment
 
@@ -39,7 +39,7 @@ class EnvUtil:
         return True
 
     @staticmethod
-    def is_attack_action_legal(attack_action_id: int, env_config: csleEnvConfig, env_state: EnvState,
+    def is_attack_action_legal(attack_action_id: int, env_config: CSLEEnvConfig, env_state: EnvState,
                                m_selection: bool = False,
                                m_action: bool = False, m_index: int = None) -> bool:
         """
@@ -207,7 +207,7 @@ class EnvUtil:
         return False
 
     @staticmethod
-    def _is_attack_action_legal_m_selection(action_id: int, env_config: csleEnvConfig, env_state: EnvState) -> bool:
+    def _is_attack_action_legal_m_selection(action_id: int, env_config: CSLEEnvConfig, env_state: EnvState) -> bool:
         """
         Utility method to check if a m_selection action is legal for AR policies
 
@@ -229,7 +229,7 @@ class EnvUtil:
         return False
 
     @staticmethod
-    def _is_attack_action_legal_m_action(action_id: int, env_config: csleEnvConfig, env_state: EnvState, machine_index: int) \
+    def _is_attack_action_legal_m_action(action_id: int, env_config: CSLEEnvConfig, env_state: EnvState, machine_index: int) \
             -> bool:
         """
         Utility method to check if a machine-specific action is legal or not for AR-policies
@@ -284,7 +284,7 @@ class EnvUtil:
         return False
 
     @staticmethod
-    def compute_optimal_defender_reward(s: EnvState, env_config: csleEnvConfig) -> Tuple[float, List[int], int]:
+    def compute_optimal_defender_reward(s: EnvState, env_config: CSLEEnvConfig) -> Tuple[float, List[int], int]:
         """
         Computes the optimal defender reward
 

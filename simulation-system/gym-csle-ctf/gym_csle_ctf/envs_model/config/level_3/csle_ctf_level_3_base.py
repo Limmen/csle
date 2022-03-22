@@ -5,7 +5,7 @@ from csle_common.dao.network.env_mode import EnvMode
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.state_representation.state_type import StateType
 from csle_common.dao.network.node import Node
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.render.render_config import RenderConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_csle_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
@@ -274,7 +274,7 @@ class CSLECTFLevel3Base:
     def env_config(network_conf : NetworkConfig, attacker_action_conf: AttackerActionConfig,
                    defender_action_conf: DefenderActionConfig,
                    emulation_config: EmulationConfig,
-                   render_conf: RenderConfig) -> csleEnvConfig:
+                   render_conf: RenderConfig) -> CSLEEnvConfig:
         """
         :param network_conf: the network config
         :param attacker_action_conf: the attacker's action config
@@ -283,7 +283,7 @@ class CSLECTFLevel3Base:
         :param render_conf: the render config
         :return: The complete environment config
         """
-        env_config = csleEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
+        env_config = CSLEEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
                                    defender_action_conf=defender_action_conf,
                                    attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
                                    attacker_num_sh_obs=3, num_nodes = CSLECTFLevel3Base.num_nodes(), render_config=render_conf,

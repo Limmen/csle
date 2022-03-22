@@ -3,7 +3,7 @@ import numpy as np
 from csle_common.dao.state_representation.state_type import StateType
 from csle_common.dao.network.base_env_state import BaseEnvState
 from csle_common.envs_model.logic.emulation.util.common.docker_stats_thread import DockerStatsThread
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from gym_csle_ctf.dao.observation.defender.defender_observation_state import DefenderObservationState
 from gym_csle_ctf.envs_model.state_representation.attacker_state_representation import AttackerStateRepresentation
@@ -17,7 +17,7 @@ class EnvState(BaseEnvState):
     Represents the combined state of the environment, including both the attacker's and the defender's belief states.
     """
 
-    def __init__(self, env_config : csleEnvConfig, num_ports : int, num_vuln : int, num_sh : int,
+    def __init__(self, env_config : CSLEEnvConfig, num_ports : int, num_vuln : int, num_sh : int,
                  num_flags : int, num_nodes : int,
                  vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None,
                  state_type: StateType = StateType.BASE, ids : bool = False):

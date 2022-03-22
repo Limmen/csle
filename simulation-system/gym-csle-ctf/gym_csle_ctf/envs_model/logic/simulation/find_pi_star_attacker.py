@@ -1,6 +1,6 @@
 from typing import Tuple
 from csle_common.dao.network.env_mode import EnvMode
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs_model.logic.transition_operator import TransitionOperator
 from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
 
@@ -12,7 +12,7 @@ class FindPiStarAttacker:
     """
 
     @staticmethod
-    def brute_force(env_config: csleEnvConfig, env) -> Tuple[list, float]:
+    def brute_force(env_config: CSLEEnvConfig, env) -> Tuple[list, float]:
         """
         Attempts to compute the optimal policy for the attacker using brute-force search
 
@@ -214,7 +214,7 @@ class FindPiStarAttacker:
 
 
     @staticmethod
-    def update_pi_star(env_config: csleEnvConfig, env: "CSLECTFEnv") -> csleEnvConfig:
+    def update_pi_star(env_config: CSLEEnvConfig, env: "CSLECTFEnv") -> CSLEEnvConfig:
         """
         Update information about the attacker's optimal policy
 

@@ -1,6 +1,6 @@
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.network.env_mode import EnvMode
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from gym_csle_ctf.envs_model.config.level_8.csle_ctf_level_8_base import CSLECTFLevel8Base
 from gym_csle_ctf.envs_model.config.level_8.csle_ctf_level_8_v1 import CSLECTFLevel8V1
@@ -14,7 +14,7 @@ class CSLECTFLevel8EmulationBaseEnv(CSLECTFEnv):
     """
     Base version with all set of actions
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -46,7 +46,7 @@ class CSLECTFLevel8Emulation1Env(CSLECTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -78,7 +78,7 @@ class CSLECTFLevel8EmulationWithCosts1Env(CSLECTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -110,7 +110,7 @@ class CSLECTFLevel8Emulation2Env(CSLECTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -142,7 +142,7 @@ class CSLECTFLevel8EmulationWithCosts2Env(CSLECTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -174,7 +174,7 @@ class CSLECTFLevel8Emulation3Env(CSLECTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -206,7 +206,7 @@ class CSLECTFLevel8EmulationWithCosts3Env(CSLECTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -238,7 +238,7 @@ class CSLECTFLevel8Emulation4Env(CSLECTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:
@@ -270,7 +270,7 @@ class CSLECTFLevel8EmulationWithCosts4Env(CSLECTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel8Base.render_conf()
             if emulation_config is None:

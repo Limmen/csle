@@ -1,7 +1,7 @@
 from csle_common.dao.network.env_mode import EnvMode
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.state_representation.state_type import StateType
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.render.render_config import RenderConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_csle_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
@@ -112,7 +112,7 @@ class CSLECTFMultiSimV2:
     def env_config(attacker_action_conf: AttackerActionConfig,
                    defender_action_conf: DefenderActionConfig,
                    render_conf: RenderConfig,
-                   emulation_config: EmulationConfig, num_nodes :int) -> csleEnvConfig:
+                   emulation_config: EmulationConfig, num_nodes :int) -> CSLEEnvConfig:
         """
         Generates the environment configuration
 
@@ -126,7 +126,7 @@ class CSLECTFMultiSimV2:
         :return: The complete environment config
         """
         network_conf = None
-        env_config = csleEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
+        env_config = CSLEEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
                                    defender_action_conf=defender_action_conf,
                                    attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
                                    attacker_num_sh_obs=3, num_nodes=num_nodes, render_config=render_conf,

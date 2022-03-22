@@ -1,7 +1,7 @@
 """
 Constants for csle collector
 """
-
+import re
 
 class DOCKER_STATS:
     CPU_STATS = "cpu_stats"
@@ -39,3 +39,19 @@ class DOCKER_STATS:
     CONTAINER_ID = "container_id"
     CONTAINER_IP = "container_ip"
     UNIX_DOCKER_SOCK_URL = "unix://var/run/docker.sock"
+
+
+
+class IDS_ROUTER:
+    """
+    Constants related to the IDS
+    """
+    MAX_ALERTS = 1000
+    UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
+    FAST_LOG_FILE = "/var/snort/fast.log"
+    ALERTS_FILE = "/var/snort/alert.csv"
+    STATS_FILE = "/var/snort/snort.stats"
+    TAIL_ALERTS_COMMAND = "sudo tail -" + str(MAX_ALERTS)
+    TAIL_FAST_LOG_COMMAND = "sudo tail -" + str(str(MAX_ALERTS))
+    TAIL_ALERTS_LATEST_COMMAND = "sudo tail -1"
+    PRIORITY_REGEX = re.compile(r"Priority: \d")

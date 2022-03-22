@@ -1,7 +1,7 @@
 from csle_common.dao.network.env_mode import EnvMode
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from gym_csle_ctf.envs_model.config.level_2.csle_ctf_level_2_base import CSLECTFLevel2Base
 from gym_csle_ctf.envs_model.config.level_2.csle_ctf_level_2_v1 import CSLECTFLevel2V1
@@ -16,7 +16,7 @@ class CSLECTFLevel2GeneratedSim1Env(CSLECTFEnv):
     Generated Simulation
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()
@@ -53,7 +53,7 @@ class CSLECTFLevel2GeneratedSimWithCosts1Env(CSLECTFEnv):
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()
@@ -90,7 +90,7 @@ class CSLECTFLevel2GeneratedSim2Env(CSLECTFEnv):
     Generated Simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()
@@ -127,7 +127,7 @@ class CSLECTFLevel2GeneratedSimWithCosts2Env(CSLECTFEnv):
     Generated Simulation.
     Slightly more set of actions than V1. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()
@@ -164,7 +164,7 @@ class CSLECTFLevel2GeneratedSim3Env(CSLECTFEnv):
     Generated Simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()
@@ -201,7 +201,7 @@ class CSLECTFLevel2GeneratedSimWithCosts3Env(CSLECTFEnv):
     Generated Simulation.
     Slightly more set of actions than V2. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()
@@ -238,7 +238,7 @@ class CSLECTFLevel2GeneratedSim4Env(CSLECTFEnv):
     Generated Simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()
@@ -275,7 +275,7 @@ class CSLECTFLevel2GeneratedSimWithCosts4Env(CSLECTFEnv):
     Generated Simulation.
     Slightly more set of actions than V3. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel2Base.emulation_config()

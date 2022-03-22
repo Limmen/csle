@@ -1,6 +1,6 @@
 from typing import Tuple
 from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.defender.defender_action import DefenderAction
 
 
@@ -10,7 +10,7 @@ class DefenderStoppingUtil:
     """
 
     @staticmethod
-    def stop_monitor(s: EnvState, a: DefenderAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def stop_monitor(s: EnvState, a: DefenderAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -24,7 +24,7 @@ class DefenderStoppingUtil:
 
 
     @staticmethod
-    def continue_monitor(s: EnvState, a: DefenderAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def continue_monitor(s: EnvState, a: DefenderAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Performs a "continue" action for the defender (continues monitoring)
 

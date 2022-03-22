@@ -9,7 +9,7 @@ from csle_common.dao.network.env_mode import EnvMode
 from csle_common.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
 from csle_common.rendering.frames.csle_base_frame import csleBaseFrame
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_csle_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_csle_ctf.envs import CSLECTFEnv
@@ -22,7 +22,7 @@ class MainFrame(csleBaseFrame):
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, env_config: csleEnvConfig, init_state : AttackerAgentState, env: CSLECTFEnv = None):
+    def __init__(self, env_config: CSLEEnvConfig, init_state : AttackerAgentState, env: CSLECTFEnv = None):
         """
         Initialize frame
         :param env_config: trhe environment config

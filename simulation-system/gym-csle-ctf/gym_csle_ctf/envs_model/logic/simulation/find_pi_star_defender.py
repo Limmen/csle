@@ -1,5 +1,5 @@
 import math
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 
 
 class FindPiStarDefender:
@@ -54,7 +54,7 @@ class FindPiStarDefender:
         return reward
 
     @staticmethod
-    def update_pi_star(env_config: csleEnvConfig) -> csleEnvConfig:
+    def update_pi_star(env_config: CSLEEnvConfig) -> CSLEEnvConfig:
         """
         Update information about the attacker's optimal policy
 

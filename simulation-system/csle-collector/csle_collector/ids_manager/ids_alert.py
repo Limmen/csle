@@ -1,6 +1,6 @@
+from typing import Tuple
 import datetime
-import re
-import csle_common.constants.constants as constants
+import csle_collector.constants.constants as constants
 
 
 class IdsAlert:
@@ -132,7 +132,7 @@ class IdsAlert:
         self.priority = priority
 
     @staticmethod
-    def fast_log_parse(fast_log_str: str, year: int):
+    def fast_log_parse(fast_log_str: str, year: int) -> Tuple[int, float]:
         """
         Parses the IDS Alert from a given string from the fast-log of Snort
 

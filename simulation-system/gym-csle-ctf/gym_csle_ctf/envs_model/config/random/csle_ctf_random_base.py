@@ -7,7 +7,7 @@ from csle_common.dao.network.node import Node
 from csle_common.dao.network.flag import Flag
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.render.render_config import RenderConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from gym_csle_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
@@ -188,7 +188,7 @@ class CSLECTFRandomBase:
                    defender_action_conf: DefenderActionConfig,
                    render_conf: RenderConfig,
                    emulation_config: EmulationConfig, num_nodes : int
-                   ) -> csleEnvConfig:
+                   ) -> CSLEEnvConfig:
         """
         :param containers_config: the containers config of the generated env
         :param num_nodes: max number of nodes (defines obs space size and action space size)
@@ -207,7 +207,7 @@ class CSLECTFRandomBase:
 
         network_conf = NetworkConfig(subnet_mask=containers_config.internal_subnet_mask, nodes = [], adj_matrix = [],
                                      flags_lookup=flags_lookup)
-        env_config = csleEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
+        env_config = CSLEEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
                                    defender_action_conf=defender_action_conf,
                                    attacker_num_ports_obs=10, attacker_num_vuln_obs=10,
                                    attacker_num_sh_obs=3, num_nodes = num_nodes, render_config=render_conf,

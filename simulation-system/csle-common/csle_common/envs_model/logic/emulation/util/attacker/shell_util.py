@@ -1,7 +1,7 @@
 from typing import Tuple, List
 import time
 import random
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -19,7 +19,7 @@ class ShellUtil:
     """
 
     @staticmethod
-    def _find_flag_using_ssh(machine: AttackerMachineObservationState, env_config: csleEnvConfig, a: AttackerAction,
+    def _find_flag_using_ssh(machine: AttackerMachineObservationState, env_config: CSLEEnvConfig, a: AttackerAction,
                              new_m_obs: AttackerMachineObservationState) -> Tuple[AttackerMachineObservationState, float,
                                                                                   bool, Tuple]:
         """
@@ -120,7 +120,7 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
-    def _find_flag_using_telnet(machine: AttackerMachineObservationState, env_config: csleEnvConfig, a: AttackerAction,
+    def _find_flag_using_telnet(machine: AttackerMachineObservationState, env_config: CSLEEnvConfig, a: AttackerAction,
                                 new_m_obs: AttackerMachineObservationState) \
             -> Tuple[AttackerMachineObservationState, float, bool, Tuple]:
         """
@@ -212,7 +212,7 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
-    def _find_flag_using_ftp(machine: AttackerMachineObservationState, env_config: csleEnvConfig, a: AttackerAction,
+    def _find_flag_using_ftp(machine: AttackerMachineObservationState, env_config: CSLEEnvConfig, a: AttackerAction,
                              new_m_obs: AttackerMachineObservationState) \
             -> Tuple[AttackerMachineObservationState, float, bool, Tuple]:
         """
@@ -342,7 +342,7 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan, total_alerts
 
     @staticmethod
-    def parse_tools_installed_file(file_name: str, env_config: csleEnvConfig) -> List[str]:
+    def parse_tools_installed_file(file_name: str, env_config: CSLEEnvConfig) -> List[str]:
         """
         Parses a file containing cached results of a install-tools action
 
@@ -373,7 +373,7 @@ class ShellUtil:
                 "will be installed" in result or "already installed" in result or "already the newest version" in result)
 
     @staticmethod
-    def install_tools_helper(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def install_tools_helper(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Uses compromised machines with root access to install tools
 
@@ -606,7 +606,7 @@ class ShellUtil:
 
 
     @staticmethod
-    def execute_ssh_backdoor_helper(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) \
+    def execute_ssh_backdoor_helper(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
             -> Tuple[EnvState, float, bool]:
         """
         Uses compromised machines with root access to setup SSH backdoor
@@ -784,7 +784,7 @@ class ShellUtil:
         return s_prime, reward, done
 
     @staticmethod
-    def execute_service_login_helper(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) \
+    def execute_service_login_helper(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
             -> Tuple[EnvState, float, bool]:
         """
         Executes a service login on the emulation using previously found credentials

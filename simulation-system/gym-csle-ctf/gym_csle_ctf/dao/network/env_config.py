@@ -15,7 +15,7 @@ from gym_csle_ctf.dao.action.defender.defender_action_config import DefenderActi
 from gym_csle_ctf.dao.render.render_config import RenderConfig
 
 
-class csleEnvConfig(BaseCSLEEnvConfig):
+class CSLEEnvConfig(BaseCSLEEnvConfig):
     """
     Class containing the complete configuration of a csle-ctf env
     """
@@ -48,7 +48,7 @@ class csleEnvConfig(BaseCSLEEnvConfig):
         :param base_detection_p: base detection probability for simulation
         :param manual_play: boolean flag whether manual play is used
         """
-        super(csleEnvConfig, self).__init__(
+        super(CSLEEnvConfig, self).__init__(
             attacker_action_conf=attacker_action_conf, defender_action_conf=defender_action_conf,
             manual_play=manual_play, attacker_exploration_filter_illegal=True)
         self.network_conf = network_conf
@@ -279,11 +279,11 @@ class csleEnvConfig(BaseCSLEEnvConfig):
         self.defender_max_costs = max_costs
 
 
-    def copy(self) -> "csleEnvConfig":
+    def copy(self) -> "CSLEEnvConfig":
         """
         :return: a copy of the environment configuration
         """
-        env_config = csleEnvConfig(
+        env_config = CSLEEnvConfig(
             network_conf=self.network_conf, attacker_action_conf=self.attacker_action_conf,
             defender_action_conf=self.defender_action_conf,
             attacker_num_ports_obs=self.attacker_num_ports_obs,

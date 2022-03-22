@@ -1,6 +1,6 @@
 from typing import Tuple
 from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -13,7 +13,7 @@ class ShellSimulatorUtil:
     """
 
     @staticmethod
-    def simulate_service_login_helper(s: EnvState, a: AttackerAction, env_config: csleEnvConfig, service_name : str = "ssh") \
+    def simulate_service_login_helper(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig, service_name : str = "ssh") \
             -> Tuple[EnvState, float, bool]:
         """
         Helper function for simulating login to various network services

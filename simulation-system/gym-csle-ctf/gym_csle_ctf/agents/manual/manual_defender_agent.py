@@ -5,7 +5,7 @@ try:
     from csle_common.rendering.viewer import Viewer
 except:
     pass
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs import CSLECTFEnv
 import numpy as np
 import torch
@@ -16,7 +16,7 @@ class ManualDefenderAgent:
     Class representing a manual defender agent, controlled in the GUI by keyboard
     """
 
-    def __init__(self, env_config: csleEnvConfig, env: CSLECTFEnv, render: bool = False, model = None):
+    def __init__(self, env_config: CSLEEnvConfig, env: CSLECTFEnv, render: bool = False, model = None):
         """
         Sets up manual defender environment
 

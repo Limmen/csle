@@ -3,6 +3,7 @@ import socket
 import time
 import grpc
 import threading
+from concurrent import futures
 from confluent_kafka import Producer
 import csle_collector.ids_manager.ids_manager_pb2_grpc.IdsManagerServicer
 import csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO
@@ -218,3 +219,24 @@ class IdsManagerServicer(csle_collector.ids_manager.ids_manager_pb2_grpc.IdsMana
         return csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO(
             running = running
         )
+
+
+def serve(port : int = 50051) -> None:
+    """
+    Starts the gRPC server for managing clients
+
+    :param port: the port that the server will listen to
+    :return: None
+    """
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    csle_collector.ids_manager.ids_manager_pb2_grpc.add_IdsManagerServicer_to_server(
+        IdsManagerServicer(), server)
+    server.add_insecure_port(f'[::]:{port}')
+    server.start()
+    logging.info(f"IdsManager Server Started, Listening on port: {port}")
+    server.wait_for_termination()
+
+
+# Program entrypoint
+if __name__ == '__main__':
+    serve(port=50051)

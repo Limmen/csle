@@ -4,7 +4,7 @@ import csle_common.constants.constants as constants
 from gym_csle_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from csle_common.dao.observation.common.port_observation_state import PortObservationState
 from csle_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.network.env_state import EnvState
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
@@ -20,7 +20,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_complete_obs_state(old_obs_state: AttackerObservationState, new_obs_state : AttackerObservationState,
-                                 env_config: csleEnvConfig) -> AttackerObservationState:
+                                 env_config: CSLEEnvConfig) -> AttackerObservationState:
         """
         Merges an old observation state with a new one
 
@@ -44,7 +44,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_new_obs_with_old(old_machines_obs: List[AttackerMachineObservationState],
-                               new_machines_obs: List[AttackerMachineObservationState], env_config: csleEnvConfig,
+                               new_machines_obs: List[AttackerMachineObservationState], env_config: CSLEEnvConfig,
                                action : AttackerAction) -> NetworkOutcome:
         """
         Helper function for merging an old network observation with new information collected
@@ -498,7 +498,7 @@ class EnvDynamicsUtil:
         return merged_vuln, num_new_vuln_found
 
     @staticmethod
-    def reward_function(net_outcome: NetworkOutcome, env_config: csleEnvConfig  = None,
+    def reward_function(net_outcome: NetworkOutcome, env_config: CSLEEnvConfig  = None,
                         action: AttackerAction = None) -> float:
         """
         Implements the reward function
@@ -537,7 +537,7 @@ class EnvDynamicsUtil:
         return reward
 
     @staticmethod
-    def emulate_detection(net_outcome: NetworkOutcome, env_config: csleEnvConfig = None,
+    def emulate_detection(net_outcome: NetworkOutcome, env_config: CSLEEnvConfig = None,
                           action: AttackerAction = None) -> Tuple[bool, int]:
         """
         Emulates a detection by the IDS by implementing a threshold policy
@@ -570,7 +570,7 @@ class EnvDynamicsUtil:
             return False, 0
 
     @staticmethod
-    def is_all_flags_collected(s: EnvState, env_config: csleEnvConfig) -> bool:
+    def is_all_flags_collected(s: EnvState, env_config: CSLEEnvConfig) -> bool:
         """
         Checks if all flags are collected (then episode is done)
 
@@ -700,7 +700,7 @@ class EnvDynamicsUtil:
         return m_obs
 
     @staticmethod
-    def cache_action(env_config: csleEnvConfig, a: AttackerAction, s: EnvState) -> None:
+    def cache_action(env_config: CSLEEnvConfig, a: AttackerAction, s: EnvState) -> None:
         """
         Utility function for caching an action
 
@@ -713,7 +713,7 @@ class EnvDynamicsUtil:
         s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
     @staticmethod
-    def logged_in_ips_str(env_config: csleEnvConfig, a: AttackerAction, s: EnvState, full_ip_str: bool = False) -> str:
+    def logged_in_ips_str(env_config: CSLEEnvConfig, a: AttackerAction, s: EnvState, full_ip_str: bool = False) -> str:
         """
         Utility function to getting a string-id of the attacker state (Q) of logged in machines
 
@@ -847,7 +847,7 @@ class EnvDynamicsUtil:
 
 
     @staticmethod
-    def normalize_action_costs(action : AttackerAction, env_config: csleEnvConfig) -> float:
+    def normalize_action_costs(action : AttackerAction, env_config: CSLEEnvConfig) -> float:
         """
         Normalize action costs
 
@@ -859,7 +859,7 @@ class EnvDynamicsUtil:
         * env_config.normalize_costs_max
 
     @staticmethod
-    def normalize_action_alerts(action : AttackerAction, env_config: csleEnvConfig) -> float:
+    def normalize_action_alerts(action : AttackerAction, env_config: CSLEEnvConfig) -> float:
         """
         Normalize action alerts
 

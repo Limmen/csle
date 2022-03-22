@@ -6,7 +6,7 @@ try:
     from gym_csle_ctf.rendering.frames.main_frame import MainFrame
 except:
     pass
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs import CSLECTFEnv
 from csle_common.dao.agent.agent_type import AgentType
 import numpy as np
@@ -17,7 +17,7 @@ class ManualAttackerAgent:
     Class representing a manual attacker agent, controlled in the GUI by keyboard
     """
 
-    def __init__(self, env_config: csleEnvConfig, env: CSLECTFEnv, render: bool = False,
+    def __init__(self, env_config: CSLEEnvConfig, env: CSLECTFEnv, render: bool = False,
                  defender_opponent: AgentType = None):
         """
         Sets up the GUI with the manual attacker

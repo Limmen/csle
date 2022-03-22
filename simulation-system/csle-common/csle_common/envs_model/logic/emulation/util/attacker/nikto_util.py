@@ -1,6 +1,6 @@
 from typing import Tuple
 import xml.etree.ElementTree as ET
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -17,7 +17,7 @@ class NiktoUtil:
     """
 
     @staticmethod
-    def parse_nikto_scan(file_name: str, env_config: csleEnvConfig) -> ET.Element:
+    def parse_nikto_scan(file_name: str, env_config: CSLEEnvConfig) -> ET.Element:
         """
         Parses an XML file containing the result of an nikt scan
 
@@ -35,7 +35,7 @@ class NiktoUtil:
         return xml_data
 
     @staticmethod
-    def nikto_scan_action_helper(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def nikto_scan_action_helper(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Helper function for executing a NIKTO web scan action on the emulation. Implements caching.
 
@@ -98,7 +98,7 @@ class NiktoUtil:
         return s_prime, reward, False
 
     @staticmethod
-    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EnvState, a: AttackerAction, env_config: csleEnvConfig) \
+    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
             -> Tuple[EnvState, float, bool]:
         """
         Merges a Nikto scan result with an existing observation state

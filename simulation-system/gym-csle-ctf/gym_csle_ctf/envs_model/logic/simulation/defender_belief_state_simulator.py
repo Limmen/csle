@@ -1,6 +1,6 @@
 from typing import Tuple
 from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
@@ -12,7 +12,7 @@ class DefenderBeliefStateSimulator:
     """
 
     @staticmethod
-    def update_state(s, attacker_action: AttackerAction, env_config: csleEnvConfig,
+    def update_state(s, attacker_action: AttackerAction, env_config: CSLEEnvConfig,
                      defender_action: DefenderAction)-> Tuple[EnvState, float, bool]:
         """
         Simulates a belief state transition of the defender
@@ -152,7 +152,7 @@ class DefenderBeliefStateSimulator:
         return s_prime, 0, True
 
     @staticmethod
-    def init_state(s, attacker_action: AttackerAction, env_config: csleEnvConfig,
+    def init_state(s, attacker_action: AttackerAction, env_config: CSLEEnvConfig,
                    defender_action: DefenderAction) -> Tuple[EnvState, float, bool]:
         """
         Initializes the belief state of the defender
@@ -167,7 +167,7 @@ class DefenderBeliefStateSimulator:
                                                         defender_action=defender_action)
 
     @staticmethod
-    def reset_state(s: EnvState, attacker_action: AttackerAction, env_config: csleEnvConfig,
+    def reset_state(s: EnvState, attacker_action: AttackerAction, env_config: CSLEEnvConfig,
                     defender_action: DefenderAction) -> Tuple[EnvState, float, bool]:
         """
         Resets the belief state of the defender

@@ -1,13 +1,12 @@
-import sys
 from typing import Tuple, List
 import time
 import datetime
 import paramiko
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 import csle_common.constants.constants as constants
-from csle_common.dao.action_results.ids_alert import IdsAlert
+from csle_collector.ids_manager.ids_alert import IdsAlert
 
 
 class EmulationUtil:
@@ -50,7 +49,7 @@ class EmulationUtil:
         return outdata, errdata, total_time
 
     @staticmethod
-    def write_estimated_cost(total_time, action: AttackerAction, env_config: csleEnvConfig, ip: str = None,
+    def write_estimated_cost(total_time, action: AttackerAction, env_config: CSLEEnvConfig, ip: str = None,
                              user: str = None, service: str = None, conn=None, dir: str = None,
                              machine_ip: str = None) -> None:
         """
@@ -94,7 +93,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_alerts_response(sum_priorities, num_alerts, action: AttackerAction, env_config: csleEnvConfig, ip: str = None,
+    def write_alerts_response(sum_priorities, num_alerts, action: AttackerAction, env_config: CSLEEnvConfig, ip: str = None,
                               user: str = None, service: str = None, conn=None, dir: str = None,
                               machine_ip: str = None) -> None:
         """
@@ -139,7 +138,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_file_system_scan_cache(action: AttackerAction, env_config: csleEnvConfig, service: str, user: str, files: List[str],
+    def write_file_system_scan_cache(action: AttackerAction, env_config: CSLEEnvConfig, service: str, user: str, files: List[str],
                                      ip: str, root: bool = False) \
             -> None:
         """
@@ -167,7 +166,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_user_command_cache(action: AttackerAction, env_config: csleEnvConfig, user: str, result: str,
+    def write_user_command_cache(action: AttackerAction, env_config: CSLEEnvConfig, user: str, result: str,
                                  ip: str, jumphost: str = None) -> None:
         """
         Caches the result of a user command action
@@ -194,7 +193,7 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def execute_cmd_interactive(a: AttackerAction, env_config: csleEnvConfig) -> None:
+    def execute_cmd_interactive(a: AttackerAction, env_config: CSLEEnvConfig) -> None:
         """
         Executes an action on the emulation using an interactive shell (non synchronous)
 
@@ -218,7 +217,7 @@ class EmulationUtil:
         channel.send(cmd + "\n")
 
     @staticmethod
-    def read_result_interactive(env_config: csleEnvConfig) -> str:
+    def read_result_interactive(env_config: CSLEEnvConfig) -> str:
         """
         Reads the result of an action executed in interactive mode
 
@@ -228,7 +227,7 @@ class EmulationUtil:
         return EmulationUtil.read_result_interactive_channel(env_config=env_config, channel=env_config.emulation_config.agent_channel)
 
     @staticmethod
-    def read_result_interactive_channel(env_config: csleEnvConfig, channel) -> str:
+    def read_result_interactive_channel(env_config: CSLEEnvConfig, channel) -> str:
         """
         Reads the result of an action executed in interactive mode
 
@@ -244,7 +243,7 @@ class EmulationUtil:
         return output_str
 
     @staticmethod
-    def check_filesystem_action_cache(a: AttackerAction, env_config: csleEnvConfig, ip: str, service: str, user: str,
+    def check_filesystem_action_cache(a: AttackerAction, env_config: CSLEEnvConfig, ip: str, service: str, user: str,
                                       root: bool = False):
         """
         Checks if a filesystem action is cached or not
@@ -276,7 +275,7 @@ class EmulationUtil:
         return None
 
     @staticmethod
-    def check_user_action_cache(a: AttackerAction, env_config: csleEnvConfig, ip: str, user: str, jumphost: str = None):
+    def check_user_action_cache(a: AttackerAction, env_config: CSLEEnvConfig, ip: str, user: str, jumphost: str = None):
         """
         Checks if a user-specific action is cached or not
 
@@ -309,7 +308,7 @@ class EmulationUtil:
         return None
 
     @staticmethod
-    def parse_file_scan_file(file_name: str, env_config: csleEnvConfig) -> List[str]:
+    def parse_file_scan_file(file_name: str, env_config: CSLEEnvConfig) -> List[str]:
         """
         Parses a file containing cached results of a file scan on a server
 
@@ -329,7 +328,7 @@ class EmulationUtil:
         return files
 
     @staticmethod
-    def parse_user_command_file(file_name: str, env_config: csleEnvConfig, conn, jumphost: str = None) -> List[str]:
+    def parse_user_command_file(file_name: str, env_config: CSLEEnvConfig, conn, jumphost: str = None) -> List[str]:
         """
         Parses a file containing cached results of a user command file on a server
 
@@ -349,7 +348,7 @@ class EmulationUtil:
         return result
 
     @staticmethod
-    def delete_cache_file(file_name: str, env_config: csleEnvConfig) -> Tuple[bytes, bytes, float]:
+    def delete_cache_file(file_name: str, env_config: CSLEEnvConfig) -> Tuple[bytes, bytes, float]:
         """
         Deletes the file that contains the cached result of some operation
 
@@ -380,7 +379,7 @@ class EmulationUtil:
             return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(c: ConnectionObservationState, env_config: csleEnvConfig, telnet: bool = False) \
+    def _list_all_users(c: ConnectionObservationState, env_config: CSLEEnvConfig, telnet: bool = False) \
             -> List:
         """
         List all users on a machine
@@ -480,88 +479,6 @@ class EmulationUtil:
             return conn.get_transport().is_active()
         else:
             return False
-
-    @staticmethod
-    def get_latest_alert_ts(env_config: csleEnvConfig) -> float:
-        """
-        Gets the latest timestamp in the snort alerts log
-
-        :param env_config: the environment config
-        :return: the latest timestamp
-        """
-        if not env_config.ids_router:
-            raise AssertionError("Can only read alert files if IDS router is enabled")
-        if not EmulationUtil.is_connection_active(env_config.emulation_config.router_conn):
-            print("Router connection not established, reconnecting..")
-            if not EmulationUtil.is_connection_active(env_config.emulation_config.agent_conn):
-                env_config.emulation_config.connect_agent()
-            env_config.emulation_config.connect_router()
-        cmd = constants.IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE
-        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
-            cmd=cmd, conn=env_config.emulation_config.router_conn)
-        year = datetime.datetime.now().year
-        alerts = []
-        year = datetime.datetime.now().year
-        for line in outdata.decode().split("\n"):
-            if line != "" and line != None and line != " ":
-                a_str = line.replace("\n", "")
-                alerts.append(IdsAlert.parse_from_str(a_str, year=year))
-        if len(alerts) == 0:
-            # retry once
-            outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
-                cmd=cmd, conn=env_config.emulation_config.router_conn)
-            alerts = []
-            for line in outdata.decode().split("\n"):
-                if line != "" and line != None and line != " ":
-                    a_str = line.replace("\n", "")
-                    alerts.append(IdsAlert.parse_from_str(a_str, year=year))
-            if len(alerts) == 0:
-                return datetime.datetime.now().timestamp()
-            else:
-                return alerts[0].timestamp
-        else:
-            return alerts[0].timestamp
-
-    @staticmethod
-    def check_ids_alerts(env_config: csleEnvConfig) -> List[IdsAlert]:
-        """
-        Reads alerts from the IDS alerts log
-
-        :param env_config: the environment config
-        :return: a list of alerts
-        """
-        if not env_config.ids_router:
-            raise AssertionError("Can only read alert files if IDS router is enabled")
-        cmd = constants.IDS_ROUTER.TAIL_ALERTS_COMMAND + " " + constants.IDS_ROUTER.ALERTS_FILE
-        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                                     conn=env_config.emulation_config.router_conn)
-        alerts = []
-        year = datetime.datetime.now().year
-        for line in outdata.decode().split("\n"):
-            a_str = line.replace("\n", "")
-            alerts.append(IdsAlert.parse_from_str(a_str, year=year))
-        return alerts
-
-    @staticmethod
-    def check_ids_fast_log(env_config: csleEnvConfig) -> List[IdsAlert]:
-        """
-        Reads alerts from the IDS fast-log
-
-        :param env_config: the environment config
-        :return: a list of alerts
-        """
-        if not env_config.ids_router:
-            raise AssertionError("Can only read alert files if IDS router is enabled")
-        cmd = constants.IDS_ROUTER.TAIL_FAST_LOG_COMMAND + " " + constants.IDS_ROUTER.FAST_LOG_FILE
-        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=env_config.emulation_config.router_conn)
-        fast_logs = []
-        year = datetime.datetime.now().year
-        for line in outdata.decode().split("\n"):
-            if line != None and line != "" and line != " ":
-                a_str = line.replace("\n", "")
-                priority, ts = IdsAlert.fast_log_parse(a_str, year=year)
-                fast_logs.append((priority, ts))
-        return fast_logs
 
     @staticmethod
     def setup_custom_connection(user: str, pw: str, source_ip: str, port: int, target_ip: str, proxy_conn,

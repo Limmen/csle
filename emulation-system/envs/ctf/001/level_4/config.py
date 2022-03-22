@@ -766,7 +766,8 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
     ]
 
     config = LogSinkConfig(container=container, resources=resources, topics=topics,
-                           version=version, kafka_port=9092, default_grpc_port=50051, time_step_len_seconds=15)
+                           version=version, kafka_port=9092, default_grpc_port=50051,
+                           secondary_grpc_port = 50049, time_step_len_seconds=15)
     return config
 
 

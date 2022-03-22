@@ -3,7 +3,7 @@ from csle_common.dao.network.env_mode import EnvMode
 from csle_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 from csle_common.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
 from csle_common.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from gym_csle_ctf.envs_model.config.level_9.csle_ctf_level_9_base import CSLECTFLevel9Base
 from gym_csle_ctf.envs_model.config.level_9.csle_ctf_level_9_v1 import CSLECTFLevel9V1
@@ -21,7 +21,7 @@ class CSLECTFLevel9GeneratedSim1Env(CSLECTFEnv):
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel9Base.emulation_config()
@@ -77,7 +77,7 @@ class CSLECTFLevel9GeneratedSimWithCosts1Env(CSLECTFEnv):
     Generated Simulation.
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel9Base.emulation_config()
@@ -117,7 +117,7 @@ class CSLECTFLevel9GeneratedSim2Env(CSLECTFEnv):
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -156,7 +156,7 @@ class CSLECTFLevel9GeneratedSimWithCosts2Env(CSLECTFEnv):
     Generated simulation.
     Slightly more set of actions than V1. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -194,7 +194,7 @@ class CSLECTFLevel9GeneratedSim3Env(CSLECTFEnv):
     Generated simulation.
     Slightly more set of actions than V2. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -232,7 +232,7 @@ class CSLECTFLevel9GeneratedSimWithCosts3Env(CSLECTFEnv):
     Generated simulation.
     Slightly more set of actions than V2. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -271,7 +271,7 @@ class CSLECTFLevel9GeneratedSim4Env(CSLECTFEnv):
     Generated simulation.
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -310,7 +310,7 @@ class CSLECTFLevel9GeneratedSimWithCosts4Env(CSLECTFEnv):
     Generated simulation.
     Slightly more set of actions than V3. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             render_config = CSLECTFLevel9Base.render_conf()
             if emulation_config is None:
@@ -352,7 +352,7 @@ class CSLECTFLevel9GeneratedSim5Env(CSLECTFEnv):
     An extension of V1 but allows the attacker to peform "no-op" actions and is intended for playing with defender agent.
     Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel9Base.emulation_config()
@@ -477,7 +477,7 @@ class CSLECTFLevel9GeneratedSim6Env(CSLECTFEnv):
 
     An extension of V5 which allows the defender to take multiple stop actions
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str):
         if env_config is None:
             if emulation_config is None:
                 emulation_config = CSLECTFLevel9Base.emulation_config()

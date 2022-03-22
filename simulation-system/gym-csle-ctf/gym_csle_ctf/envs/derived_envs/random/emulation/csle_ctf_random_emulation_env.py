@@ -2,7 +2,7 @@ from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.dao.network.env_mode import EnvMode
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from gym_csle_ctf.envs_model.config.random.csle_ctf_random_base import CSLECTFRandomBase
 from gym_csle_ctf.envs_model.config.random.csle_ctf_random_v1 import CSLECTFRandomV1
@@ -16,7 +16,7 @@ class CSLECTFRandomEmulationBaseEnv(CSLECTFEnv):
     """
     Base version with all set of actions
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -51,7 +51,7 @@ class CSLECTFRandomEmulation1Env(CSLECTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -99,7 +99,7 @@ class CSLECTFRandomEmulationWithCosts1Env(CSLECTFEnv):
     """
     The simplest possible configuration, minimal set of actions. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -147,7 +147,7 @@ class CSLECTFRandomEmulation2Env(CSLECTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -184,7 +184,7 @@ class CSLECTFRandomEmulationWithCosts2Env(CSLECTFEnv):
     """
     Slightly more set of actions than V1. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -221,7 +221,7 @@ class CSLECTFRandomEmulation3Env(CSLECTFEnv):
     """
     Slightly more set of actions than V2. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -258,7 +258,7 @@ class CSLECTFRandomEmulationWithCosts3Env(CSLECTFEnv):
     """
     Slightly more set of actions than V2. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -295,7 +295,7 @@ class CSLECTFRandomEmulation4Env(CSLECTFEnv):
     """
     Slightly more set of actions than V3. Does not take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)
@@ -332,7 +332,7 @@ class CSLECTFRandomEmulationWithCosts4Env(CSLECTFEnv):
     """
     Slightly more set of actions than V3. Does take action costs into account.
     """
-    def __init__(self, env_config: csleEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
+    def __init__(self, env_config: CSLEEnvConfig, emulation_config: EmulationConfig, checkpoint_dir : str,
                  containers_config: ContainersConfig, flags_config: FlagsConfig, num_nodes : int = -1):
         if num_nodes == -1:
             num_nodes = len(containers_config.containers)

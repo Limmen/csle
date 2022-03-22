@@ -1,6 +1,6 @@
 from typing import Tuple
 from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.action.defender.defender_action import DefenderAction
 from gym_csle_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
@@ -22,7 +22,7 @@ class EmulationMiddleware:
     """
 
     @staticmethod
-    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Implements the transition operator T: (s,a) -> (s',r)
 
@@ -47,7 +47,7 @@ class EmulationMiddleware:
 
     @staticmethod
     def defender_transition(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                            env_config: csleEnvConfig) -> Tuple[
+                            env_config: CSLEEnvConfig) -> Tuple[
         EnvState, int, bool]:
         """
         Implements the transition operator T: (s,a) -> (s',r)
@@ -70,7 +70,7 @@ class EmulationMiddleware:
             raise ValueError("Action type not recognized")
 
     @staticmethod
-    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Implements the transition of a reconnaissance action
 
@@ -123,7 +123,7 @@ class EmulationMiddleware:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Implements transition of an exploit action
 
@@ -179,7 +179,7 @@ class EmulationMiddleware:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Implements the transition of a post-exploit action
 
@@ -201,7 +201,7 @@ class EmulationMiddleware:
 
     @staticmethod
     def defender_stopping_action(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                                 env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+                                 env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Implements transition of a stopping action of the defender
 
@@ -223,7 +223,7 @@ class EmulationMiddleware:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(defender_action.id, defender_action.name))
 
     @staticmethod
-    def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: csleEnvConfig) -> Tuple[EnvState, float, bool]:
+    def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
         """
         Implements transition of a stopping action of the attacker
 
@@ -240,7 +240,7 @@ class EmulationMiddleware:
             raise ValueError("Stopping action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def defender_update_state_action(s: EnvState, defender_action: DefenderAction, env_config: csleEnvConfig,
+    def defender_update_state_action(s: EnvState, defender_action: DefenderAction, env_config: CSLEEnvConfig,
                                      attacker_action: AttackerAction) -> Tuple[EnvState, float, bool]:
         """
         Implements transition of state update for the defender

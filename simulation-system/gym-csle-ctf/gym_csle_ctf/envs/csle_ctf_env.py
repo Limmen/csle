@@ -15,7 +15,7 @@ from csle_common.envs_model.logic.exploration.random_exploration_policy import R
 from csle_common.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
 from csle_common.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 from csle_common.dao.envs.base_csle_env import BaseCSLEEnv
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.agent.attacker_agent_state import AttackerAgentState
 from gym_csle_ctf.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
@@ -35,7 +35,7 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
     Abstract OpenAI Gym Env for the csle CTF minigame
     """
 
-    def __init__(self, env_config : csleEnvConfig, rs = None):
+    def __init__(self, env_config : CSLEEnvConfig, rs = None):
         self.env_config = env_config
         if util.is_network_conf_incomplete(env_config.network_conf) and self.env_config.env_mode == EnvMode.SIMULATION:
             raise ValueError("Must provide a simulation model to run in simulation mode")
@@ -594,7 +594,7 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
             action, env_config=self.env_config, env_state=self.env_state), attacker_total_actions))
 
     @staticmethod
-    def is_defense_action_legal(defense_action_id: int, env_config: csleEnvConfig, env_state: EnvState) -> bool:
+    def is_defense_action_legal(defense_action_id: int, env_config: CSLEEnvConfig, env_state: EnvState) -> bool:
         """
         Checks if a given defense action is legal in the current state of the environment
 
@@ -608,7 +608,7 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
                                                env_state=env_state)
 
     @staticmethod
-    def is_attack_action_legal(attack_action_id : int, env_config: csleEnvConfig, env_state: EnvState, m_selection: bool = False,
+    def is_attack_action_legal(attack_action_id : int, env_config: CSLEEnvConfig, env_state: EnvState, m_selection: bool = False,
                                m_action: bool = False, m_index : int = None) -> bool:
         """
         Checks if a given attack action is legal in the current state of the environment

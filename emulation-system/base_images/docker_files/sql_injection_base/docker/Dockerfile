@@ -139,7 +139,7 @@ RUN gcc -c -fpic bindshell-samba.c &&\
 SHELL ["conda", "run", "-n", "samba", "/bin/bash", "-c"]
 #RUN conda activate samba
 RUN pip install pycrypto==2.6 &&\
-    pip install git+git://github.com/opsxcq/impacket.git &&\
+    pip install git+https://github.com/opsxcq/impacket.git &&\
     pip install pyasn1
 
 # Web server HTTP

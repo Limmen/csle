@@ -2,7 +2,7 @@ from typing import Tuple
 from csle_common.dao.network.env_mode import EnvMode
 from csle_common.envs_model.logic.base_transition_operator import BaseTransitionOperator
 from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs_model.logic.emulation.emulation_middleware import EmulationMiddleware
 from gym_csle_ctf.envs_model.logic.simulation.simulator import Simulator
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
@@ -20,7 +20,7 @@ class TransitionOperator(BaseTransitionOperator):
         super().__init__()
 
     @staticmethod
-    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : csleEnvConfig) -> \
+    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : CSLEEnvConfig) -> \
             Tuple[EnvState, float, bool]:
         """
         Implements the transition operator of the MDP/Markov Game for attack actions,
@@ -46,7 +46,7 @@ class TransitionOperator(BaseTransitionOperator):
             raise ValueError("Invalid environment mode")
 
     @staticmethod
-    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: csleEnvConfig,
+    def defender_transition(s: EnvState, defender_action: DefenderAction, env_config: CSLEEnvConfig,
                             attacker_action : AttackerAction = None) \
             -> Tuple[EnvState, float, bool]:
         """

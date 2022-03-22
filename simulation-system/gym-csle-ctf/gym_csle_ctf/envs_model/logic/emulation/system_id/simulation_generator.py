@@ -4,7 +4,7 @@ import sys
 import os
 import csv
 from torch.utils.tensorboard import SummaryWriter
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_csle_ctf.envs_model.logic.transition_operator import TransitionOperator
 import csle_common.constants.constants as constants
@@ -22,7 +22,7 @@ class SimulationGenerator:
     """
 
     @staticmethod
-    def explore(attacker_exp_policy: ExplorationPolicy, env_config: csleEnvConfig, env,
+    def explore(attacker_exp_policy: ExplorationPolicy, env_config: CSLEEnvConfig, env,
                 render: bool = False, defender_dynamics_model: DefenderDynamicsModel = None,
                 tensorboard_writer : SummaryWriter = None, tau_index :int = 0
                 ) -> Tuple[np.ndarray, Trajectory, List[DefenderDynamicsTensorboardDTO]]:
@@ -100,7 +100,7 @@ class SimulationGenerator:
         return defender_dynamics_model, trajectory, log
 
     @staticmethod
-    def build_model(exp_policy: ExplorationPolicy, env_config: csleEnvConfig, env, render: bool = False) \
+    def build_model(exp_policy: ExplorationPolicy, env_config: CSLEEnvConfig, env, render: bool = False) \
             -> Tuple[NetworkConfig, np.ndarray]:
         """
         Builds a Model of the environment using System Identification, Random Walks, ML-estimation

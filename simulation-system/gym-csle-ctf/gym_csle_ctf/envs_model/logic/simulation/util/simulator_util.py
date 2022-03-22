@@ -1,7 +1,7 @@
 from typing import Tuple
 import numpy as np
 from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import csleEnvConfig
+from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
 
@@ -12,7 +12,7 @@ class SimulatorUtil:
     """
 
     @staticmethod
-    def simulate_detection(a: AttackerAction, env_config: csleEnvConfig) -> Tuple[bool, int]:
+    def simulate_detection(a: AttackerAction, env_config: CSLEEnvConfig) -> Tuple[bool, int]:
         """
         Simulates probability that an attack is detected by a defender
 
@@ -38,7 +38,7 @@ class SimulatorUtil:
 
 
     @staticmethod
-    def reachable_nodes(state: EnvState, env_config :csleEnvConfig) -> bool:
+    def reachable_nodes(state: EnvState, env_config :CSLEEnvConfig) -> bool:
         """
         Checks whether a give node in the network is reachable
 
