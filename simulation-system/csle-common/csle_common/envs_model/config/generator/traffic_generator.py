@@ -7,6 +7,7 @@ import csle_collector.client_manager.query_clients
 import csle_common.constants.constants as constants
 from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.containers_config import ContainersConfig
+from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
@@ -214,7 +215,9 @@ class TrafficGenerator:
             # Start the client population
             csle_collector.client_manager.query_clients.start_clients(
                 stub=stub, mu=traffic_config.client_population_config.mu,
-                lamb=traffic_config.client_population_config.lamb, time_step_len_seconds=1, commands=commands,
+                lamb=traffic_config.client_population_config.lamb,
+                time_step_len_seconds=traffic_config.client_population_config.client_time_step_len_seconds,
+                commands=commands,
                 num_commands=traffic_config.client_population_config.num_commands)
 
             time.sleep(5)
@@ -224,6 +227,47 @@ class TrafficGenerator:
                 stub=stub, ip=log_sink_config.container.get_ips()[0],
                 port=log_sink_config.kafka_port,
                 time_step_len_seconds=log_sink_config.time_step_len_seconds)
+
+
+    @staticmethod
+    def get_num_active_clients(emulation_env_config : EmulationEnvConfig) \
+            -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+
+        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+
+        # Connect
+        GeneratorUtil.connect_admin(emulation_config=emulation_config,
+                                    ip=emulation_env_config.traffic_config.client_population_config.ip)
+
+        # Check if client_manager is already running
+        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+        t = constants.COMMANDS.SEARCH_CLIENT_MANAGER
+
+        if not constants.COMMANDS.SEARCH_CLIENT_MANAGER in str(o):
+
+            # Stop old background job if running
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+                  constants.COMMANDS.SPACE_DELIM \
+                  + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+
+            # Start the client_manager
+            cmd = constants.COMMANDS.START_CLIENT_MANAGER.format(
+                emulation_env_config.traffic_config.client_population_config.client_manager_port)
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+            time.sleep(5)
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{emulation_env_config.traffic_config.client_population_config.ip}:'
+                f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+            stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
+            client_dto = csle_collector.client_manager.query_clients.get_clients(stub)
+            return client_dto
 
 
     @staticmethod

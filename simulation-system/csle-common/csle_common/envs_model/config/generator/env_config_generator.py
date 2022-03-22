@@ -541,7 +541,8 @@ class EnvConfigGenerator:
             TrafficGenerator.create_and_start_internal_traffic_generators(
                 traffic_config=emulation_env_config.traffic_config,
                 containers_config=emulation_env_config.containers_config,
-                emulation_config=emulation_config, sleep_time=1)
+                emulation_config=emulation_config,
+                sleep_time=emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds)
             TrafficGenerator.start_client_population(
                 traffic_config=emulation_env_config.traffic_config,
                 containers_config=emulation_env_config.containers_config,
@@ -551,6 +552,7 @@ class EnvConfigGenerator:
         print(f"-- Step {current_step}/{steps}: Starting the Intrusion Detection System --")
         ContainerGenerator.start_ids(containers_cfg=emulation_env_config.containers_config,
                                      emulation_config=emulation_config)
+        time.sleep(10)
         IDSManager.start_ids_monitor_thread(containers_cfg=emulation_env_config.containers_config,
                                             emulation_config=emulation_config,
                                             log_sink_config=emulation_env_config.log_sink_config)
@@ -617,7 +619,8 @@ class EnvConfigGenerator:
         TrafficGenerator.create_and_start_internal_traffic_generators(
             traffic_config=emulation_env_config.traffic_config,
             containers_config=emulation_env_config.containers_config,
-            emulation_config=emulation_config, sleep_time=1)
+            emulation_config=emulation_config,
+            sleep_time=emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds)
         TrafficGenerator.start_client_population(
             traffic_config=emulation_env_config.traffic_config,
             containers_config=emulation_env_config.containers_config,

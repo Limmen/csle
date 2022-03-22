@@ -15,7 +15,7 @@ message StopClientsMsg {}
 // Message that the client sends to start the clients processes
 message StartClientsMsg {
   float mu = 1;
-  int32 lamb = 2;
+  float lamb = 2;
   int32 time_step_len_seconds = 3;
   repeated string commands = 4;
   int32 num_commands = 5;

@@ -71,6 +71,8 @@ message IdsLogDTO {
   int32 string_detect_alerts = 34;
   int32 unknown_alerts = 35;
   int32 tcp_connection_alerts = 36;
-  int32 warning_alerts = 37;
-  int32 severe_alerts = 38;
+  int32 priority_1_alerts = 37;
+  int32 priority_2_alerts = 38;
+  int32 priority_3_alerts = 39;
+  int32 priority_4_alerts = 40;
 }

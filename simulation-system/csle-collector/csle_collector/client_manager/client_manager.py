@@ -19,7 +19,7 @@ class ClientThread(threading.Thread):
     Thread representing a client
     """
 
-    def __init__(self, service_time: float, commands: List[str]) -> None:
+    def __init__(self, service_time: float, commands: List[str], time_step_len_seconds: float) -> None:
         """
         Initializes the client
 
@@ -28,6 +28,7 @@ class ClientThread(threading.Thread):
         threading.Thread.__init__(self)
         self.service_time = service_time
         self.commands = commands
+        self.time_step_len_seconds = time_step_len_seconds
 
     def run(self) -> None:
         """
@@ -47,7 +48,7 @@ class ClientThread(threading.Thread):
             if time_lapsed >= self.service_time:
                 done = True
             else:
-                time.sleep(5)
+                time.sleep(self.time_step_len_seconds)
                 time_lapsed = time.time() - start
                 if time_lapsed < self.service_time:
                     if cmd_index < len(self.commands)-1:
@@ -61,7 +62,7 @@ class ArrivalThread(threading.Thread):
     Thread that generates client arrivals (starts client threads according to a Poisson process)
     """
 
-    def __init__(self, commands: List[str], time_step_len_seconds: float = 1, lamb: int = 10, mu: float = 0.1,
+    def __init__(self, commands: List[str], time_step_len_seconds: float = 1, lamb: float = 10, mu: float = 0.1,
                  num_commands: int = 2):
         """
         Initializes the arrival thread
@@ -100,8 +101,9 @@ class ArrivalThread(threading.Thread):
             new_clients = poisson.rvs(self.lamb*self.time_step_len_seconds, size=1)[0]
             for nc in range(new_clients):
                 commands = random.sample(self.commands, self.num_commands)
-                service_time = expon.rvs(scale=1/(self.mu*(self.time_step_len_seconds)), loc=0, size=1)[0]
-                thread = ClientThread(service_time=service_time, commands=commands)
+                service_time = expon.rvs(scale=self.time_step_len_seconds/(self.mu), loc=0, size=1)[0]
+                thread = ClientThread(service_time=service_time, commands=commands,
+                                      time_step_len_seconds=self.time_step_len_seconds)
                 thread.start()
                 self.client_threads.append(thread)
             time.sleep(self.time_step_len_seconds)

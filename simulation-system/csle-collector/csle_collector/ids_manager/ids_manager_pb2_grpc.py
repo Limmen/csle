@@ -4,7 +4,6 @@ import grpc
 
 import csle_collector.ids_manager.ids_manager_pb2 as ids__manager__pb2
 
-
 class IdsManagerStub(object):
     """Interface exported by the server
     """

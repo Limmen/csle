@@ -638,7 +638,8 @@ class COMMANDS:
     ARPTABLES_APPEND_INPUT = "sudo arptables -A INPUT"
     ARPTABLES_APPEND_OUTPUT = "sudo arptables -A OUTPUT"
     ARPTABLES_APPEND_FORWARD = "sudo arptables -A FORWARD"
-    START_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l /var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile"
+    START_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l " \
+                "/var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile"
     UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
     SNORT_PID = "/var/run//snort_eth1:eth0.pid"
     SNORT_DUMP_STATS="kill -SIGUSR1 {}"
@@ -675,8 +676,9 @@ class LOG_SINK:
                                 "successful-dos", "successful-recon-largescale", "successful-recon-limited",
                                 "suspicious-filename-detect", "suspicious-login", "system-call-detect",
                                 "unusual-client-port-connection", "web-application-activity", "icmp-event",
-                                "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode", "string-detect",
-                                "unknown", "tcp-connection", "warning", "severe"]
+                                "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
+                                "string-detect",
+                                "unknown", "tcp-connection", "priority_1", "priority_2", "priority_3", "priority_4"]
     LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_login_attempts"]
     TCP_CONNECTIONS_TOPIC_ATTRIBUTES=["timestamp", "ip", "num_tcp_connections"]
     PROCESSES_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_processes"]

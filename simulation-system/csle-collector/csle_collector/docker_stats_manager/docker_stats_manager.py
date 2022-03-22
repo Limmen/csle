@@ -155,7 +155,7 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
 
         new_docker_stats_monitor_threads = []
         for dsmt in self.docker_stats_monitor_threads:
-            if dsmt.name == request.emulation:
+            if dsmt.emulation == request.emulation:
                 dsmt.stopped = True
             else:
                 if dsmt.is_alive():
@@ -177,6 +177,16 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
         :return: a clients DTO with the state of the docker stats monitor
         """
         logging.info(f"Starting the docker stats monitor for emulation:{request.emulation}")
+
+        # Stop any existing thread with the same name
+        new_docker_stats_monitor_threads = []
+        for dsmt in self.docker_stats_monitor_threads:
+            if dsmt.emulation == request.emulation:
+                dsmt.stopped = True
+            else:
+                if dsmt.is_alive():
+                    new_docker_stats_monitor_threads.append(dsmt)
+        self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
 
         docker_stats_monitor_thread = DockerStatsThread(request.containers, request.emulation, request.sink_ip,
                                                         request.stats_queue_maxsize, request.time_step_len_seconds,

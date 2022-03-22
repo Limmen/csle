@@ -1,6 +1,7 @@
 import grpc
 import time
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
+from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 import csle_common.constants.constants as constants
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
@@ -92,22 +93,25 @@ class LogSinkManager:
 
 
     @staticmethod
-    def get_kafka_status(log_sink_config: LogSinkConfig, emulation_config: EmulationConfig) -> \
+    def get_kafka_status(emulation_env_config: EmulationEnvConfig) -> \
             csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Method for querying the KafkaManager about the status of the Kafka server
 
-        :param log_sink_config: the configuration of the Kafka server
-        :param emulation_config: the emulation config
+        :param emulation_env_config: the emulation config
         :return: a KafkaDTO with the status of the server
         """
-        LogSinkManager._start_kafka_manager_if_not_running(log_sink_config=log_sink_config,
+        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+
+        LogSinkManager._start_kafka_manager_if_not_running(log_sink_config=emulation_env_config.log_sink_config,
                                                            emulation_config=emulation_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{log_sink_config.container.get_ips()[0]}:'
-                f'{log_sink_config.default_grpc_port}') as channel:
+                f'{emulation_env_config.log_sink_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.get_kafka_status(stub)
             return kafka_dto

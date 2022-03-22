@@ -9,7 +9,7 @@ class ClientPopulationConfig:
     """
 
     def __init__(self, ip: str, networks: List[ContainerNetwork], client_process_type: ClientPopulationProcessType,
-                 lamb: int, mu: float, client_manager_port: int, num_commands: int = 5,
+                 lamb: float, mu: float, client_manager_port: int, num_commands: int = 5,
                  client_time_step_len_seconds: int = 1):
         """
         Creates a ClientPopulationConfig DTO Object

@@ -9,8 +9,10 @@ To see options, run:
 from typing import List, Tuple, Union
 import click
 import os
-import subprocess
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
+from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
+from csle_common.envs_model.config.generator.ids_manager import IDSManager
+from csle_common.envs_model.config.generator.log_sink_manager import LogSinkManager
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
@@ -27,6 +29,67 @@ def commands() -> None:
     CSLE CLI Tool
     """
     pass
+
+
+@click.option('--stats', is_flag=True, help='Check the status of the stats manager')
+@click.option('--kafka', is_flag=True, help='Check the status of the Kafka manager')
+@click.option('--ids', is_flag=True, help='Check the status of the IDS manager')
+@click.option('--clients', is_flag=True, help='Check the number of active clients of the emulation')
+@click.argument('emulation', default="", type=str)
+@click.command(help="emulation-name")
+def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool) -> None:
+    """
+    Extracts status information of a given emulation
+
+    :param emulation: the emulation name
+    :param clients: if true, print information about the client population
+    :param ids: if true, print information about the ids manager
+    :param kafka: if true, print information about the kafka manager
+    :param stats: if true, print information about the statsmanager
+    :return: None
+    """
+    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    if emulation_env_config is not None:
+        if clients:
+            clients_dto = TrafficGenerator.get_num_active_clients(emulation_env_config=emulation_env_config)
+            click.secho(f"Client population status for: {emulation}", fg="magenta", bold=True)
+            click.secho(f"Active clients: {clients_dto.num_clients}", bold=False)
+            if clients_dto.client_process_active:
+                click.secho("Client process " + f" {click.style('[active]', fg='green')}", bold=False)
+            else:
+                click.secho("Client process " + f" {click.style('[inactive]', fg='red')}", bold=False)
+            if clients_dto.producer_active:
+                click.secho("Producer process " + f" {click.style('[active]', fg='green')}", bold=False)
+            else:
+                click.secho("Producer process " + f" {click.style('[inactive]', fg='red')}", bold=False)
+            click.secho(f"Clients time-step length: {clients_dto.clients_time_step_len_seconds} seconds", bold=False)
+            click.secho(f"Producer time-step length: {clients_dto.producer_time_step_len_seconds} seconds", bold=False)
+        if ids:
+            ids_monitors_statuses = IDSManager.get_ids_monitor_thread_status(emulation_env_config=emulation_env_config)
+            for ids_monitor_status in ids_monitors_statuses:
+                click.secho(f"IDS monitor status for: {emulation}", fg="magenta", bold=True)
+                if ids_monitor_status.running:
+                    click.secho("IDS monitor status: " + f" {click.style('[running]', fg='green')}", bold=False)
+                else:
+                    click.secho("IDS monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+        if kafka:
+            kafka_dto = LogSinkManager.get_kafka_status(emulation_env_config=emulation_env_config)
+            click.secho(f"Kafka manager status for: {emulation}", fg="magenta", bold=True)
+            if kafka_dto.running:
+                click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}", bold=False)
+            else:
+                click.secho("Kafka broker status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+            click.secho(f"Topics:", bold=True)
+            for topic in kafka_dto.topics:
+                click.secho(f"{topic}", bold=False)
+
+        if stats:
+            stats_manager_dto = ContainerManager.get_docker_stats_manager_status(
+                log_sink_config=emulation_env_config.log_sink_config)
+            click.secho(f"Docker stats manager status for: {emulation}", fg="magenta", bold=True)
+            click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
+    else:
+        click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
 @click.option('--nc', default=None, type=int)
 @click.option('--t', default=None, type=int)
@@ -202,6 +265,9 @@ def stop_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     """
     click.secho(f"Stopping emulation {emulation_env_config.name}", bold=False)
     EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
+    ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
+                                              containers_config=emulation_env_config.containers_config,
+                                              emulation_name=emulation_env_config.name)
 
 
 def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
@@ -214,6 +280,12 @@ def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
     EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
     EnvConfigGenerator.rm_containers(emulation_env_config=emulation_env_config)
+    try:
+        ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
+                                                  containers_config=emulation_env_config.containers_config,
+                                                  emulation_name=emulation_env_config.name)
+    except Exception as e:
+        pass
     EnvConfigGenerator.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
@@ -742,6 +814,7 @@ commands.add_command(clean)
 commands.add_command(start_traffic)
 commands.add_command(stop_traffic)
 commands.add_command(statsmanager)
+commands.add_command(em)
 
 
 # Script entrypoint

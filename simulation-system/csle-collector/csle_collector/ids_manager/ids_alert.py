@@ -1,6 +1,14 @@
-from typing import Tuple
+import re
 import datetime
 import csle_collector.constants.constants as constants
+
+
+class FastLogAlert:
+
+    def __init__(self, timestamp: float, priority: int, class_id: int):
+        self.timestamp = timestamp
+        self.priority = priority
+        self.class_id = class_id
 
 
 class IdsAlert:
@@ -60,13 +68,17 @@ class IdsAlert:
             if alert_dao.timestamp is not None and alert_dao.timestamp != "" and alert_dao.timestamp != "0":
                 alert_dao.timestamp = str(year) + " " + alert_dao.timestamp
                 try:
-                    alert_dao.timestamp = datetime.datetime.strptime(alert_dao.timestamp.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
+                    alert_dao.timestamp = datetime.datetime.strptime(alert_dao.timestamp.strip(),
+                                                                     '%Y %m/%d-%H:%M:%S.%f').timestamp()
                 except:
-                    alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
+                    alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913",
+                                                                     '%Y %m/%d-%H:%M:%S.%f').timestamp()
             else:
-                alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
+                alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913",
+                                                                 '%Y %m/%d-%H:%M:%S.%f').timestamp()
         else:
-            alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
+            alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913",
+                                                             '%Y %m/%d-%H:%M:%S.%f').timestamp()
         if len(a_fields) > 1:
             alert_dao.sig_generator = a_fields[1]
         if len(a_fields) > 2:
@@ -132,21 +144,28 @@ class IdsAlert:
         self.priority = priority
 
     @staticmethod
-    def fast_log_parse(fast_log_str: str, year: int) -> Tuple[int, float]:
+    def fast_log_parse(fast_log_str: str, year: int) -> FastLogAlert:
         """
         Parses the IDS Alert from a given string from the fast-log of Snort
 
         :param fast_log_str: the fast log string to parse
         :param year: the year
-        :return: the priority and time-stamp
+        :return: the priority, the class, and the time-stamp
         """
         priorities = re.findall(constants.IDS_ROUTER.PRIORITY_REGEX, fast_log_str)
-        priority = None
         if len(priorities) > 0:
             temp = priorities[0].replace("Priority: ", "")
             priority = int(temp)
         else:
             priority = 1
+        alert_classes = re.findall(constants.IDS_ROUTER.CLASSIFICATION_REGEX, fast_log_str)
+        alert_class = "unknown"
+        alert_class_id = 1
+        if len(alert_classes) > 0:
+            alert_class = alert_classes[0]
+        if alert_class in constants.IDS_ROUTER.ALERT_IDS_ID:
+            alert_class_id = constants.IDS_ROUTER.ALERT_IDS_ID[alert_class]
+
         ts = fast_log_str.split(" ")[0]
         if ts is not None and ts != "":
             ts = ts.strip()
@@ -158,17 +177,6 @@ class IdsAlert:
                     ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
             else:
                 ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
-        return priority, ts
+        fast_log_alert = FastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id)
+        return fast_log_alert
 
-
-if __name__ == '__main__':
-    test = "12/06-22:10:53.094913  [**] [1:1418:11] SNMP request tcp [**] [Classification: Attempted Information Leak] [Priority: 2] {TCP} 172.18.4.191:58278 -> 172.18.4.10:161"
-    ts = test.split(" ")[0]
-    print(ts)
-    parts = test.split(" ")
-    ts = parts[0]
-    import re
-    regex = re.compile(r"Priority: \d")
-    print(re.findall(regex, test))
-
-    print(parts)

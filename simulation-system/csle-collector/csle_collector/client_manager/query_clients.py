@@ -29,7 +29,7 @@ def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cli
 
 
 def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
-                  mu: float, lamb: int, time_step_len_seconds: int, commands: List[str], num_commands: int=2):
+                  mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int=2):
     """
     Starts the client arrival process
 

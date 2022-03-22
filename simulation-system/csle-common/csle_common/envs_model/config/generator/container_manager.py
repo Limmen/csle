@@ -7,6 +7,7 @@ import os
 import grpc
 import socket
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
+import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
 from csle_common.envs_model.config.generator.env_info import EnvInfo
 from csle_common.dao.container_config.containers_config import ContainersConfig
@@ -390,7 +391,6 @@ class ContainerManager:
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
 
-
     @staticmethod
     def start_docker_stats_manager(port: int = 50051) -> bool:
         """
@@ -432,6 +432,47 @@ class ContainerManager:
                 stub=stub, emulation=emulation_name, sink_ip=log_sink_config.container.get_ips()[0],
                 stats_queue_maxsize=1000, time_step_len_seconds=log_sink_config.time_step_len_seconds,
                 sink_port=log_sink_config.kafka_port, containers=containers)
+
+
+
+    @staticmethod
+    def stop_docker_stats_thread(log_sink_config: LogSinkConfig, containers_config: ContainersConfig,
+                                  emulation_name: str) -> None:
+        """
+        Sends a request to the docker stats manager on the docker host for stopping a docker stats monitor thread
+
+        :param log_sink_config: configuration of the log sink
+        :param containers_config: configuration of the containers to monitor
+        :param emulation_name: the name of the emulation to monitor
+        :return: None
+        """
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
+        with grpc.insecure_channel(f'{ip}:{log_sink_config.default_grpc_port}') as channel:
+            stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
+            csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
+                stub=stub, emulation=emulation_name)
+
+
+    @staticmethod
+    def get_docker_stats_manager_status(log_sink_config: LogSinkConfig) \
+            -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
+        """
+        Sends a request to get the status of the docker stats manager
+
+        :param log_sink_config: configuration of the log sink
+        :return: None
+        """
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
+        with grpc.insecure_channel(f'{ip}:{log_sink_config.default_grpc_port}') as channel:
+            stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
+            docker_stats_monitor_dto = \
+                csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
+                    stub=stub)
+            return docker_stats_monitor_dto
+
+
 
     @staticmethod
     def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: LogSinkConfig) -> None:

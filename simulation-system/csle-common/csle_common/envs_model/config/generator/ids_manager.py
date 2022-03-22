@@ -1,8 +1,11 @@
+from typing import List
 import grpc
 import time
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
+from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 import csle_common.constants.constants as constants
+import csle_collector.constants.constants as csle_collector_constants
 import csle_collector.ids_manager.ids_manager_pb2_grpc
 import csle_collector.ids_manager.ids_manager_pb2
 import csle_collector.ids_manager.query_ids_manager
@@ -50,7 +53,7 @@ class IDSManager:
                     o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
                     t = constants.COMMANDS.SEARCH_IDS_MANAGER
 
-                    if not constants.COMMANDS.SEARCH_KAFKA_MANAGER in str(o):
+                    if not constants.COMMANDS.SEARCH_IDS_MANAGER in str(o):
 
                         # Stop old background job if running
                         cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -92,8 +95,8 @@ class IDSManager:
                             csle_collector.ids_manager.query_ids_manager.start_ids_monitor(
                                 stub=stub, kafka_ip=log_sink_config.container.get_ips()[0],
                                 kafka_port=log_sink_config.kafka_port,
-                                log_file_path=constants.IDS_ROUTER.FAST_LOG_FILE,
-                                time_step_len_seconds=1)
+                                log_file_path=csle_collector_constants.IDS_ROUTER.FAST_LOG_FILE,
+                                time_step_len_seconds=log_sink_config.time_step_len_seconds)
 
 
     @staticmethod
@@ -124,27 +127,30 @@ class IDSManager:
                         csle_collector.ids_manager.query_ids_manager.stop_ids_monitor(stub=stub)
 
     @staticmethod
-    def get_ids_monitor_thread_status(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
-                                      log_sink_config: LogSinkConfig):
+    def get_ids_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
+            List[csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO]:
         """
         A method that sends a request to the IDSManager on every container to get the status of the IDS monitor thread
 
-        :param log_sink_config: the configuration of the log sink
-        :param containers_cfg: the container configurations
-        :param emulation_config: the emulation config
+        :param emulation_env_config: the emulation config
         :return: List of monitor thread statuses
         """
+        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+
         statuses = []
         IDSManager._start_ids_manager_if_not_running(
-            log_sink_config=log_sink_config, emulation_config=emulation_config, containers_cfg=containers_cfg)
+            log_sink_config=emulation_env_config.log_sink_config,
+            emulation_config=emulation_config, containers_cfg=emulation_env_config.containers_config)
 
-        for c in containers_cfg.containers:
+        for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.IDS_IMAGES:
                 if ids_image in c.name:
                     # Open a gRPC session
                     with grpc.insecure_channel(
                             f'{c.get_ips()[0]}:'
-                            f'{log_sink_config.default_grpc_port}') as channel:
+                            f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
                         stub = csle_collector.ids_manager.ids_manager_pb2_grpc.IdsManagerStub(channel)
                         status = csle_collector.ids_manager.query_ids_manager.get_ids_monitor_status(stub=stub)
                         statuses.append(status)
@@ -153,7 +159,8 @@ class IDSManager:
 
     @staticmethod
     def get_ids_log_data(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
-                         log_sink_config: LogSinkConfig, timestamp: float):
+                         log_sink_config: LogSinkConfig, timestamp: float) \
+            -> List[csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO]:
         """
         A method that sends a request to the IDSManager on every container to get contents of the IDS log from
         a given timestamp
@@ -177,6 +184,7 @@ class IDSManager:
                             f'{log_sink_config.default_grpc_port}') as channel:
                         stub = csle_collector.ids_manager.ids_manager_pb2_grpc.IdsManagerStub(channel)
                         ids_log_data = csle_collector.ids_manager.query_ids_manager.get_ids_alerts(
-                            stub=stub, timestamp=timestamp, log_file_path=constants.IDS_ROUTER.FAST_LOG_FILE)
+                            stub=stub, timestamp=timestamp,
+                            log_file_path=csle_collector_constants.IDS_ROUTER.FAST_LOG_FILE)
                         ids_log_data_list.append(ids_log_data)
         return ids_log_data_list
