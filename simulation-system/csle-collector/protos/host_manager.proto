@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service HostManager {
+  rpc stopHostMonitor(StopHostMonitorMsg) returns (HostMonitorDTO) {}
+  rpc startHostMonitor(StartHostMonitorMsg) returns (HostMonitorDTO) {}
+  rpc getHostMonitorStatus(GetHostMonitorStatusMsg) returns (HostMonitorDTO) {}
+  rpc getHostMetrics(GetHostMetricsMsg) returns (HostMetricsDTO) {}
+}
+
+// Message that the client sends to stop the HostMonitor
+message StopHostMonitorMsg {}
+
+// Message that the client sends to start the HostMonitor
+message StartHostMonitorMsg {
+  string kafka_ip = 1;
+  int32 kafka_port = 2;
+  string log_file_path = 3;
+  int32 time_step_len_seconds = 4;
+}
+
+// Message that the client sends to get the status of the HostMonitor
+message GetHostMonitorStatusMsg {}
+
+//Message that the server returns when asked about the status of the Host Monitor thread
+message HostMonitorDTO {
+  bool running = 1;
+}
+
+// Message that the client sends to extract the Host metrics from given timestamps
+message GetHostMetricsMsg {
+  float failed_auth_last_ts = 1;
+  float login_last_ts = 2;
+}
+
+//Message that the server returns when asked about the latest host metrics
+message HostMetricsDTO {
+  int32 num_logged_in_users = 1;
+  int32 num_failed_login_attempts = 2;
+  int32 num_open_connections = 3;
+  int32 num_login_events = 4;
+  int32 num_processes = 5;
+  int32 num_users = 6;
+  string ip = 7;
+  float timestamp = 8;
+}

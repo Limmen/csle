@@ -72,7 +72,7 @@ class DockerStatsThread(threading.Thread):
                          f"{aggregated_stats.mem_total},{aggregated_stats.mem_percent},{aggregated_stats.mem_percent}," \
                          f"{aggregated_stats.blk_read},{aggregated_stats.blk_write}," \
                          f"{aggregated_stats.net_rx},{aggregated_stats.net_tx}"
-                self.producer.produce("docker_stats", record)
+                self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
                 self.stats_queues = {}
                 start = time.time()
 

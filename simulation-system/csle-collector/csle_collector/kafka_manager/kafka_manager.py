@@ -9,6 +9,7 @@ import confluent_kafka
 import confluent_kafka.admin
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
+import csle_collector.constants.constants as constants
 
 
 class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer):
@@ -41,7 +42,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
 
         :return: status and list of topics
         """
-        stat = os.system('service kafka status')
+        stat = os.system(constants.KAFKA_COMMANDS.KAFKA_STATUS)
         running = (stat == 0)
         client = confluent_kafka.admin.AdminClient(self.conf)
         cluster_metadata = client.list_topics()
@@ -77,7 +78,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :return: a clients DTO with the state of the kafka server
         """
         logging.info("Stopping kafka")
-        os.system('service kafka stop')
+        os.system(constants.KAFKA_COMMANDS.KAFKA_STOP)
         return csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
             running = False,
             topics = []
@@ -93,7 +94,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :return: a clients DTO with the state of the kafka server
         """
         logging.info(f"Starting kafka")
-        os.system('service kafka start')
+        os.system(constants.KAFKA_COMMANDS.KAFKA_START)
         kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
             running = True,
             topics = []

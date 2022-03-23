@@ -67,5 +67,5 @@ def get_ids_alerts(
     get_ids_log_alerts_msg = \
         csle_collector.ids_manager.ids_manager_pb2.GetIdsAlertsMsg(
             timestamp=timestamp, log_file_path=log_file_path)
-    ids_monitor_dto = stub.getIdsMonitorStatus(get_ids_log_alerts_msg)
-    return ids_monitor_dto
+    ids_log_dto = stub.getIdsAlerts(get_ids_log_alerts_msg)
+    return ids_log_dto

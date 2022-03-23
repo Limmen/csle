@@ -12,6 +12,7 @@ from confluent_kafka import Producer
 import grpc
 import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
+import csle_collector.constants.constants as constants
 
 
 class ClientThread(threading.Thread):
@@ -147,7 +148,8 @@ class ProducerThread(threading.Thread):
             if self.arrival_thread is not None:
                 ts = time.time()
                 num_clients = len(self.arrival_thread.client_threads)
-                self.producer.produce("client_population", f"{ts},{self.ip},{num_clients}")
+                self.producer.produce(constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
+                                      f"{ts},{self.ip},{num_clients}")
 
 
 class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerServicer):

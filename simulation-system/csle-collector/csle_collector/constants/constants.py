@@ -40,8 +40,6 @@ class DOCKER_STATS:
     CONTAINER_IP = "container_ip"
     UNIX_DOCKER_SOCK_URL = "unix://var/run/docker.sock"
 
-
-
 class IDS_ROUTER:
     """
     Constants related to the IDS
@@ -126,3 +124,50 @@ class IDS_ROUTER:
     ALERT_IDS_ID["Attempted User Privilege Gain"] = 32
     ALERT_IDS_ID["attempted-admin"] = 33
     ALERT_IDS_ID["Attempted Administrator Privilege Gain"] = 33
+
+
+class HOST_METRICS:
+    """
+    Constants related to the defender's sensor commands
+    """
+    LIST_LOGGED_IN_USERS_CMD = "users"
+    LIST_OPEN_CONNECTIONS_CMD = "netstat -n"
+    LIST_USER_ACCOUNTS = "cat /etc/passwd"
+    LIST_FAILED_LOGIN_ATTEMPTS = "sudo tail -50 /var/log/auth.log"
+    LIST_SUCCESSFUL_LOGIN_ATTEMPTS = "last"
+    LIST_NUMBER_OF_PROCESSES = "ps -e | wc -l"
+
+
+class LOG_SINK:
+    NETWORK_ID_THIRD_OCTET=253
+    NETWORK_ID_FOURTH_OCTET=253
+    SUFFIX="_1"
+    CLIENT_POPULATION_TOPIC_NAME = "client_population"
+    IDS_LOG_TOPIC_NAME = "ids_log"
+    HOST_METRICS_TOPIC_NAME = "host_metrics"
+    DOCKER_STATS_TOPIC_NAME = "docker_stats"
+    CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients"]
+    IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
+                                "inappropriate-content", "policy-violation", "shellcode-detect", "successful-admin",
+                                "successful-user", "trojan-activity", "unsuccessful-user", "web-application-attack",
+                                "attempted-dos", "attempted-recon", "bad-unknown", "default-login-attempt",
+                                "denial-of-service", "misc-attack", "non-standard-protocol", "rpc-portmap-decode",
+                                "successful-dos", "successful-recon-largescale", "successful-recon-limited",
+                                "suspicious-filename-detect", "suspicious-login", "system-call-detect",
+                                "unusual-client-port-connection", "web-application-activity", "icmp-event",
+                                "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
+                                "string-detect",
+                                "unknown", "tcp-connection", "priority_1", "priority_2", "priority_3", "priority_4"]
+    HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
+                                     "num_open_connections", "num_login_events", "num_processes", "num_users"]
+    DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
+                                     "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx"]
+
+
+class KAFKA_COMMANDS:
+    """
+    String constants for managing Kafka
+    """
+    KAFKA_STATUS = "service kafka status"
+    KAFKA_STOP = "service kafka stop"
+    KAFKA_START = "service kafka start"

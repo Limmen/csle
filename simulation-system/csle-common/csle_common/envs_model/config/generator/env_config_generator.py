@@ -24,6 +24,7 @@ from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from csle_common.envs_model.config.generator.ids_manager import IDSManager
+from csle_common.envs_model.config.generator.host_manager import HostManager
 from csle_common.envs_model.config.generator.log_sink_manager import LogSinkManager
 from csle_common.envs_model.config.generator.users_generator import UsersGenerator
 from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
@@ -496,7 +497,7 @@ class EnvConfigGenerator:
         emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
                                            agent_username=constants.CSLE_ADMIN.USER,
                                            agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
-        steps = 11
+        steps = 12
         if no_traffic:
             steps = steps-1
         current_step = 1
@@ -557,6 +558,11 @@ class EnvConfigGenerator:
                                             emulation_config=emulation_config,
                                             log_sink_config=emulation_env_config.log_sink_config)
 
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Starting the Host managers --")
+        HostManager.start_host_monitor_thread(containers_cfg=emulation_env_config.containers_config,
+                                              log_sink_config=emulation_env_config.log_sink_config,
+                                              emulation_config=emulation_config)
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")

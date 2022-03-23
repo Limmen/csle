@@ -2,6 +2,7 @@ import argparse
 import os
 import multiprocessing
 import csle_common.constants.constants as constants
+import csle_collector.constants.constants as collector_constants
 from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.container_config.default_network_firewall_config import DefaultNetworkFirewallConfig
@@ -2636,18 +2637,18 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
         name=f"{constants.CONTAINER_IMAGES.KAFKA_1}",
         ips_and_networks=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
+             f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{collector_constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
              ContainerNetwork(
-                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
+                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
                  subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                             f"{network_id}.{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
+                             f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                              f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
              )),
         ],
         minigame=constants.CSLE.CTF_MINIGAME,
         version=version, level=str(level),
-        restart_policy=constants.DOCKER.ON_FAILURE_3, suffix=constants.LOG_SINK.SUFFIX)
+        restart_policy=constants.DOCKER.ON_FAILURE_3, suffix=collector_constants.LOG_SINK.SUFFIX)
 
     resources = NodeResourcesConfig(
         container_name=f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-"
@@ -2655,45 +2656,33 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
         num_cpus=1, available_memory_gb=4,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
+             f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{collector_constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
              None)])
 
     topics = [
         KafkaTopic(
-            name=constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
+            name=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            attributes=constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
+            attributes=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
-            name=constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
+            name=collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            attributes= constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
+            attributes= collector_constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
-            name=constants.LOG_SINK.LOGIN_ATTEMPTS_TOPIC_NAME,
+            name=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            attributes=constants.LOG_SINK.LOGIN_ATTEMPTS_TOPIC_ATTRIBUTES
+            attributes=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
-            name=constants.LOG_SINK.TCP_CONNECTIONS_TOPIC_NAME,
+            name=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            attributes=constants.LOG_SINK.TCP_CONNECTIONS_TOPIC_ATTRIBUTES
-        ),
-        KafkaTopic(
-            name=constants.LOG_SINK.PROCESSES_TOPIC_NAME,
-            num_replicas=1,
-            num_partitions=1,
-            attributes=constants.LOG_SINK.PROCESSES_TOPIC_ATTRIBUTES
-        ),
-        KafkaTopic(
-            name=constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
-            num_replicas=1,
-            num_partitions=1,
-            attributes=constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
+            attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         )
     ]
 

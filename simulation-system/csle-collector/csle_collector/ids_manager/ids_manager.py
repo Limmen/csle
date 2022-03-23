@@ -8,6 +8,7 @@ from confluent_kafka import Producer
 import csle_collector.ids_manager.ids_manager_pb2_grpc
 import csle_collector.ids_manager.ids_manager_pb2
 from csle_collector.ids_manager.ids_manager_util import IdsManagerUtil
+import csle_collector.constants.constants as constants
 
 
 class IDSMonitorThread(threading.Thread):
@@ -50,7 +51,7 @@ class IDSMonitorThread(threading.Thread):
             time.sleep(self.time_step_len_seconds)
             alert_counters = IdsManagerUtil.read_ids_data(self.latest_ts)
             record = alert_counters.to_kafka_record(ip = self.ip)
-            self.producer.produce("ids_log", record)
+            self.producer.produce(constants.LOG_SINK.IDS_LOG_TOPIC_NAME, record)
             self.latest_ts = time.time()
 
 

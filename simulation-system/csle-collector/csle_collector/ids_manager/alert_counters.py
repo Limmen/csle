@@ -5,30 +5,51 @@ import csle_collector.constants.constants as constants
 from csle_collector.ids_manager.ids_alert import FastLogAlert
 import csle_collector.ids_manager.ids_manager_pb2
 
-class AlertCounters:
 
+class AlertCounters:
+    """
+    DTO containing statistics from the IDS log
+
+    """
     def __init__(self):
+        """
+        Initializes the DTO
+        """
         self.priority_alerts = list(np.zeros(4))
         self.class_alerts = list(np.zeros(len(constants.IDS_ROUTER.ALERT_IDS_ID)))
 
+    def count(self, alerts: List[FastLogAlert]) -> None:
+        """
+        Counts the list of alerts
 
-    def count(self, alerts: List[FastLogAlert]):
+        :param alerts: list of alerts from the log
+        :return: None
+        """
         for a in alerts:
             if a.priority in range(0, len(self.priority_alerts)):
                 self.priority_alerts[a.priority] += 1
             if a.class_id in range(0, len(self.class_alerts)):
                 self.class_alerts[a.class_id] += 1
 
-
-
     def to_kafka_record(self, ip: str) -> str:
+        """
+        Converts the DTO into a kafka record
+
+        :param ip: the ip to add to the record in addition to the IDS statistics
+        :return: a comma-separated string representing the kafka record
+        """
         ts = time.time()
         total_counters = [ts, ip] + self.class_alerts + self.priority_alerts
         record_str = ",".join(list(map(lambda x: str(x), total_counters)))
         return record_str
 
+    def to_dto(self, ip: str) -> csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO:
+        """
+        Converts the object into a gRPC DTO for serialization
 
-    def to_dto(self, ip: str):
+        :param ip: the ip to add to the DTO in addition to the statistics
+        :return: A csle_collector.ids_manager.ids_manager_pb2.IdsLogDTOb
+        """
         ts = time.time()
         csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO(
             timestamp = ts,
@@ -72,6 +93,12 @@ class AlertCounters:
             priority_3_alerts = self.priority_alerts[3],
             priority_4_alerts = self.priority_alerts[4]
         )
+
+    def __str__(self):
+        """
+        :return: a string representation of the object
+        """
+        return f"priority_alets: {self.priority_alerts}, class_alerts: {self.class_alerts}"
 
 
 

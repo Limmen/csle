@@ -34,7 +34,7 @@ class IDSManager:
     def _start_ids_manager_if_not_running(emulation_config: EmulationConfig, containers_cfg: ContainersConfig,
                                           log_sink_config: LogSinkConfig) -> None:
         """
-        Utility method for checking if the kafka manager is running and starting it if it is not running
+        Utility method for checking if the ids manager is running and starting it if it is not running
 
         :param log_sink_config: the configuration of the log sink
         :param containers_cfg: the container configurations

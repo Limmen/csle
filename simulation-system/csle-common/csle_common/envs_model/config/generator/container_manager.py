@@ -433,8 +433,6 @@ class ContainerManager:
                 stats_queue_maxsize=1000, time_step_len_seconds=log_sink_config.time_step_len_seconds,
                 sink_port=log_sink_config.kafka_port, containers=containers)
 
-
-
     @staticmethod
     def stop_docker_stats_thread(log_sink_config: LogSinkConfig, containers_config: ContainersConfig,
                                   emulation_name: str) -> None:

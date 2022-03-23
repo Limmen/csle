@@ -216,6 +216,10 @@ RUN chmod 777 /kafka_manager.py
 ADD docker_files/common/ids_manager.py /ids_manager.py
 RUN chmod 777 /ids_manager.py
 
+# Host manager
+ADD docker_files/common/host_manager.py /host_manager.py
+RUN chmod 777 /host_manager.py
+
 # Setup Sysstat
 RUN mv /etc/default/sysstat /etc/default/sysstat.bak
 ADD docker_files/common/sysstat /etc/default/sysstat
