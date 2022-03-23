@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12host_manager.proto\"\x14\n\x12StopHostMonitorMsg\"q\n\x13StartHostMonitorMsg\x12\x10\n\x08kafka_ip\x18\x01 \x01(\t\x12\x12\n\nkafka_port\x18\x02 \x01(\x05\x12\x15\n\rlog_file_path\x18\x03 \x01(\t\x12\x1d\n\x15time_step_len_seconds\x18\x04 \x01(\x05\"\x19\n\x17GetHostMonitorStatusMsg\"!\n\x0eHostMonitorDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\"G\n\x11GetHostMetricsMsg\x12\x1b\n\x13\x66\x61iled_auth_last_ts\x18\x01 \x01(\x02\x12\x15\n\rlogin_last_ts\x18\x02 \x01(\x02\"\xd1\x01\n\x0eHostMetricsDTO\x12\x1b\n\x13num_logged_in_users\x18\x01 \x01(\x05\x12!\n\x19num_failed_login_attempts\x18\x02 \x01(\x05\x12\x1c\n\x14num_open_connections\x18\x03 \x01(\x05\x12\x18\n\x10num_login_events\x18\x04 \x01(\x05\x12\x15\n\rnum_processes\x18\x05 \x01(\x05\x12\x11\n\tnum_users\x18\x06 \x01(\x05\x12\n\n\x02ip\x18\x07 \x01(\t\x12\x11\n\ttimestamp\x18\x08 \x01(\x02\x32\x83\x02\n\x0bHostManager\x12\x39\n\x0fstopHostMonitor\x12\x13.StopHostMonitorMsg\x1a\x0f.HostMonitorDTO\"\x00\x12;\n\x10startHostMonitor\x12\x14.StartHostMonitorMsg\x1a\x0f.HostMonitorDTO\"\x00\x12\x43\n\x14getHostMonitorStatus\x12\x18.GetHostMonitorStatusMsg\x1a\x0f.HostMonitorDTO\"\x00\x12\x37\n\x0egetHostMetrics\x12\x12.GetHostMetricsMsg\x1a\x0f.HostMetricsDTO\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12host_manager.proto\"\x14\n\x12StopHostMonitorMsg\"Z\n\x13StartHostMonitorMsg\x12\x10\n\x08kafka_ip\x18\x01 \x01(\t\x12\x12\n\nkafka_port\x18\x02 \x01(\x05\x12\x1d\n\x15time_step_len_seconds\x18\x04 \x01(\x05\"\x19\n\x17GetHostMonitorStatusMsg\"!\n\x0eHostMonitorDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\"G\n\x11GetHostMetricsMsg\x12\x1b\n\x13\x66\x61iled_auth_last_ts\x18\x01 \x01(\x02\x12\x15\n\rlogin_last_ts\x18\x02 \x01(\x02\"\xd1\x01\n\x0eHostMetricsDTO\x12\x1b\n\x13num_logged_in_users\x18\x01 \x01(\x05\x12!\n\x19num_failed_login_attempts\x18\x02 \x01(\x05\x12\x1c\n\x14num_open_connections\x18\x03 \x01(\x05\x12\x18\n\x10num_login_events\x18\x04 \x01(\x05\x12\x15\n\rnum_processes\x18\x05 \x01(\x05\x12\x11\n\tnum_users\x18\x06 \x01(\x05\x12\n\n\x02ip\x18\x07 \x01(\t\x12\x11\n\ttimestamp\x18\x08 \x01(\x02\x32\x83\x02\n\x0bHostManager\x12\x39\n\x0fstopHostMonitor\x12\x13.StopHostMonitorMsg\x1a\x0f.HostMonitorDTO\"\x00\x12;\n\x10startHostMonitor\x12\x14.StartHostMonitorMsg\x1a\x0f.HostMonitorDTO\"\x00\x12\x43\n\x14getHostMonitorStatus\x12\x18.GetHostMonitorStatusMsg\x1a\x0f.HostMonitorDTO\"\x00\x12\x37\n\x0egetHostMetrics\x12\x12.GetHostMetricsMsg\x1a\x0f.HostMetricsDTO\"\x00\x62\x06proto3')
 
 
 
@@ -73,15 +73,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _STOPHOSTMONITORMSG._serialized_start=22
   _STOPHOSTMONITORMSG._serialized_end=42
   _STARTHOSTMONITORMSG._serialized_start=44
-  _STARTHOSTMONITORMSG._serialized_end=157
-  _GETHOSTMONITORSTATUSMSG._serialized_start=159
-  _GETHOSTMONITORSTATUSMSG._serialized_end=184
-  _HOSTMONITORDTO._serialized_start=186
-  _HOSTMONITORDTO._serialized_end=219
-  _GETHOSTMETRICSMSG._serialized_start=221
-  _GETHOSTMETRICSMSG._serialized_end=292
-  _HOSTMETRICSDTO._serialized_start=295
-  _HOSTMETRICSDTO._serialized_end=504
-  _HOSTMANAGER._serialized_start=507
-  _HOSTMANAGER._serialized_end=766
+  _STARTHOSTMONITORMSG._serialized_end=134
+  _GETHOSTMONITORSTATUSMSG._serialized_start=136
+  _GETHOSTMONITORSTATUSMSG._serialized_end=161
+  _HOSTMONITORDTO._serialized_start=163
+  _HOSTMONITORDTO._serialized_end=196
+  _GETHOSTMETRICSMSG._serialized_start=198
+  _GETHOSTMETRICSMSG._serialized_end=269
+  _HOSTMETRICSDTO._serialized_start=272
+  _HOSTMETRICSDTO._serialized_end=481
+  _HOSTMANAGER._serialized_start=484
+  _HOSTMANAGER._serialized_end=743
 # @@protoc_insertion_point(module_scope)

@@ -4,7 +4,6 @@ import grpc
 
 import csle_collector.host_manager.host_manager_pb2 as host__manager__pb2
 
-
 class HostManagerStub(object):
     """Interface exported by the server
     """

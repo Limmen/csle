@@ -48,9 +48,10 @@ class HostManager:
             cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
                   + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
-            t = constants.COMMANDS.SEARCH_HOST_MANAGER
 
             if not constants.COMMANDS.SEARCH_HOST_MANAGER in str(o):
+
+                print(f"Starting host manager on node {c.get_ips()[0]}")
 
                 # Stop old background job if running
                 cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -81,8 +82,7 @@ class HostManager:
         for c in containers_cfg.containers:
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{c.get_ips()[0]}:'
-                    f'{log_sink_config.secondary_grpc_port}') as channel:
+                    f'{c.get_ips()[0]}:{log_sink_config.secondary_grpc_port}') as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 host_monitor_dto = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub)
                 if not host_monitor_dto.running:

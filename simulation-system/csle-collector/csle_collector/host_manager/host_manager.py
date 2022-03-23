@@ -98,13 +98,12 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :return: a DTO with the status of the Host monitor thread
         """
         logging.info(f"Starting the HostMonitor thread, timestep length: {request.time_step_len_seconds}, "
-                     f"log file path: {request.log_file_path}, kafka ip: {request.kafka_ip}, "
+                     f"kafka ip: {request.kafka_ip}, "
                      f"kafka port: {request.kafka_port}")
         if self.host_monitor_thread is not None:
             self.host_monitor_thread.running = False
         self.host_monitor_thread = HostMonitorThread(kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
                                                    ip=self.ip, hostname=self.hostname,
-                                                   log_file_path=request.log_file_path,
                                                    time_step_len_seconds=request.time_step_len_seconds)
         self.host_monitor_thread.start()
         logging.info(f"Started the HostMonitor thread")

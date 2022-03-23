@@ -146,6 +146,8 @@ class LOG_SINK:
     IDS_LOG_TOPIC_NAME = "ids_log"
     HOST_METRICS_TOPIC_NAME = "host_metrics"
     DOCKER_STATS_TOPIC_NAME = "docker_stats"
+    ATTACKER_ACTIONS_TOPIC_NAME = "attacker_actions"
+    DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients"]
     IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
                                 "inappropriate-content", "policy-violation", "shellcode-detect", "successful-admin",
@@ -162,6 +164,8 @@ class LOG_SINK:
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
                                      "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx"]
+    ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index"]
+    DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index"]
 
 
 class KAFKA_COMMANDS:

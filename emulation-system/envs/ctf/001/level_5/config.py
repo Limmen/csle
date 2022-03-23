@@ -1299,6 +1299,18 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             num_replicas=1,
             num_partitions=1,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=collector_constants.LOG_SINK.ATTACKER_ACTIONS_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=collector_constants.LOG_SINK.DEFENDER_ACTIONS_ATTRIBUTES
         )
     ]
 

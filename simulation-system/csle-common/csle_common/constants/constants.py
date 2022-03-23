@@ -651,7 +651,7 @@ class COMMANDS:
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
     START_KAFKA_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /kafka_manager.py --port {} &"
     START_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ids_manager.py --port {} &"
-    START_HOST_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ids_manager.py --port {} &"
+    START_HOST_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /host_manager.py --port {} &"
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
     SEARCH_IDS_MANAGER = "/root/miniconda3/bin/python3 /ids_manager.py"
     SEARCH_HOST_MANAGER = "/root/miniconda3/bin/python3 /host_manager.py"

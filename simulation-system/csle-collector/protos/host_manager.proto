@@ -15,7 +15,6 @@ message StopHostMonitorMsg {}
 message StartHostMonitorMsg {
   string kafka_ip = 1;
   int32 kafka_port = 2;
-  string log_file_path = 3;
   int32 time_step_len_seconds = 4;
 }
 
