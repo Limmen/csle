@@ -149,6 +149,12 @@ ADD docker_files/common/index.html /web/static/index.html
 RUN pip install flask &&\
     pip install waitress
 
+# Setup base environment with csle-collector
+SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
+RUN pip install flask &&\
+    pip install waitress &&\
+    pip install csle-collector
+
 # Setup glassfish
 RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
     unzip latest-glassfish.zip
@@ -184,6 +190,22 @@ RUN chmod 777 /irc_login_test.sh
 # Pengine Exploit
 ADD docker_files/common/pengine_exploit.sh /pengine_exploit.sh
 RUN chmod 777 /pengine_exploit.sh
+
+# Client manager
+ADD docker_files/common/client_manager.py /client_manager.py
+RUN chmod 777 /client_manager.py
+
+# Kafka manager
+ADD docker_files/common/kafka_manager.py /kafka_manager.py
+RUN chmod 777 /kafka_manager.py
+
+# IDS manager
+ADD docker_files/common/ids_manager.py /ids_manager.py
+RUN chmod 777 /ids_manager.py
+
+# Host manager
+ADD docker_files/common/host_manager.py /host_manager.py
+RUN chmod 777 /host_manager.py
 
 # Setup Sysstat
 RUN mv /etc/default/sysstat /etc/default/sysstat.bak

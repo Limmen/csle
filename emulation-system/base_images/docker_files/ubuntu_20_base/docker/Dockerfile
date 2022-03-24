@@ -139,8 +139,8 @@ RUN mkdir -p /web/ &&\
 ADD docker_files/common/web_server.py /web/web_server.py
 ADD docker_files/common/index.html /web/static/index.html
 
+# Setup base environment with csle-collector
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
-
 RUN pip install flask &&\
     pip install waitress &&\
     pip install csle-collector
