@@ -33,6 +33,31 @@ class NetworkService:
         return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name,
                                                                        cr)
 
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["protocol"] = self.protocol.name
+        d["port"] = self.port
+        d["name"] = self.name
+        d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
+        return d
+
+
+    @staticmethod
+    def from_dict(d) -> "NetworkService":
+        """
+        Convert a dict representation to a DTO representation
+
+        :return: a dto representation of the object
+        """
+        dto = NetworkService(name = d["name"], port = d["port"],
+                             protocol=TransportProtocol._from_str(d["protocol"]),
+                             credentials=list(map(lambda x: x.from_dict(), d["credentials"])))
+        return dto
+
+
     def copy(self) -> "NetworkService":
         """
         :return: a copy of the DTO

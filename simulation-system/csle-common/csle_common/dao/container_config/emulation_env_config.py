@@ -9,6 +9,7 @@ from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.resources_config import ResourcesConfig
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.network.network_config import NetworkConfig
+from csle_common.dao.container_config.services_config import ServicesConfig
 
 
 class EmulationEnvConfig:
@@ -19,7 +20,7 @@ class EmulationEnvConfig:
     def __init__(self, name: str, containers_config: ContainersConfig, users_config: UsersConfig,
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: Topology, traffic_config: TrafficConfig,
-                 resources_config: ResourcesConfig, log_sink_config: LogSinkConfig):
+                 resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig):
         """
         Initializes the object
 
@@ -31,6 +32,7 @@ class EmulationEnvConfig:
         :param topology_config: the topology configuration
         :param traffic_config: the traffic configuration
         :param resources_config: the resources configuration
+        :param services_config: the services configuration
         """
         self.name = name
         self.containers_config = containers_config
@@ -41,6 +43,7 @@ class EmulationEnvConfig:
         self.traffic_config = traffic_config
         self.resources_config = resources_config
         self.log_sink_config = log_sink_config
+        self.services_config = services_config
 
     def to_dict(self) -> dict:
         """
@@ -56,6 +59,7 @@ class EmulationEnvConfig:
         d["traffic_config"] = self.traffic_config.to_dict()
         d["resources_config"] = self.resources_config.to_dict()
         d["log_sink_config"] = self.log_sink_config.to_dict()
+        d["services_config"] = self.services_config.to_dict()
         return d
 
     def __str__(self) -> str:
@@ -65,7 +69,8 @@ class EmulationEnvConfig:
         return f"name: {self.name}, containers_config: {self.containers_config}, users_config: {self.users_config}, " \
                f"flags_config: {self.flags_config}, vuln_config: {self.vuln_config}, " \
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
-               f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}"
+               f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
+               f"services_config: {self.services_config}"
 
 
     def network_config(self):
@@ -88,6 +93,14 @@ class EmulationEnvConfig:
 
             level = c.level
             vulnerabilities = self.vuln_config.vulnerabilities
+
+            services = []
+            for node_services_cfg in self.services_config.services_configs:
+                if node_services_cfg.ip in c.get_ips():
+                    services = node_services_cfg.services
+
+            os = c.os
+
 
 
 

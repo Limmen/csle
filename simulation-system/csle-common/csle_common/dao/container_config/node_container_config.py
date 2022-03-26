@@ -9,7 +9,7 @@ class NodeContainerConfig:
 
     def __init__(self, name: str, ips_and_networks: List[Tuple[str, ContainerNetwork]],
                  version: str, level: str, minigame: str, restart_policy: str,
-                 suffix: str):
+                 suffix: str, os: str):
         """
         Intializes the DTO
 
@@ -20,6 +20,7 @@ class NodeContainerConfig:
         :param minigame: the minigame that it belongs to
         :param restart_policy: the restart policy of the container
         :param suffix: the suffix of the container id
+        :param os: the operating system of the container
         """
         self.name = name
         self.ips_and_networks = ips_and_networks
@@ -28,6 +29,7 @@ class NodeContainerConfig:
         self.minigame = minigame
         self.restart_policy = restart_policy
         self.suffix = suffix
+        self.os = os
 
     def get_ips(self) -> List[str]:
         """
@@ -46,6 +48,7 @@ class NodeContainerConfig:
         d["minigame"] = self.minigame
         d["restart_policy"] = self.restart_policy
         d["suffix"] = self.suffix
+        d["os"] = self.os
         return d
 
     def __str__(self) -> str:
@@ -54,4 +57,4 @@ class NodeContainerConfig:
         """
         return f"name{self.name}, ips and networks: {self.ips_and_networks}, version: {self.version}, " \
                f"minigame:{self.minigame}, level:{self.level}, restart_policy: {self.restart_policy}, " \
-               f"suffix:{self.suffix}"
+               f"suffix:{self.suffix}, os:{self.os}"

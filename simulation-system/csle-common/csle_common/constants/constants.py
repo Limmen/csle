@@ -40,6 +40,38 @@ class CONTAINER_IMAGES:
     HACKER_IMAGES = ["hacker_kali_1"]
 
 
+class CONTAINER_OS:
+    """
+    String constants representing OS of different containers
+    """
+    SSH_1_OS = "ubuntu"
+    ROUTER_2_OS = "ubuntu"
+    SAMBA_2_OS = "debian"
+    HONEYPOT_1_OS = "ubuntu"
+    FTP_1_OS = "ubuntu"
+    HACKER_KALI_1_OS = "kali"
+    SHELLSHOCK_1_OS = "debian"
+    SQL_INJECTION_1_OS = "debian"
+    CVE_2010_0426_1_OS = "debian"
+    CVE_2015_1427_1_OS = "debian"
+    HONEYPOT_2_OS = "ubuntu"
+    SAMBA_1_OS = "debian"
+    CVE_2015_3306_1_OS = "debian"
+    CVE_2015_5602_1_OS = "debian"
+    CVE_2016_10033_1_OS = "debian"
+    CLIENT_1_OS = "ubuntu"
+    KAFKA_1_OS = "ubuntu"
+    ROUTER_1_OS = "ubuntu"
+    TELNET_1_OS = "ubuntu"
+    SSH_2_OS = "ubuntu"
+    SSH_3_OS = "ubuntu"
+    TELNET_2_OS = "ubuntu"
+    TELNET_3_OS = "ubuntu"
+    FTP_2_OS = "ubuntu"
+    PENGINE_EXPLOIT_1_OS = "ubuntu"
+    CVE_2014_0160_1_OS = "debian"
+
+
 class RENDERING:
     """
     Rendering constants
@@ -773,6 +805,15 @@ class EXPLOIT_VULNERABILITES:
     PRIVILEGE_ESC_VULNS = [CVE_2010_0426, CVE_2015_5602]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0
+    SAMBACRY_CVSS=9.8
+    SHELLSHOCK_CVSS=9.8
+    DVWA_SQL_INJECTION_CVSS = 9.5
+    CVE_2015_3306_CVSS = 9.8
+    CVE_2016_10033_CVSS = 9.8
+    CVE_2010_0426_CVSS = 6
+    CVE_2015_5602_CVSS = 6
+    CVE_2015_1427_CVSS=9.8
+    PENGINE_EXPLOIT_CVSS=9.8
 
 
 class SUB_PROC_ENV:

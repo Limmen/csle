@@ -19,6 +19,7 @@ from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.users_config import UsersConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.container_config.services_config import ServicesConfig
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
@@ -263,6 +264,7 @@ def write_emulation_config_file(emulation_env_config: EmulationEnvConfig, path: 
     :return: None
     """
     emulation_env_config.vuln_config = emulation_env_config.vuln_config.to_dict()
+    emulation_env_config.services_config = emulation_env_config.services_config.to_dict()
     json_str = json.dumps(json.loads(jsonpickle.encode(emulation_env_config, make_refs=False)), indent=4, sort_keys=True)
     with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json_str)
@@ -370,6 +372,7 @@ def read_emulation_env_config(emulation_env_config_path) -> EmulationEnvConfig:
         json_str = f.read()
     emulation_env_config: EmulationEnvConfig = jsonpickle.decode(json_str)
     emulation_env_config.vuln_config = VulnerabilitiesConfig.from_dict(emulation_env_config.vuln_config)
+    emulation_env_config.services_config = ServicesConfig.from_dict(emulation_env_config.services_config)
     return emulation_env_config
 
 

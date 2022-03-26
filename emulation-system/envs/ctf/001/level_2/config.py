@@ -20,8 +20,6 @@ from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.container_config.users_config import UsersConfig
 from csle_common.dao.container_config.node_users_config import NodeUsersConfig
-from csle_common.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
-from csle_common.dao.container_config.vulnerability_type import VulnType
 from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
@@ -31,6 +29,13 @@ from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.container_config.kafka_topic import KafkaTopic
 from csle_common.util.experiments_util import util
 from csle_common.dao.network.flag import Flag
+from csle_common.dao.container_config.node_vulnerability_config import NodeVulnerabilityConfig
+from csle_common.dao.network.credential import Credential
+from csle_common.dao.container_config.vulnerability_type import VulnType
+from csle_common.dao.network.transport_protocol import TransportProtocol
+from csle_common.dao.container_config.node_services_config import NodeServicesConfig
+from csle_common.dao.container_config.services_config import ServicesConfig
+from csle_common.dao.network.network_service import NetworkService
 
 
 def default_config(name: str, network_id: int = 2, level: int = 2, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -51,10 +56,11 @@ def default_config(name: str, network_id: int = 2, level: int = 2, version: str 
     users_cfg = default_users_config(network_id=network_id)
     vuln_cfg = default_vulns_config(network_id=network_id)
     log_sink_cfg = default_log_sink_config(network_id=network_id, level=level, version=version)
+    services_cfg = default_services_config(network_id=network_id)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
-        log_sink_config=log_sink_cfg
+        log_sink_config=log_sink_cfg, services_config=services_cfg
     )
     return emulation_env_cfg
 
@@ -68,6 +74,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
     """
     containers = [
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.CLIENT_1}",
+                            os=constants.CONTAINER_OS.CLIENT_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
                                  ContainerNetwork(
@@ -82,6 +89,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_1}",
+                            os=constants.CONTAINER_OS.FTP_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                                  ContainerNetwork(
@@ -96,6 +104,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}",
+                            os=constants.CONTAINER_OS.HACKER_KALI_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
                                  ContainerNetwork(
@@ -109,6 +118,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_1}",
+                            os=constants.CONTAINER_OS.HONEYPOT_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
                                  ContainerNetwork(
@@ -123,6 +133,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_1}",
+                            os=constants.CONTAINER_OS.ROUTER_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
                                  ContainerNetwork(
@@ -144,6 +155,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_1}",
+                            os=constants.CONTAINER_OS.SSH_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                                  ContainerNetwork(
@@ -165,6 +177,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_1}",
+                            os=constants.CONTAINER_OS.TELNET_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                                  ContainerNetwork(
@@ -186,6 +199,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.FTP_2}",
+                            os=constants.CONTAINER_OS.FTP_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
                                  ContainerNetwork(
@@ -200,6 +214,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
+                            os=constants.CONTAINER_OS.HONEYPOT_1_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",
                                  ContainerNetwork(
@@ -214,6 +229,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_2}",
+                            os=constants.CONTAINER_OS.SSH_2_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
                                  ContainerNetwork(
@@ -228,6 +244,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.SSH_3}",
+                            os=constants.CONTAINER_OS.SSH_3_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
                                  ContainerNetwork(
@@ -249,6 +266,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_2}",
+                            os=constants.CONTAINER_OS.TELNET_2_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
                                  ContainerNetwork(
@@ -263,6 +281,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_1"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.TELNET_3}",
+                            os=constants.CONTAINER_OS.TELNET_3_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
                                  ContainerNetwork(
@@ -1263,6 +1282,7 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
     """
     container = NodeContainerConfig(
         name=f"{constants.CONTAINER_IMAGES.KAFKA_1}",
+        os=constants.CONTAINER_OS.KAFKA_1_OS,
         ips_and_networks=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{collector_constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
@@ -1379,38 +1399,225 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
     :return: the vulnerability config
     """
     vulns = [
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              vuln_type=VulnType.WEAK_PW, username="l_hopital", pw="l_hopital",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              vuln_type=VulnType.WEAK_PW, username="euler", pw="euler",
-                              root=False),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              vuln_type=VulnType.WEAK_PW, username="pi", pw="pi",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              vuln_type=VulnType.WEAK_PW, username="puppet", pw="puppet",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
-                              vuln_type=VulnType.WEAK_PW, username="vagrant", pw="vagrant",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
-                              vuln_type=VulnType.WEAK_PW, username="administrator", pw="administrator",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
-                              vuln_type=VulnType.WEAK_PW, username="adm",
-                              pw="adm", root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
-                              vuln_type=VulnType.WEAK_PW, username="guest", pw="guest", root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
-                              vuln_type=VulnType.WEAK_PW, username="ec2-user", pw="ec2-user",
-                              root=True)
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="l_hopital", pw="l_hopital", root=True,
+                                    service=constants.FTP.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.FTP.DEFAULT_PORT),
+                         Credential(username="euler", pw="euler", root=False,
+                                    service=constants.FTP.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.FTP.DEFAULT_PORT),
+                         Credential(username="pi", pw="pi", root=True,
+                                    service=constants.FTP.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.FTP.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.FTP.DEFAULT_PORT,
+            protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="puppet", pw="puppet", root=False,
+                                    service=constants.SSH.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.SSH.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=False, port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+            service=constants.SSH.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="admin", pw="admin", root=True,
+                                    service=constants.TELNET.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.TELNET.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.TELNET.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+            service=constants.TELNET.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="vagrant", pw="vagrant", root=True,
+                                    service=constants.SSH.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.SSH.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+            service=constants.SSH.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="administrator", pw="administrator", root=True,
+                                    service=constants.SSH.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.SSH.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+            service=constants.SSH.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="adm", pw="adm", root=True,
+                                    service=constants.TELNET.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.TELNET.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.TELNET.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+            service=constants.TELNET.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="guest", pw="guest", root=True,
+                                    service=constants.TELNET.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.TELNET.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.TELNET.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+            service=constants.TELNET.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="ec2-user", pw="ec2-user", root=True,
+                                    service=constants.FTP.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.FTP.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.FTP.DEFAULT_PORT,
+            protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME)
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config
+
+
+def default_services_config(network_id: int) -> ServicesConfig:
+    """
+    :param network_id: the network id
+    :return: The services configuration
+    """
+    services_configs = [
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.FTP.DEFAULT_PORT,
+                               name=constants.FTP.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TELNET.DEFAULT_PORT,
+                               name=constants.TELNET.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.74",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TELNET.DEFAULT_PORT,
+                               name=constants.TELNET.SERVICE_NAME, credentials=[])
+            ]
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TELNET.DEFAULT_PORT,
+                               name=constants.TELNET.SERVICE_NAME, credentials=[])
+            ]
+        )
+    ]
+    service_cfg = ServicesConfig(
+        services_configs = services_configs
+    )
+    return service_cfg
 
 
 if __name__ == '__main__':
