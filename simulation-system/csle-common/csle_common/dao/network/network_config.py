@@ -14,19 +14,19 @@ class NetworkConfig:
     DTO Representing a network configuration
     """
 
-    def __init__(self, subnet_mask: str, nodes: List[Node], adj_matrix: np.ndarray, flags_lookup: dict,
+    def __init__(self, subnet_masks: List[str], nodes: List[Node], adj_matrix: np.ndarray, flags_lookup: dict,
                  agent_reachable: set, vulnerable_nodes = None):
         """
         Initializes the DTO
 
-        :param subnet_mask: the subnet mask
+        :param subnet_masks: the subnet mask
         :param nodes: the number of nodes
         :param adj_matrix: the adjacency matrix
         :param flags_lookup: the lookup dict for flags
         :param agent_reachable: the list of reachable nodes for the agent
         :param vulnerable_nodes: the list of vulnerable nodes
         """
-        self.subnet_mask = subnet_mask
+        self.subnet_masks = subnet_masks
         self.nodes = nodes
         self.adj_matrix = adj_matrix
         node_d, hacker, router, levels_d = self.create_lookup_dicts()
@@ -47,7 +47,7 @@ class NetworkConfig:
         """
         return "subnet_mask:{}, nodes:{}, adj_matrix:{}, hacker:{}, router: {}, flags_lookup: {}, agent_reachable: {}, " \
                "vulnerable_nodes: {}, defender_dynamics_model:{}".format(
-            self.subnet_mask, list(map(lambda x: str(x), self.nodes)), self.adj_matrix, self.hacker, self.router, self.flags_lookup,
+            self.subnet_masks, list(map(lambda x: str(x), self.nodes)), self.adj_matrix, self.hacker, self.router, self.flags_lookup,
             self.agent_reachable, self.vulnerable_nodes, self.defender_dynamics_model)
 
     def create_lookup_dicts(self) -> Tuple[dict, Node, Node, dict]:
@@ -84,7 +84,7 @@ class NetworkConfig:
         :return: a copy of the network configuration
         """
         return NetworkConfig(
-            subnet_mask=self.subnet_mask, nodes=self.nodes, adj_matrix=self.adj_matrix, flags_lookup=self.flags_lookup,
+            subnet_masks=self.subnet_masks, nodes=self.nodes, adj_matrix=self.adj_matrix, flags_lookup=self.flags_lookup,
             agent_reachable=self.agent_reachable)
 
     def shortest_paths(self) -> List[Tuple[List[str], List[int]]]:

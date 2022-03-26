@@ -1,4 +1,5 @@
-from typing import List, Tuple
+from typing import List
+from csle_common.dao.network.flag import Flag
 
 
 class NodeFlagsConfig:
@@ -6,7 +7,7 @@ class NodeFlagsConfig:
     A DTO object representing the set of flags at a specific container in an emulation environment
     """
 
-    def __init__(self, ip: str, flags: List[Tuple[str, str, str, id, bool, int]]):
+    def __init__(self, ip: str, flags: List[Flag]):
         """
         Initializes the DTO
 
@@ -23,7 +24,7 @@ class NodeFlagsConfig:
         """
         d = {}
         d["ip"] = self.ip
-        d["flags"] = self.flags
+        d["flags"] = list(map(lambda x: x.to_dict(), self.flags))
         return d
 
     def __str__(self) -> str:

@@ -4,12 +4,13 @@ class Flag:
     Class that represents a flag in the environment
     """
 
-    def __init__(self, name:str, id:int, path:str, requires_root : bool = False, score: int = 1):
+    def __init__(self, name:str, dir: str, id:int, path:str, requires_root : bool = False, score: int = 1):
         """
         Initializes the DTO
 
         :param name: the name of the flag
         :param id: the id of the flag
+        :param dir: the directory
         :param path: the path of the flag
         :param requires_root: whether the flag requires root or not
         :param score: the score of the flag
@@ -19,14 +20,29 @@ class Flag:
         self.path = path
         self.requires_root = requires_root
         self.score = score
+        self.dir = dir
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return "name:{}, id:{}, path:{}, requires_root:{}, score:{}".format(
-            self.name, self.id, self.path, self.requires_root, self.score
+        return "name:{}, id:{}, path:{}, requires_root:{}, score:{}, dir:{}".format(
+            self.name, self.id, self.path, self.requires_root, self.score, self.dir
         )
+
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["name"] = self.name
+        d["dir"] = self.dir
+        d["id"] = self.id
+        d["path"] = self.path
+        d["requires_root"] = self.requires_root
+        d["score"] = self.score
+        return d
 
     def __hash__(self) -> int:
         """

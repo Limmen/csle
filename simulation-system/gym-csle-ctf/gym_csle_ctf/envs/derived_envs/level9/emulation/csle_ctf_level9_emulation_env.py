@@ -1,6 +1,6 @@
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.network.env_mode import EnvMode
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from gym_csle_ctf.envs_model.config.level_9.csle_ctf_level_9_base import CSLECTFLevel9Base
 from gym_csle_ctf.envs_model.config.level_9.csle_ctf_level_9_v1 import CSLECTFLevel9V1

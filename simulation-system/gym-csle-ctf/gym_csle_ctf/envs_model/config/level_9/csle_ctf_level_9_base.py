@@ -5,19 +5,19 @@ from csle_common.dao.network.env_mode import EnvMode
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.state_representation.state_type import StateType
 from csle_common.dao.network.node import Node
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.render.render_config import RenderConfig
-from gym_csle_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
-from gym_csle_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
-from gym_csle_ctf.dao.action.attacker.attacker_nikto_actions import AttackerNIKTOActions
-from gym_csle_ctf.dao.action.attacker.attacker_masscan_actions import AttackerMasscanActions
-from gym_csle_ctf.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
-from gym_csle_ctf.dao.action.attacker.attacker_shell_actions import AttackerShellActions
-from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_csle_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
-from gym_csle_ctf.dao.action.defender.defender_action_id import DefenderActionId
-from gym_csle_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
-from gym_csle_ctf.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.render.render_config import RenderConfig
+from csle_common.dao.action.attacker.attacker_action_config import AttackerActionConfig
+from csle_common.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
+from csle_common.dao.action.attacker.attacker_nikto_actions import AttackerNIKTOActions
+from csle_common.dao.action.attacker.attacker_masscan_actions import AttackerMasscanActions
+from csle_common.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
+from csle_attacker.dao.action.attacker import AttackerShellActions
+from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.action.defender.defender_action_config import DefenderActionConfig
+from csle_common.dao.action.defender.defender_action_id import DefenderActionId
+from csle_common.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
+from csle_common.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
 
 
 class CSLECTFLevel9Base:
@@ -96,7 +96,7 @@ class CSLECTFLevel9Base:
             nodes = CSLECTFLevel9Base.nodes()
             adj_matrix = CSLECTFLevel9Base.adj_matrix()
             agent_reachable = CSLECTFLevel9Base.agent_reachable()
-        network_conf = NetworkConfig(subnet_mask=CSLECTFLevel9Base.subnet_mask(),
+        network_conf = NetworkConfig(subnet_masks=CSLECTFLevel9Base.subnet_mask(),
                                      nodes=nodes,
                                      adj_matrix=adj_matrix,
                                      flags_lookup = CSLECTFLevel9Base.flags_lookup(),

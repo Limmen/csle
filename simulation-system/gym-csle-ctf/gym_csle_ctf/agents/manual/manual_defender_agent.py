@@ -5,7 +5,7 @@ try:
     from csle_common.rendering.viewer import Viewer
 except:
     pass
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs import CSLECTFEnv
 import numpy as np
 import torch

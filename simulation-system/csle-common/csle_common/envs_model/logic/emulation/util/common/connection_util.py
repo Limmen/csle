@@ -3,12 +3,12 @@ import time
 import paramiko
 import telnetlib
 from ftplib import FTP
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
-from gym_csle_ctf.dao.network.env_state import EnvState
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
-from gym_csle_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from csle_common.dao.observation.attacker import AttackerMachineObservationState
 from gym_csle_ctf.dao.network.network_outcome import NetworkOutcome
 import csle_common.constants.constants as constants
 from csle_common.envs_model.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread

@@ -4,9 +4,8 @@ import csle_common.constants.constants as constants
 from csle_common.dao.agent.base_train_agent_log_dto import BaseTrainAgentLogDTO
 from csle_common.dao.agent.train_mode import TrainMode
 from csle_common.agents.config.agent_config import AgentConfig
-from csle_common.agents.config.agent_config import AgentConfig
 from gym_csle_ctf.dao.experiment.experiment_result import ExperimentResult
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.agent.rollout_data_dto import RolloutDataDTO
 from gym_csle_ctf.dao.agent.attacker_train_agent_log_dto_avg import AttackerTrainAgentLogDTOAvg
 from gym_csle_ctf.dao.agent.defender_train_agent_log_dto_avg import DefenderTrainAgentLogDTOAvg

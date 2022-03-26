@@ -11,19 +11,19 @@ from csle_common.dao.network.vulnerability import Vulnerability
 from csle_common.dao.network.credential import Credential
 from csle_common.dao.state_representation.state_type import StateType
 import csle_common.constants.constants as constants
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.render.render_config import RenderConfig
-from gym_csle_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
-from gym_csle_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
-from gym_csle_ctf.dao.action.attacker.attacker_nikto_actions import AttackerNIKTOActions
-from gym_csle_ctf.dao.action.attacker.attacker_masscan_actions import AttackerMasscanActions
-from gym_csle_ctf.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
-from gym_csle_ctf.dao.action.attacker.attacker_shell_actions import AttackerShellActions
-from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_csle_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
-from gym_csle_ctf.dao.action.defender.defender_action_id import DefenderActionId
-from gym_csle_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
-from gym_csle_ctf.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.render.render_config import RenderConfig
+from csle_common.dao.action.attacker.attacker_action_config import AttackerActionConfig
+from csle_common.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
+from csle_common.dao.action.attacker.attacker_nikto_actions import AttackerNIKTOActions
+from csle_common.dao.action.attacker.attacker_masscan_actions import AttackerMasscanActions
+from csle_common.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
+from csle_attacker.dao.action.attacker import AttackerShellActions
+from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.action.defender.defender_action_config import DefenderActionConfig
+from csle_common.dao.action.defender.defender_action_id import DefenderActionId
+from csle_common.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
+from csle_common.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
 
 
 class CSLECTFLevel1Base:
@@ -76,7 +76,8 @@ class CSLECTFLevel1Base:
                                         service=constants.SSH.SERVICE_NAME,
                                         credentials=[
                                             Credential(username="puppet", pw="puppet",
-                                                       protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME)
+                                                       protocol=TransportProtocol.TCP,
+                                                       service=constants.SSH.SERVICE_NAME)
                                         ],
                                         port=22, protocol=TransportProtocol.TCP),
                           Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
@@ -276,7 +277,7 @@ class CSLECTFLevel1Base:
             nodes = CSLECTFLevel1Base.nodes()
             adj_matrix = CSLECTFLevel1Base.adj_matrix()
             reachable = CSLECTFLevel1Base.agent_reachable()
-        network_conf = NetworkConfig(subnet_mask=CSLECTFLevel1Base.subnet_mask(),
+        network_conf = NetworkConfig(subnet_masks=CSLECTFLevel1Base.subnet_mask(),
                                      nodes=nodes,
                                      adj_matrix=adj_matrix,
                                      flags_lookup = CSLECTFLevel1Base.flags_lookup(),

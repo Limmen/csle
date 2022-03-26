@@ -1,3 +1,5 @@
+import csle_common.constants.constants as constants
+from csle_common.dao.network.node_type import NodeType
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.users_config import UsersConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
@@ -6,6 +8,7 @@ from csle_common.dao.container_config.topology import Topology
 from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.resources_config import ResourcesConfig
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
+from csle_common.dao.network.network_config import NetworkConfig
 
 
 class EmulationEnvConfig:
@@ -63,3 +66,29 @@ class EmulationEnvConfig:
                f"flags_config: {self.flags_config}, vuln_config: {self.vuln_config}, " \
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}"
+
+
+    def network_config(self):
+        nodes = []
+        for c in self.containers_config.containers:
+            ip = c.get_ips()[0]
+            ip_id = int(ip.rsplit(".", 1)[-1])
+            node_type = NodeType.SERVER
+            for router_img in constants.CONTAINER_IMAGES.ROUTER_IMAGES:
+                if router_img in c.name:
+                    node_type = NodeType.ROUTER
+            for hacker_img in constants.CONTAINER_IMAGES.HACKER_IMAGES:
+                if hacker_img in c.name:
+                    node_type = NodeType.HACKER
+
+            flags = []
+            for node_flags_cfg in self.flags_config.flags:
+                if node_flags_cfg.ip in c.get_ips():
+                    flags = node_flags_cfg.flags
+
+            level = c.level
+            vulnerabilities = self.vuln_config.vulnerabilities
+
+
+
+        net_conf = NetworkConfig(subnet_masks=self.topology_config.subnetwork_masks)

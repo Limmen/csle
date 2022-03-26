@@ -2,17 +2,17 @@ from csle_common.dao.network.network_config import NetworkConfig
 from csle_common.dao.network.env_mode import EnvMode
 from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.state_representation.state_type import StateType
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.render.render_config import RenderConfig
-from gym_csle_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
-from gym_csle_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
-from gym_csle_ctf.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
-from gym_csle_ctf.dao.action.attacker.attacker_shell_actions import AttackerShellActions
-from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.render.render_config import RenderConfig
+from csle_common.dao.action.attacker.attacker_action_config import AttackerActionConfig
+from csle_common.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
+from csle_common.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
+from csle_attacker.dao.action.attacker import AttackerShellActions
+from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_csle_ctf.envs_model.config.level_2.csle_ctf_level_2_base import CSLECTFLevel2Base
-from gym_csle_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
-from gym_csle_ctf.dao.action.defender.defender_action_id import DefenderActionId
-from gym_csle_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
+from csle_common.dao.action.defender.defender_action_config import DefenderActionConfig
+from csle_common.dao.action.defender.defender_action_id import DefenderActionId
+from csle_common.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
 
 
 class CSLECTFLevel2V2:

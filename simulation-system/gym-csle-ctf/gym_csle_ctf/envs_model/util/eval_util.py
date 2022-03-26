@@ -5,7 +5,7 @@ import math
 import csle_common.constants.constants as constants
 from csle_common.dao.network.trajectory import Trajectory
 from csle_common.envs_model.util.base_eval_util import BaseEvalUtil
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.agent.train_agent_log_dto import TrainAgentLogDTO
 
 

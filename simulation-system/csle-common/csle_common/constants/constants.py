@@ -36,6 +36,8 @@ class CONTAINER_IMAGES:
     PENGINE_EXPLOIT_1 = "pengine_exploit_1"
     CVE_2014_0160_1 = "cve_2014_0160_1"
     IDS_IMAGES = ["router_2"]
+    ROUTER_IMAGES = ["router_1", "router_2"]
+    HACKER_IMAGES = ["hacker_kali_1"]
 
 
 class RENDERING:

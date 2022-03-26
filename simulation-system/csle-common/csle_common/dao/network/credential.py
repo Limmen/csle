@@ -6,7 +6,7 @@ class Credential:
     """
 
     def __init__(self, username: str, pw: str, port: int = None, protocol: TransportProtocol = None,
-                 service: str = None):
+                 service: str = None, root: bool = False):
         """
         Initializes the DTO
 
@@ -15,20 +15,49 @@ class Credential:
         :param port: the port of the service of the credential
         :param protocol: the protocol of the service of the credential
         :param service: the service of the credential
+        :param root: whether it is a root credential or not
         """
         self.username = username
         self.pw = pw
         self.port = port
         self.protocol = protocol
         self.service = service
+        self.root = root
+
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["username"] = self.username
+        d["pw"] = self.pw
+        d["port"] = self.port
+        d["protocol"] = self.protocol.name
+        d["service"] = self.service
+        d["root"] = self.root
+        return d
+
+
+    @staticmethod
+    def from_dict(d) -> "Credential":
+        """
+        Convert a dict representation to a DTO representation
+
+        :return: a dto representation of the object
+        """
+        dto = Credential(username = d["username"], port = d["port"],
+                         protocol=TransportProtocol._from_str(d["protocol"]), pw=d["pw"], service=d["service"],
+                         root = d["root"])
+        return dto
 
 
     def __str__(self) -> str:
         """
         :return: a string representation of the credential
         """
-        return "username:{},pw:{},port:{},protocol:{},service:{}".format(self.username, self.pw, self.port,
-                                                                         self.protocol, self.service)
+        return "username:{},pw:{},port:{},protocol:{},service:{},root:{}".format(self.username, self.pw, self.port,
+                                                                         self.protocol, self.service, self.root)
 
     def __eq__(self, other) -> bool:
         """

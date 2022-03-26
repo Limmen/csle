@@ -3,8 +3,8 @@ import numpy as np
 import math
 from csle_common.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
 from gym_csle_ctf.envs_model.util.env_util import EnvUtil
-from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_state import EnvState
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs_model.logic.transition_operator import TransitionOperator
 
 

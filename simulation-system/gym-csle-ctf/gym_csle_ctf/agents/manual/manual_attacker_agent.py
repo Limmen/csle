@@ -6,7 +6,7 @@ try:
     from gym_csle_ctf.rendering.frames.main_frame import MainFrame
 except:
     pass
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs import CSLECTFEnv
 from csle_common.dao.agent.agent_type import AgentType
 import numpy as np

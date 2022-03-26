@@ -13,14 +13,16 @@ from csle_common.envs_model.config.generator.container_manager import ContainerM
 from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 from csle_common.envs_model.config.generator.ids_manager import IDSManager
 from csle_common.envs_model.config.generator.log_sink_manager import LogSinkManager
+from csle_common.envs_model.config.generator.host_manager import HostManager
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
 from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.container_config.container_network import ContainerNetwork
 from csle_common.util.experiments_util import util
-import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 import csle_common.constants.constants as constants
+import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
+from csle_attacker.attacker import Attacker
 
 
 @click.group()
@@ -31,13 +33,30 @@ def commands() -> None:
     pass
 
 
+@click.argument('emulation', default="", type=str)
+@click.command(help="emulation-name")
+def attacker(emulation : str) -> None:
+    """
+    Opens an attacker shell in the given emulation
+
+    :param emulation: the emulation name
+    :return: None
+    """
+    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    if emulation_env_config is not None:
+        Attackerpass
+    else:
+        click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
+
+
+@click.option('--host', is_flag=True, help='Check the status of the Host managers')
 @click.option('--stats', is_flag=True, help='Check the status of the stats manager')
 @click.option('--kafka', is_flag=True, help='Check the status of the Kafka manager')
 @click.option('--ids', is_flag=True, help='Check the status of the IDS manager')
 @click.option('--clients', is_flag=True, help='Check the number of active clients of the emulation')
 @click.argument('emulation', default="", type=str)
 @click.command(help="emulation-name")
-def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool) -> None:
+def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host: bool) -> None:
     """
     Extracts status information of a given emulation
 
@@ -46,6 +65,7 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool) -> N
     :param ids: if true, print information about the ids manager
     :param kafka: if true, print information about the kafka manager
     :param stats: if true, print information about the statsmanager
+    :param host: if true, print information about the hostmanagers
     :return: None
     """
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
@@ -82,14 +102,24 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool) -> N
             click.secho(f"Topics:", bold=True)
             for topic in kafka_dto.topics:
                 click.secho(f"{topic}", bold=False)
-
         if stats:
             stats_manager_dto = ContainerManager.get_docker_stats_manager_status(
                 log_sink_config=emulation_env_config.log_sink_config)
             click.secho(f"Docker stats manager status for: {emulation}", fg="magenta", bold=True)
             click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
+
+        if host:
+            click.secho(f"Host manager statuses for: {emulation}", fg="magenta", bold=True)
+            host_manager_dtos = HostManager.get_host_monitor_thread_status(emulation_env_config=emulation_env_config)
+            for ip_hmd in host_manager_dtos:
+                hmd, ip = ip_hmd
+                if not hmd.running:
+                    click.secho(f"Host manager on {ip} " + f" {click.style('[stopped]', fg='red')}", bold=False)
+                else:
+                    click.secho(f"Host manager on {ip}: " + f" {click.style('[running]', fg='green')}", bold=False)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
+
 
 @click.option('--nc', default=None, type=int)
 @click.option('--t', default=None, type=int)

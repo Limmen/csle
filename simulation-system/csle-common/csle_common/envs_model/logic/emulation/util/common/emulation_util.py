@@ -1,12 +1,10 @@
 from typing import Tuple, List
 import time
-import datetime
 import paramiko
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 import csle_common.constants.constants as constants
-from csle_collector.ids_manager.ids_alert import IdsAlert
 
 
 class EmulationUtil:
@@ -93,7 +91,8 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_alerts_response(sum_priorities, num_alerts, action: AttackerAction, env_config: CSLEEnvConfig, ip: str = None,
+    def write_alerts_response(sum_priorities, num_alerts, action: AttackerAction,
+                              env_config: CSLEEnvConfig, ip: str = None,
                               user: str = None, service: str = None, conn=None, dir: str = None,
                               machine_ip: str = None) -> None:
         """
@@ -138,7 +137,8 @@ class EmulationUtil:
             remote_file.close()
 
     @staticmethod
-    def write_file_system_scan_cache(action: AttackerAction, env_config: CSLEEnvConfig, service: str, user: str, files: List[str],
+    def write_file_system_scan_cache(action: AttackerAction,
+                                     env_config: CSLEEnvConfig, service: str, user: str, files: List[str],
                                      ip: str, root: bool = False) \
             -> None:
         """
@@ -201,7 +201,8 @@ class EmulationUtil:
         :param env_config: environment config
         :return: None
         """
-        EmulationUtil.execute_cmd_interactive_channel(cmd=a.cmd[0], channel=env_config.emulation_config.agent_channel)
+        EmulationUtil.execute_cmd_interactive_channel(cmd=a.cmd[0],
+                                                      channel=env_config.emulation_config.agent_channel)
         env_config.emulation_config.agent_channel.send(a.cmd[0] + "\n")
 
     @staticmethod
@@ -224,7 +225,8 @@ class EmulationUtil:
         :param env_config: the environment config
         :return: the result
         """
-        return EmulationUtil.read_result_interactive_channel(env_config=env_config, channel=env_config.emulation_config.agent_channel)
+        return EmulationUtil.read_result_interactive_channel(env_config=env_config,
+                                                             channel=env_config.emulation_config.agent_channel)
 
     @staticmethod
     def read_result_interactive_channel(env_config: CSLEEnvConfig, channel) -> str:
@@ -243,7 +245,8 @@ class EmulationUtil:
         return output_str
 
     @staticmethod
-    def check_filesystem_action_cache(a: AttackerAction, env_config: CSLEEnvConfig, ip: str, service: str, user: str,
+    def check_filesystem_action_cache(a: AttackerAction, env_config: CSLEEnvConfig,
+                                      ip: str, service: str, user: str,
                                       root: bool = False):
         """
         Checks if a filesystem action is cached or not
@@ -253,7 +256,8 @@ class EmulationUtil:
         :param root: whether root or not
         :return: None or the name of the file where the result is cached
         """
-        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + service + "_" + user + "_" + str(int(root)) + ".txt"
+        query = str(a.id.value) + "_" + str(a.index) + "_" + ip + "_" + service + "_" \
+                + user + "_" + str(int(root)) + ".txt"
 
         # Search through cache
         if query in env_config.attacker_filesystem_file_cache:
@@ -275,7 +279,8 @@ class EmulationUtil:
         return None
 
     @staticmethod
-    def check_user_action_cache(a: AttackerAction, env_config: CSLEEnvConfig, ip: str, user: str, jumphost: str = None):
+    def check_user_action_cache(a: AttackerAction, env_config: CSLEEnvConfig,
+                                ip: str, user: str, jumphost: str = None):
         """
         Checks if a user-specific action is cached or not
 
@@ -461,7 +466,8 @@ class EmulationUtil:
                     remote_file.write(user + "\n")
             except Exception as e:
                 print(
-                    "Error writing list of users cache: {}, file:{}, ip:{}".format(str(e), cwd + cache_file_name, c.ip))
+                    "Error writing list of users cache: {}, file:{}, ip:{}".format(str(e),
+                                                                                   cwd + cache_file_name, c.ip))
             finally:
                 if remote_file is not None:
                     remote_file.close()

@@ -3,7 +3,7 @@ from csle_common.dao.network.env_mode import EnvMode
 from csle_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
 from csle_common.envs_model.logic.exploration.custom_exploration_policy import CustomExplorationPolicy
 from csle_common.agents.bots.custom_attacker_bot_agent import CustomAttackerBotAgent
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from gym_csle_ctf.envs_model.config.level_9.csle_ctf_level_9_base import CSLECTFLevel9Base
 from gym_csle_ctf.envs_model.config.level_9.csle_ctf_level_9_v1 import CSLECTFLevel9V1

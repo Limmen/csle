@@ -178,19 +178,31 @@ git clone https://github.com/Limmen/clse
            sudo apt install python3.8
           ```
 
-   - Install `csle_collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
+   - Install `csle-collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
      ```bash
       cd simulation-system/csle-collector/
       pip install -e .
      ```
 
-    - Install `csle_common` (see ([README](simulation-system/csle-common/README.md)) for more information)
+    - Install `csle-common` (see ([README](simulation-system/csle-common/README.md)) for more information)
       ```bash
        cd simulation-system/csle-common/
        pip install -e .
       ```
 
-    - Install `gym_csle_ctf` (see ([README](simulation-system/gym-csle-ctf/README.MD)) for more information)
+    - Install `csle-attacker` (see ([README](simulation-system/csle-attacker/README.md)) for more information)
+      ```bash
+      cd simulation-system/csle-attacker/
+      pip install -e .
+      ```
+
+   - Install `csle-defender` (see ([README](simulation-system/csle-defender/README.md)) for more information)
+     ```bash
+     cd simulation-system/csle-defender/
+     pip install -e .
+     ```
+
+    - Install `gym-csle-ctf` (see ([README](simulation-system/gym-csle-ctf/README.MD)) for more information)
       ```bash
       cd simulation-system/gym-csle-ctf/
       pip install -e .

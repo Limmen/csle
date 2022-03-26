@@ -5,8 +5,8 @@ Utility functions for plotting action cost distributions
 import numpy as np
 import zipfile
 import matplotlib.pyplot as plt
-from gym_csle_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
-from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.action.attacker.attacker_action_type import AttackerActionType
+from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
 import glob
 import pandas as pd
 

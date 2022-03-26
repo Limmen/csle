@@ -1,11 +1,11 @@
 from typing import Tuple, List
 import math
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.network.env_state import EnvState
-from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_state import EnvState
+from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
-from gym_csle_ctf.dao.action.attacker.attacker_action_type import AttackerActionType
-from gym_csle_ctf.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
+from csle_common.dao.action.attacker.attacker_action_type import AttackerActionType
+from csle_common.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
 
 
 class EnvUtil:

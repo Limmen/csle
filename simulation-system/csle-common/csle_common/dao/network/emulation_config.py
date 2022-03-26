@@ -3,7 +3,7 @@ from enum import Enum
 import paramiko
 import time
 import csle_common.constants.constants as constants
-from csle_common.dao.action.attacker.base_attacker_action import BaseAttackerAction
+from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.action_results.action_costs import ActionCosts
 from csle_common.dao.action_results.action_alerts import ActionAlerts
 
@@ -378,7 +378,7 @@ class EmulationConfig:
                                                                         len(action_costs.pivot_scan_costs)))
         return action_costs
 
-    def load_action_alerts(self, actions: List[BaseAttackerAction], dir: str, action_ids: List[Enum],
+    def load_action_alerts(self, actions: List[AttackerAction], dir: str, action_ids: List[Enum],
                            shell_ids: List[Enum],
                            action_lookup_d_val: dict) -> ActionCosts:
         """

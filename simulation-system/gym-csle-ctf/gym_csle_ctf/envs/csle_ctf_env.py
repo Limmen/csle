@@ -15,19 +15,19 @@ from csle_common.envs_model.logic.exploration.random_exploration_policy import R
 from csle_common.envs_model.logic.emulation.warmup.emulation_warmup import EmulationWarmup
 from csle_common.envs_model.logic.exploration.initial_state_randomizer import InitialStateRandomizer
 from csle_common.dao.envs.base_csle_env import BaseCSLEEnv
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.dao.agent.attacker_agent_state import AttackerAgentState
-from gym_csle_ctf.dao.network.env_state import EnvState
+from csle_common.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.emulation.system_id.simulation_generator import SimulationGenerator
 from gym_csle_ctf.envs_model.logic.transition_operator import TransitionOperator
-from gym_csle_ctf.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_csle_ctf.envs_model.logic.common.domain_randomization.csle_ctf_domain_randomizer import CSLECTFCSLEDomainRandomizer
 from gym_csle_ctf.envs_model.logic.simulation.find_pi_star_attacker import FindPiStarAttacker
 from gym_csle_ctf.envs_model.logic.simulation.find_pi_star_defender import FindPiStarDefender
 from gym_csle_ctf.envs_model.logic.common.stopping_baselines_util import StoppingBaselinesUtil
 from gym_csle_ctf.envs_model.util.env_util import EnvUtil
-from gym_csle_ctf.dao.action.defender.defender_action_id import DefenderActionId
+from csle_common.dao.action.defender.defender_action_id import DefenderActionId
 
 
 class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):

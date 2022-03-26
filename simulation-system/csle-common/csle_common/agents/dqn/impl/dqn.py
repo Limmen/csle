@@ -4,8 +4,8 @@ import numpy as np
 import torch as th
 from torch.nn import functional as F
 
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.network.env_state import EnvState
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_state import EnvState
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from csle_common.agents.openai_baselines.common.off_policy_algorithm import OffPolicyAlgorithm
 from csle_common.agents.openai_baselines.common.type_aliases import GymEnv, MaybeCallback

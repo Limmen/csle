@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 import grpc
 import time
 from csle_common.dao.container_config.containers_config import ContainersConfig
@@ -119,7 +119,7 @@ class HostManager:
 
     @staticmethod
     def get_host_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
-            List[csle_collector.host_manager.host_manager_pb2.HostMonitorDTO]:
+            List[Tuple[csle_collector.host_manager.host_manager_pb2.HostMonitorDTO, str]]:
         """
         A method that sends a request to the HostManager on every container to get the status of the Host monitor thread
 
@@ -142,7 +142,7 @@ class HostManager:
                     f'{emulation_env_config.log_sink_config.secondary_grpc_port}') as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 status = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub=stub)
-                statuses.append(status)
+                statuses.append((status, c.get_ips()[0]))
         return statuses
 
 

@@ -4,7 +4,7 @@ from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
 from csle_common.envs_model.logic.exploration.random_exploration_policy import RandomExplorationPolicy
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs.csle_ctf_env import CSLECTFEnv
 from gym_csle_ctf.envs_model.config.random.csle_ctf_random_base import CSLECTFRandomBase
 from gym_csle_ctf.envs_model.config.random.csle_ctf_random_v1 import CSLECTFRandomV1

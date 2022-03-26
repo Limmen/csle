@@ -4,7 +4,7 @@ import sys
 import os
 import csv
 from torch.utils.tensorboard import SummaryWriter
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_csle_ctf.envs_model.logic.transition_operator import TransitionOperator
 import csle_common.constants.constants as constants
@@ -171,7 +171,7 @@ class SimulationGenerator:
                 num_machines, num_vulnerabilities, num_credentials, num_flags))
 
             nodes = list(map(lambda x: x.to_node(), aggregated_observation.machines))
-            new_net_conf = NetworkConfig(subnet_mask=env_config.network_conf.subnet_mask, nodes=nodes,
+            new_net_conf = NetworkConfig(subnet_masks=env_config.network_conf.subnet_masks, nodes=nodes,
                                          adj_matrix=env_config.network_conf.adj_matrix,
                                          flags_lookup=env_config.network_conf.flags_lookup,
                                          agent_reachable=env_config.network_conf.agent_reachable)

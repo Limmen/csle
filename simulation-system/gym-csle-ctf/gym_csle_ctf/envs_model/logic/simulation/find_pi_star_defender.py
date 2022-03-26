@@ -1,5 +1,5 @@
 import math
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 
 
 class FindPiStarDefender:

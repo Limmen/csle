@@ -11,7 +11,7 @@ from gym_csle_ctf.dao.domain_randomization.csle_ctf_randomization_space import C
 from csle_common.envs_model.config.domain_randomization.base_randomization_space import BaseRandomizationSpace
 from csle_common.dao.network.flag import Flag
 from csle_common.envs_model.logic.domain_randomization.csle_domain_randomizer import CSLEDomainRandomizer
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs_model.logic.common.domain_randomization.csle_ctf_node_randomizer import CSLECTFNodeRandomizer
 from gym_csle_ctf.dao.domain_randomization.csle_ctf_randomization_space_config import CSLECTFRandomizationSpaceConfig
 from gym_csle_ctf.dao.domain_randomization.csle_ctf_node_randomizer_config import CSLECTFNodeRandomizerConfig
@@ -164,8 +164,8 @@ class CSLECTFCSLEDomainRandomizer(CSLEDomainRandomizer):
                                                                                  requires_root=fl.flags[0][4],
                                                                                  score=fl.flags[0][5])
         subnet_mask = subnet_prefix + "0/24"
-        randomized_network_conf = NetworkConfig(subnet_mask=subnet_mask, nodes=randomized_nodes, adj_matrix=adj_matrix,
-                                     flags_lookup=flags_lookup, agent_reachable=agent_reachable,
+        randomized_network_conf = NetworkConfig(subnet_masks=subnet_mask, nodes=randomized_nodes, adj_matrix=adj_matrix,
+                                                flags_lookup=flags_lookup, agent_reachable=agent_reachable,
                                                 vulnerable_nodes=vulnerable_nodes)
         env_config = env_config.copy()
         env_config.network_conf=randomized_network_conf

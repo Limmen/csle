@@ -2,8 +2,8 @@ from typing import Union
 import numpy as np
 from csle_common.dao.agent.agent_log import AgentLog
 from csle_common.dao.network.attacker.base_attacker_agent_state import BaseAttackerAgentState
-from gym_csle_ctf.dao.observation.attacker.attacker_observation_state import AttackerObservationState
-from gym_csle_ctf.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from csle_common.dao.observation.attacker import AttackerObservationState
+from csle_common.dao.observation.attacker import AttackerMachineObservationState
 
 
 class AttackerAgentState(BaseAttackerAgentState):

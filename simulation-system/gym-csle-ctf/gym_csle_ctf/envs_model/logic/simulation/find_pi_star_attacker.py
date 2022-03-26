@@ -1,8 +1,8 @@
 from typing import Tuple
 from csle_common.dao.network.env_mode import EnvMode
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.env_config import CSLEEnvConfig
 from gym_csle_ctf.envs_model.logic.transition_operator import TransitionOperator
-from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
 
 
 class FindPiStarAttacker:

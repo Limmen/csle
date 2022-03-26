@@ -20,7 +20,8 @@ from csle_common.dao.container_config.traffic_config import TrafficConfig
 from csle_common.dao.container_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.container_config.users_config import UsersConfig
 from csle_common.dao.container_config.node_users_config import NodeUsersConfig
-from csle_common.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
+from csle_common.dao.container_config.node_vulnerability_config import NodeVulnerabilityConfig
+from csle_common.dao.network.credential import Credential
 from csle_common.dao.container_config.vulnerability_type import VulnType
 from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
@@ -30,6 +31,8 @@ from csle_common.dao.container_config.client_population_process_type import Clie
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.container_config.kafka_topic import KafkaTopic
 from csle_common.util.experiments_util import util
+from csle_common.dao.network.flag import Flag
+from csle_common.dao.network.transport_protocol import TransportProtocol
 
 
 def default_config(name: str, network_id: int = 1, level: int = 1, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -242,7 +245,7 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             name=collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            attributes= collector_constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
+            attributes=collector_constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
@@ -272,7 +275,7 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
 
     config = LogSinkConfig(container=container, resources=resources, topics=topics,
                            version=version, kafka_port=9092, default_grpc_port=50051,
-                           secondary_grpc_port = 50049, time_step_len_seconds=15)
+                           secondary_grpc_port=50049, time_step_len_seconds=15)
     return config
 
 
@@ -283,23 +286,32 @@ def default_flags_config(network_id: int) -> FlagsConfig:
     """
     flags = [
         NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                        flags=[(
-                            f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}3"
-                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}3", f"/{constants.COMMANDS.TMP_DIR}/",
-                            3, True, 1)]),
+                        flags=[
+                            Flag(
+                                name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}3",
+                                path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}3"
+                                     f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                                dir=f"/{constants.COMMANDS.TMP_DIR}/",
+                                id=3, requires_root=True, score=1
+                            )]),
         NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                        flags=[(
-                            f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}2"
-                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}2", f"/{constants.COMMANDS.TMP_DIR}/",
-                            2, True, 1)]),
+                        flags=[
+                            Flag(
+                                name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}2",
+                                path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}2"
+                                     f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                                dir=f"/{constants.COMMANDS.TMP_DIR}/",
+                                id=2, requires_root=True, score=1
+                            )]),
         NodeFlagsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                        flags=[(
-                            f"/{constants.COMMANDS.ROOT_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}1"
-                            f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
-                            f"{constants.COMMON.FLAG_FILENAME_PREFIX}1", f"/{constants.COMMANDS.ROOT_DIR}/",
-                            1, True, 1)])
+                        flags=[
+                            Flag(
+                                name=f"{constants.COMMON.FLAG_FILENAME_PREFIX}1",
+                                path=f"/{constants.COMMANDS.TMP_DIR}/{constants.COMMON.FLAG_FILENAME_PREFIX}1"
+                                     f"{constants.FILE_PATTERNS.TXT_FILE_SUFFIX}",
+                                dir=f"/{constants.COMMANDS.TMP_DIR}/",
+                                id=1, requires_root=True, score=1
+                            )])
     ]
     flags_config = FlagsConfig(flags=flags)
     return flags_config
@@ -810,21 +822,50 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
     :return: the vulnerability config
     """
     vulns = [
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              vuln_type=VulnType.WEAK_PW, username="l_hopital", pw="l_hopital",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              vuln_type=VulnType.WEAK_PW, username="euler", pw="euler",
-                              root=False),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                              vuln_type=VulnType.WEAK_PW, username="pi", pw="pi",
-                              root=True),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                              vuln_type=VulnType.WEAK_PW, username="puppet", pw="puppet",
-                              root=False),
-        PwVulnerabilityConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                              vuln_type=VulnType.WEAK_PW, username="admin", pw="admin",
-                              root=True)
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="l_hopital", pw="l_hopital", root=True,
+                                    service=constants.FTP.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.FTP.DEFAULT_PORT),
+                         Credential(username="euler", pw="euler", root=False,
+                                    service=constants.FTP.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.FTP.DEFAULT_PORT),
+                         Credential(username="pi", pw="pi", root=True,
+                                    service=constants.FTP.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.FTP.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.FTP.DEFAULT_PORT,
+            protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="puppet", pw="puppet", root=False,
+                                    service=constants.SSH.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.SSH.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.SSH.DEFAULT_PORT, protocol=TransportProtocol.TCP, 
+            service=constants.SSH.SERVICE_NAME),
+        NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS,
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username="admin", pw="admin", root=True,
+                                    service=constants.TELNET.SERVICE_NAME,
+                                    protocol=TransportProtocol.TCP,
+                                    port=constants.TELNET.DEFAULT_PORT)],
+            cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
+            cve=None,
+            root=True, port=constants.TELNET.DEFAULT_PORT, protocol=TransportProtocol.TCP,
+            service=constants.TELNET.SERVICE_NAME)
     ]
     vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
     return vulns_config

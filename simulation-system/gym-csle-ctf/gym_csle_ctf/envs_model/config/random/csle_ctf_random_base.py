@@ -7,19 +7,19 @@ from csle_common.dao.network.node import Node
 from csle_common.dao.network.flag import Flag
 from csle_common.dao.container_config.containers_config import ContainersConfig
 from csle_common.dao.container_config.flags_config import FlagsConfig
-from gym_csle_ctf.dao.network.env_config import CSLEEnvConfig
-from gym_csle_ctf.dao.render.render_config import RenderConfig
-from gym_csle_ctf.dao.action.attacker.attacker_action_config import AttackerActionConfig
-from gym_csle_ctf.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
-from gym_csle_ctf.dao.action.attacker.attacker_nikto_actions import AttackerNIKTOActions
-from gym_csle_ctf.dao.action.attacker.attacker_masscan_actions import AttackerMasscanActions
-from gym_csle_ctf.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
-from gym_csle_ctf.dao.action.attacker.attacker_shell_actions import AttackerShellActions
-from gym_csle_ctf.dao.action.attacker.attacker_action_id import AttackerActionId
-from gym_csle_ctf.dao.action.defender.defender_action_config import DefenderActionConfig
-from gym_csle_ctf.dao.action.defender.defender_action_id import DefenderActionId
-from gym_csle_ctf.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
-from gym_csle_ctf.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
+from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.render.render_config import RenderConfig
+from csle_common.dao.action.attacker.attacker_action_config import AttackerActionConfig
+from csle_common.dao.action.attacker.attacker_nmap_actions import AttackerNMAPActions
+from csle_common.dao.action.attacker.attacker_nikto_actions import AttackerNIKTOActions
+from csle_common.dao.action.attacker.attacker_masscan_actions import AttackerMasscanActions
+from csle_common.dao.action.attacker.attacker_network_service_actions import AttackerNetworkServiceActions
+from csle_attacker.dao.action.attacker import AttackerShellActions
+from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.action.defender.defender_action_config import DefenderActionConfig
+from csle_common.dao.action.defender.defender_action_id import DefenderActionId
+from csle_common.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
+from csle_common.dao.action.attacker.attacker_stopping_actions import AttackerStoppingActions
 
 
 class CSLECTFRandomBase:
@@ -205,7 +205,7 @@ class CSLECTFRandomBase:
                 flags_lookup[(fl.ip, fl.flags[0][0])] = Flag(name=fl.flags[0][1], path=fl.flags[0][2], id=fl.flags[0][3],
                                                              requires_root=fl.flags[0][4], score=fl.flags[0][5])
 
-        network_conf = NetworkConfig(subnet_mask=containers_config.internal_subnet_mask, nodes = [], adj_matrix = [],
+        network_conf = NetworkConfig(subnet_masks=containers_config.internal_subnet_mask, nodes = [], adj_matrix = [],
                                      flags_lookup=flags_lookup)
         env_config = CSLEEnvConfig(network_conf=network_conf, attacker_action_conf=attacker_action_conf,
                                    defender_action_conf=defender_action_conf,
