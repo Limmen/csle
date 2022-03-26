@@ -656,6 +656,19 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24"
         ],
+        agent_reachable_nodes=[
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4"
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6"
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178"
+        ],
         networks=[
             ContainerNetwork(
                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",

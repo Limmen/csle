@@ -66,7 +66,7 @@ class CSLECTFNodeRandomizer(CSLENodeRandomizer):
         level = 3
         visible = False
         firewall = False
-        node = Node(ip=config.ip, ip_id=int(config.ip.rsplit(".", 1)[-1]), id=config.id,
+        node = Node(ips=config.ip, ip_ids=int(config.ip.rsplit(".", 1)[-1]), id=config.id,
                     type=type, os=os,
                     flags=flags, level=level, vulnerabilities=vulns, services=services,
                     credentials=credentials, root_usernames=root_usernames, visible=visible,

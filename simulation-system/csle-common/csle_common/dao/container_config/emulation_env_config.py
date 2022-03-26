@@ -10,6 +10,8 @@ from csle_common.dao.container_config.resources_config import ResourcesConfig
 from csle_common.dao.container_config.log_sink_config import LogSinkConfig
 from csle_common.dao.network.network_config import NetworkConfig
 from csle_common.dao.container_config.services_config import ServicesConfig
+from csle_common.dao.network.credential import Credential
+from csle_common.dao.network.node import Node
 
 
 class EmulationEnvConfig:
@@ -75,9 +77,9 @@ class EmulationEnvConfig:
 
     def network_config(self):
         nodes = []
+        vulnerable_nodes = []
         for c in self.containers_config.containers:
-            ip = c.get_ips()[0]
-            ip_id = int(ip.rsplit(".", 1)[-1])
+            ip_ids = list(map(lambda ip: int(ip.rsplit(".", 1)[-1]), c.get_ips()))
             node_type = NodeType.SERVER
             for router_img in constants.CONTAINER_IMAGES.ROUTER_IMAGES:
                 if router_img in c.name:
@@ -101,7 +103,43 @@ class EmulationEnvConfig:
 
             os = c.os
 
+            credentials = []
+            for vuln in vulnerabilities:
+                credentials = credentials + vuln.credentials
+            for serv in services:
+                credentials = credentials + serv.credentials
+
+            for user_cfg in self.users_config.users:
+                if user_cfg.ip in c.get_ips():
+                    for user in user_cfg.users:
+                        credentials.append(Credential(username=user[0], pw=user[1], root=user[2]))
+
+            root_usernames = []
+            for cred in credentials:
+                if cred.root:
+                    root_usernames.append(cred.username)
+            visible = True
+            reachable_nodes = []
+            network_names = list(map(lambda x: x[1].name, c.ips_and_networks))
+            for c2 in self.containers_config.containers:
+                reachable = False
+                if c2.name != c.name:
+                    for ip_net in c2.ips_and_networks:
+                        if ip_net[1].name in network_names:
+                            reachable = True
+                if reachable:
+                    reachable_nodes = reachable_nodes + c2.get_ips()
+            node = Node(
+                ips = c.get_ips(),
+                ip_ids = ip_ids, id = ip_ids[0], type=node_type, flags=flags, level=int(level),
+                vulnerabilities=vulnerabilities, services=services, os=os, credentials=credentials,
+                root_usernames=root_usernames, visible=visible, reachable_nodes=reachable_nodes, firewall=False
+            )
+            nodes.append(node)
 
 
 
-        net_conf = NetworkConfig(subnet_masks=self.topology_config.subnetwork_masks)
+
+        net_conf = NetworkConfig(subnet_masks=self.topology_config.subnetwork_masks,
+                                 vulnerable_nodes=self.containers_config.vulnerable_nodes, nodes=nodes,
+                                 agent_reachable=self.containers_config.agent_reachable_nodes)

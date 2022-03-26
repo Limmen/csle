@@ -193,6 +193,13 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3"
         ],
+        agent_reachable_nodes=[
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21"
+        ],
         networks=[
             ContainerNetwork(
                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_1",

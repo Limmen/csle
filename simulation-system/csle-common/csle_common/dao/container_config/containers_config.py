@@ -11,7 +11,7 @@ class ContainersConfig:
 
     def __init__(self, containers : List[NodeContainerConfig], agent_ip : str, router_ip : str,
                  networks: List[ContainerNetwork],
-                 ids_enabled :bool, vulnerable_nodes = None):
+                 ids_enabled :bool, vulnerable_nodes = None, agent_reachable_nodes = None):
         """
         Initializes the DTO
 
@@ -21,6 +21,7 @@ class ContainersConfig:
         :param ids_enabled: whether the IDS is enabled or nt
         :param vulnerable_nodes: the list of vulnerable nodes
         :param networks: list of subnetworks
+        :param agent_reachable_nodes: nodes directly reachable by the attacker
         """
         self.containers = containers
         self.agent_ip = agent_ip
@@ -28,6 +29,7 @@ class ContainersConfig:
         self.ids_enabled = ids_enabled
         self.vulnerable_nodes = vulnerable_nodes
         self.networks = networks
+        self.agent_reachable_nodes = agent_reachable_nodes
 
     def to_dict(self) -> dict:
         """
@@ -40,6 +42,7 @@ class ContainersConfig:
         d["ids_enabled"] = self.ids_enabled
         d["vulnerable_nodes"] = self.vulnerable_nodes
         d["containers"] = list(map(lambda x: x.to_dict(), self.containers))
+        d["agent_reachable_nodes"] = self.agent_reachable_nodes
         return d
 
     def __str__(self) -> str:
@@ -48,4 +51,5 @@ class ContainersConfig:
         """
         return f"containers:{self.containers},networks:{self.networks},agent_ip:{self.agent_ip}, " \
                f"router_ip:{self.router_ip}" \
-               f"ids_enabled:{self.ids_enabled},vulnerable_nodes:{self.vulnerable_nodes}"
+               f"ids_enabled:{self.ids_enabled},vulnerable_nodes:{self.vulnerable_nodes}, " \
+               f"agent_reachable_nodes: {self.agent_reachable_nodes}"

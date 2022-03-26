@@ -30,14 +30,14 @@ class ShellSimulatorUtil:
         discovered_nodes = list(map(lambda x: x.internal_ip, s.attacker_obs_state.machines))
         reachable_nodes = list(filter(lambda x: x in discovered_nodes, reachable_nodes))
         for node in env_config.network_conf.nodes:
-            if node.ip not in reachable_nodes:
+            if node.ips not in reachable_nodes:
                 continue
-            new_m_obs = AttackerMachineObservationState(ip=node.ip)
+            new_m_obs = AttackerMachineObservationState(ip=node.ips)
             new_m_obs.reachable = node.reachable_nodes
             credentials = None
             access = False
             for o_m in s.attacker_obs_state.machines:
-                if o_m.ip == node.ip:
+                if o_m.ip == node.ips:
                     access = o_m.shell_access
                     credentials = o_m.shell_access_credentials
             if access:

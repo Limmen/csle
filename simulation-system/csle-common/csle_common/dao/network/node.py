@@ -5,7 +5,7 @@ Class representing a node in the network, used for simulations
 from typing import List
 from csle_common.dao.network.node_type import NodeType
 from csle_common.dao.network.flag import Flag
-from csle_common.dao.network.vulnerability import Vulnerability
+from csle_common.dao.container_config.node_vulnerability_config import NodeVulnerabilityConfig
 from csle_common.dao.network.network_service import NetworkService
 from csle_common.dao.network.credential import Credential
 
@@ -15,15 +15,15 @@ class Node:
     DTO class that represents a node in the network
     """
 
-    def __init__(self, ip: str, ip_id: int, id : int, type: NodeType, flags: List[Flag], level : int,
-                 vulnerabilities : List[Vulnerability], services : List[NetworkService], os : str,
+    def __init__(self, ips: List[str], ip_ids: List[int], id : int, type: NodeType, flags: List[Flag], level : int,
+                 vulnerabilities : List[NodeVulnerabilityConfig], services : List[NetworkService], os : str,
                  credentials : List[Credential], root_usernames : List[str], visible : bool = True,
                  reachable_nodes: List = None, firewall: bool =  False):
         """
         Initializes the DTO
 
-        :param ip: the ip of the node
-        :param ip_id: the id of the node's ip
+        :param ips: the ips of the node
+        :param ip_ids: the ids of the node's ips
         :param id: the id of the node
         :param type: the type of the node
         :param flags: the set of flags in the node
@@ -37,8 +37,8 @@ class Node:
         :param reachable_nodes: the set of nodes reachable from this node
         :param firewall: whether this node has a firewall or not
         """
-        self.ip = ip
-        self.ip_id = ip_id
+        self.ips = ips
+        self.ip_id = ip_ids
         self.id = id
         self.type = type
         self.flags = flags
@@ -108,9 +108,9 @@ class Node:
         """
         :return: a string representation of the node
         """
-        return "ip:{}, ip_id:{}, id:{}, type:{}, flags:{}, level:{}, vulnerabilities:{}, services:{}, os:{}," \
+        return "ips:{}, ip_ids:{}, id:{}, type:{}, flags:{}, level:{}, vulnerabilities:{}, services:{}, os:{}," \
                " credentials:{}, root_usernames:{}, visible:{}, reachable_nodes:{}, firewall:{}".format(
-            self.ip, self.ip_id, self.id, self.type, list(map(lambda x: str(x), self.flags)), self.level,
+            self.ips, self.ip_ids, self.id, self.type, list(map(lambda x: str(x), self.flags)), self.level,
             list(map(lambda x: str(x), self.vulnerabilities)), list(map(lambda x: str(x), self.services)),
             self.os, list(map(lambda x: str(x), self.credentials)), self.root_usernames, self.visible,
             self.reachable_nodes, self.firewall

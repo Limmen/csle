@@ -50,10 +50,10 @@ class SimulatorUtil:
         reachable_nodes = set()
         logged_in_machines = list(filter(lambda x: x.logged_in and x.tools_installed, state.attacker_obs_state.machines))
         for node in env_config.network_conf.nodes:
-            if node.ip in env_config.network_conf.agent_reachable:
-                reachable_nodes.add(node.ip)
+            if node.ips in env_config.network_conf.agent_reachable:
+                reachable_nodes.add(node.ips)
             for machine in logged_in_machines:
-                if node.ip in machine.reachable:
-                    reachable_nodes.add(node.ip)
+                if node.ips in machine.reachable:
+                    reachable_nodes.add(node.ips)
         return reachable_nodes
 

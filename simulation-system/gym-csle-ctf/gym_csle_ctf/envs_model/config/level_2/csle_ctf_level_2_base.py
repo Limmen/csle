@@ -38,7 +38,7 @@ class CSLECTFLevel2Base:
 
         :return: list of node configs
         """
-        nodes = [Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", ip_id=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
+        nodes = [Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", ip_ids=10, id=1, type=NodeType.ROUTER, flags=[], level=2, services=[],
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                   f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10"]),
                       os="linux", vulnerabilities=[], credentials=[
@@ -46,7 +46,7 @@ class CSLECTFLevel2Base:
                 Credential(username="jessica", pw="water")
             ], firewall=True,
                       root_usernames=["admin"]),
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", ip_id=2, id=2, type=NodeType.SERVER,
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", ip_ids=2, id=2, type=NodeType.SERVER,
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.54"]),
                       flags=[Flag(name="flag2", path=f"/{constants.COMMANDS.TMP_DIR}", id=2, requires_root=False, score=1)], level=3, os="linux",
@@ -107,7 +107,7 @@ class CSLECTFLevel2Base:
                                         port=53, protocol=TransportProtocol.TCP)
                       ]
                       ),
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", ip_id=3, id=3, type=NodeType.SERVER, os="linux",
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", ip_ids=3, id=3, type=NodeType.SERVER, os="linux",
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61"]),
                       flags=[Flag(name="flag1", path=f"/{constants.COMMANDS.ROOT_DIR}", id=1, requires_root=True, score=1)], level=3,
@@ -141,7 +141,7 @@ class CSLECTFLevel2Base:
                                        port=23, protocol=TransportProtocol.TCP, service=constants.TELNET.SERVICE_NAME)
                      ]
                       ),
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", ip_id=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", ip_ids=21, id=4, type=NodeType.SERVER, flags=[], level=3, os="linux",
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10"]),
                       credentials=[
@@ -162,7 +162,7 @@ class CSLECTFLevel2Base:
                           NetworkService(protocol=TransportProtocol.UDP, port=161, name="snmp", credentials=[])
                       ],
                       vulnerabilities=[]),
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79", ip_id=79, id=5, type=NodeType.SERVER,
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79", ip_ids=79, id=5, type=NodeType.SERVER,
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10"]),
                       flags=[Flag(name="flag3", path=f"/{constants.COMMANDS.TMP_DIR}", id=3, requires_root=False, score=1)], level=3,
@@ -202,7 +202,7 @@ class CSLECTFLevel2Base:
                                         port=21, protocol=TransportProtocol.TCP, service=constants.FTP.SERVICE_NAME)
                       ]
                       ),
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.54", ip_id=54, id=6, type=NodeType.SERVER,
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.54", ip_ids=54, id=6, type=NodeType.SERVER,
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.54"]),
                       flags=[Flag(name="flag4", path=f"/{constants.COMMANDS.TMP_DIR}", id=4, requires_root=False, score=1)], level=4, os="linux",
@@ -258,7 +258,7 @@ class CSLECTFLevel2Base:
                       ]
                       ),
 
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74", ip_id=74, id=7, type=NodeType.SERVER,
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74", ip_ids=74, id=7, type=NodeType.SERVER,
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.62"]),
@@ -291,7 +291,7 @@ class CSLECTFLevel2Base:
                       ]
                       ),
 
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61", ip_id=61, id=8, type=NodeType.SERVER, os="linux",
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61", ip_ids=61, id=8, type=NodeType.SERVER, os="linux",
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74"]),
                       flags=[Flag(name="flag5", path=f"/{constants.COMMANDS.ROOT_DIR}", id=5, requires_root=True, score=1)], level=4,
@@ -315,7 +315,7 @@ class CSLECTFLevel2Base:
                      ]
                       ),
 
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.62", ip_id=62, id=9, type=NodeType.SERVER, os="linux",
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.62", ip_ids=62, id=9, type=NodeType.SERVER, os="linux",
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.62", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.7"]),
@@ -343,7 +343,7 @@ class CSLECTFLevel2Base:
                      ]
                       ),
 
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.101", ip_id=101, id=10, type=NodeType.SERVER, flags=[], level=5, os="linux",
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.101", ip_ids=101, id=10, type=NodeType.SERVER, flags=[], level=5, os="linux",
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.62"]),
@@ -360,7 +360,7 @@ class CSLECTFLevel2Base:
                       ],
                       vulnerabilities=[]),
 
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.7", ip_id=7, id=11, type=NodeType.SERVER,
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.7", ip_ids=7, id=11, type=NodeType.SERVER,
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.61", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.74",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.101", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.62", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.7"]),
@@ -400,7 +400,7 @@ class CSLECTFLevel2Base:
                       ]
                       ),
 
-                 Node(ip=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", ip_id=191, id=12, type=NodeType.HACKER, flags=[], level=1, services=[],
+                 Node(ips=f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", ip_ids=191, id=12, type=NodeType.HACKER, flags=[], level=1, services=[],
                       reachable_nodes=set([f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.2", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.3", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.21", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.79",
                                        f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.191", f"{constants.CSLE.CSLE_INTERNAL_SUBNETMASK_PREFIX}2.10"]),
                       os="linux", vulnerabilities=[],

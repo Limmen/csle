@@ -254,7 +254,7 @@ class MainFrame(csleBaseFrame):
                     flag_sprite.visible = False
                     self.gui_queue.append((lbl, flag_sprite, (x,y)))
                     coords.append((x,y))
-                    self.flags_sprites.append((flag_sprite, machine.ip))
+                    self.flags_sprites.append((flag_sprite, machine.ips))
                     x = x + x_sep
                 y = y - y_sep
 
@@ -594,7 +594,7 @@ class MainFrame(csleBaseFrame):
         for sp_fl in self.flags_sprites:
             match = False
             for machine in self.state.attacker_obs_state.machines:
-                if sp_fl[1] == machine.ip and len(machine.flags_found) > 0:
+                if sp_fl[1] == machine.ips and len(machine.flags_found) > 0:
                     match = True
             sp_fl[0].visible = match
 
@@ -690,16 +690,16 @@ class MainFrame(csleBaseFrame):
         drawn_links = set()
         new_machine_links = False
         for x in self.state.attacker_obs_state.machines:
-            if x.ip not in self.node_ip_to_coords:
+            if x.ips not in self.node_ip_to_coords:
                 self.add_new_node_to_gui(x)
-            if x.ip not in self.node_ip_to_links:
+            if x.ips not in self.node_ip_to_links:
                 new_machine_links = True
 
         if new_machine_links:
             self.add_new_links_to_gui()
 
         for x in self.state.attacker_obs_state.machines:
-            machine = self.node_ip_to_node[x.ip]
+            machine = self.node_ip_to_node[x.ips]
             if machine.internal_ip == self.env_config.hacker_ip:
                 continue
             coords = self.node_ip_to_coords[machine.internal_ip]
@@ -795,14 +795,14 @@ class MainFrame(csleBaseFrame):
     def add_new_node_to_gui(self, machine: AttackerMachineObservationState):
         try:
             lbl, flag_sprite, (x, y) = self.gui_queue.pop()
-            self.node_ip_to_ip_lbl[machine.ip] = lbl
-            self.node_ip_to_coords[machine.ip] = (x, y)
-            self.node_ip_to_node[machine.ip] = machine
-            if machine.ip not in self.node_ip_to_idx:
-                self.node_ip_to_idx[machine.ip] = self.node_idx
+            self.node_ip_to_ip_lbl[machine.ips] = lbl
+            self.node_ip_to_coords[machine.ips] = (x, y)
+            self.node_ip_to_node[machine.ips] = machine
+            if machine.ips not in self.node_ip_to_idx:
+                self.node_ip_to_idx[machine.ips] = self.node_idx
                 self.node_idx += 1
-            self.flags_sprites.append((flag_sprite, machine.ip))
-            self.id_to_node[int(machine.ip.rsplit(".", 1)[-1])] = machine
+            self.flags_sprites.append((flag_sprite, machine.ips))
+            self.id_to_node[int(machine.ips.rsplit(".", 1)[-1])] = machine
         except IndexError as e:
             print("Too many nodes for GUI, increase GUI size: {}".format(str(e)))
 
@@ -827,9 +827,9 @@ class MainFrame(csleBaseFrame):
         for machine in self.state.attacker_obs_state.machines:
             machine1_links = []
             #print("self.node_ip_to_coords:{}".format(self.node_ip_to_coords))
-            coords1 = self.node_ip_to_coords[machine.ip]
+            coords1 = self.node_ip_to_coords[machine.ips]
             reachable = machine.reachable.copy()
-            if machine.ip == self.env_config.router_ip:
+            if machine.ips == self.env_config.router_ip:
                 reachable = machine.reachable.union(self.state.attacker_obs_state.agent_reachable)
             for machine2 in reachable:
                 if machine2 not in self.node_ip_to_node:
@@ -842,7 +842,7 @@ class MainFrame(csleBaseFrame):
 
                 links = self.complete_graph_links[(coords1, coords2)]
 
-                if machine.ip == self.env_config.hacker_ip or machine.ip == self.env_config.router_ip:
+                if machine.ips == self.env_config.hacker_ip or machine.ips == self.env_config.router_ip:
                     machine1_links.append(links[0])
                 node2_links.append(links[0])
 
@@ -850,7 +850,7 @@ class MainFrame(csleBaseFrame):
                 node2_links.append(links[1])
 
                 # # draw second straight line down
-                if machine.ip == self.env_config.hacker_ip or machine.ip == self.env_config.router_ip:
+                if machine.ips == self.env_config.hacker_ip or machine.ips == self.env_config.router_ip:
                     machine1_links.append(links[2])
                 node2_links.append(links[2])
 
@@ -859,8 +859,8 @@ class MainFrame(csleBaseFrame):
                 else:
                     self.node_ip_to_links[machine2.internal_ip] = self.node_ip_to_links[machine2.internal_ip] + node2_links
 
-            if machine.ip not in self.node_ip_to_links:
-                self.node_ip_to_links[machine.ip] = machine1_links
+            if machine.ips not in self.node_ip_to_links:
+                self.node_ip_to_links[machine.ips] = machine1_links
             else:
-                self.node_ip_to_links[machine.ip] = self.node_ip_to_links[machine.ip] + machine1_links
+                self.node_ip_to_links[machine.ips] = self.node_ip_to_links[machine.ips] + machine1_links
 

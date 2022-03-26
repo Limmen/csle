@@ -112,9 +112,9 @@ class NetworkConfig:
             l_reachable = reachable.copy()
             l_path = path.copy()
             l_flags = flags.copy()
-            if n.ip in l_reachable and n.ip in self.vulnerable_nodes and n.ip not in l_path:
+            if n.ips in l_reachable and n.ips in self.vulnerable_nodes and n.ips not in l_path:
                 l_reachable.update(n.reachable_nodes)
-                l_path.append(n.ip)
+                l_path.append(n.ips)
                 l_flags = l_flags + n.flags
                 if len(l_flags)== len(self.flags_lookup):
                     paths.append((l_path, l_flags.copy()))
@@ -172,7 +172,7 @@ class NetworkConfig:
         for node in network_conf.nodes:
             new_node = True
             for n in self.nodes:
-                if node.ip == n.ip:
+                if node.ips == n.ips:
                     new_node = False
                     n.merge(node)
             if new_node:

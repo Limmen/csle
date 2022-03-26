@@ -254,7 +254,7 @@ class AttackerMachineObservationState:
             if c.root:
                 root_usernames.append(c.username)
 
-        node = Node(ip=self.ip, ip_id=int(self.ip.rsplit(".", 1)[-1]), id=int(self.ip.rsplit(".", 1)[-1]),
+        node = Node(ips=self.ip, ip_ids=int(self.ip.rsplit(".", 1)[-1]), id=int(self.ip.rsplit(".", 1)[-1]),
                     type = NodeType.SERVER, os=self.os,
                     flags=self.flags_found, level=3, vulnerabilities=vulnerabilities, services=services,
                     credentials=self.shell_access_credentials, root_usernames=root_usernames, visible=False,

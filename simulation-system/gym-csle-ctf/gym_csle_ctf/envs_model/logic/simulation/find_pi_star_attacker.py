@@ -74,7 +74,7 @@ class FindPiStarAttacker:
                 a.internal_ip = env.env_state.attacker_obs_state.get_action_ip(a)
                 s_prime, reward, done = TransitionOperator.attacker_transition(s=env.env_state, attacker_action=a, env_config=env_config)
                 for k in s_prime.attacker_obs_state.machines:
-                    if k.ip == current_node:
+                    if k.ips == current_node:
                         if k.shell_access:
                             k_path = k_path + [a]
                             a_rew = a_rew + reward

@@ -39,8 +39,8 @@ class ReconSimulatorUtil:
         if not a.subnet:
             new_m_obs = None
             for node in env_config.network_conf.nodes:
-                if node.ip == a.ip and node.ip in reachable_nodes:
-                    new_m_obs = AttackerMachineObservationState(ip=node.ip)
+                if node.ips == a.ip and node.ips in reachable_nodes:
+                    new_m_obs = AttackerMachineObservationState(ip=node.ips)
                     new_m_obs.reachable = node.reachable_nodes
                     for service in node.services:
                         if service.protocol == protocol and \
@@ -84,9 +84,9 @@ class ReconSimulatorUtil:
         else:
             new_m_obs = []
             for node in env_config.network_conf.nodes:
-                if not node.ip in reachable_nodes:
+                if not node.ips in reachable_nodes:
                     continue
-                m_obs = AttackerMachineObservationState(ip=node.ip)
+                m_obs = AttackerMachineObservationState(ip=node.ips)
                 m_obs.reachable = node.reachable_nodes
                 for service in node.services:
                     if service.protocol == protocol and \
@@ -138,8 +138,8 @@ class ReconSimulatorUtil:
             new_m_obs = None
 
             for node in env_config.network_conf.nodes:
-                if node.ip == a.ip and node.ip in reachable_nodes and not np.random.rand() < miss_p:
-                    new_m_obs = AttackerMachineObservationState(ip=node.ip)
+                if node.ips == a.ip and node.ips in reachable_nodes and not np.random.rand() < miss_p:
+                    new_m_obs = AttackerMachineObservationState(ip=node.ips)
                     new_m_obs.reachable = node.reachable_nodes
                     if os:
                         new_m_obs.os = node.os
@@ -172,8 +172,8 @@ class ReconSimulatorUtil:
         else:
             new_m_obs = []
             for node in env_config.network_conf.nodes:
-                if node.ip in reachable_nodes and not np.random.rand() < miss_p:
-                    m_obs = AttackerMachineObservationState(ip=node.ip)
+                if node.ips in reachable_nodes and not np.random.rand() < miss_p:
+                    m_obs = AttackerMachineObservationState(ip=node.ips)
                     m_obs.reachable = node.reachable_nodes
                     if os:
                         m_obs.os = node.os

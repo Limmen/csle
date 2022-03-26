@@ -42,7 +42,7 @@ class NodeFirewallConfig:
         """
         :return: list of ip addresses
         """
-        return list(filter(lambda x: x is not None, map(lambda x: x.ip, self.ips_gw_default_policy_networks)))
+        return list(filter(lambda x: x is not None, map(lambda x: x.ips, self.ips_gw_default_policy_networks)))
 
     def to_dict(self) -> dict:
         """

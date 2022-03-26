@@ -60,12 +60,12 @@ class EnvDynamicsUtil:
 
         # Add updated machines to merged state
         for n_m in new_machines_obs:
-            if n_m.ip == env_config.hacker_ip or n_m.ip in env_config.blacklist_ips:
+            if n_m.ips == env_config.hacker_ip or n_m.ips in env_config.blacklist_ips:
                 continue
             exists = False
             merged_m = n_m
             for i, o_m in enumerate(old_machines_obs):
-                if n_m.ip == o_m.ip:
+                if n_m.ips == o_m.ips:
                     new_net_outcome = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m, action)
                     net_outcome.update_counts(new_net_outcome)
                     merged_m = new_net_outcome.attacker_machine_observation
@@ -78,7 +78,7 @@ class EnvDynamicsUtil:
         for o_m in old_machines_obs:
             exists = False
             for m_m in net_outcome.attacker_machine_observations:
-                if o_m.ip == m_m.ip:
+                if o_m.ips == m_m.ips:
                     exists = True
             if not exists:
                 net_outcome.attacker_machine_observations.append(o_m)
@@ -835,14 +835,14 @@ class EnvDynamicsUtil:
         merged_machines = []
         ips = set()
         for m in machines:
-            if m.ip not in ips:
+            if m.ips not in ips:
                 merged_m = m
                 for m2 in machines:
-                    if m2.ip == merged_m.ip:
+                    if m2.ips == merged_m.ips:
                         net_out = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(merged_m, m2, action)
                         merged_m = net_out.attacker_machine_observation
                 merged_machines.append(merged_m)
-                ips.add(m.ip)
+                ips.add(m.ips)
         return merged_machines
 
 

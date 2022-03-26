@@ -309,7 +309,7 @@ class ConnectionUtil:
                                                     root=root,
                                                     service=constants.SSH.SERVICE_NAME,
                                                     port=connection_setup_dto.ports[i], proxy=connection_setup_dto.proxies[i],
-                                                    ip=target_machine.ip)
+                                                    ip=target_machine.ips)
         target_machine.ssh_connections.append(connection_dto)
         end = time.time()
         total_time = end - start
@@ -414,7 +414,7 @@ class ConnectionUtil:
                                                     tunnel_thread=connection_setup_dto.tunnel_threads[i],
                                                     tunnel_port=connection_setup_dto.forward_ports[i],
                                                     port=connection_setup_dto.ports[i],
-                                                    proxy=connection_setup_dto.proxies[i], ip=target_machine.ip)
+                                                    proxy=connection_setup_dto.proxies[i], ip=target_machine.ips)
         target_machine.telnet_connections.append(connection_dto)
         end = time.time()
         total_time = end - start
@@ -514,7 +514,7 @@ class ConnectionUtil:
                                                     tunnel_port=connection_setup_dto.forward_ports[i],
                                                     port=connection_setup_dto.ports[i],
                                                     interactive_shell=connection_setup_dto.interactive_shells[i],
-                                                    ip=target_machine.ip,
+                                                    ip=target_machine.ips,
                                                     proxy=connection_setup_dto.proxies[i])
         target_machine.ftp_connections.append(connection_dto)
         return root, 0

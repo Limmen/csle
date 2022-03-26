@@ -40,7 +40,7 @@ class ShellUtil:
         total_alerts = (0, 0)
         for c in ssh_connections_sorted_by_root:
             cache_file = \
-                EmulationUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                EmulationUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ips,
                                                             service=constants.SSH.SERVICE_NAME,
                                                             user=c.username, root=c.root)
             if cache_file is not None:
@@ -62,17 +62,17 @@ class ShellUtil:
                         sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                         num_alerts = len(fast_logs)
                         EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
-                                                            action=a, env_config=env_config, ip=machine.ip,
+                                                            action=a, env_config=env_config, ip=machine.ips,
                                                             user=c.username, service=constants.SSH.SERVICE_NAME)
-                        env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                        env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ips, user=c.username,
                                                                             service=constants.SSH.SERVICE_NAME,
                                                                             alert=(sum_priority_alerts, num_alerts))
 
                     EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
-                                                       env_config=env_config, ip=machine.ip,
+                                                       env_config=env_config, ip=machine.ips,
                                                        user=c.username,
                                                        service=constants.SSH.SERVICE_NAME)
-                    env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                    env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ips, user=c.username,
                                                                    service=constants.SSH.SERVICE_NAME,
                                                                    cost=float(total_time))
                     outdata_str = outdata.decode()
@@ -81,7 +81,7 @@ class ShellUtil:
                     num_flags = 0
                     for fp in flag_paths:
                         fp = fp.replace(".txt", "")
-                        if (machine.ip, fp) in env_config.flag_lookup:
+                        if (machine.ips, fp) in env_config.flag_lookup:
                             num_flags += 1
                     if len(flag_paths) > 0 and num_flags > 0:
                         break
@@ -91,26 +91,26 @@ class ShellUtil:
                 # Persist cache
                 EmulationUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                            service=constants.SSH.SERVICE_NAME, user=c.username,
-                                                           files=flag_paths, ip=machine.ip, root=c.root)
+                                                           files=flag_paths, ip=machine.ips, root=c.root)
 
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")
-                if (machine.ip, fp) in env_config.flag_lookup:
-                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+                if (machine.ips, fp) in env_config.flag_lookup:
+                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ips, fp)])
 
             # Update cost
-            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ips, user=c.username,
                                                             service=constants.SSH.SERVICE_NAME):
-                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ips, user=c.username,
                                                                       service=constants.SSH.SERVICE_NAME)
                 total_cost += cost
 
             # Update alerts
-            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ips,
                                                                                           user=c.username,
                                                                                           service=constants.SSH.SERVICE_NAME):
-                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ips, user=c.username,
                                                                              service=constants.SSH.SERVICE_NAME)
                 total_alerts = alerts
 
@@ -142,7 +142,7 @@ class ShellUtil:
         root_scan = False
         for c in telnet_connections_sorted_by_root:
             cache_file = \
-                EmulationUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                EmulationUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ips,
                                                             service=constants.TELNET.SERVICE_NAME,
                                                             user=c.username, root=c.root)
             if cache_file is not None:
@@ -167,43 +167,43 @@ class ShellUtil:
                     sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
                     num_alerts = len(fast_logs)
                     EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
-                                                        action=a, env_config=env_config, ip=machine.ip,
+                                                        action=a, env_config=env_config, ip=machine.ips,
                                                         user=c.username,
                                                         service=constants.TELNET.SERVICE_NAME)
-                    env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                    env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ips, user=c.username,
                                                                         service=constants.TELNET.SERVICE_NAME,
                                                                         alert=(sum_priority_alerts, num_alerts))
 
                 EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
-                                                   env_config=env_config, ip=machine.ip,
+                                                   env_config=env_config, ip=machine.ips,
                                                    user=c.username,
                                                    service=constants.TELNET.SERVICE_NAME)
-                env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ips, user=c.username,
                                                                service=constants.TELNET.SERVICE_NAME,
                                                                cost=float(total_time))
                 flag_paths = response.decode().strip().split("\r\n")
                 # Persist cache
                 EmulationUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                            service=constants.TELNET.SERVICE_NAME, user=c.username,
-                                                           files=flag_paths, ip=machine.ip, root=c.root)
+                                                           files=flag_paths, ip=machine.ips, root=c.root)
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")
-                if (machine.ip, fp) in env_config.flag_lookup:
-                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+                if (machine.ips, fp) in env_config.flag_lookup:
+                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ips, fp)])
 
             # Update cost
-            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ips, user=c.username,
                                                             service=constants.TELNET.SERVICE_NAME):
-                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ips, user=c.username,
                                                                       service=constants.TELNET.SERVICE_NAME)
                 total_cost += cost
 
             # Update alerts
-            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ips,
                                                                                           user=c.username,
                                                                                           service=constants.TELNET.SERVICE_NAME):
-                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ips, user=c.username,
                                                                              service=constants.TELNET.SERVICE_NAME)
                 total_alerts = alerts
 
@@ -235,7 +235,7 @@ class ShellUtil:
         root_scan = False
         for c in ftp_connections_sorted_by_root:
             cache_file = \
-                EmulationUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ip,
+                EmulationUtil.check_filesystem_action_cache(a=a, env_config=env_config, ip=machine.ips,
                                                             service=constants.FTP.SERVICE_NAME,
                                                             user=c.username, root=c.root)
             if cache_file is not None:
@@ -279,19 +279,19 @@ class ShellUtil:
                                     num_alerts = len(fast_logs)
                                     EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts,
                                                                         num_alerts=num_alerts,
-                                                                        action=a, env_config=env_config, ip=machine.ip,
+                                                                        action=a, env_config=env_config, ip=machine.ips,
                                                                         user=c.username,
                                                                         service=constants.FTP.SERVICE_NAME)
-                                    env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ip,
+                                    env_config.attacker_action_alerts.user_ip_add_alert(action_id=a.id, ip=machine.ips,
                                                                                         user=c.username,
                                                                                         service=constants.FTP.SERVICE_NAME,
                                                                                         alert=(sum_priority_alerts, num_alerts))
 
                                 EmulationUtil.write_estimated_cost(total_time=total_time, action=a,
-                                                                   env_config=env_config, ip=machine.ip,
+                                                                   env_config=env_config, ip=machine.ips,
                                                                    user=c.username,
                                                                    service=constants.FTP.SERVICE_NAME)
-                                env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                                env_config.attacker_action_costs.find_add_cost(action_id=a.id, ip=machine.ips, user=c.username,
                                                                                service=constants.FTP.SERVICE_NAME,
                                                                                cost=float(total_time))
                         else:
@@ -306,7 +306,7 @@ class ShellUtil:
                     # Check for flags
                     for fp in flag_paths:
                         fp = fp.replace(".txt", "")
-                        if (machine.ip, fp) in env_config.flag_lookup:
+                        if (machine.ips, fp) in env_config.flag_lookup:
                             ff = True
                     if not ff:
                         continue
@@ -315,26 +315,26 @@ class ShellUtil:
                 # Persist cache
                 EmulationUtil.write_file_system_scan_cache(action=a, env_config=env_config,
                                                            service=constants.FTP.SERVICE_NAME, user=c.username,
-                                                           files=flag_paths, ip=machine.ip, root=c.root)
+                                                           files=flag_paths, ip=machine.ips, root=c.root)
             new_m_obs.filesystem_searched = True
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")
-                if (machine.ip, fp) in env_config.flag_lookup:
-                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ip, fp)])
+                if (machine.ips, fp) in env_config.flag_lookup:
+                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ips, fp)])
 
             # Update cost
-            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ip, user=c.username,
+            if env_config.attacker_action_costs.find_exists(action_id=a.id, ip=machine.ips, user=c.username,
                                                             service=constants.FTP.SERVICE_NAME):
-                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ip, user=c.username,
+                cost = env_config.attacker_action_costs.find_get_cost(action_id=a.id, ip=machine.ips, user=c.username,
                                                                       service=constants.FTP.SERVICE_NAME)
                 total_cost += cost
 
             # Update alerts
-            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ip,
+            if env_config.ids_router and env_config.attacker_action_alerts.user_ip_exists(action_id=a.id, ip=machine.ips,
                                                                                           user=c.username,
                                                                                           service=constants.FTP.SERVICE_NAME):
-                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ip, user=c.username,
+                alerts = env_config.attacker_action_alerts.user_ip_get_alert(action_id=a.id, ip=machine.ips, user=c.username,
                                                                              service=constants.FTP.SERVICE_NAME)
                 total_alerts = alerts
 

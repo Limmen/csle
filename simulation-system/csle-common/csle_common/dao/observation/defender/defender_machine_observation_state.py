@@ -157,7 +157,7 @@ class DefenderMachineObservationState:
         :param service_lookup: a service lookup table
         :return: the defender machine observation
         """
-        d_obs = DefenderMachineObservationState(node.ip)
+        d_obs = DefenderMachineObservationState(node.ips)
         d_obs.os = node.os
         d_obs.num_flags = len(node.flags)
         d_obs.ports = list(map(lambda x: PortObservationState.from_network_service(x, service_lookup), node.services))

@@ -148,21 +148,21 @@ class DefenderUpdateStateMiddleware:
 
         # Measure Node specific features
         for node in env_config.network_conf.nodes:
-            if node.ip == env_config.emulation_config.agent_ip:
+            if node.ips == env_config.emulation_config.agent_ip:
                 continue
             d_obs = DefenderMachineObservationState.from_node(node,s.service_lookup)
 
             # Setup connection
-            if node.ip in s_prime.defender_cached_ssh_connections:
-                (node_connections, ec) = s_prime.defender_cached_ssh_connections[node.ip]
+            if node.ips in s_prime.defender_cached_ssh_connections:
+                (node_connections, ec) = s_prime.defender_cached_ssh_connections[node.ips]
                 node_conn = node_connections[0]
             else:
-                ec = env_config.emulation_config.copy(ip=node.ip, username=constants.CSLE_ADMIN.USER,
+                ec = env_config.emulation_config.copy(ip=node.ips, username=constants.CSLE_ADMIN.USER,
                                                       pw=constants.CSLE_ADMIN.PW)
                 ec.connect_agent()
                 node_conn = ConnectionObservationState(
                     conn=ec.agent_conn, username=ec.agent_username, root=True, port=22,
-                    service=constants.SSH.SERVICE_NAME, proxy=None, ip=node.ip)
+                    service=constants.SSH.SERVICE_NAME, proxy=None, ip=node.ips)
             d_obs.ssh_connections.append(node_conn)
             d_obs.emulation_config = ec
 

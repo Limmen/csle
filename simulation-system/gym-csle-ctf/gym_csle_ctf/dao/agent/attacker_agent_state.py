@@ -61,7 +61,7 @@ class AttackerAgentState(BaseAttackerAgentState):
         :return: the machine if it exists or otherwise None
         """
         for m in self.attacker_obs_state.machines:
-            if m.ip == ip:
+            if m.ips == ip:
                 return m
         return None
 
@@ -90,7 +90,7 @@ class AttackerAgentState(BaseAttackerAgentState):
                 self.attacker_obs_state.machines[i].sort_shell_access(self.service_lookup)
 
                 # IP
-                host_ip = int(self.attacker_obs_state.machines[i].ip.rsplit(".", 1)[-1])
+                host_ip = int(self.attacker_obs_state.machines[i].ips.rsplit(".", 1)[-1])
                 self.machines_state[i][1] = host_ip
 
                 # OS
