@@ -1,6 +1,6 @@
 from typing import List, Tuple
 import copy
-from csle_common.dao.observation.attacker import AttackerMachineObservationState
+from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 
 
 class NetworkOutcome:

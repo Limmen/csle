@@ -668,8 +668,8 @@ class CSLECTFEnv(BaseCSLEEnv, metaclass=ABCMeta):
         """
         tag = "-"
         if not action.subnet:
-            if action.ip is not None:
-                tag = str(action.ip.rsplit(".", 1)[-1])
+            if action.ips is not None:
+                tag = str(action.ips.rsplit(".", 1)[-1])
         else:
             tag = "*"
         self.attacker_agent_state.env_log.add_entry(action.name + "[." + tag + "]" + " c:" + str(action.cost))

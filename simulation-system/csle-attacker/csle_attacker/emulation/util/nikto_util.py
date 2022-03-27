@@ -4,7 +4,7 @@ from csle_common.dao.network.env_config import CSLEEnvConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
-from csle_common.dao.observation.attacker import AttackerMachineObservationState
+from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 import csle_common.constants.constants as constants
 from csle_common.dao.action_results.nikto_scan_result import NiktoScanResult
 from csle_common.dao.action_results.nikto_vuln import NiktoVuln
@@ -47,7 +47,7 @@ class NiktoUtil:
         :return: s', reward, done
         """
         cache_result = None
-        cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
+        cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + ".xml"
 
         # Check in-memory cache
         if env_config.attacker_use_nikto_cache:
@@ -76,10 +76,10 @@ class NiktoUtil:
                 num_alerts = len(fast_logs)
                 EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                     action=a, env_config=env_config)
-                env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+                env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=a.ips, alert=(sum_priority_alerts, num_alerts))
 
             EmulationUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-            env_config.attacker_action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
+            env_config.attacker_action_costs.add_cost(action_id=a.id, ip=a.ips, cost=round(total_time, 1))
             cache_result = cache_id
 
         # Read result
@@ -90,7 +90,7 @@ class NiktoUtil:
                 break
             except Exception as e:
                 # If no webserver, Nikto outputs nothing
-                scan_result = NiktoScanResult(ip=a.ip, vulnerabilities=[], port=80, sitename=a.ip)
+                scan_result = NiktoScanResult(ip=a.ips, vulnerabilities=[], port=80, sitename=a.ips)
                 break
 
         if env_config.attacker_use_nikto_cache:
@@ -127,12 +127,12 @@ class NiktoUtil:
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
         # Use measured cost
-        if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ip):
-            a.cost = env_config.attacker_action_costs.get_cost(action_id=a.id, ip=a.ip)
+        if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ips):
+            a.cost = env_config.attacker_action_costs.get_cost(action_id=a.id, ip=a.ips)
 
         # Use measured # alerts
-        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ip):
-            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ip)
+        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ips):
+            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ips)
 
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
 

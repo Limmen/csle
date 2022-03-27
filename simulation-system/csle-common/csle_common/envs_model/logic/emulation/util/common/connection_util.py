@@ -8,7 +8,7 @@ from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
-from csle_common.dao.observation.attacker import AttackerMachineObservationState
+from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_csle_ctf.dao.network.network_outcome import NetworkOutcome
 import csle_common.constants.constants as constants
 from csle_common.envs_model.logic.emulation.tunnel.forward_tunnel_thread import ForwardTunnelThread
@@ -42,7 +42,7 @@ class ConnectionUtil:
         non_failed_credentials = []
         net_outcome = NetworkOutcome()
         for m in s.attacker_obs_state.machines:
-            if m.ip == a.ip:
+            if m.ip == a.ips:
                 target_machine = m
                 target_machine = target_machine.copy()
                 break
@@ -239,23 +239,23 @@ class ConnectionUtil:
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != env_config.hacker_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
-                if m is None or a.ip not in m.reachable or m.ip == a.ip:
+                if m is None or a.ips not in m.reachable or m.ip == a.ips:
                     continue
             else:
-                if not a.ip in s.attacker_obs_state.agent_reachable:
+                if not a.ips in s.attacker_obs_state.agent_reachable:
                     continue
             for cr in credentials:
                 if cr.service == constants.SSH.SERVICE_NAME:
                     try:
                         agent_addr = (proxy_conn.ip, cr.port)
-                        target_addr = (a.ip, cr.port)
+                        target_addr = (a.ips, cr.port)
                         agent_transport = proxy_conn.conn.get_transport()
                         relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
                                                                      agent_addr,
                                                                      timeout=3)
                         target_conn = paramiko.SSHClient()
                         target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                        target_conn.connect(a.ip, username=cr.username, password=cr.pw, sock=relay_channel,
+                        target_conn.connect(a.ips, username=cr.username, password=cr.pw, sock=relay_channel,
                                             timeout=3)
                         connection_setup_dto.connected = True
                         connection_setup_dto.users.append(cr.username)
@@ -267,9 +267,9 @@ class ConnectionUtil:
                         print("SSH exception :{}".format(str(e)))
                         print("user:{}, pw:{}".format(cr.username, cr.pw))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
+                        print("Target ip in agent reachable: {}".format(a.ips in s.attacker_obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
-                        print("Action:{}, {}, {}".format(a.id, a.ip, a.descr))
+                        print("Action:{}, {}, {}".format(a.id, a.ips, a.descr))
                 else:
                     connection_setup_dto.non_failed_credentials.append(cr)
             if connection_setup_dto.connected:
@@ -334,23 +334,23 @@ class ConnectionUtil:
         for proxy_conn in proxy_connections:
             if proxy_conn.internal_ip != env_config.hacker_ip:
                 m = s.get_attacker_machine(proxy_conn.internal_ip)
-                if m is None or a.ip not in m.reachable or m.ip == a.ip:
+                if m is None or a.ips not in m.reachable or m.ip == a.ips:
                     continue
             else:
-                if not a.ip in s.attacker_obs_state.agent_reachable:
+                if not a.ips in s.attacker_obs_state.agent_reachable:
                     continue
             for cr in credentials:
                 if cr.service == constants.TELNET.SERVICE_NAME:
                     try:
                         forward_port = env_config.get_port_forward_port()
                         agent_addr = (proxy_conn.internal_ip, cr.port)
-                        target_addr = (a.ip, cr.port)
+                        target_addr = (a.ips, cr.port)
                         agent_transport = proxy_conn.conn.get_transport()
                         relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
                                                                      agent_addr,
                                                                      timeout=3)
                         tunnel_thread = ForwardTunnelThread(local_port=forward_port,
-                                                            remote_host=a.ip, remote_port=cr.port,
+                                                            remote_host=a.ips, remote_port=cr.port,
                                                             transport=agent_transport)
                         tunnel_thread.start()
                         target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port, timeout=3)
@@ -373,7 +373,7 @@ class ConnectionUtil:
                         print("telnet exception:{}".format(str(e)))
                         #print("Target:{} reachable from {}, {}".format(a.ip, m.ip, a.ip in m.reachable))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
+                        print("Target ip in agent reachable: {}".format(a.ips in s.attacker_obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                 else:
                     connection_setup_dto.non_failed_credentials.append(cr)
@@ -439,23 +439,23 @@ class ConnectionUtil:
         for proxy_conn in proxy_connections:
             if proxy_conn.internal_ip != env_config.hacker_ip:
                 m = s.get_attacker_machine(proxy_conn.internal_ip)
-                if m is None or a.ip not in m.reachable or m.ip == a.ip:
+                if m is None or a.ips not in m.reachable or m.ip == a.ips:
                     continue
             else:
-                if not a.ip in s.attacker_obs_state.agent_reachable:
+                if not a.ips in s.attacker_obs_state.agent_reachable:
                     continue
             for cr in credentials:
                 if cr.service == constants.FTP.SERVICE_NAME:
                     try:
                         forward_port = env_config.get_port_forward_port()
                         agent_addr = (proxy_conn.internal_ip, cr.port)
-                        target_addr = (a.ip, cr.port)
+                        target_addr = (a.ips, cr.port)
                         agent_transport = proxy_conn.conn.get_transport()
                         relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
                                                                      agent_addr,
                                                                      timeout=3)
                         tunnel_thread = ForwardTunnelThread(local_port=forward_port,
-                                                            remote_host=a.ip, remote_port=cr.port,
+                                                            remote_host=a.ips, remote_port=cr.port,
                                                             transport=agent_transport)
                         tunnel_thread.start()
                         target_conn = FTP()
@@ -474,7 +474,7 @@ class ConnectionUtil:
                             # clear output
                             if shell.recv_ready():
                                 shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
-                            shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + a.ip + "\n")
+                            shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + a.ips + "\n")
                             time.sleep(0.5)
                             # clear output
                             if shell.recv_ready():
@@ -484,7 +484,7 @@ class ConnectionUtil:
                     except Exception as e:
                         print("FTP exception: {}".format(str(e)))
                         print("Target addr: {}, Source Addr: {}".format(target_addr, agent_addr))
-                        print("Target ip in agent reachable: {}".format(a.ip in s.attacker_obs_state.agent_reachable))
+                        print("Target ip in agent reachable: {}".format(a.ips in s.attacker_obs_state.agent_reachable))
                         print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                 else:
                     connection_setup_dto.non_failed_credentials.append(cr)

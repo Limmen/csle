@@ -56,31 +56,31 @@ class CSLECTFLevel9V3:
             attacker_actions.append(AttackerShellActions.CVE_2015_5602_PRIV_ESC(index=idx))
 
         # Subnet actions
-        attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ip=subnet_mask,
-                                                                subnet=True))
-        attacker_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ips=subnet_mask,
+                                                                         subnet=True))
+        attacker_actions.append(AttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ips=subnet_mask, subnet=True))
         attacker_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
         attacker_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
         attacker_actions.append(AttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
         attacker_actions.append(AttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
         attacker_actions.append(
-            AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+            AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_mask,
                                                                  subnet=True))
-        attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
-                                                                         subnet=True))
-        attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
-                                                                         subnet=True))
-        attacker_actions.append(AttackerNMAPActions.UDP_PORT_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        attacker_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
-        attacker_actions.append(AttackerNMAPActions.OS_DETECTION_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_mask,
+                                                                                  subnet=True))
+        attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_mask,
+                                                                                  subnet=True))
+        attacker_actions.append(AttackerNMAPActions.UDP_PORT_SCAN(num_nodes + 1, ips=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ips=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.OS_DETECTION_SCAN(num_nodes + 1, ips=subnet_mask, subnet=True))
         attacker_actions.append(
-            AttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        attacker_actions.append(AttackerNMAPActions.TCP_FIN_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        attacker_actions.append(AttackerNMAPActions.TCP_NULL_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
+            AttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(num_nodes + 1, ips=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.TCP_FIN_SCAN(num_nodes + 1, ips=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.TCP_NULL_SCAN(num_nodes + 1, ips=subnet_mask, subnet=True))
         attacker_actions.append(
-            AttackerNMAPActions.TCP_XMAS_TREE_SCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        attacker_actions.append(AttackerNMAPActions.VULSCAN(num_nodes + 1, ip=subnet_mask, subnet=True))
-        attacker_actions.append(AttackerNMAPActions.FINGER(num_nodes + 1, ip=subnet_mask, subnet=True))
+            AttackerNMAPActions.TCP_XMAS_TREE_SCAN(num_nodes + 1, ips=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.VULSCAN(num_nodes + 1, ips=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.FINGER(num_nodes + 1, ips=subnet_mask, subnet=True))
 
         attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [

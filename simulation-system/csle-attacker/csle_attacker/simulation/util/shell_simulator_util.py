@@ -2,7 +2,7 @@ from typing import Tuple
 from csle_common.dao.network.env_state import EnvState
 from csle_common.dao.network.env_config import CSLEEnvConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.observation.attacker import AttackerMachineObservationState
+from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from csle_attacker.simulation.util.simulator_util import SimulatorUtil
 

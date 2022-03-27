@@ -33,7 +33,7 @@ class NodeServicesConfig:
         :return: a dto representation of the object
         """
         dto = NodeServicesConfig(ip = d["ip"],
-                                 services=list(map(lambda x: x.from_dict(), d["services"])))
+                                 services=list(map(lambda x: NetworkService.from_dict(x), d["services"])))
         return dto
 
     def __str__(self) -> str:

@@ -13,16 +13,16 @@ class Attacker:
     """
 
     @staticmethod
-    def attacker_transition(s : EnvState, attacker_action : AttackerAction, env_config : CSLEEnvConfig) -> \
+    def attacker_transition(s : EnvState, attacker_action : AttackerAction) -> \
             Tuple[EnvState, float, bool]:
         """
         Implements an attacker transition of the MDP/Markov Game:
 
         (s, a) --> (s', r)
         """
-        if env_config.env_mode == EnvMode.SIMULATION:
-            return SimulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, env_config=env_config)
-        elif env_config.env_mode == EnvMode.EMULATION or env_config.env_mode == EnvMode.GENERATED_SIMULATION:
-            return EmulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, env_config=env_config)
+        if s.env_config.env_mode == EnvMode.SIMULATION:
+            return SimulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, env_config=s.env_config)
+        elif s.env_config.env_mode == EnvMode.EMULATION or s.env_config.env_mode == EnvMode.GENERATED_SIMULATION:
+            return EmulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, env_config=s.env_config)
         else:
             raise ValueError("Invalid environment mode")

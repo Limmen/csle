@@ -24,7 +24,7 @@ class AttackerShellActions:
                               type=AttackerActionType.POST_EXPLOIT,
                               descr="Searches the file system for a flag",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.FLAG, alt_cmd=alt_cmd,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.FLAG, alt_cmd=alt_cmd,
                               backdoor=False)
 
     @staticmethod
@@ -42,7 +42,7 @@ class AttackerShellActions:
                               type=AttackerActionType.POST_EXPLOIT,
                               descr="If taken root on remote machine, installs pentest tools, e.g. nmap",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
                               backdoor=False)
 
     @staticmethod
@@ -60,7 +60,7 @@ class AttackerShellActions:
                               descr="If taken root on remote machine, installs a ssh backdoor, useful for upgrading telnet"
                             "or weaker channels",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
                               backdoor=True)
 
     @staticmethod
@@ -79,7 +79,7 @@ class AttackerShellActions:
                               descr="Uses the sambacry shell to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.SAMBA.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -102,7 +102,7 @@ class AttackerShellActions:
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the Shellshock exploit and curl to do remote code execution and create a backdoor",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.SHELLSHOCK.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -120,7 +120,7 @@ class AttackerShellActions:
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the DVWA SQL Injection exploit to extract secret passwords",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.DVWA_SQL_INJECTION.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -139,7 +139,7 @@ class AttackerShellActions:
                               descr="Uses the CVE-2015-3306 vulnerability to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.CVE_2015_3306.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -159,7 +159,7 @@ class AttackerShellActions:
                               descr="Uses the CVE-2015-1427 vulnerability to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.CVE_2015_1427.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -178,7 +178,7 @@ class AttackerShellActions:
                               descr="Uses the CVE-2016-10033 vulnerability to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.CVE_2016_10033.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -196,7 +196,7 @@ class AttackerShellActions:
                               type=AttackerActionType.PRIVILEGE_ESCALATION,
                               descr="Uses the CVE-2010-0426 vulnerability to perform privilege escalation to get root access",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
                               alt_cmd=None,
                               vulnerability=constants.CVE_2010_0426.VULNERABILITY_NAME,
                               backdoor=True)
@@ -216,6 +216,6 @@ class AttackerShellActions:
                               type=AttackerActionType.PRIVILEGE_ESCALATION,
                               descr="Uses the CVE-2015-5602 vulnerability to perform privilege escalation to get root access",
                               cost=0.0, noise=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
                               alt_cmd=None, vulnerability=constants.CVE_2015_5602.VULNERABILITY_NAME,
                               backdoor=True)

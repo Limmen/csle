@@ -6,7 +6,7 @@ from csle_common.dao.network.transport_protocol import TransportProtocol
 from csle_common.dao.network.env_state import EnvState
 from csle_common.dao.network.env_config import CSLEEnvConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.observation.attacker import AttackerMachineObservationState
+from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from gym_csle_ctf.dao.network.network_outcome import NetworkOutcome
 from csle_attacker.simulation.util.simulator_util import SimulatorUtil
@@ -39,7 +39,7 @@ class ReconSimulatorUtil:
         if not a.subnet:
             new_m_obs = None
             for node in env_config.network_conf.nodes:
-                if node.ips == a.ip and node.ips in reachable_nodes:
+                if node.ips == a.ips and node.ips in reachable_nodes:
                     new_m_obs = AttackerMachineObservationState(ip=node.ips)
                     new_m_obs.reachable = node.reachable_nodes
                     for service in node.services:
@@ -60,7 +60,7 @@ class ReconSimulatorUtil:
                 merged = False
                 for o_m in s.attacker_obs_state.machines:
                     # Machine was already known, merge state
-                    if o_m.ip == a.ip:
+                    if o_m.ip == a.ips:
                         new_net_outcome = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(
                             o_m, new_m_obs, action=a)
                         merged_machine_obs = new_net_outcome.attacker_machine_observation
@@ -138,7 +138,7 @@ class ReconSimulatorUtil:
             new_m_obs = None
 
             for node in env_config.network_conf.nodes:
-                if node.ips == a.ip and node.ips in reachable_nodes and not np.random.rand() < miss_p:
+                if node.ips == a.ips and node.ips in reachable_nodes and not np.random.rand() < miss_p:
                     new_m_obs = AttackerMachineObservationState(ip=node.ips)
                     new_m_obs.reachable = node.reachable_nodes
                     if os:
@@ -148,7 +148,7 @@ class ReconSimulatorUtil:
                 merged = False
                 for o_m in s.attacker_obs_state.machines:
                     # Machine was already known, merge state
-                    if o_m.ip == a.ip:
+                    if o_m.ip == a.ips:
                         new_net_outcome = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(
                             o_m, new_m_obs, action=a)
                         merged_machine_obs = new_net_outcome.attacker_machine_observation

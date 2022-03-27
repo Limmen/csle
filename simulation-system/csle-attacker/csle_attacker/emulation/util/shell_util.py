@@ -6,7 +6,7 @@ from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.network.env_state import EnvState
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
-from csle_common.dao.observation.attacker import AttackerMachineObservationState
+from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 import csle_common.constants.constants as constants
 from csle_common.dao.network.credential import Credential
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
@@ -679,7 +679,7 @@ class ShellUtil:
                     # Create SSH connection
                     new_m_obs.shell_access_credentials.append(credential)
                     new_m_obs.backdoor_credentials.append(credential)
-                    a.ip = machine.ip
+                    a.ips = machine.ip
                     for i in range(5):
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
                             a=a, env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
@@ -746,7 +746,7 @@ class ShellUtil:
                         # Create SSH connection
                         new_m_obs.shell_access_credentials.append(credential)
                         new_m_obs.backdoor_credentials.append(credential)
-                        a.ip = machine.ip
+                        a.ips = machine.ip
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
                             a=a, env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         telnet_cost += setup_connection_dto.total_time
@@ -804,7 +804,7 @@ class ShellUtil:
             last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
 
         for machine in s.attacker_obs_state.machines:
-            a.ip = machine.ip
+            a.ips = machine.ip
             s_1, net_out_1, new_conn_ssh = ConnectionUtil.login_service_helper(
                 s=s_prime, a=a, alive_check=EnvDynamicsUtil.check_if_ssh_connection_is_alive,
                 service_name=constants.SSH.SERVICE_NAME, env_config=env_config)
@@ -824,7 +824,7 @@ class ShellUtil:
                 new_conn = True
 
             for m in s_prime.attacker_obs_state.machines:
-                if m.ip == a.ip:
+                if m.ip == a.ips:
                     m.untried_credentials = False
 
         # Update cost cache
@@ -843,7 +843,7 @@ class ShellUtil:
             env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=env_config.emulation_config.agent_ip,
                                                         alert=(sum_priority_alerts, num_alerts))
 
-        a.ip = ""
+        a.ips = ""
 
         # Use measured cost
         if env_config.attacker_action_costs.service_exists(action_id=a.id, ip=env_config.emulation_config.agent_ip):

@@ -27,5 +27,5 @@ class AttackerNIKTOActions:
                               type=AttackerActionType.RECON,
                               descr="Nikto Web Scan",
                               cost=0.1 * cost_noise_multiplier, noise=0.01 * cost_noise_multiplier,
-                              ip=ip, subnet=False, index=index,
+                              ips=ip, subnet=False, index=index,
                               action_outcome=AttackerActionOutcome.INFORMATION_GATHERING)

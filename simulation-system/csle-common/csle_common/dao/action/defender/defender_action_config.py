@@ -3,6 +3,7 @@ import gym
 from csle_common.dao.action.defender.defender_action import DefenderAction
 from csle_common.dao.action.defender.defender_action_id import DefenderActionId
 from csle_common.dao.action.defender.defender_update_state_actions import DefenderUpdateStateActions
+from csle_common.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
 
 
 class DefenderActionConfig:
@@ -10,8 +11,9 @@ class DefenderActionConfig:
     Configuration of the action space for the defender
     """
     def __init__(self, num_indices : int, actions: List[DefenderAction] = None,
-                 stopping_action_ids : List[int] = None, multiple_stop_actions : List[DefenderAction] = None,
-                 multiple_stop_actions_ids : List[int] = None):
+                 stopping_action_ids : List[DefenderActionId] = None,
+                 multiple_stop_actions : List[DefenderAction] = None,
+                 multiple_stop_actions_ids : List[DefenderActionId] = None):
         """
         Class constructor
 
@@ -66,3 +68,25 @@ class DefenderActionConfig:
             if self.actions[i].id == DefenderActionId.CONTINUE:
                 return i
         raise ValueError("No Continue Action in the action space")
+
+
+    @staticmethod
+    def all_actions_config(num_nodes: int, subnet_masks: List[str]) -> "DefenderActionConfig":
+        defender_actions = []
+
+        # Host actions
+        for idx in range(num_nodes):
+            #actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
+            pass
+
+        # Subnet actions
+        defender_actions.append(DefenderStoppingActions.STOP(index=num_nodes + 1))
+        defender_actions.append(DefenderStoppingActions.CONTINUE(index=num_nodes + 1))
+
+        defender_actions = sorted(defender_actions, key=lambda x: (x.id.value, x.index))
+        stopping_action_ids = [
+            DefenderActionId.STOP, DefenderActionId.CONTINUE
+        ]
+        defender_action_config = DefenderActionConfig(
+            num_indices=num_nodes + 1, actions=defender_actions, stopping_action_ids=stopping_action_ids)
+        return defender_action_config

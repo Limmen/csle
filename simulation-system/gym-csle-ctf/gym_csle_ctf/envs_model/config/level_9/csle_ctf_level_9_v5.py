@@ -48,19 +48,19 @@ class CSLECTFLevel9V5:
 
         # Subnet actions
         attacker_actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(
-            index=num_nodes + 1, ip=subnet_mask, subnet=True))
-        attacker_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ip=subnet_mask, subnet=True))
+            index=num_nodes + 1, ips=subnet_mask, subnet=True))
+        attacker_actions.append(AttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ips=subnet_mask, subnet=True))
         attacker_actions.append(AttackerShellActions.FIND_FLAG(index=num_nodes + 1))
         attacker_actions.append(AttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
         attacker_actions.append(AttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
         attacker_actions.append(AttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
         attacker_actions.append(
-            AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
+            AttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_mask,
                                                                  subnet=True))
-        attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
-                                                                         subnet=True))
-        attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ip=subnet_mask,
-                                                                         subnet=True))
+        attacker_actions.append(AttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_mask,
+                                                                                  subnet=True))
+        attacker_actions.append(AttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_mask,
+                                                                                  subnet=True))
 
         attacker_actions.append(AttackerStoppingActions.CONTINUE(index=num_nodes + 1))
 

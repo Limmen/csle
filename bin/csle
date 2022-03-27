@@ -23,6 +23,7 @@ from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
 import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 from csle_attacker.attacker import Attacker
+from csle_common.dao.network.env_state import EnvState
 
 
 @click.group()
@@ -31,6 +32,43 @@ def commands() -> None:
     CSLE CLI Tool
     """
     pass
+
+
+def attacker_shell(s: EnvState):
+    latest_reward = 0
+    cumulative_reward = 0
+    done = False
+    while True:
+        raw_input = input("> ")
+        raw_input = raw_input.strip()
+        if raw_input == "help":
+            print("Enter an action id to execute the action, "
+                  "press R to reset, press G to print the rewards, "
+                  "press S to print the state, press A to print the actions, "
+                  "press D to check if done"
+                  "press H to print the history of actions")
+        elif raw_input == "A":
+            print("Attacker actions:")
+            for i, a in enumerate(s.env_config.attacker_action_conf.actions):
+                print(f"idx:{i}, a:{a}")
+        elif raw_input == "S":
+            print(s)
+        elif raw_input == "D":
+            print(done)
+        elif raw_input == "G":
+            print(f"Latest reward:{latest_reward}, cumulative reward:{cumulative_reward}")
+        elif raw_input == "R":
+            print("Resetting the state")
+            s.reset_state()
+        else:
+            try:
+                attacker_action_idx = int(raw_input)
+                attacker_action = s.env_config.attacker_action_conf.actions[attacker_action_idx]
+                s_prime, r, done = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
+                latest_reward = r
+                cumulative_reward = cumulative_reward + r
+            except Exception as e:
+                print("There was an error parsing the input, please enter an integer representing an attacker action")
 
 
 @click.argument('emulation', default="", type=str)
@@ -44,7 +82,8 @@ def attacker(emulation : str) -> None:
     """
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
-        Attackerpass
+        s = EnvState.from_emulation_env_config(emulation_env_config=emulation_env_config)
+        attacker_shell(s=s)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 

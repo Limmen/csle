@@ -1,4 +1,7 @@
+from typing import Union
 import re
+import numpy as np
+import csle_common.constants.constants as constants
 from csle_common.dao.network.network_config import NetworkConfig
 from csle_common.dao.network.env_mode import EnvMode
 from csle_common.dao.network.emulation_config import EmulationConfig
@@ -13,6 +16,9 @@ from csle_common.dao.action_results.action_alerts import ActionAlerts
 from csle_common.dao.action.attacker.attacker_action_config import AttackerActionConfig
 from csle_common.dao.action.defender.defender_action_config import DefenderActionConfig
 from csle_common.dao.render.render_config import RenderConfig
+from csle_common.dao.network.node_type import NodeType
+from csle_common.dao.network.credential import Credential
+from csle_common.dao.network.node import Node
 
 
 class CSLEEnvConfig:
@@ -222,7 +228,7 @@ class CSLEEnvConfig:
         self.randomize_state_max_steps = 20
         self.randomize_starting_state_policy = None
         self.randomize_state_steps_list = [0, 8, 16, 23]
-        self.attacker_static_opponent : "CustomAttackerBotAgent" = None
+        self.attacker_static_opponent : Union["CustomAttackerBotAgent", None] = None
         self.snort_baseline_simulate = False
         self.attacker_early_stopping_reward = 10
         self.use_attacker_action_stats_to_update_defender_state = False
@@ -243,7 +249,7 @@ class CSLEEnvConfig:
         self.emulation_config.port_forward_next_port +=1
         return p
 
-    def _create_flags_lookup(self) -> dict:
+    def _create_flags_lookup(self) -> Union[dict, None]:
         """
         Creates a lookup dict of (flagpath -> FlagDTO)
 
@@ -425,3 +431,148 @@ class CSLEEnvConfig:
         env_config.attacker_prevented_stops_remaining = self.attacker_prevented_stops_remaining
         env_config.multistop_costs = self.multistop_costs
         return env_config
+
+    @staticmethod
+    def from_emulation_config(
+            emulation_env_config: EmulationEnvConfig, attacker_num_ports_obs: int =5,
+            attacker_num_vuln_obs: int = 5,
+            attacker_num_sh_obs : int = 5, simulate_detection=False, detection_reward=10,
+            base_detection_p : float = 0.01,
+            manual_play : bool = False, state_type: StateType = StateType.BASE) -> "CSLEEnvConfig":
+        """
+        Creates an environment configuration from an emulation environment configuration
+
+        :param emulation_env_config: the emulation environment configuration
+        :param attacker_num_ports_obs: the number of ports to store in the attacker observation
+        :param attacker_num_vuln_obs: the number of vulnerabilities to store in the attacker observation
+        :param attacker_num_sh_obs: the number of compromised shells to store in the attacker observation
+        :param simulate_detection: whether to simulate detection or not
+        :param detection_reward: the detection reward
+        :param base_detection_p: the base detection probability
+        :param manual_play: whether to use manual play or not
+        :param state_type: the state type
+        :return: the created configuration
+        """
+        network_conf = CSLEEnvConfig.emulation_env_config_to_network_config(emulation_env_config=emulation_env_config)
+        attacker_action_conf = AttackerActionConfig.all_actions_config(
+            num_nodes=len(network_conf.nodes), subnet_masks=emulation_env_config.topology_config.subnetwork_masks,
+            hacker_ip=emulation_env_config.containers_config.agent_ip)
+        defender_action_conf = DefenderActionConfig.all_actions_config(
+            num_nodes=len(network_conf.nodes),
+            subnet_masks=emulation_env_config.topology_config.subnetwork_masks)
+        render_config = RenderConfig(num_levels = int(len(network_conf.nodes)/4), num_nodes_per_level = 4)
+
+        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                           agent_username=constants.CSLE_ADMIN.USER,
+                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        env_config = CSLEEnvConfig(
+            attacker_action_conf=attacker_action_conf,
+            defender_action_conf=defender_action_conf,
+            network_conf=network_conf,
+            attacker_num_ports_obs=attacker_num_ports_obs,
+            attacker_num_vuln_obs=attacker_num_vuln_obs,
+            attacker_num_sh_obs=attacker_num_sh_obs,
+            num_nodes=len(network_conf.nodes),
+            hacker_ip = emulation_env_config.containers_config.agent_ip,
+            router_ip = emulation_env_config.containers_config.router_ip,
+            render_config=render_config, env_mode=EnvMode.EMULATION,
+            emulation_config=emulation_config, simulate_detection=simulate_detection,
+            detection_reward=detection_reward, base_detection_p=base_detection_p, manual_play=manual_play,
+            state_type=state_type, emulation_env_config=emulation_env_config
+        )
+        for c in emulation_env_config.containers_config.containers:
+            if c.name in constants.CONTAINER_IMAGES.IDS_IMAGES:
+                env_config.ids_router = True
+        return env_config
+
+    @staticmethod
+    def emulation_env_config_to_network_config(emulation_env_config: EmulationEnvConfig) -> NetworkConfig:
+        """
+        Creates a network config object from the emulation config
+
+        :return: the network config
+        """
+        nodes = []
+        for c in emulation_env_config.containers_config.containers:
+
+            ip_ids = list(map(lambda ip: int(ip.rsplit(".", 1)[-1]), c.get_ips()))
+            node_type = NodeType.SERVER
+            for router_img in constants.CONTAINER_IMAGES.ROUTER_IMAGES:
+                if router_img in c.name:
+                    node_type = NodeType.ROUTER
+            for hacker_img in constants.CONTAINER_IMAGES.HACKER_IMAGES:
+                if hacker_img in c.name:
+                    node_type = NodeType.HACKER
+            for client_img in constants.CONTAINER_IMAGES.CLIENT_IMAGES:
+                if client_img in c.name:
+                    node_type = NodeType.CLIENT
+
+            flags = []
+            for node_flags_cfg in emulation_env_config.flags_config.flags:
+                if node_flags_cfg.ip in c.get_ips():
+                    flags = node_flags_cfg.flags
+
+            level = c.level
+            vulnerabilities = emulation_env_config.vuln_config.vulnerabilities
+
+            services = []
+            for node_services_cfg in emulation_env_config.services_config.services_configs:
+                if node_services_cfg.ip in c.get_ips():
+                    services = node_services_cfg.services
+
+            os = c.os
+
+            credentials = []
+            for vuln in vulnerabilities:
+                credentials = credentials + vuln.credentials
+            for serv in services:
+                credentials = credentials + serv.credentials
+
+            for user_cfg in emulation_env_config.users_config.users:
+                if user_cfg.ip in c.get_ips():
+                    for user in user_cfg.users:
+                        credentials.append(Credential(username=user[0], pw=user[1], root=user[2]))
+
+            root_usernames = []
+            for cred in credentials:
+                if cred.root:
+                    root_usernames.append(cred.username)
+            visible = True
+            reachable_nodes = []
+            network_names = list(map(lambda x: x[1].name, c.ips_and_networks))
+            for c2 in emulation_env_config.containers_config.containers:
+                reachable = False
+                if c2.name != c.name:
+                    for ip_net in c2.ips_and_networks:
+                        if ip_net[1].name in network_names:
+                            reachable = True
+                if reachable:
+                    reachable_nodes = reachable_nodes + c2.get_ips()
+            node = Node(
+                ips = c.get_ips(),
+                ip_ids = ip_ids, id = ip_ids[0], type=node_type, flags=flags, level=int(level),
+                vulnerabilities=vulnerabilities, services=services, os=os, credentials=credentials,
+                root_usernames=root_usernames, visible=visible, reachable_nodes=reachable_nodes, firewall=False
+            )
+            nodes.append(node)
+
+        adj_matrix = np.zeros((len(nodes), len(nodes)))
+        for i in range(len(emulation_env_config.containers_config.containers)):
+            for j in range(len(emulation_env_config.containers_config.containers)):
+                network_names = list(map(lambda x: x[1].name, emulation_env_config.containers_config.containers[i].ips_and_networks))
+                network_names2 = list(map(lambda x: x[1].name, emulation_env_config.containers_config.containers[j].ips_and_networks))
+                reachable = False
+                for name in network_names2:
+                    if name in network_names:
+                        reachable = True
+                if reachable:
+                    adj_matrix[i][j] = 1
+        flags_lookup = {}
+        for node in nodes:
+            for flag in node.flags:
+                flags_lookup[(node.ips[0], flag.path.replace(".txt", ""))] = flag
+        net_conf = NetworkConfig(subnet_masks=emulation_env_config.topology_config.subnetwork_masks,
+                                 vulnerable_nodes=emulation_env_config.containers_config.vulnerable_nodes, nodes=nodes,
+                                 agent_reachable=emulation_env_config.containers_config.agent_reachable_nodes,
+                                 adj_matrix=adj_matrix, flags_lookup=flags_lookup)
+        return net_conf

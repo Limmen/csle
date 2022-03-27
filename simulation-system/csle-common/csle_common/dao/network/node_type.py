@@ -11,3 +11,4 @@ class NodeType(Enum):
     HACKER = 0
     ROUTER = 1
     SERVER = 2
+    CLIENT = 3

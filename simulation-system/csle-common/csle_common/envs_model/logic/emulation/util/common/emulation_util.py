@@ -71,8 +71,8 @@ class EmulationUtil:
 
         sftp_client = conn.open_sftp()
         file_name = dir + str(action.id.value) + "_" + str(action.index)
-        if not action.subnet and action.ip is not None:
-            file_name = file_name + "_" + action.ip
+        if not action.subnet and action.ips is not None:
+            file_name = file_name + "_" + action.ips
         elif ip is not None:
             file_name = file_name + "_" + ip
         if service is not None:
@@ -117,8 +117,8 @@ class EmulationUtil:
 
         sftp_client = conn.open_sftp()
         file_name = dir + str(action.id.value) + "_" + str(action.index)
-        if not action.subnet and action.ip is not None:
-            file_name = file_name + "_" + action.ip
+        if not action.subnet and action.ips is not None:
+            file_name = file_name + "_" + action.ips
         elif ip is not None:
             file_name = file_name + "_" + ip
         if service is not None:

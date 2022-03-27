@@ -30,7 +30,8 @@ class ServicesConfig:
 
         :return: a dto representation of the object
         """
-        dto = ServicesConfig(services_configs=list(map(lambda x: x.from_dict(), d["services_configs"])))
+        dto = ServicesConfig(services_configs=list(map(lambda x: NodeServicesConfig.from_dict(x),
+                                                       d["services_configs"])))
         return dto
 
     def __str__(self) -> str:

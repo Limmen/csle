@@ -24,4 +24,4 @@ class AttackerNetworkServiceActions:
                               type=AttackerActionType.POST_EXPLOIT,
                               descr="Uses known credentials to login to network services on a server",
                               cost=0.01, noise=0.01, index=index,
-                              ip=ip, subnet=False, action_outcome=AttackerActionOutcome.LOGIN)
+                              ips=ip, subnet=False, action_outcome=AttackerActionOutcome.LOGIN)

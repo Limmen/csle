@@ -6,7 +6,7 @@ from csle_common.dao.network.env_config import CSLEEnvConfig
 from csle_common.dao.network.env_state import EnvState
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
-from csle_common.dao.observation.attacker import AttackerMachineObservationState
+from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 import csle_common.constants.constants as constants
 from csle_common.dao.action_results.nmap_scan_result import NmapScanResult
 from csle_common.dao.action_results.nmap_host_result import NmapHostResult
@@ -47,7 +47,7 @@ class NmapUtil:
         if dir is None or dir == "":
             dir = env_config.nmap_cache_dir
 
-        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ip
+        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ips
         if a.subnet:
             query = str(a.id.value) + "_" + str(a.index)
         if machine_ip is not None:
@@ -94,7 +94,7 @@ class NmapUtil:
         cache_list = cache_list[1:-1]  # remove command ([0]) and prompt ([-1])
 
         # Search through cache
-        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
+        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         if a.subnet:
             query = str(a.id.value) + "_" + str(a.index) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
         for item in cache_list:
@@ -542,12 +542,12 @@ class NmapUtil:
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
         # Use measured cost
-        if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ip):
-            a.cost = env_config.attacker_action_costs.get_cost(action_id=a.id, ip=a.ip)
+        if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ips):
+            a.cost = env_config.attacker_action_costs.get_cost(action_id=a.id, ip=a.ips)
 
         # Use measured # alerts
-        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ip):
-            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ip)
+        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ips):
+            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ips)
 
         reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
 
@@ -580,8 +580,8 @@ class NmapUtil:
 
         # Host action
         else:
-            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + ".xml"
-            cache_id = (a.id, a.index, a.ip, a.subnet)
+            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + ".xml"
+            cache_id = (a.id, a.index, a.ips, a.subnet)
 
         # Subnet action
         if a.subnet:
@@ -619,10 +619,10 @@ class NmapUtil:
                 num_alerts = len(fast_logs)
                 EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
                                                     action=a, env_config=env_config)
-                env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=a.ip, alert=(sum_priority_alerts, num_alerts))
+                env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=a.ips, alert=(sum_priority_alerts, num_alerts))
 
             EmulationUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-            env_config.attacker_action_costs.add_cost(action_id=a.id, ip=a.ip, cost=round(total_time, 1))
+            env_config.attacker_action_costs.add_cost(action_id=a.id, ip=a.ips, cost=round(total_time, 1))
             cache_result = cache_filename
 
         # Read result
@@ -779,10 +779,10 @@ class NmapUtil:
         logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
         logged_in_ips_str = "_".join(logged_in_ips)
 
-        base_cache_id = (a.id, a.index, a.ip, a.subnet)
+        base_cache_id = (a.id, a.index, a.ips, a.subnet)
         for ip in logged_in_ips:
             base_cache_id = base_cache_id + (ip,)
-        base_cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip
+        base_cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ips
         if a.subnet:
             base_cache_filename = str(a.id.value) + "_" + str(a.index)
         base_cache_filename = base_cache_filename + "_" + logged_in_ips_str + ".xml"
@@ -817,7 +817,7 @@ class NmapUtil:
                     if machine.logged_in and machine.tools_installed:
                         machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
-                    if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
+                    if machine.ip in reachable and (machine.ip == a.ips or a.subnet):
                         machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
                     new_machines_obs_1.append(machine)
                 s_prime.attacker_obs_state.machines = new_machines_obs_1
@@ -832,10 +832,10 @@ class NmapUtil:
         for machine in s.attacker_obs_state.machines:
             scan_result = None
             new_m_obs = AttackerMachineObservationState(ip=machine.ip)
-            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ip + "_" + machine.ip + ".xml"
+            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + "_" + machine.ip + ".xml"
             if a.subnet:
                 cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + machine.ip + ".xml"
-            cache_id = (a.id, a.index, a.ip, a.subnet, machine.ip)
+            cache_id = (a.id, a.index, a.ips, a.subnet, machine.ip)
 
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
 
@@ -930,7 +930,7 @@ class NmapUtil:
             if machine.logged_in and machine.tools_installed:
                 machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
-            if machine.ip in reachable and (machine.ip == a.ip or a.subnet):
+            if machine.ip in reachable and (machine.ip == a.ips or a.subnet):
                 machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
             new_machines_obs_1.append(machine)
         s_prime.attacker_obs_state.machines = new_machines_obs_1

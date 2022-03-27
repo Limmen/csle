@@ -24,7 +24,7 @@ class AttackerStoppingActions:
                               type=AttackerActionType.STOP,
                               descr="Aborts an ongoing intrusion",
                               cost=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.GAME_END, alt_cmd=alt_cmd,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.GAME_END, alt_cmd=alt_cmd,
                               noise=0)
 
     @staticmethod
@@ -42,5 +42,5 @@ class AttackerStoppingActions:
                               type=AttackerActionType.CONTINUE,
                               descr="A 'continue' action, the attacker chooses to not make any action",
                               cost=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=AttackerActionOutcome.CONTINUE, alt_cmd=alt_cmd,
+                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.CONTINUE, alt_cmd=alt_cmd,
                               noise=0)

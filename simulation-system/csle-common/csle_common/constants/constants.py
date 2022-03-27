@@ -38,6 +38,7 @@ class CONTAINER_IMAGES:
     IDS_IMAGES = ["router_2"]
     ROUTER_IMAGES = ["router_1", "router_2"]
     HACKER_IMAGES = ["hacker_kali_1"]
+    CLIENT_IMAGES = ["client_1"]
 
 
 class CONTAINER_OS:

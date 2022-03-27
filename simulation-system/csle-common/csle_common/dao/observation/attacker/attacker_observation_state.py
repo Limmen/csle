@@ -99,7 +99,7 @@ class AttackerObservationState:
             return ips_str
         if a.index < len(self.machines) and a.index < self.num_machines:
             return self.machines[a.index].ip
-        return a.ip
+        return a.ips
 
     def exploit_tried(self, a: AttackerAction, m: AttackerMachineObservationState) -> bool:
         """
