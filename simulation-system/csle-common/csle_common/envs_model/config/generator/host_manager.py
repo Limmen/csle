@@ -1,15 +1,15 @@
 from typing import List, Tuple
 import grpc
 import time
-from csle_common.dao.container_config.containers_config import ContainersConfig
-from csle_common.dao.container_config.log_sink_config import LogSinkConfig
-from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 import csle_common.constants.constants as constants
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
 import csle_collector.host_manager.query_host_manager
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 
 
@@ -30,7 +30,7 @@ class HostManager:
             return False
 
     @staticmethod
-    def _start_host_managers_if_not_running(emulation_config: EmulationConfig, containers_cfg: ContainersConfig,
+    def _start_host_managers_if_not_running(emulation_config: RunningEmulationEnvConfig, containers_cfg: ContainersConfig,
                                             log_sink_config: LogSinkConfig) -> None:
         """
         Utility method for checking if the host manager is running and starting it if it is not running
@@ -42,7 +42,7 @@ class HostManager:
         """
         for c in containers_cfg.containers:
             # Connect
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.get_ips()[0])
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=c.get_ips()[0])
 
             # Check if host_manager is already running
             cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
@@ -65,8 +65,8 @@ class HostManager:
                 time.sleep(5)
 
     @staticmethod
-    def start_host_monitor_thread(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
-                                 log_sink_config: LogSinkConfig) -> None:
+    def start_host_monitor_thread(containers_cfg: ContainersConfig, emulation_config: RunningEmulationEnvConfig,
+                                  log_sink_config: LogSinkConfig) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and the monitor thread
@@ -94,8 +94,8 @@ class HostManager:
 
 
     @staticmethod
-    def stop_host_monitor_thread(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
-                                log_sink_config: LogSinkConfig) -> None:
+    def stop_host_monitor_thread(containers_cfg: ContainersConfig, emulation_config: RunningEmulationEnvConfig,
+                                 log_sink_config: LogSinkConfig) -> None:
         """
         A method that sends a request to the HostManager on every container to stop the monitor threads
 
@@ -126,9 +126,11 @@ class HostManager:
         :param emulation_env_config: the emulation config
         :return: List of monitor thread statuses
         """
-        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False,
+                                                     kafka_port=emulation_env_config.log_sink_config.kafka_port,
+                                                     kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0])
 
         statuses = []
         HostManager._start_host_managers_if_not_running(
@@ -147,8 +149,8 @@ class HostManager:
 
 
     @staticmethod
-    def get_host_log_data(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
-                         log_sink_config: LogSinkConfig, failed_auth_last_ts: float,
+    def get_host_log_data(containers_cfg: ContainersConfig, emulation_config: RunningEmulationEnvConfig,
+                          log_sink_config: LogSinkConfig, failed_auth_last_ts: float,
                           login_last_ts: float) \
             -> List[csle_collector.host_manager.host_manager_pb2.HostMetricsDTO]:
         """

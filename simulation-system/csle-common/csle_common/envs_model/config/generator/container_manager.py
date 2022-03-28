@@ -10,11 +10,10 @@ import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
 from csle_common.envs_model.config.generator.env_info import EnvInfo
-from csle_common.dao.container_config.containers_config import ContainersConfig
-from csle_common.util.experiments_util import util
-from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
-from csle_common.dao.container_config.container_network import ContainerNetwork
-from csle_common.dao.container_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.util import util
+from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 import csle_common.constants.constants as constants
 
 
@@ -205,44 +204,6 @@ class ContainerManager:
         networks, network_ids = ContainerManager.list_docker_networks()
         return networks
 
-    @staticmethod
-    def run_container_config(containers_config: ContainersConfig, path: str = None) -> None:
-        """
-        Starts all containers with a given set of configurations
-
-        :param containers_config: the container configurations
-        :param path: the path where to store created artifacts
-        :return: None
-        """
-        if path == None:
-            path = util.default_output_dir()
-        client_1 = docker.from_env()
-        project = constants.CSLE.NAME
-        ContainerGenerator.write_containers_config(containers_cfg=containers_config, path=path)
-        for idx, c in enumerate(containers_config.containers):
-            container = c.name
-            version = c.version
-            image = project + constants.COMMANDS.SLASH_DELIM + container + constants.COMMANDS.COLON_DELIM + version
-            suffix = str(idx)
-            name = project + constants.COMMANDS.DASH_DELIM + c.minigame + constants.COMMANDS.DASH_DELIM + container \
-                   + suffix + constants.COMMANDS.DASH_DELIM + constants.CSLE.LEVEL + c.level
-            labels = {}
-            labels[constants.DOCKER.CONTAINER_CONFIG_DIR]=path
-            labels[constants.DOCKER.CONTAINER_CONFIG_CFG]=path + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH
-            labels[constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG] = \
-                path + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH
-            labels[constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG] = \
-                path + constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG_PATH
-            labels[constants.DOCKER.CONTAINER_CONFIG_USERS_CFG] = \
-                path + constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH
-            labels[constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG] = \
-                path + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH
-            labels[constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG] = \
-                path + constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG_PATH
-            print("Running container: {}".format(name))
-            client_1.containers.run(image=image, name=name, hostname=name,
-                                    detach=True, tty=True, network=c.internal_network, labels=labels,
-                                    publish_all_ports=True, cap_add=[constants.DOCKER.NET_ADMIN])
 
     @staticmethod
     def start_all_stopped_containers() -> None:
@@ -289,7 +250,8 @@ class ContainerManager:
         parsed_envs = EnvInfo.parse_runnning_emulation_infos()
         container_name_image_ip = []
         for env in parsed_envs:
-            container_name_image_ip = container_name_image_ip + list(map(lambda x: (x.name, x.image_name, x.ips), env.containers))
+            container_name_image_ip = container_name_image_ip + \
+                                      list(map(lambda x: (x.name, x.image_name, x.ips), env.containers))
         return container_name_image_ip
 
     @staticmethod

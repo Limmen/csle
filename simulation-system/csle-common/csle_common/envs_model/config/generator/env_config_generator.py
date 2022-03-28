@@ -6,21 +6,18 @@ import random
 import os
 import re
 import subprocess
-import psycopg
 import json
-import jsonpickle
-from csle_common.dao.container_config.vulnerability_type import VulnType
+from csle_common.dao.emulation_config.vulnerability_type import VulnType
 from csle_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
 from csle_common.envs_model.config.generator.container_generator import ContainerGenerator
-from csle_common.dao.container_config.containers_config import ContainersConfig
-from csle_common.dao.container_config.resources_config import ResourcesConfig
-from csle_common.dao.container_config.node_resources_config import NodeResourcesConfig
-from csle_common.dao.container_config.flags_config import FlagsConfig
-from csle_common.util.experiments_util import util
-from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
-from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.container_config.log_sink_config import LogSinkConfig
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.dao.emulation_config.resources_config import ResourcesConfig
+from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
+from csle_common.dao.emulation_config.flags_config import FlagsConfig
+from csle_common.util import util
+from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.envs_model.config.generator.flags_generator import FlagsGenerator
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from csle_common.envs_model.config.generator.ids_manager import IDSManager
@@ -123,9 +120,10 @@ class EnvConfigGenerator:
                                             agent_container_names=agent_container_names,
                                             router_container_names = gateway_container_names
                                             )
-        emulation_env_config = EmulationEnvConfig(name=name,
-            topology_config=topology, containers_config = containers, vuln_config=vulnerabilities,
-            users_config = users, flags_config = flags, traffic_config = traffic, resources_config=resources)
+        emulation_env_config = EmulationEnvConfig(
+            name=name, topology_config=topology, containers_config = containers, vuln_config=vulnerabilities,
+            users_config = users, flags_config = flags, traffic_config = traffic, resources_config=resources,
+            services_config=None, log_sink_config=None)
         return emulation_env_config
 
     @staticmethod
@@ -388,10 +386,10 @@ class EnvConfigGenerator:
         if path == None:
             path = util.default_output_dir()
         env_dirs = EnvConfigGenerator.get_env_dirs(path)
-        flags_config = []
+        flags_configs = []
         for d in env_dirs:
-            flags_config.append(util.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH))
-        return flags_config
+            flags_configs.append(util.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH))
+        return flags_configs
 
     @staticmethod
     def config_exists(path: str = None) -> bool:
@@ -494,9 +492,10 @@ class EnvConfigGenerator:
         :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
         :return: None
         """
-        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False,
+                                                     kafka_port=emulation_env_config.log_sink_config.kafka_port)
         steps = 12
         if no_traffic:
             steps = steps-1
@@ -582,9 +581,11 @@ class EnvConfigGenerator:
         :param log_sink_config: the config to apply
         :return: None
         """
-        emulation_config = EmulationConfig(agent_ip=log_sink_config.container.ips_and_networks[0][0],
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=log_sink_config.container.ips_and_networks[0][0],
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False,
+                                                     kafka_port=log_sink_config.kafka_port,
+                                                     kafka_ip=log_sink_config.container.get_ips()[0])
         steps = 4
         current_step = 1
         print(f"-- Configuring the logsink --")
@@ -618,9 +619,9 @@ class EnvConfigGenerator:
         :param emulation_env_config: the configuration of the emulation
         :return: None
         """
-        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
 
         TrafficGenerator.create_and_start_internal_traffic_generators(
             traffic_config=emulation_env_config.traffic_config,
@@ -641,9 +642,10 @@ class EnvConfigGenerator:
         :param emulation_env_config: the configuration for connecting to the emulation
         :return: None
         """
-        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False,
+                                                     kafka_port=emulation_env_config.log_sink_config.kafka_port)
         TrafficGenerator.stop_internal_traffic_generators(traffic_config=emulation_env_config.traffic_config,
                                                           emulation_config=emulation_config)
         TrafficGenerator.stop_client_population(traffic_config=emulation_env_config.traffic_config,
@@ -806,20 +808,7 @@ class EnvConfigGenerator:
         :param config: the config to install
         :return: None
         """
-        print(f"Installing emulation:{config.name} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
-            with conn.cursor() as cur:
-                try:
-                    config.vuln_config = config.vuln_config.to_dict()
-                    config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
-                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
-                                f"VALUES (%s, %s)", (config.name, config_json_str))
-                    conn.commit()
-                    print(f"Emulation {config.name} installed successfully")
-                except psycopg.errors.UniqueViolation as e:
-                    print(f"Emulation {config.name} is already installed")
+        MetastoreFacade.install_emulation(config=config)
 
 
     @staticmethod
@@ -830,14 +819,7 @@ class EnvConfigGenerator:
         :param config: the config to uninstall
         :return: None
         """
-        print(f"Uninstalling emulation:{config.name} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
-            with conn.cursor() as cur:
-                cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (config.name,))
-                conn.commit()
-                print(f"Emulation {config.name} uninstalled successfully")
+        MetastoreFacade.uninstall_emulation(config=config)
 
 
 

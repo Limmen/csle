@@ -1,9 +1,9 @@
-from typing import Tuple
-from csle_common.dao.network.env_state import EnvState
-from csle_common.dao.network.env_config import CSLEEnvConfig
+import csle_common.constants.constants as constants
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
-from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from csle_common.envs_model.util.env_dynamics_util import EnvDynamicsUtil
 from csle_attacker.simulation.util.simulator_util import SimulatorUtil
 
 
@@ -13,9 +13,9 @@ class ShellSimulatorUtil:
     """
 
     @staticmethod
-    def simulate_service_login_helper(s: EnvState, a: AttackerAction,
-                                      env_config: CSLEEnvConfig, service_name : str = "ssh") \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_service_login_helper(s: EmulationEnvState, a: AttackerAction,
+                                      env_config: EmulationEnvAgentConfig, service_name : str = constants.SSH.SERVICE_NAME) \
+            -> EmulationEnvState:
         """
         Helper function for simulating login to various network services
 
@@ -23,7 +23,7 @@ class ShellSimulatorUtil:
         :param a: the action to take
         :param env_config: the env config
         :param service_name: the name of the service to login to
-        :return: s_prime, reward
+        :return: s_prime
         """
         new_obs_machines = []
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s, env_config=env_config)
@@ -32,12 +32,12 @@ class ShellSimulatorUtil:
         for node in env_config.network_conf.nodes:
             if node.ips not in reachable_nodes:
                 continue
-            new_m_obs = AttackerMachineObservationState(ip=node.ips)
+            new_m_obs = AttackerMachineObservationState(ips=node.ips)
             new_m_obs.reachable = node.reachable_nodes
             credentials = None
             access = False
             for o_m in s.attacker_obs_state.machines:
-                if o_m.ip == node.ips:
+                if o_m.ips == node.ips:
                     access = o_m.shell_access
                     credentials = o_m.shell_access_credentials
             if access:
@@ -51,7 +51,7 @@ class ShellSimulatorUtil:
                 if new_m_obs.logged_in:
                     for cr in credentials:
                         cr_user = cr.username
-                        if cr_user in node.root_usernames and service_name != "ftp":
+                        if cr_user in node.root_usernames and service_name != constants.FTP.SERVICE_NAME:
                             new_m_obs.root = True
                     if new_m_obs.backdoor_installed:
                         new_m_obs.root = True
@@ -59,13 +59,8 @@ class ShellSimulatorUtil:
             new_obs_machines.append(new_m_obs)
 
         net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_obs_machines,
-                                                             env_config=env_config, action=a)
+                                                             emulation_env_agent_config=env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
-        reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        return s_prime
 

@@ -13,7 +13,7 @@ class NmapHostResult:
     A DTO representing a host found with an NMAP scan
     """
 
-    def __init__(self, status: NmapHostStatus = NmapHostStatus.DOWN, ip_addr: str = None,
+    def __init__(self, status: NmapHostStatus = NmapHostStatus.DOWN, ips: List[str] = None,
                  mac_addr: str = None, hostnames: List[str] = None,
                  ports: List[NmapPort] = None, os: NmapOs = None, os_matches: List[NmapOs] = None,
                  vulnerabilities: List[NmapVuln] = None, credentials: List[NmapBruteCredentials] = None,
@@ -22,7 +22,7 @@ class NmapHostResult:
         Initializes the DTO
 
         :param status: the status of the host
-        :param ip_addr: the ip address of the host
+        :param ips: the ip address of the host
         :param mac_addr: the mac address of the host
         :param hostnames: the hostnames of the host
         :param ports: the ports of the host
@@ -33,7 +33,9 @@ class NmapHostResult:
         :param trace: the trace of the host
         """
         self.status = status
-        self.ip_addr = ip_addr
+        self.ips = ips
+        if self.ips is None:
+            self.ips = []
         self.mac_addr = mac_addr
         self.hostnames = hostnames
         self.ports = ports
@@ -49,14 +51,13 @@ class NmapHostResult:
         """
         return "status:{}, ip_addr:{}, mac_addr:{}, hostnames:{}, ports:{}, os:{}, os_matches:{}, " \
                "vulnerabilities:{}, credentials:{}, trace:{}".format(
-            self.status, self.ip_addr, self.mac_addr, " ".join(self.hostnames),
+            self.status, self.ips, self.mac_addr, " ".join(self.hostnames),
             " ".join(list(map(lambda x: str(x), self.ports))), self.os,
             " ".join(list(map(lambda x: str(x), self.os_matches))),
             " ".join(list(map(lambda x: str(x), self.vulnerabilities))),
             " ".join(list(map(lambda x: str(x), self.credentials))),
             self.trace
         )
-
 
     def copy(self) -> "NmapHostResult":
         """

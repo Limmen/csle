@@ -1,10 +1,11 @@
 import random
-from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from csle_common.dao.container_config.node_flags_config import NodeFlagsConfig
-from csle_common.dao.container_config.flags_config import FlagsConfig
-from csle_common.dao.container_config.vulnerability_type import VulnType
+from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
+from csle_common.dao.emulation_config.flags_config import FlagsConfig
+from csle_common.dao.emulation_config.vulnerability_type import VulnType
 from csle_common.util.experiments_util import util
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
+from csle_common.dao.network.flag import Flag
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
 from csle_common.envs_model.config.generator.vuln_generator import VulnerabilityGenerator
@@ -36,10 +37,11 @@ class FlagsGenerator:
         for i in range(num_flags):
             if vulnerabilities[i].vuln_type == VulnType.WEAK_PW:
                 flag_dirs = [constants.COMMANDS.SLASH_DELIM + constants.COMMANDS.TMP_DIR +
-                             constants.COMMANDS.SLASH_DELIM,
-                             constants.COMMANDS.SLASH_DELIM + constants.COMMANDS.HOME_DIR +
-                             constants.COMMANDS.SLASH_DELIM + vulnerabilities[i].username +
                              constants.COMMANDS.SLASH_DELIM]
+                for cred in vulnerabilities[i].credentials:
+                    flag_dirs.append(constants.COMMANDS.SLASH_DELIM + constants.COMMANDS.HOME_DIR +
+                                     constants.COMMANDS.SLASH_DELIM + cred.username +
+                                     constants.COMMANDS.SLASH_DELIM)
             else:
                 flag_dirs = [constants.COMMANDS.SLASH_DELIM + constants.COMMANDS.TMP_DIR +
                              constants.COMMANDS.SLASH_DELIM]
@@ -47,7 +49,8 @@ class FlagsGenerator:
             flag_dir = flag_dirs[dir_idx]
             flag_name = "flag" + str(i)
             filename = flag_name + constants.FILE_PATTERNS.TXT_FILE_SUFFIX
-            flags = [(flag_dir + filename, flag_name, flag_dir, i, True, 1)]
+            flags = [Flag(name=flag_name, dir=flag_dir, id=i, path=flag_dir+filename,
+                          requires_root=True, score=1)]
             flag_cfg = NodeFlagsConfig(ip=vulnerabilities[i].ip, flags=flags)
             flag_cfgs.append(flag_cfg)
 
@@ -56,7 +59,7 @@ class FlagsGenerator:
         return fl_cfg
 
     @staticmethod
-    def create_flags(flags_config: FlagsConfig, emulation_config: EmulationConfig) -> None:
+    def create_flags(flags_config: FlagsConfig, emulation_config: RunningEmulationEnvConfig) -> None:
         """
         Connects to a node in the emulation and creates the flags according to a given flags config
 
@@ -66,18 +69,17 @@ class FlagsGenerator:
         """
         for flags_conf in flags_config.flags:
             print(f"ip:{flags_conf.ip}")
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=flags_conf.ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=flags_conf.ip)
 
             for flag in flags_conf.flags:
-                path, content, dir, id, requires_root, score = flag
-                cmd = constants.COMMANDS.SUDO_RM_RF + " {}".format(path)
+                cmd = constants.COMMANDS.SUDO_RM_RF + " {}".format(flag.path)
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
-                cmd = constants.COMMANDS.SUDO_TOUCH + " {}".format(path)
+                cmd = constants.COMMANDS.SUDO_TOUCH + " {}".format(flag.path)
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
-                cmd = constants.COMMANDS.ECHO + " '{}' >> {}".format(content, path)
+                cmd = constants.COMMANDS.ECHO + " '{}' >> {}".format(flag.name, flag.path)
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
-            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
+            GeneratorUtil.disconnect_admin(emulation_env_config=emulation_config)
 
 
     @staticmethod

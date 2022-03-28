@@ -1,15 +1,15 @@
 import time
 from typing import List, Tuple
 import random
-from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from csle_common.dao.container_config.topology import Topology
-from csle_common.dao.container_config.node_container_config import NodeContainerConfig
-from csle_common.dao.container_config.containers_config import ContainersConfig
-from csle_common.dao.container_config.node_firewall_config import NodeFirewallConfig
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-from csle_common.util.experiments_util import util
+from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
+from csle_common.util import util
 import csle_common.constants.constants as constants
 
 
@@ -82,7 +82,7 @@ class ContainerGenerator:
                 new_network = True
                 for net in networks:
                     if net.subnet_prefix == net_fw_config.network.subnet_prefix:
-                        new_network == False
+                        new_network = False
                 if new_network:
                     networks.append(net_fw_config.network)
                 if net_fw_config.ip is not None:
@@ -102,7 +102,7 @@ class ContainerGenerator:
 
 
     @staticmethod
-    def start_ids(containers_cfg: ContainersConfig, emulation_config: EmulationConfig):
+    def start_ids(containers_cfg: ContainersConfig, emulation_env_config: EmulationEnvConfig):
         """
         Utility function for starting the IDS
 
@@ -113,13 +113,13 @@ class ContainerGenerator:
         for c in containers_cfg.containers:
             for ids_image in constants.CONTAINER_IMAGES.IDS_IMAGES:
                 if ids_image in c.name:
-                    GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.get_ips()[0])
+                    GeneratorUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
                     cmd = constants.COMMANDS.STOP_IDS
-                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[c.get_ips()[0]])
                     time.sleep(1)
                     cmd = constants.COMMANDS.START_IDS
                     print(f"Starting Snort IDS on {c.get_ips()[0]}")
-                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[c.get_ips()[0]])
                     continue
 
 

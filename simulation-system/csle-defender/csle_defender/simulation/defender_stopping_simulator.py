@@ -1,7 +1,6 @@
-from typing import Tuple
 import math
-from csle_common.dao.network.env_state import EnvState
-from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.defender.defender_action import DefenderAction
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 
@@ -12,8 +11,8 @@ class DefenderStoppingSimulator:
     """
 
     @staticmethod
-    def stop_monitor(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                     env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
+    def stop_monitor(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                     env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -21,7 +20,7 @@ class DefenderStoppingSimulator:
         :param defender_action: the action to take
         :param attacker_action: the attacker's previous action
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         s_prime = s
         s_prime.defender_obs_state.stops_remaining -= 1
@@ -42,34 +41,12 @@ class DefenderStoppingSimulator:
         s_prime.defender_obs_state.sum_priority_alerts_total = 0
         s_prime.defender_obs_state.num_alerts_total = 0
 
-        reward = 0
-        done = False
-        if s_prime.attacker_obs_state.ongoing_intrusion():
-            s_prime.attacker_obs_state.undetected_intrusions_steps += 1
-            if env_config.attacker_prevented_stops_remaining == s_prime.defender_obs_state.stops_remaining:
-                if not s_prime.defender_obs_state.caught_attacker:
-                    s_prime.defender_obs_state.caught_attacker = True
-                    reward = reward + env_config.defender_caught_attacker_reward
-            if s_prime.defender_obs_state.stops_remaining == 0:
-                done = True
-        else:
-            if s_prime.defender_obs_state.stops_remaining <= env_config.attacker_prevented_stops_remaining:
-                s_prime.defender_obs_state.stopped = True
-
-            if s_prime.defender_obs_state.stops_remaining == 0:
-                done = True
-
-        idx = env_config.maximum_number_of_defender_stop_actions - (env_config.maximum_number_of_defender_stop_actions -
-                                                                    s_prime.defender_obs_state.stops_remaining)
-        costs = env_config.multistop_costs[idx]
-        reward = reward + costs
-
-        return s_prime, reward, done
+        return s_prime
 
 
     @staticmethod
-    def continue_monitor(s: EnvState, defender_action: DefenderAction, env_config: CSLEEnvConfig,
-                         attacker_action: AttackerAction) -> Tuple[EnvState, float, bool]:
+    def continue_monitor(s: EmulationEnvState, defender_action: DefenderAction, env_config: EmulationEnvAgentConfig,
+                         attacker_action: AttackerAction) -> EmulationEnvState:
         """
         Performs a "continue" action for the defender (continues monitoring)
 
@@ -77,15 +54,8 @@ class DefenderStoppingSimulator:
         :param defender_action: the action to take
         :param attacker_action: the attacker's previous action
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         s_prime = s
-        reward = env_config.defender_service_reward/math.pow(2, (env_config.maximum_number_of_defender_stop_actions-
-                                                     s_prime.defender_obs_state.stops_remaining))
-        if s_prime.attacker_obs_state.ongoing_intrusion():
-            if not s.defender_obs_state.caught_attacker \
-                    and not env_config.attacker_prevented_stops_remaining >= s_prime.defender_obs_state.stops_remaining:
-                reward = reward + env_config.defender_intrusion_reward
-                s_prime.attacker_obs_state.undetected_intrusions_steps += 1
-        return s_prime, reward, False
+        return s_prime
 

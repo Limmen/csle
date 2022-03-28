@@ -9,64 +9,20 @@ class AttackerObservationState:
     Represents the attacker's agent's current belief state of the environment
     """
 
-    def __init__(self, num_machines : int, num_ports : int, num_vuln : int, num_sh : int,
-                 num_flags : int, catched_flags : int, agent_reachable = None):
+    def __init__(self, catched_flags : int, agent_reachable = None):
         """
         Initializes the state
 
-        :param num_machines: the number of machines
-        :param num_ports: the number of ports
-        :param num_vuln: the number of vulnerabilities
-        :param num_sh: the number of shell access
         :param num_flags: the number of flags
         :param catched_flags: the number of catched flags
         :param agent_reachable: whether this node is reachable from the agent
         """
-        self.num_machines = num_machines
-        self.num_ports = num_ports
-        self.num_vuln = num_vuln
         self.machines : List[AttackerMachineObservationState] = []
-        self.detected = False
-        self.all_flags = False
-        self.num_sh = num_sh
-        self.num_flags = num_flags
         self.catched_flags = catched_flags
         self.actions_tried = set()
         self.agent_reachable = agent_reachable
         if agent_reachable is None:
             self.agent_reachable = set()
-        self.last_attacker_action : AttackerAction = None
-        self.undetected_intrusions_steps = 0
-        self.step=0
-        self.cost=0.0
-        self.cost_norm=0.0
-        self.alerts=0.0
-        self.alerts_norm = 0.0
-        self.intrusion_completed = False
-        self.intrusion_started = False
-        self.intrusion_step = -1
-
-    def ongoing_intrusion(self) -> bool:
-        """
-        Checks if there is an ongoing intrusion or not
-
-        :return: true if there is an intrusion, otherwise false
-        """
-
-        # if self.last_attacker_action is not None and self.last_attacker_action.id != AttackerActionId.CONTINUE:
-        #     return True
-
-        if self.catched_flags > 0 or self.intrusion_started:
-            return True
-
-        # for m in self.machines:
-        #     if m.shell_access:
-        #         return True
-        #     if self.exploit_executed(m):
-        #         return True
-        #     if m.logged_in:
-        #         return True
-        return False
 
     def sort_machines(self) -> None:
         """
@@ -85,7 +41,7 @@ class AttackerObservationState:
         for m in self.machines:
             m.cleanup()
 
-    def get_action_ip(self, a : AttackerAction) -> str:
+    def get_action_ips(self, a : AttackerAction) -> List[str]:
         """
         Returns the ip of the machine that the action targets
 
@@ -95,10 +51,9 @@ class AttackerObservationState:
         if a.index == -1:
             self.sort_machines()
             ips = list(map(lambda x: x.internal_ip, self.machines))
-            ips_str = "_".join(ips)
-            return ips_str
-        if a.index < len(self.machines) and a.index < self.num_machines:
-            return self.machines[a.index].ip
+            return ips
+        if a.index < len(self.machines):
+            return self.machines[a.index].ips
         return a.ips
 
     def exploit_tried(self, a: AttackerAction, m: AttackerMachineObservationState) -> bool:
@@ -201,19 +156,9 @@ class AttackerObservationState:
         """
         :return: a copy of the state
         """
-        c = AttackerObservationState(num_machines = self.num_machines, num_vuln = self.num_vuln, num_sh = self.num_sh,
-                                     num_flags = self.num_flags, catched_flags = self.catched_flags,
-                                     agent_reachable = self.agent_reachable.copy(), num_ports=self.num_ports)
-        c.detected = self.detected
-        c.undetected_intrusions_steps = self.undetected_intrusions_steps
-        c.all_flags = self.all_flags
-        c.last_attacker_action = self.last_attacker_action
+        c = AttackerObservationState(catched_flags = self.catched_flags,
+                                     agent_reachable = self.agent_reachable.copy())
         c.actions_tried = self.actions_tried.copy()
-        c.step = self.step
-        c.cost = self.cost
-        c.cost_norm = self.cost_norm
-        c.alerts = self.alerts
-        c.alerts_norm = self.alerts_norm
         for m in self.machines:
             c.machines.append(m.copy())
         return c
@@ -222,8 +167,5 @@ class AttackerObservationState:
         """
         :return: a string representation of the state
         """
-        return  "Found flags:{},step:{},costs:{},costs_norm:{},alerts:{},alerts_norm:{},intrusion_completed:{}," \
-                "intrusion_started:{},intrusion_step:{}".format(
-            self.catched_flags, self.step, self.cost, self.cost_norm, self.alerts, self.alerts_norm,
-            self.intrusion_completed, self.intrusion_started, self.intrusion_step) + \
-                "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
+        return  "Found flags:{},".format(self.catched_flags) \
+                + "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

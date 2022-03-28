@@ -3,11 +3,11 @@ import numpy as np
 from random_username.generate import generate_username
 import secrets
 import string
-from csle_common.dao.container_config.topology import Topology
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-from csle_common.dao.container_config.users_config import UsersConfig
-from csle_common.dao.container_config.node_users_config import NodeUsersConfig
+from csle_common.dao.emulation_config.users_config import UsersConfig
+from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
 from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
 from csle_common.util.experiments_util import util
@@ -52,7 +52,7 @@ class UsersGenerator:
         return users_conf
 
     @staticmethod
-    def create_users(users_config: UsersConfig, emulation_config: EmulationConfig):
+    def create_users(users_config: UsersConfig, emulation_config: RunningEmulationEnvConfig):
         """
         Creates users in an emulation environment according to a specified users-configuration
 
@@ -61,7 +61,7 @@ class UsersGenerator:
         :return: None
         """
         for users_conf in users_config.users:
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=users_conf.ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=users_conf.ip)
 
             cmd="ls /home"
             o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
@@ -83,7 +83,7 @@ class UsersGenerator:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -p \"$(openssl passwd -1 '{}')\" {}".format(username,pw,username)
                 o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
-            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
+            GeneratorUtil.disconnect_admin(emulation_env_config=emulation_config)
 
     @staticmethod
     def write_users_config(users_config: UsersConfig, path: str = None) -> None:

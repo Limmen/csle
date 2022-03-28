@@ -1,10 +1,8 @@
 from typing import List
 import copy
 import datetime
-from csle_common.dao.network.emulation_config import EmulationConfig
 from csle_common.dao.observation.common.port_observation_state import PortObservationState
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
-from csle_common.dao.network.node import Node
 
 
 class DefenderMachineObservationState:
@@ -12,17 +10,16 @@ class DefenderMachineObservationState:
     Represent's the defender's belief state of a component in the infrastructure
     """
 
-    def __init__(self, ip : str):
+    def __init__(self, ips : List[str]):
         """
         Initializes the DTO
 
-        :param ip: the ip of the machine
+        :param ips: the ip of the machine
         """
-        self.ip = ip
+        self.ips = ips
         self.os="unknown"
         self.ports : List[PortObservationState] = []
         self.ssh_connections :List[ConnectionObservationState] = []
-        self.emulation_config : EmulationConfig = None
         self.num_open_connections = 0
         self.num_failed_login_attempts = 0
         self.num_users = 0
@@ -64,7 +61,7 @@ class DefenderMachineObservationState:
         """
         :return: a string representation of the object
         """
-        return f"ip:{self.ip},os:{self.os},num_ports:{len(self.ports)}," \
+        return f"ip:{self.ips},os:{self.os},num_ports:{len(self.ports)}," \
                f"num_ssh_connections:{len(self.ssh_connections)}," \
                f"num_open_connections:{self.num_open_connections}," \
                f"num_failed_login_attempts:{self.num_failed_login_attempts},num_users:{self.num_users}," \
@@ -110,7 +107,7 @@ class DefenderMachineObservationState:
         """
         :return: a copy of the object
         """
-        m_copy = DefenderMachineObservationState(ip=self.ip)
+        m_copy = DefenderMachineObservationState(ips=self.ips)
         m_copy.os = self.os
         m_copy.ports = copy.deepcopy(self.ports)
         m_copy.ssh_connections = self.ssh_connections
@@ -148,20 +145,6 @@ class DefenderMachineObservationState:
         m_copy.net_tx_recent = self.net_tx_recent
         return m_copy
 
-
-    @staticmethod
-    def from_node(node: Node, service_lookup: dict) -> "DefenderMachineObservationState":
-        """
-        Converts a node to a defender machine observation
-
-        :param service_lookup: a service lookup table
-        :return: the defender machine observation
-        """
-        d_obs = DefenderMachineObservationState(node.ips)
-        d_obs.os = node.os
-        d_obs.num_flags = len(node.flags)
-        d_obs.ports = list(map(lambda x: PortObservationState.from_network_service(x, service_lookup), node.services))
-        return d_obs
 
 
 

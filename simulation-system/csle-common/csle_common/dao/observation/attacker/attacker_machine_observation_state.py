@@ -1,13 +1,11 @@
 from typing import List
 import copy
-from csle_common.dao.network.credential import Credential
-from csle_common.dao.network.node import Node
-from csle_common.dao.network.node_type import NodeType
+from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.observation.common.port_observation_state import PortObservationState
 from csle_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 from csle_common.dao.action_results.nmap_host_result import NmapHostResult
-from csle_common.dao.network.network_service import NetworkService
+from csle_common.dao.emulation_config.network_service import NetworkService
 
 
 class AttackerMachineObservationState:
@@ -15,13 +13,13 @@ class AttackerMachineObservationState:
     Represent's the attacker's belief state of a component in the infrastructure
     """
 
-    def __init__(self, ip : str):
+    def __init__(self, ips : List[str]):
         """
         Initializes the state
 
-        :param ip: the ip of the machine
+        :param ips: the ip of the machine
         """
-        self.ip = ip
+        self.ips = ips
         self.os="unknown"
         self.ports : List[PortObservationState] = []
         self.cve_vulns : List[VulnerabilityObservationState] = []
@@ -69,7 +67,8 @@ class AttackerMachineObservationState:
         """
         :return: a string representation of the object
         """
-        return "ip:{},os:{},shell_access:{},logged_in:{},root:{},num_ports:{},num_cve_vuln:{},num_cred:{},num_ssh_connections:{}," \
+        return "ips:{},os:{},shell_access:{},logged_in:{},root:{},num_ports:{},num_cve_vuln:{},num_cred:{}," \
+               "num_ssh_connections:{}," \
                "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{},hostnames:{},trace:{}, " \
                "filesystem_searched:{},telnet_brute_tried:{},ssh_brute_tried:{},ftp_brute_tried:{}," \
                "cassandra_brute_tried:{},irc_brute_tried:{},mongo_brute_tried:{},mysql_brute_tried:{}," \
@@ -78,7 +77,7 @@ class AttackerMachineObservationState:
                "sambacry_tried:{},shellshock_tried:{},dvwa_sql_injection_tried:{},cve_2015_3306_tried:{}," \
                "cve_2015_1427_tried:{},cve_2016_10033_tried:{},cve_2010_0426_tried:{},cve_2015_5602_tried:{}," \
                "flags_found:{}".format(
-            self.ip, self.os,  self.shell_access, self.logged_in, self.root, len(self.ports), len(self.cve_vulns),
+            self.ips, self.os,  self.shell_access, self.logged_in, self.root, len(self.ports), len(self.cve_vulns),
             len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
             len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames, self.trace, self.filesystem_searched,
             self.telnet_brute_tried, self.ssh_brute_tried, self.ftp_brute_tried, self.cassandra_brute_tried,
@@ -114,9 +113,10 @@ class AttackerMachineObservationState:
         :param service_lookup: a lookup table for converting between service names and service ids
         :return: None
         """
-        self.shell_access_credentials = sorted(self.shell_access_credentials,
-                                               key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
-                                               reverse=False)
+        self.shell_access_credentials = sorted(
+            self.shell_access_credentials,
+            key=lambda x: service_lookup[x.service] if x.service is not None else x.username,
+            reverse=False)
 
     def _vuln_lookup(self, name, lookup_table) -> int:
         """
@@ -158,7 +158,7 @@ class AttackerMachineObservationState:
         """
         :return: a copy of the DTO
         """
-        m_copy = AttackerMachineObservationState(ip=self.ip)
+        m_copy = AttackerMachineObservationState(ips=self.ips)
         m_copy.os = self.os
         m_copy.ports = copy.deepcopy(self.ports)
         m_copy.cve_vulns = copy.deepcopy(self.cve_vulns)
@@ -254,7 +254,8 @@ class AttackerMachineObservationState:
             if c.root:
                 root_usernames.append(c.username)
 
-        node = Node(ips=self.ip, ip_ids=int(self.ip.rsplit(".", 1)[-1]), id=int(self.ip.rsplit(".", 1)[-1]),
+        node = Node(ips=self.ips, ip_ids=list(map(lambda x: int(x.rsplit(".", 1)[-1]), self.ips)),
+                    id=int(self.ips[0].rsplit(".", 1)[-1]),
                     type = NodeType.SERVER, os=self.os,
                     flags=self.flags_found, level=3, vulnerabilities=vulnerabilities, services=services,
                     credentials=self.shell_access_credentials, root_usernames=root_usernames, visible=False,
@@ -268,7 +269,7 @@ class AttackerMachineObservationState:
 
         :return: the created AttackerMachineObservationState
         """
-        m_obs = AttackerMachineObservationState(ip=nmap_host_result.ip_addr)
+        m_obs = AttackerMachineObservationState(ips=nmap_host_result.ips)
         ports = list(map(lambda x: x.to_obs(), nmap_host_result.ports))
         m_obs.ports = ports
         if nmap_host_result.os is not None:

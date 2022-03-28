@@ -3,8 +3,8 @@ import psycopg
 import jsonpickle
 import json
 import csle_common.constants.constants as constants
-from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
 
 class MetastoreFacade:
     """
@@ -60,3 +60,45 @@ class MetastoreFacade:
             if isinstance(vuln.vuln_type, str):
                 pass
         return emulation_env_config
+
+
+    @staticmethod
+    def install_emulation(config: EmulationEnvConfig) -> None:
+        """
+        Installs the emulation configuration in the metastore
+
+        :param config: the config to install
+        :return: None
+        """
+        print(f"Installing emulation:{config.name} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                try:
+                    config.vuln_config = config.vuln_config.to_dict()
+                    config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
+                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
+                                f"VALUES (%s, %s)", (config.name, config_json_str))
+                    conn.commit()
+                    print(f"Emulation {config.name} installed successfully")
+                except psycopg.errors.UniqueViolation as e:
+                    print(f"Emulation {config.name} is already installed")
+
+
+    @staticmethod
+    def uninstall_emulation(config: EmulationEnvConfig) -> None:
+        """
+        Uninstalls the emulation configuration in the metastore
+
+        :param config: the config to uninstall
+        :return: None
+        """
+        print(f"Uninstalling emulation:{config.name} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (config.name,))
+                conn.commit()
+                print(f"Emulation {config.name} uninstalled successfully")

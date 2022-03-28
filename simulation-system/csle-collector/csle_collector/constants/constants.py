@@ -164,8 +164,8 @@ class LOG_SINK:
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
                                      "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx"]
-    ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index"]
-    DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index"]
+    ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
+    DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
 
 
 class KAFKA_COMMANDS:

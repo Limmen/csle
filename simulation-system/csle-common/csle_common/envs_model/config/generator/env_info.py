@@ -1,11 +1,10 @@
 from typing import List
 import docker
-from csle_common.dao.env_info.env_container import EnvContainer
-from csle_common.dao.env_info.running_env import RunningEnv
+from csle_common.dao.env_info.docker_container_metadata import DockerContainerMetadata
+from csle_common.dao.env_info.docker_env_metadata import DockerEnvMetadata
 from csle_common.util.experiments_util import util
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 import csle_common.constants.constants as constants
-
 
 
 class EnvInfo:
@@ -14,7 +13,7 @@ class EnvInfo:
     """
 
     @staticmethod
-    def parse_runnning_emulation_infos() -> List[RunningEnv]:
+    def parse_runnning_emulation_infos() -> List[DockerEnvMetadata]:
         """
         Queries docker to get a list of all running emulation environments
 
@@ -28,7 +27,7 @@ class EnvInfo:
         return parsed_envs
 
     @staticmethod
-    def parse_running_containers(client_1, client2) -> List[EnvContainer]:
+    def parse_running_containers(client_1, client2) -> List[DockerContainerMetadata]:
         """
         Queries docker to get a list of all running containers
 
@@ -41,7 +40,7 @@ class EnvInfo:
         return parsed_containers
 
     @staticmethod
-    def parse_stopped_containers(client_1, client2) -> List[EnvContainer]:
+    def parse_stopped_containers(client_1, client2) -> List[DockerContainerMetadata]:
         """
         Queries docker to get a list of all stopped csle containers
 
@@ -58,7 +57,7 @@ class EnvInfo:
 
 
     @staticmethod
-    def parse_running_emulation_envs(emulations: List[str], containers: List[EnvContainer]) -> List[RunningEnv]:
+    def parse_running_emulation_envs(emulations: List[str], containers: List[DockerContainerMetadata]) -> List[DockerEnvMetadata]:
         """
         Queries docker to get a list of all active emulation environments
 
@@ -84,14 +83,14 @@ class EnvInfo:
                 if em_record is not None:
                     config = em_record
 
-            p_env = RunningEnv(containers=em_containers, name=em, subnet_prefix=subnet_mask, minigame=minigame,
-                               subnet_mask=subnet_mask, level= em_containers[0].level, config=config,
-                               log_sink_config=None)
+            p_env = DockerEnvMetadata(containers=em_containers, name=em, subnet_prefix=subnet_mask, minigame=minigame,
+                                      subnet_mask=subnet_mask, level= em_containers[0].level, config=config,
+                                      log_sink_config=None)
             parsed_envs.append(p_env)
         return parsed_envs
 
     @staticmethod
-    def parse_containers(containers, client2) -> List[EnvContainer]:
+    def parse_containers(containers, client2) -> List[DockerContainerMetadata]:
         """
         Queries docker to get a list of running or stopped csle containers
 
@@ -122,7 +121,7 @@ class EnvInfo:
                 if constants.DOCKER.LOGSINK in labels:
                     log_sink = labels[constants.DOCKER.LOGSINK]
 
-                parsed_c = EnvContainer(
+                parsed_c = DockerContainerMetadata(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags = c.image.tags, id=c.id,
                     created=inspect_info[constants.DOCKER.CREATED_INFO],

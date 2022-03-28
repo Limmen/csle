@@ -1,16 +1,15 @@
 from typing import Tuple, List, Union
-from xml.etree.ElementTree import fromstring
 import xml.etree.ElementTree as ET
-import time
-from csle_common.dao.network.env_config import CSLEEnvConfig
-from csle_common.dao.network.env_state import EnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from csle_common.envs_model.util.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 import csle_common.constants.constants as constants
 from csle_common.dao.action_results.nmap_scan_result import NmapScanResult
 from csle_common.dao.action_results.nmap_host_result import NmapHostResult
 from csle_common.dao.action_results.nmap_port_status import NmapPortStatus
+from csle_common.dao.action_results.nmap_host_status import NmapHostStatus
 from csle_common.dao.action_results.nmap_port import NmapPort
 from csle_common.dao.action_results.nmap_addr_type import NmapAddrType
 from csle_common.dao.network.transport_protocol import TransportProtocol
@@ -22,7 +21,7 @@ from csle_common.dao.action_results.nmap_trace import NmapTrace
 from csle_common.dao.action_results.nmap_http_enum import NmapHttpEnum
 from csle_common.dao.action_results.nmap_http_grep import NmapHttpGrep
 from csle_common.dao.action_results.nmap_vulscan import NmapVulscan
-from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
+from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
 
 
 class NmapUtil:
@@ -31,80 +30,7 @@ class NmapUtil:
     """
 
     @staticmethod
-    def check_nmap_action_cache(a: AttackerAction, env_config: CSLEEnvConfig, conn=None, dir: str = None,
-                                machine_ip: str = None):
-        """
-        Checks if an nmap action is cached or not
-
-        :param a: the action
-        :param env_config: the environment configuration
-        :param dir: dir
-        :param machine_ip: machine_ip
-        :return: None or the name of the file where the result is cached
-        """
-        if conn is None:
-            conn = env_config.emulation_config.agent_conn
-        if dir is None or dir == "":
-            dir = env_config.nmap_cache_dir
-
-        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ips
-        if a.subnet:
-            query = str(a.id.value) + "_" + str(a.index)
-        if machine_ip is not None:
-            query = query + "_" + machine_ip
-        query = query + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
-
-        # Search through cache
-        if query in env_config.nmap_cache:
-            return query
-
-        stdin, stdout, stderr = conn.exec_command(constants.COMMANDS.LIST_CACHE + dir)
-        cache_list = []
-        for line in stdout:
-            cache_list.append(line.replace("\n", ""))
-        env_config.nmap_cache = cache_list
-
-        # Search through updated cache
-        if query in env_config.nmap_cache:
-            return query
-
-        env_config.cache_misses += 1
-
-        return None
-
-    @staticmethod
-    def check_nmap_action_cache_interactive(a: AttackerAction, env_config: CSLEEnvConfig):
-        """
-        Checks if an NMAP action is cached or ot using an interactive shell
-
-        :param a: the action to check
-        :param env_config:  the environment config
-        :return: None if not cached, otherwise the name of the file where the result is cached
-        """
-
-        # Clear channel
-        if env_config.emulation_config.agent_channel.recv_ready():
-            output = env_config.emulation_config.agent_channel.recv(5000)
-
-        # List cache
-        env_config.emulation_config.agent_channel.send(constants.COMMANDS.LIST_CACHE
-                                                       + env_config.nmap_cache_dir + "\n")
-        result_str = EmulationUtil.read_result_interactive(env_config=env_config)
-        cache_list = result_str.split('\r\n')
-        cache_list = cache_list[1:-1]  # remove command ([0]) and prompt ([-1])
-
-        # Search through cache
-        query = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
-        if a.subnet:
-            query = str(a.id.value) + "_" + str(a.index) + constants.FILE_PATTERNS.NMAP_ACTION_RESULT_SUFFIX
-        for item in cache_list:
-            if item == query:
-                return item
-
-        return None
-
-    @staticmethod
-    def parse_nmap_scan(file_name: str, env_config: CSLEEnvConfig, conn=None, dir: str = None) -> ET.Element:
+    def parse_nmap_scan(file_name: str, env_config: EmulationEnvAgentConfig, conn=None, dir: str = None) -> ET.Element:
         """
         Parses an XML file containing the result of an nmap scan
 
@@ -115,36 +41,16 @@ class NmapUtil:
         if conn is None:
             conn = env_config.emulation_config.agent_conn
         if dir is None or dir == "":
-            dir = env_config.nmap_cache_dir
+            dir = constants.NMAP.RESULTS_DIR
 
         sftp_client = conn.open_sftp()
-        remote_file = sftp_client.open(dir + file_name)
+        file_name = str(dir + file_name).strip()
+        remote_file = sftp_client.open(file_name)
         try:
             xml_tree = ET.parse(remote_file)
         finally:
             remote_file.close()
         xml_data = xml_tree.getroot()
-        return xml_data
-
-    @staticmethod
-    def parse_nmap_scan_interactive(file_name: str, env_config: CSLEEnvConfig) -> ET.Element:
-        """
-        Parses an XML file with the result of an nmap scan using an interactive shell
-
-        :param file_name: the name of the file to parse
-        :param env_config: the environment config
-        :return: the parsed XML file
-        """
-        env_config.emulation_config.agent_channel.send("cat " + env_config.nmap_cache_dir + file_name + "\n")
-        while not env_config.emulation_config.agent_channel.recv_ready():
-            time.sleep(env_config.shell_read_wait)
-        output = env_config.emulation_config.agent_channel.recv(env_config.max_nmap_command_output_size)
-        output_str = output.decode("utf-8")
-        output_str = env_config.shell_escape.sub("", output_str)
-        lines = output_str.split('\r\n')
-        lines = lines[1:-1]  # remove command ([0]) and prompt ([-1])
-        xml_str = "\n".join(lines)
-        xml_data = fromstring(xml_str)
         return xml_data
 
     @staticmethod
@@ -162,7 +68,7 @@ class NmapUtil:
             if child.tag == constants.NMAP_XML.HOST:
                 host = NmapUtil._parse_nmap_host_xml(child, action=action)
                 hosts = NmapUtil._merge_nmap_hosts(host, hosts, action=action)
-        result = NmapScanResult(hosts=hosts, ip=ip)
+        result = NmapScanResult(hosts=hosts, ips=ip)
         return result
 
     @staticmethod
@@ -182,11 +88,11 @@ class NmapUtil:
         credentials = []
         os = None
         os_matches = []
-        status = "up"
+        status = NmapHostStatus.UP
         trace = None
         for child in list(xml_data.iter()):
             if child.tag == constants.NMAP_XML.STATUS:
-                status = NmapUtil._parse_nmap_status_xml(child)
+                port_status = NmapUtil._parse_nmap_status_xml(child)
             elif child.tag == constants.NMAP_XML.ADDRESS:
                 addr, type = NmapUtil._parse_nmap_address_xml(child)
                 if type == NmapAddrType.MAC:
@@ -202,7 +108,7 @@ class NmapUtil:
                 os = NmapOs.get_best_match(os_matches)
             elif child.tag == constants.NMAP_XML.TRACE:
                 trace = NmapUtil._parse_nmap_trace_xml(child)
-        nmap_host_result = NmapHostResult(status=status, ip_addr=ip_addr, mac_addr=mac_addr,
+        nmap_host_result = NmapHostResult(status=status, ips=ip_addr, mac_addr=mac_addr,
                                           hostnames=hostnames, ports=ports, os=os, os_matches=os_matches,
                                           vulnerabilities=vulnerabilities, credentials=credentials, trace=trace)
         return nmap_host_result
@@ -357,7 +263,7 @@ class NmapUtil:
         return port_status
 
     @staticmethod
-    def _parse_nmap_os_xml(xml_data) -> NmapOs:
+    def _parse_nmap_os_xml(xml_data) -> List[NmapOs]:
         """
         Parses NMAP OS XML element
 
@@ -409,8 +315,8 @@ class NmapUtil:
 
     @staticmethod
     def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str, action: AttackerAction) \
-            -> Tuple[Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep, NmapVulscan],
-                     NmapVuln]:
+            -> Tuple[Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep, NmapVulscan, None],
+                     Union[NmapVuln, None]]:
         """
         Parses a XML script element
 
@@ -517,16 +423,15 @@ class NmapUtil:
         return credentials
 
     @staticmethod
-    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EnvState, a: AttackerAction,
-                                          env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EmulationEnvState, a: AttackerAction,
+                                          env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Merges a NMAP scan result with an existing observation state
 
         :param scan_result: the scan result
         :param s: the current state
         :param a: the action just executed
-        :return: s', reward, done
+        :return: s'
         """
 
         new_m_obs = []
@@ -536,117 +441,62 @@ class NmapUtil:
             new_m_obs.append(m_obs)
 
         net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs,
-                                                             env_config=env_config, action=a)
+                                                             emulation_env_agent_config=env_config, action=a)
 
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
-        # Use measured cost
-        if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ips):
-            a.cost = env_config.attacker_action_costs.get_cost(action_id=a.id, ip=a.ips)
-
-        # Use measured # alerts
-        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ips):
-            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ips)
-
-        reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-
-        # Emulate detection
-        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
-
-        return s_prime, reward, done
+        return s_prime
 
     @staticmethod
-    def nmap_scan_action_helper(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig, masscan: bool = False) \
-            -> Tuple[EnvState, float, bool]:
+    def nmap_scan_action_helper(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig, masscan: bool = False) \
+            -> EmulationEnvState:
         """
         Helper function for executing a NMAP scan action on the emulation. Implements caching.
 
         :param s: the current env state
         :param a: the NMAP action to execute
         :param env_config: the env config
-        :return: s', reward, done
+        :return: s'
         """
-        # ALL action
-        if a.index == -1:
-            s.attacker_obs_state.sort_machines()
-            ips = list(map(lambda x: x.internal_ip, s.attacker_obs_state.machines))
-            ips_str = "_".join(ips)
-            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + ips + ".xml"
-            cache_id = (a.id, a.index, ips_str, a.subnet)
-
-        # Host action
-        else:
-            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + ".xml"
-            cache_id = (a.id, a.index, a.ips, a.subnet)
-
-        # Subnet action
-        if a.subnet:
-            cache_filename = str(a.id.value) + "_" + str(a.index) + ".xml"
-
-        # Check in-memory cache
-        if env_config.attacker_use_nmap_cache:
-            cache_value = env_config.attacker_nmap_scan_cache.get(cache_id)
-            if cache_value is not None:
-                s.attacker_obs_state.agent_reachable.update(cache_value.reachable)
-                return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
-                                                                 partial_result=cache_value.copy(), masscan=masscan)
-
-        # Check On-disk cache
-        cache_result = None
-        if env_config.attacker_use_nmap_cache:
-            cache_result = NmapUtil.check_nmap_action_cache(a=a, env_config=env_config)
-
         # If cache miss, then execute cmd
-        if cache_result is None:
-            cmd = a.nmap_cmd()
-            if masscan:
-                cmd = a.masscan_cmd()
-            if env_config.ids_router:
-                last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-            outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                                         conn=env_config.emulation_config.agent_conn)
-            if env_config.ids_router:
-                # alerts = emulationUtil.check_ids_alerts(env_config=env_config)
-                fast_logs = EmulationUtil.check_ids_fast_log(env_config=env_config)
-                # alerts = list(filter(lambda x: x.timestamp > last_alert_ts, alerts))
-                if last_alert_ts is not None:
-                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
-                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
-                num_alerts = len(fast_logs)
-                EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
-                                                    action=a, env_config=env_config)
-                env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=a.ips, alert=(sum_priority_alerts, num_alerts))
+        cmds, file_names = a.nmap_cmds()
+        if masscan:
+            cmds = a.masscan_cmds()
+        results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=env_config.emulation_config.agent_conn)
+        total_time = sum(list(map(lambda x: x[2], results)))
 
-            EmulationUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-            env_config.attacker_action_costs.add_cost(action_id=a.id, ip=a.ips, cost=round(total_time, 1))
-            cache_result = cache_filename
+        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_agent_config=env_config)
 
-        # Read result
-        for i in range(env_config.num_retries):
-            try:
-                xml_data = NmapUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config)
-                scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ip=env_config.hacker_ip, action=a)
-                s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
-                break
-            except Exception as e:
-                scan_result = NmapScanResult(hosts=[], ip=env_config.hacker_ip)
-                break
-
-        if env_config.attacker_use_nmap_cache:
-            env_config.attacker_nmap_scan_cache.add(cache_id, scan_result)
+        # Read results
+        scan_result = NmapScanResult(hosts=[], ips=[env_config.emulation_env_config.containers_config.agent_ip])
+        for file_name in file_names:
+            for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+                try:
+                    xml_data = NmapUtil.parse_nmap_scan(file_name=file_name, env_config=env_config)
+                    scan_result_new = NmapUtil.parse_nmap_scan_xml(
+                        xml_data, ip=env_config.emulation_env_config.containers_config.agent_ip, action=a)
+                    s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
+                    scan_result =NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
+                except Exception as e:
+                    break
         return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, env_config=env_config,
-                                                         partial_result=scan_result.copy(), masscan=masscan)
+                                                      partial_result=scan_result.copy())
 
     @staticmethod
     def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult],
                           action: AttackerAction) -> List[NmapHostResult]:
+        """
+        Merge nmap host results
+
+        :param host: a host to merge with an existing list of hosts
+        :param hosts: the list of hosts to merge with the new host
+        :param action: the attacker action
+        :return: the merged list
+        """
         found = False
         for h in hosts:
-            if h.ip_addr == host.ip_addr:
+            if h.ips == host.ips:
                 found = True
                 vulnerabilities = list(set(h.vulnerabilities).union(host.vulnerabilities))
                 h.vulnerabilities = vulnerabilities
@@ -739,19 +589,26 @@ class NmapUtil:
 
     @staticmethod
     def merge_nmap_scan_results(scan_result_1: NmapScanResult, scan_result_2: NmapScanResult) -> NmapScanResult:
+        """
+        Merges two nmap scan results
+
+        :param scan_result_1: the first result to merge
+        :param scan_result_2: the second result to merge
+        :return: the merged result
+        """
         new_hosts = []
 
         for h in scan_result_2.hosts:
             new_host = True
             for h2 in scan_result_1.hosts:
-                if h.ip_addr == h2.ip_addr:
+                if h.ips == h2.ips:
                     new_host = False
             if new_host:
                 new_hosts.append(h)
 
         for h in scan_result_1.hosts:
             for h2 in scan_result_2.hosts:
-                if h.ip_addr == h2.ip_addr:
+                if h.ips == h2.ips:
                     h.hostnames = list(set(h.hostnames).union(set(h2.hostnames)))
                     h.ports = list(set(h.ports).union(h2.ports))
                     h.vulnerabilities = list(set(h.vulnerabilities).union(h2.vulnerabilities))
@@ -766,140 +623,49 @@ class NmapUtil:
         return scan_result_1
 
     @staticmethod
-    def nmap_pivot_scan_action_helper(s: EnvState, a: AttackerAction,
-                                      env_config: CSLEEnvConfig, partial_result:
-    NmapScanResult, masscan: bool = False) \
-            -> Tuple[EnvState, float, bool]:
-        done = False
-        hacker_ip = env_config.hacker_ip
-        logged_in_ips = list(map(lambda x: x.internal_ip, filter(lambda x: x.logged_in and x.tools_installed \
-                                                                           and x.backdoor_installed,
-                                                                 s.attacker_obs_state.machines)))
-        logged_in_ips.append(hacker_ip)
-        logged_in_ips = sorted(logged_in_ips, key=lambda x: x)
-        logged_in_ips_str = "_".join(logged_in_ips)
+    def nmap_pivot_scan_action_helper(s: EmulationEnvState, a: AttackerAction,
+                                      env_config: EmulationEnvAgentConfig, partial_result: NmapScanResult) -> EmulationEnvState:
+        """
+        Performs an NMAP pivot scan, utilizing many compromised hosts
 
-        base_cache_id = (a.id, a.index, a.ips, a.subnet)
-        for ip in logged_in_ips:
-            base_cache_id = base_cache_id + (ip,)
-        base_cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ips
-        if a.subnet:
-            base_cache_filename = str(a.id.value) + "_" + str(a.index)
-        base_cache_filename = base_cache_filename + "_" + logged_in_ips_str + ".xml"
-
-        # Check in-memory cache
-        if env_config.attacker_use_nmap_cache:
-            scan_result = env_config.attacker_nmap_scan_cache.get(base_cache_id)
-            if scan_result is not None:
-                merged_result, total_results = scan_result
-                s_prime, reward, d = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_result, s=s, a=a,
-                                                                                env_config=env_config)
-                if d:
-                    done = d
-                for res in total_results:
-                    if res.internal_ip == env_config.hacker_ip:
-                        s_prime.attacker_obs_state.agent_reachable.update(res.reachable)
-                    else:
-                        machine = s_prime.get_attacker_machine(res.internal_ip)
-                        if machine is None:
-                            pass
-                        else:
-                            machine.reachable.update(res.reachable)
-                new_machines_obs_1 = []
-                reachable = s.attacker_obs_state.agent_reachable
-                reachable.add(env_config.router_ip)
-
-                for machine in s_prime.attacker_obs_state.machines:
-                    if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
-                        reachable = reachable.union(machine.reachable)
-
-                for machine in s_prime.attacker_obs_state.machines:
-                    if machine.logged_in and machine.tools_installed:
-                        machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
-
-                    if machine.ip in reachable and (machine.ip == a.ips or a.subnet):
-                        machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
-                    new_machines_obs_1.append(machine)
-                s_prime.attacker_obs_state.machines = new_machines_obs_1
-
-                return s_prime, reward, done
-
-        new_machines_obs = []
+        :param s: the curretn state
+        :param a: the attacker scan action
+        :param env_config: the environment configuration
+        :param partial_result: the initial result before pivoting
+        :return: the new state
+        """
         total_cost = 0
         merged_scan_result = partial_result
         total_results = []
 
         for machine in s.attacker_obs_state.machines:
             scan_result = None
-            new_m_obs = AttackerMachineObservationState(ip=machine.ip)
-            cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + "_" + machine.ip + ".xml"
-            if a.subnet:
-                cache_filename = str(a.id.value) + "_" + str(a.index) + "_" + machine.ip + ".xml"
-            cache_id = (a.id, a.index, a.ips, a.subnet, machine.ip)
-
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
 
-                # Start with ssh connections
                 ssh_connections_sorted_by_root = sorted(
                     machine.ssh_connections,
                     key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
                     reverse=True)
                 for c in ssh_connections_sorted_by_root:
-
-                    # Check in-memory cache
-                    cache_result = None
-                    if env_config.attacker_use_nmap_cache:
-                        scan_result = env_config.attacker_nmap_scan_cache.get(cache_id)
-                        if scan_result is not None:
-                            machine.reachable.update(scan_result.reachable)
-                            break
-
-                    # Check On-disk cache
-                    cwd = "/home/" + c.username + "/"
-                    if env_config.attacker_use_nmap_cache:
-                        cache_result = NmapUtil.check_nmap_action_cache(a=a, env_config=env_config, conn=c.conn,
-                                                                           dir=cwd, machine_ip=machine.ip)
-
-                    # If cache miss, then execute cmd
-                    if cache_result is None:
-                        if env_config.ids_router:
-                            last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-                        cmd = a.nmap_cmd(machine_ip=machine.ip)
-                        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
-                        total_cost += total_time
-                        if env_config.ids_router:
-                            fast_logs = EmulationUtil.check_ids_fast_log(env_config=env_config)
-                            if last_alert_ts is not None:
-                                fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
-                            sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
-                            num_alerts = len(fast_logs)
-                            EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
-                                                                action=a, env_config=env_config,
-                                                                conn=c.conn, dir=cwd, machine_ip=machine.ip)
-                            env_config.attacker_action_alerts.pivot_scan_add_alert(action_id=a.id, ip=machine.ip,
-                                                                                   user=c.username,
-                                                                                   target_ip=machine.ip,
-                                                                                   alert=(sum_priority_alerts, num_alerts))
-                        EmulationUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config,
-                                                           conn=c.conn, dir=cwd, machine_ip=machine.ip)
-                        env_config.attacker_action_costs.pivot_scan_add_cost(action_id=a.id, ip=machine.ip, user=c.username,
-                                                                             target_ip=machine.ip, cost=round(total_time, 1))
-
-                        cache_result = cache_filename
+                    cmds, file_names = a.nmap_cmds(machine_ips=machine.ips)
+                    results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
+                    total_time = sum(list(map(lambda x: x[2], results)))
+                    total_cost += total_time
+                    EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_agent_config=env_config)
 
                     # Read result
-                    for i in range(env_config.num_retries):
-                        try:
-                            xml_data = NmapUtil.parse_nmap_scan(file_name=cache_result, env_config=env_config,
-                                                                   conn=c.conn, dir=cwd)
-                            scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ip=machine.ip, action=a)
-                            machine.reachable.update(scan_result.reachable)
-                        except Exception as e:
-                            scan_result = NmapScanResult(hosts=[], ip=machine.ip)
-                            break
-
-                    if env_config.attacker_use_nmap_cache and scan_result is not None:
-                        env_config.attacker_nmap_scan_cache.add(cache_id, scan_result)
+                    scan_result = NmapScanResult(hosts=[], ips=machine.ips)
+                    for file_name in file_names:
+                        for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+                            try:
+                                xml_data = NmapUtil.parse_nmap_scan(file_name=file_name, env_config=env_config,
+                                                                       conn=c.conn, dir=file_name)
+                                new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ip=machine.ips, action=a)
+                                scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
+                                                                               scan_result_2=new_scan_result)
+                                machine.reachable.update(scan_result.reachable)
+                            except Exception as e:
+                                break
                     break
 
                 # Update state with scan result
@@ -911,16 +677,11 @@ class NmapUtil:
                     total_results.append(scan_result)
                     merged_scan_result = scan_result.copy()
 
-        if env_config.attacker_use_nmap_cache:
-            env_config.attacker_nmap_scan_cache.add(base_cache_id, (merged_scan_result, total_results))
-        a.cost = a.cost + total_cost
-        s_prime, reward, d = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
+        s_prime = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
                                                                         env_config=env_config)
-        if d:
-            done = d
         new_machines_obs_1 = []
         reachable = s.attacker_obs_state.agent_reachable
-        reachable.add(env_config.router_ip)
+        reachable.add(env_config.emulation_env_config.containers_config.router_ip)
 
         for machine in s_prime.attacker_obs_state.machines:
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
@@ -930,9 +691,9 @@ class NmapUtil:
             if machine.logged_in and machine.tools_installed:
                 machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
-            if machine.ip in reachable and (machine.ip == a.ips or a.subnet):
+            if machine.ips in reachable and (machine.ips == a.ips or a.subnet):
                 machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
             new_machines_obs_1.append(machine)
         s_prime.attacker_obs_state.machines = new_machines_obs_1
 
-        return s_prime, reward, done
+        return s_prime

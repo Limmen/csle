@@ -1,16 +1,16 @@
 from typing import List
 import grpc
 import time
-from csle_common.dao.container_config.containers_config import ContainersConfig
-from csle_common.dao.container_config.log_sink_config import LogSinkConfig
-from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as csle_collector_constants
 import csle_collector.ids_manager.ids_manager_pb2_grpc
 import csle_collector.ids_manager.ids_manager_pb2
 import csle_collector.ids_manager.query_ids_manager
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 
 
@@ -31,7 +31,7 @@ class IDSManager:
             return False
 
     @staticmethod
-    def _start_ids_manager_if_not_running(emulation_config: EmulationConfig, containers_cfg: ContainersConfig,
+    def _start_ids_manager_if_not_running(emulation_config: RunningEmulationEnvConfig, containers_cfg: ContainersConfig,
                                           log_sink_config: LogSinkConfig) -> None:
         """
         Utility method for checking if the ids manager is running and starting it if it is not running
@@ -45,7 +45,7 @@ class IDSManager:
             for ids_image in constants.CONTAINER_IMAGES.IDS_IMAGES:
                 if ids_image in c.name:
                     # Connect
-                    GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=c.get_ips()[0])
+                    GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=c.get_ips()[0])
 
                     # Check if ids_manager is already running
                     cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
@@ -67,7 +67,7 @@ class IDSManager:
                         time.sleep(5)
 
     @staticmethod
-    def start_ids_monitor_thread(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
+    def start_ids_monitor_thread(containers_cfg: ContainersConfig, emulation_config: RunningEmulationEnvConfig,
                                  log_sink_config: LogSinkConfig) -> None:
         """
         A method that sends a request to the IDSManager on every container that runs
@@ -100,8 +100,8 @@ class IDSManager:
 
 
     @staticmethod
-    def stop_ids_monitor_thread(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
-                                 log_sink_config: LogSinkConfig) -> None:
+    def stop_ids_monitor_thread(containers_cfg: ContainersConfig, emulation_config: RunningEmulationEnvConfig,
+                                log_sink_config: LogSinkConfig) -> None:
         """
         A method that sends a request to the IDSManager on every container that runs
         an IDS to stop the monitor threads
@@ -135,9 +135,11 @@ class IDSManager:
         :param emulation_env_config: the emulation config
         :return: List of monitor thread statuses
         """
-        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False,
+                                                     kafka_port=emulation_env_config.log_sink_config.kafka_port,
+                                                     kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0])
 
         statuses = []
         IDSManager._start_ids_manager_if_not_running(
@@ -158,7 +160,7 @@ class IDSManager:
 
 
     @staticmethod
-    def get_ids_log_data(containers_cfg: ContainersConfig, emulation_config: EmulationConfig,
+    def get_ids_log_data(containers_cfg: ContainersConfig, emulation_config: RunningEmulationEnvConfig,
                          log_sink_config: LogSinkConfig, timestamp: float) \
             -> List[csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO]:
         """

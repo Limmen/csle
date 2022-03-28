@@ -1,13 +1,13 @@
 import grpc
 import time
-from csle_common.dao.container_config.log_sink_config import LogSinkConfig
-from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 import csle_common.constants.constants as constants
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.kafka_manager.query_kafka_server
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 
 
@@ -28,7 +28,7 @@ class LogSinkManager:
             return False
 
     @staticmethod
-    def _start_kafka_manager_if_not_running(log_sink_config: LogSinkConfig, emulation_config: EmulationConfig) -> None:
+    def _start_kafka_manager_if_not_running(log_sink_config: LogSinkConfig, emulation_config: RunningEmulationEnvConfig) -> None:
         """
         Utility method for checking if the kafka manager is running and starting it if it is not running
 
@@ -38,7 +38,7 @@ class LogSinkManager:
         """
 
         # Connect
-        GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=log_sink_config.container.get_ips()[0])
+        GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=log_sink_config.container.get_ips()[0])
 
         # Check if kafka_manager is already running
         cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
@@ -61,7 +61,7 @@ class LogSinkManager:
             time.sleep(5)
 
     @staticmethod
-    def create_topics(log_sink_config: LogSinkConfig, emulation_config: EmulationConfig) -> None:
+    def create_topics(log_sink_config: LogSinkConfig, emulation_config: RunningEmulationEnvConfig) -> None:
         """
         A method that sends a request to the KafkaManager to create topics according to the given configuration
 
@@ -101,9 +101,11 @@ class LogSinkManager:
         :param emulation_env_config: the emulation config
         :return: a KafkaDTO with the status of the server
         """
-        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False,
+                                                     kafka_port=emulation_env_config.log_sink_config.kafka_port,
+                                                     kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0])
 
         LogSinkManager._start_kafka_manager_if_not_running(log_sink_config=emulation_env_config.log_sink_config,
                                                            emulation_config=emulation_config)
@@ -118,7 +120,7 @@ class LogSinkManager:
 
 
     @staticmethod
-    def stop_kafka_server(log_sink_config: LogSinkConfig, emulation_config: EmulationConfig) -> \
+    def stop_kafka_server(log_sink_config: LogSinkConfig, emulation_config: RunningEmulationEnvConfig) -> \
             csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Method for requesting the KafkaManager to stop the Kafka server
@@ -141,7 +143,7 @@ class LogSinkManager:
 
 
     @staticmethod
-    def start_kafka_server(log_sink_config: LogSinkConfig, emulation_config: EmulationConfig) -> \
+    def start_kafka_server(log_sink_config: LogSinkConfig, emulation_config: RunningEmulationEnvConfig) -> \
             csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Method for requesting the KafkaManager to start the Kafka server

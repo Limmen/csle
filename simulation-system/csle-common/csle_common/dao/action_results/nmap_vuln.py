@@ -1,7 +1,7 @@
 from typing import List
 from csle_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
-from csle_common.dao.network.transport_protocol import TransportProtocol
-from csle_common.dao.network.credential import Credential
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
+from csle_common.dao.emulation_config.credential import Credential
 
 
 class NmapVuln:
@@ -27,6 +27,8 @@ class NmapVuln:
         self.cvss = cvss
         self.service = service
         self.credentials = credentials
+        if self.credentials is None:
+            self.credentials = []
 
     def to_obs(self) -> VulnerabilityObservationState:
         """
@@ -55,7 +57,7 @@ class NmapVuln:
         :return: True if equal otherwise False
         """
         return (self.name == other.name and
-                self.port == other.kafka_port)
+                self.port == other.port)
 
     def __str__(self) -> str:
         """

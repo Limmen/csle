@@ -7,18 +7,18 @@ class NmapScanResult:
     DTO representing the result of a NMAP Scan
     """
 
-    def __init__(self, hosts: List[NmapHostResult], ip: str):
+    def __init__(self, hosts: List[NmapHostResult], ips: List[str]):
         """
         Initializes the DTO
 
         :param hosts: the list of NMAP hosts
-        :param ip: the ip of the host
+        :param ips: the ips of the host
         """
         self.hosts = hosts
-        self.ip = ip
+        self.ips = ips
         self.reachable = []
         for h in self.hosts:
-            self.reachable.append(h.ip_addr)
+            self.reachable.append(h.ips)
 
     def __str__(self) -> str:
         """
@@ -33,4 +33,4 @@ class NmapScanResult:
         hosts = []
         for host in self.hosts:
             hosts.append(host.copy())
-        return NmapScanResult(hosts = hosts, ip = self.ip)
+        return NmapScanResult(hosts = hosts, ips= self.ips)

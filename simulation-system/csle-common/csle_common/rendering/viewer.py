@@ -23,7 +23,7 @@ except ImportError as e:
 import numpy as np
 import sys
 from csle_common.rendering.frames.csle_base_frame import csleBaseFrame
-from csle_common.dao.envs.base_csle_env import BaseCSLEEnv
+from csle_common.dao.envs.base_env import BaseEnv
 
 
 class Viewer():
@@ -53,7 +53,7 @@ class Viewer():
         if interactive:
             pyglet.app.run()
 
-    def manual_start_attacker(self, env: BaseCSLEEnv) -> None:
+    def manual_start_attacker(self, env: BaseEnv) -> None:
         """
         Starts the csle-game app in a manual mode where the actions are controlled with the keyboard
 

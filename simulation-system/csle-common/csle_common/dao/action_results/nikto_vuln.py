@@ -1,6 +1,6 @@
-import csle_common.constants.constants as constants
+from typing import Union
 from csle_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
-from csle_common.dao.network.transport_protocol import TransportProtocol
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 
 
 class NiktoVuln:
@@ -8,7 +8,8 @@ class NiktoVuln:
     Object representing a vulnerability found with a Nikto scan
     """
 
-    def __init__(self, id : str, osvdb_id : int, method: str, iplink: str, namelink: str, uri: str, description: str):
+    def __init__(self, id : str, osvdb_id : Union[int,None], method: str, iplink: str,
+                 namelink: str, uri: str, description: str):
         """
         Initializes the object
 

@@ -72,6 +72,13 @@ class DefenderActionConfig:
 
     @staticmethod
     def all_actions_config(num_nodes: int, subnet_masks: List[str]) -> "DefenderActionConfig":
+        """
+        Creates an action configuration for the defender with all actions
+
+        :param num_nodes: the number of nodes in the environment
+        :param subnet_masks: the the subnet masks in the environment
+        :return: the action configuration
+        """
         defender_actions = []
 
         # Host actions

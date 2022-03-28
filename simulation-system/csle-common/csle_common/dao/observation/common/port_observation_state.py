@@ -1,5 +1,5 @@
-from csle_common.dao.network.transport_protocol import TransportProtocol
-from csle_common.dao.network.network_service import NetworkService
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
+from csle_common.dao.emulation_config.network_service import NetworkService
 
 
 class PortObservationState:

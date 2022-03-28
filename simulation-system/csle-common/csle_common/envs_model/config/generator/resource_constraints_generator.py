@@ -1,13 +1,13 @@
 import subprocess
 import random
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
-from csle_common.dao.container_config.resources_config import ResourcesConfig
-from csle_common.dao.container_config.containers_config import ContainersConfig
-from csle_common.dao.container_config.node_network_config import NodeNetworkConfig
-from csle_common.dao.container_config.node_resources_config import NodeResourcesConfig
-from csle_common.dao.container_config.packet_delay_distribution_type import PacketDelayDistributionType
-from csle_common.dao.container_config.packet_loss_type import PacketLossType
+from csle_common.dao.emulation_config.resources_config import ResourcesConfig
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
+from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
+from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
+from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
 from csle_common.util.experiments_util import util
 
@@ -81,7 +81,7 @@ class ResourceConstraintsGenerator:
         return resources_config
 
     @staticmethod
-    def apply_resource_constraints(resources_config: ResourcesConfig, emulation_config: EmulationConfig):
+    def apply_resource_constraints(resources_config: ResourcesConfig, emulation_config: RunningEmulationEnvConfig):
         """
         Creates users in an emulation environment according to a specified users-configuration
 
@@ -95,7 +95,7 @@ class ResourceConstraintsGenerator:
             ips = node_resource_config.get_ips()
             ip = ips[0]
             print(f"applying resource constraints on node:{ip}")
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=ip)
 
             for ip_and_net_config in node_resource_config.ips_and_network_configs:
                 _, net_config = ip_and_net_config
@@ -129,7 +129,7 @@ class ResourceConstraintsGenerator:
                       f"rate {net_config.rate_limit_mbit:.6f}mbit " \
                       f"limit {net_config.limit_packets_queue:.6f}"
                 o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
-            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
+            GeneratorUtil.disconnect_admin(emulation_env_config=emulation_config)
 
 
     @staticmethod

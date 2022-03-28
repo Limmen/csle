@@ -1,6 +1,5 @@
-from typing import Tuple
-from csle_common.dao.network.env_state import EnvState
-from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.defender.defender_action import DefenderAction
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 
@@ -11,8 +10,8 @@ class DefenderStoppingMiddleware:
     """
 
     @staticmethod
-    def stop_monitor(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                     env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
+    def stop_monitor(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                     env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
@@ -20,21 +19,16 @@ class DefenderStoppingMiddleware:
         :param defender_action: the action to take
         :param attacker_action: the previous action of the attacker
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         s_prime = s
-
-        if s_prime.attacker_obs_state.ongoing_intrusion():
-            s_prime.attacker_obs_state.undetected_intrusions_steps += 1
-            s_prime.defender_obs_state.caught_attacker = True
-        else:
-            s_prime.defender_obs_state.stopped = True
-        return s_prime, 0, True
+        s_prime.defender_obs_state.stopped = True
+        return s_prime
 
 
     @staticmethod
-    def continue_monitor(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                         env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
+    def continue_monitor(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                         env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a "continue" action for the defender (continues monitoring)
 
@@ -45,7 +39,5 @@ class DefenderStoppingMiddleware:
         :return: s_prime, reward, done
         """
         s_prime = s
-        if s_prime.attacker_obs_state.ongoing_intrusion():
-            s_prime.attacker_obs_state.undetected_intrusions_steps += 1
-        return s_prime, 0, False
+        return s_prime
 

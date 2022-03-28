@@ -1,14 +1,14 @@
 from typing import Tuple
 import xml.etree.ElementTree as ET
-from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.network.env_state import EnvState
-from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.envs_model.util.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 import csle_common.constants.constants as constants
 from csle_common.dao.action_results.nikto_scan_result import NiktoScanResult
 from csle_common.dao.action_results.nikto_vuln import NiktoVuln
-from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
+from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
 from csle_attacker.emulation.util.nmap_util import NmapUtil
 
 
@@ -18,7 +18,7 @@ class NiktoUtil:
     """
 
     @staticmethod
-    def parse_nikto_scan(file_name: str, env_config: CSLEEnvConfig) -> ET.Element:
+    def parse_nikto_scan(file_name: str, env_config: EmulationEnvAgentConfig) -> ET.Element:
         """
         Parses an XML file containing the result of an nikt scan
 
@@ -27,7 +27,7 @@ class NiktoUtil:
         :return: the parsed xml file
         """
         sftp_client = env_config.emulation_config.agent_conn.open_sftp()
-        remote_file = sftp_client.open(env_config.nmap_cache_dir + file_name)
+        remote_file = sftp_client.open(constants.NMAP.RESULTS_DIR + file_name)
         try:
             xml_tree = ET.parse(remote_file)
         finally:
@@ -36,8 +36,7 @@ class NiktoUtil:
         return xml_data
 
     @staticmethod
-    def nikto_scan_action_helper(s: EnvState, a: AttackerAction,
-                                 env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
+    def nikto_scan_action_helper(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Helper function for executing a NIKTO web scan action on the emulation. Implements caching.
 
@@ -46,63 +45,29 @@ class NiktoUtil:
         :param env_config: the env config
         :return: s', reward, done
         """
-        cache_result = None
-        cache_id = str(a.id.value) + "_" + str(a.index) + "_" + a.ips + ".xml"
-
-        # Check in-memory cache
-        if env_config.attacker_use_nikto_cache:
-            cache_value = env_config.attacker_nikto_scan_cache.get(cache_id)
-            if cache_value is not None:
-                s_prime, reward, done = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=cache_value, s=s, a=a,
-                                                                                 env_config=env_config)
-
-                return s_prime, reward, done
-
-        # Check On-disk cache
-        if env_config.attacker_use_nmap_cache:
-            cache_result = NmapUtil.check_nmap_action_cache(a=a, env_config=env_config)
-
-        # If cache miss, then execute cmd
-        if cache_result is None:
-            if env_config.ids_router:
-                last_alert_ts = EmulationUtil.get_latest_alert_ts(env_config=env_config)
-            outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=a.nikto_cmd(),
-                                                                         conn=env_config.emulation_config.agent_conn)
-            if env_config.ids_router:
-                fast_logs = EmulationUtil.check_ids_fast_log(env_config=env_config)
-                if last_alert_ts is not None:
-                    fast_logs = list(filter(lambda x: x[1] > last_alert_ts, fast_logs))
-                sum_priority_alerts = sum(list(map(lambda x: x[0], fast_logs)))
-                num_alerts = len(fast_logs)
-                EmulationUtil.write_alerts_response(sum_priorities=sum_priority_alerts, num_alerts=num_alerts,
-                                                    action=a, env_config=env_config)
-                env_config.attacker_action_alerts.add_alert(action_id=a.id, ip=a.ips, alert=(sum_priority_alerts, num_alerts))
-
-            EmulationUtil.write_estimated_cost(total_time=total_time, action=a, env_config=env_config)
-            env_config.attacker_action_costs.add_cost(action_id=a.id, ip=a.ips, cost=round(total_time, 1))
-            cache_result = cache_id
+        cmds, file_names = a.nikto_cmds()
+        outdata, errdata, total_time = EmulationUtil.execute_ssh_cmds(
+            cmds=cmds, conn=env_config.emulation_config.agent_conn)
+        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_agent_config=env_config)
 
         # Read result
-        for i in range(env_config.num_retries):
-            try:
-                xml_data = NiktoUtil.parse_nikto_scan(file_name=cache_result, env_config=env_config)
-                scan_result = NiktoUtil.parse_nikto_scan_xml(xml_data)
-                break
-            except Exception as e:
-                # If no webserver, Nikto outputs nothing
-                scan_result = NiktoScanResult(ip=a.ips, vulnerabilities=[], port=80, sitename=a.ips)
-                break
-
-        if env_config.attacker_use_nikto_cache:
-            env_config.attacker_nikto_scan_cache.add(cache_id, scan_result)
-        s_prime, reward = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=scan_result, s=s, a=a,
-                                                                         env_config=env_config)
-        return s_prime, reward, False
+        scan_result = NiktoScanResult(ip=a.ips[0], vulnerabilities=[], port=80, sitename=a.ips[0])
+        for file_name in file_names:
+            for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+                try:
+                    xml_data = NiktoUtil.parse_nikto_scan(file_name=file_name, env_config=env_config)
+                    scan_result = NiktoUtil.parse_nikto_scan_xml(xml_data)
+                    s = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=scan_result, s=s, a=a,
+                                                                           env_config=env_config)
+                    break
+                except Exception as e:
+                    break
+        s_prime = s
+        return s_prime
 
     @staticmethod
-    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult,
-                                           s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EmulationEnvState, a: AttackerAction,
+                                           env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Merges a Nikto scan result with an existing observation state
 
@@ -114,34 +79,19 @@ class NiktoUtil:
         m_obs = None
 
         for m in s.attacker_obs_state.machines:
-            if m.ip == scan_result.ip:
-                m_obs = AttackerMachineObservationState(ip=m.ip)
+            if m.ips == scan_result.ip:
+                m_obs = AttackerMachineObservationState(ips=m.ips)
 
         for vuln in scan_result.vulnerabilities:
             vuln_obs = vuln.to_obs()
             m_obs.osvdb_vulns.append(vuln_obs)
 
         net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [m_obs],
-                                                             env_config=env_config, action=a)
+                                                             emulation_env_agent_config=env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
-        # Use measured cost
-        if env_config.attacker_action_costs.exists(action_id=a.id, ip=a.ips):
-            a.cost = env_config.attacker_action_costs.get_cost(action_id=a.id, ip=a.ips)
-
-        # Use measured # alerts
-        if env_config.attacker_action_alerts.exists(action_id=a.id, ip=a.ips):
-            a.alerts = env_config.attacker_action_alerts.get_alert(action_id=a.id, ip=a.ips)
-
-        reward = EnvDynamicsUtil.reward_function(net_outcome=net_outcome, env_config=env_config, action=a)
-
-        # Emulate detection
-        done, d_reward = EnvDynamicsUtil.emulate_detection(net_outcome=net_outcome, action=a, env_config=env_config)
-        if done:
-            reward = d_reward
-        s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        return s_prime
 
     @staticmethod
     def parse_nikto_scan_xml(xml_data) -> NiktoScanResult:
@@ -158,7 +108,7 @@ class NiktoUtil:
             elif child.tag == constants.NIKTO_XML.ITEM:
                 result = NiktoUtil._parse_nikto_scandetails(xml_data)
             elif child.tag == constants.NIKTO_XML.NIKTOSCAN:
-                result = NiktoUtil.parse_nikto_scan(xml_data)
+                NiktoUtil.parse_nikto_scan_xml(xml_data)
         return result
 
     @staticmethod
@@ -184,8 +134,8 @@ class NiktoUtil:
         for child in list(xml_data.iter()):
             if child.tag == constants.NIKTO_XML.ITEM:
                 vuln = NmapUtil._parse_nmap_status_xml(child)
-        nikto_scan_result = NiktoScanResult(vulnerabilities=vulnerabilities,
-                                            port=targetport, ip=target_ip)
+        nikto_scan_result = NiktoScanResult(vulnerabilities=vulnerabilities, port=targetport,
+                                            ip=target_ip, sitename=target_ip)
         return nikto_scan_result
 
     @staticmethod
@@ -209,7 +159,7 @@ class NiktoUtil:
         if constants.NIKTO_XML.OSVDB_ID in xml_data.keys():
             method = int(xml_data.attrib[constants.NIKTO_XML.OSVDB_ID])
         if constants.NIKTO_XML.ITEM_ID in xml_data.keys():
-            id = int(xml_data.attrib[constants.NIKTO_XML.ITEM_ID])
+            id = str(int(xml_data.attrib[constants.NIKTO_XML.ITEM_ID]))
 
         for child in list(xml_data.iter()):
             if child.tag == constants.NIKTO_XML.DESCR:

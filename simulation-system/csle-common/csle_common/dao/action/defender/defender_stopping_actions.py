@@ -24,7 +24,7 @@ class DefenderStoppingActions:
                               type=DefenderActionType.STOP,
                               descr="Reports an ongoing intrusion to the infrastructure and stops",
                               cost=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=DefenderActionOutcome.GAME_END, alt_cmd=alt_cmd)
+                              ips=[], subnet=False, action_outcome=DefenderActionOutcome.GAME_END, alt_cmd=alt_cmd)
 
     @staticmethod
     def CONTINUE(index: int) -> DefenderAction:
@@ -41,7 +41,7 @@ class DefenderStoppingActions:
                               type=DefenderActionType.CONTINUE,
                               descr="A 'continue' action, the defender chooses to not make any action",
                               cost=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=DefenderActionOutcome.CONTINUE, alt_cmd=alt_cmd)
+                              ips=[], subnet=False, action_outcome=DefenderActionOutcome.CONTINUE, alt_cmd=alt_cmd)
 
     @staticmethod
     def RESET_USERS(index: int) -> DefenderAction:
@@ -60,7 +60,7 @@ class DefenderStoppingActions:
                               descr="A non terminal stop action the defender resets all user accounts, "
                                     "which means that password vulnerabilities are mitigated",
                               cost=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=DefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
+                              ips=[], subnet=False, action_outcome=DefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                               alt_cmd=alt_cmd)
 
     @staticmethod
@@ -78,7 +78,7 @@ class DefenderStoppingActions:
                               type=DefenderActionType.ADD_DEFENSIVE_MECHANISM,
                               descr="A non terminal stop action, the defender enables DPI by starting the IDS",
                               cost=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=DefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
+                              ips=[], subnet=False, action_outcome=DefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                               alt_cmd=alt_cmd)
 
     @staticmethod
@@ -99,5 +99,6 @@ class DefenderStoppingActions:
                                     "IDS alerts that exceed a threshold, the blacklist is implemented "
                                     "using the firewall.",
                               cost=0.0, index=index,
-                              ip=None, subnet=False, action_outcome=DefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
+                              ips=[],
+                              subnet=False, action_outcome=DefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                               alt_cmd=alt_cmd)

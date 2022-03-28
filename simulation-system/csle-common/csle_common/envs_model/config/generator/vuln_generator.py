@@ -1,18 +1,16 @@
 from typing import List
 import random
 import numpy as np
-from csle_common.dao.container_config.topology import Topology
-from csle_common.dao.container_config.node_firewall_config import NodeFirewallConfig
-from csle_common.dao.container_config.vulnerabilities_config import VulnerabilitiesConfig
-from csle_common.dao.container_config.pw_vulnerability_config import PwVulnerabilityConfig
-from csle_common.dao.container_config.rce_vulnerability_config import RceVulnerabilityConfig
-from csle_common.dao.container_config.priv_esc_vulnerability_config import PrivEscVulnerabilityConfig
-from csle_common.dao.container_config.sql_injection_vulnerability_config import SQLInjectionVulnerabilityConfig
-from csle_common.dao.container_config.vulnerability_type import VulnType
+from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
+from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
+from csle_common.dao.emulation_config.vulnerability_type import VulnType
 from csle_common.envs_model.config.generator.topology_generator import TopologyGenerator
-from csle_common.envs_model.config.generator.users_generator import UsersGenerator
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
+from csle_common.dao.network.credential import Credential
+from csle_common.dao.network.transport_protocol import TransportProtocol
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
@@ -23,14 +21,12 @@ class VulnerabilityGenerator:
     A Utility Class for generating vulnerability configuration files
     """
 
-
     @staticmethod
     def shortlist() -> List[str]:
         """
         :return: a list of shortlist usernames for password vulnerabilities
         """
         return constants.VULNERABILITY_GENERATOR.NAMES_SHORTLIST
-
 
     @staticmethod
     def generate(topology: Topology, vulnerable_nodes : List[NodeFirewallConfig], agent_ip : str,
@@ -102,7 +98,7 @@ class VulnerabilityGenerator:
         return vulns_cfg
 
     @staticmethod
-    def pw_vuln(node: NodeFirewallConfig) -> PwVulnerabilityConfig:
+    def pw_vuln(node: NodeFirewallConfig) -> NodeVulnerabilityConfig:
         """
         Utility function for creating a password vulnerability config object
 
@@ -113,23 +109,35 @@ class VulnerabilityGenerator:
         pw_idx = random.randint(0, len(pw_shortlist)-1)
         u = pw_shortlist[pw_idx]
         pw = pw_shortlist[pw_idx]
-        vuln_config = PwVulnerabilityConfig(ip= node.get_ips()[0], vuln_type=VulnType.WEAK_PW, username=u, pw=pw, root=True)
+        vuln_config = NodeVulnerabilityConfig(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
+                                              ip= node.get_ips()[0], vuln_type=VulnType.WEAK_PW,
+                                              credentials=[Credential(username=u, pw=pw)], root=True,
+                                              port=constants.SSH.DEFAULT_PORT, service=constants.SSH.SERVICE_NAME,
+                                              cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, cve=None,
+                                              protocol=TransportProtocol.TCP)
         return vuln_config
 
 
     @staticmethod
-    def rce_vuln(node: NodeFirewallConfig) -> RceVulnerabilityConfig:
+    def rce_vuln(node: NodeFirewallConfig) -> NodeVulnerabilityConfig:
         """
         Utility function for creating an RCE vulnerability config object
 
         :param node: the node to create the vulnerability on
         :return: the created vulnerability
         """
-        vuln_config = RceVulnerabilityConfig(ip=node.get_ips()[0], vuln_type=VulnType.RCE)
+        vuln_config = NodeVulnerabilityConfig(name=constants.EXPLOIT_VULNERABILITES.SAMBACRY_EXPLOIT,
+                                              ip= node.get_ips()[0], vuln_type=VulnType.WEAK_PW,
+                                              credentials=[
+                                                  Credential(username=constants.SAMBA.USER, pw=constants.SAMBA.PW)],
+                                              root=True,
+                                              port=constants.SSH.DEFAULT_PORT, service=constants.SSH.SERVICE_NAME,
+                                              cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, cve=None,
+                                              protocol=TransportProtocol.TCP)
         return vuln_config
 
     @staticmethod
-    def priv_esc_vuln(node: NodeFirewallConfig, username: str, pw: str) -> PrivEscVulnerabilityConfig:
+    def priv_esc_vuln(node: NodeFirewallConfig, username: str, pw: str) -> NodeVulnerabilityConfig:
         """
         Utility function for creating a Priv-Esc vulnerability config object
 
@@ -140,28 +148,38 @@ class VulnerabilityGenerator:
         """
         priv_esc_cve_idx = random.randint(0, len(constants.EXPLOIT_VULNERABILITES.PRIVILEGE_ESC_VULNS) - 1)
         root =False
-        vuln_config = PrivEscVulnerabilityConfig(
-            ip=node.get_ips()[0], vuln_type=VulnType.PRIVILEGE_ESCALATION, username=username, pw=pw, root=root,
-            cve=constants.EXPLOIT_VULNERABILITES.PRIVILEGE_ESC_VULNS[priv_esc_cve_idx])
+        vuln_config = NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426, ip= node.get_ips()[0], vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username=username, pw=pw)],
+            root=root, port=constants.SSH.DEFAULT_PORT,  service=constants.CVE_2010_0426.SERVICE_NAME,
+            cvss=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426_CVSS,
+            cve=constants.EXPLOIT_VULNERABILITES.PRIVILEGE_ESC_VULNS[priv_esc_cve_idx],
+            protocol=TransportProtocol.TCP)
         return vuln_config
 
 
     @staticmethod
-    def sql_injection_vuln(node: NodeFirewallConfig) -> SQLInjectionVulnerabilityConfig:
+    def sql_injection_vuln(node: NodeFirewallConfig) -> NodeVulnerabilityConfig:
         """
         Utility function for creating a SQL-Injection vulnerability config object
 
         :param node: the node to create the vulnerability on
         :return: the created vulnerability
         """
-        vuln_config = SQLInjectionVulnerabilityConfig(ip=node.get_ips()[0], vuln_type=VulnType.SQL_INJECTION,
-                                             username=constants.DVWA_SQL_INJECTION.EXPLOIT_USER,
-                                             pw=constants.DVWA_SQL_INJECTION.EXPLOIT_PW, root=True)
+        vuln_config = NodeVulnerabilityConfig(
+            name=constants.EXPLOIT_VULNERABILITES.DVWA_SQL_INJECTION, ip= node.get_ips()[0],
+            vuln_type=VulnType.WEAK_PW,
+            credentials=[Credential(username=constants.DVWA_SQL_INJECTION.EXPLOIT_USER,
+                                    pw=constants.DVWA_SQL_INJECTION.EXPLOIT_PW)],
+            root=True, port=constants.SSH.DEFAULT_PORT,  service=constants.DVWA_SQL_INJECTION.SERVICE_NAME,
+            cvss=constants.EXPLOIT_VULNERABILITES.DVWA_SQL_INJECTION_CVSS,
+            cve=constants.EXPLOIT_VULNERABILITES.DVWA_SQL_INJECTION,
+            protocol=TransportProtocol.TCP)
         return vuln_config
 
 
     @staticmethod
-    def create_vulns(vuln_cfg: VulnerabilitiesConfig, emulation_config: EmulationConfig) -> None:
+    def create_vulns(vuln_cfg: VulnerabilitiesConfig, emulation_config: RunningEmulationEnvConfig) -> None:
         """
         Utility function for connecting to a running emulation and creating vulnerabilities
 
@@ -171,7 +189,7 @@ class VulnerabilityGenerator:
         """
         vulnerabilities = vuln_cfg.vulnerabilities
         for vuln in vulnerabilities:
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=vuln.ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=vuln.ip)
             if vuln.vuln_type == VulnType.WEAK_PW or vuln.vuln_type == VulnType.SQL_INJECTION or \
                     vuln.vuln_type == VulnType.PRIVILEGE_ESCALATION:
                 cmd = "ls /home"

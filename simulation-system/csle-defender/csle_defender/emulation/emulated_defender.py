@@ -1,6 +1,6 @@
 from typing import Tuple
-from csle_common.dao.network.env_state import EnvState
-from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.action.defender.defender_action import DefenderAction
 from csle_common.dao.action.defender.defender_action_type import DefenderActionType
@@ -15,17 +15,16 @@ class EmulatedDefender:
     """
 
     @staticmethod
-    def defender_transition(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                            env_config: CSLEEnvConfig) -> Tuple[
-        EnvState, float, bool]:
+    def defender_transition(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                            env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
-        Implements the transition operator T: (s,a) -> (s',r)
+        Implements the transition operator T: (s,a) -> s'
 
         :param s: the current state
         :param defender_action: the defender action
         :param attacker_action: the previous action of the attacker
         :param env_config: the environment configuration
-        :return: s', r, done
+        :return: s'
         """
         if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
             return EmulatedDefender.defender_stopping_action(s=s, defender_action=defender_action,
@@ -40,8 +39,8 @@ class EmulatedDefender:
 
 
     @staticmethod
-    def defender_stopping_action(s: EnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
-                                 env_config: CSLEEnvConfig) -> Tuple[EnvState, float, bool]:
+    def defender_stopping_action(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+                                 env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Implements transition of a stopping action of the defender
 
@@ -49,7 +48,7 @@ class EmulatedDefender:
         :param defender_action: the defender's action
         :param attacker_action: the previous action of the attacker
         :param env_config: the environment configuration
-        :return: s', r, done
+        :return: s'
         """
         if defender_action.id == DefenderActionId.STOP:
             return DefenderStoppingMiddleware.stop_monitor(s=s, defender_action=defender_action,
@@ -64,8 +63,8 @@ class EmulatedDefender:
 
 
     @staticmethod
-    def defender_update_state_action(s: EnvState, defender_action: DefenderAction, env_config: CSLEEnvConfig,
-                                     attacker_action: AttackerAction) -> Tuple[EnvState, float, bool]:
+    def defender_update_state_action(s: EmulationEnvState, defender_action: DefenderAction, env_config: EmulationEnvAgentConfig,
+                                     attacker_action: AttackerAction) -> EmulationEnvState:
         """
         Implements transition of state update for the defender
 
@@ -73,7 +72,7 @@ class EmulatedDefender:
         :param defender_action: the action
         :param attacker_action: the attacker's previous action
         :param env_config: the environment configuration
-        :return: s', r, done
+        :return: s'
         """
         if defender_action.id == DefenderActionId.UPDATE_STATE:
             return DefenderUpdateStateMiddleware.update_belief_state(

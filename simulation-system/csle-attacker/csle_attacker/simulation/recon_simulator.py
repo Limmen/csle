@@ -2,8 +2,8 @@ from typing import Tuple
 from csle_common.dao.network.transport_protocol import TransportProtocol
 from csle_attacker.simulation.util.simulator_util import SimulatorUtil
 from csle_attacker.simulation.util.recon_simulator_util import ReconSimulatorUtil
-from csle_common.dao.network.env_state import EnvState
-from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 
 
@@ -13,217 +13,149 @@ class ReconSimulator:
     """
 
     @staticmethod
-    def simulate_tcp_syn_stealth_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_tcp_syn_stealth_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a TCP SYN Stealth Scan action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.syn_stealth_scan_miss_p,
-            protocol=TransportProtocol.TCP)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
+            s=s, a=a, env_config=env_config, protocol=TransportProtocol.TCP)
+        return s_prime
 
     @staticmethod
-    def simulate_ping_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_ping_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a Ping Scan action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,
-                                                          miss_p=env_config.ping_scan_miss_p,
-                                                          os=False)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_host_scan_helper(s=s, a=a, env_config=env_config,os=False)
+        return s_prime
 
     @staticmethod
-    def simulate_udp_port_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_udp_port_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a UDP port scan action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.udp_port_scan_miss_p,
-            protocol=TransportProtocol.UDP)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
+            s=s, a=a, env_config=env_config, protocol=TransportProtocol.UDP)
+        return s_prime
 
     @staticmethod
-    def simulate_con_non_stealth_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_con_non_stealth_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a TCP CON Scan (non-stealth) action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.syn_stealth_scan_miss_p,
-            protocol=TransportProtocol.TCP)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
+            s=s, a=a, env_config=env_config, protocol=TransportProtocol.TCP)
+        return s_prime
 
     @staticmethod
-    def simulate_fin_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_fin_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a TCP FIN Scan action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.syn_stealth_scan_miss_p,
-            protocol=TransportProtocol.TCP)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
+            s=s, a=a, env_config=env_config, protocol=TransportProtocol.TCP)
+        return s_prime
 
     @staticmethod
-    def simulate_tcp_null_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_tcp_null_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a TCP NULL Scan action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.syn_stealth_scan_miss_p,
-            protocol=TransportProtocol.TCP)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
+            s=s, a=a, env_config=env_config,  protocol=TransportProtocol.TCP)
+        return s_prime
 
     @staticmethod
-    def simulate_tcp_xmas_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_tcp_xmas_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a TCP XMAS Scan action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.syn_stealth_scan_miss_p,
-            protocol=TransportProtocol.TCP)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
+            s=s, a=a, env_config=env_config, protocol=TransportProtocol.TCP)
+        return s_prime
 
     @staticmethod
-    def simulate_os_detection_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_os_detection_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs an OS Detection scan action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_host_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.os_scan_miss_p, os=True)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        s_prime = ReconSimulatorUtil.simulate_host_scan_helper(
+            s=s, a=a, env_config=env_config, os=True)
+        return s_prime
 
     @staticmethod
-    def simulate_vulscan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_vulscan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) \
+            -> EmulationEnvState:
         """
         Performs a nmap vulnerability scan using "vulscan" action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.vulscan_miss_p, protocol=TransportProtocol.TCP,
-            vuln_scan=True)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+            s=s, a=a, env_config=env_config, protocol=TransportProtocol.TCP, vuln_scan=True)
+        return s_prime
 
     @staticmethod
-    def simulate_nmap_vulners(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_nmap_vulners(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) \
+            -> EmulationEnvState:
         """
         Performs a nmap vulnerability scan using "vulners" action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        s_prime, reward, done = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
-            s=s, a=a, env_config=env_config, miss_p=env_config.vulners_miss_p,
+        s_prime = ReconSimulatorUtil.simulate_port_vuln_scan_helper(
+            s=s, a=a, env_config=env_config,
             protocol=TransportProtocol.TCP, vuln_scan=True)
-        if not done:
-            done, d_reward = SimulatorUtil.simulate_detection(a=a, env_config=env_config)
-            if done:
-                reward = d_reward
-            s_prime.attacker_obs_state.detected = done
-        return s_prime, reward, done
+        return s_prime
 
     @staticmethod
-    def simulate_nikto_web_host_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_nikto_web_host_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Simulates a Nikto web host scan
 
@@ -232,69 +164,65 @@ class ReconSimulator:
         :param env_config: the environment configuration
         :return: s_prime, reward, done
         """
-        return s, 0, False
+        return s
 
     @staticmethod
-    def simulate_masscan_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_masscan_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Simulates a masscan host scan
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        return s, 0, False
+        return s
 
     @staticmethod
-    def simulate_firewalk_scan(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_firewalk_scan(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Simulates a firewalk scan
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        return s, 0, False
+        return s
 
     @staticmethod
-    def simulate_http_enum(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_http_enum(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) \
+            -> EmulationEnvState:
         """
         Simulates a http enum scan
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        return s, 0, False
+        return s
 
     @staticmethod
-    def simulate_http_grep(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_http_grep(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Simulates a http grep scan
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        return s, 0, False
+        return s
 
     @staticmethod
-    def simulate_finger(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def simulate_finger(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Simulates a finger scan
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
-        return s, 0, False
+        return s

@@ -1,9 +1,8 @@
-from typing import Tuple
-from csle_common.dao.network.env_state import EnvState
-from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from csle_common.dao.action.defender.defender_action import DefenderAction
-from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from csle_common.envs_model.util.env_dynamics_util import EnvDynamicsUtil
 
 
 class DefenderBeliefStateSimulator:
@@ -12,8 +11,8 @@ class DefenderBeliefStateSimulator:
     """
 
     @staticmethod
-    def update_state(s, attacker_action: AttackerAction, env_config: CSLEEnvConfig,
-                     defender_action: DefenderAction)-> Tuple[EnvState, float, bool]:
+    def update_state(s, attacker_action: AttackerAction, env_config: EmulationEnvAgentConfig,
+                     defender_action: DefenderAction)-> EmulationEnvState:
         """
         Simulates a belief state transition of the defender
 
@@ -25,39 +24,32 @@ class DefenderBeliefStateSimulator:
         :return: s_prime, reward, done
         """
         s_prime = s
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(env_config=env_config, a=attacker_action, s=s)
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_agent_config=env_config, a=attacker_action, s=s)
 
         num_new_alerts = 0
         num_new_priority = 0
         num_new_severe_alerts = 0
         num_new_warning_alerts = 0
 
-        if env_config.use_attacker_action_stats_to_update_defender_state:
-            num_new_alerts = attacker_action.alerts[0]
-            num_new_priority = attacker_action.alerts[1]
-            num_new_severe_alerts = num_new_alerts / 2
-            num_new_warning_alerts = num_new_alerts / 2
+        if (attacker_action.id.value, logged_in_ips_str) in \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts:
+            num_new_severe_alerts = \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts[
+                    (attacker_action.id.value, logged_in_ips_str)].rvs()
         else:
+            print("miss 1: {}, action:{}, id: {}".format((attacker_action.id.value, logged_in_ips_str),
+                                                         attacker_action, attacker_action.id.value))
 
-            if (attacker_action.id.value, logged_in_ips_str) in \
-                    env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts:
-                num_new_severe_alerts = \
-                    env_config.network_conf.defender_dynamics_model.norm_num_new_severe_alerts[
-                        (attacker_action.id.value, logged_in_ips_str)].rvs()
-            else:
-                print("miss 1: {}, action:{}, id: {}".format((attacker_action.id.value, logged_in_ips_str),
-                                                             attacker_action, attacker_action.id.value))
+        if (attacker_action.id.value, logged_in_ips_str) in \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts:
+            num_new_warning_alerts = \
+                env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts[
+                    (attacker_action.id.value, logged_in_ips_str)].rvs()
+        else:
+            print("miss 2: {}, action:{}".format((attacker_action.id.value, logged_in_ips_str), attacker_action))
 
-            if (attacker_action.id.value, logged_in_ips_str) in \
-                    env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts:
-                num_new_warning_alerts = \
-                    env_config.network_conf.defender_dynamics_model.norm_num_new_warning_alerts[
-                        (attacker_action.id.value, logged_in_ips_str)].rvs()
-            else:
-                print("miss 2: {}, action:{}".format((attacker_action.id.value, logged_in_ips_str), attacker_action))
-
-            num_new_alerts = num_new_severe_alerts + num_new_warning_alerts
-            num_new_priority = num_new_severe_alerts*3 + num_new_warning_alerts*1
+        num_new_alerts = num_new_severe_alerts + num_new_warning_alerts
+        num_new_priority = num_new_severe_alerts*3 + num_new_warning_alerts*1
 
         # Update network state
         s_prime.defender_obs_state.num_alerts_total = s_prime.defender_obs_state.num_alerts_total + num_new_alerts
@@ -137,11 +129,11 @@ class DefenderBeliefStateSimulator:
         s_prime.defender_obs_state.num_login_attempts_total_all_stops = \
             sum(list(map(lambda x: x.num_failed_login_attempts, s_prime.defender_obs_state.machines)))
 
-        return s_prime, 0, True
+        return s_prime
 
     @staticmethod
-    def init_state(s, attacker_action: AttackerAction, env_config: CSLEEnvConfig,
-                   defender_action: DefenderAction) -> Tuple[EnvState, float, bool]:
+    def init_state(s, attacker_action: AttackerAction, env_config: EmulationEnvAgentConfig,
+                   defender_action: DefenderAction) -> EmulationEnvState:
         """
         Initializes the belief state of the defender
 
@@ -149,14 +141,14 @@ class DefenderBeliefStateSimulator:
         :param attacker_action: the attacker's previous action
         :param defender_action: the defender action
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         return DefenderBeliefStateSimulator.reset_state(s=s, attacker_action=attacker_action, env_config=env_config,
                                                         defender_action=defender_action)
 
     @staticmethod
-    def reset_state(s: EnvState, attacker_action: AttackerAction, env_config: CSLEEnvConfig,
-                    defender_action: DefenderAction) -> Tuple[EnvState, float, bool]:
+    def reset_state(s: EmulationEnvState, attacker_action: AttackerAction, env_config: EmulationEnvAgentConfig,
+                    defender_action: DefenderAction) -> EmulationEnvState:
         """
         Resets the belief state of the defender
 
@@ -164,7 +156,7 @@ class DefenderBeliefStateSimulator:
         :param attacker_action: the attacker's previous action
         :param defender_action: the defender action
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         s_prime = s
 
@@ -196,8 +188,8 @@ class DefenderBeliefStateSimulator:
             m.num_processes = 0
             m.num_open_connections = 0
 
-            if m.ip in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
-                m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ip]
+            if m.ips in env_config.network_conf.defender_dynamics_model.machines_dynamics_model:
+                m_dynamics = env_config.network_conf.defender_dynamics_model.machines_dynamics_model[m.ips]
 
                 # Sample initial states
                 if m_dynamics.norm_num_new_open_connections is not None:
@@ -292,4 +284,4 @@ class DefenderBeliefStateSimulator:
         s_prime.defender_obs_state.step_baseline_stops_remaining = \
             s_prime.defender_obs_state.maximum_number_of_stops
 
-        return s_prime, 0, False
+        return s_prime

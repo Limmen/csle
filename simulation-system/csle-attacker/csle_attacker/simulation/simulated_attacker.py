@@ -1,12 +1,12 @@
 from typing import Tuple
-from csle_common.dao.network.env_state import EnvState
-from csle_common.dao.network.env_config import CSLEEnvConfig
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
 from csle_common.dao.action.attacker.attacker_action_type import AttackerActionType
 from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
 from csle_attacker.simulation.recon_simulator import ReconSimulator
 from csle_attacker.simulation.exploit_simulator import ExploitSimulator
 from csle_attacker.simulation.post_exploit_simulator import PostExploitSimulator
-from gym_csle_ctf.envs_model.logic.common.env_dynamics_util import EnvDynamicsUtil
+from csle_common.envs_model.util.env_dynamics_util import EnvDynamicsUtil
 from csle_attacker.simulation.attacker_stopping_simulator import AttackerStoppingSimulator
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 
@@ -17,23 +17,22 @@ class SimulatedAttacker:
     """
 
     @staticmethod
-    def attacker_transition(s: EnvState, attacker_action: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def attacker_transition(s: EmulationEnvState, attacker_action: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Simulates a state transition in the MDP or Markov Game
 
         :param s: the current state
         :param attacker_action: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         if attacker_action.type == AttackerActionType.RECON:
-            EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
+            EnvDynamicsUtil.cache_action(emulation_env_agent_config=env_config, a=attacker_action, s=s)
             return SimulatedAttacker.attacker_recon_action(s=s, a=attacker_action, env_config=env_config)
         elif attacker_action.type == AttackerActionType.EXPLOIT \
                 or attacker_action.type == AttackerActionType.PRIVILEGE_ESCALATION:
             if attacker_action.subnet:
-                EnvDynamicsUtil.cache_action(env_config=env_config, a=attacker_action, s=s)
+                EnvDynamicsUtil.cache_action(emulation_env_agent_config=env_config, a=attacker_action, s=s)
             return SimulatedAttacker.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
         elif attacker_action.type == AttackerActionType.POST_EXPLOIT:
             return SimulatedAttacker.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)
@@ -44,15 +43,14 @@ class SimulatedAttacker:
 
 
     @staticmethod
-    def attacker_recon_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def attacker_recon_action(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs a reconnaissance action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         if a.id == AttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET \
                 or a.id == AttackerActionId.TCP_SYN_STEALTH_SCAN_HOST \
@@ -106,15 +104,14 @@ class SimulatedAttacker:
             raise ValueError("Recon action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_exploit_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def attacker_exploit_action(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Performs an exploit action
 
         :param s: the current state
         :param a: the action to take
         :param env_config: the environment configuration
-        :return: s_prime, reward, done
+        :return: s_prime
         """
         if a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST \
                 or a.id == AttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
@@ -172,26 +169,20 @@ class SimulatedAttacker:
             raise ValueError("Exploit action id:{},name:{} not recognized".format(a.id, a.name))
 
     @staticmethod
-    def attacker_post_exploit_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def attacker_post_exploit_action(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Simulates a post-exploit action
 
         :param s: the current state
         :param a: the action
         :param env_config: the environment configuration
-        :return: s', r, done
+        :return: s'
         """
         if a.id == AttackerActionId.NETWORK_SERVICE_LOGIN:
             s_1, r_1, _ = PostExploitSimulator.simulate_ssh_login(s=s, a=a, env_config=env_config)
             s_2, r_2, _ = PostExploitSimulator.simulate_ftp_login(s=s_1, a=a, env_config=env_config)
             s_3, r_3, done = PostExploitSimulator.simulate_telnet_login(s=s_2, a=a, env_config=env_config)
-            rewards = list(filter(lambda x: x >= 0, [r_1, r_2, r_3]))
-            if len(rewards) > 0:
-                reward = sum(rewards)
-            else:
-                reward = r_3
-            return s_3, reward, done
+            return s_3
         if a.id == AttackerActionId.FIND_FLAG:
             return PostExploitSimulator.simulate_bash_find_flag(s=s, a=a, env_config=env_config)
         if a.id == AttackerActionId.INSTALL_TOOLS:
@@ -203,8 +194,7 @@ class SimulatedAttacker:
 
 
     @staticmethod
-    def attacker_stopping_action(s: EnvState, a: AttackerAction, env_config: CSLEEnvConfig) \
-            -> Tuple[EnvState, float, bool]:
+    def attacker_stopping_action(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
         """
         Implements transition of a stopping action of the attacker
 

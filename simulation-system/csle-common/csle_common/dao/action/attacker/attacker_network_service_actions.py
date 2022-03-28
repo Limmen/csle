@@ -1,3 +1,4 @@
+from typing import List
 from csle_common.dao.action.attacker.attacker_action_type import AttackerActionType
 from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
@@ -10,18 +11,20 @@ class AttackerNetworkServiceActions:
     """
 
     @staticmethod
-    def SERVICE_LOGIN(index: int, ip: str = "") -> AttackerAction:
+    def SERVICE_LOGIN(index: int, ips: List[str] = None) -> AttackerAction:
         """
         Action for using known credentials to login to a server
 
         :param index: index of the machine to apply the action to
-        :param ip: ip of the machine to apply the action to
+        :param ips: ip of the machine to apply the action to
         :return: the action
         """
+        if ips is None:
+            ips = []
         id = AttackerActionId.NETWORK_SERVICE_LOGIN
         cmd = []
-        return AttackerAction(id=id, name="Network service login", cmd=cmd,
+        return AttackerAction(id=id, name="Network service login", cmds=cmd,
                               type=AttackerActionType.POST_EXPLOIT,
                               descr="Uses known credentials to login to network services on a server",
-                              cost=0.01, noise=0.01, index=index,
-                              ips=ip, subnet=False, action_outcome=AttackerActionOutcome.LOGIN)
+                              index=index,
+                              ips=ips, subnet=False, action_outcome=AttackerActionOutcome.LOGIN)

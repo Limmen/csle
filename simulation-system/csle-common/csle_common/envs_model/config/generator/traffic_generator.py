@@ -5,15 +5,15 @@ import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.client_manager.query_clients
 import csle_common.constants.constants as constants
-from csle_common.dao.container_config.topology import Topology
-from csle_common.dao.container_config.containers_config import ContainersConfig
-from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.containers_config import ContainersConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.dao.container_config.traffic_config import TrafficConfig
-from csle_common.dao.container_config.node_traffic_config import NodeTrafficConfig
-from csle_common.dao.container_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.traffic_config import TrafficConfig
+from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
+from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.util.experiments_util import util
 
 
@@ -86,7 +86,7 @@ class TrafficGenerator:
 
 
     @staticmethod
-    def stop_client_population(traffic_config: TrafficConfig, emulation_config: EmulationConfig) -> None:
+    def stop_client_population(traffic_config: TrafficConfig, emulation_config: RunningEmulationEnvConfig) -> None:
         """
         Function for stopping the client arrival process of an emulation
 
@@ -97,7 +97,7 @@ class TrafficGenerator:
         print(f"stopping client population on container: {traffic_config.client_population_config.ip}")
 
         # Connect
-        GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=traffic_config.client_population_config.ip)
+        GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=traffic_config.client_population_config.ip)
 
         # Check if client_manager is already running
         cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
@@ -137,7 +137,7 @@ class TrafficGenerator:
 
     @staticmethod
     def start_client_population(traffic_config: TrafficConfig, containers_config: ContainersConfig,
-                                emulation_config: EmulationConfig, log_sink_config: LogSinkConfig) -> None:
+                                emulation_config: RunningEmulationEnvConfig, log_sink_config: LogSinkConfig) -> None:
         """
         Starts the arrival process of clients
 
@@ -173,7 +173,7 @@ class TrafficGenerator:
                 commands.append(cmd.format(net.subnet_mask))
 
         # Connect
-        GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=traffic_config.client_population_config.ip)
+        GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=traffic_config.client_population_config.ip)
 
         # Check if client_manager is already running
         cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
@@ -233,12 +233,14 @@ class TrafficGenerator:
     def get_num_active_clients(emulation_env_config : EmulationEnvConfig) \
             -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
 
-        emulation_config = EmulationConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
-                                           agent_username=constants.CSLE_ADMIN.USER,
-                                           agent_pw=constants.CSLE_ADMIN.PW, server_connection=False)
+        emulation_config = RunningEmulationEnvConfig(agent_ip=emulation_env_config.containers_config.agent_ip,
+                                                     agent_username=constants.CSLE_ADMIN.USER,
+                                                     agent_pw=constants.CSLE_ADMIN.PW, server_connection=False,
+                                                     kafka_port=emulation_env_config.log_sink_config.kafka_port,
+                                                     kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0])
 
         # Connect
-        GeneratorUtil.connect_admin(emulation_config=emulation_config,
+        GeneratorUtil.connect_admin(emulation_env_config=emulation_config,
                                     ip=emulation_env_config.traffic_config.client_population_config.ip)
 
         # Check if client_manager is already running
@@ -272,7 +274,7 @@ class TrafficGenerator:
 
     @staticmethod
     def stop_internal_traffic_generators(traffic_config: TrafficConfig,
-                                                     emulation_config: EmulationConfig) -> None:
+                                         emulation_config: RunningEmulationEnvConfig) -> None:
         """
         Utility function for stopping and deleting internal traffic generators
 
@@ -284,7 +286,7 @@ class TrafficGenerator:
             print("stopping traffic generator script, node ip:{}".format(node.ip))
 
             # Connect
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=node.ip)
 
             # Stop old background job if running
             cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -299,12 +301,12 @@ class TrafficGenerator:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Disconnect
-            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
+            GeneratorUtil.disconnect_admin(emulation_env_config=emulation_config)
 
 
     @staticmethod
     def create_and_start_internal_traffic_generators(traffic_config: TrafficConfig, containers_config: ContainersConfig,
-                                                     emulation_config: EmulationConfig, sleep_time : int = 2) -> None:
+                                                     emulation_config: RunningEmulationEnvConfig, sleep_time : int = 2) -> None:
         """
         Installs the traffic generation scripts at each node
 
@@ -343,7 +345,7 @@ class TrafficGenerator:
             print("creating traffic generator script, node ip:{}".format(node.ip))
 
             # Connect
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=node.ip)
 
             # Stop old background job if running
             cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -399,10 +401,10 @@ class TrafficGenerator:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Disconnect
-            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
+            GeneratorUtil.disconnect_admin(emulation_env_config=emulation_config)
 
     @staticmethod
-    def stop_traffic_generators(traffic_config: TrafficConfig, emulation_config: EmulationConfig) -> None:
+    def stop_traffic_generators(traffic_config: TrafficConfig, emulation_config: RunningEmulationEnvConfig) -> None:
         """
         Stops running traffic generators at each node
 
@@ -413,7 +415,7 @@ class TrafficGenerator:
         for node in traffic_config.node_traffic_configs:
 
             # Connect
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=node.ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=node.ip)
 
             # Stop old background job if running
             cmd = constants.COMMANDS.SUDO + " " + constants.COMMANDS.PKILL + " " \
@@ -421,7 +423,7 @@ class TrafficGenerator:
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn)
 
             # Disconnect
-            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
+            GeneratorUtil.disconnect_admin(emulation_env_config=emulation_config)
 
 
     @staticmethod

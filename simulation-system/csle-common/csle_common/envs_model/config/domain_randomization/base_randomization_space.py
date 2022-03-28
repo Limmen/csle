@@ -1,9 +1,9 @@
 from typing import List
 import csle_common.constants.constants as constants
-from csle_common.dao.network.network_service import NetworkService
-from csle_common.dao.network.transport_protocol import TransportProtocol
-from csle_common.dao.network.vulnerability import Vulnerability
-from csle_common.dao.network.credential import Credential
+from csle_common.dao.emulation_config.network_service import NetworkService
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
+from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
+from csle_common.dao.emulation_config.credential import Credential
 
 
 class BaseRandomizationSpace:
@@ -60,12 +60,12 @@ class BaseRandomizationSpace:
         return services
 
     @staticmethod
-    def base_vulns() -> List[Vulnerability]:
+    def base_vulns() -> List[NodeVulnerabilityConfig]:
         """
         :return: a list of base vulnerabilities
         """
         vulns = [
-            Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
+            NodeVulnerabilityConfig(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
                           cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
                           service=constants.SSH.SERVICE_NAME,
                           credentials=[
@@ -73,29 +73,29 @@ class BaseRandomizationSpace:
                                          protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME)
                           ],
                           port=22, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                           port=22, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8620", cve="CVE-2020-8620", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8620", cve="CVE-2020-8620", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8617", cve="CVE-2020-8617", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8617", cve="CVE-2020-8617", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8616", cve="CVE-2020-8616", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8616", cve="CVE-2020-8616", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2019-6470", cve="CVE-2019-6470", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2019-6470", cve="CVE-2019-6470", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8623", cve="CVE-2020-8623", cvss=4.3, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8623", cve="CVE-2020-8623", cvss=4.3, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8621", cve="CVE-2020-8621", cvss=4.3, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8621", cve="CVE-2020-8621", cvss=4.3, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8624", cve="CVE-2020-8624", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8624", cve="CVE-2020-8624", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8622", cve="CVE-2020-8622", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8622", cve="CVE-2020-8622", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8619", cve="CVE-2020-8619", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8619", cve="CVE-2020-8619", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8618", cve="CVE-2020-8618", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8618", cve="CVE-2020-8618", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
+            NodeVulnerabilityConfig(name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS, cve=None,
                           cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS,
                           service=constants.SSH.SERVICE_NAME,
                           credentials=[
@@ -103,41 +103,41 @@ class BaseRandomizationSpace:
                                          protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME)
                           ],
                           port=22, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                           port=22, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8620", cve="CVE-2020-8620", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8620", cve="CVE-2020-8620", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8617", cve="CVE-2020-8617", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8617", cve="CVE-2020-8617", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8616", cve="CVE-2020-8616", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8616", cve="CVE-2020-8616", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2019-6470", cve="CVE-2019-6470", cvss=5.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2019-6470", cve="CVE-2019-6470", cvss=5.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8623", cve="CVE-2020-8623", cvss=4.3, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8623", cve="CVE-2020-8623", cvss=4.3, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8621", cve="CVE-2020-8621", cvss=4.3, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8621", cve="CVE-2020-8621", cvss=4.3, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8624", cve="CVE-2020-8624", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8624", cve="CVE-2020-8624", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8622", cve="CVE-2020-8622", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8622", cve="CVE-2020-8622", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8619", cve="CVE-2020-8619", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8619", cve="CVE-2020-8619", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-8618", cve="CVE-2020-8618", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2020-8618", cve="CVE-2020-8618", cvss=4.0, credentials=[],
                           port=53, protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-15523", cve="CVE-2020-15523", cvss=6.9, credentials=[], port=80,
+            NodeVulnerabilityConfig(name="CVE-2020-15523", cve="CVE-2020-15523", cvss=6.9, credentials=[], port=80,
                           protocol=TransportProtocol.TCP),
-            Vulnerability(name="CVE-2020-14422", cve="CVE-2020-14422", cvss=4.3, credentials=[], port=80,
+            NodeVulnerabilityConfig(name="CVE-2020-14422", cve="CVE-2020-14422", cvss=4.3, credentials=[], port=80,
                           protocol=TransportProtocol.TCP),
-            Vulnerability(name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS,
+            NodeVulnerabilityConfig(name=constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS,
                           cve=None, cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, credentials=[
                     Credential(username="admin", pw="admin", service=constants.TELNET.SERVICE_NAME)
                 ],
                           port=23, protocol=TransportProtocol.TCP, service=constants.TELNET.SERVICE_NAME),
-            Vulnerability(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
+            NodeVulnerabilityConfig(name="CVE-2014-9278", cve="CVE-2014-9278", cvss=4.0, credentials=[],
                           port=22,
                           protocol=TransportProtocol.TCP),
-            Vulnerability(name=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS, cve=None,
+            NodeVulnerabilityConfig(name=constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS, cve=None,
                           cvss=constants.EXPLOIT_VULNERABILITES.WEAK_PASSWORD_CVSS, credentials=[
                     Credential(username="pi", pw="pi", service=constants.FTP.SERVICE_NAME)
                 ],

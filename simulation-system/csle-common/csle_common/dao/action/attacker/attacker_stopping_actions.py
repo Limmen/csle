@@ -20,12 +20,11 @@ class AttackerStoppingActions:
         id = AttackerActionId.STOP
         cmd = []
         alt_cmd = []
-        return AttackerAction(id=id, name="Abort Intrusion", cmd=cmd,
+        return AttackerAction(id=id, name="Abort Intrusion", cmds=cmd,
                               type=AttackerActionType.STOP,
                               descr="Aborts an ongoing intrusion",
-                              cost=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.GAME_END, alt_cmd=alt_cmd,
-                              noise=0)
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.GAME_END, alt_cmd=alt_cmd)
 
     @staticmethod
     def CONTINUE(index: int) -> AttackerAction:
@@ -38,9 +37,8 @@ class AttackerStoppingActions:
         id = AttackerActionId.CONTINUE
         cmd = []
         alt_cmd = []
-        return AttackerAction(id=id, name="Continue", cmd=cmd,
+        return AttackerAction(id=id, name="Continue", cmds=cmd,
                               type=AttackerActionType.CONTINUE,
                               descr="A 'continue' action, the attacker chooses to not make any action",
-                              cost=0.0, index=index,
-                              ips=None, subnet=False, action_outcome=AttackerActionOutcome.CONTINUE, alt_cmd=alt_cmd,
-                              noise=0)
+                              index=index,
+                              ips=[], subnet=False, action_outcome=AttackerActionOutcome.CONTINUE, alt_cmd=alt_cmd)

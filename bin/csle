@@ -9,21 +9,22 @@ To see options, run:
 from typing import List, Tuple, Union
 import click
 import os
+import readline # for history in shells
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
 from csle_common.envs_model.config.generator.ids_manager import IDSManager
 from csle_common.envs_model.config.generator.log_sink_manager import LogSinkManager
 from csle_common.envs_model.config.generator.host_manager import HostManager
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
-from csle_common.dao.container_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
-from csle_common.dao.container_config.emulation_env_generation_config import EmulationEnvGenerationConfig
-from csle_common.dao.container_config.container_network import ContainerNetwork
+from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
+from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
 import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 from csle_attacker.attacker import Attacker
-from csle_common.dao.network.env_state import EnvState
+from csle_common.dao.network.emulation_env_state import EmulationEnvState
 
 
 @click.group()
@@ -34,16 +35,20 @@ def commands() -> None:
     pass
 
 
-def attacker_shell(s: EnvState):
-    latest_reward = 0
-    cumulative_reward = 0
+def attacker_shell(s: EmulationEnvState) -> None:
+    """
+    An interactive shell for executing attacker actions in an emulation environment
+
+    :param s: the state of the emulation
+    :return: None
+    """
     done = False
     while True:
         raw_input = input("> ")
         raw_input = raw_input.strip()
         if raw_input == "help":
             print("Enter an action id to execute the action, "
-                  "press R to reset, press G to print the rewards, "
+                  "press R to reset,"
                   "press S to print the state, press A to print the actions, "
                   "press D to check if done"
                   "press H to print the history of actions")
@@ -55,20 +60,16 @@ def attacker_shell(s: EnvState):
             print(s)
         elif raw_input == "D":
             print(done)
-        elif raw_input == "G":
-            print(f"Latest reward:{latest_reward}, cumulative reward:{cumulative_reward}")
         elif raw_input == "R":
             print("Resetting the state")
-            s.reset_state()
+            s.reset()
         else:
-            try:
-                attacker_action_idx = int(raw_input)
-                attacker_action = s.env_config.attacker_action_conf.actions[attacker_action_idx]
-                s_prime, r, done = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
-                latest_reward = r
-                cumulative_reward = cumulative_reward + r
-            except Exception as e:
-                print("There was an error parsing the input, please enter an integer representing an attacker action")
+            # try:
+            attacker_action_idx = int(raw_input)
+            attacker_action = s.env_config.attacker_action_conf.actions[attacker_action_idx]
+            s = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
+            # except Exception as e:
+            #     print("There was an error parsing the input, please enter an integer representing an attacker action")
 
 
 @click.argument('emulation', default="", type=str)
@@ -82,7 +83,7 @@ def attacker(emulation : str) -> None:
     """
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
-        s = EnvState.from_emulation_env_config(emulation_env_config=emulation_env_config)
+        s = EmulationEnvState.from_emulation_env_config(emulation_env_config=emulation_env_config)
         attacker_shell(s=s)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
@@ -884,6 +885,7 @@ commands.add_command(start_traffic)
 commands.add_command(stop_traffic)
 commands.add_command(statsmanager)
 commands.add_command(em)
+commands.add_command(attacker)
 
 
 # Script entrypoint

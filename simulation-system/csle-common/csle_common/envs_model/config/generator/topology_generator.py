@@ -1,15 +1,15 @@
 from typing import List, Tuple
 import random
 import numpy as np
-from csle_common.dao.container_config.topology import Topology
-from csle_common.dao.container_config.node_firewall_config import NodeFirewallConfig
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 from csle_common.envs_model.logic.emulation.util.common.emulation_util import EmulationUtil
 from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
 from csle_common.util.experiments_util import util
 import csle_common.constants.constants as constants
-from csle_common.dao.container_config.container_network import ContainerNetwork
-from csle_common.dao.container_config.default_network_firewall_config import DefaultNetworkFirewallConfig
+from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 
 
 class TopologyGenerator:
@@ -146,7 +146,7 @@ class TopologyGenerator:
         return ip_suffix
 
     @staticmethod
-    def create_topology(topology: Topology, emulation_config: EmulationConfig) -> None:
+    def create_topology(topology: Topology, emulation_config: RunningEmulationEnvConfig) -> None:
         """
         Utility function for connecting to a running emulation and creating the configuration
 
@@ -159,7 +159,7 @@ class TopologyGenerator:
             ips = node.get_ips()
             ip = ips[0]
             print("Connecting to node:{}".format(ip))
-            GeneratorUtil.connect_admin(emulation_config=emulation_config, ip=ip)
+            GeneratorUtil.connect_admin(emulation_env_config=emulation_config, ip=ip)
 
             for route in node.routes:
                 target, gw = route
@@ -267,7 +267,7 @@ class TopologyGenerator:
                       f"{default_network_fw_config.default_input}"
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_config.agent_conn, wait_for_completion=True)
 
-            GeneratorUtil.disconnect_admin(emulation_config=emulation_config)
+            GeneratorUtil.disconnect_admin(emulation_env_config=emulation_config)
 
     @staticmethod
     def write_topology(topology: Topology, path: str = None) -> None:

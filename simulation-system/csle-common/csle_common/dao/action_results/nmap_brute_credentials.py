@@ -1,5 +1,5 @@
-from csle_common.dao.network.transport_protocol import TransportProtocol
-from csle_common.dao.network.credential import Credential
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
+from csle_common.dao.emulation_config.credential import Credential
 
 
 class NmapBruteCredentials:

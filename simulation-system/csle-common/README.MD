@@ -53,7 +53,7 @@ use cases in csle.
 
 ```python
 from csle_common.dao.network.env_mode import EnvMode
-from csle_common.dao.network.emulation_config import EmulationConfig
+from csle_common.dao.network.running_emulation_env_config import RunningEmulationEnvConfig
 ```
 
 ## Author & Maintainer
