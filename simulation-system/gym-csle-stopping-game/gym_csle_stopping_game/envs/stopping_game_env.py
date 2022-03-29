@@ -12,17 +12,17 @@ class StoppingGameEnv(BaseEnv):
     OpenAI Gym Env for the csle-stopping-game
     """
 
-    def __init__(self, stopping_game_config: StoppingGameConfig):
-        self.stopping_game_config = stopping_game_config
+    def __init__(self, config: StoppingGameConfig):
+        self.config = config
 
         # Initialize environment state
-        self.env_state = StoppingGameState(b1=self.stopping_game_config.b1, L=self.stopping_game_config.L)
+        self.state = StoppingGameState(b1=self.config.b1, L=self.config.L)
 
         # Setup spaces
-        self.attacker_observation_space = self.stopping_game_config.attacker_observation_space()
-        self.defender_observation_space = self.stopping_game_config.defender_observation_space()
-        self.attacker_action_space = self.stopping_game_config.attacker_action_space()
-        self.defender_action_space = self.stopping_game_config.defender_action_space()
+        self.attacker_observation_space = self.config.attacker_observation_space()
+        self.defender_observation_space = self.config.defender_observation_space()
+        self.attacker_action_space = self.config.attacker_action_space()
+        self.defender_action_space = self.config.defender_action_space()
 
         # Setup Config
         self.viewer = None
@@ -50,31 +50,31 @@ class StoppingGameEnv(BaseEnv):
 
         # Setup initial values
         a1, pi2 = action_profile
-        assert pi2.shape[0] == len(self.stopping_game_config.S)
-        assert pi2.shape[1] == len(self.stopping_game_config.A1)
+        assert pi2.shape[0] == len(self.config.S)
+        assert pi2.shape[1] == len(self.config.A1)
         done = False
         info = {}
 
         # Compute r, s', b',o'
-        a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.env_state.s)
-        r = -self.stopping_game_config.R[self.env_state.l-1][a1][a2][self.env_state.s]
-        self.env_state.s = StoppingGameUtil.sample_next_state(l=self.env_state.l, a1=a1, a2=a2,
-                                                              T=self.stopping_game_config.T,
-                                                              S=self.stopping_game_config.S, s=self.env_state.s)
-        o = max(self.stopping_game_config.O)
-        if self.env_state.s == 2:
+        a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.state.s)
+        r = -self.config.R[self.state.l - 1][a1][a2][self.state.s]
+        self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
+                                                          T=self.config.T,
+                                                          S=self.config.S, s=self.state.s)
+        o = max(self.config.O)
+        if self.state.s == 2:
             done = True
         else:
-            o = StoppingGameUtil.sample_next_observation(Z=self.stopping_game_config.Z,
-                                                         O=self.stopping_game_config.O, s_prime=self.env_state.s)
-            self.env_state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.env_state.b, pi2=pi2,
-                                                                       config=self.stopping_game_config,
-                                                                       l=self.env_state.l, a2=a2)
+            o = StoppingGameUtil.sample_next_observation(Z=self.config.Z,
+                                                         O=self.config.O, s_prime=self.state.s)
+            self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
+                                                        config=self.config,
+                                                        l=self.state.l, a2=a2)
 
 
         # Get observations
-        attacker_obs = self.env_state.attacker_observation()
-        defender_obs = self.env_state.defender_observation()
+        attacker_obs = self.state.attacker_observation()
+        defender_obs = self.state.defender_observation()
 
         # Log trajectory
         self.trajectory.defender_rewards.append(r)
@@ -82,8 +82,8 @@ class StoppingGameEnv(BaseEnv):
         self.trajectory.attacker_actions.append(a2)
         self.trajectory.defender_actions.append(a1)
         self.trajectory.infos.append(info)
-        self.trajectory.states.append(self.env_state.s)
-        self.trajectory.beliefs.append(self.env_state.b[1])
+        self.trajectory.states.append(self.state.s)
+        self.trajectory.beliefs.append(self.state.b[1])
         self.trajectory.infrastructure_metrics.append(o)
         if not done:
             self.trajectory.attacker_observations.append(attacker_obs)
@@ -97,16 +97,14 @@ class StoppingGameEnv(BaseEnv):
 
         :return: initial observation
         """
-        self.env_state.reset()
-        if self.viewer is not None and self.viewer.mainframe is not None:
-            self.viewer.mainframe.reset()
+        self.state.reset()
         if len(self.trajectory .attacker_rewards) > 0:
             self.trajectories.append(self.trajectory)
         if len(self.trajectories) > 1 and len(self.trajectories) % 1000 == 0:
             self.__checkpoint_trajectories()
         self.trajectory = Trajectory()
-        attacker_obs = self.env_state.attacker_observation()
-        defender_obs = self.env_state.defender_observation()
+        attacker_obs = self.state.attacker_observation()
+        defender_obs = self.state.defender_observation()
         self.trajectory.attacker_observations.append(attacker_obs)
         self.trajectory.defender_observations.append(defender_obs)
         return defender_obs, attacker_obs
@@ -148,14 +146,6 @@ class StoppingGameEnv(BaseEnv):
         Checkpoints agent trajectories
         :return: None
         """
-        Trajectory.save_trajectories(trajectories_save_dir=self.stopping_game_config.save_dir,
+        Trajectory.save_trajectories(trajectories_save_dir=self.config.save_dir,
                                      trajectories=self.trajectories, trajectories_file="taus.json")
 
-    def close(self) -> None:
-        """
-        Closes the viewer (cleanup)
-        :return: None
-        """
-        if self.viewer:
-            self.viewer.close()
-            self.viewer = None
