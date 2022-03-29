@@ -31,7 +31,7 @@ class NiktoUtil:
         try:
             xml_tree = ET.parse(remote_file)
         finally:
-            remote_file.close()
+            remote_file.close_all_connections()
         xml_data = xml_tree.getroot()
         return xml_data
 
@@ -48,7 +48,7 @@ class NiktoUtil:
         cmds, file_names = a.nikto_cmds()
         outdata, errdata, total_time = EmulationUtil.execute_ssh_cmds(
             cmds=cmds, conn=env_config.emulation_config.agent_conn)
-        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_agent_config=env_config)
+        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_config=env_config)
 
         # Read result
         scan_result = NiktoScanResult(ip=a.ips[0], vulnerabilities=[], port=80, sitename=a.ips[0])
@@ -87,7 +87,7 @@ class NiktoUtil:
             m_obs.osvdb_vulns.append(vuln_obs)
 
         net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [m_obs],
-                                                             emulation_env_agent_config=env_config, action=a)
+                                                             emulation_env_config=env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 

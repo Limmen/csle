@@ -22,16 +22,16 @@ class MainFrame(CSLEBaseFrame):
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, env_config: EmulationEnvAgentConfig, init_state : AttackerRenderState, env: CSLECTFEnv = None):
+    def __init__(self, emulation_env_config: EmulationEnvAgentConfig, init_state : AttackerRenderState, env: CSLECTFEnv = None):
         """
         Initialize frame
-        :param env_config: trhe environment config
+        :param emulation_env_config: trhe environment config
         :param init_state: the initial state to render
         """
 
         # call constructor of parent class
         super(MainFrame, self).__init__(height=850, width=1400, caption=constants.RENDERING.CAPTION,
-                                        env_config=env_config, init_state=init_state, env=env)
+                                        emulation_env_config=emulation_env_config, init_state=init_state, env=env)
         self.batch = pyglet.graphics.Batch()
         self.background = pyglet.graphics.OrderedGroup(0)
         self.first_foreground = pyglet.graphics.OrderedGroup(1)
@@ -83,21 +83,21 @@ class MainFrame(CSLEBaseFrame):
                                                     group=self.background)
         self.hacker_sprite.scale = 0.18
 
-        lbl = batch_label("." + self.env_config.hacker_ip.rsplit(".", 1)[-1], self.width / 2 + 50,
-                    self.height - 20, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
-        self.node_ip_to_ip_lbl[self.env_config.hacker_ip] = lbl
-        nodes_to_coords[int(self.env_config.hacker_ip.rsplit(".", 1)[-1])] = (self.width/2+20,self.height-35)
+        lbl = batch_label("." + self.emulation_env_config.hacker_ip.rsplit(".", 1)[-1], self.width / 2 + 50,
+                          self.height - 20, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
+        self.node_ip_to_ip_lbl[self.emulation_env_config.hacker_ip] = lbl
+        nodes_to_coords[int(self.emulation_env_config.hacker_ip.rsplit(".", 1)[-1])] = (self.width / 2 + 20, self.height - 35)
         coords.append((self.width/2+20,self.height-35))
-        self.node_ip_to_coords[self.env_config.hacker_ip] = (self.width / 2 + 20, self.height - 35)
-        hacker_m = AttackerMachineObservationState(ip=self.env_config.hacker_ip)
-        self.node_ip_to_node[self.env_config.hacker_ip] = hacker_m
-        self.id_to_node[int(self.env_config.hacker_ip.rsplit(".", 1)[-1])] = hacker_m
-        self.node_ip_to_idx[self.env_config.hacker_ip] = self.node_idx
+        self.node_ip_to_coords[self.emulation_env_config.hacker_ip] = (self.width / 2 + 20, self.height - 35)
+        hacker_m = AttackerMachineObservationState(ip=self.emulation_env_config.hacker_ip)
+        self.node_ip_to_node[self.emulation_env_config.hacker_ip] = hacker_m
+        self.id_to_node[int(self.emulation_env_config.hacker_ip.rsplit(".", 1)[-1])] = hacker_m
+        self.node_ip_to_idx[self.emulation_env_config.hacker_ip] = self.node_idx
         self.node_idx += 1
-        self.gui_queue_reset.append((lbl, self.env_config.hacker_ip, (self.width/2+20,self.height-35)))
+        self.gui_queue_reset.append((lbl, self.emulation_env_config.hacker_ip, (self.width / 2 + 20, self.height - 35)))
 
         # Draw subnet Mask
-        batch_label(str(self.env_config.network_conf.internal_subnet_mask), self.width / 2 + 175,
+        batch_label(str(self.emulation_env_config.network_conf.internal_subnet_mask), self.width / 2 + 175,
                     self.height - 20, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=True)
 
         # Draw C_Reward label
@@ -162,33 +162,33 @@ class MainFrame(CSLEBaseFrame):
                            constants.RENDERING.WHITE)
         lbl = batch_label("", self.width / 2 + 40,
                     self.height - 60, 10, (0, 0, 0, 255), self.batch, self.second_foreground)
-        self.node_ip_to_ip_lbl[self.env_config.router_ip] = lbl
-        nodes_to_coords[int(self.env_config.router_ip.rsplit(".", 1)[-1])] = (self.width / 2 + 20, self.height - 60)
+        self.node_ip_to_ip_lbl[self.emulation_env_config.router_ip] = lbl
+        nodes_to_coords[int(self.emulation_env_config.router_ip.rsplit(".", 1)[-1])] = (self.width / 2 + 20, self.height - 60)
         coords.append((self.width / 2 + 20, self.height - 60))
-        self.node_ip_to_coords[self.env_config.router_ip] = (self.width / 2 + 20, self.height - 60)
-        machine = AttackerMachineObservationState(ip=self.env_config.router_ip)
-        self.node_ip_to_node[self.env_config.router_ip] = machine
-        self.id_to_node[int(self.env_config.router_ip.rsplit(".", 1)[-1])] = machine
-        self.node_ip_to_idx[self.env_config.router_ip] = self.node_idx
+        self.node_ip_to_coords[self.emulation_env_config.router_ip] = (self.width / 2 + 20, self.height - 60)
+        machine = AttackerMachineObservationState(ip=self.emulation_env_config.router_ip)
+        self.node_ip_to_node[self.emulation_env_config.router_ip] = machine
+        self.id_to_node[int(self.emulation_env_config.router_ip.rsplit(".", 1)[-1])] = machine
+        self.node_ip_to_idx[self.emulation_env_config.router_ip] = self.node_idx
         self.node_idx += 1
         self.gui_queue_reset.append((lbl, None, (self.width / 2 + 20, self.height - 60)))
 
         # --- Draw adjacency matrix
-        if self.env_config.render_config.render_adj_matrix:
+        if self.emulation_env_config.render_config.render_adj_matrix:
             adj_matrix_x_start = 150
             adj_matrix_y_start = self.height - 45
             h = 15
             w = 15
 
             # Draw Adjacency Matrix label
-            batch_label("Adjacency Matrix:", adj_matrix_x_start + ((self.env_config.num_nodes+1)*w)/2,
+            batch_label("Adjacency Matrix:", adj_matrix_x_start + ((self.emulation_env_config.num_nodes + 1) * w) / 2,
                         self.height - 10, 10, (0, 0, 0, 255), self.batch, self.second_foreground, bold=False)
 
             self.adj_matrix_labels = []
             self.adj_matrix_columns = []
             self.adj_matrix_rows = []
             y_adj = adj_matrix_y_start
-            for m in range(self.env_config.num_nodes+1):
+            for m in range(self.emulation_env_config.num_nodes + 1):
                 row = batch_label(".xxx", adj_matrix_x_start -10, y_adj - m*h + w/3, 5,
                                 (0, 0, 0, 255), self.batch,
                                 self.second_foreground)
@@ -200,11 +200,11 @@ class MainFrame(CSLEBaseFrame):
                 col.font_size = 6
                 self.adj_matrix_columns.append(col)
 
-            for m in range(self.env_config.num_nodes+1):
+            for m in range(self.emulation_env_config.num_nodes + 1):
                 row_labels = []
                 #y_adj = y_adj - (m * h) + w / 3
                 y_temp = y_adj - (m * h) + w / 3
-                for c in range(self.env_config.num_nodes+1):
+                for c in range(self.emulation_env_config.num_nodes + 1):
                     batch_rect_border(adj_matrix_x_start + c * w, adj_matrix_y_start - (m * h), w, h, constants.RENDERING.BLACK, self.batch,
                                       self.background)
                     l = batch_label("0", adj_matrix_x_start + w / 2 + c * (w), y_temp, 8,
@@ -214,8 +214,8 @@ class MainFrame(CSLEBaseFrame):
                     row_labels.append(l)
                 self.adj_matrix_labels.append(row_labels)
 
-            adj_matrix_max_x = adj_matrix_x_start + (self.env_config.num_nodes+2) * w
-            adj_matrix_min_y = adj_matrix_y_start - (self.env_config.num_nodes + 2) * h
+            adj_matrix_max_x = adj_matrix_x_start + (self.emulation_env_config.num_nodes + 2) * w
+            adj_matrix_min_y = adj_matrix_y_start - (self.emulation_env_config.num_nodes + 2) * h
         else:
             adj_matrix_max_x = 150
             adj_matrix_min_y = self.height - 45
@@ -224,7 +224,7 @@ class MainFrame(CSLEBaseFrame):
 
         # Draw nodes
         x_max = self.width - 100
-        num_nodes_in_level = self.env_config.render_config.num_nodes_per_level
+        num_nodes_in_level = self.emulation_env_config.render_config.num_nodes_per_level
         x_sep = 50
         y_sep = 25
         max_nodes_per_level = int(x_max / x_sep + 1)
@@ -235,7 +235,7 @@ class MainFrame(CSLEBaseFrame):
         y = self.height-100
         self.flag_avatar = pyglet.resource.image(constants.RENDERING.FLAG_SPRITE_NAME)
         self.firewall_avatar = pyglet.resource.image(constants.RENDERING.FIREWALL_SPRITE_NAME)
-        for level in range(self.env_config.render_config.num_levels):
+        for level in range(self.emulation_env_config.render_config.num_levels):
             if level > 1:
                 x = x_start
                 for n in range(num_nodes_in_level):
@@ -258,17 +258,17 @@ class MainFrame(CSLEBaseFrame):
                     x = x + x_sep
                 y = y - y_sep
 
-        if self.env_config.network_conf.nodes is not None and len(self.env_config.network_conf.nodes) > 0 \
-            and self.env_config.network_conf.adj_matrix is not None and len(self.env_config.network_conf.adj_matrix) > 0:
-            for n1 in self.env_config.network_conf.nodes:
+        if self.emulation_env_config.network_conf.nodes is not None and len(self.emulation_env_config.network_conf.nodes) > 0 \
+            and self.emulation_env_config.network_conf.adj_matrix is not None and len(self.emulation_env_config.network_conf.adj_matrix) > 0:
+            for n1 in self.emulation_env_config.network_conf.nodes:
                 machine = self.state.get_machine(n1.internal_ip)
                 if machine is not None:
-                    for n2 in self.env_config.network_conf.nodes:
-                        if self.env_config.network_conf.adj_matrix[n1.id-1][n2.id-1] == 1:
+                    for n2 in self.emulation_env_config.network_conf.nodes:
+                        if self.emulation_env_config.network_conf.adj_matrix[n1.id - 1][n2.id - 1] == 1:
                             machine.reachable.add(n2.internal_ip)
-                    if machine.ips == self.env_config.router_ip:
-                        machine.reachable.add(self.env_config.hacker_ip)
-                        machine.reachable.add(self.env_config.router_ip)
+                    if machine.ips == self.emulation_env_config.router_ip:
+                        machine.reachable.add(self.emulation_env_config.hacker_ip)
+                        machine.reachable.add(self.emulation_env_config.router_ip)
         #
         # Draw links
         for c1 in coords:
@@ -524,7 +524,7 @@ class MainFrame(CSLEBaseFrame):
         :return: None
         """
         # Dont do anything if agent is playing
-        if not self.env_config.manual_play:
+        if not self.emulation_env_config.manual_play:
             return
 
         if symbol == pyglet.window.key._1:
@@ -583,7 +583,7 @@ class MainFrame(CSLEBaseFrame):
         :return: None
         """
         script_dir = os.path.dirname(__file__)
-        resource_path = os.path.join(script_dir, self.env_config.render_config.resources_dir)
+        resource_path = os.path.join(script_dir, self.emulation_env_config.render_config.resources_dir)
         if os.path.exists(resource_path):
             pyglet.resource.path = [resource_path]
         else:
@@ -658,7 +658,7 @@ class MainFrame(CSLEBaseFrame):
         # Reset
         for i in range(len(self.gui_queue_reset)):
             lbl, flag_sprite, (x, y) = self.gui_queue_reset[i]
-            if flag_sprite != self.env_config.hacker_ip:
+            if flag_sprite != self.emulation_env_config.hacker_ip:
                 create_circle_fill(x, y, 3, self.batch, self.first_foreground,
                                    constants.RENDERING.WHITE)
                 lbl.text = ""
@@ -673,7 +673,7 @@ class MainFrame(CSLEBaseFrame):
                     batch_line(link[0], link[1], link[2], link[3], constants.RENDERING.WHITE, self.batch, self.background,
                                constants.RENDERING.LINE_WIDTH)
 
-        if self.env_config.render_config.render_adj_matrix:
+        if self.emulation_env_config.render_config.render_adj_matrix:
             for i in range(len(self.adj_matrix_labels)):
                 self.adj_matrix_rows[i].text = ".xxx"
                 self.adj_matrix_columns[i].text = ".xxx"
@@ -700,10 +700,10 @@ class MainFrame(CSLEBaseFrame):
 
         for x in self.state.attacker_obs_state.machines:
             machine = self.node_ip_to_node[x.ips]
-            if machine.internal_ip == self.env_config.hacker_ip:
+            if machine.internal_ip == self.emulation_env_config.hacker_ip:
                 continue
             coords = self.node_ip_to_coords[machine.internal_ip]
-            if machine.internal_ip == self.env_config.router_ip:
+            if machine.internal_ip == self.emulation_env_config.router_ip:
                 color = constants.RENDERING.BLUE_PURPLE
             else:
                 color = constants.RENDERING.BLACK
@@ -721,13 +721,13 @@ class MainFrame(CSLEBaseFrame):
                                    constants.RENDERING.LINE_WIDTH)
                         drawn_links.add((link[0], link[1], link[2], link[3]))
                         drawn_links.add((link[2], link[3], link[0], link[1]))
-            if self.env_config.render_config.render_adj_matrix:
+            if self.emulation_env_config.render_config.render_adj_matrix:
                 self.adj_matrix_columns[self.node_ip_to_idx[machine.internal_ip]].text \
                     = "." + machine.internal_ip.rsplit(".", 1)[-1]
                 self.adj_matrix_rows[self.node_ip_to_idx[machine.internal_ip]].text \
                     = "." + machine.internal_ip.rsplit(".", 1)[-1]
                 reachable = machine.reachable.copy()
-                if machine.internal_ip == self.env_config.router_ip:
+                if machine.internal_ip == self.emulation_env_config.router_ip:
                     reachable = machine.reachable.union(self.state.attacker_obs_state.agent_reachable)
                 for machine2 in reachable:
                     if machine.internal_ip in self.node_ip_to_idx and machine2 in self.node_ip_to_idx:
@@ -783,7 +783,7 @@ class MainFrame(CSLEBaseFrame):
         :param dt: the number of seconds since the function was last called
         :return: None
         """
-        if self.env_config.manual_play and self.env is not None:
+        if self.emulation_env_config.manual_play and self.env is not None:
             self.set_state(self.env.attacker_render_state)
         else:
             self.set_state(self.state)
@@ -808,26 +808,26 @@ class MainFrame(CSLEBaseFrame):
 
     def add_new_links_to_gui(self):
         self.node_ip_to_links = {}
-        if self.env_config.env_mode == EnvMode.SIMULATION:
-            if self.env_config.network_conf.nodes is not None and len(self.env_config.network_conf.nodes) > 0 \
-                    and self.env_config.network_conf.adj_matrix is not None and len(
-                self.env_config.network_conf.adj_matrix) > 0:
-                for n1 in self.env_config.network_conf.nodes:
+        if self.emulation_env_config.env_mode == EnvMode.SIMULATION:
+            if self.emulation_env_config.network_conf.nodes is not None and len(self.emulation_env_config.network_conf.nodes) > 0 \
+                    and self.emulation_env_config.network_conf.adj_matrix is not None and len(
+                self.emulation_env_config.network_conf.adj_matrix) > 0:
+                for n1 in self.emulation_env_config.network_conf.nodes:
                     machine = self.state.get_machine(n1.internal_ip)
                     if machine is not None:
-                        for n2 in self.env_config.network_conf.nodes:
-                            if self.env_config.network_conf.adj_matrix[n1.id - 1][n2.id - 1] == 1:
+                        for n2 in self.emulation_env_config.network_conf.nodes:
+                            if self.emulation_env_config.network_conf.adj_matrix[n1.id - 1][n2.id - 1] == 1:
                                 machine.reachable.add(n2.internal_ip)
-                        if machine.ips == self.env_config.router_ip:
-                            machine.reachable.add(self.env_config.hacker_ip)
-                            machine.reachable.add(self.env_config.router_ip)
+                        if machine.ips == self.emulation_env_config.router_ip:
+                            machine.reachable.add(self.emulation_env_config.hacker_ip)
+                            machine.reachable.add(self.emulation_env_config.router_ip)
 
         for machine in self.state.attacker_obs_state.machines:
             machine1_links = []
             #print("self.node_ip_to_coords:{}".format(self.node_ip_to_coords))
             coords1 = self.node_ip_to_coords[machine.ips]
             reachable = machine.reachable.copy()
-            if machine.ips == self.env_config.router_ip:
+            if machine.ips == self.emulation_env_config.router_ip:
                 reachable = machine.reachable.union(self.state.attacker_obs_state.agent_reachable)
             for machine2 in reachable:
                 if machine2 not in self.node_ip_to_node:
@@ -840,7 +840,7 @@ class MainFrame(CSLEBaseFrame):
 
                 links = self.complete_graph_links[(coords1, coords2)]
 
-                if machine.ips == self.env_config.hacker_ip or machine.ips == self.env_config.router_ip:
+                if machine.ips == self.emulation_env_config.hacker_ip or machine.ips == self.emulation_env_config.router_ip:
                     machine1_links.append(links[0])
                 node2_links.append(links[0])
 
@@ -848,7 +848,7 @@ class MainFrame(CSLEBaseFrame):
                 node2_links.append(links[1])
 
                 # # draw second straight line down
-                if machine.ips == self.env_config.hacker_ip or machine.ips == self.env_config.router_ip:
+                if machine.ips == self.emulation_env_config.hacker_ip or machine.ips == self.emulation_env_config.router_ip:
                     machine1_links.append(links[2])
                 node2_links.append(links[2])
 

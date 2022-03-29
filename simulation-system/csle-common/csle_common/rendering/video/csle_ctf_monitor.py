@@ -157,7 +157,7 @@ class CSLECTFMonitor(Wrapper):
 
         if not self.enabled:
             return
-        self.stats_recorder.close()
+        self.stats_recorder.close_all_connections()
         if self.video_recorder is not None:
             self._close_video_recorder()
         self._flush(force=True)
@@ -303,7 +303,7 @@ class CSLECTFMonitor(Wrapper):
 
         :return: None
         """
-        self.video_recorder.close()
+        self.video_recorder.close_all_connections()
         if self.video_recorder.functional:
             self.videos.append((self.video_recorder.path, self.video_recorder.metadata_path))
 

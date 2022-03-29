@@ -3,6 +3,9 @@ from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
 
 class DefaultNetworkFirewallConfig:
+    """
+    DTO representing a default firewall configuration
+    """
 
     def __init__(self, ip: Union[str, None], default_gw: Union[str, None], default_input: str, default_output: str,
                  default_forward: str, network: ContainerNetwork):

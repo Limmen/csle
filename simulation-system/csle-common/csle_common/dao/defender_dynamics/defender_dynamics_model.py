@@ -3,7 +3,7 @@ import os
 from enum import IntEnum
 from scipy import stats
 import numpy as np
-from csle_common.util import util
+from csle_common.util import experiment_util
 from csle_common.dao.defender_dynamics.defender_machine_dynamics_model import DefenderMachineDynamicsModel
 from csle_common.dao.defender_dynamics.defender_dynamics_tensorboard_dto import DefenderDynamicsTensorboardDTO
 import csle_common.constants.constants as constants

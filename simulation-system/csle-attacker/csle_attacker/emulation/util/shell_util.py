@@ -46,7 +46,7 @@ class ShellUtil:
                 outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                 new_m_obs.filesystem_searched = True
                 EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                       emulation_env_agent_config=env_config)
+                                                       emulation_env_config=env_config)
                 outdata_str = outdata.decode()
                 flag_paths = outdata_str.split("\n")
                 flag_paths = list(filter(lambda x: x != '', flag_paths))
@@ -103,7 +103,7 @@ class ShellUtil:
             total_time = end - start
 
             EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                   emulation_env_agent_config=env_config)
+                                                   emulation_env_config=env_config)
             flag_paths = response.decode().strip().split("\r\n")
             # Check for flags
             for fp in flag_paths:
@@ -169,7 +169,7 @@ class ShellUtil:
                             total_time = end - start
 
                             EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                                   emulation_env_agent_config=env_config)
+                                                                   emulation_env_config=env_config)
                     else:
                         break
 
@@ -218,7 +218,7 @@ class ShellUtil:
             data = data.decode()
             installed = bool(int(data))
         finally:
-            remote_file.close()
+            remote_file.close_all_connections()
         return installed
 
     @staticmethod
@@ -276,7 +276,7 @@ class ShellUtil:
                         ssh_cost += float(total_time)
 
                     EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                           emulation_env_agent_config=env_config)
+                                                           emulation_env_config=env_config)
 
                     new_machines_obs.append(new_m_obs)
 
@@ -324,7 +324,7 @@ class ShellUtil:
                         telnet_cost += float(total_time)
 
                     EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                           emulation_env_agent_config=env_config)
+                                                           emulation_env_config=env_config)
 
                     new_machines_obs.append(new_m_obs)
 
@@ -335,7 +335,7 @@ class ShellUtil:
 
                 total_cost += telnet_cost
         net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
-                                                             emulation_env_agent_config=env_config, action=a)
+                                                             emulation_env_config=env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
@@ -411,7 +411,7 @@ class ShellUtil:
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     #try:
-                    users = EmulationUtil._list_all_users(c, emulation_env_agent_config=env_config)
+                    users = EmulationUtil._list_all_users(c, emulation_env_config=env_config)
                     users = sorted(users, key=lambda x: x)
                     user_exists = False
                     for user in users:
@@ -441,7 +441,7 @@ class ShellUtil:
                     setup_connection_dto = None
                     for i in range(5):
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
-                            a=a, emulation_env_agent_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                            a=a, emulation_env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         ssh_cost += setup_connection_dto.total_time
                         if len(setup_connection_dto.target_connections) > 0:
                             break
@@ -476,7 +476,7 @@ class ShellUtil:
                 telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     try:
-                        users = EmulationUtil._list_all_users(c, emulation_env_agent_config=env_config, telnet=True)
+                        users = EmulationUtil._list_all_users(c, emulation_env_config=env_config, telnet=True)
                         user_exists = False
                         for user in users:
                             if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user \
@@ -504,7 +504,7 @@ class ShellUtil:
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ips = machine.ips
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
-                            a=a, emulation_env_agent_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                            a=a, emulation_env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         telnet_cost += setup_connection_dto.total_time
                         connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
                                                                     username=credential.username,
@@ -524,7 +524,7 @@ class ShellUtil:
 
                 total_cost += telnet_cost
         net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
-                                                             emulation_env_agent_config=env_config, action=a)
+                                                             emulation_env_config=env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
@@ -546,14 +546,14 @@ class ShellUtil:
         for machine in s.attacker_obs_state.machines:
             a.ips = machine.ips
             s_1, net_out_1, new_conn_ssh = ConnectionUtil.login_service_helper(
-                s=s_prime, a=a, alive_check=EnvDynamicsUtil.check_if_ssh_connection_is_alive,
-                service_name=constants.SSH.SERVICE_NAME, emulation_env_agent_config=env_config)
+                s=s_prime, a=a, alive_check=EmulationEnvConfig.check_if_ssh_connection_is_alive,
+                service_name=constants.SSH.SERVICE_NAME, emulation_env_config=env_config)
             s_2, net_out_2, new_conn_ftp = ConnectionUtil.login_service_helper(
                 s=s_1, a=a, alive_check=EnvDynamicsUtil.check_if_ftp_connection_is_alive,
-                service_name=constants.FTP.SERVICE_NAME, emulation_env_agent_config=env_config)
+                service_name=constants.FTP.SERVICE_NAME, emulation_env_config=env_config)
             s_3, net_out_3, new_conn_telnet = ConnectionUtil.login_service_helper(
                 s=s_2, a=a, alive_check=EnvDynamicsUtil.check_if_telnet_connection_is_alive,
-                service_name=constants.TELNET.SERVICE_NAME, emulation_env_agent_config=env_config)
+                service_name=constants.TELNET.SERVICE_NAME, emulation_env_config=env_config)
 
             net_out_merged = net_out_1
             net_out_merged.update_counts(net_out_2)

@@ -1,10 +1,10 @@
 """
-Type of attack action outcomes in the csle-ctf environment
+Type of attack action outcomes
 """
-from enum import Enum
+from enum import IntEnum
 
 
-class AttackerActionOutcome(Enum):
+class AttackerActionOutcome(IntEnum):
     """
     Enum representing the different attack outcomes in the network.
     """

@@ -1,10 +1,10 @@
 """
-Type of nmap host statuses in the csle-ctf environment
+Type of nmap host statuses
 """
-from enum import Enum
+from enum import IntEnum
 
 
-class NmapHostStatus(Enum):
+class NmapHostStatus(IntEnum):
     """
     Enum representing the different host statuses in the network.
     """

@@ -1,10 +1,10 @@
 """
-Type of attack actions in the csle-ctf environment
+Type of attack actions
 """
-from enum import Enum
+from enum import IntEnum
 
 
-class AttackerActionType(Enum):
+class AttackerActionType(IntEnum):
     """
     Enum representing the different attack types in the network.
     """

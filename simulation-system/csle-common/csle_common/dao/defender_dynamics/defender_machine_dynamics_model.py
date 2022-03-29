@@ -5,7 +5,7 @@ from enum import Enum
 
 class DefenderMachineDynamicsModel:
     """
-    Represents a dynamics model of specific machiens in the emulation of
+    Represents a dynamics model of specific machines in the emulation of
     the defender for simulating stochastic (b, a) -> b' transitions based on
     maximum likelihood estimations
     """

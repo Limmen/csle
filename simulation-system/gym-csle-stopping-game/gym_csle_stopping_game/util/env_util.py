@@ -233,7 +233,7 @@ class EnvUtil:
         action = env_config.attacker_action_conf.actions[attack_action_id]
         ip = env_state.attacker_obs_state.get_action_ips(action)
 
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_agent_config=env_config, a=action, s=env_state,
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=env_config, a=action, s=env_state,
                                                               full_ip_str=True)
         if (action.id, action.index, logged_in_ips_str) in env_state.attacker_obs_state.actions_tried:
             return False

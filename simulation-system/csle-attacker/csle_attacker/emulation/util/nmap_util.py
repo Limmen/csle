@@ -49,7 +49,7 @@ class NmapUtil:
         try:
             xml_tree = ET.parse(remote_file)
         finally:
-            remote_file.close()
+            remote_file.close_all_connections()
         xml_data = xml_tree.getroot()
         return xml_data
 
@@ -441,7 +441,7 @@ class NmapUtil:
             new_m_obs.append(m_obs)
 
         net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs,
-                                                             emulation_env_agent_config=env_config, action=a)
+                                                             emulation_env_config=env_config, action=a)
 
         s_prime = s
         s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
@@ -466,7 +466,7 @@ class NmapUtil:
         results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=env_config.emulation_config.agent_conn)
         total_time = sum(list(map(lambda x: x[2], results)))
 
-        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_agent_config=env_config)
+        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_config=env_config)
 
         # Read results
         scan_result = NmapScanResult(hosts=[], ips=[env_config.emulation_env_config.containers_config.agent_ip])
@@ -651,7 +651,7 @@ class NmapUtil:
                     results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
                     total_time = sum(list(map(lambda x: x[2], results)))
                     total_cost += total_time
-                    EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_agent_config=env_config)
+                    EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_config=env_config)
 
                     # Read result
                     scan_result = NmapScanResult(hosts=[], ips=machine.ips)

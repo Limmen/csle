@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from csle_common.envs_model.config.generator.env_info import EnvInfo
+from csle_common.envs_model.config.generator.docker_util import DockerUtil
 from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
 from csle_common.envs_model.config.generator.container_manager import ContainerManager
 from waitress import serve
@@ -12,7 +12,7 @@ def root():
 
 @app.route('/envs')
 def environments():
-    envs = EnvInfo.parse_runnning_emulation_infos()
+    envs = DockerUtil.parse_runnning_emulation_infos()
     envs_dicts = list(map(lambda x: x.to_dict(), envs))
     response = jsonify(envs_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")

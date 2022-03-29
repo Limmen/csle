@@ -3,6 +3,9 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 
 
 class RandomizationSpaceConfig:
+    """
+    DTO representing a randomization space configuratio
+    """
 
     def __init__(self, emulation_confs: List[EmulationEnvConfig], min_num_nodes : int=4,
                  max_num_nodes : int=4, min_num_flags : int = 1, max_num_flags : int = 1,

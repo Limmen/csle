@@ -22,7 +22,7 @@ except ImportError as e:
     ''')
 import numpy as np
 import sys
-from csle_common.rendering.frames.csle_base_frame import csleBaseFrame
+from csle_common.rendering.frames.csle_base_frame import CSLEBaseFrame
 from csle_common.dao.envs.base_env import BaseEnv
 
 
@@ -31,7 +31,7 @@ class Viewer():
     Viewer class that orchestrates rendering of csle environments
     """
 
-    def __init__(self, mainframe: csleBaseFrame):
+    def __init__(self, mainframe: CSLEBaseFrame):
         """
         Initialize the viewer
 
@@ -47,7 +47,7 @@ class Viewer():
         :return:
         """
         # self.mainframe = csleBaseFrame(env_config=self.env_config, init_state=self.init_state)
-        self.mainframe.__init__(env_config=self.mainframe.env_config, init_state=self.mainframe.init_state)
+        self.mainframe.__init__(emulation_env_config=self.mainframe.emulation_env_config)
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
         if interactive:
@@ -59,7 +59,7 @@ class Viewer():
 
         :return: None
         """
-        self.mainframe.env_config.manual_play = True
+        self.mainframe.emulation_env_config.manual_play = True
         self.mainframe.on_close = self.window_closed_by_user
         self.isopen = True
         pyglet.clock.schedule_interval(self.mainframe.update, 1 / 10.)
@@ -72,7 +72,7 @@ class Viewer():
         :return: None
         """
         self.isopen = False
-        self.mainframe.close()
+        self.mainframe.close_all_connections()
         print("Window closed, exiting")
         sys.exit(0)
 
@@ -83,7 +83,7 @@ class Viewer():
         :return: None
         """
         print("closing the frame")
-        self.mainframe.close()
+        self.mainframe.close_all_connections()
 
     def render_frame(self, return_rgb_array: bool = False):
         """

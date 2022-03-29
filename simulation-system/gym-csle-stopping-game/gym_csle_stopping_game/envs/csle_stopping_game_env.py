@@ -153,7 +153,7 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
         :return: None
         """
         if self.viewer:
-            self.viewer.close()
+            self.viewer.close_all_connections()
             self.viewer = None
 
     def cleanup(self) -> None:
@@ -165,7 +165,7 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
         """
         self.env_state.cleanup()
         if self.env_config.emulation_config is not None:
-            self.env_config.emulation_config.close()
+            self.env_config.emulation_config.close_all_connections()
 
     def attacker_convert_ar_action(self, machine_idx, action_idx):
         """

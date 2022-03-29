@@ -1,10 +1,10 @@
 """
-Type of nmap addresses in the csle-ctf environment
+Type of nmap addresses
 """
-from enum import Enum
+from enum import IntEnum
 
 
-class NmapAddrType(Enum):
+class NmapAddrType(IntEnum):
     """
     Enum representing the different address types in the network.
     """

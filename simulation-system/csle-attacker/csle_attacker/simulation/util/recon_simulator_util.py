@@ -96,7 +96,7 @@ class ReconSimulatorUtil:
 
                 new_m_obs.append(m_obs)
             net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs,
-                                                                 emulation_env_agent_config=env_config, action=a)
+                                                                 emulation_env_config=env_config, action=a)
             s_prime = s
             s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 
@@ -160,7 +160,7 @@ class ReconSimulatorUtil:
                         m_obs.os = node.os
                     new_m_obs.append(m_obs)
             net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines,
-                                                                 new_m_obs, emulation_env_agent_config=env_config, action=a)
+                                                                 new_m_obs, emulation_env_config=env_config, action=a)
             s_prime = s
             s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
 

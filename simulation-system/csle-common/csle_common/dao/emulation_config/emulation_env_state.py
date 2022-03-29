@@ -1,5 +1,4 @@
 from typing import Union
-import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from csle_common.dao.observation.defender.defender_observation_state import DefenderObservationState
@@ -74,7 +73,7 @@ class EmulationEnvState:
         if self.defender_obs_state is not None:
             for m in self.defender_obs_state.machines:
                 if len(m.ssh_connections) > 0:
-                    self.defender_cached_ssh_connections[m.ips] = (m.ssh_connections, m.emulation_config)
+                    self.defender_cached_ssh_connections["_".join(m.ips)] = m.ssh_connections
         else:
             self.defender_obs_state = DefenderObservationState()
 
@@ -130,7 +129,9 @@ class EmulationEnvState:
         """
         copy = EmulationEnvState(emulation_env_config=self.emulation_env_config,
                                  vuln_lookup=self.vuln_lookup,
-                                 service_lookup=self.service_lookup, os_lookup=self.os_lookup)
+                                 service_lookup=self.service_lookup, os_lookup=self.os_lookup,
+                                 attacker_agent_config=self.attacker_agent_config,
+                                 defender_action_config=self.defender_agent_config)
         copy.attacker_obs_state = self.attacker_obs_state.copy()
         copy.defender_obs_state = self.defender_obs_state.copy()
         return copy

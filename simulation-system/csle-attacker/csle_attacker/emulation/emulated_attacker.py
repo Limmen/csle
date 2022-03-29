@@ -28,13 +28,13 @@ class EmulatedAttacker:
         :return: s'
         """
         if attacker_action.type == AttackerActionType.RECON:
-            EnvDynamicsUtil.cache_action(emulation_env_agent_config=emulation_env_agent_config, a=attacker_action, s=s)
+            EnvDynamicsUtil.cache_action(emulation_env_config=emulation_env_agent_config, a=attacker_action, s=s)
             return EmulatedAttacker.attacker_recon_action(s=s, a=attacker_action,
                                                           emulation_env_agent_config=emulation_env_agent_config)
         elif attacker_action.type == AttackerActionType.EXPLOIT \
                 or attacker_action.type == AttackerActionType.PRIVILEGE_ESCALATION:
             if attacker_action.subnet:
-                EnvDynamicsUtil.cache_action(emulation_env_agent_config=emulation_env_agent_config,
+                EnvDynamicsUtil.cache_action(emulation_env_config=emulation_env_agent_config,
                                              a=attacker_action, s=s)
             return EmulatedAttacker.attacker_exploit_action(s=s, a=attacker_action,
                                                             emulation_env_agent_config=emulation_env_agent_config)

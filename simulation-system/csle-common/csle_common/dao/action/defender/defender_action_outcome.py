@@ -1,10 +1,10 @@
 """
-Type of defense action outcomes in the csle-ctf environment
+Type of defense action outcomes
 """
-from enum import Enum
+from enum import IntEnum
 
 
-class DefenderActionOutcome(Enum):
+class DefenderActionOutcome(IntEnum):
     """
     Enum representing the different defense outcomes in the network.
     """

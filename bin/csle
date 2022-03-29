@@ -54,7 +54,7 @@ def attacker_shell(s: EmulationEnvState) -> None:
                   "press H to print the history of actions")
         elif raw_input == "A":
             print("Attacker actions:")
-            for i, a in enumerate(s.env_config.attacker_action_conf.actions):
+            for i, a in enumerate(s.emulation_env_config.attacker_action_conf.actions):
                 print(f"idx:{i}, a:{a}")
         elif raw_input == "S":
             print(s)
@@ -66,7 +66,7 @@ def attacker_shell(s: EmulationEnvState) -> None:
         else:
             # try:
             attacker_action_idx = int(raw_input)
-            attacker_action = s.env_config.attacker_action_conf.actions[attacker_action_idx]
+            attacker_action = s.emulation_env_config.attacker_action_conf.actions[attacker_action_idx]
             s = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
             # except Exception as e:
             #     print("There was an error parsing the input, please enter an integer representing an attacker action")

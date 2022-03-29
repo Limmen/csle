@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class DefenderActionId(Enum):
+class DefenderActionId(IntEnum):
     """
     Enum representing the different defenses
     """

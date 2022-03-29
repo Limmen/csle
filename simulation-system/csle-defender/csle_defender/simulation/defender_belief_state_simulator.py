@@ -24,7 +24,7 @@ class DefenderBeliefStateSimulator:
         :return: s_prime, reward, done
         """
         s_prime = s
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_agent_config=env_config, a=attacker_action, s=s)
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=env_config, a=attacker_action, s=s)
 
         num_new_alerts = 0
         num_new_priority = 0

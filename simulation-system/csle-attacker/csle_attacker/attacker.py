@@ -17,9 +17,9 @@ class Attacker:
 
         (s, a) --> s'
         """
-        if s.env_config.env_mode == EnvMode.SIMULATION:
-            return SimulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, env_config=s.env_config)
-        elif s.env_config.env_mode == EnvMode.EMULATION:
-            return EmulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, emulation_env_agent_config=s.env_config)
+        if s.emulation_env_config.env_mode == EnvMode.SIMULATION:
+            return SimulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, env_config=s.emulation_env_config)
+        elif s.emulation_env_config.env_mode == EnvMode.EMULATION:
+            return EmulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action, emulation_env_agent_config=s.emulation_env_config)
         else:
             raise ValueError("Invalid environment mode")

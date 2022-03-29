@@ -5,7 +5,7 @@ from csle_common.dao.emulation_config.transport_protocol import TransportProtoco
 
 class NiktoVuln:
     """
-    Object representing a vulnerability found with a Nikto scan
+    DTO representing a vulnerability found with a Nikto scan
     """
 
     def __init__(self, id : str, osvdb_id : Union[int,None], method: str, iplink: str,

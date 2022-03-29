@@ -78,18 +78,18 @@ emulation_config = RunningEmulationEnvConfig(agent_ip=f"{constants.CSLE.CSLE_INT
 # Create gym interface
 env_name = "csle-ctf-level-9-emulation-v1"
 env = gym.make(env_name, env_config=None, emulation_config=emulation_config)
-num_actions_attacker = env.env_config.attacker_action_conf.num_actions
+num_actions_attacker = env.emulation_env_config.attacker_action_conf.num_actions
 attacker_actions = np.array(list(range(num_actions_attacker)))
-num_actions_defender = env.env_config.defender_action_conf.num_actions
+num_actions_defender = env.emulation_env_config.defender_action_conf.num_actions
 defender_actions = np.array(list(range(num_actions_defender)))
 
 for i in range(10):
 
     # Sample an action
     legal_attacker_actions = list(
-        filter(lambda x: env.is_attack_action_legal(x, env.env_config, env.env_state), attacker_actions))
+        filter(lambda x: env.is_attack_action_legal(x, env.emulation_env_config, env.env_state), attacker_actions))
     legal_defender_actions = list(
-        filter(lambda x: env.is_defense_action_legal(x, env.env_config, env.env_state), defender_actions))
+        filter(lambda x: env.is_defense_action_legal(x, env.emulation_env_config, env.env_state), defender_actions))
     attacker_action = np.random.choice(legal_attacker_actions)
     defender_action = np.random.choice(legal_defender_actions)
     action = (attacker_action, defender_action)
@@ -105,7 +105,7 @@ for i in range(10):
         env.reset()
 
 env.reset()
-env.close()
+env.close_all_connections()
 ```
 
 ## Manual Control
@@ -130,7 +130,7 @@ emulation_config = RunningEmulationEnvConfig(agent_ip=f"{constants.CSLE.CSLE_INT
 env = gym.make("csle-ctf-level-7-emulation-v1", env_config=None, emulation_config=emulation_config)
 
 # Manual Control with GUI
-ManualAttackerAgent(env=env, env_config=env.env_config)
+ManualAttackerAgent(env=env, env_config=env.emulation_env_config)
 ```
 
 ## GUI

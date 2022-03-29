@@ -1,10 +1,10 @@
 """
-Type of defense actions in the csle-ctf environment
+Type of defense actions
 """
-from enum import Enum
+from enum import IntEnum
 
 
-class DefenderActionType(Enum):
+class DefenderActionType(IntEnum):
     """
     Enum representing the different defense types in the network.
     """

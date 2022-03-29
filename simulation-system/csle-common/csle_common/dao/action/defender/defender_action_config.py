@@ -2,7 +2,6 @@ from typing import List
 import gym
 from csle_common.dao.action.defender.defender_action import DefenderAction
 from csle_common.dao.action.defender.defender_action_id import DefenderActionId
-from csle_common.dao.action.defender.defender_update_state_actions import DefenderUpdateStateActions
 from csle_common.dao.action.defender.defender_stopping_actions import DefenderStoppingActions
 
 
@@ -40,9 +39,6 @@ class DefenderActionConfig:
         self.multiple_stop_actions = multiple_stop_actions
         self.multiple_stop_actions_ids = multiple_stop_actions_ids
         self.num_node_specific_actions = len(self.action_ids)
-        self.state_update_action = DefenderUpdateStateActions.UPDATE_STATE(index=-1)
-        self.state_init_action = DefenderUpdateStateActions.INITIALIZE_STATE(index=-1)
-        self.state_reset_action = DefenderUpdateStateActions.RESET_STATE(index=-1)
 
     def print_actions(self) -> None:
         """

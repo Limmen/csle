@@ -1,6 +1,7 @@
 import socket
 import paramiko
 from confluent_kafka import Producer
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
@@ -47,6 +48,7 @@ class EmulationEnvConfig:
         self.connections = {}
         self.producer = None
         self.hostname = socket.gethostname()
+        self.port_forward_port = 1900
 
     def to_dict(self) -> dict:
         """
@@ -76,7 +78,9 @@ class EmulationEnvConfig:
 
         :return: None
         """
-        if ip not in self.connections:
+        if ip not in self.connections or ip in self.connections \
+                and not EmulationEnvConfig.check_if_ssh_connection_is_alive(self.connections[ip]):
+            self.connections.pop(ip)
             print(f"Connecting to host: {ip}")
             conn = paramiko.SSHClient()
             conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -84,6 +88,31 @@ class EmulationEnvConfig:
             self.connections[ip] = conn
 
         print("Connected successfully")
+
+    def get_connection(self, ip: str) -> paramiko.SSHClient:
+        """
+        Gets a connection to a given IP address
+
+        :param ip: the ip address to get the connection for
+        :return: the connection
+        """
+        if ip in self.connections and EmulationEnvConfig.check_if_ssh_connection_is_alive(self.connections[ip]):
+            return self.connections[ip]
+        else:
+            raise ConnectionError(f"Connection to ip:{ip} is not activep")
+
+    def get_hacker_connection(self) -> paramiko.SSHClient:
+        """
+        Gets an SSH connection to the hacker agent, creates one if it does not exist
+
+        :return: SSH connecton to the hacker
+        """
+        hacker_ip = self.containers_config.agent_ip
+        if hacker_ip in self.connections:
+            return self.connections[hacker_ip]
+        else:
+            self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW)
+            return self.connections[hacker_ip]
 
     def create_producer(self) -> None:
         """
@@ -95,8 +124,7 @@ class EmulationEnvConfig:
                 'client.id': self.hostname}
         self.producer = Producer(**conf)
 
-
-    def close(self) -> None:
+    def close_all_connections(self) -> None:
         """
         Closes the emulation connection
         :return: None
@@ -104,6 +132,25 @@ class EmulationEnvConfig:
         for k,v in self.connections.items():
             v.close()
         self.connections = {}
+
+    @staticmethod
+    def check_if_ssh_connection_is_alive(conn: paramiko.SSHClient) -> bool:
+        """
+        Utility function to check whether a SSH connection is alive or not
+        :param conn: the connection to check
+        :return: true or false
+        """
+        alive = False
+        if conn.get_transport() is not None:
+            alive = conn.get_transport().is_active()
+        return alive
+
+    def get_port_forward_port(self) -> int:
+        """
+        :return: the next port to use for forwarding
+        """
+        self.get_port_forward_port+=1
+        return self.get_port_forward_port()
 
     def __str__(self) -> str:
         """

@@ -5,7 +5,6 @@ from csle_common.dao.observation.common.port_observation_state import PortObserv
 from csle_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 from csle_common.dao.action_results.nmap_host_result import NmapHostResult
-from csle_common.dao.emulation_config.network_service import NetworkService
 
 
 class AttackerMachineObservationState:
@@ -202,65 +201,6 @@ class AttackerMachineObservationState:
         m_copy.cve_2015_5602_tried = self.cve_2015_5602_tried
         return m_copy
 
-    def to_node(self) -> Node:
-        """
-        Converts the observation to a node representation
-
-        :return: the node representation
-        """
-        vulnerabilities = list(map(lambda x: x.to_vulnerability(), self.cve_vulns))
-        services = []
-        for port in self.ports:
-            services.append(port.to_network_service())
-
-        for vuln in self.cve_vulns:
-            service_list = vuln.to_network_services()
-            for s in service_list:
-                duplicate = False
-                for s2 in services:
-                    if s2.name == s.name:
-                        duplicate = True
-                        s2.credentials = s2.credentials + s.credentials
-                if not duplicate:
-                    services.append(s)
-
-        new_services = []
-        for s1 in services:
-            for cr in s1.credentials:
-                new_service = True
-                for s1 in services:
-                    if s1.name == cr.service:
-                        new_service = False
-                if new_service:
-                    new_services.append(NetworkService.from_credential(cr))
-        services = services + new_services
-
-        for cr in self.shell_access_credentials:
-            s = NetworkService.from_credential(cr)
-            duplicate = False
-            for s2 in services:
-                if s2.name == s.name:
-                    duplicate = True
-                    s2.credentials = s2.credentials + s.credentials
-            if not duplicate:
-                services.append(s)
-
-        for service in services:
-            for cr in self.shell_access_credentials:
-                if service.name.lower() == cr.service.lower():
-                    service.credentials.append(cr)
-        root_usernames = []
-        for c in self.ssh_connections + self.telnet_connections + self.ftp_connections:
-            if c.root:
-                root_usernames.append(c.username)
-
-        node = Node(ips=self.ips, ip_ids=list(map(lambda x: int(x.rsplit(".", 1)[-1]), self.ips)),
-                    id=int(self.ips[0].rsplit(".", 1)[-1]),
-                    type = NodeType.SERVER, os=self.os,
-                    flags=self.flags_found, level=3, vulnerabilities=vulnerabilities, services=services,
-                    credentials=self.shell_access_credentials, root_usernames=root_usernames, visible=False,
-                    reachable_nodes=self.reachable, firewall=False)
-        return node
 
     @staticmethod
     def from_nmap_result(nmap_host_result: NmapHostResult) -> "AttackerMachineObservationState":

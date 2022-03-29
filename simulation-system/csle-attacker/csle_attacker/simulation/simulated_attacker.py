@@ -27,12 +27,12 @@ class SimulatedAttacker:
         :return: s_prime
         """
         if attacker_action.type == AttackerActionType.RECON:
-            EnvDynamicsUtil.cache_action(emulation_env_agent_config=env_config, a=attacker_action, s=s)
+            EnvDynamicsUtil.cache_action(emulation_env_config=env_config, a=attacker_action, s=s)
             return SimulatedAttacker.attacker_recon_action(s=s, a=attacker_action, env_config=env_config)
         elif attacker_action.type == AttackerActionType.EXPLOIT \
                 or attacker_action.type == AttackerActionType.PRIVILEGE_ESCALATION:
             if attacker_action.subnet:
-                EnvDynamicsUtil.cache_action(emulation_env_agent_config=env_config, a=attacker_action, s=s)
+                EnvDynamicsUtil.cache_action(emulation_env_config=env_config, a=attacker_action, s=s)
             return SimulatedAttacker.attacker_exploit_action(s=s, a=attacker_action, env_config=env_config)
         elif attacker_action.type == AttackerActionType.POST_EXPLOIT:
             return SimulatedAttacker.attacker_post_exploit_action(s=s, a=attacker_action, env_config=env_config)

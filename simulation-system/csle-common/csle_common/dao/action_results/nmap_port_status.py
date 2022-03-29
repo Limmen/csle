@@ -1,10 +1,10 @@
 """
-Type of nmap port statuses in the csle-ctf environment
+Type of nmap port statuses
 """
-from enum import Enum
+from enum import IntEnum
 
 
-class NmapPortStatus(Enum):
+class NmapPortStatus(IntEnum):
     """
     Enum representing the different port statuses in the network.
     """

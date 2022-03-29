@@ -6,6 +6,9 @@ from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
 
 
 class NodeRandomizerConfig:
+    """
+    DTO representing domain randomization configuration of a single node
+    """
 
 
     def __init__(self, ip: str, reachable: Set[str], id: int, users_config: NodeUsersConfig,
