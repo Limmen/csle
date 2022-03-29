@@ -87,6 +87,8 @@ class EmulationEnvConfig:
             conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             conn.connect(ip, username=username, password=pw)
             self.connections[ip] = conn
+            if self.producer is None:
+                self.create_producer()
 
         print("Connected successfully")
 

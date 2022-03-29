@@ -266,7 +266,7 @@ class ContainerManager:
     @staticmethod
     def list_all_stopped_containers() -> List[Tuple[str, str, str]]:
         """
-        Stops all stopped csle containers
+        Lists all stopped csle containers
 
         :return: a list of the stopped containers
         """

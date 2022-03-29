@@ -87,43 +87,23 @@ The monitoring system allows to track the execution of running emulations and th
     - [x] Monitoring Framework with Webapp, Grafana, Prometheus, C-advisor, Node-exporter
     - [x] Automatic Network Traffic Simulation
     - [x] 20+ vulnerable containers with exploits
-    - [x] CTF challenges
-    - [ ] Malware challenges
-    - [ ] DoS challenges
-    - [ ] Web hacking challenges
 
 - **Open-AI Gym Environment**
      - [x] GUI rendering
-     - [x] 50+ versions of gym environments
+     - [x] optimal stopping game
      - [x] Simulation-mode
      - [x] Emulation-mode
-     - [x] Manual-mode
-     - [x] Emulation+Simulation-model (using system identification)
-     - [x] Support for massively parallel training with distributed emulation/simulation environments
 
 - **Learning Process**
      - [x] Attacker training
      - [x] Defender training
      - [x] Self-play
 
-- **Reinforcement Learning Algorithms**
-     - [x] PPO baseline
-     - [x] DQN baseline
-     - [x] DDPG baseline
-     - [x] REINFORCE baseline
-     - [x] TD3 baseline
-     - [ ] MuZero baseline
-     - [ ] Value Prediction Network baseline
-     - [ ] Bayesian REINFORCE
-     - [ ] Monte-Carlo Tree Search
-
 - **System Identification**
      - [x] Custom system identifification algorithm to learn model of emulation
-     - [x] Custom domain randomization algorithm
      - [ ] Function approximation
      
-- **Demonstrations**
-      
+- **Demonstrations**      
      - [x] A Dashboard for Inspecting Automated Intrusion Prevention Policies     
 
 ## Installation

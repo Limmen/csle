@@ -11,6 +11,7 @@ import os
 import sys
 import numpy as np
 import random
+import torch
 import scipy.stats
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
@@ -642,3 +643,16 @@ class ExperimentUtil:
         m, se = np.mean(a), scipy.stats.sem(a)
         h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
         return m, h
+
+
+    @staticmethod
+    def set_seed(seed: int) -> None:
+        """
+        Sets the random seed
+
+        :param seed: the seed to set
+        :return: None
+        """
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)

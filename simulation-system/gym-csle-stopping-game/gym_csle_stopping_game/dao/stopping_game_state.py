@@ -1,5 +1,5 @@
 import numpy as np
-from gym_csle_stopping_game.util.env_util import EnvUtil
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
 class StoppingGameState:
@@ -18,7 +18,7 @@ class StoppingGameState:
         self.b1 = b1
         self.b = self.b1.copy()
         self.l = self.L
-        self.s = EnvUtil.sample_initial_state(b1=self.b1)
+        self.s = StoppingGameUtil.sample_initial_state(b1=self.b1)
         self.t = 1
 
     def reset(self) -> None:
@@ -29,8 +29,20 @@ class StoppingGameState:
         """
         self.l = self.L
         self.t = 1
-        self.s = EnvUtil.sample_initial_state(b1=self.b1)
+        self.s = StoppingGameUtil.sample_initial_state(b1=self.b1)
         self.b = self.b1.copy()
+
+    def attacker_observation(self) -> np.ndarray:
+        """
+        :return: the attacker's observation
+        """
+        return np.array([self.l, self.b[1], self.s])
+
+    def defender_observation(self) -> np.ndarray:
+        """
+        :return: the defender's observation
+        """
+        return np.array([self.l, self.b[1]])
 
     def __str__(self) -> str:
         """

@@ -27,7 +27,7 @@ class EmulationEnvState:
         self.attacker_action_config=AttackerActionConfig.all_actions_config(
             num_nodes=len(self.emulation_env_config.containers_config.containers),
             subnet_masks= self.emulation_env_config.topology_config.subnetwork_masks,
-            hacker_ip=self.emulation_env_config.containers_config.agent_ip),
+            hacker_ip=self.emulation_env_config.containers_config.agent_ip)
         self.defender_action_config=DefenderActionConfig.all_actions_config(
             num_nodes=len(self.emulation_env_config.containers_config.containers),
             subnet_masks=self.emulation_env_config.topology_config.subnetwork_masks

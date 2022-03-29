@@ -1,0 +1,161 @@
+from typing import Tuple
+import numpy as np
+from csle_common.dao.envs.base_env import BaseEnv
+from csle_common.dao.emulation_config.trajectory import Trajectory
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
+
+
+class StoppingGameEnv(BaseEnv):
+    """
+    OpenAI Gym Env for the csle-stopping-game
+    """
+
+    def __init__(self, stopping_game_config: StoppingGameConfig):
+        self.stopping_game_config = stopping_game_config
+
+        # Initialize environment state
+        self.env_state = StoppingGameState(b1=self.stopping_game_config.b1, L=self.stopping_game_config.L)
+
+        # Setup spaces
+        self.attacker_observation_space = self.stopping_game_config.attacker_observation_space()
+        self.defender_observation_space = self.stopping_game_config.defender_observation_space()
+        self.attacker_action_space = self.stopping_game_config.attacker_action_space()
+        self.defender_action_space = self.stopping_game_config.defender_action_space()
+
+        # Setup Config
+        self.viewer = None
+        self.metadata = {
+            'render.modes': ['human', 'rgb_array'],
+            'video.frames_per_second': 50  # Video rendering speed
+        }
+
+        # Setup trajectories
+        self.trajectories = []
+        self.trajectory = Trajectory()
+
+        # Reset
+        self.reset()
+        super().__init__()
+
+    def step(self, action_profile : Tuple[int, np.ndarray]) \
+            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
+        """
+        Takes a step in the environment by executing the given action
+
+        :param action_profile: the actions to take (both players actions
+        :return: (obs, reward, done, info)
+        """
+
+        # Setup initial values
+        a1, pi2 = action_profile
+        assert pi2.shape[0] == len(self.stopping_game_config.S)
+        assert pi2.shape[1] == len(self.stopping_game_config.A1)
+        done = False
+        info = {}
+
+        # Compute r, s', b',o'
+        a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.env_state.s)
+        r = -self.stopping_game_config.R[self.env_state.l-1][a1][a2][self.env_state.s]
+        self.env_state.s = StoppingGameUtil.sample_next_state(l=self.env_state.l, a1=a1, a2=a2,
+                                                              T=self.stopping_game_config.T,
+                                                              S=self.stopping_game_config.S, s=self.env_state.s)
+        o = max(self.stopping_game_config.O)
+        if self.env_state.s == 2:
+            done = True
+        else:
+            o = StoppingGameUtil.sample_next_observation(Z=self.stopping_game_config.Z,
+                                                         O=self.stopping_game_config.O, s_prime=self.env_state.s)
+            self.env_state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.env_state.b, pi2=pi2,
+                                                                       config=self.stopping_game_config,
+                                                                       l=self.env_state.l, a2=a2)
+
+
+        # Get observations
+        attacker_obs = self.env_state.attacker_observation()
+        defender_obs = self.env_state.defender_observation()
+
+        # Log trajectory
+        self.trajectory.defender_rewards.append(r)
+        self.trajectory.attacker_rewards.append(-r)
+        self.trajectory.attacker_actions.append(a2)
+        self.trajectory.defender_actions.append(a1)
+        self.trajectory.infos.append(info)
+        self.trajectory.states.append(self.env_state.s)
+        self.trajectory.beliefs.append(self.env_state.b[1])
+        self.trajectory.infrastructure_metrics.append(o)
+        if not done:
+            self.trajectory.attacker_observations.append(attacker_obs)
+            self.trajectory.defender_observations.append(defender_obs)
+
+        return (defender_obs, attacker_obs), (r,-r), done, info
+
+    def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Resets the environment state, this should be called whenever step() returns <done>
+
+        :return: initial observation
+        """
+        self.env_state.reset()
+        if self.viewer is not None and self.viewer.mainframe is not None:
+            self.viewer.mainframe.reset()
+        if len(self.trajectory .attacker_rewards) > 0:
+            self.trajectories.append(self.trajectory)
+        if len(self.trajectories) > 1 and len(self.trajectories) % 1000 == 0:
+            self.__checkpoint_trajectories()
+        self.trajectory = Trajectory()
+        attacker_obs = self.env_state.attacker_observation()
+        defender_obs = self.env_state.defender_observation()
+        self.trajectory.attacker_observations.append(attacker_obs)
+        self.trajectory.defender_observations.append(defender_obs)
+        return defender_obs, attacker_obs
+
+    def render(self, mode: str = 'human'):
+        """
+        Renders the environment
+        Supported rendering modes:
+          -human: render to the current display or terminal and return nothing. Usually for human consumption.
+          -rgb_array: Return an numpy.ndarray with shape (x, y, 3),
+                      representing RGB values for an x-by-y pixel image, suitable
+                      for turning into a video.
+        :param mode: the rendering mode
+        :return: True (if human mode) otherwise an rgb array
+        """
+        raise NotImplemented("Rendering is not implemented for this environment")
+
+    def is_defense_action_legal(self, defense_action_id: int) -> bool:
+        """
+        Checks whether a defender action in the environment is legal or not
+
+        :param defense_action_id: the id of the action
+        :return: True or False
+        """
+        return True
+
+    def is_attack_action_legal(self, attack_action_id: int) -> bool:
+        """
+        Checks whether an attacker action in the environment is legal or not
+
+        :param attack_action_id: the id of the attacker action
+        :return: True or False
+        """
+        return True
+
+
+    def __checkpoint_trajectories(self) -> None:
+        """
+        Checkpoints agent trajectories
+        :return: None
+        """
+        Trajectory.save_trajectories(trajectories_save_dir=self.stopping_game_config.save_dir,
+                                     trajectories=self.trajectories, trajectories_file="taus.json")
+
+    def close(self) -> None:
+        """
+        Closes the viewer (cleanup)
+        :return: None
+        """
+        if self.viewer:
+            self.viewer.close()
+            self.viewer = None
