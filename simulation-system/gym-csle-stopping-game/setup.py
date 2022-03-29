@@ -7,8 +7,9 @@ setup(name='gym_csle_stopping_game',
                         'sphinx-rtd-theme', 'csle-common', 'pyperclip', 'psycopg', 'click'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
-      description='csle is a platform for evaluating and developing reinforcement learning agents for '
-                  'control problems in cyber security; gym-csle-ctf implements a CTF minigame in csle',
+      description='CSLE is a platform for evaluating and developing reinforcement learning agents for '
+                  'control problems in cyber security; gym-csle-stopping-game implements an optimal '
+                  'stopping game in CSLE',
       license='Creative Commons Attribution-ShareAlike 4.0 International',
       keywords='Reinforcement-Learning Cyber-Security',
       url='https://github.com/Limmen/csle',

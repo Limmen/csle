@@ -78,9 +78,10 @@ class EmulationEnvConfig:
 
         :return: None
         """
-        if ip not in self.connections or ip in self.connections \
-                and not EmulationEnvConfig.check_if_ssh_connection_is_alive(self.connections[ip]):
-            self.connections.pop(ip)
+        if ip not in self.connections or (ip in self.connections
+                and not EmulationEnvConfig.check_if_ssh_connection_is_alive(self.connections[ip])):
+            if ip in self.connections:
+                self.connections.pop(ip)
             print(f"Connecting to host: {ip}")
             conn = paramiko.SSHClient()
             conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())

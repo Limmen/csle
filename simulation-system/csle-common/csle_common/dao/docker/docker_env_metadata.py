@@ -1,5 +1,5 @@
 from typing import List
-from csle_common.dao.env_info.docker_container_metadata import DockerContainerMetadata
+from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 
@@ -9,7 +9,7 @@ class DockerEnvMetadata:
     DTO Object representing a running environment
     """
 
-    def __init__(self, containers: List[DockerContainerMetadata], name: str, subnet_prefix: str, minigame :str,
+    def __init__(self, containers: List[DockerContainerMetadata], name: str, subnet_prefix: str,
                  subnet_mask : str, level: str, config: EmulationEnvConfig, log_sink_config: LogSinkConfig):
         """
         Initializes the DTO
@@ -17,7 +17,6 @@ class DockerEnvMetadata:
         :param containers: the list of running containers
         :param name: the environment name
         :param subnet_prefix: the subnet prefix
-        :param minigame: the minigame of the environment
         :param subnet_mask: the subnet mask
         :param level: the level of the environment
         :param config: the configuration of the environment
@@ -26,7 +25,6 @@ class DockerEnvMetadata:
         self.containers = containers
         self.name = name
         self.subnet_prefix=subnet_prefix
-        self.minigame = minigame
         self.subnet_mask = subnet_mask
         self.level = level
         self.config = config
@@ -40,7 +38,6 @@ class DockerEnvMetadata:
         d["containers"] = list(map(lambda x: x.to_dict(), self.containers))
         d["name"] = self.name
         d["subnet_prefix"] = self.subnet_prefix
-        d["minigame"] = self.minigame
         d["subnet_mask"] = self.subnet_mask
         d["num_containers"] = len(self.containers)
         d["level"] = self.level

@@ -7,8 +7,7 @@ import csle_collector.constants.constants as csle_collector_constants
 import csle_collector.ids_manager.ids_manager_pb2_grpc
 import csle_collector.ids_manager.ids_manager_pb2
 import csle_collector.ids_manager.query_ids_manager
-from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
+from csle_common.util.emulation_util import EmulationUtil
 
 
 class IDSManager:
@@ -38,7 +37,7 @@ class IDSManager:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.IDS_IMAGES:
                 if ids_image in c.name:
-                    GeneratorUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
                     cmd = constants.COMMANDS.STOP_IDS
                     o, e, _ = EmulationUtil.execute_ssh_cmd(
                         cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
@@ -61,7 +60,7 @@ class IDSManager:
             for ids_image in constants.CONTAINER_IMAGES.IDS_IMAGES:
                 if ids_image in c.name:
                     # Connect
-                    GeneratorUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
                     # Check if ids_manager is already running
                     cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \

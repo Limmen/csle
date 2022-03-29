@@ -11,7 +11,7 @@ from csle_common.domain_randomization.container_generator import ContainerGenera
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.domain_randomization.flags_generator import FlagsGenerator
@@ -168,7 +168,7 @@ class EmulationEnvConfigGenerator:
         :param emulation_name: the name of the emulation
         :return: None
         """
-        containers_folders_dir = ExperimentsUtil.default_containers_folders_path(out_dir=path)
+        containers_folders_dir = ExperimentUtil.default_containers_folders_path(out_dir=path)
         if not os.path.exists(containers_folders_dir):
             os.makedirs(containers_folders_dir)
 
@@ -194,7 +194,6 @@ class EmulationEnvConfigGenerator:
                 os.makedirs(c_dir)
                 makefile_preamble = ""
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.PROJECT + "=csle\n"
-                makefile_preamble = makefile_preamble + constants.MAKEFILE.MINIGAME + "=" + c.minigame + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.EMULATION + "=" + emulation_name + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.CONTAINER + "=" + c.name + "\n"
                 makefile_preamble = makefile_preamble + constants.MAKEFILE.VERSION + "=" + c.version + "\n"
@@ -225,7 +224,7 @@ class EmulationEnvConfigGenerator:
         :param path: the path to where the Makefile will be stored
         :return: None
         """
-        with io.open(ExperimentsUtil.default_makefile_template_path(out_dir=path), 'r', encoding='utf-8') as f:
+        with io.open(ExperimentUtil.default_makefile_template_path(out_dir=path), 'r', encoding='utf-8') as f:
             makefile_template_str = f.read()
 
         makefile_template_str = makefile_template_str + constants.MANAGEMENT.RUN + ":\n"
@@ -247,7 +246,7 @@ class EmulationEnvConfigGenerator:
         for c in container_names:
             makefile_template_str = makefile_template_str + "	cd containers/" + c + "/ && $(MAKE) clean\n"
         makefile_template_str = makefile_template_str + "\n\n"
-        with io.open(ExperimentsUtil.default_makefile_path(out_dir=path), 'w', encoding='utf-8') as f:
+        with io.open(ExperimentUtil.default_makefile_path(out_dir=path), 'w', encoding='utf-8') as f:
             f.write(makefile_template_str)
 
     @staticmethod
@@ -259,20 +258,20 @@ class EmulationEnvConfigGenerator:
         :return: None
         """
         # try:
-        if os.path.exists(ExperimentsUtil.default_users_path(out_dir=path)):
-            os.remove(ExperimentsUtil.default_users_path(out_dir=path))
-        if os.path.exists(ExperimentsUtil.default_topology_path(out_dir=path)):
-            os.remove(ExperimentsUtil.default_topology_path(out_dir=path))
-        if os.path.exists(ExperimentsUtil.default_flags_path(out_dir=path)):
-            os.remove(ExperimentsUtil.default_flags_path(out_dir=path))
-        if os.path.exists(ExperimentsUtil.default_vulnerabilities_path(out_dir=path)):
-            os.remove(ExperimentsUtil.default_vulnerabilities_path(out_dir=path))
-        if os.path.exists(ExperimentsUtil.default_containers_path(out_dir=path)):
-            os.remove(ExperimentsUtil.default_containers_path(out_dir=path))
-        if os.path.exists(ExperimentsUtil.default_containers_folders_path(out_dir=path)):
-            shutil.rmtree(ExperimentsUtil.default_containers_folders_path(out_dir=path))
-        if os.path.exists(ExperimentsUtil.default_traffic_path(out_dir=path)):
-            os.remove(ExperimentsUtil.default_traffic_path(out_dir=path))
+        if os.path.exists(ExperimentUtil.default_users_path(out_dir=path)):
+            os.remove(ExperimentUtil.default_users_path(out_dir=path))
+        if os.path.exists(ExperimentUtil.default_topology_path(out_dir=path)):
+            os.remove(ExperimentUtil.default_topology_path(out_dir=path))
+        if os.path.exists(ExperimentUtil.default_flags_path(out_dir=path)):
+            os.remove(ExperimentUtil.default_flags_path(out_dir=path))
+        if os.path.exists(ExperimentUtil.default_vulnerabilities_path(out_dir=path)):
+            os.remove(ExperimentUtil.default_vulnerabilities_path(out_dir=path))
+        if os.path.exists(ExperimentUtil.default_containers_path(out_dir=path)):
+            os.remove(ExperimentUtil.default_containers_path(out_dir=path))
+        if os.path.exists(ExperimentUtil.default_containers_folders_path(out_dir=path)):
+            shutil.rmtree(ExperimentUtil.default_containers_folders_path(out_dir=path))
+        if os.path.exists(ExperimentUtil.default_traffic_path(out_dir=path)):
+            os.remove(ExperimentUtil.default_traffic_path(out_dir=path))
         # except Exception as e:
         #     pass
 
@@ -285,10 +284,10 @@ class EmulationEnvConfigGenerator:
         :return: None
         """
         if path == None:
-            path = ExperimentsUtil.default_output_dir()
+            path = ExperimentUtil.default_output_dir()
         for f in os.listdir(path):
             if re.search("env_*", f):
-                ExperimentsUtil.rmtree(os.path.join(path, f))
+                ExperimentUtil.rmtree(os.path.join(path, f))
 
     @staticmethod
     def get_env_dirs(path: str = None) -> List[str]:
@@ -299,7 +298,7 @@ class EmulationEnvConfigGenerator:
         :return: A list of the directories
         """
         if path == None:
-            path = ExperimentsUtil.default_output_dir()
+            path = ExperimentUtil.default_output_dir()
         env_dirs = []
         for f in os.listdir(path):
             if re.search("env_*", f):
@@ -315,11 +314,11 @@ class EmulationEnvConfigGenerator:
         :return: a list of container configurations
         """
         if path == None:
-            path = ExperimentsUtil.default_output_dir()
+            path = ExperimentUtil.default_output_dir()
         env_dirs = EmulationEnvConfigGenerator.get_env_dirs(path)
         containers_configs = []
         for d in env_dirs:
-            containers_configs.append(ExperimentsUtil.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH))
+            containers_configs.append(ExperimentUtil.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH))
         return containers_configs
 
     @staticmethod
@@ -330,21 +329,21 @@ class EmulationEnvConfigGenerator:
         :param path: the path to check
         :return: True if it exists, otherwise False
         """
-        if not os.path.exists(ExperimentsUtil.default_users_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_users_path(out_dir=path)):
             return False
-        if not os.path.exists(ExperimentsUtil.default_topology_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_topology_path(out_dir=path)):
             return False
-        if not os.path.exists(ExperimentsUtil.default_flags_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_flags_path(out_dir=path)):
             return False
-        if not os.path.exists(ExperimentsUtil.default_vulnerabilities_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_vulnerabilities_path(out_dir=path)):
             return False
-        if not os.path.exists(ExperimentsUtil.default_containers_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_containers_path(out_dir=path)):
             return False
-        if not os.path.exists(ExperimentsUtil.default_containers_folders_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_containers_folders_path(out_dir=path)):
             return False
-        if not os.path.exists(ExperimentsUtil.default_makefile_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_makefile_path(out_dir=path)):
             return False
-        if not os.path.exists(ExperimentsUtil.default_traffic_path(out_dir=path)):
+        if not os.path.exists(ExperimentUtil.default_traffic_path(out_dir=path)):
             return False
 
         return True
@@ -364,9 +363,9 @@ class EmulationEnvConfigGenerator:
 
         if not os.path.exists(path + emulation_env_config.name + constants.COMMANDS.SLASH_DELIM + \
                               constants.DOCKER.EMULATION_ENV_CFG_PATH):
-            ExperimentsUtil.write_emulation_config_file(emulation_env_config, path + emulation_env_config.name
-                                             + constants.COMMANDS.SLASH_DELIM + \
-                                             constants.DOCKER.EMULATION_ENV_CFG_PATH)
+            ExperimentUtil.write_emulation_config_file(emulation_env_config, path + emulation_env_config.name
+                                                       + constants.COMMANDS.SLASH_DELIM + \
+                                                       constants.DOCKER.EMULATION_ENV_CFG_PATH)
 
         container_dirs_path = path + emulation_env_config.name + constants.COMMANDS.SLASH_DELIM + \
                               constants.DOCKER.CONTAINERS_DIR
@@ -387,8 +386,8 @@ class EmulationEnvConfigGenerator:
         :return: the parsed object
         """
         if path == "":
-            path = ExperimentsUtil.default_emulation_config_path(out_dir=ExperimentsUtil.default_output_dir())
-        return ExperimentsUtil.read_emulation_env_config(path)
+            path = ExperimentUtil.default_emulation_config_path(out_dir=ExperimentUtil.default_output_dir())
+        return ExperimentUtil.read_emulation_env_config(path)
 
 
     @staticmethod

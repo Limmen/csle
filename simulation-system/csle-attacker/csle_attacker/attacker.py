@@ -26,4 +26,4 @@ class Attacker:
                                                          emulation_env_config=s.emulation_env_config)
         else:
             return EmulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action,
-                                                        emulation_env_agent_config=s.emulation_env_config)
+                                                        emulation_env_config=s.emulation_env_config)

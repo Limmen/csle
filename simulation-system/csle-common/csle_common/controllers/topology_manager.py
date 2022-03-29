@@ -64,7 +64,7 @@ class TopologyManager:
             cmd = f"{constants.COMMANDS.ECHO} {constants.ETC_HOSTS.DEFAULT_HOST_LINE_6} " \
                   f"| {constants.ETC_HOSTS.APPEND_TO_ETC_HOSTS}"
             EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
-            for node2 in topology.node_configs:
+            for node2 in emulation_env_config.topology_config.node_configs:
                 ips2 = node.get_ips()
                 if ip not in ips2:
                     cmd = f"{constants.COMMANDS.ECHO} '" + ips2[0] + " " + node2.hostname \

@@ -6,7 +6,7 @@ from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class TopologyGenerator:
@@ -150,8 +150,8 @@ class TopologyGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        path = ExperimentsUtil.default_topology_path(out_dir=path)
-        ExperimentsUtil.write_topology_file(topology, path)
+        path = ExperimentUtil.default_topology_path(out_dir=path)
+        ExperimentUtil.write_topology_file(topology, path)
 
 
 if __name__ == '__main__':

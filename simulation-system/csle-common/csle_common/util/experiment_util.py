@@ -25,7 +25,7 @@ from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 import csle_common.constants.constants as constants
 
 
-class ExperimentsUtil:
+class ExperimentUtil:
     """
     Class with utility functions related to experiments
     """
@@ -53,34 +53,34 @@ class ExperimentsUtil:
         :param random_seed: the random seed of the experiment
         :return: None
         """
-        if not os.path.exists(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.LOG_DIR, random_seed)):
-            os.makedirs(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.LOG_DIR, random_seed))
-        if not os.path.exists(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.PLOTS_DIR, random_seed)):
-            os.makedirs(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.PLOTS_DIR, random_seed))
-        if not os.path.exists(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.DATA_DIR, random_seed)):
-            os.makedirs(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.DATA_DIR, random_seed))
-        if not os.path.exists(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.HYPERPARAMETERS_DIR, random_seed)):
-            os.makedirs(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.HYPERPARAMETERS_DIR, random_seed))
-        if not os.path.exists(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.GIFS_DIR, random_seed)):
-            os.makedirs(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.GIFS_DIR, random_seed))
-        if not os.path.exists(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.TENSORBOARD_DIR, random_seed)):
-            os.makedirs(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.TENSORBOARD_DIR, random_seed))
-        if not os.path.exists(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.ENV_DATA_DIR, random_seed)):
-            os.makedirs(ExperimentsUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
-                                                           constants.EXPERIMENT.ENV_DATA_DIR, random_seed))
+        if not os.path.exists(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                        constants.EXPERIMENT.LOG_DIR, random_seed)):
+            os.makedirs(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                  constants.EXPERIMENT.LOG_DIR, random_seed))
+        if not os.path.exists(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                        constants.EXPERIMENT.PLOTS_DIR, random_seed)):
+            os.makedirs(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                  constants.EXPERIMENT.PLOTS_DIR, random_seed))
+        if not os.path.exists(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                        constants.EXPERIMENT.DATA_DIR, random_seed)):
+            os.makedirs(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                  constants.EXPERIMENT.DATA_DIR, random_seed))
+        if not os.path.exists(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                        constants.EXPERIMENT.HYPERPARAMETERS_DIR, random_seed)):
+            os.makedirs(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                  constants.EXPERIMENT.HYPERPARAMETERS_DIR, random_seed))
+        if not os.path.exists(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                        constants.EXPERIMENT.GIFS_DIR, random_seed)):
+            os.makedirs(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                  constants.EXPERIMENT.GIFS_DIR, random_seed))
+        if not os.path.exists(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                        constants.EXPERIMENT.TENSORBOARD_DIR, random_seed)):
+            os.makedirs(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                  constants.EXPERIMENT.TENSORBOARD_DIR, random_seed))
+        if not os.path.exists(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                        constants.EXPERIMENT.ENV_DATA_DIR, random_seed)):
+            os.makedirs(ExperimentUtil.get_subdir(output_dir, constants.EXPERIMENT.RESULTS_DIR,
+                                                  constants.EXPERIMENT.ENV_DATA_DIR, random_seed))
 
     @staticmethod
     def setup_experiment_logger(name: str, logdir: str, time_str = None):
@@ -187,8 +187,6 @@ class ExperimentsUtil:
         :param path: the path to write the file
         :return: None
         """
-        emulation_env_config.vuln_config = emulation_env_config.vuln_config.to_dict()
-        emulation_env_config.services_config = emulation_env_config.services_config.to_dict()
         json_str = json.dumps(json.loads(jsonpickle.encode(emulation_env_config,
                                                            make_refs=False)), indent=4, sort_keys=True)
         with io.open(path, 'w', encoding='utf-8') as f:
@@ -283,8 +281,6 @@ class ExperimentsUtil:
         with io.open(emulation_env_config_path, 'r', encoding='utf-8') as f:
             json_str = f.read()
         emulation_env_config: EmulationEnvConfig = jsonpickle.decode(json_str)
-        emulation_env_config.vuln_config = VulnerabilitiesConfig.from_dict(emulation_env_config.vuln_config)
-        emulation_env_config.services_config = ServicesConfig.from_dict(emulation_env_config.services_config)
         return emulation_env_config
 
     @staticmethod
@@ -384,7 +380,7 @@ class ExperimentsUtil:
         """
         :return: the default output dir
         """
-        script_dir = ExperimentsUtil.get_script_path()
+        script_dir = ExperimentUtil.get_script_path()
         return script_dir
 
     @staticmethod
@@ -394,7 +390,7 @@ class ExperimentsUtil:
         :return: the default path to configuration file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM +
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM +
                                        constants.EXPERIMENT.CONFIG_FILE_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM + constants.EXPERIMENT.CONFIG_FILE_PATH)
@@ -407,7 +403,7 @@ class ExperimentsUtil:
         :return: the default path to topology file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.CONTAINER_CONFIG_TOPOLOGY_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -421,7 +417,7 @@ class ExperimentsUtil:
         :return: the default path to users file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.CONTAINER_CONFIG_USERS_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -435,7 +431,7 @@ class ExperimentsUtil:
         :return: the default path to flags file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.CONTAINER_CONFIG_FLAGS_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -449,7 +445,7 @@ class ExperimentsUtil:
         :return: the default path to vuln file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.CONTAINER_CONFIG_VULNERABILITIES_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -463,7 +459,7 @@ class ExperimentsUtil:
         :return: the default path to emulation config file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.EMULATION_ENV_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -477,7 +473,7 @@ class ExperimentsUtil:
         :return: the default path to log sink config file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.LOG_SINK_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -491,7 +487,7 @@ class ExperimentsUtil:
         :return: the default path to containers config file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -505,7 +501,7 @@ class ExperimentsUtil:
         :return: the default path to traffic config file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.CONTAINER_CONFIG_TRAFFIC_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -519,7 +515,7 @@ class ExperimentsUtil:
         :return: the default path to resources config file
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.CONTAINER_CONFIG_RESOURCES_CFG_PATH)
         else:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
@@ -532,7 +528,7 @@ class ExperimentsUtil:
         :return: the default path to container folders
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.COMMANDS.SLASH_DELIM
                                        + constants.DOCKER.CONTAINERS_DIR)
         else:
@@ -546,7 +542,7 @@ class ExperimentsUtil:
         :return: the default path to makefile tempalte
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.COMMANDS.SLASH_DELIM +
                                        constants.DOCKER.CONTAINER_MAKEFILE_TEMPLATE_NAME)
         else:
@@ -560,7 +556,7 @@ class ExperimentsUtil:
         :return: the default path to makefile tempalte
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.COMMANDS.SLASH_DELIM
                                        + constants.DOCKER.MAKEFILE_TEMPLATE)
         else:
@@ -575,7 +571,7 @@ class ExperimentsUtil:
         :return: the default path to makefile tempalte
         """
         if out_dir is None:
-            config_path = os.path.join(ExperimentsUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+            config_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
                                        + constants.COMMANDS.SLASH_DELIM +
                                        constants.DOCKER.MAKEFILE)
         else:

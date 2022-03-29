@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple
 import time
 import random
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig

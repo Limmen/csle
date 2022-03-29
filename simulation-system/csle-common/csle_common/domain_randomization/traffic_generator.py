@@ -3,7 +3,7 @@ from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class TrafficGenerator:
@@ -68,8 +68,8 @@ class TrafficGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        path = ExperimentsUtil.default_traffic_path(out_dir=path)
-        ExperimentsUtil.write_traffic_config_file(traffic_config, path)
+        path = ExperimentUtil.default_traffic_path(out_dir=path)
+        ExperimentUtil.write_traffic_config_file(traffic_config, path)
 
 
     @staticmethod

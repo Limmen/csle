@@ -5,8 +5,7 @@ import csle_common.constants.constants as constants
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.kafka_manager.query_kafka_server
-from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
+from csle_common.util.emulation_util import EmulationUtil
 
 
 class LogSinkManager:
@@ -35,7 +34,7 @@ class LogSinkManager:
         """
 
         # Connect
-        GeneratorUtil.connect_admin(emulation_env_config=emulation_env_config,
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                     ip=emulation_env_config.log_sink_config.container.get_ips()[0])
 
         # Check if kafka_manager is already running

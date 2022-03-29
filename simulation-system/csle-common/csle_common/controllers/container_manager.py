@@ -9,7 +9,7 @@ import socket
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
-from csle_common.envs_model.config.generator.docker_util import DockerUtil
+from csle_common.util.docker_util import DockerUtil
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
@@ -249,7 +249,7 @@ class ContainerManager:
         container_name_image_ip = []
         for env in parsed_envs:
             container_name_image_ip = container_name_image_ip + \
-                                      list(map(lambda x: (x.name, x.image_name, x.ips), env.containers))
+                                      list(map(lambda x: (x.name, x.image_name, x.ip), env.containers))
         return container_name_image_ip
 
     @staticmethod
@@ -309,7 +309,7 @@ class ContainerManager:
         :return: None
         """
         for c in containers_config.containers:
-            container_name = f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-{c.name}{c.suffix}-" \
+            container_name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-" \
                              f"{constants.CSLE.LEVEL}{c.level}"
             # Disconnect from none
             cmd = f"docker network disconnect none {container_name}"
@@ -334,7 +334,7 @@ class ContainerManager:
         :return: None
         """
         c = log_sink_config.container
-        container_name = f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-{c.name}{c.suffix}-" \
+        container_name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-" \
                          f"{constants.CSLE.LEVEL}{c.level}"
         # Disconnect from none
         cmd = f"docker network disconnect none {container_name}"
@@ -444,7 +444,7 @@ class ContainerManager:
         log_sink_ip, logsink_net = log_sink_config.container.ips_and_networks[0]
         log_sink_network_prefix = ".".join(log_sink_ip.split(".")[0:-1])
         for c in containers_config.containers:
-            container_name = f"{constants.CSLE.NAME}-{constants.CSLE.CTF_MINIGAME}-{c.name}{c.suffix}-" \
+            container_name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-" \
                              f"{constants.CSLE.LEVEL}{c.level}"
 
             ip_suffix = c.ips_and_networks[0][0].split(".")[-1]

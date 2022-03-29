@@ -1,5 +1,5 @@
 """
-Transport protocols in the csle-ctf environment
+Transport protocols in CSLE
 """
 from enum import IntEnum
 

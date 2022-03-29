@@ -2,7 +2,7 @@ from typing import List
 import json
 import os
 import csle_common.constants.constants as constants
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class Trajectory:
@@ -93,7 +93,7 @@ class Trajectory:
         if trajectories_save_dir is not None:
             save_dir = trajectories_save_dir + "/" + trajectories_file
         else:
-            save_dir = ExperimentsUtil.get_script_path() + "/" + \
+            save_dir = ExperimentUtil.get_script_path() + "/" + \
                        trajectories_file
         with open(save_dir, 'w') as fp:
             json.dump({"trajectories": trajectories}, fp)

@@ -71,14 +71,13 @@ class DockerUtil:
             subnet_prefix = constants.COMMANDS.DOT_DELIM.join(em_containers[0].ip.rsplit(
                 constants.COMMANDS.DOT_DELIM)[0:-1])
             subnet_mask = subnet_prefix + constants.COMMANDS.SLASH_DELIM + str(em_containers[0].ip_prefix_len)
-            minigame = em_containers[0].minigame
 
             config = None
             em_record = MetastoreFacade.get_emulation(name=em)
             if em_record is not None:
                 config = em_record
 
-            p_env = DockerEnvMetadata(containers=em_containers, name=em, subnet_prefix=subnet_mask, minigame=minigame,
+            p_env = DockerEnvMetadata(containers=em_containers, name=em, subnet_prefix=subnet_mask,
                                       subnet_mask=subnet_mask, level= em_containers[0].level, config=config,
                                       log_sink_config=None)
             parsed_envs.append(p_env)
@@ -97,9 +96,8 @@ class DockerUtil:
         for c in containers:
             if "csle-" in c.name:
                 name_parts = c.name.split("-")
-                minigame = name_parts[1]
-                container_name_2 = name_parts[2]
-                level = name_parts[3]
+                container_name_2 = name_parts[1]
+                level = name_parts[2]
                 inspect_info = client2.inspect_container(c.id)
                 net = list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())[0]
                 labels = c.labels
@@ -130,7 +128,7 @@ class DockerUtil:
                         constants.DOCKER.MAC_ADDRESS_INFO],
                     ip_prefix_len=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
                         constants.DOCKER.IP_PREFIX_LEN_INFO],
-                    minigame=minigame, name2=container_name_2, level=level,
+                    name2=container_name_2, level=level,
                     hostname=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.HOSTNAME_INFO],
                     image_name=inspect_info[constants.DOCKER.CONFIG]["Image"],
                     net=net, dir=dir_path, config_path=config_path,

@@ -1,5 +1,5 @@
 """
-The main frame for the csle-ctf environment
+The main frame for the csle environment
 """
 import pyperclip
 import os
@@ -7,20 +7,20 @@ import pyglet
 import csle_common.constants.constants as constants
 from csle_common.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
-from csle_common.rendering.frames.csle_base_frame import CSLEBaseFrame
+from csle_common.rendering.frames.base_frame import BaseFrame
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.observation.attacker.attacker_observation_state import AttackerMachineObservationState
 #from gym_csle_stopping_game.envs import CSLESt
 
 
-class MainFrame(CSLEBaseFrame):
+class MainFrame(BaseFrame):
     """
     A class representing the OpenGL/Pyglet Game Frame
     By subclassing pyglet.window.Window, event handlers can be defined simply by overriding functions, e.g.
     event handler for on_draw is defined by overriding the on_draw function.
     """
 
-    def __init__(self, emulation_env_config: EmulationEnvAgentConfig, init_state : AttackerRenderState, env: CSLECTFEnv = None):
+    def __init__(self, emulation_env_config: EmulationEnvAgentConfig, init_state : AttackerRenderState, env: CSLEEnv = None):
         """
         Initialize frame
         :param emulation_env_config: trhe environment config

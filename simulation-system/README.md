@@ -12,8 +12,8 @@ optimize control policies.
 - **csle-common** ([csle-common](./csle-common)):
     - Contains common functionality to all python environments
     
-- **gym-csle-ctf** ([gym-csle-ctf](./gym-csle-ctf)):
-    - A gym environment for capture the flag challenges        
+- **gym-csle-stopping-game** ([gym-csle-stopping-game](./gym-csle-stopping-game)):
+    - A gym environment for an optimal stopping game        
 
 ## Author & Maintainer
 

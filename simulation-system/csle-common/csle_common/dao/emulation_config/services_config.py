@@ -2,6 +2,7 @@ from typing import List
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
 
+
 class ServicesConfig:
     """
     A DTO object representing the services configuration of an emulation environment

@@ -1,5 +1,5 @@
 """
-The viewer for rendering the gym-csle-ctf environment.
+The viewer for rendering CSLE environments
 """
 try:
     import pyglet
@@ -22,7 +22,7 @@ except ImportError as e:
     ''')
 import numpy as np
 import sys
-from csle_common.rendering.frames.csle_base_frame import CSLEBaseFrame
+from csle_common.rendering.frames.base_frame import BaseFrame
 from csle_common.dao.envs.base_env import BaseEnv
 
 
@@ -31,7 +31,7 @@ class Viewer():
     Viewer class that orchestrates rendering of csle environments
     """
 
-    def __init__(self, mainframe: CSLEBaseFrame):
+    def __init__(self, mainframe: BaseFrame):
         """
         Initialize the viewer
 

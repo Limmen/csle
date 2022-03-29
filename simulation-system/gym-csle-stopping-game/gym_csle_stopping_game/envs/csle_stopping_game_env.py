@@ -13,7 +13,7 @@ from gym_csle_stopping_game.util.env_util import EnvUtil
 
 class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
     """
-    Abstract OpenAI Gym Env for the csle CTF minigame
+    Abstract OpenAI Gym Env for the csle-stopping-game
     """
 
     def __init__(self, emulation_env_config : EmulationEnvConfig):

@@ -11,7 +11,7 @@ RUN echo 'deb http://archive.debian.org/debian wheezy-backports main' > /etc/apt
 
 # Install dependencies
 RUN apt-get update
-RUN echo "postfix postfix/mailname string ctf_minigame.csle" | debconf-set-selections &&\
+RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
         DEBIAN_FRONTEND=noninteractive apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping \
         emacs curl htop ssh openssh-server build-essential \

@@ -21,7 +21,7 @@ from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
 from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 import csle_common.constants.constants as constants
 import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 from csle_attacker.attacker import Attacker
@@ -285,7 +285,7 @@ def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int
         priv_esc_vuln_compatible_containers=constants.CONTAINER_POOLS.PRIV_ESC_CONTAINERS,
         agent_containers=constants.CONTAINER_POOLS.AGENT_CONTAINERS,
         router_containers=constants.CONTAINER_POOLS.ROUTER_CONTAINERS,
-        path=ExperimentsUtil.default_output_dir(), subnet_id_blacklist=set(),
+        path=ExperimentUtil.default_output_dir(), subnet_id_blacklist=set(),
         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}", min_cpus=min_cpus, max_cpus=max_cpus,
         min_mem_G=min_mem, max_mem_G=max_mem
     )
@@ -559,7 +559,9 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
                 else:
                     net = get_network(name=entity)
                     if net is not None:
-                        print_network(net=net)
+                        active_networks_names = ContainerManager.list_all_networks()
+                        active = net.name in active_networks_names
+                        print_network(net=net, active=active)
                     else:
                         img = get_image(name=entity)
                         if img is not None:
@@ -590,14 +592,20 @@ def print_stopped_container(container) -> None:
                 bold=False)
 
 
-def print_network(net: ContainerNetwork) -> None:
+def print_network(net: ContainerNetwork, active: bool = False) -> None:
     """
     Utility function for printing a given network
 
     :param net: the network to print
+    :param active: boolean flag whether the network is active or not
     :return: None
     """
-    click.secho(f"name:{net.name}, subnet_mask:{net.subnet_mask}, subnet_prefix:{net.subnet_prefix}", bold=False)
+    if active:
+        click.secho(f"name:{net.name}, subnet_mask:{net.subnet_mask}, subnet_prefix:{net.subnet_prefix} "
+                    f"{click.style('[active]', fg='green')}", bold=False)
+    else:
+        click.secho(f"name:{net.name}, subnet_mask:{net.subnet_mask}, subnet_prefix:{net.subnet_prefix} "
+                    f"{click.style('[inactive]', fg='red')}", bold=False)
 
 
 def print_img(img: Tuple[str, str, str, str, str]) -> None:
@@ -656,12 +664,9 @@ def list_networks() -> None:
     emulations = MetastoreFacade.list_emulations()
     for em in emulations:
         for net in em.containers_config.networks:
-            if net.name in active_networks_names:
-                print_network(net)
-
-    for net in active_networks_names:
-        if constants.CSLE.NAME in net:
-            print(f"name:{net}")
+            active = net.name in active_networks_names
+            if active:
+                print_network(net, active=active)
 
 
 def get_network(name: str) -> Union[None, ContainerNetwork]:
@@ -755,7 +760,7 @@ def list_images() -> None:
 
     :return: None
     """
-    click.secho("CSLE built Docker images:", fg="magenta", bold=True)
+    click.secho("CSLE Docker images:", fg="magenta", bold=True)
     image_names=ContainerManager.list_all_images()
     for img in image_names:
         print_img(img)

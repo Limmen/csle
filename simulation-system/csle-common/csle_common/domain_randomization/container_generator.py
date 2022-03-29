@@ -6,7 +6,7 @@ from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class ContainerGenerator:
@@ -41,7 +41,6 @@ class ContainerGenerator:
         """
 
         network = constants.CSLE.CSLE_NETWORK_PREFIX + str(subnet_id)
-        minigame = constants.CSLE.CTF_MINIGAME
         level = "random_n" + str(len(topology.node_configs)) + "_f" + str(num_flags) \
                 + "_rid_" + str(random.randint(0, 100000))
         container_configs = []
@@ -88,7 +87,7 @@ class ContainerGenerator:
             node.hostname = f"{container_name}_{suffix}"
             container_cfg = NodeContainerConfig(name=container_name, ips_and_networks=ips_and_networks,
                                                 version=container_version,
-                                                level=level, minigame = minigame, suffix=f"_{suffix}",
+                                                level=level, suffix=f"_{suffix}",
                                                 restart_policy=constants.DOCKER.ON_FAILURE_3, os=os)
             container_configs.append(container_cfg)
 
@@ -108,6 +107,6 @@ class ContainerGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        path = ExperimentsUtil.default_containers_path(out_dir=path)
-        ExperimentsUtil.write_containers_config_file(containers_cfg, path)
+        path = ExperimentUtil.default_containers_path(out_dir=path)
+        ExperimentUtil.write_containers_config_file(containers_cfg, path)
 

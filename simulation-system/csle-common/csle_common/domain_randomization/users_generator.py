@@ -8,7 +8,7 @@ from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
 from csle_common.domain_randomization.topology_generator import TopologyGenerator
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class UsersGenerator:
@@ -56,8 +56,8 @@ class UsersGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        path = ExperimentsUtil.default_users_path(out_dir=path)
-        ExperimentsUtil.write_users_config_file(users_config, path)
+        path = ExperimentUtil.default_users_path(out_dir=path)
+        ExperimentUtil.write_users_config_file(users_config, path)
 
 
 if __name__ == '__main__':

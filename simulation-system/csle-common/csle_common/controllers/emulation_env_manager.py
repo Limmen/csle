@@ -15,7 +15,7 @@ from csle_common.controllers.traffic_manager import TrafficManager
 from csle_common.controllers.topology_manager import TopologyManager
 from csle_common.controllers.resource_constraints_manager import ResourceConstraintsManager
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class EmulationEnvManager:
@@ -46,7 +46,7 @@ class EmulationEnvManager:
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Apply log sink config --")
-        EmulationEnvManager.apply_log_sink_config(log_sink_config=emulation_env_config.log_sink_config)
+        EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Connect containers to log sink --")
@@ -72,9 +72,7 @@ class EmulationEnvManager:
         if not no_traffic:
             current_step += 1
             print(f"-- Step {current_step}/{steps}: Creating traffic generators --")
-            TrafficManager.create_and_start_internal_traffic_generators(
-                emulation_env_config=emulation_env_config,
-                sleep_time=emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds)
+            TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
             TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
 
         current_step += 1
@@ -195,7 +193,7 @@ class EmulationEnvManager:
         :param emulation_env_config: the config
         :return: None
         """
-        path = ExperimentsUtil.default_output_dir()
+        path = ExperimentUtil.default_output_dir()
         for c in emulation_env_config.containers_config.containers:
             ips = c.get_ips()
             container_resources : NodeResourcesConfig = None
@@ -209,7 +207,7 @@ class EmulationEnvManager:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
                                  f"resources:{emulation_env_config.resources_config}")
 
-            name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+            name = f"csle-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
             print(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -222,7 +220,7 @@ class EmulationEnvManager:
         c = emulation_env_config.log_sink_config.container
         container_resources : NodeResourcesConfig = emulation_env_config.log_sink_config.resources
 
-        name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}"
         print(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
               f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -252,8 +250,8 @@ class EmulationEnvManager:
         ContainerManager.create_network(name=net_name,
                                         subnetmask=f"55.{net_id}.0.0/16",
                                         existing_network_names=[])
-        print(f"Starting container with image:{image} and name:csle-custom-{name}-level1")
-        cmd = f"docker container run -dt --name csle-custom-{name}-level1 " \
+        print(f"Starting container with image:{image} and name:csle-{name}-001")
+        cmd = f"docker container run -dt --name csle-{name}-001 " \
               f"--hostname={name} " \
               f"--network={net_name} --ip {ip} --publish-all=true " \
               f"--memory={memory}G --cpus={num_cpus} " \
@@ -269,13 +267,13 @@ class EmulationEnvManager:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+            name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
             print(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
 
         c = emulation_env_config.log_sink_config.container
-        name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
         print(f"Stopping container:{name}")
         cmd = f"docker stop {name}"
         subprocess.call(cmd, shell=True)
@@ -290,13 +288,13 @@ class EmulationEnvManager:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+            name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}"
             print(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
         c = emulation_env_config.log_sink_config.container
-        name = f"csle-{c.minigame}-{c.name}{c.suffix}-level{c.level}"
+        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
         print(f"Removing container:{name}")
         cmd = f"docker rm {name}"
         subprocess.call(cmd, shell=True)

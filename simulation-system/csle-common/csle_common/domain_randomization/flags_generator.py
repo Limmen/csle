@@ -3,7 +3,7 @@ from csle_common.dao.emulation_config.vulnerabilities_config import Vulnerabilit
 from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
 from csle_common.dao.emulation_config.vulnerability_type import VulnType
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.domain_randomization.vuln_generator import VulnerabilityGenerator
 from csle_common.domain_randomization.topology_generator import TopologyGenerator
@@ -63,8 +63,8 @@ class FlagsGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        path = ExperimentsUtil.default_flags_path(out_dir=path)
-        ExperimentsUtil.write_flags_config_file(flags_config, path)
+        path = ExperimentUtil.default_flags_path(out_dir=path)
+        ExperimentUtil.write_flags_config_file(flags_config, path)
 
 
 if __name__ == '__main__':

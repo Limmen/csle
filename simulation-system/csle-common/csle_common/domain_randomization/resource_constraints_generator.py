@@ -5,7 +5,7 @@ from csle_common.dao.emulation_config.node_network_config import NodeNetworkConf
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class ResourceConstraintsGenerator:
@@ -85,7 +85,7 @@ class ResourceConstraintsGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        path = ExperimentsUtil.default_resources_path(out_dir=path)
-        ExperimentsUtil.write_resources_config_file(resources_config, path)
+        path = ExperimentUtil.default_resources_path(out_dir=path)
+        ExperimentUtil.write_resources_config_file(resources_config, path)
 
 

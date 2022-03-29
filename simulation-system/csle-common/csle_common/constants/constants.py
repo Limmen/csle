@@ -94,10 +94,10 @@ class RENDERING:
     GREY = (220, 220, 220)
     RESOURCES_DIR = "resources"
     LINE_WIDTH = 1
-    CAPTION = "csle-ctf"
+    CAPTION = "csle"
     DEFAULT_WIDTH = 950
     DEFAULT_HEIGHT = 900
-    TITLE = "csle-ctf"
+    TITLE = "csle"
     FIREWALL_SPRITE_NAME = "firewall.png"
     HACKER_SPRITE_NAME = "hacker.png"
     FLAG_SPRITE_NAME = "flag_1.png"
@@ -764,7 +764,7 @@ class SSH_BACKDOOR:
     Constants related to creation of SSH backdoors
     """
     BACKDOOR_PREFIX = "ssh_backdoor"
-    DEFAULT_PW = "csle_ctf"
+    DEFAULT_PW = "csle"
 
 
 class SHELL:
@@ -858,7 +858,7 @@ class TRAFFIC_COMMANDS:
             "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.HONEYPOT_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-            "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
+            "timeout 5 snmpwalk -v2c {} -c csle_1234 > /dev/null 2>&1",
             "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
             "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.SAMBA_1}": [
@@ -870,7 +870,7 @@ class TRAFFIC_COMMANDS:
         f"{CONTAINER_IMAGES.SHELLSHOCK_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 5 curl {} > /dev/null 2>&1",
-            "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1"],
+            "timeout 5 snmpwalk -v2c {} -c csle_1234 > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.SQL_INJECTION_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 5 curl {}/login.php > /dev/null 2>&1",
@@ -880,10 +880,10 @@ class TRAFFIC_COMMANDS:
             "timeout 5 curl {}:8080 > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.CVE_2015_1427_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-            "snmpwalk -v2c {} -c csle_ctf1234"],
+            "snmpwalk -v2c {} -c csle_1234"],
         f"{CONTAINER_IMAGES.CVE_2015_3306_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-            "snmpwalk -v2c {} -c csle_ctf1234",
+            "snmpwalk -v2c {} -c csle_1234",
             "timeout 5 curl {} > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.CVE_2015_5602_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
@@ -892,7 +892,7 @@ class TRAFFIC_COMMANDS:
             "timeout 5 curl {} > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.HONEYPOT_2}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-            "timeout 5 snmpwalk -v2c {} -c csle_ctf1234 > /dev/null 2>&1",
+            "timeout 5 snmpwalk -v2c {} -c csle_1234 > /dev/null 2>&1",
             "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1",
             "timeout 5 psql -h {} -p 5432 > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.SSH_2}": [
@@ -1125,15 +1125,15 @@ class DOCKER:
     ON_FAILURE_3 = "on-failure:3"
     CONTAINER_MAKEFILE_TEMPLATE_STR = \
         "\nall: run\n\nrun:\n\tdocker container run -dt " \
-        "--name $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) " \
+        "--name $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) " \
         "--hostname=$(CONTAINER)$(SUFFIX) --label dir=$(DIR) --label cfg=$(CFG) --label emulation=$(EMULATION)" \
         "--network=none --publish-all=true --memory=$(MEMORY) " \
         "--cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) " \
         "--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)\n\nshell:\n\t" \
-        "docker exec -it $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) /bin/bash\n\nstart:\n\t" \
-        "docker container start $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nstop:\n\t" \
-        "-docker stop $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nclean: stop\n\t" \
-        "-docker rm $(PROJECT)-$(MINIGAME)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)"
+        "docker exec -it $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) /bin/bash\n\nstart:\n\t" \
+        "docker container start $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nstop:\n\t" \
+        "-docker stop $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)\n\nclean: stop\n\t" \
+        "-docker rm $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)"
 
 
 class CSLE:
@@ -1144,7 +1144,6 @@ class CSLE:
     CSLE_LEVEL_SUBNETMASK_SUFFIX = ".0.0/16"
     CSLE_EDGE_SUBNETMASK_SUFFIX = ".0/24"
     CSLE_EDGE_BITMASK = "255.255.255.0"
-    CTF_MINIGAME = "ctf"
     NON_IDS_ROUTER = "router_1"
 
 
@@ -1179,7 +1178,6 @@ class MAKEFILE:
     PROJECT = "PROJECT"
     INTERNAL_NETWORK = "INTERNAL_NETWORK"
     EXTERNAL_NETWORK = "EXTERNAL_NETWORK"
-    MINIGAME = "MINIGAME"
     EMULATION = "EMULATION"
     CONTAINER = "CONTAINER"
     VERSION = "VERSION"

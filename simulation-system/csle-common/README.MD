@@ -43,7 +43,7 @@ $ pip install -e csle-common --upgrade
 
 # git clone and install from source
 git clone https://github.com/Limmen/csle
-cd csle/simulation-system/use_cases/intrusion_prevention/minigames/ctf/gym-csle-ctf
+cd csle/simulation-system/gym-csle-stopping-game
 pip3 install -e .
 ```
 

@@ -12,7 +12,7 @@ from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.util.experiment_util import ExperimentsUtil
+from csle_common.util.experiment_util import ExperimentUtil
 
 
 class VulnerabilityGenerator:
@@ -250,8 +250,8 @@ class VulnerabilityGenerator:
         :param path: the path to write the configuration to
         :return: None
         """
-        path = ExperimentsUtil.default_vulnerabilities_path(out_dir=path)
-        ExperimentsUtil.write_vulns_config_file(vulns_cfg, path)
+        path = ExperimentUtil.default_vulnerabilities_path(out_dir=path)
+        ExperimentUtil.write_vulns_config_file(vulns_cfg, path)
 
 
 if __name__ == '__main__':

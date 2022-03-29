@@ -202,9 +202,9 @@ git clone https://github.com/Limmen/clse
      pip install -e .
      ```
 
-    - Install `gym-csle-ctf` (see ([README](simulation-system/gym-csle-ctf/README.MD)) for more information)
+    - Install `gym-csle-stopping-game` (see ([README](simulation-system/gym-csle-stopping-game/README.MD)) for more information)
       ```bash
-      cd simulation-system/gym-csle-ctf/
+      cd simulation-system/gym-csle-stopping-game/
       pip install -e .
       ```
     
@@ -291,7 +291,7 @@ git clone https://github.com/Limmen/clse
 csle rm all
 csle clean emulations
 csle rm emulations
-pip uninstall gym-csle-ctf
+pip uninstall gym-csle-stopping-game
 pip uninstall csle-common
 pip uninstall csle-collector
 cd emulation-system && make rm

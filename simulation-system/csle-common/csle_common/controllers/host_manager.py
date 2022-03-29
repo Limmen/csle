@@ -6,8 +6,7 @@ import csle_common.constants.constants as constants
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
 import csle_collector.host_manager.query_host_manager
-from csle_common.envs_model.config.generator.generator_util import GeneratorUtil
-from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
+from csle_common.util.emulation_util import EmulationUtil
 
 
 class HostManager:
@@ -36,7 +35,7 @@ class HostManager:
         """
         for c in emulation_env_config.containers_config.containers:
             # Connect
-            GeneratorUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
             # Check if host_manager is already running
             cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \

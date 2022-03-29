@@ -6,7 +6,7 @@ class DockerContainerMetadata:
 
     def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
-                 minigame : str, name2: str, level: str, hostname: str, image_name : str, net: str,
+                 name2: str, level: str, hostname: str, image_name : str, net: str,
                  dir: str, config_path : str, container_handle, emulation: str, log_sink: str):
         """
         Intializes the DTO
@@ -23,7 +23,6 @@ class DockerContainerMetadata:
         :param gateway: the gateway of the container
         :param mac: the mac address of the container
         :param ip_prefix_len: the ip prefix len of the container
-        :param minigame: the minigame of the container
         :param name2: the name2 of the container
         :param level: the level of the container
         :param hostname: the hostname of the container
@@ -47,7 +46,6 @@ class DockerContainerMetadata:
         self.gateway=gateway
         self.mac = mac
         self.ip_prefix_len = ip_prefix_len
-        self.minigame = minigame
         self.name2 = name2
         self.level = level
         self.hostname = hostname
@@ -76,7 +74,6 @@ class DockerContainerMetadata:
         d["gateway"] = self.gateway
         d["mac"] = self.mac
         d["ip_prefix_len"] = self.ip_prefix_len
-        d["minigame"] = self.minigame
         d["name2"] = self.name2
         d["level"] = self.level
         d["hostname"] = self.hostname
@@ -95,6 +92,6 @@ class DockerContainerMetadata:
         return f"name: {self.name}, status: {self.status}, short_id: {self.short_id}, " \
                f"image_short_id: {self.image_short_id}, image_tags: {self.image_tags}, id: {self.id}, " \
                f"created: {self.created}, ip: {self.ip}, network_id: {self.network_id}, gateway: {self.gateway}," \
-               f"mac: {self.mac}, ip_prefix_len: {self.ip_prefix_len}, minigame: {self.minigame}, name2: {self.name2}," \
+               f"mac: {self.mac}, ip_prefix_len: {self.ip_prefix_len}, name2: {self.name2}," \
                f"level: {self.level}, hostname: {self.hostname}, image_name: {self.image_name}, net: {self.net}, " \
                f"dir: {self.dir}, config_path: {self.config_path}, emulation: {self.emulation}, log_sink:{self.log_sink}"

@@ -2,6 +2,7 @@ from typing import List
 from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
 from csle_common.dao.emulation_config.flag import Flag
 
+
 class FlagsConfig:
     """
     A DTO representing the set of flags in an emulation environment

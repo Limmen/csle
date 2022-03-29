@@ -16,7 +16,7 @@ class NodeRandomizerConfig:
                  r_space: RandomizationSpace,
                  router: bool = False, agent: bool = False, gateway: bool = False):
         """
-        Creates a config DTO for randomizing a node in a csle-CTF env
+        Creates a config DTO for randomizing a node in a csle env
 
         :param ip: the ip of the node
         :param reachable: the list of reachable nodes

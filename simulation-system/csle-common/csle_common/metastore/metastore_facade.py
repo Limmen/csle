@@ -56,10 +56,6 @@ class MetastoreFacade:
         """
         emulation_config_json_str = json.dumps(emulation_record[2], indent=4, sort_keys=True)
         emulation_env_config: EmulationEnvConfig = jsonpickle.decode(emulation_config_json_str)
-        emulation_env_config.vuln_config = VulnerabilitiesConfig.from_dict(emulation_env_config.vuln_config)
-        for vuln in emulation_env_config.vuln_config.node_vulnerability_configs:
-            if isinstance(vuln.vuln_type, str):
-                pass
         return emulation_env_config
 
 
@@ -77,7 +73,6 @@ class MetastoreFacade:
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
-                    config.vuln_config = config.vuln_config.to_dict()
                     config_json_str = json.dumps(json.loads(jsonpickle.encode(config)), indent=4, sort_keys=True)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
                                 f"VALUES (%s, %s)", (config.name, config_json_str))
