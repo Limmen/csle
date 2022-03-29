@@ -57,7 +57,7 @@ class StoppingGameEnv(BaseEnv):
 
         # Compute r, s', b',o'
         a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.state.s)
-        r = -self.config.R[self.state.l - 1][a1][a2][self.state.s]
+        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
         self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
                                                           T=self.config.T,
                                                           S=self.config.S, s=self.state.s)
@@ -71,6 +71,8 @@ class StoppingGameEnv(BaseEnv):
                                                         config=self.config,
                                                         l=self.state.l, a2=a2)
 
+        # Update stops remaining
+        self.state.l = self.state.l-a1
 
         # Get observations
         attacker_obs = self.state.attacker_observation()
@@ -100,7 +102,7 @@ class StoppingGameEnv(BaseEnv):
         self.state.reset()
         if len(self.trajectory .attacker_rewards) > 0:
             self.trajectories.append(self.trajectory)
-        if len(self.trajectories) > 1 and len(self.trajectories) % 1000 == 0:
+        if len(self.trajectories) > 1 and len(self.trajectories) % 100 == 0:
             self.__checkpoint_trajectories()
         self.trajectory = Trajectory()
         attacker_obs = self.state.attacker_observation()
@@ -139,7 +141,6 @@ class StoppingGameEnv(BaseEnv):
         :return: True or False
         """
         return True
-
 
     def __checkpoint_trajectories(self) -> None:
         """

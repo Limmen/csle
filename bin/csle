@@ -9,6 +9,7 @@ To see options, run:
 from typing import List, Tuple, Union
 import click
 import os
+import gym
 import readline # for history in shells
 from csle_common.controllers.container_manager import ContainerManager
 from csle_common.controllers.traffic_manager import TrafficManager
@@ -23,9 +24,10 @@ from csle_common.dao.emulation_config.emulation_env_generation_config import Emu
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.experiment_util import ExperimentUtil
 import csle_common.constants.constants as constants
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 from csle_attacker.attacker import Attacker
-from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+import gym_csle_stopping_game.envs.stopping_game_env  # for registering the gym environments
 
 
 @click.group()
@@ -89,6 +91,16 @@ def attacker(emulation : str) -> None:
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
+def list_csle_gym_envs() -> None:
+    """
+    Lists the registered OpenAI gym environments
+
+    :return: None
+    """
+    click.secho(f"Registered OpenAI gym environments:", fg="magenta", bold=True)
+    for env in gym.envs.registry.all():
+        if constants.CSLE.NAME in env.id:
+            click.secho(f"{env.id}", bold=False)
 
 @click.option('--host', is_flag=True, help='Check the status of the Host managers')
 @click.option('--stats', is_flag=True, help='Check the status of the stats manager')
@@ -518,7 +530,7 @@ def clean(entity : str) -> None:
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-@click.command(help="containers | networks | images | emulations | all")
+@click.command(help="containers | networks | images | emulations | all | environments")
 def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
@@ -544,6 +556,8 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
         list_images()
     elif entity == "emulations":
         list_emulations(all=all, stopped=stopped)
+    elif entity == "environments":
+        list_csle_gym_envs()
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -631,6 +645,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_all_containers()
     list_images()
     list_emulations(all=all, stopped=stopped, running=running)
+    list_csle_gym_envs()
 
 
 def list_emulations(all: bool = False, stopped: bool = False, running: bool = True) -> None:

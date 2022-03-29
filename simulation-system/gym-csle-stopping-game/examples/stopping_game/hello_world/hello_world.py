@@ -17,7 +17,10 @@ def test_env():
     R_SLA = 1
     R_ST = 5
 
-    stopping_game_config = StoppingGameConfig(
+    for env in gym.envs.registry.all():
+        print(env.id)
+
+    config = StoppingGameConfig(
         A1 = StoppingGameUtil.attacker_actions(), A2= StoppingGameUtil.defender_actions(), L=L, R_INT=R_INT,
         R_COST=R_COST,
         R_SLA=R_SLA, R_ST =R_ST, b1 = StoppingGameUtil.b1(), save_dir=ExperimentUtil.default_output_dir() + "/results",
@@ -26,15 +29,15 @@ def test_env():
         R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
         S = StoppingGameUtil.state_space())
 
-    env = gym.make("csle-stopping-game-v1", stopping_game_config=stopping_game_config)
+    env = gym.make("csle-stopping-game-v1", config=config)
     num_episodes = 50
     ep = 1
     while ep < num_episodes:
         done = False
         o = env.reset()
         while not done:
-            a1 = np.random.choice(np.arange(0, len(stopping_game_config.A1)),
-                                  p=[1/len(stopping_game_config.A1)]*len(stopping_game_config.A1))
+            a1 = np.random.choice(np.arange(0, len(config.A1)),
+                                  p=[1/len(config.A1)]*len(config.A1))
             pi2 = np.zeros((3,2))
             pi2[0][0] = np.random.rand()
             pi2[0][1] = 1-pi2[0][0]

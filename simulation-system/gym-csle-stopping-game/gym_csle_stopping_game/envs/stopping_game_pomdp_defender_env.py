@@ -3,21 +3,21 @@ from typing import Tuple
 import gym
 import numpy as np
 from csle_common.dao.envs.base_env import BaseEnv
-from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 
 
-class StoppingGameMdpAttackerEnv(BaseEnv):
+class StoppingGamePomdpDefenderEnv(BaseEnv):
     """
-    OpenAI Gym Env for the MDP of the attacker when facing a static defender
+    OpenAI Gym Env for the MDP of the defender when facing a static attacker
     """
 
-    def __init__(self, config: StoppingGameAttackerMdpConfig):
+    def __init__(self, config: StoppingGameDefenderPomdpConfig):
         self.config = config
         self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
 
         # Setup spaces
-        self.attacker_observation_space = self.config.stopping_game_config.attacker_observation_space()
-        self.attacker_action_space = self.config.stopping_game_config.attacker_action_space()
+        self.defender_observation_space = self.config.stopping_game_config.defender_observation_space()
+        self.defender_action_space = self.config.stopping_game_config.defender_action_space()
 
         # Setup Config
         self.viewer = None
@@ -26,30 +26,27 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
             'video.frames_per_second': 50  # Video rendering speed
         }
 
-        self.latest_defender_obs = None
+        self.latest_attacker_obs = None
         # Reset
         self.reset()
         super().__init__()
 
-    def step(self, pi2 : np.ndarray) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, a1: int) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
-        :param pi2: attacker stage policy
+        :param a1: defender action
         :return: (obs, reward, done, info)
         """
-        assert pi2.shape[0] == len(self.config.stopping_game_config.S)
-        assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
-
         # Get defender action from static strategy
-        a1 = self.config.defender_strategy(self.latest_defender_obs, self.config.stopping_game_config)
+        pi2 = self.config.attacker_strategy(self.latest_attacker_obs, self.config.stopping_game_config)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, pi2))
-        self.latest_defender_obs = o[0]
-        attacker_obs = o[1]
+        self.latest_attacker_obs = o[1]
+        defender_obs = o[0]
 
-        return attacker_obs, r[1], d, info
+        return defender_obs, r[0], d, info
 
     def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -58,9 +55,9 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :return: initial observation
         """
         o = self.stopping_game_env.reset()
-        self.latest_defender_obs = o[0]
-        attacker_obs = o[1]
-        return attacker_obs
+        self.latest_attacker_obs = o[1]
+        defender_obs = o[0]
+        return defender_obs
 
     def render(self, mode: str = 'human'):
         """

@@ -1,16 +1,20 @@
 import gym
 import numpy as np
 from csle_common.util.experiment_util import ExperimentUtil
-from gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env import StoppingGameMdpAttackerEnv
+from gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
-from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
-def static_defender_strategy(obs: np.ndarray, config: StoppingGameConfig) -> int:
-    a1 = np.random.choice(np.arange(0, len(config.A1)),
-                          p=[1/len(config.A1)]*len(config.A1))
-    return a1
+def static_attacker_strategy(obs: np.ndarray, config: StoppingGameConfig) -> np.ndarray:
+    pi2 = np.zeros((3,2))
+    pi2[0][0] = np.random.rand()
+    pi2[0][1] = 1-pi2[0][0]
+    pi2[1][0] = np.random.rand()
+    pi2[1][1] = 1-pi2[1][0]
+    pi2[2] = pi2[1]
+    return pi2
 
 
 def test_env():
@@ -31,25 +35,21 @@ def test_env():
         Z=StoppingGameUtil.observation_tensor(num_observations),
         R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
         S = StoppingGameUtil.state_space())
-    config = StoppingGameAttackerMdpConfig(
+    config = StoppingGameDefenderPomdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        defender_strategy=static_defender_strategy)
+        attacker_strategy=static_attacker_strategy)
 
-    env = gym.make("csle-stopping-game-mdp-attacker-v1", config=config)
-    num_episodes = 50
+    env = gym.make("csle-stopping-game-pomdp-defender-v1", config=config)
+    num_episodes = 150
     ep = 1
     while ep < num_episodes:
         done = False
         o = env.reset()
         while not done:
-            pi2 = np.zeros((3,2))
-            pi2[0][0] = np.random.rand()
-            pi2[0][1] = 1-pi2[0][0]
-            pi2[1][0] = np.random.rand()
-            pi2[1][1] = 1-pi2[1][0]
-            pi2[2] = pi2[1]
-            o, r, done, info = env.step(pi2)
-            print(f"o_A:{list(o)}, r_A:{r}, done:{done}, info:{info}")
+            a1 = np.random.choice(np.arange(0, len(config.stopping_game_config.A1)),
+                                  p=[1/len(config.stopping_game_config.A1)]*len(config.stopping_game_config.A1))
+            o, r, done, info = env.step(a1)
+            print(f"o_D:{list(o)}, r_D:{r}, done:{done}, info:{info}")
         ep+=1
 
 if __name__ == '__main__':
