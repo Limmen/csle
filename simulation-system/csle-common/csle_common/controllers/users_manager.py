@@ -16,7 +16,7 @@ class UsersManager:
         :param emulation_config: the emulation configuration
         :return: None
         """
-        for users_conf in emulation_env_config.users_config.users:
+        for users_conf in emulation_env_config.users_config.users_configs:
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=users_conf.ip)
 
             cmd="ls /home"

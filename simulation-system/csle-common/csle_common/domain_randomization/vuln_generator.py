@@ -2,7 +2,7 @@ from typing import List
 import random
 import numpy as np
 import csle_common.constants.constants as constants
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
@@ -28,7 +28,7 @@ class VulnerabilityGenerator:
         return constants.VULNERABILITY_GENERATOR.NAMES_SHORTLIST
 
     @staticmethod
-    def generate(topology: Topology, vulnerable_nodes : List[NodeFirewallConfig], agent_ip : str,
+    def generate(topology: TopologyConfig, vulnerable_nodes : List[NodeFirewallConfig], agent_ip : str,
                  router_ip: str, subnet_prefix :str, num_flags,
                  access_vuln_types : List[VulnType]) -> VulnerabilitiesConfig:
         """
@@ -93,7 +93,7 @@ class VulnerabilityGenerator:
                     else:
                         raise ValueError("Unrecognized vulnerability type")
 
-        vulns_cfg = VulnerabilitiesConfig(vulnerabilities=vulnerabilities)
+        vulns_cfg = VulnerabilitiesConfig(node_vulnerability_configs=vulnerabilities)
         return vulns_cfg
 
     @staticmethod
@@ -186,7 +186,7 @@ class VulnerabilityGenerator:
         :param emulation_config: the emulation config
         :return: None
         """
-        vulnerabilities = emulation_env_config.vuln_config.vulnerabilities
+        vulnerabilities = emulation_env_config.vuln_config.node_vulnerability_configs
         for vuln in vulnerabilities:
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.ip)
             if vuln.vuln_type == VulnType.WEAK_PW or vuln.vuln_type == VulnType.SQL_INJECTION or \

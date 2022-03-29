@@ -57,7 +57,7 @@ class MetastoreFacade:
         emulation_config_json_str = json.dumps(emulation_record[2], indent=4, sort_keys=True)
         emulation_env_config: EmulationEnvConfig = jsonpickle.decode(emulation_config_json_str)
         emulation_env_config.vuln_config = VulnerabilitiesConfig.from_dict(emulation_env_config.vuln_config)
-        for vuln in emulation_env_config.vuln_config.vulnerabilities:
+        for vuln in emulation_env_config.vuln_config.node_vulnerability_configs:
             if isinstance(vuln.vuln_type, str):
                 pass
         return emulation_env_config

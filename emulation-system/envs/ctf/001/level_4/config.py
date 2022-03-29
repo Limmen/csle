@@ -3,7 +3,7 @@ import os
 import multiprocessing
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
@@ -249,7 +249,7 @@ def default_flags_config(network_id: int) -> FlagsConfig:
                             id=1, requires_root=True, score=1
                         )])
     ]
-    flags_config = FlagsConfig(flags=flags)
+    flags_config = FlagsConfig(node_flag_configs=flags)
     return flags_config
 
 
@@ -419,7 +419,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
     return resources_config
 
 
-def default_topology_config(network_id: int) -> Topology:
+def default_topology_config(network_id: int) -> TopologyConfig:
     """
     :param network_id: the network id
     :return: the Topology configuration
@@ -663,8 +663,8 @@ def default_topology_config(network_id: int) -> Topology:
         forward_accept=set(), output_drop=set(), input_drop=set(), forward_drop=set(),
         routes=set())
     node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7]
-    topology = Topology(node_configs=node_configs,
-                        subnetwork_masks=[
+    topology = TopologyConfig(node_configs=node_configs,
+                              subnetwork_masks=[
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                             f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
@@ -827,7 +827,7 @@ def default_users_config(network_id: int) -> UsersConfig:
             ("vagrant", "test_pw1", False)
         ])
     ]
-    users_conf = UsersConfig(users=users)
+    users_conf = UsersConfig(users_configs=users)
     return users_conf
 
 
@@ -882,7 +882,7 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
             root=True, port=constants.TELNET.DEFAULT_PORT, protocol=TransportProtocol.TCP,
             service=constants.TELNET.SERVICE_NAME)
     ]
-    vulns_config = VulnerabilitiesConfig(vulnerabilities=vulns)
+    vulns_config = VulnerabilitiesConfig(node_vulnerability_configs=vulns)
     return vulns_config
 
 

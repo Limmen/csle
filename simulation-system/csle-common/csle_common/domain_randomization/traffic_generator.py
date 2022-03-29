@@ -1,5 +1,5 @@
 from typing import List
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
@@ -12,7 +12,7 @@ class TrafficGenerator:
     """
 
     @staticmethod
-    def generate(topology: Topology, containers_config: ContainersConfig, agent_container_names : List[str],
+    def generate(topology: TopologyConfig, containers_config: ContainersConfig, agent_container_names : List[str],
                  router_container_names : List[str]) \
             -> TrafficConfig:
         """
@@ -73,7 +73,7 @@ class TrafficGenerator:
 
 
     @staticmethod
-    def _find_jumphosts(topology: Topology, ip: str) -> List[str]:
+    def _find_jumphosts(topology: TopologyConfig, ip: str) -> List[str]:
         """
         Utility method to find Ips in a topology that can reach a specific ip
 

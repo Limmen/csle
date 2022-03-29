@@ -1,6 +1,6 @@
-# `gym-csle-ctf`
+# `gym-csle-stopping-game`
 
-`gym-csle-ctf` is a reinforcement learning environment for automating the "first line of defense" against
+`gym-csle-stopping-game` is a reinforcement learning environment for automating the "first line of defense" against
 network intrusions. Specifically the environment focuses on reconnaissance, password vulnerabilities, 
 RCE vulnerabilities, 
 intrusion detection, and dictionary attacks. The environment provides a MDP (POMDP) or Markov Game interface for 
@@ -105,7 +105,7 @@ for i in range(10):
         env.reset()
 
 env.reset()
-env.close_all_connections()
+env.close()
 ```
 
 ## Manual Control

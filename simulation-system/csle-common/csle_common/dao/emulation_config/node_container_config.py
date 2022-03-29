@@ -58,3 +58,16 @@ class NodeContainerConfig:
         return f"name{self.name}, ips and networks: {self.ips_and_networks}, version: {self.version}, " \
                f"minigame:{self.minigame}, level:{self.level}, restart_policy: {self.restart_policy}, " \
                f"suffix:{self.suffix}, os:{self.os}"
+
+
+    def reachable(self, reachable_ips: List[str]) -> bool:
+        """
+        Check if container is reachable given a list of reachable ips
+
+        :param reachable_ips: the list of reachable ips
+        :return: True if the container is reachable, false otherwise
+        """
+        for ip in self.get_ips():
+            if ip in reachable_ips:
+                return True
+        return False

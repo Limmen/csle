@@ -1,5 +1,6 @@
-from csle_common.dao.network.emulation_env_state import EmulationEnvState
-from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
+from typing import Set
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 
 
 class SimulatorUtil:
@@ -8,21 +9,24 @@ class SimulatorUtil:
     """
 
     @staticmethod
-    def reachable_nodes(state: EmulationEnvState, env_config :EmulationEnvAgentConfig) -> bool:
+    def reachable_nodes(state: EmulationEnvState, emulation_env_config: EmulationEnvConfig) -> Set[str]:
         """
         Checks whether a give node in the network is reachable
 
         :param state: the current state
-        :param env_config: env_config
+        :param emulation_env_config: emulation env_config
         :return: True or False
         """
         reachable_nodes = set()
+        agent_reachable = emulation_env_config.containers_config.get_agent_reachable_ips()
         logged_in_machines = list(filter(lambda x: x.logged_in and x.tools_installed, state.attacker_obs_state.machines))
-        for node in env_config.network_conf.nodes:
-            if node.ips in env_config.network_conf.agent_reachable:
-                reachable_nodes.add(node.ips)
+        for c in emulation_env_config.containers_config.containers:
+            for ip in c.get_ips():
+                if ip in agent_reachable:
+                    reachable_nodes.add(ip)
             for machine in logged_in_machines:
-                if node.ips in machine.reachable:
-                    reachable_nodes.add(node.ips)
+                for ip in c.get_ips():
+                    if ip in machine.reachable:
+                        reachable_nodes.add(ip)
         return reachable_nodes
 

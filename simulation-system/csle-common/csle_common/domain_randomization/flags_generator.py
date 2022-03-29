@@ -24,7 +24,7 @@ class FlagsGenerator:
         :param num_flags: the number of flags
         :return: The created flags configuration
         """
-        vulnerabilities = vuln_cfg.vulnerabilities
+        vulnerabilities = vuln_cfg.node_vulnerability_configs
         random.shuffle(vulnerabilities)
         flag_cfgs = []
 
@@ -51,7 +51,7 @@ class FlagsGenerator:
             flag_cfg = NodeFlagsConfig(ip=vulnerabilities[i].ip, flags=flags)
             flag_cfgs.append(flag_cfg)
 
-        fl_cfg = FlagsConfig(flags = flag_cfgs)
+        fl_cfg = FlagsConfig(node_flag_configs= flag_cfgs)
 
         return fl_cfg
 

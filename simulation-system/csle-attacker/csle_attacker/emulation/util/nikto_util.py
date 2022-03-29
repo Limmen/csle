@@ -1,14 +1,14 @@
 from typing import Tuple
 import xml.etree.ElementTree as ET
-from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.network.emulation_env_state import EmulationEnvState
-from csle_common.envs_model.util.env_dynamics_util import EnvDynamicsUtil
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+from csle_common.util.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 import csle_common.constants.constants as constants
 from csle_common.dao.action_results.nikto_scan_result import NiktoScanResult
 from csle_common.dao.action_results.nikto_vuln import NiktoVuln
-from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
+from csle_common.util.emulation_util import EmulationUtil
 from csle_attacker.emulation.util.nmap_util import NmapUtil
 
 
@@ -18,47 +18,49 @@ class NiktoUtil:
     """
 
     @staticmethod
-    def parse_nikto_scan(file_name: str, env_config: EmulationEnvAgentConfig) -> ET.Element:
+    def parse_nikto_scan(file_name: str, emulation_env_config: EmulationEnvConfig) -> ET.Element:
         """
         Parses an XML file containing the result of an nikt scan
 
         :param file_name: name of the file to parse
-        :param env_config: environment config
+        :param emulation_env_config: environment config
         :return: the parsed xml file
         """
-        sftp_client = env_config.emulation_config.agent_conn.open_sftp()
+        sftp_client = emulation_env_config.get_hacker_connection().open_sftp()
         remote_file = sftp_client.open(constants.NMAP.RESULTS_DIR + file_name)
         try:
             xml_tree = ET.parse(remote_file)
         finally:
-            remote_file.close_all_connections()
+            remote_file.close()
         xml_data = xml_tree.getroot()
         return xml_data
 
     @staticmethod
-    def nikto_scan_action_helper(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
+    def nikto_scan_action_helper(s: EmulationEnvState, a: AttackerAction, emulation_env_config: EmulationEnvConfig) \
+            -> EmulationEnvState:
         """
         Helper function for executing a NIKTO web scan action on the emulation. Implements caching.
 
         :param s: the current env state
         :param a: the Nikto action to execute
-        :param env_config: the env config
+        :param emulation_env_config: the emulation env config
         :return: s', reward, done
         """
         cmds, file_names = a.nikto_cmds()
         outdata, errdata, total_time = EmulationUtil.execute_ssh_cmds(
-            cmds=cmds, conn=env_config.emulation_config.agent_conn)
-        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_config=env_config)
+            cmds=cmds, conn=emulation_env_config.get_hacker_connection())
+        EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
+                                               emulation_env_config=emulation_env_config)
 
         # Read result
         scan_result = NiktoScanResult(ip=a.ips[0], vulnerabilities=[], port=80, sitename=a.ips[0])
         for file_name in file_names:
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
                 try:
-                    xml_data = NiktoUtil.parse_nikto_scan(file_name=file_name, env_config=env_config)
+                    xml_data = NiktoUtil.parse_nikto_scan(file_name=file_name, emulation_env_config=emulation_env_config)
                     scan_result = NiktoUtil.parse_nikto_scan_xml(xml_data)
                     s = NiktoUtil.merge_nikto_scan_result_with_state(scan_result=scan_result, s=s, a=a,
-                                                                           env_config=env_config)
+                                                                     emulation_env_config=emulation_env_config)
                     break
                 except Exception as e:
                     break
@@ -67,13 +69,14 @@ class NiktoUtil:
 
     @staticmethod
     def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EmulationEnvState, a: AttackerAction,
-                                           env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
+                                           emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Merges a Nikto scan result with an existing observation state
 
         :param scan_result: the scan result
         :param s: the current state
         :param a: the action just executed
+        :param emulation_env_config: the emulation env config
         :return: s', reward, done
         """
         m_obs = None
@@ -86,10 +89,10 @@ class NiktoUtil:
             vuln_obs = vuln.to_obs()
             m_obs.osvdb_vulns.append(vuln_obs)
 
-        net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [m_obs],
-                                                             emulation_env_config=env_config, action=a)
+        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [m_obs],
+                                                             emulation_env_config=emulation_env_config, action=a)
         s_prime = s
-        s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
+        s_prime.attacker_obs_state.machines = attacker_machine_observations
 
         return s_prime
 

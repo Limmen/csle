@@ -1,16 +1,16 @@
 from typing import Tuple, List
 import time
 import random
-from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.network.emulation_env_state import EmulationEnvState
-from csle_common.envs_model.util.env_dynamics_util import EnvDynamicsUtil
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+from csle_common.util.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
 from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
 import csle_common.constants.constants as constants
-from csle_common.dao.network.credential import Credential
-from csle_common.envs_model.logic.emulation.util.emulation_util import EmulationUtil
-from csle_common.envs_model.logic.emulation.util.connection_util import ConnectionUtil
+from csle_common.dao.emulation_config.credential import Credential
+from csle_common.util.emulation_util import EmulationUtil
+from csle_common.util.connection_util import ConnectionUtil
 
 
 class ShellUtil:
@@ -19,14 +19,15 @@ class ShellUtil:
     """
 
     @staticmethod
-    def _find_flag_using_ssh(machine: AttackerMachineObservationState, env_config: EmulationEnvAgentConfig,
+    def _find_flag_using_ssh(machine: AttackerMachineObservationState,
+                             emulation_env_config: EmulationEnvConfig,
                              a: AttackerAction, new_m_obs: AttackerMachineObservationState) \
             -> Tuple[AttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing SSH connections to a specific machine to search the file system for flags
 
         :param machine: the machine to search
-        :param env_config: the env config
+        :param emulation_env_config: the emulation env config
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
         :return: the updated machine observation with the found flags, cost, root
@@ -46,14 +47,19 @@ class ShellUtil:
                 outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                 new_m_obs.filesystem_searched = True
                 EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                       emulation_env_config=env_config)
+                                                       emulation_env_config=emulation_env_config)
                 outdata_str = outdata.decode()
                 flag_paths = outdata_str.split("\n")
                 flag_paths = list(filter(lambda x: x != '', flag_paths))
                 num_flags = 0
                 for fp in flag_paths:
                     fp = fp.replace(".txt", "")
-                    if (machine.ips, fp) in env_config.flag_lookup:
+                    for node_flags_config in emulation_env_config.flags_config.node_flag_configs:
+                        if node_flags_config.ip in machine.ips:
+                            for flag in node_flags_config.flags:
+                                if flag.name == fp:
+                                    num_flags += 1
+                    if fp in emulation_env_config.flags_config.node_flag_configs:
                         num_flags += 1
                 if len(flag_paths) > 0 and num_flags > 0:
                     break
@@ -63,8 +69,11 @@ class ShellUtil:
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")
-                if (machine.ips, fp) in env_config.flag_lookup:
-                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ips, fp)])
+                for node_flags_config in emulation_env_config.flags_config.node_flag_configs:
+                    if node_flags_config.ip in machine.ips:
+                        for flag in node_flags_config.flags:
+                            if flag.name == fp:
+                                new_m_obs.flags_found.add(flag)
 
             if c.root:
                 root_scan = True
@@ -73,14 +82,14 @@ class ShellUtil:
 
     @staticmethod
     def _find_flag_using_telnet(machine: AttackerMachineObservationState,
-                                env_config: EmulationEnvAgentConfig, a: AttackerAction,
+                                emulation_env_config: EmulationEnvConfig, a: AttackerAction,
                                 new_m_obs: AttackerMachineObservationState) \
             -> Tuple[AttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing Telnet connections to a specific machine to search the file system for flags
 
         :param machine: the machine to search
-        :param env_config: the env config
+        :param emulation_env_config: the emulation env config
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
         :return: the updated machine observation with the found flags, cost, root
@@ -103,13 +112,16 @@ class ShellUtil:
             total_time = end - start
 
             EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                   emulation_env_config=env_config)
+                                                   emulation_env_config=emulation_env_config)
             flag_paths = response.decode().strip().split("\r\n")
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")
-                if (machine.ips, fp) in env_config.flag_lookup:
-                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ips, fp)])
+                for node_flags_config in emulation_env_config.flags_config.node_flag_configs:
+                    if node_flags_config.ip in machine.ips:
+                        for flag in node_flags_config.flags:
+                            if flag.name == fp:
+                                new_m_obs.flags_found.add(flag)
 
             if c.root:
                 root_scan = True
@@ -117,7 +129,7 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
-    def _find_flag_using_ftp(machine: AttackerMachineObservationState, env_config: EmulationEnvAgentConfig,
+    def _find_flag_using_ftp(machine: AttackerMachineObservationState, emulation_env_config: EmulationEnvConfig,
                              a: AttackerAction,
                              new_m_obs: AttackerMachineObservationState) \
             -> Tuple[AttackerMachineObservationState, float, bool]:
@@ -125,7 +137,7 @@ class ShellUtil:
         Utility function for using existing FTP connections to a specific machine to search the file system for flags
 
         :param machine: the machine to search
-        :param env_config: the env config
+        :param emulation_env_config: the emulation env config
         :param a: the action of finding the flags
         :param new_m_obs: the updated machine observation with the found flags
         :return: the updated machine observation with the found flags, cost, root
@@ -155,7 +167,7 @@ class ShellUtil:
                     while not c.interactive_shell.recv_ready():
                         if timeouts > constants.ENV_CONSTANTS.SHELL_MAX_TIMEOUTS:
                             print("max timeouts FTP, env:{}".format(
-                                env_config.emulation_env_config.containers_config.agent_ip))
+                                emulation_env_config.containers_config.agent_ip))
                             break
                         time.sleep(constants.ENV_CONSTANTS.SHELL_READ_WAIT)
                         timeouts += 1
@@ -169,7 +181,7 @@ class ShellUtil:
                             total_time = end - start
 
                             EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                                   emulation_env_config=env_config)
+                                                                   emulation_env_config=emulation_env_config)
                     else:
                         break
 
@@ -182,8 +194,11 @@ class ShellUtil:
                     # Check for flags
                     for fp in flag_paths:
                         fp = fp.replace(".txt", "")
-                        if (machine.ips, fp) in env_config.flag_lookup:
-                            ff = True
+                        for node_flags_config in emulation_env_config.flags_config.node_flag_configs:
+                            if node_flags_config.ip in machine.ips:
+                                for flag in node_flags_config.flags:
+                                    if flag.name == fp:
+                                        ff = True
                     if not ff:
                         continue
                     else:
@@ -193,8 +208,11 @@ class ShellUtil:
             # Check for flags
             for fp in flag_paths:
                 fp = fp.replace(".txt", "")
-                if (machine.ips, fp) in env_config.flag_lookup:
-                    new_m_obs.flags_found.add(env_config.flag_lookup[(machine.ips, fp)])
+                for node_flags_config in emulation_env_config.flags_config.node_flag_configs:
+                    if node_flags_config.ip in machine.ips:
+                        for flag in node_flags_config.flags:
+                            if flag.name == fp:
+                                new_m_obs.flags_found.add(flag)
 
             if c.root:
                 root_scan = True
@@ -202,15 +220,15 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
-    def parse_tools_installed_file(file_name: str, env_config: EmulationEnvAgentConfig) -> bool:
+    def parse_tools_installed_file(file_name: str, emulation_env_config: EmulationEnvConfig) -> bool:
         """
         Parses a file containing cached results of a install-tools action
 
         :param file_name: name of the file to parse
-        :param env_config: environment config
+        :param emulation_env_config: environment config
         :return: boolean: if installed or not
         """
-        sftp_client = env_config.emulation_config.agent_conn.open_sftp()
+        sftp_client = emulation_env_config.get_hacker_connection().open_sftp()
         remote_file = sftp_client.open(constants.NMAP.RESULTS_DIR + file_name)
         installed = False
         try:
@@ -218,7 +236,7 @@ class ShellUtil:
             data = data.decode()
             installed = bool(int(data))
         finally:
-            remote_file.close_all_connections()
+            remote_file.close()
         return installed
 
     @staticmethod
@@ -230,16 +248,18 @@ class ShellUtil:
         :return: True if sucessful otherwise False
         """
         return (
-                "will be installed" in result or "already installed" in result or "already the newest version" in result)
+                "will be installed" in result or "already installed" in result
+                or "already the newest version" in result)
 
     @staticmethod
-    def install_tools_helper(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
+    def install_tools_helper(s: EmulationEnvState, a: AttackerAction,
+                             emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Uses compromised machines with root access to install tools
 
         :param s: the current state
         :param a: the action to take
-        :param env_config: the environment configuration
+        :param emulation_env_config: the emulation environment configuration
         :return: s_prime
         """
         new_machines_obs = []
@@ -276,7 +296,7 @@ class ShellUtil:
                         ssh_cost += float(total_time)
 
                     EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                           emulation_env_config=env_config)
+                                                           emulation_env_config=emulation_env_config)
 
                     new_machines_obs.append(new_m_obs)
 
@@ -324,7 +344,7 @@ class ShellUtil:
                         telnet_cost += float(total_time)
 
                     EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                           emulation_env_config=env_config)
+                                                           emulation_env_config=emulation_env_config)
 
                     new_machines_obs.append(new_m_obs)
 
@@ -334,10 +354,10 @@ class ShellUtil:
                 new_m_obs.install_tools_tried = True
 
                 total_cost += telnet_cost
-        net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
-                                                             emulation_env_config=env_config, action=a)
+        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
+                                                             emulation_env_config=emulation_env_config, action=a)
         s_prime = s
-        s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
+        s_prime.attacker_obs_state.machines = attacker_machine_observations
 
         return s_prime
 
@@ -369,13 +389,14 @@ class ShellUtil:
 
 
     @staticmethod
-    def execute_ssh_backdoor_helper(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
+    def execute_ssh_backdoor_helper(s: EmulationEnvState, a: AttackerAction,
+                                    emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Uses compromised machines with root access to setup SSH backdoor
 
         :param s: the current state
         :param a: the action to take
-        :param env_config: the environment configuration
+        :param emulation_env_config: the emulation environment configuration
         :return: s_prime
         """
         username = constants.SSH_BACKDOOR.BACKDOOR_PREFIX + "_" + str(random.randint(0, 100000))
@@ -391,10 +412,9 @@ class ShellUtil:
                 for cr in s.attacker_cached_backdoor_credentials.values():
                     if (machine.ips, cr.username, cr.kafka_port) in s.attacker_cached_ssh_connections:
                         conn_dto = s.attacker_cached_ssh_connections[(machine.ips, cr.username, cr.kafka_port)]
-                        connection_dto = ConnectionObservationState(conn=conn_dto.conn, username=cr.username,
-                                                                    root=machine.root,
-                                                                    service=constants.SSH.SERVICE_NAME,
-                                                                    port=cr.kafka_port, ip=machine.ips)
+                        connection_dto = ConnectionObservationState(
+                            conn=conn_dto.conn, username=cr.username, root=machine.root,
+                            service=constants.SSH.SERVICE_NAME, port=cr.kafka_port, ip=machine.ips)
                         new_m_obs.shell_access_credentials.append(cr)
                         new_m_obs.backdoor_credentials.append(cr)
                         new_m_obs.ssh_connections.append(connection_dto)
@@ -411,7 +431,7 @@ class ShellUtil:
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     #try:
-                    users = EmulationUtil._list_all_users(c, emulation_env_config=env_config)
+                    users = EmulationUtil._list_all_users(c, emulation_env_config=emulation_env_config)
                     users = sorted(users, key=lambda x: x)
                     user_exists = False
                     for user in users:
@@ -441,7 +461,7 @@ class ShellUtil:
                     setup_connection_dto = None
                     for i in range(5):
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
-                            a=a, emulation_env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                            a=a, emulation_env_config=emulation_env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         ssh_cost += setup_connection_dto.total_time
                         if len(setup_connection_dto.target_connections) > 0:
                             break
@@ -476,7 +496,7 @@ class ShellUtil:
                 telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     try:
-                        users = EmulationUtil._list_all_users(c, emulation_env_config=env_config, telnet=True)
+                        users = EmulationUtil._list_all_users(c, emulation_env_config=emulation_env_config, telnet=True)
                         user_exists = False
                         for user in users:
                             if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user \
@@ -504,7 +524,7 @@ class ShellUtil:
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ips = machine.ips
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
-                            a=a, emulation_env_config=env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                            a=a, emulation_env_config=emulation_env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         telnet_cost += setup_connection_dto.total_time
                         connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
                                                                     username=credential.username,
@@ -523,45 +543,39 @@ class ShellUtil:
                         break
 
                 total_cost += telnet_cost
-        net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
-                                                             emulation_env_config=env_config, action=a)
+        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
+                                                             emulation_env_config=emulation_env_config, action=a)
         s_prime = s
-        s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
+        s_prime.attacker_obs_state.machines = attacker_machine_observations
 
         return s_prime
 
     @staticmethod
-    def execute_service_login_helper(s: EmulationEnvState, a: AttackerAction, env_config: EmulationEnvAgentConfig) -> EmulationEnvState:
+    def execute_service_login_helper(s: EmulationEnvState, a: AttackerAction,
+                                     emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Executes a service login on the emulation using previously found credentials
 
         :param s: the current state
         :param a: the action to take
-        :param env_config: the environment configuration
+        :param emulation_env_config: the emulation environment configuration
         :return: s_prime, reward, done
         """
         s_prime = s
-        new_conn = False
 
         for machine in s.attacker_obs_state.machines:
             a.ips = machine.ips
-            s_1, net_out_1, new_conn_ssh = ConnectionUtil.login_service_helper(
+            s_1, new_conn_ssh = ConnectionUtil.login_service_helper(
                 s=s_prime, a=a, alive_check=EmulationEnvConfig.check_if_ssh_connection_is_alive,
-                service_name=constants.SSH.SERVICE_NAME, emulation_env_config=env_config)
-            s_2, net_out_2, new_conn_ftp = ConnectionUtil.login_service_helper(
+                service_name=constants.SSH.SERVICE_NAME, emulation_env_config=emulation_env_config)
+            s_2, new_conn_ftp = ConnectionUtil.login_service_helper(
                 s=s_1, a=a, alive_check=EnvDynamicsUtil.check_if_ftp_connection_is_alive,
-                service_name=constants.FTP.SERVICE_NAME, emulation_env_config=env_config)
-            s_3, net_out_3, new_conn_telnet = ConnectionUtil.login_service_helper(
+                service_name=constants.FTP.SERVICE_NAME, emulation_env_config=emulation_env_config)
+            s_3, new_conn_telnet = ConnectionUtil.login_service_helper(
                 s=s_2, a=a, alive_check=EnvDynamicsUtil.check_if_telnet_connection_is_alive,
-                service_name=constants.TELNET.SERVICE_NAME, emulation_env_config=env_config)
-
-            net_out_merged = net_out_1
-            net_out_merged.update_counts(net_out_2)
-            net_out_merged.update_counts(net_out_3)
+                service_name=constants.TELNET.SERVICE_NAME, emulation_env_config=emulation_env_config)
 
             s_prime = s_3
-            if new_conn_ssh or new_conn_ftp or new_conn_telnet:
-                new_conn = True
 
             for m in s_prime.attacker_obs_state.machines:
                 if m.ips == a.ips:

@@ -1,7 +1,5 @@
-from typing import Tuple
-import time
-from csle_common.dao.network.emulation_env_state import EmulationEnvState
-from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 
 
@@ -12,13 +10,13 @@ class AttackerStoppingMiddleware:
 
     @staticmethod
     def stop_intrusion(s: EmulationEnvState, a: AttackerAction,
-                       emulation_env_agent_config: EmulationEnvAgentConfig) -> EmulationEnvState:
+                       emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a stopping action for the attacker
 
         :param s: the current state
         :param a: the action to take
-        :param emulation_env_agent_config: the environment configuration
+        :param emulation_env_config: the emulation environment configuration
         :return: s_prime
         """
         raise NotImplemented("Not Implemented yet")
@@ -26,13 +24,13 @@ class AttackerStoppingMiddleware:
 
     @staticmethod
     def continue_intrusion(s: EmulationEnvState, a: AttackerAction,
-                           emulation_env_agent_config: EmulationEnvAgentConfig) -> EmulationEnvState:
+                           emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a "continue" action for the attacker (does nothing)
 
         :param s: the current state
         :param a: the action to take
-        :param emulation_env_agent_config: the environment configuration
+        :param emulation_env_config: the emulation environment configuration
         :return: s_prime, reward, done
         """
         return s

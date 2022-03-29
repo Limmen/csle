@@ -2,9 +2,9 @@ from typing import List
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 
 
-class Topology:
+class TopologyConfig:
     """
-    A DTO representing the topology of an emulation environment
+    A DTO representing the topology configuration of an emulation environment
     """
 
     def __init__(self, node_configs: List[NodeFirewallConfig], subnetwork_masks: List[str]):
@@ -32,3 +32,4 @@ class Topology:
         """
         return "node configs:{}, subnetwork_masks:{}".format(",".join(list(map(lambda x: str(x), self.node_configs))),
                                                        ",".join(self.subnetwork_masks))
+

@@ -6,7 +6,7 @@ from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
@@ -20,7 +20,7 @@ class EmulationEnvConfig:
 
     def __init__(self, name: str, containers_config: ContainersConfig, users_config: UsersConfig,
                  flags_config: FlagsConfig,
-                 vuln_config: VulnerabilitiesConfig, topology_config: Topology, traffic_config: TrafficConfig,
+                 vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
                  resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig):
         """
         Initializes the object
@@ -151,6 +151,17 @@ class EmulationEnvConfig:
         """
         self.get_port_forward_port+=1
         return self.get_port_forward_port()
+
+    def ids(self) -> bool:
+        """
+        Check if the configuration includes an IDS
+
+        :return: True if it includes an IDS, otherwise False
+        """
+        for c in self.containers_config.containers:
+            if c.name in constants.CONTAINER_IMAGES.IDS_IMAGES:
+                return True
+        return False
 
     def __str__(self) -> str:
         """

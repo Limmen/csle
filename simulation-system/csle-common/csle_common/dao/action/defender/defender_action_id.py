@@ -7,9 +7,6 @@ class DefenderActionId(IntEnum):
     """
     STOP = 0
     CONTINUE = 1
-    UPDATE_STATE = 2
-    INITIALIZE_STATE = 3
-    RESET_STATE = 4
-    RESET_USERS = 5
-    ENABLE_DPI = 6
-    BLACKLIST_IPS = 7
+    RESET_USERS = 2
+    ENABLE_DPI = 3
+    BLACKLIST_IPS = 4

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
@@ -52,3 +52,36 @@ class ContainersConfig:
                f"router_ip:{self.router_ip}" \
                f"ids_enabled:{self.ids_enabled},vulnerable_nodes:{self.vulnerable_nodes}, " \
                f"agent_reachable_nodes: {self.agent_reachable_nodes}"
+
+    def get_reachable_ips(self, container: NodeContainerConfig) -> List[str]:
+        """
+        Get list of IP addresses reachable from a given container
+
+        :param container: the container to get reachable IPs from
+        :return:
+        """
+        reachable_ips = []
+        for c in self.containers:
+            for ip_net in c.ips_and_networks:
+                ip, net = ip_net
+                for container_ip_net in container.ips_and_networks:
+                    container_ip, container_net = container_ip_net
+                    if net.name == container_net.name:
+                        reachable_ips.append(ip)
+        return reachable_ips
+
+    def get_agent_container(self) -> Union[NodeContainerConfig, None]:
+        """
+        :return: get container of the attacker agent
+        """
+        for container in self.containers:
+            if self.agent_ip in container.get_ips():
+                return container
+        return None
+
+    def get_agent_reachable_ips(self) -> List[str]:
+        """
+        :return: list of ips reachable for the attacker agent
+        """
+        agent_container = self.get_agent_container()
+        return self.get_reachable_ips(container=agent_container)

@@ -1,6 +1,6 @@
 from typing import List
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
-
+from csle_common.dao.emulation_config.network_service import NetworkService
 
 class ServicesConfig:
     """
@@ -39,3 +39,16 @@ class ServicesConfig:
         :return: a string representation of the object
         """
         return "services_configs:{}".format(",".join(list(map(lambda x: str(x), self.services_configs))))
+
+    def get_services_for_ips(self, ips: List[str]) -> List[NetworkService]:
+        """
+        Gets all services for a list ip addresses
+
+        :param ips: the list of ips
+        :return: the list of services
+        """
+        services = []
+        for service_config in self.services_configs:
+            if service_config.ip in ips:
+                services = services + service_config.services
+        return services

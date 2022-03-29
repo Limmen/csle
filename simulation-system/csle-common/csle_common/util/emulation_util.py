@@ -207,7 +207,7 @@ class EmulationUtil:
         except Exception as e:
             print("exception writing file:{}".format(str(e)))
         finally:
-            remote_file.close_all_connections()
+            remote_file.close()
 
 
     @staticmethod
@@ -231,3 +231,42 @@ class EmulationUtil:
         :return: None
         """
         emulation_env_config.close_all_connections()
+
+    @staticmethod
+    def execute_cmd_interactive_channel(cmd: str, channel) -> None:
+        """
+        Executes an action on the emulation using an interactive shell (non synchronous)
+        :param a: action to execute
+        :param env_config: environment config
+        :param channel: the channel to use
+        :return: None
+        """
+        channel.send(cmd + "\n")
+
+    @staticmethod
+    def read_result_interactive(emulation_env_config: EmulationEnvConfig, channel) -> str:
+        """
+        Reads the result of an action executed in interactive mode
+
+        :param emulation_env_config: the emulation environment config
+        :param the channel
+        :return: the result
+        """
+        return EmulationUtil.read_result_interactive_channel(
+            emulation_env_config=emulation_env_config,
+            channel=channel)
+
+    @staticmethod
+    def read_result_interactive_channel(emulation_env_config: EmulationEnvConfig, channel) -> str:
+        """
+        Reads the result of an action executed in interactive mode
+        :param emulation_env_config: the emulation environment config
+        :param channel: the channel to use
+        :return: the result
+        """
+        while not channel.recv_ready():
+            time.sleep(constants.ENV_CONSTANTS.SHELL_READ_WAIT)
+        output = channel.recv(constants.COMMON.LARGE_RECV_SIZE)
+        output_str = output.decode("utf-8")
+        output_str = constants.NMAP.SHELL_ESCAPE.sub("", output_str)
+        return output_str

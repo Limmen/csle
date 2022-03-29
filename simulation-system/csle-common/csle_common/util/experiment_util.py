@@ -12,7 +12,7 @@ import sys
 import numpy as np
 import random
 import scipy.stats
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
@@ -114,7 +114,7 @@ class ExperimentsUtil:
         return logger
 
     @staticmethod
-    def write_topology_file(topology: Topology, path: str) -> None:
+    def write_topology_file(topology: TopologyConfig, path: str) -> None:
         """
         Writes a config object to a config file
 
@@ -234,7 +234,7 @@ class ExperimentsUtil:
             f.write(json_str)
 
     @staticmethod
-    def read_topology(topology_path) -> Topology:
+    def read_topology(topology_path) -> TopologyConfig:
         """
         Reads topology from a json file
 
@@ -243,7 +243,7 @@ class ExperimentsUtil:
         """
         with io.open(topology_path, 'r', encoding='utf-8') as f:
             json_str = f.read()
-        topology: Topology = jsonpickle.decode(json_str)
+        topology: TopologyConfig = jsonpickle.decode(json_str)
         return topology
 
     @staticmethod

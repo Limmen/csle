@@ -2,7 +2,7 @@ from typing import List, Tuple
 import random
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
@@ -15,7 +15,7 @@ class ContainerGenerator:
     """
 
     @staticmethod
-    def generate(topology: Topology, vuln_cfg : VulnerabilitiesConfig,
+    def generate(topology: TopologyConfig, vuln_cfg : VulnerabilitiesConfig,
                  vulnerable_nodes : List[NodeFirewallConfig], container_pool: List[Tuple[str, str]],
                  gw_vuln_compatible_containers: List[Tuple[str, str]],
                  pw_vuln_compatible_containers: List[Tuple[str, str]], subnet_id: int, num_flags: int,
@@ -45,7 +45,7 @@ class ContainerGenerator:
         level = "random_n" + str(len(topology.node_configs)) + "_f" + str(num_flags) \
                 + "_rid_" + str(random.randint(0, 100000))
         container_configs = []
-        vulnerabilities = vuln_cfg.vulnerabilities
+        vulnerabilities = vuln_cfg.node_vulnerability_configs
         ids_enabled = True
 
         networks = []

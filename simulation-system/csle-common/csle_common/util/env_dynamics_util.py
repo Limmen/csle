@@ -480,7 +480,7 @@ class EnvDynamicsUtil:
         :return: True if all flags are collected otherwise false
         """
         total_flags = set()
-        for flag in emulation_env_config.flags_config.flags:
+        for flag in emulation_env_config.flags_config.node_flag_configs:
             total_flags.add(flag)
         found_flags = set()
         for node in s.attacker_obs_state.machines:

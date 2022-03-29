@@ -35,8 +35,8 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
                         break
                     self.request.send(data)
 
-            chan.close_all_connections()
-            self.request.close_all_connections()
+            chan.close()
+            self.request.close()
         except Exception as e:
             if "Transport endpoint" not in str(e):
                 print(str(e))

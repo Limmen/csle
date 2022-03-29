@@ -24,7 +24,7 @@ from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 import csle_common.constants.constants as constants
 
 
-class EnvConfigGenerator:
+class EmulationEnvConfigGenerator:
     """
     A Utility Class for generating emulation environments from given configurations
     """
@@ -45,7 +45,7 @@ class EnvConfigGenerator:
         for i in range(num_envs):
             container_env_config_c = container_env_config.copy()
             em_name = f"{name}_{start_idx + i}"
-            created_emulation=  EnvConfigGenerator.create_env(container_env_config_c, name=em_name)
+            created_emulation=  EmulationEnvConfigGenerator.create_env(container_env_config_c, name=em_name)
             created_emulations.append(created_emulation)
         return created_emulations
 
@@ -214,7 +214,7 @@ class EnvConfigGenerator:
                     f.write(makefile_str)
 
         if create_folder_makefile:
-            EnvConfigGenerator.create_makefile(container_names, path=path)
+            EmulationEnvConfigGenerator.create_makefile(container_names, path=path)
 
     @staticmethod
     def create_makefile(container_names, path: str = None) -> None:
@@ -316,7 +316,7 @@ class EnvConfigGenerator:
         """
         if path == None:
             path = ExperimentsUtil.default_output_dir()
-        env_dirs = EnvConfigGenerator.get_env_dirs(path)
+        env_dirs = EmulationEnvConfigGenerator.get_env_dirs(path)
         containers_configs = []
         for d in env_dirs:
             containers_configs.append(ExperimentsUtil.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH))
@@ -371,11 +371,11 @@ class EnvConfigGenerator:
         container_dirs_path = path + emulation_env_config.name + constants.COMMANDS.SLASH_DELIM + \
                               constants.DOCKER.CONTAINERS_DIR
         if not os.path.exists(container_dirs_path):
-            EnvConfigGenerator.create_container_dirs(emulation_env_config.containers_config,
-                                                     resources_config=emulation_env_config.resources_config,
-                                                     path=path + emulation_env_config.name,
-                                                     create_folder_makefile=create_folder_makefile,
-                                                     emulation_name=emulation_env_config.name)
+            EmulationEnvConfigGenerator.create_container_dirs(emulation_env_config.containers_config,
+                                                              resources_config=emulation_env_config.resources_config,
+                                                              path=path + emulation_env_config.name,
+                                                              create_folder_makefile=create_folder_makefile,
+                                                              emulation_name=emulation_env_config.name)
 
 
     @staticmethod
@@ -401,7 +401,7 @@ class EnvConfigGenerator:
         :return: The configuration of the created emulation
         """
         emulations = MetastoreFacade.list_emulations()
-        available_network_ids = EnvConfigGenerator.get_free_network_ids(emulations=emulations)
+        available_network_ids = EmulationEnvConfigGenerator.get_free_network_ids(emulations=emulations)
         container_env_config.subnet_id = available_network_ids[random.randint(0, len(available_network_ids) - 1)]
         container_env_config.num_nodes = random.randint(container_env_config.min_num_nodes,
                                                         container_env_config.max_num_nodes)
@@ -411,7 +411,7 @@ class EnvConfigGenerator:
                                                             container_env_config.num_nodes - 3))
         container_env_config.num_users = random.randint(container_env_config.min_num_users,
                                                         container_env_config.max_num_users)
-        emulation_env_config = EnvConfigGenerator.generate(container_env_config, name=name)
+        emulation_env_config = EmulationEnvConfigGenerator.generate(container_env_config, name=name)
         EmulationEnvManager.install_emulation(config=emulation_env_config)
         return emulation_env_config
 

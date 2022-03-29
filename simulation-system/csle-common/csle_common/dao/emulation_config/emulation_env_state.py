@@ -1,4 +1,5 @@
 from typing import Union
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.observation.attacker.attacker_observation_state import AttackerObservationState
 from csle_common.dao.observation.defender.defender_observation_state import DefenderObservationState
@@ -14,27 +15,28 @@ class EmulationEnvState:
     including both the attacker's and the defender's states.
     """
 
-    def __init__(self, emulation_env_config : EmulationEnvConfig, attacker_agent_config: AttackerActionConfig,
-                 defender_action_config: DefenderActionConfig,
-                 vuln_lookup: dict = None, service_lookup: dict = None, os_lookup: dict = None):
+    def __init__(self, emulation_env_config : EmulationEnvConfig):
         """
         Initializes the state
 
         :param emulation_env_config: the environment configuration
-        :param vuln_lookup: the vulnerability lookup dict
-        :param service_lookup: the service lookup dict
-        :param attacker_agent_config: the configuration of the attacker agent
+        :param attacker_action_config: the configuration of the attacker agent
         :param defender_agent_config: the configuration of the defender agent
-        :param os_lookup: the operating system lookup dict
         """
-        self.attacker_agent_config = attacker_agent_config
-        self.defender_agent_config = defender_action_config
         self.emulation_env_config = emulation_env_config
-        self.vuln_lookup = vuln_lookup
+        self.attacker_action_config=AttackerActionConfig.all_actions_config(
+            num_nodes=len(self.emulation_env_config.containers_config.containers),
+            subnet_masks= self.emulation_env_config.topology_config.subnetwork_masks,
+            hacker_ip=self.emulation_env_config.containers_config.agent_ip),
+        self.defender_action_config=DefenderActionConfig.all_actions_config(
+            num_nodes=len(self.emulation_env_config.containers_config.containers),
+            subnet_masks=self.emulation_env_config.topology_config.subnetwork_masks
+        )
+        self.vuln_lookup = constants.VULNERABILITIES.vuln_lookup
         self.vuln_lookup_inv = {v: k for k, v in self.vuln_lookup.items()}
-        self.service_lookup = service_lookup
+        self.service_lookup = constants.SERVICES.service_lookup
         self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}
-        self.os_lookup = os_lookup
+        self.os_lookup = constants.OS.os_lookup
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
         self.attacker_obs_state : Union[AttackerObservationState, None] = None
         self.defender_obs_state : Union[DefenderObservationState, None] = None
@@ -128,10 +130,8 @@ class EmulationEnvState:
         :return: a copy of the env state
         """
         copy = EmulationEnvState(emulation_env_config=self.emulation_env_config,
-                                 vuln_lookup=self.vuln_lookup,
-                                 service_lookup=self.service_lookup, os_lookup=self.os_lookup,
-                                 attacker_agent_config=self.attacker_agent_config,
-                                 defender_action_config=self.defender_agent_config)
+                                 attacker_action_config=self.attacker_action_config,
+                                 defender_action_config=self.defender_action_config)
         copy.attacker_obs_state = self.attacker_obs_state.copy()
         copy.defender_obs_state = self.defender_obs_state.copy()
         return copy

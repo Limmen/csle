@@ -4,7 +4,7 @@ from random_username.generate import generate_username
 import secrets
 import string
 import csle_common.constants.constants as constants
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
 from csle_common.domain_randomization.topology_generator import TopologyGenerator
@@ -17,7 +17,7 @@ class UsersGenerator:
     """
 
     @staticmethod
-    def generate(max_num_users: int, topology: Topology, agent_ip: str):
+    def generate(max_num_users: int, topology: TopologyConfig, agent_ip: str):
         """
         Generates a random user configuration for an emulation environment
 
@@ -45,7 +45,7 @@ class UsersGenerator:
         agent_user_cfg = NodeUsersConfig(ip=agent_ip, users=[agent_user])
         user_configs.append(agent_user_cfg)
 
-        users_conf = UsersConfig(users=user_configs)
+        users_conf = UsersConfig(users_configs=user_configs)
         return users_conf
 
     @staticmethod

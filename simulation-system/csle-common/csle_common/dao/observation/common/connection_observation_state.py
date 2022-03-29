@@ -73,13 +73,13 @@ class ConnectionObservationState:
             self.tunnel_thread = None
         if self.interactive_shell is not None:
             try:
-                self.interactive_shell.close_all_connections()
+                self.interactive_shell.close()
             except Exception:
                 pass
             self.interactive_shell = None
         if self.conn is not None:
             try:
-                self.conn.close_all_connections()
+                self.conn.close()
             except Exception:
                 pass
             self.conn = None

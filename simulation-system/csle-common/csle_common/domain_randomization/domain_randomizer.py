@@ -5,7 +5,7 @@ from csle_common.dao.domain_randomization.randomization_space_config import Rand
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 
 
-class CSLEDomainRandomizer(ABC):
+class DomainRandomizer(ABC):
 
 
     @staticmethod

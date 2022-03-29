@@ -5,14 +5,12 @@ import pyperclip
 import os
 import pyglet
 import csle_common.constants.constants as constants
-from csle_common.dao.network.env_mode import EnvMode
 from csle_common.rendering.util.render_util import batch_rect_fill, batch_line, batch_label, \
     create_circle_fill, batch_rect_border
 from csle_common.rendering.frames.csle_base_frame import CSLEBaseFrame
-from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.observation.attacker.attacker_observation_state import AttackerMachineObservationState
-from gym_csle_ctf.dao.agent.attacker_render_state import AttackerRenderState
-from gym_csle_ctf.envs import CSLECTFEnv
+#from gym_csle_stopping_game.envs import CSLESt
 
 
 class MainFrame(CSLEBaseFrame):

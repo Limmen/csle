@@ -3,13 +3,10 @@ import pickle
 from abc import ABCMeta
 import numpy as np
 import os
-import sys
 import csle_common.constants.constants as constants
-import csle_common.envs_model.logic.common.util as util
-from csle_common.dao.network.env_mode import EnvMode
 from csle_common.dao.envs.base_env import BaseEnv
-from csle_common.dao.network.emulation_env_agent_config import EmulationEnvAgentConfig
-from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.action.attacker.attacker_action import AttackerAction
 from gym_csle_stopping_game.util.env_util import EnvUtil
 
@@ -19,26 +16,24 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
     Abstract OpenAI Gym Env for the csle CTF minigame
     """
 
-    def __init__(self, env_config : EmulationEnvAgentConfig):
-        self.env_config = env_config
-        if util.is_network_conf_incomplete(env_config.network_conf) and self.env_config.env_mode == EnvMode.SIMULATION:
-            raise ValueError("Must provide a simulation model to run in simulation mode")
+    def __init__(self, emulation_env_config : EmulationEnvConfig):
+        self.emulation_env_config = emulation_env_config
 
         # Initialize environment state
-        self.env_state = EmulationEnvState(env_config=self.env_config,
+        self.env_state = EmulationEnvState(emulation_env_config=self.emulation_env_config,
                                            service_lookup=constants.SERVICES.service_lookup,
                                            vuln_lookup=constants.VULNERABILITIES.vuln_lookup,
                                            os_lookup=constants.OS.os_lookup)
 
         # Setup Attacker Spaces
         self.attacker_observation_space = self.env_state.attacker_observation_space
-        self.attacker_action_space = self.env_config.attacker_action_conf.action_space
-        self.attacker_num_actions = self.env_config.attacker_action_conf.num_actions
+        self.attacker_action_space = self.emulation_env_config.attacker_action_conf.action_space
+        self.attacker_num_actions = self.emulation_env_config.attacker_action_conf.num_actions
 
         # Setup Defender Spaces
         self.defender_observation_space = self.env_state.defender_observation_space
-        self.defender_action_space = self.env_config.defender_action_conf.action_space
-        self.defender_num_actions = self.env_config.defender_action_conf.num_actions
+        self.defender_action_space = self.emulation_env_config.defender_action_conf.action_space
+        self.defender_num_actions = self.emulation_env_config.defender_action_conf.num_actions
 
         # Setup Config
         self.viewer = None
@@ -153,7 +148,7 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
         :return: None
         """
         if self.viewer:
-            self.viewer.close_all_connections()
+            self.viewer.close()
             self.viewer = None
 
     def cleanup(self) -> None:
@@ -164,8 +159,8 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
         :return: None
         """
         self.env_state.cleanup()
-        if self.env_config.emulation_config is not None:
-            self.env_config.emulation_config.close_all_connections()
+        if self.emulation_env_config.emulation_config is not None:
+            self.emulation_env_config.emulation_config.close_all_connections()
 
     def attacker_convert_ar_action(self, machine_idx, action_idx):
         """
@@ -176,8 +171,8 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
         :return: the global action id
         """
         key = (machine_idx, action_idx)
-        print(self.env_config.attacker_action_conf.ar_action_converter)
-        return self.env_config.attacker_action_conf.ar_action_converter[key]
+        print(self.emulation_env_config.attacker_action_conf.ar_action_converter)
+        return self.emulation_env_config.attacker_action_conf.ar_action_converter[key]
 
     # -------- Private methods ------------
 
@@ -207,8 +202,8 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
         from csle_common.rendering.viewer import Viewer
         script_dir = os.path.dirname(__file__)
         resource_path = os.path.join(script_dir, './rendering/frames/', constants.RENDERING.RESOURCES_DIR)
-        self.env_config.render_config.resources_dir = resource_path
-        self.viewer = Viewer(env_config=self.env_config, init_state=self.attacker_render_state)
+        self.emulation_env_config.render_config.resources_dir = resource_path
+        self.viewer = Viewer(env_config=self.emulation_env_config, init_state=self.attacker_render_state)
         self.viewer.start()
 
     def __checkpoint_log(self) -> None:
@@ -217,9 +212,9 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
 
         :return: None
         """
-        if not self.env_config.checkpoint_dir == None \
-                and self.attacker_render_state.num_episodes % self.env_config.checkpoint_freq == 0:
-            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.attacker_render_state.num_episodes) + "_agent.log"
+        if not self.emulation_env_config.checkpoint_dir == None \
+                and self.attacker_render_state.num_episodes % self.emulation_env_config.checkpoint_freq == 0:
+            file_path = self.emulation_env_config.checkpoint_dir + "/ep_" + str(self.attacker_render_state.num_episodes) + "_agent.log"
             with open(file_path, "w") as outfile:
                 outfile.write("\n".join(self.attacker_render_state.env_log.log))
 
@@ -229,9 +224,9 @@ class StoppingGameEnv(BaseEnv, metaclass=ABCMeta):
 
         :return: None
         """
-        if self.env_config.save_trajectories and not self.env_config.checkpoint_dir == None \
-                and self.attacker_render_state.num_episodes % self.env_config.checkpoint_freq == 0:
-            file_path = self.env_config.checkpoint_dir + "/ep_" + str(self.attacker_render_state.num_episodes) \
+        if self.emulation_env_config.save_trajectories and not self.emulation_env_config.checkpoint_dir == None \
+                and self.attacker_render_state.num_episodes % self.emulation_env_config.checkpoint_freq == 0:
+            file_path = self.emulation_env_config.checkpoint_dir + "/ep_" + str(self.attacker_render_state.num_episodes) \
                         + "_trajectories.pickle"
             with open(file_path, "wb") as outfile:
                 pickle.dump(self.attacker_trajectories, outfile, protocol=pickle.HIGHEST_PROTOCOL)

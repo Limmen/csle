@@ -10,21 +10,22 @@ from typing import List, Tuple, Union
 import click
 import os
 import readline # for history in shells
-from csle_common.envs_model.config.generator.container_manager import ContainerManager
-from csle_common.envs_model.config.generator.traffic_generator import TrafficGenerator
-from csle_common.envs_model.config.generator.ids_manager import IDSManager
-from csle_common.envs_model.config.generator.log_sink_manager import LogSinkManager
-from csle_common.envs_model.config.generator.host_manager import HostManager
-from csle_common.envs_model.config.generator.metastore_facade import MetastoreFacade
+from csle_common.controllers.container_manager import ContainerManager
+from csle_common.controllers.traffic_manager import TrafficManager
+from csle_common.controllers.ids_manager import IDSManager
+from csle_common.controllers.log_sink_manager import LogSinkManager
+from csle_common.controllers.host_manager import HostManager
+from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.envs_model.config.generator.env_config_generator import EnvConfigGenerator
+from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
 from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
-from csle_common.util.experiments_util import util
+from csle_common.util.experiment_util import ExperimentsUtil
 import csle_common.constants.constants as constants
 import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 from csle_attacker.attacker import Attacker
-from csle_common.dao.network.emulation_env_state import EmulationEnvState
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 
 
 @click.group()
@@ -54,7 +55,7 @@ def attacker_shell(s: EmulationEnvState) -> None:
                   "press H to print the history of actions")
         elif raw_input == "A":
             print("Attacker actions:")
-            for i, a in enumerate(s.emulation_env_config.attacker_action_conf.actions):
+            for i, a in enumerate(s.attacker_action_config.actions):
                 print(f"idx:{i}, a:{a}")
         elif raw_input == "S":
             print(s)
@@ -66,7 +67,7 @@ def attacker_shell(s: EmulationEnvState) -> None:
         else:
             # try:
             attacker_action_idx = int(raw_input)
-            attacker_action = s.emulation_env_config.attacker_action_conf.actions[attacker_action_idx]
+            attacker_action = s.attacker_action_config.actions[attacker_action_idx]
             s = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
             # except Exception as e:
             #     print("There was an error parsing the input, please enter an integer representing an attacker action")
@@ -83,7 +84,7 @@ def attacker(emulation : str) -> None:
     """
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
-        s = EmulationEnvState.from_emulation_env_config(emulation_env_config=emulation_env_config)
+        s = EmulationEnvState(emulation_env_config=emulation_env_config)
         attacker_shell(s=s)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
@@ -111,7 +112,7 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
         if clients:
-            clients_dto = TrafficGenerator.get_num_active_clients(emulation_env_config=emulation_env_config)
+            clients_dto = TrafficManager.get_num_active_clients(emulation_env_config=emulation_env_config)
             click.secho(f"Client population status for: {emulation}", fg="magenta", bold=True)
             click.secho(f"Active clients: {clients_dto.num_clients}", bold=False)
             if clients_dto.client_process_active:
@@ -189,7 +190,7 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
             emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds = t
         if nc is not None:
             emulation_env_config.traffic_config.client_population_config.num_commands = nc
-        EnvConfigGenerator.start_custom_traffic(emulation_env_config=emulation_env_config)
+        EmulationEnvManager.start_custom_traffic(emulation_env_config=emulation_env_config)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
@@ -204,7 +205,7 @@ def stop_traffic(emulation : str) -> None:
     """
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
-        EnvConfigGenerator.stop_custom_traffic(emulation_env_config=emulation_env_config)
+        EmulationEnvManager.stop_custom_traffic(emulation_env_config=emulation_env_config)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
@@ -284,11 +285,11 @@ def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int
         priv_esc_vuln_compatible_containers=constants.CONTAINER_POOLS.PRIV_ESC_CONTAINERS,
         agent_containers=constants.CONTAINER_POOLS.AGENT_CONTAINERS,
         router_containers=constants.CONTAINER_POOLS.ROUTER_CONTAINERS,
-        path=util.default_output_dir(), subnet_id_blacklist=set(),
+        path=ExperimentsUtil.default_output_dir(), subnet_id_blacklist=set(),
         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}", min_cpus=min_cpus, max_cpus=max_cpus,
         min_mem_G=min_mem, max_mem_G=max_mem
     )
-    created_emulations = EnvConfigGenerator.generate_envs(container_env_config, name=name, num_envs=num_envs)
+    created_emulations = EmulationEnvConfigGenerator.generate_envs(container_env_config, name=name, num_envs=num_envs)
     for em in created_emulations:
         click.secho(f"Successfully created emulation with name: {em.name} and configuration:",
                     fg="green", bold=True)
@@ -304,8 +305,8 @@ def run_emulation(emulation_env_config: EmulationEnvConfig, no_traffic: bool) ->
     :return: None
     """
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
-    EnvConfigGenerator.run_containers(emulation_env_config=emulation_env_config)
-    EnvConfigGenerator.apply_emulation_env_config(emulation_env_config=emulation_env_config, no_traffic=no_traffic)
+    EmulationEnvManager.run_containers(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.apply_emulation_env_config(emulation_env_config=emulation_env_config, no_traffic=no_traffic)
 
 
 def separate_running_and_stopped_emulations(emulations : List[EmulationEnvConfig]) -> Tuple[List[str], List[str]]:
@@ -334,7 +335,7 @@ def stop_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     :return: None
     """
     click.secho(f"Stopping emulation {emulation_env_config.name}", bold=False)
-    EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.stop_containers(emulation_env_config=emulation_env_config)
     ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
                                               containers_config=emulation_env_config.containers_config,
                                               emulation_name=emulation_env_config.name)
@@ -348,15 +349,15 @@ def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     :return: None
     """
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
-    EnvConfigGenerator.stop_containers(emulation_env_config=emulation_env_config)
-    EnvConfigGenerator.rm_containers(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.stop_containers(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.rm_containers(emulation_env_config=emulation_env_config)
     try:
         ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
                                                   containers_config=emulation_env_config.containers_config,
                                                   emulation_name=emulation_env_config.name)
     except Exception as e:
         pass
-    EnvConfigGenerator.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
 def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -> None:
@@ -370,7 +371,7 @@ def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -
     path = os.path.join(os.getcwd(), path + constants.COMMANDS.SLASH_DELIM)
     click.secho(f"Materialize emulation {emulation_env_config.name} to path:{path}{emulation_env_config.name}",
                 bold=False)
-    EnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=emulation_env_config)
+    EmulationEnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
 @click.argument('entity', default="")
@@ -465,7 +466,7 @@ def run_image(image: str, name: str) -> bool:
     :return: True if it was started successfully, False otherwise
     """
     try:
-        EnvConfigGenerator.run_container(image=image, name=name)
+        EmulationEnvManager.run_container(image=image, name=name)
         return True
     except Exception as e:
         return False
@@ -679,7 +680,7 @@ def get_network(name: str) -> Union[None, ContainerNetwork]:
     return None
 
 
-def get_running_container(name: str) -> Union[None, Tuple[str, str, bool]]:
+def get_running_container(name: str) -> Union[None, Tuple[str, str, str]]:
     """
     Utility function for getting a running container with a given name
 
@@ -693,7 +694,7 @@ def get_running_container(name: str) -> Union[None, Tuple[str, str, bool]]:
     return None
 
 
-def get_stopped_container(name: str) -> Union[None, Tuple[str, str, bool]]:
+def get_stopped_container(name: str) -> Union[None, Tuple[str, str, str]]:
     """
     Utility function for stopping a given container
 
@@ -821,7 +822,7 @@ def remove_emulation(name: str) -> bool:
     for emulation in emulations:
         if emulation.name == name:
             clean_emulation(emulation)
-            EnvConfigGenerator.uninstall_emulation(config=emulation)
+            EmulationEnvManager.uninstall_emulation(config=emulation)
             return True
     return False
 
@@ -841,7 +842,7 @@ def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
     click.secho(f"Username:{constants.CSLE_ADMIN.USER}", bold=False)
     click.secho(f"Password:{constants.CSLE_ADMIN.PW}", bold=False)
     click.secho(f"Vulnerabilities:", fg="yellow", bold=True)
-    for vuln in emulation_env_config.vuln_config.vulnerabilities:
+    for vuln in emulation_env_config.vuln_config.node_vulnerability_configs:
         click.secho(f"{vuln.vuln_type} {vuln.ip}", bold=False)
         click.secho(f"{type(vuln.vuln_type)}", bold=False)
     click.secho(f"Resource constraints:", fg="yellow", bold=True)
@@ -858,10 +859,10 @@ def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
             click.secho(f"{rc.container_name}: CPUs:{rc.num_cpus}, memory: {rc.available_memory_gb}GB, "
                         f"network:{network_bandwidth}", bold=False)
     click.secho(f"Flags:", fg="yellow", bold=True)
-    for flag in emulation_env_config.flags_config.flags:
+    for flag in emulation_env_config.flags_config.node_flag_configs:
         click.secho(f"{flag.flags[0][0]} {flag.ip}", bold=False)
     click.secho(f"Users:", fg="yellow", bold=True)
-    for user in emulation_env_config.users_config.users:
+    for user in emulation_env_config.users_config.users_configs:
         users = ",".join(list(map(lambda x: x[0], user.users)))
         click.secho(f"{users} {user.ip}", bold=False)
     click.secho(f"Log sink configuration:", fg="yellow", bold=True)

@@ -141,7 +141,7 @@ class CSLECTFVideoRecorder(object):
 
         if self.encoder:
             logger.debug('Closing video encoder: path=%s', self.path)
-            self.encoder.close_all_connections()
+            self.encoder.close()
             self.encoder = None
         else:
             # No frames captured. Set metadata, and remove the empty output file.
@@ -401,7 +401,7 @@ class ImageEncoder(object):
 
         :return: None
         """
-        self.proc.stdin.close_all_connections()
+        self.proc.stdin.close()
         ret = self.proc.wait()
         if ret != 0:
             logger.error("VideoRecorder encoder exited with status {}".format(ret))

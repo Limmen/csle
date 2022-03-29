@@ -2,7 +2,7 @@ from typing import List, Tuple
 import random
 import numpy as np
 import csle_common.constants.constants as constants
-from csle_common.dao.emulation_config.topology import Topology
+from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
@@ -15,7 +15,7 @@ class TopologyGenerator:
     """
 
     @staticmethod
-    def generate(num_nodes: int, subnet_prefix: str, subnet_id: int) -> Tuple[Topology, str, str, List]:
+    def generate(num_nodes: int, subnet_prefix: str, subnet_id: int) -> Tuple[TopologyConfig, str, str, List]:
         """
         Generates a topology configuration
 
@@ -120,7 +120,7 @@ class TopologyGenerator:
                     vulnerable_nodes.append(node_cfg)
                 node_configs.append(node_cfg)
 
-        topology = Topology(node_configs=node_configs, subnetwork_masks=subnetwork_masks)
+        topology = TopologyConfig(node_configs=node_configs, subnetwork_masks=subnetwork_masks)
         agent_ip = f"{client_net.subnet_prefix}.{agent_ip_suffix}"
         router_ip = f"{client_net.subnet_prefix}.{router_ip_suffix}"
 
@@ -143,7 +143,7 @@ class TopologyGenerator:
         return ip_suffix
 
     @staticmethod
-    def write_topology(topology: Topology, path: str = None) -> None:
+    def write_topology(topology: TopologyConfig, path: str = None) -> None:
         """
         Writes the default configuration to a json file
 

@@ -16,7 +16,7 @@ class FlagsManager:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        for flags_conf in emulation_env_config.flags_config.flags:
+        for flags_conf in emulation_env_config.flags_config.node_flag_configs:
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=flags_conf.ip)
 
             for flag in flags_conf.flags:
