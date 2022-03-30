@@ -1,7 +1,7 @@
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.defender.defender_action import DefenderAction
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 
 
 class DefenderUpdateStateMiddleware:
@@ -10,7 +10,7 @@ class DefenderUpdateStateMiddleware:
     """
 
     @staticmethod
-    def update_belief_state(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+    def update_belief_state(s: EmulationEnvState, defender_action: EmulationDefenderAction, attacker_action: EmulationAttackerAction,
                             emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Updates the defender's state by measuring the emulation
@@ -25,7 +25,7 @@ class DefenderUpdateStateMiddleware:
         return s_prime
 
     @staticmethod
-    def initialize_state(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+    def initialize_state(s: EmulationEnvState, defender_action: EmulationDefenderAction, attacker_action: EmulationAttackerAction,
                          emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Initializes the defender's state by measuring the emulation
@@ -40,8 +40,8 @@ class DefenderUpdateStateMiddleware:
         return s_prime
 
     @staticmethod
-    def reset_state(s: EmulationEnvState, defender_action: DefenderAction, emulation_env_config: EmulationEnvConfig,
-                    attacker_action: AttackerAction) -> EmulationEnvState:
+    def reset_state(s: EmulationEnvState, defender_action: EmulationDefenderAction, emulation_env_config: EmulationEnvConfig,
+                    attacker_action: EmulationAttackerAction) -> EmulationEnvState:
         """
         Resets the defender's state
 

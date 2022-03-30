@@ -4,13 +4,14 @@ import paramiko
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
+    import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-from csle_common.dao.action.attacker.attacker_action_id import AttackerActionId
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
-from csle_common.dao.action.attacker.attacker_action_type import AttackerActionType
-from csle_common.dao.action.attacker.attacker_action_outcome import AttackerActionOutcome
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
 
 
 class EmulationUtil:
@@ -69,7 +70,7 @@ class EmulationUtil:
         return outdata, errdata, total_time
 
     @staticmethod
-    def log_measured_action_time(total_time, action: AttackerAction, emulation_env_config: EmulationEnvConfig) -> None:
+    def log_measured_action_time(total_time, action: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig) -> None:
         """
         Logs the measured time of an action to Kafka
 
@@ -87,6 +88,8 @@ class EmulationUtil:
         ts = time.time()
         record = f"{ts},{action.id.value},{action.descr},{action.index},{action.name}," \
                  f"{total_time},{'_'.join(action.ips)},{'_'.join(action.cmds)}"
+        if emulation_env_config.producer is None:
+            emulation_env_config.create_producer()
         emulation_env_config.producer.produce(collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME, record)
         emulation_env_config.producer.flush()
 
@@ -110,7 +113,7 @@ class EmulationUtil:
             return "is running" in response.decode()
 
     @staticmethod
-    def _list_all_users(c: ConnectionObservationState, emulation_env_config: EmulationEnvConfig,
+    def _list_all_users(c: EmulationConnectionObservationState, emulation_env_config: EmulationEnvConfig,
                         telnet: bool = False) -> List:
         """
         List all users on a machine
@@ -162,7 +165,7 @@ class EmulationUtil:
     @staticmethod
     def setup_custom_connection(user: str, pw: str, source_ip: str, port: int, target_ip: str, proxy_conn,
                                 root: bool) \
-            -> Union[ConnectionObservationState, None]:
+            -> Union[EmulationConnectionObservationState, None]:
         """
         Utility function for setting up a custom SSH connection given credentials and a proxy connection
         :param user: the username of the new connection
@@ -184,10 +187,10 @@ class EmulationUtil:
             target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             target_conn.connect(target_ip, username=user, password=pw, sock=relay_channel,
                                 timeout=3)
-            connection_dto = ConnectionObservationState(conn=target_conn, username=user, root=root,
-                                                        service=constants.SSH.SERVICE_NAME,
-                                                        port=constants.SSH.DEFAULT_PORT,
-                                                        proxy=proxy_conn, ip=target_ip)
+            connection_dto = EmulationConnectionObservationState(conn=target_conn, username=user, root=root,
+                                                                 service=constants.SSH.SERVICE_NAME,
+                                                                 port=constants.SSH.DEFAULT_PORT,
+                                                                 proxy=proxy_conn, ip=target_ip)
             return connection_dto
         except Exception as e:
             print("Custom connection setup failed:{}".format(str(e)))
@@ -216,16 +219,18 @@ class EmulationUtil:
 
 
     @staticmethod
-    def connect_admin(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def connect_admin(emulation_env_config: EmulationEnvConfig, ip: str, create_producer: bool = True) -> None:
         """
         Connects the admin agent
 
         :param emulation_env_config: the configuration of the emulation to connect to
         :param ip: the ip of the container to connect to
+        :param create_producer: boolean flag whether the producer thread to Kafka should be created also
         :return: None
         """
         emulation_env_config.agent_ip = ip
-        emulation_env_config.connect(ip=ip, username=constants.CSLE_ADMIN.USER, pw=constants.CSLE_ADMIN.PW)
+        emulation_env_config.connect(ip=ip, username=constants.CSLE_ADMIN.USER, pw=constants.CSLE_ADMIN.PW,
+                                     create_producer=create_producer)
 
     @staticmethod
     def disconnect_admin(emulation_env_config: EmulationEnvConfig) -> None:
@@ -308,22 +313,21 @@ class EmulationUtil:
         action = env_state.attacker_action_config.actions[attack_action_id]
         ip = env_state.attacker_obs_state.get_action_ips(action)
 
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=env_config, a=action, s=env_state,
-                                                              full_ip_str=True)
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=env_config, s=env_state)
         if (action.id, action.index, logged_in_ips_str) in env_state.attacker_obs_state.actions_tried:
             return False
 
         # Recon on subnet is always possible
-        if action.type == AttackerActionType.RECON and action.subnet:
+        if action.type == EmulationAttackerActionType.RECON and action.subnet:
             return True
 
         # Recon on set of all found machines is always possible if there exists such machiens
-        if action.type == AttackerActionType.RECON and action.index == -1 and len(
+        if action.type == EmulationAttackerActionType.RECON and action.index == -1 and len(
                 env_state.attacker_obs_state.machines) > 0:
             return True
 
         # Optimal Stopping actions are always possible
-        if action.type == AttackerActionType.STOP or action.type == AttackerActionType.CONTINUE:
+        if action.type == EmulationAttackerActionType.STOP or action.type == EmulationAttackerActionType.CONTINUE:
             return True
 
         machine_discovered = False
@@ -367,32 +371,32 @@ class EmulationUtil:
             if m.untried_credentials:
                 untried_credentials = m.untried_credentials
 
-        if action.subnet or action.id == AttackerActionId.NETWORK_SERVICE_LOGIN:
+        if action.subnet or action.id == EmulationAttackerActionId.NETWORK_SERVICE_LOGIN:
             machine_discovered = True
 
         # Privilege escalation only legal if machine discovered and logged in and not root
-        if action.type == AttackerActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
-                                                                       or machine_root_login):
+        if action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
+                                                                                or machine_root_login):
             return False
 
         # Exploit only legal if we have not already compromised the node
-        if action.type == AttackerActionType.EXPLOIT and machine_logged_in and root_login:
+        if action.type == EmulationAttackerActionType.EXPLOIT and machine_logged_in and root_login:
             return False
 
         # Shell-access Exploit only legal if we do not already have untried credentials
-        if action.type == AttackerActionType.EXPLOIT and action.action_outcome == AttackerActionOutcome.SHELL_ACCESS \
+        if action.type == EmulationAttackerActionType.EXPLOIT and action.action_outcome == EmulationAttackerActionOutcome.SHELL_ACCESS \
                 and target_untried_credentials:
             return False
 
         # Priv-Esc Exploit only legal if we are already logged in and do not have root
-        if action.type == AttackerActionType.EXPLOIT \
-                and action.action_outcome == AttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT \
+        if action.type == EmulationAttackerActionType.EXPLOIT \
+                and action.action_outcome == EmulationAttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT \
                 and (not machine_logged_in or root_login):
             return False
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
-        if machine_discovered and (action.type == AttackerActionType.RECON or action.type == AttackerActionType.EXPLOIT
-                                   or action.type == AttackerActionType.PRIVILEGE_ESCALATION):
+        if machine_discovered and (action.type == EmulationAttackerActionType.RECON or action.type == EmulationAttackerActionType.EXPLOIT
+                                   or action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION):
             if action.subnet and target_machine is None:
                 return True
             else:
@@ -402,38 +406,38 @@ class EmulationUtil:
             return True
 
         # If nothing new to scan, find-flag is illegal
-        if action.id == AttackerActionId.FIND_FLAG and not unscanned_filesystems:
+        if action.id == EmulationAttackerActionId.FIND_FLAG and not unscanned_filesystems:
             return False
 
         # If nothing new to backdoor, install backdoor is illegal
-        if action.id == AttackerActionId.SSH_BACKDOOR and not uninstalled_backdoor:
+        if action.id == EmulationAttackerActionId.SSH_BACKDOOR and not uninstalled_backdoor:
             return False
 
         # If no new credentials, login to service is illegal
-        if action.id == AttackerActionId.NETWORK_SERVICE_LOGIN and not untried_credentials:
+        if action.id == EmulationAttackerActionId.NETWORK_SERVICE_LOGIN and not untried_credentials:
             return False
 
         # Pivot recon possible if logged in on pivot machine with tools installed
-        if machine_discovered and action.type == AttackerActionType.POST_EXPLOIT and logged_in and machine_w_tools:
+        if machine_discovered and action.type == EmulationAttackerActionType.POST_EXPLOIT and logged_in and machine_w_tools:
             return True
 
         # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
-        if machine_discovered and action.type == AttackerActionType.POST_EXPLOIT \
+        if machine_discovered and action.type == EmulationAttackerActionType.POST_EXPLOIT \
                 and ((target_machine is not None and target_machine.shell_access
                       and len(target_machine.shell_access_credentials) > 0)
-                     or action.subnet or action.id == AttackerActionId.NETWORK_SERVICE_LOGIN):
+                     or action.subnet or action.id == EmulationAttackerActionId.NETWORK_SERVICE_LOGIN):
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in
-        if action.id == AttackerActionId.FIND_FLAG and logged_in and unscanned_filesystems:
+        if action.id == EmulationAttackerActionId.FIND_FLAG and logged_in and unscanned_filesystems:
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in and root
-        if action.id == AttackerActionId.INSTALL_TOOLS and logged_in and root_login and uninstalled_tools:
+        if action.id == EmulationAttackerActionId.INSTALL_TOOLS and logged_in and root_login and uninstalled_tools:
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in and root
-        if action.id == AttackerActionId.SSH_BACKDOOR and logged_in and root_login \
+        if action.id == EmulationAttackerActionId.SSH_BACKDOOR and logged_in and root_login \
                 and machine_w_tools and uninstalled_backdoor:
             return True
 

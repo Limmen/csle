@@ -1,5 +1,5 @@
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_attacker.emulation.emulated_attacker import EmulatedAttacker
 from csle_attacker.simulation.simulated_attacker import SimulatedAttacker
 
@@ -10,7 +10,7 @@ class Attacker:
     """
 
     @staticmethod
-    def attacker_transition(s : EmulationEnvState, attacker_action : AttackerAction, simulation : bool = False) \
+    def attacker_transition(s : EmulationEnvState, attacker_action : EmulationAttackerAction, simulation : bool = False) \
             -> EmulationEnvState:
         """
         Implements an attacker transition of the MDP/Markov Game:

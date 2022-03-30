@@ -2,7 +2,7 @@ from csle_common.dao.emulation_config.transport_protocol import TransportProtoco
 from csle_attacker.simulation.util.recon_simulator_util import ReconSimulatorUtil
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 
 
 class ReconSimulator:
@@ -11,7 +11,7 @@ class ReconSimulator:
     """
 
     @staticmethod
-    def simulate_tcp_syn_stealth_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_tcp_syn_stealth_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                       emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a TCP SYN Stealth Scan action
@@ -26,7 +26,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_ping_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_ping_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                            emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a Ping Scan action
@@ -41,7 +41,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_udp_port_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_udp_port_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a UDP port scan action
@@ -56,7 +56,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_con_non_stealth_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_con_non_stealth_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                       emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a TCP CON Scan (non-stealth) action
@@ -71,7 +71,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_fin_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_fin_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                           emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a TCP FIN Scan action
@@ -86,7 +86,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_tcp_null_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_tcp_null_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a TCP NULL Scan action
@@ -101,7 +101,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_tcp_xmas_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_tcp_xmas_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a TCP XMAS Scan action
@@ -116,7 +116,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_os_detection_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_os_detection_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                    emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs an OS Detection scan action
@@ -131,7 +131,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_vulscan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_vulscan(s: EmulationEnvState, a: EmulationAttackerAction,
                          emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a nmap vulnerability scan using "vulscan" action
@@ -146,7 +146,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_nmap_vulners(s: EmulationEnvState, a: AttackerAction, emulation_env_config: EmulationEnvConfig) \
+    def simulate_nmap_vulners(s: EmulationEnvState, a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig) \
             -> EmulationEnvState:
         """
         Performs a nmap vulnerability scan using "vulners" action
@@ -162,7 +162,7 @@ class ReconSimulator:
         return s_prime
 
     @staticmethod
-    def simulate_nikto_web_host_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_nikto_web_host_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                      emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Simulates a Nikto web host scan
@@ -175,7 +175,7 @@ class ReconSimulator:
         return s
 
     @staticmethod
-    def simulate_masscan_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_masscan_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                               emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Simulates a masscan host scan
@@ -188,7 +188,7 @@ class ReconSimulator:
         return s
 
     @staticmethod
-    def simulate_firewalk_scan(s: EmulationEnvState, a: AttackerAction,
+    def simulate_firewalk_scan(s: EmulationEnvState, a: EmulationAttackerAction,
                                emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Simulates a firewalk scan
@@ -201,7 +201,7 @@ class ReconSimulator:
         return s
 
     @staticmethod
-    def simulate_http_enum(s: EmulationEnvState, a: AttackerAction, emulation_env_config: EmulationEnvConfig) \
+    def simulate_http_enum(s: EmulationEnvState, a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig) \
             -> EmulationEnvState:
         """
         Simulates a http enum scan
@@ -214,7 +214,7 @@ class ReconSimulator:
         return s
 
     @staticmethod
-    def simulate_http_grep(s: EmulationEnvState, a: AttackerAction,
+    def simulate_http_grep(s: EmulationEnvState, a: EmulationAttackerAction,
                            emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Simulates a http grep scan
@@ -227,7 +227,7 @@ class ReconSimulator:
         return s
 
     @staticmethod
-    def simulate_finger(s: EmulationEnvState, a: AttackerAction,
+    def simulate_finger(s: EmulationEnvState, a: EmulationAttackerAction,
                         emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Simulates a finger scan

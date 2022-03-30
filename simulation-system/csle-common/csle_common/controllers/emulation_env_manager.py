@@ -36,7 +36,7 @@ class EmulationEnvManager:
         if no_traffic:
             steps = steps-1
         current_step = 1
-        print(f"-- Configuring the emulation --")
+        print(f"-- Configuring the emulation: {emulation_env_config.name} --")
         print(f"-- Step {current_step}/{steps}: Creating networks --")
         ContainerManager.create_networks(containers_config=emulation_env_config.containers_config)
 

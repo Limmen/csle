@@ -10,6 +10,7 @@ import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
 from csle_common.util.docker_util import DockerUtil
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
@@ -251,6 +252,17 @@ class ContainerManager:
             container_name_image_ip = container_name_image_ip + \
                                       list(map(lambda x: (x.name, x.image_name, x.ip), env.containers))
         return container_name_image_ip
+
+    @staticmethod
+    def is_emulation_running(emulation_env_config: EmulationEnvConfig) -> bool:
+        """
+        Checks if a given emulation config is running or not
+
+        :param emulation_env_config: the emulation environment configuraiton
+        :return: True if running otherwise False
+        """
+        running_emulations = ContainerManager.list_running_emulations()
+        return emulation_env_config.name in running_emulations
 
     @staticmethod
     def list_running_emulations() -> List[str]:

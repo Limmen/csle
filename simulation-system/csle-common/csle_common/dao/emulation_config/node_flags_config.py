@@ -15,7 +15,6 @@ class NodeFlagsConfig:
         :param flags: the list of flags
         """
         self.ip = ip
-        # flags= [(name, path, id, root, score)]
         self.flags = flags
 
     def to_dict(self) -> dict:

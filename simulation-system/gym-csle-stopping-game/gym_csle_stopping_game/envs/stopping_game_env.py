@@ -1,7 +1,7 @@
 from typing import Tuple
 import numpy as np
-from csle_common.dao.envs.base_env import BaseEnv
-from csle_common.dao.emulation_config.trajectory import Trajectory
+from csle_common.dao.simulation_config.base_env import BaseEnv
+from csle_common.dao.simulation_config.simulation_trajectory import SimulationTrajectory
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
@@ -33,7 +33,7 @@ class StoppingGameEnv(BaseEnv):
 
         # Setup trajectories
         self.trajectories = []
-        self.trajectory = Trajectory()
+        self.trajectory = SimulationTrajectory()
 
         # Reset
         self.reset()
@@ -104,7 +104,7 @@ class StoppingGameEnv(BaseEnv):
             self.trajectories.append(self.trajectory)
         if len(self.trajectories) > 1 and len(self.trajectories) % 100 == 0:
             self.__checkpoint_trajectories()
-        self.trajectory = Trajectory()
+        self.trajectory = SimulationTrajectory()
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
         self.trajectory.attacker_observations.append(attacker_obs)
@@ -147,6 +147,6 @@ class StoppingGameEnv(BaseEnv):
         Checkpoints agent trajectories
         :return: None
         """
-        Trajectory.save_trajectories(trajectories_save_dir=self.config.save_dir,
-                                     trajectories=self.trajectories, trajectories_file="taus.json")
+        SimulationTrajectory.save_trajectories(trajectories_save_dir=self.config.save_dir,
+                                               trajectories=self.trajectories, trajectories_file="taus.json")
 

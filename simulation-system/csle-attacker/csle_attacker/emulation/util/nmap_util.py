@@ -2,25 +2,27 @@ from typing import Tuple, List, Union
 import xml.etree.ElementTree as ET
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action \
+    import EmulationAttackerAction
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
-from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
+    import EmulationAttackerMachineObservationState
 import csle_common.constants.constants as constants
-from csle_common.dao.action_results.nmap_scan_result import NmapScanResult
-from csle_common.dao.action_results.nmap_host_result import NmapHostResult
-from csle_common.dao.action_results.nmap_port_status import NmapPortStatus
-from csle_common.dao.action_results.nmap_host_status import NmapHostStatus
-from csle_common.dao.action_results.nmap_port import NmapPort
-from csle_common.dao.action_results.nmap_addr_type import NmapAddrType
+from csle_common.dao.emulation_action_result.nmap_scan_result import NmapScanResult
+from csle_common.dao.emulation_action_result.nmap_host_result import NmapHostResult
+from csle_common.dao.emulation_action_result.nmap_port_status import NmapPortStatus
+from csle_common.dao.emulation_action_result.nmap_host_status import NmapHostStatus
+from csle_common.dao.emulation_action_result.nmap_port import NmapPort
+from csle_common.dao.emulation_action_result.nmap_addr_type import NmapAddrType
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
-from csle_common.dao.action_results.nmap_os import NmapOs
-from csle_common.dao.action_results.nmap_vuln import NmapVuln
-from csle_common.dao.action_results.nmap_brute_credentials import NmapBruteCredentials
-from csle_common.dao.action_results.nmap_hop import NmapHop
-from csle_common.dao.action_results.nmap_trace import NmapTrace
-from csle_common.dao.action_results.nmap_http_enum import NmapHttpEnum
-from csle_common.dao.action_results.nmap_http_grep import NmapHttpGrep
-from csle_common.dao.action_results.nmap_vulscan import NmapVulscan
+from csle_common.dao.emulation_action_result.nmap_os import NmapOs
+from csle_common.dao.emulation_action_result.nmap_vuln import NmapVuln
+from csle_common.dao.emulation_action_result.nmap_brute_credentials import NmapBruteCredentials
+from csle_common.dao.emulation_action_result.nmap_hop import NmapHop
+from csle_common.dao.emulation_action_result.nmap_trace import NmapTrace
+from csle_common.dao.emulation_action_result.nmap_http_enum import NmapHttpEnum
+from csle_common.dao.emulation_action_result.nmap_http_grep import NmapHttpGrep
+from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
 from csle_common.util.emulation_util import EmulationUtil
 
 
@@ -55,12 +57,12 @@ class NmapUtil:
         return xml_data
 
     @staticmethod
-    def parse_nmap_scan_xml(xml_data, ip, action: AttackerAction) -> NmapScanResult:
+    def parse_nmap_scan_xml(xml_data, ips: List[str], action: EmulationAttackerAction) -> NmapScanResult:
         """
         Parses an XML Tree into a DTO
 
         :param xml_data: the xml tree to parse
-        :param ip: ip of the source of the scan
+        :param ips: ips of the source of the scan
         :param action: the action of the scan
         :return: parsed nmap scan result
         """
@@ -69,11 +71,11 @@ class NmapUtil:
             if child.tag == constants.NMAP_XML.HOST:
                 host = NmapUtil._parse_nmap_host_xml(child, action=action)
                 hosts = NmapUtil._merge_nmap_hosts(host, hosts, action=action)
-        result = NmapScanResult(hosts=hosts, ips=ip)
+        result = NmapScanResult(hosts=hosts, ips=ips)
         return result
 
     @staticmethod
-    def _parse_nmap_host_xml(xml_data, action: AttackerAction) -> NmapHostResult:
+    def _parse_nmap_host_xml(xml_data, action: EmulationAttackerAction) -> NmapHostResult:
         """
         Parses a host-element in the XML tree
 
@@ -109,7 +111,7 @@ class NmapUtil:
                 os = NmapOs.get_best_match(os_matches)
             elif child.tag == constants.NMAP_XML.TRACE:
                 trace = NmapUtil._parse_nmap_trace_xml(child)
-        nmap_host_result = NmapHostResult(status=status, ips=ip_addr, mac_addr=mac_addr,
+        nmap_host_result = NmapHostResult(status=status, ips=[ip_addr], mac_addr=mac_addr,
                                           hostnames=hostnames, ports=ports, os=os, os_matches=os_matches,
                                           vulnerabilities=vulnerabilities, credentials=credentials, trace=trace)
         return nmap_host_result
@@ -160,7 +162,7 @@ class NmapUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data, action: AttackerAction) -> Tuple[
+    def _parse_nmap_ports_xml(xml_data, action: EmulationAttackerAction) -> Tuple[
         List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
         """
         Parses a ports XML element in the XML tree
@@ -315,7 +317,7 @@ class NmapUtil:
         return vuln
 
     @staticmethod
-    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str, action: AttackerAction) \
+    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str, action: EmulationAttackerAction) \
             -> Tuple[Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep, NmapVulscan, None],
                      Union[NmapVuln, None]]:
         """
@@ -364,7 +366,7 @@ class NmapUtil:
         return vulnerabilities
 
     @staticmethod
-    def _parse_nmap_brute(xml_data, port: int, protocol: TransportProtocol, service: str, action: AttackerAction) \
+    def _parse_nmap_brute(xml_data, port: int, protocol: TransportProtocol, service: str, action: EmulationAttackerAction) \
             -> Tuple[List[NmapBruteCredentials], NmapVuln]:
         """
         Parses a XML result from a brute force dictionary scan
@@ -424,7 +426,7 @@ class NmapUtil:
         return credentials
 
     @staticmethod
-    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EmulationEnvState, a: AttackerAction,
+    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EmulationEnvState, a: EmulationAttackerAction,
                                           emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Merges a NMAP scan result with an existing observation state
@@ -438,7 +440,7 @@ class NmapUtil:
 
         new_m_obs = []
         for host in scan_result.hosts:
-            m_obs = AttackerMachineObservationState.from_nmap_result(host)
+            m_obs = EmulationAttackerMachineObservationState.from_nmap_result(host)
             # m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
             new_m_obs.append(m_obs)
 
@@ -447,11 +449,13 @@ class NmapUtil:
 
         s_prime = s
         s_prime.attacker_obs_state.machines = attacker_machine_observations
+        s_prime.attacker_obs_state.sort_machines()
+        s_prime.defender_obs_state.sort_machines()
 
         return s_prime
 
     @staticmethod
-    def nmap_scan_action_helper(s: EmulationEnvState, a: AttackerAction,
+    def nmap_scan_action_helper(s: EmulationEnvState, a: EmulationAttackerAction,
                                 emulation_env_config: EmulationEnvConfig, masscan: bool = False) -> EmulationEnvState:
         """
         Helper function for executing a NMAP scan action on the emulation. Implements caching.
@@ -459,12 +463,14 @@ class NmapUtil:
         :param s: the current env state
         :param a: the NMAP action to execute
         :param emulation_env_config: the env config
+        :param masscan: whether it is a masscan or not
         :return: s'
         """
         # If cache miss, then execute cmd
         cmds, file_names = a.nmap_cmds()
         if masscan:
             cmds = a.masscan_cmds()
+        print(f"commands:{cmds}")
         results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=emulation_env_config.get_hacker_connection())
         total_time = sum(list(map(lambda x: x[2], results)))
 
@@ -474,20 +480,21 @@ class NmapUtil:
         scan_result = NmapScanResult(hosts=[], ips=[emulation_env_config.containers_config.agent_ip])
         for file_name in file_names:
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
-                try:
-                    xml_data = NmapUtil.parse_nmap_scan(file_name=file_name, emulation_env_config=emulation_env_config)
-                    scan_result_new = NmapUtil.parse_nmap_scan_xml(
-                        xml_data, ip=emulation_env_config.containers_config.agent_ip, action=a)
-                    s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
-                    scan_result =NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
-                except Exception as e:
-                    break
+                # try:
+                xml_data = NmapUtil.parse_nmap_scan(file_name=file_name, emulation_env_config=emulation_env_config)
+                scan_result_new = NmapUtil.parse_nmap_scan_xml(
+                    xml_data, ips=[emulation_env_config.containers_config.agent_ip], action=a)
+                s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
+                scan_result =NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
+                # except Exception as e:
+                #     print(f"There was an exception parsing the nmap result file:{file_name}")
+                #     print(e)
         return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, emulation_env_config=emulation_env_config,
                                                       partial_result=scan_result.copy())
 
     @staticmethod
     def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult],
-                          action: AttackerAction) -> List[NmapHostResult]:
+                          action: EmulationAttackerAction) -> List[NmapHostResult]:
         """
         Merge nmap host results
 
@@ -498,7 +505,7 @@ class NmapUtil:
         """
         found = False
         for h in hosts:
-            if h.ips == host.ips:
+            if h.ips_match(host.ips):
                 found = True
                 vulnerabilities = list(set(h.vulnerabilities).union(host.vulnerabilities))
                 h.vulnerabilities = vulnerabilities
@@ -603,14 +610,14 @@ class NmapUtil:
         for h in scan_result_2.hosts:
             new_host = True
             for h2 in scan_result_1.hosts:
-                if h.ips == h2.ips:
+                if h.ips_match(h2.ips):
                     new_host = False
             if new_host:
                 new_hosts.append(h)
 
         for h in scan_result_1.hosts:
             for h2 in scan_result_2.hosts:
-                if h.ips == h2.ips:
+                if h.ips_match(h2.ips):
                     h.hostnames = list(set(h.hostnames).union(set(h2.hostnames)))
                     h.ports = list(set(h.ports).union(h2.ports))
                     h.vulnerabilities = list(set(h.vulnerabilities).union(h2.vulnerabilities))
@@ -625,7 +632,7 @@ class NmapUtil:
         return scan_result_1
 
     @staticmethod
-    def nmap_pivot_scan_action_helper(s: EmulationEnvState, a: AttackerAction,
+    def nmap_pivot_scan_action_helper(s: EmulationEnvState, a: EmulationAttackerAction,
                                       emulation_env_config: EmulationEnvConfig,
                                       partial_result: NmapScanResult) -> EmulationEnvState:
         """
@@ -665,7 +672,7 @@ class NmapUtil:
                                 xml_data = NmapUtil.parse_nmap_scan(
                                     file_name=file_name, emulation_env_config=emulation_env_config,
                                     conn=c.conn, dir=file_name)
-                                new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ip=machine.ips, action=a)
+                                new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ips=machine.ips, action=a)
                                 scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
                                                                                scan_result_2=new_scan_result)
                                 machine.reachable.update(scan_result.reachable)
@@ -696,9 +703,16 @@ class NmapUtil:
             if machine.logged_in and machine.tools_installed:
                 machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
-            if machine.ips in reachable and (machine.ips == a.ips or a.subnet):
+            if machine.ips_match(reachable) and (machine.ips_match(a.ips) or a.subnet):
                 machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
-            new_machines_obs_1.append(machine)
-        s_prime.attacker_obs_state.machines = new_machines_obs_1
 
+            valid_ips = True
+            for ip in machine.ips:
+                if int(ip.split(".")[-1]) ==1:
+                    valid_ips = False
+            if valid_ips:
+                new_machines_obs_1.append(machine)
+        s_prime.attacker_obs_state.machines = new_machines_obs_1
+        s_prime.attacker_obs_state.sort_machines()
+        s_prime.defender_obs_state.sort_machines()
         return s_prime

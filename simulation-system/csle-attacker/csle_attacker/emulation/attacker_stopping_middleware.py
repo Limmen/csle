@@ -1,6 +1,6 @@
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 
 
 class AttackerStoppingMiddleware:
@@ -9,7 +9,7 @@ class AttackerStoppingMiddleware:
     """
 
     @staticmethod
-    def stop_intrusion(s: EmulationEnvState, a: AttackerAction,
+    def stop_intrusion(s: EmulationEnvState, a: EmulationAttackerAction,
                        emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a stopping action for the attacker
@@ -23,7 +23,7 @@ class AttackerStoppingMiddleware:
 
 
     @staticmethod
-    def continue_intrusion(s: EmulationEnvState, a: AttackerAction,
+    def continue_intrusion(s: EmulationEnvState, a: EmulationAttackerAction,
                            emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a "continue" action for the attacker (does nothing)

@@ -1,13 +1,15 @@
 from typing import Tuple
 import xml.etree.ElementTree as ET
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
-from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
+    import EmulationAttackerMachineObservationState
 import csle_common.constants.constants as constants
-from csle_common.dao.action_results.nikto_scan_result import NiktoScanResult
-from csle_common.dao.action_results.nikto_vuln import NiktoVuln
+from csle_common.dao.emulation_action_result.nikto_scan_result \
+    import NiktoScanResult
+from csle_common.dao.emulation_action_result.nikto_vuln import NiktoVuln
 from csle_common.util.emulation_util import EmulationUtil
 from csle_attacker.emulation.util.nmap_util import NmapUtil
 
@@ -36,7 +38,7 @@ class NiktoUtil:
         return xml_data
 
     @staticmethod
-    def nikto_scan_action_helper(s: EmulationEnvState, a: AttackerAction, emulation_env_config: EmulationEnvConfig) \
+    def nikto_scan_action_helper(s: EmulationEnvState, a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig) \
             -> EmulationEnvState:
         """
         Helper function for executing a NIKTO web scan action on the emulation. Implements caching.
@@ -68,7 +70,7 @@ class NiktoUtil:
         return s_prime
 
     @staticmethod
-    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EmulationEnvState, a: AttackerAction,
+    def merge_nikto_scan_result_with_state(scan_result: NiktoScanResult, s: EmulationEnvState, a: EmulationAttackerAction,
                                            emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Merges a Nikto scan result with an existing observation state
@@ -83,7 +85,7 @@ class NiktoUtil:
 
         for m in s.attacker_obs_state.machines:
             if m.ips == scan_result.ip:
-                m_obs = AttackerMachineObservationState(ips=m.ips)
+                m_obs = EmulationAttackerMachineObservationState(ips=m.ips)
 
         for vuln in scan_result.vulnerabilities:
             vuln_obs = vuln.to_obs()

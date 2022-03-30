@@ -68,13 +68,14 @@ class EmulationEnvConfig:
         d["hostname"] = self.hostname
         return d
 
-    def connect(self, ip: str = "", username: str = "", pw: str = "") -> None:
+    def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> None:
         """
         Connects to the agent's host with SSH, either directly or through a jumphost
 
         :param ip: the ip to connect to
         :param username: the username to connect with
         :param pw: the password to connect with
+        :param create_producer: whether the producer should be created if it not already created
 
         :return: None
         """
@@ -87,7 +88,7 @@ class EmulationEnvConfig:
             conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             conn.connect(ip, username=username, password=pw)
             self.connections[ip] = conn
-            if self.producer is None:
+            if self.producer is None and create_producer:
                 self.create_producer()
 
         print("Connected successfully")

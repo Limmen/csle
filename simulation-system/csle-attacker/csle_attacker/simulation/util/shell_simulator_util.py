@@ -1,8 +1,9 @@
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
+    import EmulationAttackerMachineObservationState
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
 from csle_attacker.simulation.util.simulator_util import SimulatorUtil
 
@@ -14,7 +15,7 @@ class ShellSimulatorUtil:
 
     @staticmethod
     def simulate_service_login_helper(
-            s: EmulationEnvState, a: AttackerAction,
+            s: EmulationEnvState, a: EmulationAttackerAction,
             emulation_env_config: EmulationEnvConfig, service_name : str = constants.SSH.SERVICE_NAME) \
             -> EmulationEnvState:
         """
@@ -33,7 +34,7 @@ class ShellSimulatorUtil:
         for c in emulation_env_config.containers_config.containers:
             if not c.reachable(reachable_ips=list(reachable_nodes)):
                 continue
-            new_m_obs = AttackerMachineObservationState(ips=c.get_ips())
+            new_m_obs = EmulationAttackerMachineObservationState(ips=c.get_ips())
             new_m_obs.reachable = emulation_env_config.containers_config.get_reachable_ips(container=c)
             credentials = None
             access = False

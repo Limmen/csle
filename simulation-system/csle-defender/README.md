@@ -1,2 +1,14 @@
 # `csle-defender`
 
+## Author & Maintainer
+
+Kim Hammar <kimham@kth.se>
+
+## Copyright and license
+
+Creative Commons
+
+[LICENSE](../../LICENSE.md)
+
+(C) 2022, Kim Hammar
+

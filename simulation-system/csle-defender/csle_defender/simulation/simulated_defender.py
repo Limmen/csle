@@ -1,9 +1,9 @@
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.action.defender.defender_action import DefenderAction
-from csle_common.dao.action.defender.defender_action_type import DefenderActionType
-from csle_common.dao.action.defender.defender_action_id import DefenderActionId
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
+from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
 from csle_defender.simulation.defender_stopping_simulator import DefenderStoppingSimulator
 
 
@@ -13,8 +13,8 @@ class SimulatedDefender:
     """
 
     @staticmethod
-    def defender_transition(s: EmulationEnvState, defender_action: DefenderAction, emulation_env_config: EmulationEnvConfig,
-                            attacker_action : AttackerAction = None) -> EmulationEnvState:
+    def defender_transition(s: EmulationEnvState, defender_action: EmulationDefenderAction, emulation_env_config: EmulationEnvConfig,
+                            attacker_action : EmulationAttackerAction = None) -> EmulationEnvState:
         """
         Implements the transition operator T: (s,a) -> (s',r)
 
@@ -24,7 +24,7 @@ class SimulatedDefender:
         :param attacker_action: previous attacker action
         :return: s'
         """
-        if defender_action.type == DefenderActionType.STOP or defender_action.type == DefenderActionType.CONTINUE:
+        if defender_action.type == EmulationDefenderActionType.STOP or defender_action.type == EmulationDefenderActionType.CONTINUE:
             return SimulatedDefender.defender_stopping_action(s=s, defender_action=defender_action,
                                                               attacker_action=attacker_action,
                                                               emulation_env_config=emulation_env_config)
@@ -33,7 +33,7 @@ class SimulatedDefender:
 
 
     @staticmethod
-    def defender_stopping_action(s: EmulationEnvState, defender_action: DefenderAction, attacker_action: AttackerAction,
+    def defender_stopping_action(s: EmulationEnvState, defender_action: EmulationDefenderAction, attacker_action: EmulationAttackerAction,
                                  emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Implements transition of a stopping action of the defender
@@ -44,11 +44,11 @@ class SimulatedDefender:
         :param emulation_env_config: the environment configuration
         :return: s'
         """
-        if defender_action.id == DefenderActionId.STOP:
+        if defender_action.id == EmulationDefenderActionId.STOP:
             return DefenderStoppingSimulator.stop_monitor(s=s, defender_action=defender_action,
                                                           attacker_action=attacker_action,
                                                           emulation_env_config=emulation_env_config)
-        elif defender_action.id == DefenderActionId.CONTINUE:
+        elif defender_action.id == EmulationDefenderActionId.CONTINUE:
             return DefenderStoppingSimulator.continue_monitor(s=s, attacker_action=attacker_action,
                                                               defender_action=defender_action, emulation_env_config=emulation_env_config)
         else:

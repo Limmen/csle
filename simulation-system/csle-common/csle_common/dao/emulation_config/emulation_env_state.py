@@ -1,12 +1,12 @@
 from typing import Union
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.observation.attacker.attacker_observation_state import AttackerObservationState
-from csle_common.dao.observation.defender.defender_observation_state import DefenderObservationState
-from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
-from csle_common.dao.observation.defender.defender_machine_observation_state import DefenderMachineObservationState
-from csle_common.dao.action.attacker.attacker_action_config import AttackerActionConfig
-from csle_common.dao.action.defender.defender_action_config import DefenderActionConfig
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state import EmulationAttackerObservationState
+from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import EmulationDefenderObservationState
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state import EmulationAttackerMachineObservationState
+from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state import EmulationDefenderMachineObservationState
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_config import EmulationAttackerActionConfig
+from csle_common.dao.emulation_action.defender.emulation_defender_action_config import EmulationDefenderActionConfig
 
 
 class EmulationEnvState:
@@ -24,11 +24,11 @@ class EmulationEnvState:
         :param defender_agent_config: the configuration of the defender agent
         """
         self.emulation_env_config = emulation_env_config
-        self.attacker_action_config=AttackerActionConfig.all_actions_config(
+        self.attacker_action_config=EmulationAttackerActionConfig.all_actions_config(
             num_nodes=len(self.emulation_env_config.containers_config.containers),
             subnet_masks= self.emulation_env_config.topology_config.subnetwork_masks,
             hacker_ip=self.emulation_env_config.containers_config.agent_ip)
-        self.defender_action_config=DefenderActionConfig.all_actions_config(
+        self.defender_action_config=EmulationDefenderActionConfig.all_actions_config(
             num_nodes=len(self.emulation_env_config.containers_config.containers),
             subnet_masks=self.emulation_env_config.topology_config.subnetwork_masks
         )
@@ -38,8 +38,8 @@ class EmulationEnvState:
         self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}
         self.os_lookup = constants.OS.os_lookup
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
-        self.attacker_obs_state : Union[AttackerObservationState, None] = None
-        self.defender_obs_state : Union[DefenderObservationState, None] = None
+        self.attacker_obs_state : Union[EmulationAttackerObservationState, None] = None
+        self.defender_obs_state : Union[EmulationDefenderObservationState, None] = None
         self.attacker_cached_ssh_connections = {}
         self.attacker_cached_telnet_connections = {}
         self.attacker_cached_ftp_connections = {}
@@ -65,7 +65,7 @@ class EmulationEnvState:
                     self.attacker_cached_ftp_connections[(m.ips, c.username, c.port)] = c
                 for cr in m.backdoor_credentials:
                     self.attacker_cached_backdoor_credentials[(m.ips, cr.username, cr.pw)] = cr
-        self.attacker_obs_state = AttackerObservationState(catched_flags=0, agent_reachable=agent_reachable)
+        self.attacker_obs_state = EmulationAttackerObservationState(catched_flags=0, agent_reachable=agent_reachable)
         self.attacker_obs_state.last_attacker_action = None
         self.attacker_obs_state.undetected_intrusions_steps = 0
         self.attacker_obs_state.all_flags = False
@@ -77,7 +77,7 @@ class EmulationEnvState:
                 if len(m.ssh_connections) > 0:
                     self.defender_cached_ssh_connections["_".join(m.ips)] = m.ssh_connections
         else:
-            self.defender_obs_state = DefenderObservationState()
+            self.defender_obs_state = EmulationDefenderObservationState()
 
     def cleanup(self) -> None:
         """
@@ -101,7 +101,7 @@ class EmulationEnvState:
 
         self.defender_obs_state.cleanup()
 
-    def get_attacker_machine(self, ip: str) -> Union[AttackerMachineObservationState, None]:
+    def get_attacker_machine(self, ip: str) -> Union[EmulationAttackerMachineObservationState, None]:
         """
         Utility function for extracting the attacker machine from the attacker's observation
 
@@ -113,7 +113,7 @@ class EmulationEnvState:
                 return m
         return None
 
-    def get_defender_machine(self, ip: str) -> Union[DefenderMachineObservationState, None]:
+    def get_defender_machine(self, ip: str) -> Union[EmulationDefenderMachineObservationState, None]:
         """
         Utility function for extracting the defender machine from the defender's observation given an IP
 

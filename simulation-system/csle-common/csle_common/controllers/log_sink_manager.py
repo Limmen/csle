@@ -35,7 +35,8 @@ class LogSinkManager:
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
-                                    ip=emulation_env_config.log_sink_config.container.get_ips()[0])
+                                    ip=emulation_env_config.log_sink_config.container.get_ips()[0],
+                                    create_producer=False)
 
         # Check if kafka_manager is already running
         cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \

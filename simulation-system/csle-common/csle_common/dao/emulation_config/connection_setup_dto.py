@@ -1,5 +1,6 @@
 from typing import List
-from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
+from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
+    import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.controllers.forward_tunnel_thread import ForwardTunnelThread
 
@@ -12,7 +13,7 @@ class ConnectionSetupDTO:
     def __init__(self, connected : bool = False, users : List[str] = None, target_connections  : List = None,
                  tunnel_threads : List[ForwardTunnelThread] = None, forward_ports : List[int] = None,
                  ports : List[int] = None, interactive_shells : List = None, total_time : float = 0.0,
-                 non_failed_credentials : List[Credential] = None, proxies : List[ConnectionObservationState] = None):
+                 non_failed_credentials : List[Credential] = None, proxies : List[EmulationConnectionObservationState] = None):
         """
         Initializes the DTO
 

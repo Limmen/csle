@@ -1,10 +1,13 @@
-from csle_common.dao.observation.common.port_observation_state import PortObservationState
-from csle_common.dao.observation.common.vulnerability_observation_state import VulnerabilityObservationState
+from csle_common.dao.emulation_observation.common.emulation_port_observation_state \
+    import EmulationPortObservationState
+from csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state \
+    import EmulationVulnerabilityObservationState
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
-from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
+    import EmulationAttackerMachineObservationState
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
 from csle_attacker.simulation.util.simulator_util import SimulatorUtil
 
@@ -15,7 +18,7 @@ class ReconSimulatorUtil:
     """
 
     @staticmethod
-    def simulate_port_vuln_scan_helper(s: EmulationEnvState, a: AttackerAction,
+    def simulate_port_vuln_scan_helper(s: EmulationEnvState, a: EmulationAttackerAction,
                                        emulation_env_config: EmulationEnvConfig,
                                        protocol=TransportProtocol.TCP, vuln_scan : bool = False) -> EmulationEnvState:
         """
@@ -36,17 +39,17 @@ class ReconSimulatorUtil:
             for c in emulation_env_config.containers_config.containers:
                 for ip in a.ips:
                     if ip in c.get_ips() and ip in reachable_nodes:
-                        new_m_obs = AttackerMachineObservationState(ips=c.get_ips())
+                        new_m_obs = EmulationAttackerMachineObservationState(ips=c.get_ips())
                         new_m_obs.reachable = emulation_env_config.containers_config.get_reachable_ips(container=c)
                         for service in emulation_env_config.services_config.get_services_for_ips(ips=c.get_ips()):
                             if service.protocol == protocol:
-                                port_obs = PortObservationState(port=service.port, open=True, service=service.name,
-                                                                protocol=protocol)
+                                port_obs = EmulationPortObservationState(port=service.port, open=True, service=service.name,
+                                                                         protocol=protocol)
                                 new_m_obs.ports.append(port_obs)
 
                         if vuln_scan:
                             for vuln in emulation_env_config.vuln_config.get_vulnerabilities(ips=c.get_ips()):
-                                vuln_obs = VulnerabilityObservationState(
+                                vuln_obs = EmulationVulnerabilityObservationState(
                                     name=vuln.name, port=vuln.port, protocol=vuln.protocol, cvss=vuln.cvss,
                                     service=vuln.service, credentials=vuln.credentials)
                                 new_m_obs.cve_vulns.append(vuln_obs)
@@ -76,17 +79,17 @@ class ReconSimulatorUtil:
             for c in emulation_env_config.containers_config.containers:
                 if not c.reachable(reachable_ips=list(reachable_nodes)):
                     continue
-                m_obs = AttackerMachineObservationState(ips=c.get_ips())
+                m_obs = EmulationAttackerMachineObservationState(ips=c.get_ips())
                 m_obs.reachable = emulation_env_config.containers_config.get_reachable_ips(container=c)
                 for service in emulation_env_config.services_config.get_services_for_ips(ips=c.get_ips()):
                     if service.protocol == protocol:
-                        port_obs = PortObservationState(port=service.port, open=True, service=service.name,
-                                                        protocol=protocol)
+                        port_obs = EmulationPortObservationState(port=service.port, open=True, service=service.name,
+                                                                 protocol=protocol)
                         m_obs.ports.append(port_obs)
 
                 if vuln_scan:
                     for vuln in emulation_env_config.vuln_config.get_vulnerabilities(ips=c.get_ips()):
-                        vuln_obs = VulnerabilityObservationState(
+                        vuln_obs = EmulationVulnerabilityObservationState(
                             name=vuln.name, port=vuln.port, protocol=vuln.protocol, cvss=vuln.cvss,
                             service=vuln.service, credentials=vuln.credentials)
                         m_obs.cve_vulns.append(vuln_obs)
@@ -100,7 +103,7 @@ class ReconSimulatorUtil:
         return s_prime
 
     @staticmethod
-    def simulate_host_scan_helper(s: EmulationEnvState, a: AttackerAction,
+    def simulate_host_scan_helper(s: EmulationEnvState, a: EmulationAttackerAction,
                                   emulation_env_config: EmulationEnvConfig, os=False) -> EmulationEnvState:
         """
         Helper method for simulating a host-scan (i.e non-port scan) action
@@ -119,7 +122,7 @@ class ReconSimulatorUtil:
 
             for c in emulation_env_config.containers_config.containers:
                 if c.get_ips() == a.ips and c.get_ips() in reachable_nodes:
-                    new_m_obs = AttackerMachineObservationState(ips=c.get_ips())
+                    new_m_obs = EmulationAttackerMachineObservationState(ips=c.get_ips())
                     new_m_obs.reachable = emulation_env_config.containers_config.get_reachable_ips(container=c)
                     if os:
                         new_m_obs.os = c.os
@@ -149,7 +152,7 @@ class ReconSimulatorUtil:
             for c in emulation_env_config.containers_config.containers:
                 for ip in c.get_ips():
                     if ip in reachable_nodes:
-                        m_obs = AttackerMachineObservationState(ips=c.get_ips())
+                        m_obs = EmulationAttackerMachineObservationState(ips=c.get_ips())
                         m_obs.reachable = emulation_env_config.containers_config.get_reachable_ips(container=c)
                         if os:
                             m_obs.os = c.os

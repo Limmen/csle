@@ -2,11 +2,13 @@ from typing import Tuple
 import time
 import random
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.action.attacker.attacker_action import AttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
-from csle_common.dao.observation.common.connection_observation_state import ConnectionObservationState
-from csle_common.dao.observation.attacker.attacker_machine_observation_state import AttackerMachineObservationState
+from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
+    import EmulationConnectionObservationState
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
+    import EmulationAttackerMachineObservationState
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.util.emulation_util import EmulationUtil
@@ -19,10 +21,10 @@ class ShellUtil:
     """
 
     @staticmethod
-    def _find_flag_using_ssh(machine: AttackerMachineObservationState,
+    def _find_flag_using_ssh(machine: EmulationAttackerMachineObservationState,
                              emulation_env_config: EmulationEnvConfig,
-                             a: AttackerAction, new_m_obs: AttackerMachineObservationState) \
-            -> Tuple[AttackerMachineObservationState, float, bool]:
+                             a: EmulationAttackerAction, new_m_obs: EmulationAttackerMachineObservationState) \
+            -> Tuple[EmulationAttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing SSH connections to a specific machine to search the file system for flags
 
@@ -81,10 +83,10 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
-    def _find_flag_using_telnet(machine: AttackerMachineObservationState,
-                                emulation_env_config: EmulationEnvConfig, a: AttackerAction,
-                                new_m_obs: AttackerMachineObservationState) \
-            -> Tuple[AttackerMachineObservationState, float, bool]:
+    def _find_flag_using_telnet(machine: EmulationAttackerMachineObservationState,
+                                emulation_env_config: EmulationEnvConfig, a: EmulationAttackerAction,
+                                new_m_obs: EmulationAttackerMachineObservationState) \
+            -> Tuple[EmulationAttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing Telnet connections to a specific machine to search the file system for flags
 
@@ -129,10 +131,10 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
-    def _find_flag_using_ftp(machine: AttackerMachineObservationState, emulation_env_config: EmulationEnvConfig,
-                             a: AttackerAction,
-                             new_m_obs: AttackerMachineObservationState) \
-            -> Tuple[AttackerMachineObservationState, float, bool]:
+    def _find_flag_using_ftp(machine: EmulationAttackerMachineObservationState, emulation_env_config: EmulationEnvConfig,
+                             a: EmulationAttackerAction,
+                             new_m_obs: EmulationAttackerMachineObservationState) \
+            -> Tuple[EmulationAttackerMachineObservationState, float, bool]:
         """
         Utility function for using existing FTP connections to a specific machine to search the file system for flags
 
@@ -252,7 +254,7 @@ class ShellUtil:
                 or "already the newest version" in result)
 
     @staticmethod
-    def install_tools_helper(s: EmulationEnvState, a: AttackerAction,
+    def install_tools_helper(s: EmulationEnvState, a: EmulationAttackerAction,
                              emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Uses compromised machines with root access to install tools
@@ -266,7 +268,7 @@ class ShellUtil:
         total_cost = 0
         total_time = 0
         for machine in s.attacker_obs_state.machines:
-            new_m_obs = AttackerMachineObservationState(ips=machine.ips)
+            new_m_obs = EmulationAttackerMachineObservationState(ips=machine.ips)
             installed = False
             if machine.logged_in and machine.root and not machine.tools_installed:
                 # Start with ssh connections
@@ -389,7 +391,7 @@ class ShellUtil:
 
 
     @staticmethod
-    def execute_ssh_backdoor_helper(s: EmulationEnvState, a: AttackerAction,
+    def execute_ssh_backdoor_helper(s: EmulationEnvState, a: EmulationAttackerAction,
                                     emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Uses compromised machines with root access to setup SSH backdoor
@@ -404,7 +406,7 @@ class ShellUtil:
         new_machines_obs = []
         total_cost = 0
         for machine in s.attacker_obs_state.machines:
-            new_m_obs = AttackerMachineObservationState(ips=machine.ips)
+            new_m_obs = EmulationAttackerMachineObservationState(ips=machine.ips)
             backdoor_created = False
             if machine.logged_in and machine.root and machine.tools_installed and not machine.backdoor_installed:
                 new_m_obs.backdoor_tried = True
@@ -412,7 +414,7 @@ class ShellUtil:
                 for cr in s.attacker_cached_backdoor_credentials.values():
                     if (machine.ips, cr.username, cr.kafka_port) in s.attacker_cached_ssh_connections:
                         conn_dto = s.attacker_cached_ssh_connections[(machine.ips, cr.username, cr.kafka_port)]
-                        connection_dto = ConnectionObservationState(
+                        connection_dto = EmulationConnectionObservationState(
                             conn=conn_dto.conn, username=cr.username, root=machine.root,
                             service=constants.SSH.SERVICE_NAME, port=cr.kafka_port, ip=machine.ips)
                         new_m_obs.shell_access_credentials.append(cr)
@@ -471,13 +473,13 @@ class ShellUtil:
                     if len(setup_connection_dto.target_connections) == 0:
                         print("cannot install backdoor, machine:{}, credentials:{}".format(machine.ips, credential))
 
-                    connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
-                                                                username=credential.username,
-                                                                root=machine.root,
-                                                                service=constants.SSH.SERVICE_NAME,
-                                                                port=credential.port,
-                                                                proxy=setup_connection_dto.proxies[0],
-                                                                ip=machine.ips)
+                    connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
+                                                                         username=credential.username,
+                                                                         root=machine.root,
+                                                                         service=constants.SSH.SERVICE_NAME,
+                                                                         port=credential.port,
+                                                                         proxy=setup_connection_dto.proxies[0],
+                                                                         ip=machine.ips)
                     new_m_obs.ssh_connections.append(connection_dto)
                     new_m_obs.backdoor_installed = True
                     new_machines_obs.append(new_m_obs)
@@ -526,13 +528,13 @@ class ShellUtil:
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
                             a=a, emulation_env_config=emulation_env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         telnet_cost += setup_connection_dto.total_time
-                        connection_dto = ConnectionObservationState(conn=setup_connection_dto.target_connections[0],
-                                                                    username=credential.username,
-                                                                    root=machine.root,
-                                                                    service=constants.SSH.SERVICE_NAME,
-                                                                    port=credential.port,
-                                                                    proxy=setup_connection_dto.proxies[0],
-                                                                    ip=machine.ips)
+                        connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
+                                                                             username=credential.username,
+                                                                             root=machine.root,
+                                                                             service=constants.SSH.SERVICE_NAME,
+                                                                             port=credential.port,
+                                                                             proxy=setup_connection_dto.proxies[0],
+                                                                             ip=machine.ips)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
@@ -551,7 +553,7 @@ class ShellUtil:
         return s_prime
 
     @staticmethod
-    def execute_service_login_helper(s: EmulationEnvState, a: AttackerAction,
+    def execute_service_login_helper(s: EmulationEnvState, a: EmulationAttackerAction,
                                      emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Executes a service login on the emulation using previously found credentials

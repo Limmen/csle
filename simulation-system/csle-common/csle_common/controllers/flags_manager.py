@@ -20,6 +20,7 @@ class FlagsManager:
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=flags_conf.ip)
 
             for flag in flags_conf.flags:
+                print(f"Creating flag:{flag.name} on {flags_conf.ip}")
                 cmd = constants.COMMANDS.SUDO_RM_RF + " {}".format(flag.path)
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=flags_conf.ip))
                 cmd = constants.COMMANDS.SUDO_TOUCH + " {}".format(flag.path)
