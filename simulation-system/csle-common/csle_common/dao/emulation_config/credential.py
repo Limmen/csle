@@ -34,7 +34,10 @@ class Credential:
         d["username"] = self.username
         d["pw"] = self.pw
         d["port"] = self.port
-        d["protocol"] = self.protocol.name
+        if self.protocol is not None:
+            d["protocol"] = self.protocol.name
+        else:
+            d["protocol"] = None
         d["service"] = self.service
         d["root"] = self.root
         return d

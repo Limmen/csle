@@ -37,7 +37,6 @@ class SimulationTrajectory:
             self.defender_observations, self.infos, self.dones, self.attacker_actions,
             self.defender_actions, self.states, self.beliefs, self.infrastructure_metrics)
 
-
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the trajectory
@@ -89,9 +88,9 @@ class SimulationTrajectory:
             trajectory.infrastructure_metrics = d["infrastructure_metrics"]
         return trajectory
 
-
     @staticmethod
-    def save_trajectories(trajectories_save_dir, trajectories : List["SimulationTrajectory"], trajectories_file : str = None) -> None:
+    def save_trajectories(trajectories_save_dir, trajectories : List["SimulationTrajectory"],
+                          trajectories_file : str = None) -> None:
         """
         Utility function for saving a list of trajectories to a json file
 
@@ -100,10 +99,12 @@ class SimulationTrajectory:
         :param trajectories_file: the filename of the trajectories file
         :return: None
         """
+        if trajectories_file is None:
+            trajectories_file =  constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
         trajectories = list(map(lambda x: x.to_dict(), trajectories))
         if not os.path.exists(trajectories_save_dir):
             os.makedirs(trajectories_save_dir)
-        with open(trajectories_save_dir + "/"+ trajectories_file, 'w') as fp:
+        with open(trajectories_save_dir + constants.COMMANDS.SLASH_DELIM + trajectories_file, 'w') as fp:
             json.dump({"trajectories": trajectories}, fp, cls=NpEncoder)
 
     @staticmethod
@@ -117,33 +118,13 @@ class SimulationTrajectory:
         """
         if trajectories_file is None:
             trajectories_file =  constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
-        path = trajectories_save_dir + "/" + trajectories_file
+        path = trajectories_save_dir + constants.COMMANDS.SLASH_DELIM + trajectories_file
         if os.path.exists(path):
             with open(path, 'r') as fp:
                 d = json.load(fp)
                 trajectories  = d["trajectories"]
                 trajectories = list(map(lambda x: SimulationTrajectory.from_dict(x), trajectories))
                 return trajectories
-        else:
-            print("Warning: Could not read trajectories file, path does not exist:{}".format(path))
-            return []
-
-    @staticmethod
-    def load_trajectories_json(trajectories_save_dir, trajectories_file: str = None) -> List["SimulationTrajectory"]:
-        """
-        Utility function for loading a trajectories from a json file
-
-        :param trajectories_save_dir: the directory where to load the trajectories from
-        :param trajectories_file: (optional) a custom name of the trajectories file
-        :return: a list of the loaded trajectories
-        """
-        if trajectories_file is None:
-            trajectories_file = constants.SYSTEM_IDENTIFICATION.TRAJECTORIES_FILE
-        path = trajectories_save_dir + "/" + trajectories_file
-        if os.path.exists(path):
-            with open(path, 'r') as fp:
-                d = json.load(fp)
-                return d
         else:
             print("Warning: Could not read trajectories file, path does not exist:{}".format(path))
             return []

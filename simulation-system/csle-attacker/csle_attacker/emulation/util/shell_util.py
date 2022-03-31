@@ -153,7 +153,7 @@ class ShellUtil:
         flag_paths = []
         for c in ftp_connections_sorted_by_root:
             for i in range(constants.ENV_CONSTANTS.ATTACKER_FTP_RETRY_FIND_FLAG):
-                cmd = a.alt_cmd[0] + "\n"
+                cmd = a.alt_cmds[0] + "\n"
                 if c.root:
                     cmd = constants.COMMANDS.SUDO + " " + cmd
                 start = time.time()
@@ -232,7 +232,6 @@ class ShellUtil:
         """
         sftp_client = emulation_env_config.get_hacker_connection().open_sftp()
         remote_file = sftp_client.open(constants.NMAP.RESULTS_DIR + file_name)
-        installed = False
         try:
             data = remote_file.read()
             data = data.decode()
@@ -269,6 +268,8 @@ class ShellUtil:
         total_time = 0
         for machine in s.attacker_obs_state.machines:
             new_m_obs = EmulationAttackerMachineObservationState(ips=machine.ips)
+            if machine.logged_in and machine.root:
+                new_m_obs.install_tools_tried = True
             installed = False
             if machine.logged_in and machine.root and not machine.tools_installed:
                 # Start with ssh connections
@@ -353,8 +354,6 @@ class ShellUtil:
                     if installed:
                         break
 
-                new_m_obs.install_tools_tried = True
-
                 total_cost += telnet_cost
         attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
                                                              emulation_env_config=emulation_env_config, action=a)
@@ -412,17 +411,20 @@ class ShellUtil:
                 new_m_obs.backdoor_tried = True
                 # Check cached connections
                 for cr in s.attacker_cached_backdoor_credentials.values():
-                    if (machine.ips, cr.username, cr.kafka_port) in s.attacker_cached_ssh_connections:
-                        conn_dto = s.attacker_cached_ssh_connections[(machine.ips, cr.username, cr.kafka_port)]
-                        connection_dto = EmulationConnectionObservationState(
-                            conn=conn_dto.conn, username=cr.username, root=machine.root,
-                            service=constants.SSH.SERVICE_NAME, port=cr.kafka_port, ip=machine.ips)
-                        new_m_obs.shell_access_credentials.append(cr)
-                        new_m_obs.backdoor_credentials.append(cr)
-                        new_m_obs.ssh_connections.append(connection_dto)
-                        new_m_obs.backdoor_installed = True
-                        new_machines_obs.append(new_m_obs)
-                        backdoor_created = True
+                    for ip in machine.ips:
+                        if (ip, cr.username, cr.kafka_port) in s.attacker_cached_ssh_connections:
+                            conn_dto = s.attacker_cached_ssh_connections[
+                                (ip, cr.username, cr.kafka_port)]
+                            connection_dto = EmulationConnectionObservationState(
+                                conn=conn_dto.conn, username=cr.username, root=machine.root,
+                                service=constants.SSH.SERVICE_NAME, port=cr.kafka_port, ip=ip)
+                            new_m_obs.shell_access_credentials.append(cr)
+                            new_m_obs.backdoor_credentials.append(cr)
+                            new_m_obs.ssh_connections.append(connection_dto)
+                            new_m_obs.backdoor_installed = True
+                            new_machines_obs.append(new_m_obs)
+                            backdoor_created = True
+                            break
 
                 if backdoor_created:
                     continue
@@ -479,7 +481,7 @@ class ShellUtil:
                                                                          service=constants.SSH.SERVICE_NAME,
                                                                          port=credential.port,
                                                                          proxy=setup_connection_dto.proxies[0],
-                                                                         ip=machine.ips)
+                                                                         ip=setup_connection_dto.ip)
                     new_m_obs.ssh_connections.append(connection_dto)
                     new_m_obs.backdoor_installed = True
                     new_machines_obs.append(new_m_obs)
@@ -534,7 +536,7 @@ class ShellUtil:
                                                                              service=constants.SSH.SERVICE_NAME,
                                                                              port=credential.port,
                                                                              proxy=setup_connection_dto.proxies[0],
-                                                                             ip=machine.ips)
+                                                                             ip=setup_connection_dto.ip)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)
@@ -545,8 +547,8 @@ class ShellUtil:
                         break
 
                 total_cost += telnet_cost
-        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
-                                                             emulation_env_config=emulation_env_config, action=a)
+        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
+            s.attacker_obs_state.machines,  new_machines_obs, emulation_env_config=emulation_env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = attacker_machine_observations
 

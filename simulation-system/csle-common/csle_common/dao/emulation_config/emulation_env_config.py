@@ -1,3 +1,4 @@
+from typing import List
 import socket
 import paramiko
 from confluent_kafka import Producer
@@ -153,8 +154,8 @@ class EmulationEnvConfig:
         """
         :return: the next port to use for forwarding
         """
-        self.get_port_forward_port+=1
-        return self.get_port_forward_port()
+        self.port_forward_port+=1
+        return self.port_forward_port
 
     def ids(self) -> bool:
         """
@@ -176,4 +177,15 @@ class EmulationEnvConfig:
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}"
+
+    def get_all_ips(self) -> List[str]:
+        """
+        :return: a list of all ip addresses in the emulation
+        """
+        ips = set()
+        for c in self.containers_config.containers:
+            for ip_net in c.ips_and_networks:
+                ip, _ = ip_net
+                ips.add(ip)
+        return ips
 

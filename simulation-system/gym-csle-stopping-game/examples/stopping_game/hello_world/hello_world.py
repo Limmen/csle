@@ -1,9 +1,6 @@
-import random
-
 import gym
 import numpy as np
 from csle_common.util.experiment_util import ExperimentUtil
-from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 

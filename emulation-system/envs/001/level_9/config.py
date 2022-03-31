@@ -2910,7 +2910,7 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
             name=constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS,
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
             vuln_type=VulnType.WEAK_PW,
-            credentials=[Credential(username="puppet", pw="puppet", root=False,
+            credentials=[Credential(username="puppet", pw="puppet", root=True,
                                     service=constants.SSH.SERVICE_NAME,
                                     protocol=TransportProtocol.TCP,
                                     port=constants.SSH.DEFAULT_PORT)],
@@ -2978,7 +2978,7 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
                                     port=None)],
             cvss=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426_CVSS,
             cve=constants.EXPLOIT_VULNERABILITES.CVE_2010_0426,
-            root=False, port=None, protocol=TransportProtocol.TCP,
+            root=True, port=None, protocol=TransportProtocol.TCP,
             service=None),
         NodeVulnerabilityConfig(
             name=constants.EXPLOIT_VULNERABILITES.CVE_2015_1427,
@@ -3041,7 +3041,7 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
                                     port=None)],
             cvss=constants.EXPLOIT_VULNERABILITES.CVE_2015_5602_CVSS,
             cve=constants.EXPLOIT_VULNERABILITES.CVE_2015_5602,
-            root=False, port=None, protocol=TransportProtocol.TCP,
+            root=True, port=None, protocol=TransportProtocol.TCP,
             service=None),
         NodeVulnerabilityConfig(
             name=constants.EXPLOIT_VULNERABILITES.CVE_2016_10033,

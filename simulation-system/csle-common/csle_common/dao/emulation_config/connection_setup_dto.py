@@ -13,7 +13,8 @@ class ConnectionSetupDTO:
     def __init__(self, connected : bool = False, users : List[str] = None, target_connections  : List = None,
                  tunnel_threads : List[ForwardTunnelThread] = None, forward_ports : List[int] = None,
                  ports : List[int] = None, interactive_shells : List = None, total_time : float = 0.0,
-                 non_failed_credentials : List[Credential] = None, proxies : List[EmulationConnectionObservationState] = None):
+                 non_failed_credentials : List[Credential] = None,
+                 proxies : List[EmulationConnectionObservationState] = None, ip: str = None):
         """
         Initializes the DTO
 
@@ -27,6 +28,7 @@ class ConnectionSetupDTO:
         :param total_time: the total time of connection
         :param non_failed_credentials: the non-failed-credentials
         :param proxies: the list of proxy connections
+        :param ip: the ip address of the connectio
         """
         self.connected = connected
         self.total_time = total_time
@@ -39,6 +41,7 @@ class ConnectionSetupDTO:
         self.total_time = total_time
         self.non_failed_credentials = non_failed_credentials
         self.proxies = proxies
+        self.ip = ip
 
         if self.target_connections is None:
             self.target_connections = []
@@ -62,13 +65,13 @@ class ConnectionSetupDTO:
         :return: a string represetation of the object
         """
         return "connected:{},total_time:{},users:{},target_connections:{},tunnel_threads:{},forward_ports:{}," \
-               "ports:{},interactive_shells:{},non_failed_credentials:{},proxies:{}".format(
+               "ports:{},interactive_shells:{},non_failed_credentials:{},proxies:{},ip:{}".format(
             self.connected, self.total_time, list(map(lambda x: str(x), self.users)),
             list(map(lambda x: str(x), self.target_connections)), list(map(lambda x: str(x), self.tunnel_threads)),
             list(map(lambda x: str(x), self.forward_ports)), list(map(lambda x: str(x), self.ports)),
             list(map(lambda x: str(x), self.interactive_shells)),
             list(map(lambda x: str(x), self.non_failed_credentials)),
-            list(map(lambda x: str(x), self.proxies)))
+            list(map(lambda x: str(x), self.proxies)), self.ip)
 
 
     def copy(self) -> "ConnectionSetupDTO":
@@ -79,5 +82,5 @@ class ConnectionSetupDTO:
             connected=self.connected, users = self.users, target_connections=self.target_connections,
             tunnel_threads=self.tunnel_threads, forward_ports=self.forward_ports, ports=self.ports,
             interactive_shells=self.interactive_shells, total_time=self.total_time,
-            non_failed_credentials=self.non_failed_credentials, proxies=self.proxies
+            non_failed_credentials=self.non_failed_credentials, proxies=self.proxies, ip=self.ip
         )

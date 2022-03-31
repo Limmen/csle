@@ -20,11 +20,11 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.STOP
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Report Intrusion", cmd=cmd,
+        return EmulationDefenderAction(id=id, name="Report Intrusion", cmds=cmd,
                                        type=EmulationDefenderActionType.STOP,
                                        descr="Reports an ongoing intrusion to the infrastructure and stops",
                                        cost=0.0, index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.GAME_END, alt_cmd=alt_cmd)
+                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.GAME_END, alt_cmds=alt_cmd)
 
     @staticmethod
     def CONTINUE(index: int) -> EmulationDefenderAction:
@@ -37,11 +37,11 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.CONTINUE
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Continue", cmd=cmd,
+        return EmulationDefenderAction(id=id, name="Continue", cmds=cmd,
                                        type=EmulationDefenderActionType.CONTINUE,
                                        descr="A 'continue' action, the defender chooses to not make any action",
                                        cost=0.0, index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.CONTINUE, alt_cmd
+                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.CONTINUE, alt_cmds
                                        =alt_cmd)
 
     @staticmethod
@@ -56,13 +56,13 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.RESET_USERS
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Reset Users", cmd=cmd,
+        return EmulationDefenderAction(id=id, name="Reset Users", cmds=cmd,
                                        type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
                                        descr="A non terminal stop action the defender resets all user accounts, "
                                     "which means that password vulnerabilities are mitigated",
                                        cost=0.0, index=index,
                                        ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
-                                       alt_cmd=alt_cmd)
+                                       alt_cmds=alt_cmd)
 
     @staticmethod
     def ENABLE_DPI(index: int) -> EmulationDefenderAction:
@@ -75,12 +75,12 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.ENABLE_DPI
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Enable DPI", cmd=cmd,
+        return EmulationDefenderAction(id=id, name="Enable DPI", cmds=cmd,
                                        type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
                                        descr="A non terminal stop action, the defender enables DPI by starting the IDS",
                                        cost=0.0, index=index,
                                        ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
-                                       alt_cmd=alt_cmd)
+                                       alt_cmds=alt_cmd)
 
     @staticmethod
     def BLACKLIST_IPS(index: int) -> EmulationDefenderAction:
@@ -94,7 +94,7 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.BLACKLIST_IPS
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Blacklist IPs", cmd=cmd,
+        return EmulationDefenderAction(id=id, name="Blacklist IPs", cmds=cmd,
                                        type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
                                        descr="A non terminal stop action, the defender blacklists all IPs that generate "
                                     "IDS alerts that exceed a threshold, the blacklist is implemented "
@@ -102,4 +102,4 @@ class EmulationDefenderStoppingActions:
                                        cost=0.0, index=index,
                                        ips=[],
                                        subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
-                                       alt_cmd=alt_cmd)
+                                       alt_cmds=alt_cmd)

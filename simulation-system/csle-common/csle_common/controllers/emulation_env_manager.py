@@ -10,6 +10,7 @@ from csle_common.controllers.ids_manager import IDSManager
 from csle_common.controllers.host_manager import HostManager
 from csle_common.controllers.log_sink_manager import LogSinkManager
 from csle_common.controllers.users_manager import UsersManager
+from csle_common.controllers.vulnerabilities_manager import VulnerabilitiesManager
 from csle_common.controllers.flags_manager import FlagsManager
 from csle_common.controllers.traffic_manager import TrafficManager
 from csle_common.controllers.topology_manager import TopologyManager
@@ -32,7 +33,7 @@ class EmulationEnvManager:
         :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
         :return: None
         """
-        steps = 12
+        steps = 13
         if no_traffic:
             steps = steps-1
         current_step = 1
@@ -56,6 +57,10 @@ class EmulationEnvManager:
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Creating users --")
         UsersManager.create_users(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        print(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
+        VulnerabilitiesManager.create_vulns(emulation_env_config=emulation_env_config)
 
         current_step += 1
         print(f"-- Step {current_step}/{steps}: Creating flags --")

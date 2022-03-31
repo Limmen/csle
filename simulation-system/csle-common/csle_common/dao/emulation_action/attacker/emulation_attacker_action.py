@@ -9,10 +9,11 @@ class EmulationAttackerAction:
     """
     Class representing an action of the attacker in the emulation
     """
-    def __init__(self, id : EmulationAttackerActionId, name :str, cmds : List[str], type: EmulationAttackerActionType, descr: str,
+    def __init__(self, id : EmulationAttackerActionId, name :str, cmds : List[str],
+                 type: EmulationAttackerActionType, descr: str,
                  ips :List[str], index: int, subnet : bool = False,
                  action_outcome: EmulationAttackerActionOutcome = EmulationAttackerActionOutcome.INFORMATION_GATHERING,
-                 vulnerability: str = None, alt_cmd = List[str], backdoor: bool = False):
+                 vulnerability: str = None, alt_cmds : List[str] = None, backdoor: bool = False):
         """
         Class constructor
 
@@ -26,7 +27,7 @@ class EmulationAttackerAction:
         :param subnet: if True, apply action to entire subnet
         :param action_outcome: type of the outcome of the action
         :param vulnerability: type of vulnerability that the action exploits (in case an exploit)
-        :param alt_cmd: alternative command if the first command does not work
+        :param alt_cmds: alternative command if the first command does not work
         :param backdoor: if the action also installs a backdoor (some exploits does this)
         """
         self.type = type
@@ -40,7 +41,7 @@ class EmulationAttackerAction:
         self.vulnerability = vulnerability
         self.action_outcome = action_outcome
         self.backdoor = backdoor
-        self.alt_cmd = alt_cmd
+        self.alt_cmds = alt_cmds
         self.index = index
         self.backdoor = backdoor
 
@@ -102,3 +103,50 @@ class EmulationAttackerAction:
         :return: a string representation of the object
         """
         return "id:{},name:{},ips:{},subnet:{},index:{}".format(self.id, self.name, self.ips, self.subnet, self.index)
+
+    @staticmethod
+    def from_dict(d: dict) -> "EmulationAttackerAction":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = EmulationAttackerAction(
+            type = d["type"], id=d["id"], name=d["name"], cmds=d["cmds"], descr=d["descr"], index=d["index"],
+            subnet=d["subnet"], ips=d["ips"], vulnerability=d["vulnerability"], action_outcome=d["action_outcome"],
+            backdoor=d["backdoor"], alt_cmds=d["alt_cmds"]
+        )
+        return obj
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["id"] = self.id
+        d["name"] = self.name
+        d["cmds"] = self.cmds
+        d["type"] = self.type
+        d["descr"] = self.descr
+        d["ips"] = self.ips
+        d["index"] = self.index
+        d["subnet"] = self.subnet
+        d["action_outcome"] = self.action_outcome
+        d["vulnerability"] = self.vulnerability
+        d["alt_cmds"] = self.alt_cmds
+        d["backdoor"] = self.backdoor
+        return d
+
+    def ips_match(self, ips: List[str]) -> bool:
+        """
+        Checks if a list of ips overlap with the ips of this host
+
+        :param ips: the list of ips to check
+        :return:  True if they match, False otherwise
+        """
+        for ip in self.ips:
+            if ip in ips:
+                return True
+        return False
+

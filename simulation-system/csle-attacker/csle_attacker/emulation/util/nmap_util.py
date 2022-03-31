@@ -451,7 +451,6 @@ class NmapUtil:
         s_prime.attacker_obs_state.machines = attacker_machine_observations
         s_prime.attacker_obs_state.sort_machines()
         s_prime.defender_obs_state.sort_machines()
-
         return s_prime
 
     @staticmethod
@@ -470,7 +469,6 @@ class NmapUtil:
         cmds, file_names = a.nmap_cmds()
         if masscan:
             cmds = a.masscan_cmds()
-        print(f"commands:{cmds}")
         results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=emulation_env_config.get_hacker_connection())
         total_time = sum(list(map(lambda x: x[2], results)))
 
@@ -480,15 +478,15 @@ class NmapUtil:
         scan_result = NmapScanResult(hosts=[], ips=[emulation_env_config.containers_config.agent_ip])
         for file_name in file_names:
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
-                # try:
-                xml_data = NmapUtil.parse_nmap_scan(file_name=file_name, emulation_env_config=emulation_env_config)
-                scan_result_new = NmapUtil.parse_nmap_scan_xml(
-                    xml_data, ips=[emulation_env_config.containers_config.agent_ip], action=a)
-                s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
-                scan_result =NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
-                # except Exception as e:
-                #     print(f"There was an exception parsing the nmap result file:{file_name}")
-                #     print(e)
+                try:
+                    xml_data = NmapUtil.parse_nmap_scan(file_name=file_name, emulation_env_config=emulation_env_config)
+                    scan_result_new = NmapUtil.parse_nmap_scan_xml(
+                        xml_data, ips=[emulation_env_config.containers_config.agent_ip], action=a)
+                    s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
+                    scan_result =NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
+                except Exception as e:
+                    print(f"There was an exception parsing the nmap result file:{file_name}")
+                    print(e)
         return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, emulation_env_config=emulation_env_config,
                                                       partial_result=scan_result.copy())
 
@@ -651,12 +649,12 @@ class NmapUtil:
         for machine in s.attacker_obs_state.machines:
             scan_result = None
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
-
                 ssh_connections_sorted_by_root = sorted(
                     machine.ssh_connections,
                     key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
                     reverse=True)
                 for c in ssh_connections_sorted_by_root:
+                    cwd = "/home/" + c.username + "/"
                     cmds, file_names = a.nmap_cmds(machine_ips=machine.ips)
                     results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
                     total_time = sum(list(map(lambda x: x[2], results)))
@@ -671,13 +669,13 @@ class NmapUtil:
                             try:
                                 xml_data = NmapUtil.parse_nmap_scan(
                                     file_name=file_name, emulation_env_config=emulation_env_config,
-                                    conn=c.conn, dir=file_name)
+                                    conn=c.conn, dir=cwd)
                                 new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ips=machine.ips, action=a)
                                 scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
                                                                                scan_result_2=new_scan_result)
                                 machine.reachable.update(scan_result.reachable)
                             except Exception as e:
-                                break
+                                print(f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
                     break
 
                 # Update state with scan result

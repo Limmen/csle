@@ -23,4 +23,13 @@ CREATE TABLE IF NOT EXISTS emulations (
 GRANT ALL ON emulations TO csle;
 GRANT USAGE, SELECT ON SEQUENCE emulations_id_seq TO csle;
 
+-- Create table that stores the emulation traces --
+CREATE TABLE IF NOT EXISTS traces (
+    id serial PRIMARY KEY,
+    emulation_name TEXT references emulations(name),
+    trace json NOT NULL
+);
+GRANT ALL ON traces TO csle;
+GRANT USAGE, SELECT ON SEQUENCE traces_id_seq TO csle;
+
 

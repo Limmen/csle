@@ -21,6 +21,7 @@ class EmulationAttackerMachineObservationState:
 
         :param ips: the ip of the machine
         """
+        assert ips is not None and len(ips) > 0
         self.ips = ips
         self.os="unknown"
         self.ports : List[EmulationPortObservationState] = []
@@ -240,6 +241,55 @@ class EmulationAttackerMachineObservationState:
                 return True
         return False
 
+    @staticmethod
+    def from_dict(d: dict) -> "EmulationAttackerMachineObservationState":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = EmulationAttackerMachineObservationState(ips=d["ips"])
+        obj.os = d["os"]
+        obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
+        obj.cve_vulns = list(map(lambda x: EmulationVulnerabilityObservationState.from_dict(x), d["cve_vulns"]))
+        obj.osvdb_vulns = list(map(lambda x: EmulationVulnerabilityObservationState.from_dict(x), d["osvdb_vulns"]))
+        obj.shell_access = d["shell_access"]
+        obj.shell_access_credentials = list(map(lambda x: Credential.from_dict(x), d["shell_access_credentials"]))
+        obj.backdoor_credentials = list(map(lambda x: Credential.from_dict(x), d["backdoor_credentials"]))
+        obj.logged_in = d["logged_in"]
+        obj.root = d["root"]
+        obj.flags_found = set(d["flags_found"])
+        obj.filesystem_searched = d["filesystem_searched"]
+        obj.untried_credentials = d["untried_credentials"]
+        obj.logged_in_services = d["logged_in_services"]
+        obj.root_services = d["root_services"]
+        obj.hostnames = d["hostnames"]
+        obj.trace = d["trace"]
+        obj.telnet_brute_tried = d["telnet_brute_tried"]
+        obj.ssh_brute_tried = d["ssh_brute_tried"]
+        obj.ftp_brute_tried = d["ftp_brute_tried"]
+        obj.cassandra_brute_tried = d["cassandra_brute_tried"]
+        obj.irc_brute_tried = d["irc_brute_tried"]
+        obj.mongo_brute_tried = d["mongo_brute_tried"]
+        obj.mysql_brute_tried = d["mysql_brute_tried"]
+        obj.smtp_brute_tried = d["smtp_brute_tried"]
+        obj.postgres_brute_tried = d["postgres_brute_tried"]
+        obj.tools_installed = d["tools_installed"]
+        obj.backdoor_installed = d["backdoor_installed"]
+        obj.backdoor_tried = d["backdoor_tried"]
+        obj.install_tools_tried = d["install_tools_tried"]
+        obj.sambacry_tried = d["sambacry_tried"]
+        obj.shellshock_tried = d["shellshock_tried"]
+        obj.dvwa_sql_injection_tried = d["dvwa_sql_injection_tried"]
+        obj.cve_2015_3306_tried = d["cve_2015_3306_tried"]
+        obj.cve_2015_1427_tried = d["cve_2015_1427_tried"]
+        obj.cve_2016_10033_tried = d["cve_2016_10033_tried"]
+        obj.cve_2010_0426_tried = d["cve_2010_0426_tried"]
+        obj.cve_2015_5602_tried = d["cve_2015_5602_tried"]
+        obj.reachable = set(d["reachable"])
+        return obj
+
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the object
@@ -257,13 +307,16 @@ class EmulationAttackerMachineObservationState:
                                                  self.backdoor_credentials))
         d["logged_in"] = self.logged_in
         d["root"] = self.root
-        d["flags_found"] = self.flags_found
+        d["flags_found"] = list(self.flags_found)
         d["filesystem_searched"] = self.filesystem_searched
         d["untried_credentials"] = self.untried_credentials
         d["logged_in_services"] = self.logged_in_services
         d["root_services"] = self.root_services
         d["hostnames"] = self.hostnames
-        d["trace"] = self.trace.to_dict()
+        if self.trace is None:
+            d["trace"] = None
+        else:
+            d["trace"] = self.trace.to_dict()
         d["telnet_brute_tried"] = self.telnet_brute_tried
         d["ssh_brute_tried"] = self.ssh_brute_tried
         d["ftp_brute_tried"] = self.ftp_brute_tried

@@ -969,6 +969,7 @@ class SYSTEM_IDENTIFICATION:
     NETWORK_CONF_FILE = "network_conf.pickle"
     DEFENDER_DYNAMICS_MODEL_FILE = "defender_dynamics_model.json"
     TRAJECTORIES_FILE = "taus.json"
+    TRACES_FILE = "traces.json"
     SYSTEM_ID_LOGS_FILE = "system_id_log.csv"
 
 
@@ -1222,7 +1223,7 @@ class METADATA_STORE:
     PASSWORD = "csle"
     HOST = "127.0.0.1"
     EMULATIONS_TABLE = "emulations"
-    LOGSINKS_TABLE = "log_sinks"
+    TRACES_TABLE = "traces"
 
 
 class CONTAINER_POOLS:

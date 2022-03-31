@@ -101,44 +101,50 @@ class ConnectionUtil:
         non_used_nor_cached_credentials = []
         for cr in non_used_credentials:
             if cr.service == constants.SSH.SERVICE_NAME:
-                key = (target_machine.ips, cr.username, cr.port)
-                if key in s.attacker_cached_ssh_connections:
-                    c = s.attacker_cached_ssh_connections[key]
-                    target_machine.ssh_connections.append(c)
-                    target_machine.logged_in = True
-                    target_machine.root = c.root
-                    if cr.service not in target_machine.logged_in_services:
-                        target_machine.logged_in_services.append(cr.service)
-                    if cr.service not in target_machine.root_services:
-                        target_machine.root_services.append(cr.service)
-                else:
-                    non_used_nor_cached_credentials.append(cr)
+                for ip in target_machine.ips:
+                    key = (ip, cr.username, cr.port)
+                    if key in s.attacker_cached_ssh_connections:
+                        c = s.attacker_cached_ssh_connections[key]
+                        target_machine.ssh_connections.append(c)
+                        target_machine.logged_in = True
+                        target_machine.root = c.root
+                        if cr.service not in target_machine.logged_in_services:
+                            target_machine.logged_in_services.append(cr.service)
+                        if cr.service not in target_machine.root_services:
+                            target_machine.root_services.append(cr.service)
+                        break
+                    else:
+                        non_used_nor_cached_credentials.append(cr)
             elif cr.service == constants.TELNET.SERVICE_NAME:
-                key = (target_machine.ips, cr.username, cr.port)
-                if key in s.attacker_cached_telnet_connections:
-                    c = s.attacker_cached_telnet_connections[key]
-                    target_machine.telnet_connections.append(c)
-                    target_machine.logged_in = True
-                    target_machine.root = c.root
-                    if cr.service not in target_machine.logged_in_services:
-                        target_machine.logged_in_services.append(cr.service)
-                    if cr.service not in target_machine.root_services:
-                        target_machine.root_services.append(cr.service)
-                else:
-                    non_used_nor_cached_credentials.append(cr)
+                for ip in target_machine.ips:
+                    key = (ip, cr.username, cr.port)
+                    if key in s.attacker_cached_telnet_connections:
+                        c = s.attacker_cached_telnet_connections[key]
+                        target_machine.telnet_connections.append(c)
+                        target_machine.logged_in = True
+                        target_machine.root = c.root
+                        if cr.service not in target_machine.logged_in_services:
+                            target_machine.logged_in_services.append(cr.service)
+                        if cr.service not in target_machine.root_services:
+                            target_machine.root_services.append(cr.service)
+                        break
+                    else:
+                        non_used_nor_cached_credentials.append(cr)
             elif cr.service == constants.FTP.SERVICE_NAME:
-                key = (target_machine.ips, cr.username, cr.port)
-                if key in s.attacker_cached_ftp_connections:
-                    c = s.attacker_cached_ftp_connections[key]
-                    target_machine.ftp_connections.append(c)
-                    target_machine.logged_in = True
-                    target_machine.root = c.root
-                    if cr.service not in target_machine.logged_in_services:
-                        target_machine.logged_in_services.append(cr.service)
-                    if cr.service not in target_machine.root_services:
-                        target_machine.root_services.append(cr.service)
-                else:
-                    non_used_nor_cached_credentials.append(cr)
+                for ip in target_machine.ips:
+                    key = (ip, cr.username, cr.port)
+                    if key in s.attacker_cached_ftp_connections:
+                        c = s.attacker_cached_ftp_connections[key]
+                        target_machine.ftp_connections.append(c)
+                        target_machine.logged_in = True
+                        target_machine.root = c.root
+                        if cr.service not in target_machine.logged_in_services:
+                            target_machine.logged_in_services.append(cr.service)
+                        if cr.service not in target_machine.root_services:
+                            target_machine.root_services.append(cr.service)
+                        break
+                    else:
+                        non_used_nor_cached_credentials.append(cr)
 
         if target_machine is None or root or len(non_used_nor_cached_credentials) == 0:
             s_prime = s
@@ -151,14 +157,10 @@ class ConnectionUtil:
             return s_prime, False
 
         # If not logged in and there are credentials, setup a new connection
-        connected = False
-        users = []
-        target_connections = []
-        ports = []
-        proxy_connections = [EmulationConnectionObservationState(conn=emulation_env_config.get_hacker_connection(),
-                                                                 username=constants.AGENT.USER,
-                                                                 root=True, port=22, service=constants.SSH.SERVICE_NAME,
-                                                                 proxy=None, ip=emulation_env_config.containers_config.agent_ip)]
+        proxy_connections = [EmulationConnectionObservationState(
+            conn=emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
+            root=True, port=22, service=constants.SSH.SERVICE_NAME, proxy=None,
+            ip=emulation_env_config.containers_config.agent_ip)]
         for m in s.attacker_obs_state.machines:
             ssh_connections_sorted_by_root = sorted(
                 m.ssh_connections,
@@ -214,9 +216,9 @@ class ConnectionUtil:
                     if c_root:
                         root = True
             target_machine.root = root
-            net_outcome = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine],
+            attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine],
                                                                  emulation_env_config=emulation_env_config, action=a)
-            s_prime.attacker_obs_state.machines = net_outcome.attacker_machine_observations
+            s_prime.attacker_obs_state.machines = attacker_machine_observations
         else:
             target_machine.shell_access = False
             target_machine.shell_access_credentials = []
@@ -225,7 +227,8 @@ class ConnectionUtil:
 
     @staticmethod
     def _ssh_setup_connection(a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig,
-                              credentials: List[Credential], proxy_connections: List[EmulationConnectionObservationState],
+                              credentials: List[Credential],
+                              proxy_connections: List[EmulationConnectionObservationState],
                               s: EmulationEnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a SSH connection
@@ -242,17 +245,17 @@ class ConnectionUtil:
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != emulation_env_config.containers_config.agent_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
-                if m is None or a.ips not in m.reachable or m.ips == a.ips:
+                if m is None or not a.ips_match(list(m.reachable)) or m.ips_match(a.ips):
                     continue
             else:
-                if not a.ips in s.attacker_obs_state.agent_reachable:
+                if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
             for cr in credentials:
                 for ip in a.ips:
                     if cr.service == constants.SSH.SERVICE_NAME:
                         try:
                             agent_addr = (proxy_conn.ip, cr.port)
-                            target_addr = (a.ips, cr.port)
+                            target_addr = (ip, cr.port)
                             agent_transport = proxy_conn.conn.get_transport()
                             relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
                                                                          agent_addr,
@@ -267,10 +270,11 @@ class ConnectionUtil:
                             connection_setup_dto.proxies.append(proxy_conn)
                             connection_setup_dto.ports.append(cr.port)
                             connection_setup_dto.non_failed_credentials.append(cr)
+                            connection_setup_dto.ip = ip
+                            break
                         except Exception as e:
                             print("SSH exception :{}".format(str(e)))
                             print("user:{}, pw:{}".format(cr.username, cr.pw))
-                            print("Target ip in agent reachable: {}".format(a.ips in s.attacker_obs_state.agent_reachable))
                             print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                             print("Action:{}, {}, {}".format(a.id, a.ips, a.descr))
                     else:
@@ -314,7 +318,7 @@ class ConnectionUtil:
                                                              service=constants.SSH.SERVICE_NAME,
                                                              port=connection_setup_dto.ports[i],
                                                              proxy=connection_setup_dto.proxies[i],
-                                                             ip=target_machine.ips)
+                                                             ip=connection_setup_dto.ip)
         target_machine.ssh_connections.append(connection_dto)
         end = time.time()
         total_time = end - start
@@ -342,7 +346,7 @@ class ConnectionUtil:
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
             else:
-                if not a.ips in s.attacker_obs_state.agent_reachable:
+                if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
             for cr in credentials:
                 for ip in a.ips:
@@ -350,11 +354,8 @@ class ConnectionUtil:
                         try:
                             forward_port = emulation_env_config.get_port_forward_port()
                             agent_addr = (proxy_conn.ip, cr.port)
-                            target_addr = (a.ips, cr.port)
+                            target_addr = (ip, cr.port)
                             agent_transport = proxy_conn.conn.get_transport()
-                            relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
-                                                                         agent_addr,
-                                                                         timeout=3)
                             tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                                 remote_host=ip, remote_port=cr.port,
                                                                 transport=agent_transport)
@@ -374,11 +375,13 @@ class ConnectionUtil:
                                 connection_setup_dto.tunnel_threads.append(tunnel_thread)
                                 connection_setup_dto.forward_ports.append(forward_port)
                                 connection_setup_dto.ports.append(cr.port)
+                                connection_setup_dto.ip = ip
                             connection_setup_dto.non_failed_credentials.append(cr)
+                            break
                         except Exception as e:
                             print("telnet exception:{}".format(str(e)))
-                            print("Target ip in agent reachable: {}".format(a.ips
-                                                                            in s.attacker_obs_state.agent_reachable))
+                            print("Target ip in agent reachable: {}".format(
+                                a.ips_match(s.attacker_obs_state.agent_reachable)))
                             print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                     else:
                         connection_setup_dto.non_failed_credentials.append(cr)
@@ -422,7 +425,8 @@ class ConnectionUtil:
                                                              tunnel_thread=connection_setup_dto.tunnel_threads[i],
                                                              tunnel_port=connection_setup_dto.forward_ports[i],
                                                              port=connection_setup_dto.ports[i],
-                                                             proxy=connection_setup_dto.proxies[i], ip=target_machine.ips)
+                                                             proxy=connection_setup_dto.proxies[i],
+                                                             ip=connection_setup_dto.ip)
         target_machine.telnet_connections.append(connection_dto)
         end = time.time()
         total_time = end - start
@@ -450,19 +454,14 @@ class ConnectionUtil:
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
             else:
-                if not a.ips in s.attacker_obs_state.agent_reachable:
+                if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
             for cr in credentials:
                 for ip in a.ips:
                     if cr.service == constants.FTP.SERVICE_NAME:
                         try:
                             forward_port = emulation_env_config.get_port_forward_port()
-                            agent_addr = (proxy_conn.ip, cr.port)
-                            target_addr = (a.ips, cr.port)
                             agent_transport = proxy_conn.conn.get_transport()
-                            relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
-                                                                         agent_addr,
-                                                                         timeout=3)
                             tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                                 remote_host=ip, remote_port=cr.port,
                                                                 transport=agent_transport)
@@ -478,22 +477,24 @@ class ConnectionUtil:
                                 connection_setup_dto.tunnel_threads.append(tunnel_thread)
                                 connection_setup_dto.forward_ports.append(forward_port)
                                 connection_setup_dto.ports.append(cr.port)
+                                connection_setup_dto.ip = ip
                                 # Create LFTP connection too to be able to search file system
                                 shell = proxy_conn.conn.invoke_shell()
                                 # clear output
                                 if shell.recv_ready():
                                     shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
-                                shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + a.ips + "\n")
+                                shell.send(constants.FTP.LFTP_PREFIX + cr.username + ":" + cr.pw + "@" + ip + "\n")
                                 time.sleep(0.5)
                                 # clear output
                                 if shell.recv_ready():
                                     o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
                                 connection_setup_dto.interactive_shells.append(shell)
                                 connection_setup_dto.non_failed_credentials.append(cr)
+                                break
                         except Exception as e:
                             print("FTP exception: {}".format(str(e)))
                             print("Target ip in agent reachable: {}".format(
-                                a.ips in s.attacker_obs_state.agent_reachable))
+                                a.ips_match(s.attacker_obs_state.agent_reachable)))
                             print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
                     else:
                         connection_setup_dto.non_failed_credentials.append(cr)
@@ -518,15 +519,12 @@ class ConnectionUtil:
         :return: boolean, whether the connection has root privileges, cost
         """
         root = False
-        connection_dto = EmulationConnectionObservationState(conn=connection_setup_dto.target_connections[i],
-                                                             username=connection_setup_dto.users[i], root=root,
-                                                             service=constants.FTP.SERVICE_NAME,
-                                                             tunnel_thread=connection_setup_dto.tunnel_threads[i],
-                                                             tunnel_port=connection_setup_dto.forward_ports[i],
-                                                             port=connection_setup_dto.ports[i],
-                                                             interactive_shell=connection_setup_dto.interactive_shells[i],
-                                                             ip=target_machine.ips,
-                                                             proxy=connection_setup_dto.proxies[i])
+        connection_dto = EmulationConnectionObservationState(
+            conn=connection_setup_dto.target_connections[i], username=connection_setup_dto.users[i], root=root,
+            service=constants.FTP.SERVICE_NAME, tunnel_thread=connection_setup_dto.tunnel_threads[i],
+            tunnel_port=connection_setup_dto.forward_ports[i], port=connection_setup_dto.ports[i],
+            interactive_shell=connection_setup_dto.interactive_shells[i], ip=connection_setup_dto.ip,
+            proxy=connection_setup_dto.proxies[i])
         target_machine.ftp_connections.append(connection_dto)
         return root, 0
 
@@ -544,11 +542,10 @@ class ConnectionUtil:
         """
 
         if ip in s.attacker_obs_state.agent_reachable:
-            c = EmulationConnectionObservationState(conn=emulation_env_config.get_hacker_connection(),
-                                                    username=constants.AGENT.USER,
-                                                    root=True, port=constants.SSH.DEFAULT_PORT,
-                                                    service=constants.SSH.SERVICE_NAME,
-                                                    proxy=None, ip=emulation_env_config.containers_config.agent_ip)
+            c = EmulationConnectionObservationState(
+                conn=emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
+                root=True, port=constants.SSH.DEFAULT_PORT, service=constants.SSH.SERVICE_NAME,
+                proxy=None, ip=emulation_env_config.containers_config.agent_ip)
             return c
         s.attacker_obs_state.sort_machines()
 

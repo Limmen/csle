@@ -58,13 +58,14 @@ class EmulationEnvState:
             agent_reachable = self.attacker_obs_state.agent_reachable
             for m in self.attacker_obs_state.machines:
                 for c in m.ssh_connections:
-                    self.attacker_cached_ssh_connections[(m.ips, c.username, c.port)] = c
+                    self.attacker_cached_ssh_connections[(c.ip, c.username, c.port)] = c
                 for c in m.telnet_connections:
-                    self.attacker_cached_telnet_connections[(m.ips, c.username, c.port)] = c
+                    self.attacker_cached_telnet_connections[(c.ip, c.username, c.port)] = c
                 for c in m.ftp_connections:
-                    self.attacker_cached_ftp_connections[(m.ips, c.username, c.port)] = c
+                    self.attacker_cached_ftp_connections[(c.ip, c.username, c.port)] = c
                 for cr in m.backdoor_credentials:
-                    self.attacker_cached_backdoor_credentials[(m.ips, cr.username, cr.pw)] = cr
+                    for ip in m.ips:
+                        self.attacker_cached_backdoor_credentials[(ip, cr.username, cr.pw)] = cr
         self.attacker_obs_state = EmulationAttackerObservationState(catched_flags=0, agent_reachable=agent_reachable)
         self.attacker_obs_state.last_attacker_action = None
         self.attacker_obs_state.undetected_intrusions_steps = 0
@@ -74,8 +75,8 @@ class EmulationEnvState:
 
         if self.defender_obs_state is not None:
             for m in self.defender_obs_state.machines:
-                if len(m.ssh_connections) > 0:
-                    self.defender_cached_ssh_connections["_".join(m.ips)] = m.ssh_connections
+                for c in m.ssh_connections:
+                    self.defender_cached_ssh_connections[(c.ip, c.username, c.port)] = c
         else:
             self.defender_obs_state = EmulationDefenderObservationState()
 
@@ -109,7 +110,7 @@ class EmulationEnvState:
         :return: the machine if is found, otherwise None
         """
         for m in self.attacker_obs_state.machines:
-            if m.ips == ip:
+            if ip in m.ips:
                 return m
         return None
 

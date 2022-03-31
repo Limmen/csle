@@ -87,7 +87,7 @@ def training_attacker():
 
 @app.route('/trajectories')
 def trajectories():
-    taus: dict = Trajectory.load_trajectories_json(
+    taus: dict = Trajectory.load_trajectories(
         trajectories_save_dir="./",
         trajectories_file="one_tau.json")
     response = jsonify(taus)

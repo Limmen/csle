@@ -61,6 +61,7 @@ class EmulationAttackerObservationState:
         """
         self.machines = sorted(self.machines, key=lambda x: int(x.ips[0].rsplit(".", 1)[-1]), reverse=False)
 
+
     def cleanup(self) -> None:
         """
         Cleanup machine states
@@ -78,7 +79,7 @@ class EmulationAttackerObservationState:
         :param emulation_env_config: the emulation env config
         :return: the ip of the target
         """
-        if a.index == -1:
+        if a.index == -1 or a.index == len(self.machines):
             return emulation_env_config.topology_config.subnetwork_masks
         if a.index < len(self.machines):
             return self.machines[a.index].ips
