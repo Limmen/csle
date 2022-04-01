@@ -594,32 +594,30 @@ class EnvDynamicsUtil:
         return m_obs
 
     @staticmethod
-    def cache_attacker_action(emulation_env_config: EmulationEnvConfig, a: EmulationAttackerAction, s: EmulationEnvState) \
+    def cache_attacker_action(a: EmulationAttackerAction, s: EmulationEnvState) \
             -> None:
         """
         Utility function for caching an attacker action
 
-        :param emulation_env_config: the environment configuration
         :param a: the attacker action to cache
         :param s: the current state
         :return: None
         """
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=emulation_env_config, s=s)
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
         s.attacker_obs_state.actions_tried.add((a.id.name, a.index, logged_in_ips_str))
 
 
     @staticmethod
-    def cache_defender_action(emulation_env_config: EmulationEnvConfig, a: EmulationDefenderAction, s: EmulationEnvState) \
+    def cache_defender_action(a: EmulationDefenderAction, s: EmulationEnvState) \
             -> None:
         """
         Utility function for caching a defender action
 
-        :param emulation_env_config: the environment configuration
         :param a: the defender action to cache
         :param s: the current state
         :return: None
         """
-        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=emulation_env_config, s=s)
+        logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
         s.defender_obs_state.actions_tried.add((a.id.name, a.index, logged_in_ips_str))
 
     @staticmethod

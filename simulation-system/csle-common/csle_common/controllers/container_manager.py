@@ -15,6 +15,7 @@ from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 import csle_common.constants.constants as constants
+from csle_common.logging.log import Logger
 
 
 class ContainerManager:
@@ -33,7 +34,7 @@ class ContainerManager:
         containers = client_1.containers.list()
         containers = list(filter(lambda x: constants.CSLE.NAME in x.name, containers))
         for c in containers:
-            print("Stopping container: {}".format(c.name))
+            Logger.__call__().get_logger().info("Stopping container: {}".format(c.name))
             c.stop()
 
 
@@ -67,7 +68,7 @@ class ContainerManager:
                                             and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
                                             or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         for c in containers:
-            print(f"Removing container: {c.name}")
+            Logger.__call__().get_logger().info(f"Removing container: {c.name}")
             c.remove()
 
 
@@ -110,13 +111,13 @@ class ContainerManager:
                                                or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]),
                                      base_images))
         for img in non_base_images:
-            print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
+            Logger.__call__().get_logger().info("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
             client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
         for img in non_os_base_images:
-            print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
+            Logger.__call__().get_logger().info("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
             client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
         for img in os_base_images:
-            print("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
+            Logger.__call__().get_logger().info("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
             client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
 
 
@@ -217,7 +218,7 @@ class ContainerManager:
                                             and x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
                                             or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         for c in containers:
-            print("Starting container: {}".format(c.name))
+            Logger.__call__().get_logger().info("Starting container: {}".format(c.name))
             c.start()
 
     @staticmethod
@@ -321,8 +322,7 @@ class ContainerManager:
         :return: None
         """
         for c in containers_config.containers:
-            container_name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-" \
-                             f"{constants.CSLE.LEVEL}{c.level}"
+            container_name = c.get_full_name()
             # Disconnect from none
             cmd = f"docker network disconnect none {container_name}"
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
@@ -334,7 +334,7 @@ class ContainerManager:
                 ip, net = ip_net
                 cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                       f"{container_name}"
-                print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+                Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
@@ -346,8 +346,7 @@ class ContainerManager:
         :return: None
         """
         c = log_sink_config.container
-        container_name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-" \
-                         f"{constants.CSLE.LEVEL}{c.level}"
+        container_name = c.get_full_name()
         # Disconnect from none
         cmd = f"docker network disconnect none {container_name}"
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
@@ -359,7 +358,7 @@ class ContainerManager:
             ip, net = ip_net
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
-            print(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
 
@@ -399,7 +398,7 @@ class ContainerManager:
         ip = socket.gethostbyname(hostname)
         with grpc.insecure_channel(f'{ip}:{log_sink_config.default_grpc_port}') as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
-            containers = list(map(lambda x: x.name, containers_config.containers))
+            containers = list(map(lambda x: x.get_full_name(), containers_config.containers))
             csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
                 stub=stub, emulation=emulation_name, sink_ip=log_sink_config.container.get_ips()[0],
                 stats_queue_maxsize=1000, time_step_len_seconds=log_sink_config.time_step_len_seconds,
@@ -456,14 +455,14 @@ class ContainerManager:
         log_sink_ip, logsink_net = log_sink_config.container.ips_and_networks[0]
         log_sink_network_prefix = ".".join(log_sink_ip.split(".")[0:-1])
         for c in containers_config.containers:
-            container_name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-" \
-                             f"{constants.CSLE.LEVEL}{c.level}"
+            container_name = c.get_full_name()
 
             ip_suffix = c.ips_and_networks[0][0].split(".")[-1]
             c_ip = log_sink_network_prefix + "." + ip_suffix
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c_ip} {logsink_net.name} " \
                   f"{container_name}"
-            print(f"Connecting container:{container_name} to network:{logsink_net.name} with ip: {c_ip}")
+            Logger.__call__().get_logger().info(
+                f"Connecting container:{container_name} to network:{logsink_net.name} with ip: {c_ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
@@ -499,7 +498,7 @@ class ContainerManager:
         if existing_network_names is not None:
             network_names = existing_network_names
         if name not in network_names:
-            print(f"Creating network: {name}, subnetmask: {subnetmask}")
+            Logger.__call__().get_logger().info(f"Creating network: {name}, subnetmask: {subnetmask}")
             client_1.networks.create(
                 name,
                 driver=driver,
@@ -518,7 +517,7 @@ class ContainerManager:
         networks = client_1.networks.list()
         for net in networks:
             if net.name == name:
-                print(f"Removing network: {net.name}")
+                Logger.__call__().get_logger().info(f"Removing network: {net.name}")
                 try:
                     net.remove()
                 except:
@@ -536,7 +535,7 @@ class ContainerManager:
         networks = client_1.networks.list()
         for net in networks:
             if net.name in names:
-                print(f"Removing network: {net.name}")
+                Logger.__call__().get_logger().info(f"Removing network: {net.name}")
                 try:
                     net.remove()
                 except:
@@ -553,7 +552,7 @@ class ContainerManager:
         networks = client_1.networks.list()
         networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
         for net in networks:
-            print(f"Removing network:{net.name}")
+            Logger.__call__().get_logger().info(f"Removing network:{net.name}")
             ContainerManager.remove_network(name = net.name)
 
 
@@ -584,13 +583,13 @@ class ContainerManager:
 
         if cmd == constants.MANAGEMENT.LIST_STOPPED:
             names = ContainerManager.list_all_stopped_containers()
-            print(names)
+            Logger.__call__().get_logger().info(names)
         elif cmd == constants.MANAGEMENT.LIST_RUNNING:
             names = ContainerManager.list_all_running_containers()
-            print(names)
+            Logger.__call__().get_logger().info(names)
         elif cmd == constants.MANAGEMENT.LIST_IMAGES:
             names = ContainerManager.list_all_images()
-            print(names)
+            Logger.__call__().get_logger().info(names)
         elif cmd == constants.MANAGEMENT.STOP_RUNNING:
             ContainerManager.stop_all_running_containers()
         elif cmd == constants.MANAGEMENT.RM_STOPPED:
@@ -601,7 +600,7 @@ class ContainerManager:
             ContainerManager.start_all_stopped_containers()
         elif cmd == constants.MANAGEMENT.LIST_NETWORKS:
             networks = ContainerManager.list_all_networks()
-            print(networks)
+            Logger.__call__().get_logger().info(networks)
         elif cmd == constants.MANAGEMENT.RM_NETWORKS:
             ContainerManager.rm_all_networks()
         else:

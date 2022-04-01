@@ -24,6 +24,7 @@ from csle_common.dao.emulation_action_result.nmap_http_enum import NmapHttpEnum
 from csle_common.dao.emulation_action_result.nmap_http_grep import NmapHttpGrep
 from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.logging.log import Logger
 
 
 class NmapUtil:
@@ -70,7 +71,7 @@ class NmapUtil:
         for child in xml_data:
             if child.tag == constants.NMAP_XML.HOST:
                 host = NmapUtil._parse_nmap_host_xml(child, action=action)
-                hosts = NmapUtil._merge_nmap_hosts(host, hosts, action=action)
+                hosts = NmapUtil._merge_nmap_hosts(host, hosts)
         result = NmapScanResult(hosts=hosts, ips=ips)
         return result
 
@@ -426,15 +427,14 @@ class NmapUtil:
         return credentials
 
     @staticmethod
-    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EmulationEnvState, a: EmulationAttackerAction,
-                                          emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
+    def merge_nmap_scan_result_with_state(scan_result: NmapScanResult, s: EmulationEnvState,
+                                          a: EmulationAttackerAction) -> EmulationEnvState:
         """
         Merges a NMAP scan result with an existing observation state
 
         :param scan_result: the scan result
         :param s: the current state
         :param a: the action just executed
-        :param emulation_env_config: the emulation env config
         :return: s'
         """
 
@@ -444,8 +444,8 @@ class NmapUtil:
             # m_obs = EnvDynamicsUtil.brute_tried_flags(a=a, m_obs=m_obs)
             new_m_obs.append(m_obs)
 
-        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_m_obs,
-                                                             emulation_env_config=emulation_env_config, action=a)
+        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
+            s.attacker_obs_state.machines, new_m_obs, action=a, emulation_env_config=s.emulation_env_config)
 
         s_prime = s
         s_prime.attacker_obs_state.machines = attacker_machine_observations
@@ -455,13 +455,12 @@ class NmapUtil:
 
     @staticmethod
     def nmap_scan_action_helper(s: EmulationEnvState, a: EmulationAttackerAction,
-                                emulation_env_config: EmulationEnvConfig, masscan: bool = False) -> EmulationEnvState:
+                                masscan: bool = False) -> EmulationEnvState:
         """
         Helper function for executing a NMAP scan action on the emulation. Implements caching.
 
         :param s: the current env state
         :param a: the NMAP action to execute
-        :param emulation_env_config: the env config
         :param masscan: whether it is a masscan or not
         :return: s'
         """
@@ -469,36 +468,36 @@ class NmapUtil:
         cmds, file_names = a.nmap_cmds()
         if masscan:
             cmds = a.masscan_cmds()
-        results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=emulation_env_config.get_hacker_connection())
+        results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=s.emulation_env_config.get_hacker_connection())
         total_time = sum(list(map(lambda x: x[2], results)))
 
-        EmulationUtil.log_measured_action_time(total_time=total_time, action=a, emulation_env_config=emulation_env_config)
+        EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
+                                               emulation_env_config=s.emulation_env_config)
 
         # Read results
-        scan_result = NmapScanResult(hosts=[], ips=[emulation_env_config.containers_config.agent_ip])
+        scan_result = NmapScanResult(hosts=[], ips=[s.emulation_env_config.containers_config.agent_ip])
         for file_name in file_names:
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
                 try:
-                    xml_data = NmapUtil.parse_nmap_scan(file_name=file_name, emulation_env_config=emulation_env_config)
+                    xml_data = NmapUtil.parse_nmap_scan(file_name=file_name,
+                                                        emulation_env_config=s.emulation_env_config)
                     scan_result_new = NmapUtil.parse_nmap_scan_xml(
-                        xml_data, ips=[emulation_env_config.containers_config.agent_ip], action=a)
+                        xml_data, ips=[s.emulation_env_config.containers_config.agent_ip], action=a)
                     s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
                     scan_result =NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
                 except Exception as e:
-                    print(f"There was an exception parsing the nmap result file:{file_name}")
-                    print(e)
-        return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, emulation_env_config=emulation_env_config,
-                                                      partial_result=scan_result.copy())
+                    Logger.__call__().get_logger().warning(
+                        f"There was an exception parsing the nmap result file:{file_name}")
+                    Logger.__call__().get_logger().warning(e)
+        return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, partial_result=scan_result.copy())
 
     @staticmethod
-    def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult],
-                          action: EmulationAttackerAction) -> List[NmapHostResult]:
+    def _merge_nmap_hosts(host: NmapHostResult, hosts: List[NmapHostResult]) -> List[NmapHostResult]:
         """
         Merge nmap host results
 
         :param host: a host to merge with an existing list of hosts
         :param hosts: the list of hosts to merge with the new host
-        :param action: the attacker action
         :return: the merged list
         """
         found = False
@@ -631,14 +630,12 @@ class NmapUtil:
 
     @staticmethod
     def nmap_pivot_scan_action_helper(s: EmulationEnvState, a: EmulationAttackerAction,
-                                      emulation_env_config: EmulationEnvConfig,
                                       partial_result: NmapScanResult) -> EmulationEnvState:
         """
         Performs an NMAP pivot scan, utilizing many compromised hosts
 
         :param s: the curretn state
         :param a: the attacker scan action
-        :param emulation_env_config: the emulation environment configuration
         :param partial_result: the initial result before pivoting
         :return: the new state
         """
@@ -660,7 +657,7 @@ class NmapUtil:
                     total_time = sum(list(map(lambda x: x[2], results)))
                     total_cost += total_time
                     EmulationUtil.log_measured_action_time(
-                        total_time=total_time, action=a, emulation_env_config=emulation_env_config)
+                        total_time=total_time, action=a, emulation_env_config=s.emulation_env_config)
 
                     # Read result
                     scan_result = NmapScanResult(hosts=[], ips=machine.ips)
@@ -668,14 +665,15 @@ class NmapUtil:
                         for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
                             try:
                                 xml_data = NmapUtil.parse_nmap_scan(
-                                    file_name=file_name, emulation_env_config=emulation_env_config,
+                                    file_name=file_name, emulation_env_config=s.emulation_env_config,
                                     conn=c.conn, dir=cwd)
                                 new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ips=machine.ips, action=a)
                                 scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
                                                                                scan_result_2=new_scan_result)
                                 machine.reachable.update(scan_result.reachable)
                             except Exception as e:
-                                print(f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
+                                Logger.__call__().get_logger().warning(
+                                    f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
                     break
 
                 # Update state with scan result
@@ -687,11 +685,10 @@ class NmapUtil:
                     total_results.append(scan_result)
                     merged_scan_result = scan_result.copy()
 
-        s_prime = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a,
-                                                             emulation_env_config=emulation_env_config)
+        s_prime = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a)
         new_machines_obs_1 = []
         reachable = s.attacker_obs_state.agent_reachable
-        reachable.add(emulation_env_config.containers_config.router_ip)
+        reachable.add(s.emulation_env_config.containers_config.router_ip)
 
         for machine in s_prime.attacker_obs_state.machines:
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:

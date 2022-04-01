@@ -1,6 +1,7 @@
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.logging.log import Logger
 
 
 class TopologyManager:
@@ -16,11 +17,11 @@ class TopologyManager:
         :param emulation_env_config: the emulation configuration
         :return: None
         """
-        print("Creating topology")
+        Logger.__call__().get_logger().info("Creating topology")
         for node in emulation_env_config.topology_config.node_configs:
             ips = node.get_ips()
             ip = ips[0]
-            print("Connecting to node:{}".format(ip))
+            Logger.__call__().get_logger().info("Connecting to node:{}".format(ip))
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
             for route in node.routes:

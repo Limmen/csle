@@ -1,4 +1,5 @@
 from typing import List, Tuple
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
 
@@ -68,3 +69,9 @@ class NodeContainerConfig:
             if ip in reachable_ips:
                 return True
         return False
+
+    def get_full_name(self) -> str:
+        """
+        :return: the full name
+        """
+        return f"{constants.CSLE.NAME}-{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}"

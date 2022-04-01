@@ -4,7 +4,6 @@ import paramiko
 import telnetlib
 from ftplib import FTP
 import csle_common.constants.constants as constants
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
@@ -24,8 +23,8 @@ class ConnectionUtil:
     """
 
     @staticmethod
-    def login_service_helper(s: EmulationEnvState, a: EmulationAttackerAction, alive_check, service_name: str,
-                             emulation_env_config: EmulationEnvConfig) -> Tuple[EmulationEnvState, bool]:
+    def login_service_helper(s: EmulationEnvState, a: EmulationAttackerAction, alive_check,
+                             service_name: str) -> Tuple[EmulationEnvState, bool]:
         """
         Helper function for logging in to a network service in the emulation
 
@@ -33,7 +32,6 @@ class ConnectionUtil:
         :param a: the action of the login
         :param alive_check:  the function to check whether current connections are alive or not
         :param service_name: name of the service to login to
-        :param emulation_env_config: environment config
         :return: s_prime, new connection (bool)
         """
         total_cost = 0
@@ -151,16 +149,16 @@ class ConnectionUtil:
             if target_machine is not None:
                 attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
                     s.attacker_obs_state.machines, [target_machine],
-                    emulation_env_config=emulation_env_config, action=a)
+                    emulation_env_config=s.emulation_env_config, action=a)
                 s_prime.attacker_obs_state.machines = attacker_machine_observations
 
             return s_prime, False
 
         # If not logged in and there are credentials, setup a new connection
         proxy_connections = [EmulationConnectionObservationState(
-            conn=emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
+            conn=s.emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
             root=True, port=22, service=constants.SSH.SERVICE_NAME, proxy=None,
-            ip=emulation_env_config.containers_config.agent_ip)]
+            ip=s.emulation_env_config.containers_config.agent_ip)]
         for m in s.attacker_obs_state.machines:
             ssh_connections_sorted_by_root = sorted(
                 m.ssh_connections,
@@ -172,17 +170,17 @@ class ConnectionUtil:
         connection_setup_dto = ConnectionSetupDTO()
         if service_name == constants.SSH.SERVICE_NAME:
             connection_setup_dto = ConnectionUtil._ssh_setup_connection(
-                a=a, emulation_env_config=emulation_env_config,
+                a=a,
                 credentials=non_used_nor_cached_credentials,
                 proxy_connections=proxy_connections, s=s)
         elif service_name == constants.TELNET.SERVICE_NAME:
             connection_setup_dto = ConnectionUtil._telnet_setup_connection(
-                a=a, emulation_env_config=emulation_env_config,
+                a=a,
                 credentials=non_used_nor_cached_credentials,
                 proxy_connections=proxy_connections, s=s)
         elif service_name == constants.FTP.SERVICE_NAME:
             connection_setup_dto = ConnectionUtil._ftp_setup_connection(
-                a=a, emulation_env_config=emulation_env_config,
+                a=a,
                 credentials=non_used_nor_cached_credentials,
                 proxy_connections=proxy_connections, s=s)
 
@@ -203,11 +201,11 @@ class ConnectionUtil:
                     cost = 0.0
                     if service_name == constants.SSH.SERVICE_NAME:
                         c_root, cost = ConnectionUtil._ssh_finalize_connection(
-                            target_machine=target_machine, i=i, emulation_env_config=emulation_env_config,
+                            target_machine=target_machine, i=i,
                             connection_setup_dto=connection_setup_dto)
                     elif service_name == constants.TELNET.SERVICE_NAME:
                         c_root, cost = ConnectionUtil._telnet_finalize_connection(
-                            target_machine=target_machine, i=i, emulation_env_config=emulation_env_config,
+                            target_machine=target_machine, i=i,
                             connection_setup_dto=connection_setup_dto)
                     elif service_name == constants.FTP.SERVICE_NAME:
                         c_root, cost = ConnectionUtil._ftp_finalize_connection(
@@ -216,8 +214,9 @@ class ConnectionUtil:
                     if c_root:
                         root = True
             target_machine.root = root
-            attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, [target_machine],
-                                                                 emulation_env_config=emulation_env_config, action=a)
+            attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
+                s.attacker_obs_state.machines, [target_machine],
+                emulation_env_config=s.emulation_env_config, action=a)
             s_prime.attacker_obs_state.machines = attacker_machine_observations
         else:
             target_machine.shell_access = False
@@ -226,7 +225,7 @@ class ConnectionUtil:
         return s_prime, False
 
     @staticmethod
-    def _ssh_setup_connection(a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig,
+    def _ssh_setup_connection(a: EmulationAttackerAction,
                               credentials: List[Credential],
                               proxy_connections: List[EmulationConnectionObservationState],
                               s: EmulationEnvState) -> ConnectionSetupDTO:
@@ -243,7 +242,7 @@ class ConnectionUtil:
         connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
         for proxy_conn in proxy_connections:
-            if proxy_conn.ip != emulation_env_config.containers_config.agent_ip:
+            if proxy_conn.ip != s.emulation_env_config.containers_config.agent_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or not a.ips_match(list(m.reachable)) or m.ips_match(a.ips):
                     continue
@@ -287,14 +286,12 @@ class ConnectionUtil:
 
     @staticmethod
     def _ssh_finalize_connection(target_machine: EmulationAttackerMachineObservationState,
-                                 emulation_env_config: EmulationEnvConfig,
                                  connection_setup_dto: ConnectionSetupDTO, i: int) -> Tuple[bool, float]:
         """
         Helper function for finalizing a SSH connection and setting up the DTO
 
         :param target_machine: the target machine to connect to
         :param i: current index
-        :param emulation_env_config: emulation environment config
         :param connection_setup_dto: DTO with connection setup information
         :return: boolean whether the connection has root privileges or not, cost
         """
@@ -325,14 +322,13 @@ class ConnectionUtil:
         return root, total_time
 
     @staticmethod
-    def _telnet_setup_connection(a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig,
+    def _telnet_setup_connection(a: EmulationAttackerAction,
                                  credentials: List[Credential], proxy_connections: List,
                                  s: EmulationEnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a Telnet connection to a target machine
 
         :param a: the action of the connection
-        :param emulation_env_config: the emulation environment config
         :param credentials: list of credentials to try
         :param proxies: proxy connections
         :param s: env state
@@ -341,7 +337,7 @@ class ConnectionUtil:
         connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
         for proxy_conn in proxy_connections:
-            if proxy_conn.ip != emulation_env_config.containers_config.agent_ip:
+            if proxy_conn.ip != s.emulation_env_config.containers_config.agent_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
@@ -352,7 +348,7 @@ class ConnectionUtil:
                 for ip in a.ips:
                     if cr.service == constants.TELNET.SERVICE_NAME:
                         try:
-                            forward_port = emulation_env_config.get_port_forward_port()
+                            forward_port = s.emulation_env_config.get_port_forward_port()
                             agent_addr = (proxy_conn.ip, cr.port)
                             target_addr = (ip, cr.port)
                             agent_transport = proxy_conn.conn.get_transport()
@@ -395,14 +391,12 @@ class ConnectionUtil:
 
     @staticmethod
     def _telnet_finalize_connection(target_machine: EmulationAttackerMachineObservationState, i: int,
-                                    emulation_env_config: EmulationEnvConfig,
                                     connection_setup_dto: ConnectionSetupDTO) -> Tuple[bool, float]:
         """
         Helper function for finalizing a Telnet connection to a target machine and creating the DTO
 
         :param target_machine: the target machine to connect to
         :param i: current index
-        :param emulation_env_config: emulation environment config
         :param connection_setup_dto: DTO with information about the connection setup
         :return: boolean whether the connection has root privileges or not, cost
         """
@@ -433,14 +427,13 @@ class ConnectionUtil:
         return root, total_time
 
     @staticmethod
-    def _ftp_setup_connection(a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig,
+    def _ftp_setup_connection(a: EmulationAttackerAction,
                               credentials: List[Credential], proxy_connections: List,
                               s: EmulationEnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a FTP connection
 
         :param a: the action of the connection
-        :param emulation_env_config: the environment config
         :param credentials: list of credentials to try
         :param proxy_connections: proxy connections
         :param env_state: env state
@@ -449,7 +442,7 @@ class ConnectionUtil:
         connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
         for proxy_conn in proxy_connections:
-            if proxy_conn.ip != emulation_env_config.containers_config.agent_ip:
+            if proxy_conn.ip != s.emulation_env_config.containers_config.agent_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
@@ -460,7 +453,7 @@ class ConnectionUtil:
                 for ip in a.ips:
                     if cr.service == constants.FTP.SERVICE_NAME:
                         try:
-                            forward_port = emulation_env_config.get_port_forward_port()
+                            forward_port = s.emulation_env_config.get_port_forward_port()
                             agent_transport = proxy_conn.conn.get_transport()
                             tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                                 remote_host=ip, remote_port=cr.port,
@@ -530,8 +523,7 @@ class ConnectionUtil:
 
 
     @staticmethod
-    def find_jump_host_connection(ip, s: EmulationEnvState, emulation_env_config: EmulationEnvConfig) \
-            -> EmulationConnectionObservationState:
+    def find_jump_host_connection(ip, s: EmulationEnvState) -> EmulationConnectionObservationState:
         """
         Utility function for finding a jump-host from the set of compromised machines to reach a target IP
 
@@ -543,9 +535,9 @@ class ConnectionUtil:
 
         if ip in s.attacker_obs_state.agent_reachable:
             c = EmulationConnectionObservationState(
-                conn=emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
+                conn=s.emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
                 root=True, port=constants.SSH.DEFAULT_PORT, service=constants.SSH.SERVICE_NAME,
-                proxy=None, ip=emulation_env_config.containers_config.agent_ip)
+                proxy=None, ip=s.emulation_env_config.containers_config.agent_ip)
             return c
         s.attacker_obs_state.sort_machines()
 
@@ -563,7 +555,6 @@ class ConnectionUtil:
                     if alive:
                         return c
         raise ValueError("No JumpHost found")
-
 
     @staticmethod
     def test_connection(c: EmulationConnectionObservationState) -> bool:

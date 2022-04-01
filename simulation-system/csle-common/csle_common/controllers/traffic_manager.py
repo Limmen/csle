@@ -6,6 +6,7 @@ import csle_collector.client_manager.query_clients
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.logging.log import Logger
 
 
 class TrafficManager:
@@ -36,7 +37,7 @@ class TrafficManager:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        print(f"stopping client population on container: "
+        Logger.__call__().get_logger().info(f"stopping client population on container: "
               f"{emulation_env_config.traffic_config.client_population_config.ip}")
 
         # Connect
@@ -95,7 +96,7 @@ class TrafficManager:
         :param log_sink_config: configuration of the log sink
         :return: None
         """
-        print(f"starting client population on container:"
+        Logger.__call__().get_logger().info(f"starting client population on container:"
               f" {emulation_env_config.traffic_config.client_population_config.ip}")
         commands = []
         reachable_containers = []
@@ -233,7 +234,7 @@ class TrafficManager:
         :return: None
         """
         for node in emulation_env_config.traffic_config.node_traffic_configs:
-            print("stopping traffic generator script, node ip:{}".format(node.ip))
+            Logger.__call__().get_logger().info("stopping traffic generator script, node ip:{}".format(node.ip))
 
             # Connect
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node.ip)
@@ -289,7 +290,7 @@ class TrafficManager:
                         for cmd in node2.commands:
                             commands.append(cmd.format(ip))
 
-            print("creating traffic generator script, node ip:{}".format(node.ip))
+            Logger.__call__().get_logger().info("creating traffic generator script, node ip:{}".format(node.ip))
 
             # Connect
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node.ip)
@@ -336,7 +337,7 @@ class TrafficManager:
             try:
                 remote_file.write(script_file)
             except Exception as e:
-                print("exception writing traffic generation file:{}".format(str(e)))
+                Logger.__call__().get_logger().info("exception writing traffic generation file:{}".format(str(e)))
             finally:
                 remote_file.close()
 

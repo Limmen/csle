@@ -8,6 +8,7 @@ import csle_collector.ids_manager.ids_manager_pb2_grpc
 import csle_collector.ids_manager.ids_manager_pb2
 import csle_collector.ids_manager.query_ids_manager
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.logging.log import Logger
 
 
 class IDSManager:
@@ -43,7 +44,7 @@ class IDSManager:
                         cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
                     time.sleep(1)
                     cmd = constants.COMMANDS.START_IDS
-                    print(f"Starting Snort IDS on {c.get_ips()[0]}")
+                    Logger.__call__().get_logger().info(f"Starting Snort IDS on {c.get_ips()[0]}")
                     o, e, _ = EmulationUtil.execute_ssh_cmd(
                         cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
                     continue
@@ -106,7 +107,8 @@ n
                         stub = csle_collector.ids_manager.ids_manager_pb2_grpc.IdsManagerStub(channel)
                         ids_monitor_dto = csle_collector.ids_manager.query_ids_manager.get_ids_monitor_status(stub)
                         if not ids_monitor_dto.running:
-                            print(f"IDS monitor thread is not running on {c.get_ips()[0]}, starting it.")
+                            Logger.__call__().get_logger().info(
+                                f"IDS monitor thread is not running on {c.get_ips()[0]}, starting it.")
                             csle_collector.ids_manager.query_ids_manager.start_ids_monitor(
                                 stub=stub, kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0],
                                 kafka_port=emulation_env_config.log_sink_config.kafka_port,
@@ -134,7 +136,8 @@ n
                             f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
                         stub = csle_collector.ids_manager.ids_manager_pb2_grpc.IdsManagerStub(channel)
                         ids_monitor_dto = csle_collector.ids_manager.query_ids_manager.get_ids_monitor_status(stub)
-                        print(f"Stopping the IDS monitor thread on {c.get_ips()[0]}.")
+                        Logger.__call__().get_logger().info(
+                            f"Stopping the IDS monitor thread on {c.get_ips()[0]}.")
                         csle_collector.ids_manager.query_ids_manager.stop_ids_monitor(stub=stub)
 
     @staticmethod

@@ -10,7 +10,8 @@ class DefenderStoppingMiddleware:
     """
 
     @staticmethod
-    def stop_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction, attacker_action: EmulationAttackerAction,
+    def stop_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction,
+                     attacker_action: EmulationAttackerAction,
                      emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a stopping action for the defender (reports an intrusion)
@@ -27,7 +28,8 @@ class DefenderStoppingMiddleware:
 
 
     @staticmethod
-    def continue_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction, attacker_action: EmulationAttackerAction,
+    def continue_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction,
+                         attacker_action: EmulationAttackerAction,
                          emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
         """
         Performs a "continue" action for the defender (continues monitoring)

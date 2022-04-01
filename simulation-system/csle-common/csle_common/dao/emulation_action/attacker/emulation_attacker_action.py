@@ -1,3 +1,4 @@
+import time
 from typing import List, Tuple
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
@@ -13,7 +14,8 @@ class EmulationAttackerAction:
                  type: EmulationAttackerActionType, descr: str,
                  ips :List[str], index: int, subnet : bool = False,
                  action_outcome: EmulationAttackerActionOutcome = EmulationAttackerActionOutcome.INFORMATION_GATHERING,
-                 vulnerability: str = None, alt_cmds : List[str] = None, backdoor: bool = False):
+                 vulnerability: str = None, alt_cmds : List[str] = None, backdoor: bool = False,
+                 execution_time : float = 0, ts: float = None):
         """
         Class constructor
 
@@ -29,6 +31,8 @@ class EmulationAttackerAction:
         :param vulnerability: type of vulnerability that the action exploits (in case an exploit)
         :param alt_cmds: alternative command if the first command does not work
         :param backdoor: if the action also installs a backdoor (some exploits does this)
+        :param execution_time: the time it took to run the action
+        :param ts: the timestep the action was completed
         """
         self.type = type
         self.id = id
@@ -44,6 +48,9 @@ class EmulationAttackerAction:
         self.alt_cmds = alt_cmds
         self.index = index
         self.backdoor = backdoor
+        self.execution_time = execution_time
+        self.ts = ts
+
 
     def nmap_cmds(self, machine_ips: List[str] = None) -> Tuple[List[str], List[str]]:
         """
@@ -115,7 +122,7 @@ class EmulationAttackerAction:
         obj = EmulationAttackerAction(
             type = d["type"], id=d["id"], name=d["name"], cmds=d["cmds"], descr=d["descr"], index=d["index"],
             subnet=d["subnet"], ips=d["ips"], vulnerability=d["vulnerability"], action_outcome=d["action_outcome"],
-            backdoor=d["backdoor"], alt_cmds=d["alt_cmds"]
+            backdoor=d["backdoor"], alt_cmds=d["alt_cmds"], execution_time=d["execution_time"], ts=d["ts"]
         )
         return obj
 
@@ -136,6 +143,8 @@ class EmulationAttackerAction:
         d["vulnerability"] = self.vulnerability
         d["alt_cmds"] = self.alt_cmds
         d["backdoor"] = self.backdoor
+        d["execution_time"] = self.execution_time
+        d["ts"] = self.ts
         return d
 
     def ips_match(self, ips: List[str]) -> bool:
@@ -149,4 +158,39 @@ class EmulationAttackerAction:
             if ip in ips:
                 return True
         return False
+
+    def to_kafka_record(self) -> str:
+        """
+        Converts the instance into a kafka record format
+
+        :param total_time: the total time of execution
+        :return: the kafka record
+        """
+        ts = time.time()
+        record = f"{ts},{self.id.value},{self.descr},{self.index},{self.name}," \
+                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type},{self.subnet}," \
+                 f"{self.action_outcome},{self.vulnerability},{'_'.join(self.alt_cmds)},{self.backdoor}"
+        return record
+
+
+    @staticmethod
+    def from_kafka_record(record: str) -> "EmulationAttackerAction":
+        """
+        Converts a kafka record into an instance
+
+        :param record: the record to convert
+        :return: the created instance
+        """
+        parts = record.split(",")
+        obj = EmulationAttackerAction(id=EmulationAttackerActionId(int(parts[1])), ts=float(parts[0]),
+                                      descr=parts[2], index=int(parts[3]),
+                                      name=parts[4],
+                                      execution_time=float(parts[5]), ips = parts[6].split("_"),
+                                      cmds=parts[7].split("_"),
+                                      type=EmulationAttackerActionType(int(parts[8])),
+                                      subnet=parts[9] == "True",
+                                      action_outcome=EmulationAttackerActionOutcome(int(parts[10])),
+                                      vulnerability=parts[11], alt_cmds=parts[12].split("_"),
+                                      backdoor=parts[13] == "True")
+        return obj
 

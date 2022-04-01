@@ -5,6 +5,7 @@ import json
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
+from csle_common.logging.log import Logger
 
 
 class MetastoreFacade:
@@ -78,7 +79,7 @@ class MetastoreFacade:
         :param config: the config to install
         :return: None
         """
-        print(f"Installing emulation:{config.name} in the metastore")
+        Logger.__call__().get_logger().debug(f"Installing emulation:{config.name} in the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
@@ -88,9 +89,9 @@ class MetastoreFacade:
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
                                 f"VALUES (%s, %s)", (config.name, config_json_str))
                     conn.commit()
-                    print(f"Emulation {config.name} installed successfully")
+                    Logger.__call__().get_logger().debug(f"Emulation {config.name} installed successfully")
                 except psycopg.errors.UniqueViolation as e:
-                    print(f"Emulation {config.name} is already installed")
+                    Logger.__call__().get_logger().debug(f"Emulation {config.name} is already installed")
 
 
     @staticmethod
@@ -101,14 +102,14 @@ class MetastoreFacade:
         :param config: the config to uninstall
         :return: None
         """
-        print(f"Uninstalling emulation:{config.name} from the metastore")
+        Logger.__call__().get_logger().debug(f"Uninstalling emulation:{config.name} from the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (config.name,))
                 conn.commit()
-                print(f"Emulation {config.name} uninstalled successfully")
+                Logger.__call__().get_logger().debug(f"Emulation {config.name} uninstalled successfully")
 
     @staticmethod
     def save_trace(trace: EmulationTrace) -> None:
@@ -118,7 +119,7 @@ class MetastoreFacade:
         :param trace: the trace to save
         :return: None
         """
-        print(f"Installing trace for emulation:{trace.emulation_name} in the metastore")
+        Logger.__call__().get_logger().debug(f"Installing trace for emulation:{trace.emulation_name} in the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
@@ -127,7 +128,7 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_TABLE} (emulation_name, trace) "
                             f"VALUES (%s, %s)", (trace.emulation_name, config_json_str))
                 conn.commit()
-                print(f"Trace for emulation {trace.emulation_name} saved successfully")
+                Logger.__call__().get_logger().debug(f"Trace for emulation {trace.emulation_name} saved successfully")
 
 
     @staticmethod

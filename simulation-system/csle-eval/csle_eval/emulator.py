@@ -8,6 +8,7 @@ from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.logging.log import Logger
 from csle_attacker.attacker import Attacker
 from csle_defender.defender import Defender
 
@@ -30,8 +31,7 @@ class Emulator:
         :param save_dir: the directory to save the collected traces
         :return: None
         """
-        # TODO save traces
-        # TODO tensorboard?
+        logger = Logger.__call__().get_logger()
         if save_dir is None:
             save_dir = ExperimentUtil.default_output_dir() + "/results"
         assert len(attacker_sequence) == len(defender_sequence)
@@ -39,7 +39,7 @@ class Emulator:
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         traces = []
         for i in range(repeat_times):
-            print(f"Starting execution of static action sequences, iteration :{i}")
+            logger.info(f"Starting execution of static action sequences, iteration :{i}")
             trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
                                    initial_defender_observation_state=s.defender_obs_state,
                                    emulation_name=emulation_env_config.name)
@@ -48,22 +48,21 @@ class Emulator:
                 a2 = attacker_sequence[t]
                 a2.ips = s.attacker_obs_state.get_action_ips(a=a2, emulation_env_config=emulation_env_config)
                 a1.ips = s.defender_obs_state.get_action_ips(a=a1, emulation_env_config=emulation_env_config)
-                print(f"Executing attacker action:{a2.name} on machine index: {a2.index}, t={t}, ips:{a2.ips}")
+                logger.debug(f"Executing attacker action:{a2.name} on machine index: {a2.index}, t={t}, ips:{a2.ips}")
                 s_prime = Attacker.attacker_transition(s=s, attacker_action=a2, simulation=False)
-                print(f"Attacker action complete, attacker state:{s_prime.attacker_obs_state}")
-                EnvDynamicsUtil.cache_attacker_action(emulation_env_config=emulation_env_config,
-                                                      a=a2, s=s_prime)
-                print(f"Executing defender action:{a1.name} on machine index: {a1.index}, t={t}")
+                logger.debug(f"Attacker action complete, attacker state:{s_prime.attacker_obs_state}")
+                EnvDynamicsUtil.cache_attacker_action(a=a2, s=s_prime)
+                logger.debug(f"Executing defender action:{a1.name} on machine index: {a1.index}, t={t}")
                 s_prime_prime = Defender.defender_transition(s=s_prime, defender_action=a1, simulation=False)
-                print(f"Defender action complete, defender state:{s_prime.defender_obs_state}, ips:{a1.ips}")
-                EnvDynamicsUtil.cache_defender_action(emulation_env_config=emulation_env_config, a=a1,
-                                                      s=s_prime_prime)
+                logger.debug(f"Defender action complete, defender state:{s_prime.defender_obs_state}, ips:{a1.ips}")
+                EnvDynamicsUtil.cache_defender_action(a=a1, s=s_prime_prime)
                 s = s_prime_prime
                 trace.attacker_observation_states.append(s_prime_prime.attacker_obs_state)
                 trace.defender_observation_states.append(s_prime_prime.defender_obs_state)
                 trace.attacker_actions.append(a2)
                 trace.defender_actions.append(a1)
                 time.sleep(sleep_time)
+                Defender.update_defender_state(s=s)
             MetastoreFacade.save_trace(trace)
             traces.append(trace)
         EmulationTrace.save_traces_to_disk(traces_save_dir=save_dir, traces=traces)

@@ -10,5 +10,4 @@ class EmulationDefenderActionType(IntEnum):
     """
     STOP = 0
     CONTINUE = 1
-    STATE_UPDATE = 2
-    ADD_DEFENSIVE_MECHANISM = 3
+    ADD_DEFENSIVE_MECHANISM = 2

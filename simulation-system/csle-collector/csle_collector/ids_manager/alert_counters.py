@@ -17,6 +17,8 @@ class AlertCounters:
         """
         self.priority_alerts = list(np.zeros(4))
         self.class_alerts = list(np.zeros(len(constants.IDS_ROUTER.ALERT_IDS_ID)))
+        self.ip = None
+        self.ts = None
 
     def count(self, alerts: List[FastLogAlert]) -> None:
         """
@@ -30,6 +32,24 @@ class AlertCounters:
                 self.priority_alerts[a.priority] += 1
             if a.class_id in range(0, len(self.class_alerts)):
                 self.class_alerts[a.class_id] += 1
+
+    @staticmethod
+    def from_kafka_record(record: str) -> "AlertCounters":
+        """
+        Converts a kafka record to a DTO
+
+        :param record: the kafka record to convert
+        :return: the DTO
+        """
+        parts = record.split(",")
+        obj = AlertCounters()
+        obj.ts = float(parts[0])
+        obj.ip = parts[1]
+        for i in range(2, len(constants.IDS_ROUTER.ALERT_IDS_ID)+2):
+            obj.class_alerts.append(int(round(float(parts[i]))))
+        for i in range(len(constants.IDS_ROUTER.ALERT_IDS_ID)+2, len(constants.IDS_ROUTER.ALERT_IDS_ID)+6):
+            obj.priority_alerts.append(int(round(float(parts[i]))))
+        return obj
 
     def to_kafka_record(self, ip: str) -> str:
         """
@@ -94,11 +114,40 @@ class AlertCounters:
             priority_4_alerts = self.priority_alerts[4]
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
         return f"priority_alets: {self.priority_alerts}, class_alerts: {self.class_alerts}"
+
+
+    @staticmethod
+    def from_dict(d: dict) -> "AlertCounters":
+        """
+        Converts a dict representaion of the object into an instance
+
+        :param d: the dict to convert
+        :return: the DTO
+        """
+        obj = AlertCounters()
+        obj.ip = d["ip"]
+        obj.ts = d["ts"]
+        obj.priority_alerts = d["priority_alerts"]
+        obj.class_alerts = d["class_alerts"]
+        return obj
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["ip"] = self.ip
+        d["ts"] = self.ts
+        d["class_alerts"] = self.class_alerts
+        d["priority_alerts"] = self.priority_alerts
+        return d
+
+
 
 
 

@@ -1,5 +1,6 @@
 from typing import List
 from datetime import datetime
+import time
 import csle_collector.constants.constants as constants
 
 
@@ -8,9 +9,10 @@ class DockerStats:
     DTO class containing docker statistics
     """
 
-    def __init__(self, pids: float, timestamp: str, cpu_percent: float, mem_current: float, mem_total: float,
-                 mem_percent: float, blk_read: float, blk_write: float, net_rx: float, net_tx: float,
-                 container_name: str):
+    def __init__(self, pids: float = 0.0, timestamp: str = "", cpu_percent: float = 0.0, mem_current: float = 0.0,
+                 mem_total: float = 0.0,
+                 mem_percent: float = 0.0, blk_read: float = 0.0, blk_write: float = 0.0, net_rx: float = 0.0,
+                 net_tx: float = 0.0, container_name: str = "", ip: str = None, ts: float = None):
         """
         Class constructor, creates a DockerStats object
 
@@ -25,6 +27,8 @@ class DockerStats:
         :param net_rx: the number of receives network bytes
         :param net_tx: the number of sent network bytes
         :param container_name: the name of the container
+        :param ip: the ip
+        :param ts: the timestamp
         """
         self.pids = pids
         self.timestamp = timestamp
@@ -37,6 +41,8 @@ class DockerStats:
         self.net_rx = net_rx
         self.net_tx = net_tx
         self.container_name = container_name
+        self.ip = ip
+        self.ts = ts
 
     @staticmethod
     def from_dict(parsed_stats_dict: dict) -> "DockerStats":
@@ -138,4 +144,35 @@ class DockerStats:
                            mem_total=avg_mem_total, mem_percent=avg_mem_percent,
                            blk_read=avg_blk_read, blk_write=avg_blk_write, net_rx=avg_net_rx, net_tx=avg_net_tx,
                            container_name=container_name)
+
+    @staticmethod
+    def from_kafka_record(record: str) -> "DockerStats":
+        """
+        Converts a kafka record to a DTO
+
+        :param record: the recordto convert
+        :return: the created DTO
+        """
+        parts = record.split(",")
+        obj= DockerStats(
+            ts=float(parts[0]), ip=parts[1], cpu_percent=float(parts[2]), mem_current=float(parts[3]),
+            mem_total = float(parts[4]), mem_percent=float(parts[5]), blk_read=float(parts[6]),
+            blk_write=float(parts[7]), net_rx=float(parts[8]), net_tx=float(parts[9]),
+            container_name="", pids=int(parts[10]), timestamp=str(parts[0])
+        )
+        return obj
+
+    def to_kafka_record(self, ip: str) -> str:
+        """
+        Converts the DTO to a kafka record
+
+        :param ip: the ip to add to the DTO
+        :return: the Kafka record
+        """
+        ts = time.time()
+        record = f"{ts},{ip},{self.cpu_percent},{self.mem_current}," \
+                 f"{self.mem_total},{self.mem_percent}," \
+                 f"{self.blk_read},{self.blk_write}," \
+                 f"{self.net_rx},{self.net_tx},{self.pids}"
+        return record
 

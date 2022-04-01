@@ -7,6 +7,7 @@ import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
 import csle_collector.host_manager.query_host_manager
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.logging.log import Logger
 
 
 class HostManager:
@@ -45,7 +46,7 @@ class HostManager:
 
             if not constants.COMMANDS.SEARCH_HOST_MANAGER in str(o):
 
-                print(f"Starting host manager on node {c.get_ips()[0]}")
+                Logger.__call__().get_logger().info(f"Starting host manager on node {c.get_ips()[0]}")
 
                 # Stop old background job if running
                 cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -79,7 +80,8 @@ class HostManager:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 host_monitor_dto = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub)
                 if not host_monitor_dto.running:
-                    print(f"Host monitor thread is not running on {c.get_ips()[0]}, starting it.")
+                    Logger.__call__().get_logger().info(
+                        f"Host monitor thread is not running on {c.get_ips()[0]}, starting it.")
                     csle_collector.host_manager.query_host_manager.start_host_monitor(
                         stub=stub, kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0],
                         kafka_port=emulation_env_config.log_sink_config.kafka_port,
@@ -103,7 +105,7 @@ class HostManager:
                     f'{emulation_env_config.log_sink_config.secondary_grpc_port}') as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 host_monitor_dto = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub)
-                print(f"Stopping the Host monitor thread on {c.get_ips()[0]}.")
+                Logger.__call__().get_logger().info(f"Stopping the Host monitor thread on {c.get_ips()[0]}.")
                 csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=stub)
 
     @staticmethod

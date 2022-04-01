@@ -1,4 +1,5 @@
 import time
+import os
 from typing import Tuple, List
 import logging
 import threading
@@ -55,7 +56,8 @@ class DockerStatsThread(threading.Thread):
         self.producer = Producer(**self.conf)
         self.stopped = False
         logging.info(f"Producer thread starting, emulation:{self.emulation}, kafka ip: {self.kafka_ip}, "
-                     f"kafka port:{self.port}, time_step_len_seconds: {self.time_step_len_seconds}")
+                     f"kafka port:{self.port}, time_step_len_seconds: {self.time_step_len_seconds}, "
+                     f"container names:{self.container_names}")
 
     def run(self) -> None:
         """
@@ -67,11 +69,7 @@ class DockerStatsThread(threading.Thread):
         while not self.stopped:
             if time.time()-start >= self.time_step_len_seconds:
                 aggregated_stats, avg_stats_dict = self.compute_averages()
-                ts = time.time()
-                record = f"{ts},{self.ip},{aggregated_stats.cpu_percent},{aggregated_stats.mem_current}," \
-                         f"{aggregated_stats.mem_total},{aggregated_stats.mem_percent},{aggregated_stats.mem_percent}," \
-                         f"{aggregated_stats.blk_read},{aggregated_stats.blk_write}," \
-                         f"{aggregated_stats.net_rx},{aggregated_stats.net_tx}"
+                record = aggregated_stats.to_kafka_record(ip=self.ip)
                 self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
                 self.stats_queues = {}
                 start = time.time()
@@ -105,7 +103,8 @@ class DockerStatsThread(threading.Thread):
         return aggregated_stats, avg_stats
 
 
-class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerServicer):
+class DockerStatsManagerServicer(
+    csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerServicer):
     """
     gRPC server for managing a the docker statsm monitor server.
     Allows to start/stop the docker stats monitor remotely and also to query the
@@ -116,7 +115,10 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
         """
         Initializes the server
         """
-        logging.basicConfig(filename="docker_stats_manager.log", level=logging.INFO)
+        file_name = "docker_stats_manager.log"
+        dir = "/var/log/csle/"
+        logfile = os.path.join(dir, file_name)
+        logging.basicConfig(filename=logfile, level=logging.INFO)
         self.docker_stats_monitor_threads = []
         logging.info(f"Setting up DockerStatsManager")
 

@@ -91,6 +91,7 @@ def attacker(emulation : str) -> None:
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
+
 def list_csle_gym_envs() -> None:
     """
     Lists the registered OpenAI gym environments

@@ -27,9 +27,18 @@ class Defender:
         """
         if simulation:
             return SimulatedDefender.defender_transition(s=s, defender_action=defender_action,
-                                                         emulation_env_config=s.emulation_env_config,
                                                          attacker_action=attacker_action)
         else:
             return EmulatedDefender.defender_transition(s=s, defender_action=defender_action,
-                                                        attacker_action=attacker_action,
-                                                        emulation_env_config=s.emulation_env_config)
+                                                        attacker_action=attacker_action)
+
+
+    @staticmethod
+    def update_defender_state(s: EmulationEnvState) -> EmulationEnvState:
+        """
+        Updates the defender's state by measuring metrics from the emulatio
+
+        :param s: the current state
+        :return: the updated state
+        """
+        return EmulatedDefender.update_state(s)

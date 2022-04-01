@@ -23,7 +23,7 @@ class EmulationDefenderStoppingActions:
         return EmulationDefenderAction(id=id, name="Report Intrusion", cmds=cmd,
                                        type=EmulationDefenderActionType.STOP,
                                        descr="Reports an ongoing intrusion to the infrastructure and stops",
-                                       cost=0.0, index=index,
+                                       index=index,
                                        ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.GAME_END, alt_cmds=alt_cmd)
 
     @staticmethod
@@ -40,7 +40,7 @@ class EmulationDefenderStoppingActions:
         return EmulationDefenderAction(id=id, name="Continue", cmds=cmd,
                                        type=EmulationDefenderActionType.CONTINUE,
                                        descr="A 'continue' action, the defender chooses to not make any action",
-                                       cost=0.0, index=index,
+                                       index=index,
                                        ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.CONTINUE, alt_cmds
                                        =alt_cmd)
 
@@ -60,7 +60,7 @@ class EmulationDefenderStoppingActions:
                                        type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
                                        descr="A non terminal stop action the defender resets all user accounts, "
                                     "which means that password vulnerabilities are mitigated",
-                                       cost=0.0, index=index,
+                                       index=index,
                                        ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                                        alt_cmds=alt_cmd)
 
@@ -78,7 +78,7 @@ class EmulationDefenderStoppingActions:
         return EmulationDefenderAction(id=id, name="Enable DPI", cmds=cmd,
                                        type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
                                        descr="A non terminal stop action, the defender enables DPI by starting the IDS",
-                                       cost=0.0, index=index,
+                                       index=index,
                                        ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                                        alt_cmds=alt_cmd)
 
@@ -99,7 +99,7 @@ class EmulationDefenderStoppingActions:
                                        descr="A non terminal stop action, the defender blacklists all IPs that generate "
                                     "IDS alerts that exceed a threshold, the blacklist is implemented "
                                     "using the firewall.",
-                                       cost=0.0, index=index,
+                                       index=index,
                                        ips=[],
                                        subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                                        alt_cmds=alt_cmd)

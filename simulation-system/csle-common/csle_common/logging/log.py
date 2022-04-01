@@ -1,5 +1,8 @@
 import logging
 import os
+import datetime
+import sys
+import csle_common.constants.constants as constants
 from csle_common.logging.custom_formatter import CustomFormatter
 
 
@@ -11,46 +14,50 @@ class SingletonType(type):
             cls._instances[cls] = super(SingletonType, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
-#https://gist.github.com/huklee/cea20761dd05da7c39120084f52fcc7c
+
 class Logger(metaclass=SingletonType):
     """
     Centralized class that handles log-management in csle
     """
 
     _logger = None
+    _log_path = ""
 
-    @staticmethod
-    def __init__(self, log_file_name : str, log_sub_dir : str ="") -> logging.Logger:
+    def __init__(self):
         """
         Creates a log file and returns a logger object
 
-        :param log_file_name: the name of the log file to create
-        :param log_sub_dir: the sub-directory (default no sub-directory)
         :return: the logger object
         """
-        log_dir = "/logs_dir/"
+        log_dir = constants.LOGGING.DEFAULT_LOG_DIR
 
-        # Build Log file directory, based on the OS and supplied input
-        log_dir = log_dir
-        log_dir = os.path.join(log_dir, log_sub_dir)
-
-        # Create Log file directory if not exists
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
+        now = datetime.datetime.now()
+        log_file_name = now.strftime("%Y-%m-%d-%H-%M")+".log"
 
         # Build Log File Full Path
-        logPath = log_file_name if os.path.exists(log_file_name) else os.path.join(log_dir,
-                                                                                   (str(log_file_name) + '.log'))
+        log_path = os.path.join(log_dir, (str(log_file_name)))
 
         # Create logger object and set the format for logging and other attributes
         logger = logging.Logger(log_file_name)
         logger.setLevel(logging.DEBUG)
-        handler = logging.FileHandler(logPath, 'a+')
-        """ Set the formatter of 'CustomFormatter' type as we need to log base function name and base file name """
+        handler = logging.FileHandler(log_path, 'a+')
         handler.setFormatter(
             CustomFormatter('%(asctime)s - %(levelname)-10s - %(filename)s - %(funcName)s - %(message)s'))
         logger.addHandler(handler)
 
+        handler = logging.StreamHandler(sys.stdout)
+        logger.addHandler(handler)
         self.logger = logger
+        self._log_path = log_path
+
+    def get_logger(self) -> logging.Logger:
+        """
+        :return: the CSLE logger
+        """
+        # Create Log file directory if not exists
+        if not os.path.exists(self._log_path):
+            print(f"Log outputs are stored at: {self._log_path}")
+            os.makedirs(self._log_path)
+        return self.logger
 
 

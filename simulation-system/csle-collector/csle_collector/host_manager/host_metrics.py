@@ -8,7 +8,7 @@ class HostMetrics:
     """
 
     def __init__(self, num_logged_in_users: int, num_failed_login_attempts: int, num_open_connections: int,
-                 num_login_events: int, num_processes: int, num_users: int) -> None:
+                 num_login_events: int, num_processes: int, num_users: int, ip: str = None, ts: float = None) -> None:
         """
         Initializes the DTO
 
@@ -25,6 +25,8 @@ class HostMetrics:
         self.num_login_events = num_login_events
         self.num_processes = num_processes
         self.num_users = num_users
+        self.ts = ts
+        self.ip = ip
 
     def to_dto(self, ip: str) -> csle_collector.host_manager.host_manager_pb2.HostMetricsDTO:
         """
@@ -57,6 +59,23 @@ class HostMetrics:
                      f"{self.num_open_connections},{self.num_login_events},{self.num_processes},{self.num_users}"
         return record_str
 
+    @staticmethod
+    def from_kafka_record(record: str) -> "HostMetrics":
+        """
+        Converts the Kafka record string to a DTO
+
+        :param record: the kafka record
+        :return: the created DTO
+        """
+        parts = record.split(",")
+        obj = HostMetrics(
+            ip = record[0], ts=float(parts[1]),
+            num_logged_in_users=int(parts[2]), num_failed_login_attempts=int(parts[3]),
+            num_open_connections=int(parts[4]),
+            num_login_events=int(parts[5]), num_processes=int(parts[6]), num_users=int(parts[7])
+        )
+        return obj
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object
@@ -66,3 +85,39 @@ class HostMetrics:
                f"num_open_connections:{self.num_open_connections}, " \
                f"num_login_events:{self.num_login_events}, num_processes: {self.num_processes}," \
                f"num_users: {self.num_users}"
+
+    @staticmethod
+    def from_dict(d: dict) -> "HostMetrics":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = HostMetrics(
+            num_logged_in_users=d["num_logged_in_users"],
+            num_failed_login_attempts=d["num_failed_login_attempts"],
+            num_open_connections=d["num_open_connections"],
+            num_login_events=d["num_login_events"],
+            num_processes=d["num_processes"],
+            num_users=d["num_users"],
+            ip=d["ip"],
+            ts=d["ts"],
+        )
+        return obj
+
+    def to_dict(self) -> dict:
+        """
+        :return: a dict representation of the instance
+        """
+        d = {}
+        d["num_logged_in_users"] = self.num_logged_in_users
+        d["num_failed_login_attempts"] = self.num_failed_login_attempts
+        d["num_open_connections"] = self.num_open_connections
+        d["num_login_events"] = self.num_login_events
+        d["num_processes"] = self.num_processes
+        d["num_users"] = self.num_users
+        d["ts"] = self.ts
+        d["ip"] = self.ip
+        return d
+

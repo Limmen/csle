@@ -1,6 +1,7 @@
 import subprocess
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.logging.log import Logger
 
 
 class ResourceConstraintsManager:
@@ -19,7 +20,7 @@ class ResourceConstraintsManager:
         for node_resource_config in emulation_env_config.resources_config.node_resources_configurations:
             ips = node_resource_config.get_ips()
             ip = ips[0]
-            print(f"applying resource constraints on node:{ip}")
+            Logger.__call__().get_logger().info(f"applying resource constraints on node:{ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
             for ip_and_net_config in node_resource_config.ips_and_network_configs:

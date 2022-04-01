@@ -6,6 +6,7 @@ import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.kafka_manager.query_kafka_server
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.logging.log import Logger
 
 
 class LogSinkManager:
@@ -74,7 +75,8 @@ class LogSinkManager:
         :param emulation_env_config: the configuration of the emulation env
         :return: None
         """
-        print(f"creating kafka topics on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
+        Logger.__call__().get_logger().info(
+            f"creating kafka topics on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
         LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
@@ -84,12 +86,12 @@ class LogSinkManager:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.get_kafka_status(stub)
             if not kafka_dto.running:
-                print(f"Kafka server is not running, starting it.")
+                Logger.__call__().get_logger().info(f"Kafka server is not running, starting it.")
                 csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
                 time.sleep(15)
 
             for topic in emulation_env_config.log_sink_config.topics:
-                print(f"Creating topic: {topic.name}")
+                Logger.__call__().get_logger().info(f"Creating topic: {topic.name}")
                 csle_collector.kafka_manager.query_kafka_server.create_topic(
                     stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas
                 )
@@ -124,7 +126,8 @@ class LogSinkManager:
         :param emulation_env_config: the emulation env config
         :return: a KafkaDTO with the status of the server
         """
-        print(f"Stopping kafka server on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
+        Logger.__call__().get_logger().info(
+            f"Stopping kafka server on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
         LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
@@ -145,7 +148,8 @@ class LogSinkManager:
         :param emulation_env_config: the emulation env config
         :return: a KafkaDTO with the status of the server
         """
-        print(f"Starting kafka server on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
+        Logger.__call__().get_logger().info(
+            f"Starting kafka server on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
         LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session

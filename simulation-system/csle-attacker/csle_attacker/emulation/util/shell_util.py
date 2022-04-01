@@ -13,6 +13,7 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.util.connection_util import ConnectionUtil
+from csle_common.logging.log import Logger
 
 
 class ShellUtil:
@@ -168,7 +169,7 @@ class ShellUtil:
                 while not command_complete:
                     while not c.interactive_shell.recv_ready():
                         if timeouts > constants.ENV_CONSTANTS.SHELL_MAX_TIMEOUTS:
-                            print("max timeouts FTP, env:{}".format(
+                            loger("max timeouts FTP, env:{}".format(
                                 emulation_env_config.containers_config.agent_ip))
                             break
                         time.sleep(constants.ENV_CONSTANTS.SHELL_READ_WAIT)
@@ -253,14 +254,12 @@ class ShellUtil:
                 or "already the newest version" in result)
 
     @staticmethod
-    def install_tools_helper(s: EmulationEnvState, a: EmulationAttackerAction,
-                             emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
+    def install_tools_helper(s: EmulationEnvState, a: EmulationAttackerAction) -> EmulationEnvState:
         """
         Uses compromised machines with root access to install tools
 
         :param s: the current state
         :param a: the action to take
-        :param emulation_env_config: the emulation environment configuration
         :return: s_prime
         """
         new_machines_obs = []
@@ -287,7 +286,8 @@ class ShellUtil:
                             installed = True
                             new_m_obs.tools_installed = True
                         else:
-                            print("tools installed failed result. out:{}, err:{}".format(outdata, errdata))
+                            Logger.__call__().get_logger().warning(
+                                "tools installed failed result. out:{}, err:{}".format(outdata, errdata))
                         if installed:
                             break
 
@@ -299,7 +299,7 @@ class ShellUtil:
                         ssh_cost += float(total_time)
 
                     EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                           emulation_env_config=emulation_env_config)
+                                                           emulation_env_config=s.emulation_env_config)
 
                     new_machines_obs.append(new_m_obs)
 
@@ -330,7 +330,8 @@ class ShellUtil:
                             installed = True
                             new_m_obs.tools_installed = True
                         else:
-                            print("tools installed failed result.{}".format(response))
+                            Logger.__call__().get_logger().warning(
+                                "tools installed failed result.{}".format(response))
                         if installed:
                             break
 
@@ -347,7 +348,7 @@ class ShellUtil:
                         telnet_cost += float(total_time)
 
                     EmulationUtil.log_measured_action_time(total_time=total_time, action=a,
-                                                           emulation_env_config=emulation_env_config)
+                                                           emulation_env_config=s.emulation_env_config)
 
                     new_machines_obs.append(new_m_obs)
 
@@ -355,8 +356,8 @@ class ShellUtil:
                         break
 
                 total_cost += telnet_cost
-        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(s.attacker_obs_state.machines, new_machines_obs,
-                                                             emulation_env_config=emulation_env_config, action=a)
+        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
+            s.attacker_obs_state.machines, new_machines_obs, emulation_env_config=s.emulation_env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = attacker_machine_observations
 
@@ -380,7 +381,8 @@ class ShellUtil:
                 if checklists_installed:
                     break
                 else:
-                    print("checklists not installed:{}, {}".format(outdata.decode(), errdata.decode()))
+                    Logger.__call__().get_logger().warning(
+                        "checklists not installed:{}, {}".format(outdata.decode(), errdata.decode()))
             return checklists_installed
         else:
             cmd = cmd + "\n"
@@ -390,14 +392,12 @@ class ShellUtil:
 
 
     @staticmethod
-    def execute_ssh_backdoor_helper(s: EmulationEnvState, a: EmulationAttackerAction,
-                                    emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
+    def execute_ssh_backdoor_helper(s: EmulationEnvState, a: EmulationAttackerAction) -> EmulationEnvState:
         """
         Uses compromised machines with root access to setup SSH backdoor
 
         :param s: the current state
         :param a: the action to take
-        :param emulation_env_config: the emulation environment configuration
         :return: s_prime
         """
         username = constants.SSH_BACKDOOR.BACKDOOR_PREFIX + "_" + str(random.randint(0, 100000))
@@ -435,7 +435,7 @@ class ShellUtil:
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     #try:
-                    users = EmulationUtil._list_all_users(c, emulation_env_config=emulation_env_config)
+                    users = EmulationUtil._list_all_users(c, emulation_env_config=s.emulation_env_config)
                     users = sorted(users, key=lambda x: x)
                     user_exists = False
                     for user in users:
@@ -465,7 +465,7 @@ class ShellUtil:
                     setup_connection_dto = None
                     for i in range(5):
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
-                            a=a, emulation_env_config=emulation_env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                            a=a, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         ssh_cost += setup_connection_dto.total_time
                         if len(setup_connection_dto.target_connections) > 0:
                             break
@@ -473,7 +473,8 @@ class ShellUtil:
                             time.sleep(5)
 
                     if len(setup_connection_dto.target_connections) == 0:
-                        print("cannot install backdoor, machine:{}, credentials:{}".format(machine.ips, credential))
+                        Logger.__call__().get_logger().warning(
+                            "cannot install backdoor, machine:{}, credentials:{}".format(machine.ips, credential))
 
                     connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
                                                                          username=credential.username,
@@ -500,7 +501,8 @@ class ShellUtil:
                 telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
                 for c in telnet_root_connections:
                     try:
-                        users = EmulationUtil._list_all_users(c, emulation_env_config=emulation_env_config, telnet=True)
+                        users = EmulationUtil._list_all_users(c,
+                                                              emulation_env_config=s.emulation_env_config, telnet=True)
                         user_exists = False
                         for user in users:
                             if constants.SSH_BACKDOOR.BACKDOOR_PREFIX in user \
@@ -528,7 +530,7 @@ class ShellUtil:
                         new_m_obs.backdoor_credentials.append(credential)
                         a.ips = machine.ips
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
-                            a=a, emulation_env_config=emulation_env_config, credentials=[credential], proxy_connections=[c.proxy], s=s)
+                            a=a, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         telnet_cost += setup_connection_dto.total_time
                         connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
                                                                              username=credential.username,
@@ -548,21 +550,19 @@ class ShellUtil:
 
                 total_cost += telnet_cost
         attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
-            s.attacker_obs_state.machines,  new_machines_obs, emulation_env_config=emulation_env_config, action=a)
+            s.attacker_obs_state.machines,  new_machines_obs, emulation_env_config=s.emulation_env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = attacker_machine_observations
 
         return s_prime
 
     @staticmethod
-    def execute_service_login_helper(s: EmulationEnvState, a: EmulationAttackerAction,
-                                     emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
+    def execute_service_login_helper(s: EmulationEnvState, a: EmulationAttackerAction) -> EmulationEnvState:
         """
         Executes a service login on the emulation using previously found credentials
 
         :param s: the current state
         :param a: the action to take
-        :param emulation_env_config: the emulation environment configuration
         :return: s_prime, reward, done
         """
         s_prime = s
@@ -571,13 +571,13 @@ class ShellUtil:
             a.ips = machine.ips
             s_1, new_conn_ssh = ConnectionUtil.login_service_helper(
                 s=s_prime, a=a, alive_check=EmulationEnvConfig.check_if_ssh_connection_is_alive,
-                service_name=constants.SSH.SERVICE_NAME, emulation_env_config=emulation_env_config)
+                service_name=constants.SSH.SERVICE_NAME)
             s_2, new_conn_ftp = ConnectionUtil.login_service_helper(
                 s=s_1, a=a, alive_check=EnvDynamicsUtil.check_if_ftp_connection_is_alive,
-                service_name=constants.FTP.SERVICE_NAME, emulation_env_config=emulation_env_config)
+                service_name=constants.FTP.SERVICE_NAME)
             s_3, new_conn_telnet = ConnectionUtil.login_service_helper(
                 s=s_2, a=a, alive_check=EnvDynamicsUtil.check_if_telnet_connection_is_alive,
-                service_name=constants.TELNET.SERVICE_NAME, emulation_env_config=emulation_env_config)
+                service_name=constants.TELNET.SERVICE_NAME)
 
             s_prime = s_3
 

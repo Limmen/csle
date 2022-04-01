@@ -4,6 +4,7 @@ try:
 except ImportError:
     import socketserver as SocketServer
 import csle_common.constants.constants as constants
+from csle_common.logging.log import Logger
 
 
 class ForwardSSHHandler(SocketServer.BaseRequestHandler):
@@ -24,7 +25,7 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
                         data = self.request.recv(1024)
                     except Exception as e:
                         if "Connection reset by peer" not in str(e):
-                            print(str(e))
+                            Logger.__call__().get_logger()(str(e))
                         data = []
                     if len(data) == 0:
                         break
@@ -39,4 +40,4 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
             self.request.close()
         except Exception as e:
             if "Transport endpoint" not in str(e):
-                print(str(e))
+                Logger.__call__().get_logger()(str(e))

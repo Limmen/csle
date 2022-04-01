@@ -17,6 +17,7 @@ from csle_common.controllers.topology_manager import TopologyManager
 from csle_common.controllers.resource_constraints_manager import ResourceConstraintsManager
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.experiment_util import ExperimentUtil
+from csle_common.logging.log import Logger
 
 
 class EmulationEnvManager:
@@ -37,68 +38,68 @@ class EmulationEnvManager:
         if no_traffic:
             steps = steps-1
         current_step = 1
-        print(f"-- Configuring the emulation: {emulation_env_config.name} --")
-        print(f"-- Step {current_step}/{steps}: Creating networks --")
+        Logger.__call__().get_logger().info(f"-- Configuring the emulation: {emulation_env_config.name} --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
         ContainerManager.create_networks(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Connect containers to networks --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
         ContainerManager.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Apply log sink config --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
         EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Connect containers to log sink --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to log sink --")
         ContainerManager.connect_containers_to_logsink(containers_config=emulation_env_config.containers_config,
                                                        log_sink_config=emulation_env_config.log_sink_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Creating users --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
         UsersManager.create_users(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
         VulnerabilitiesManager.create_vulns(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Creating flags --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating flags --")
         FlagsManager.create_flags(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Creating topology --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
         TopologyManager.create_topology(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Creating resource constraints --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
         ResourceConstraintsManager.apply_resource_constraints(emulation_env_config=emulation_env_config)
 
         if not no_traffic:
             current_step += 1
-            print(f"-- Step {current_step}/{steps}: Creating traffic generators --")
+            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators --")
             TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
             TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Starting the Intrusion Detection System --")
+        Logger.__call__().get_logger().info(f"-- Step "
+                                            f"{current_step}/{steps}: Starting the Intrusion Detection System --")
         IDSManager.start_ids(emulation_env_config=emulation_env_config)
         time.sleep(10)
         IDSManager.start_ids_monitor_thread(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Starting the Host managers --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
         HostManager.start_host_monitor_thread(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        print(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
         ContainerManager.start_docker_stats_manager(port=50051)
         time.sleep(10)
         ContainerManager.start_docker_stats_thread(
             log_sink_config=emulation_env_config.log_sink_config,
             containers_config=emulation_env_config.containers_config,
             emulation_name=emulation_env_config.name)
-
 
     @staticmethod
     def apply_log_sink_config(emulation_env_config: EmulationEnvConfig) -> None:
@@ -110,28 +111,29 @@ class EmulationEnvManager:
         """
         steps = 4
         current_step = 1
-        print(f"-- Configuring the logsink --")
+        Logger.__call__().get_logger().info(f"-- Configuring the logsink --")
 
-        print(f"-- Log sink configuration step {current_step}/{steps}: Creating networks --")
+        Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Creating networks --")
         networks = ContainerManager.get_network_references()
         networks = list(map(lambda x: x.name, networks))
         ip, net = emulation_env_config.log_sink_config.container.ips_and_networks[0]
         ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
 
         current_step += 1
-        print(f"-- Log sink configuration step {current_step}/{steps}: Connect log sink container to network --")
+        Logger.__call__().get_logger().info(
+            f"-- Log sink configuration step {current_step}/{steps}: Connect log sink container to network --")
         ContainerManager.connect_logsink_to_network(log_sink_config=emulation_env_config.log_sink_config)
 
-        print(f"-- Log sink configuration step {current_step}/{steps}: Restarting the Kafka server --")
+        Logger.__call__().get_logger().info(
+            f"-- Log sink configuration step {current_step}/{steps}: Restarting the Kafka server --")
         LogSinkManager.stop_kafka_server(emulation_env_config=emulation_env_config)
         time.sleep(20)
         LogSinkManager.start_kafka_server(emulation_env_config=emulation_env_config)
         time.sleep(20)
 
         current_step += 1
-        print(f"-- Log sink configuration step {current_step}/{steps}: Create topics --")
+        Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Create topics --")
         LogSinkManager.create_topics(emulation_env_config=emulation_env_config)
-
 
     @staticmethod
     def start_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
@@ -144,7 +146,6 @@ class EmulationEnvManager:
         TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
         TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
 
-
     @staticmethod
     def stop_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
         """
@@ -155,7 +156,6 @@ class EmulationEnvManager:
         """
         TrafficManager.stop_internal_traffic_generators(emulation_env_config=emulation_env_config)
         TrafficManager.stop_client_population(emulation_env_config=emulation_env_config)
-
 
     @staticmethod
     def delete_networks_of_log_sink(log_sink_config: LogSinkConfig) -> None:
@@ -169,7 +169,6 @@ class EmulationEnvManager:
         for ip_net in c.ips_and_networks:
             ip, net = ip_net
             ContainerManager.remove_network(name=net.name)
-
 
     @staticmethod
     def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:
@@ -212,8 +211,8 @@ class EmulationEnvManager:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
                                  f"resources:{emulation_env_config.resources_config}")
 
-            name = f"csle-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
-            print(f"Starting container:{name}")
+            name = c.get_full_name()
+            Logger.__call__().get_logger().info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
@@ -226,7 +225,7 @@ class EmulationEnvManager:
         container_resources : NodeResourcesConfig = emulation_env_config.log_sink_config.resources
 
         name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}"
-        print(f"Starting container:{name}")
+        Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
               f"--hostname={c.name}{c.suffix} --label dir={path} " \
               f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
@@ -255,7 +254,7 @@ class EmulationEnvManager:
         ContainerManager.create_network(name=net_name,
                                         subnetmask=f"55.{net_id}.0.0/16",
                                         existing_network_names=[])
-        print(f"Starting container with image:{image} and name:csle-{name}-001")
+        Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle-{name}-001")
         cmd = f"docker container run -dt --name csle-{name}-001 " \
               f"--hostname={name} " \
               f"--network={net_name} --ip {ip} --publish-all=true " \
@@ -272,17 +271,16 @@ class EmulationEnvManager:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
-            print(f"Stopping container:{name}")
+            name = c.get_full_name()
+            Logger.__call__().get_logger().info(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
 
         c = emulation_env_config.log_sink_config.container
-        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
-        print(f"Stopping container:{name}")
+        name = c.get_full_name()
+        Logger.__call__().get_logger().info(f"Stopping container:{name}")
         cmd = f"docker stop {name}"
         subprocess.call(cmd, shell=True)
-
 
     @staticmethod
     def rm_containers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -294,16 +292,15 @@ class EmulationEnvManager:
         """
         for c in emulation_env_config.containers_config.containers:
             name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}"
-            print(f"Removing container:{name}")
+            Logger.__call__().get_logger().info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
         c = emulation_env_config.log_sink_config.container
-        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-{constants.CSLE.LEVEL}{c.level}"
-        print(f"Removing container:{name}")
+        name = c.get_full_name()
+        Logger.__call__().get_logger().info(f"Removing container:{name}")
         cmd = f"docker rm {name}"
         subprocess.call(cmd, shell=True)
-
 
     @staticmethod
     def install_emulation(config: EmulationEnvConfig) -> None:
@@ -314,7 +311,6 @@ class EmulationEnvManager:
         :return: None
         """
         MetastoreFacade.install_emulation(config=config)
-
 
     @staticmethod
     def uninstall_emulation(config: EmulationEnvConfig) -> None:

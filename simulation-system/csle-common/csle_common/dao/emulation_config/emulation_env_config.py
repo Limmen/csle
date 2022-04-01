@@ -12,6 +12,7 @@ from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
+from csle_common.logging.log import Logger
 
 
 class EmulationEnvConfig:
@@ -84,7 +85,7 @@ class EmulationEnvConfig:
                 and not EmulationEnvConfig.check_if_ssh_connection_is_alive(self.connections[ip])):
             if ip in self.connections:
                 self.connections.pop(ip)
-            print(f"Connecting to host: {ip}")
+            Logger.__call__().get_logger().info(f"Connecting to host: {ip}")
             conn = paramiko.SSHClient()
             conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             conn.connect(ip, username=username, password=pw)
@@ -92,7 +93,7 @@ class EmulationEnvConfig:
             if self.producer is None and create_producer:
                 self.create_producer()
 
-        print("Connected successfully")
+        Logger.__call__().get_logger().info("Connected successfully")
 
     def get_connection(self, ip: str) -> paramiko.SSHClient:
         """
@@ -116,7 +117,7 @@ class EmulationEnvConfig:
         if hacker_ip in self.connections:
             return self.connections[hacker_ip]
         else:
-            self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW)
+            self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
             return self.connections[hacker_ip]
 
     def create_producer(self) -> None:
@@ -187,5 +188,5 @@ class EmulationEnvConfig:
             for ip_net in c.ips_and_networks:
                 ip, _ = ip_net
                 ips.add(ip)
-        return ips
+        return list(ips)
 

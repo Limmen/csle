@@ -1,4 +1,5 @@
 from typing import List
+import time
 from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
 from csle_common.dao.emulation_action.defender.emulation_defender_action_outcome import EmulationDefenderActionOutcome
@@ -10,10 +11,10 @@ class EmulationDefenderAction:
     """
 
     def __init__(self, id : EmulationDefenderActionId, name :str, cmds : List[str],
-                 type: EmulationDefenderActionType, descr: str, cost: float,
+                 type: EmulationDefenderActionType, descr: str,
                  ips : List[str], index: int, subnet : bool = False,
                  action_outcome: EmulationDefenderActionOutcome = EmulationDefenderActionOutcome.GAME_END,
-                 alt_cmds : List[str] = None):
+                 alt_cmds : List[str] = None, execution_time: float = 0.0, ts : float = 0.0):
         """
         Class constructor
 
@@ -22,24 +23,26 @@ class EmulationDefenderAction:
         :param cmds: command-line commands to apply the action on the emulation
         :param type: type of the action
         :param descr: description of the action (documentation)
-        :param cost: cost of the action
         :param ips: ip of the machine to apply the action to
         :param index: index of the machine to apply the action to
         :param subnet: if True, apply action to entire subnet
         :param action_outcome: type of the outcome of the action
         :param alt_cmds: alternative command if the first command does not work
+        :param execution_time: the time it took to run the action
+        :param ts: the timestamp the action was run
         """
         self.id = id
         self.name = name
         self.cmds = cmds
         self.type = type
         self.descr = descr
-        self.cost = cost
         self.ips = ips
         self.subnet = subnet
         self.action_outcome = action_outcome
         self.alt_cmds = alt_cmds
         self.index = index
+        self.ts = ts
+        self.execution_time = execution_time
 
     def __str__(self) -> str:
         """
@@ -56,9 +59,10 @@ class EmulationDefenderAction:
         :return: the instance
         """
         obj = EmulationDefenderAction(
-            id=d["id"], name=d["name"], cmds=d["cmds"], type=d["type"], descr=d["descr"], cost=d["cost"], ips=d["ips"],
-            index=d["index"], subnet=d["subnet"], action_outcome=d["action_outcome"], alt_cmds=d["alt_cmds"]
-        )
+            id=d["id"], name=d["name"], cmds=d["cmds"], type=d["type"], descr=d["descr"],
+            ips=d["ips"],
+            index=d["index"], subnet=d["subnet"], action_outcome=d["action_outcome"], alt_cmds=d["alt_cmds"],
+            ts=d["ts"])
         return obj
 
     def to_dict(self) -> dict:
@@ -71,12 +75,13 @@ class EmulationDefenderAction:
         d["cmds"] = self.cmds
         d["type"] = self.type
         d["descr"] = self.descr
-        d["cost"] = self.cost
         d["ips"] = self.ips
         d["index"] = self.index
         d["subnet"] = self.subnet
         d["action_outcome"] = self.action_outcome
         d["alt_cmds"] = self.alt_cmds
+        d["execution_time"] = self.execution_time
+        d["ts"] = self.ts
         return d
 
     def ips_match(self, ips: List[str]) -> bool:
@@ -90,3 +95,37 @@ class EmulationDefenderAction:
             if ip in ips:
                 return True
         return False
+
+    def to_kafka_record(self) -> str:
+        """
+        Converts the instance into a kafka record format
+
+        :param total_time: the total time of execution
+        :return: the kafka record
+        """
+        ts = time.time()
+        record = f"{ts},{self.id.value},{self.descr},{self.index},{self.name}," \
+                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type},{self.subnet}," \
+                 f"{self.action_outcome},{'_'.join(self.alt_cmds)}"
+        return record
+
+
+    @staticmethod
+    def from_kafka_record(record: str) -> "EmulationDefenderAction":
+        """
+        Converts a kafka record into an instance
+
+        :param record: the record to convert
+        :return: the created instance
+        """
+        parts = record.split(",")
+        obj = EmulationDefenderAction(id=EmulationDefenderActionId(int(parts[1])), ts=float(parts[0]),
+                                      descr=parts[2], index=int(parts[3]),
+                                      name=parts[4],
+                                      execution_time=float(parts[5]), ips = parts[6].split("_"),
+                                      cmds=parts[7].split("_"),
+                                      type=EmulationDefenderActionType(int(parts[8])),
+                                      subnet=parts[9] == "True",
+                                      action_outcome=EmulationDefenderActionOutcome(int(parts[10])),
+                                      alt_cmds=parts[11].split("_"))
+        return obj

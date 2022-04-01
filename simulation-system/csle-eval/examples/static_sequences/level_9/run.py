@@ -33,15 +33,15 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
         EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1),
         EmulationAttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1),
         EmulationAttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ips=subnet_masks, subnet=True),
-        EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=15),
+        EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=12),
         EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1),
         EmulationAttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1),
         EmulationAttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ips=subnet_masks, subnet=True),
-        EmulationAttackerShellActions.CVE_2015_1427_EXPLOIT(index=16),
+        EmulationAttackerShellActions.CVE_2015_1427_EXPLOIT(index=12),
         EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1),
         EmulationAttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1),
         EmulationAttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ips=subnet_masks, subnet=True),
-        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=1),
+        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=6),
         EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1),
         EmulationAttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1),
         EmulationAttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ips=subnet_masks, subnet=True)
@@ -141,7 +141,8 @@ def run() -> None:
     assert emulation_env_config is not None
     assert ContainerManager.is_emulation_running(emulation_env_config=emulation_env_config) is True
     # attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
-    attacker_sequence = experienced_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
+    # attacker_sequence = experienced_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
+    attacker_sequence = expert_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
     defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_env_config)
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,

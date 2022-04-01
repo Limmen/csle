@@ -2,6 +2,7 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.vulnerability_type import VulnType
+from csle_common.logging.log import Logger
 
 
 class VulnerabilitiesManager:
@@ -19,7 +20,7 @@ class VulnerabilitiesManager:
         """
         vulnerabilities = emulation_env_config.vuln_config.node_vulnerability_configs
         for vuln in vulnerabilities:
-            print(f"Creating vulnerability on ip: {vuln.ip}, type: {vuln.vuln_type}")
+            Logger.__call__().get_logger().info(f"Creating vulnerability on ip: {vuln.ip}, type: {vuln.vuln_type}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.ip)
 
             # Update sudoers file

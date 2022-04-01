@@ -10,8 +10,8 @@ class Attacker:
     """
 
     @staticmethod
-    def attacker_transition(s : EmulationEnvState, attacker_action : EmulationAttackerAction, simulation : bool = False) \
-            -> EmulationEnvState:
+    def attacker_transition(s : EmulationEnvState, attacker_action : EmulationAttackerAction,
+                            simulation : bool = False) -> EmulationEnvState:
         """
         Implements an attacker transition of the MDP/Markov Game:
         (s, a) --> s'
@@ -22,8 +22,6 @@ class Attacker:
         :return: s' (EmulationEnvState)
         """
         if simulation:
-            return SimulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action,
-                                                         emulation_env_config=s.emulation_env_config)
+            return SimulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action)
         else:
-            return EmulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action,
-                                                        emulation_env_config=s.emulation_env_config)
+            return EmulatedAttacker.attacker_transition(s=s, attacker_action=attacker_action)

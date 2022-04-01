@@ -1288,6 +1288,9 @@ class CONTAINER_POOLS:
 
 
 class ENV_CONSTANTS:
+    """
+    Constants  related to emulation environments
+    """
     ATTACKER_SSH_RETRY_FIND_FLAG = 5
     ATTACKER_RETRY_FIND_USERS = 5
     ATTACKER_FTP_RETRY_FIND_FLAG = 2
@@ -1317,3 +1320,9 @@ class ENV_CONSTANTS:
     RETRY_TIMEOUT = 2
     NUM_RETRIES = 2
 
+
+class LOGGING:
+    """
+    Constants related to logging
+    """
+    DEFAULT_LOG_DIR = "/var/log/csle/"

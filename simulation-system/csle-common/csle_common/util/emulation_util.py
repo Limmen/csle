@@ -85,9 +85,8 @@ class EmulationUtil:
         :param machine_ips: machine_ips
         :return: None
         """
-        ts = time.time()
-        record = f"{ts},{action.id.value},{action.descr},{action.index},{action.name}," \
-                 f"{total_time},{'_'.join(action.ips)},{'_'.join(action.cmds)}"
+        action.execution_time = total_time
+        record = action.to_kafka_record()
         if emulation_env_config.producer is None:
             emulation_env_config.create_producer()
         emulation_env_config.producer.produce(collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME, record)
@@ -219,7 +218,8 @@ class EmulationUtil:
 
 
     @staticmethod
-    def connect_admin(emulation_env_config: EmulationEnvConfig, ip: str, create_producer: bool = True) -> None:
+    def connect_admin(emulation_env_config: EmulationEnvConfig, ip: str,
+                      create_producer: bool = True) -> None:
         """
         Connects the admin agent
 

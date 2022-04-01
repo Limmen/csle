@@ -1,8 +1,12 @@
+import time
 from typing import List
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state \
     import EmulationDefenderMachineObservationState
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
+from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.ids_manager.alert_counters import AlertCounters
 
 
 class EmulationDefenderObservationState:
@@ -19,6 +23,9 @@ class EmulationDefenderObservationState:
         """
         self.machines : List[EmulationDefenderMachineObservationState] = []
         self.actions_tried = set()
+        self.client_population_metrics = ClientPopulationMetrics()
+        self.docker_stats = DockerStats()
+        self.ids_alert_counters = AlertCounters()
 
 
     @staticmethod
@@ -32,6 +39,9 @@ class EmulationDefenderObservationState:
         obj = EmulationDefenderObservationState()
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(x), d["machines"]))
         obj.actions_tried = set(d["actions_tried"])
+        obj.client_population_metrics = ClientPopulationMetrics.from_dict(d["client_population_metrics"])
+        obj.docker_stats = DockerStats.from_dict(d["docker_stats"])
+        obj.ids_alert_counters = AlertCounters.from_dict(d["ids_alert_counters"])
 
     def to_dict(self) -> dict:
         """
@@ -40,6 +50,9 @@ class EmulationDefenderObservationState:
         d = {}
         d["machines"] = list(map(lambda x: x.to_dict(), self.machines))
         d["actions_tried"] = list(self.actions_tried)
+        d["client_population_metrics"] = self.client_population_metrics.to_dict()
+        d["docker_stats"] = self.docker_stats.to_dict()
+        d["ids_alert_counters"] = self.ids_alert_counters.to_dict()
         return d
 
     def sort_machines(self) -> None:

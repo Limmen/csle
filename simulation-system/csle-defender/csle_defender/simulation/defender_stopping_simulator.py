@@ -10,15 +10,14 @@ class DefenderStoppingSimulator:
     """
 
     @staticmethod
-    def stop_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction, attacker_action: EmulationAttackerAction,
-                     emulation_env_config: EmulationEnvConfig) -> EmulationEnvState:
+    def stop_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction,
+                     attacker_action: EmulationAttackerAction) -> EmulationEnvState:
         """
         Performs a stopping action for the defender (reports an intrusion)
 
         :param s: the current state
         :param defender_action: the action to take
         :param attacker_action: the attacker's previous action
-        :param emulation_env_config: the emulation environment configuration
         :return: s_prime
         """
         s_prime = s   # TODO
@@ -27,7 +26,6 @@ class DefenderStoppingSimulator:
 
     @staticmethod
     def continue_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction,
-                         emulation_env_config: EmulationEnvConfig,
                          attacker_action: EmulationAttackerAction) -> EmulationEnvState:
         """
         Performs a "continue" action for the defender (continues monitoring)
@@ -35,7 +33,6 @@ class DefenderStoppingSimulator:
         :param s: the current state
         :param defender_action: the action to take
         :param attacker_action: the attacker's previous action
-        :param emulation_env_config: the emulation environment configuration
         :return: s_prime
         """
         s_prime = s
