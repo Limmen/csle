@@ -15,6 +15,20 @@ class ContainerNetwork:
         self.subnet_mask = subnet_mask
         self.subnet_prefix = subnet_prefix
 
+
+    @staticmethod
+    def from_dict(d: dict) -> "ContainerNetwork":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = ContainerNetwork(
+            name = d["name"], subnet_mask=d["subnet_mask"], subnet_prefix=d["subnet_prefix"]
+        )
+        return obj
+
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the object

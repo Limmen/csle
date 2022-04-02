@@ -1,10 +1,7 @@
 import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
-from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state \
-    import EmulationDefenderMachineObservationState
 import csle_collector.constants.constants as collector_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_collector.host_manager.host_metrics import HostMetrics
 from csle_common.logging.log import Logger
 
@@ -15,7 +12,7 @@ class HostMetricsConsumerThread(threading.Thread):
     """
 
     def __init__(self, host_ip: str, kafka_server_ip: str, kafka_port: int,
-                 machine: EmulationDefenderMachineObservationState) -> None:
+                 host_metrics: HostMetrics) -> None:
         """
         Initializes the thread
 
@@ -29,13 +26,13 @@ class HostMetricsConsumerThread(threading.Thread):
         self.host_ip = host_ip
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
-        self.machine = machine
         self.ts = time.time()
         self.kafka_conf = {'bootstrap.servers': f"{self.kafka_server_ip}:{self.kafka_port}",
                            'group.id':  f"host_metrics_consumer_thread_{self.host_ip}_{self.ts}",
                            'auto.offset.reset': 'latest'}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME])
+        self.host_metrics = host_metrics
 
     def run(self) -> None:
         """
@@ -53,16 +50,4 @@ class HostMetricsConsumerThread(threading.Thread):
                     elif msg.error():
                         raise KafkaException(msg.error())
                 else:
-                    self.machine.host_metrics = HostMetrics.from_kafka_record(
-                        record=msg.value().decode())
-                    print(self.machine.host_metrics)
-
-
-if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    # s = EmulationEnvState(emulation_env_config=emulation_env_config)
-    # thread = HostMetricsConsumerThread(
-    #     kafka_server_ip=emulation_env_config.log_sink_config.container.get_ips()[0],
-    #     kafka_port=emulation_env_config.log_sink_config.kafka_port, s=s)
-    # thread.start()
-    # thread.join()
+                    self.host_metrics.update_with_kafka_record(record=msg.value().decode(), ip=self.host_ip)

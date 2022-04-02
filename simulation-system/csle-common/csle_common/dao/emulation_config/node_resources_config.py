@@ -31,6 +31,22 @@ class NodeResourcesConfig:
         return list(map(lambda x: x[0], self.ips_and_network_configs))
 
 
+    @staticmethod
+    def from_dict(d: dict) -> "NodeResourcesConfig":
+        """
+        Converts a dict representation into an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = NodeResourcesConfig(
+            container_name=d["container_name"],
+            ips_and_network_configs=list(map(lambda x: (x[0], NodeNetworkConfig.from_dict(x[1])),
+                                             d["ips_and_network_configs"])),
+            num_cpus=d["num_cpus"], available_memory_gb=d["available_memory_gb"]
+        )
+        return obj
+
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the object

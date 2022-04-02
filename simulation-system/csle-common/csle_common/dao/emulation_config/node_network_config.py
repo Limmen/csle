@@ -83,7 +83,7 @@ class NodeNetworkConfig:
         self.packet_delay_distribution = packet_delay_distribution
         self.packet_loss_type = packet_loss_type
         self.packet_loss_rate_random_percentage = packet_loss_rate_random_percentage
-        self.packet_loss_correlation_percentage = packet_loss_random_correlation_percentage
+        self.packet_loss_random_correlation_percentage = packet_loss_random_correlation_percentage
         self.loss_state_markov_chain_p13 = loss_state_markov_chain_p13
         self.loss_state_markov_chain_p31 = loss_state_markov_chain_p31
         self.loss_state_markov_chain_p32 = loss_state_markov_chain_p32
@@ -104,6 +104,45 @@ class NodeNetworkConfig:
         self.packet_overhead_bytes = packet_overhead_bytes
         self.cell_overhead_bytes = cell_overhead_bytes
 
+    @staticmethod
+    def from_dict(d: dict) -> "NodeNetworkConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the converted instance
+        """
+        obj = NodeNetworkConfig(
+            interface=d["interface"],
+            limit_packets_queue=d["limit_packets_queue"],
+            packet_delay_ms=d["packet_delay_ms"],
+            packet_delay_jitter_ms=d["packet_delay_jitter_ms"],
+            packet_delay_correlation_percentage=d["packet_delay_correlation_percentage"],
+            packet_delay_distribution=d["packet_delay_distribution"],
+            packet_loss_type=d["packet_loss_type"],
+            packet_loss_rate_random_percentage=d["packet_loss_rate_random_percentage"],
+            packet_loss_random_correlation_percentage=d["packet_loss_random_correlation_percentage"],
+            loss_state_markov_chain_p13=d["loss_state_markov_chain_p13"],
+            loss_state_markov_chain_p31=d["loss_state_markov_chain_p31"],
+            loss_state_markov_chain_p32=d["loss_state_markov_chain_p32"],
+            loss_state_markov_chain_p23=d["loss_state_markov_chain_p23"],
+            loss_state_markov_chain_p14=d["loss_state_markov_chain_p14"],
+            loss_gemodel_p=d["loss_gemodel_p"],
+            loss_gemodel_r=d["loss_gemodel_r"],
+            loss_gemodel_h=d["loss_gemodel_h"],
+            loss_gemodel_k=d["loss_gemodel_k"],
+            packet_corrupt_percentage=d["packet_corrupt_percentage"],
+            packet_corrupt_correlation_percentage=d["packet_corrupt_correlation_percentage"],
+            packet_duplicate_percentage=d["packet_duplicate_percentage"],
+            packet_duplicate_correlation_percentage=d["packet_duplicate_correlation_percentage"],
+            packet_reorder_percentage=d["packet_reorder_percentage"],
+            packet_reorder_correlation_percentage=d["packet_reorder_correlation_percentage"],
+            packet_reorder_gap=d["packet_reorder_gap"],
+            rate_limit_mbit=d["rate_limit_mbit"],
+            packet_overhead_bytes=d["packet_overhead_bytes"],
+            cell_overhead_bytes=d["cell_overhead_bytes"]
+        )
+        return obj
 
     def to_dict(self) -> dict:
         """
@@ -150,7 +189,7 @@ class NodeNetworkConfig:
                f"packet_delay_distribution: {self.packet_delay_distribution}, " \
                f"packet_loss_type:{self.packet_loss_type}, " \
                f"packet_loss_rate_random_percentage: {self.packet_loss_rate_random_percentage}, " \
-               f"packet_loss_correlation_percentage: {self.packet_loss_correlation_percentage}, " \
+               f"packet_loss_correlation_percentage: {self.packet_loss_random_correlation_percentage}, " \
                f"loss_state_markov_chain_p13: {self.loss_state_markov_chain_p13}, " \
                f"loss_state_markov_chain_p31: {self.loss_state_markov_chain_p31}, " \
                f"loss_state_markov_chain_p32: {self.loss_state_markov_chain_p32}, " \

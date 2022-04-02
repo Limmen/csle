@@ -158,9 +158,32 @@ class DockerStats:
             ts=float(parts[0]), ip=parts[1], cpu_percent=float(parts[2]), mem_current=float(parts[3]),
             mem_total = float(parts[4]), mem_percent=float(parts[5]), blk_read=float(parts[6]),
             blk_write=float(parts[7]), net_rx=float(parts[8]), net_tx=float(parts[9]),
-            container_name="", pids=int(parts[10]), timestamp=str(parts[0])
+            container_name="", pids=int(round(float(parts[10]))), timestamp=str(parts[0])
         )
         return obj
+
+
+    def update_with_kafka_record(self, record: str) -> None:
+        """
+        Updates the DTO with a given kafka record
+
+        :param record: the record to update with
+        :return: None
+        """
+        parts = record.split(",")
+        self.ts=float(parts[0])
+        self.ip=parts[1]
+        self.cpu_percent=float(parts[2])
+        self.mem_current=float(parts[3])
+        self.mem_total = float(parts[4])
+        self.mem_percent=float(parts[5])
+        self.blk_read=float(parts[6])
+        self.blk_write=float(parts[7])
+        self.net_rx=float(parts[8])
+        self.net_tx=float(parts[9]),
+        self.container_name=""
+        self.pids=int(round(float(parts[10])))
+        self.timestamp=str(parts[0])
 
     def to_kafka_record(self, ip: str) -> str:
         """

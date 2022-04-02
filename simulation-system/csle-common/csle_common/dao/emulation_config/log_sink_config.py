@@ -34,6 +34,24 @@ class LogSinkConfig:
         self.topics = topics
         self.secondary_grpc_port = secondary_grpc_port
 
+    @staticmethod
+    def from_dict(d: dict) -> "LogSinkConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = LogSinkConfig(
+            container=NodeContainerConfig.from_dict(d["container"]),
+            resources=NodeResourcesConfig.from_dict(d["resources"]),
+            topics = list(map(lambda x: KafkaTopic.from_dict(x), d["topics"])),
+            kafka_port=d["kafka_port"], time_step_len_seconds=d["time_step_len_seconds"],
+            default_grpc_port=d["default_grpc_port"], secondary_grpc_port=d["secondary_grpc_port"],
+            version=d["version"]
+        )
+        return obj
+
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the object

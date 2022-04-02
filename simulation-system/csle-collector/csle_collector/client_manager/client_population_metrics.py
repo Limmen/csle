@@ -31,6 +31,18 @@ class ClientPopulationMetrics:
         obj = ClientPopulationMetrics(ts = float(parts[0]), ip=parts[1], num_clients=int(parts[2]))
         return obj
 
+    def update_with_kafka_record(self, record: str) -> None:
+        """
+        Updates the DTO with a new kafka record
+
+        :param record: the kafka record
+        :return: None
+        """
+        parts = record.split(",")
+        self.ts = float(parts[0])
+        self.ip=parts[1]
+        self.num_clients=int(parts[2])
+
     @staticmethod
     def from_dict(d: dict) -> "ClientPopulationMetrics":
         """
@@ -52,3 +64,10 @@ class ClientPopulationMetrics:
         d["ts"] = self.ts
         d["num_clients"] = self.num_clients
         return d
+
+
+    def __str__(self):
+        """
+        :return: a string representation of the object
+        """
+        return f"ip: {self.ip}, ts: {self.ts}, num_clients: {self.num_clients}"

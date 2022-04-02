@@ -7,8 +7,10 @@ class HostMetrics:
     DTO class containing host metrics
     """
 
-    def __init__(self, num_logged_in_users: int, num_failed_login_attempts: int, num_open_connections: int,
-                 num_login_events: int, num_processes: int, num_users: int, ip: str = None, ts: float = None) -> None:
+    def __init__(self, num_logged_in_users: int = 0, num_failed_login_attempts: int = 0,
+                 num_open_connections: int = 0,
+                 num_login_events: int = 0, num_processes: int = 0, num_users: int = 0,
+                 ip: str = None, ts: float = None) -> None:
         """
         Initializes the DTO
 
@@ -69,12 +71,31 @@ class HostMetrics:
         """
         parts = record.split(",")
         obj = HostMetrics(
-            ip = record[0], ts=float(parts[1]),
+            ip = record[1], ts=float(parts[0]),
             num_logged_in_users=int(parts[2]), num_failed_login_attempts=int(parts[3]),
             num_open_connections=int(parts[4]),
             num_login_events=int(parts[5]), num_processes=int(parts[6]), num_users=int(parts[7])
         )
         return obj
+
+    def update_with_kafka_record(self, record: str, ip: str) -> None:
+        """
+        Updates the DTO based on a kafka record
+
+        :param record: the kafka record
+        :param ip: the host ip
+        :return: None
+        """
+        parts = record.split(",")
+        if parts[1] == ip:
+            self.ip = parts[1]
+            self.ts=float(parts[0]),
+            self.num_logged_in_users=int(parts[2])
+            self.num_failed_login_attempts=int(parts[3])
+            self.num_open_connections=int(parts[4])
+            self.num_login_events=int(parts[5])
+            self.num_processes=int(parts[6])
+            self.num_users=int(parts[7])
 
     def __str__(self) -> str:
         """

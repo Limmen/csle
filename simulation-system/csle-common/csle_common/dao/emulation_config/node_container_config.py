@@ -36,6 +36,20 @@ class NodeContainerConfig:
         """
         return list(filter(lambda x: x is not None, map(lambda x: x[0], self.ips_and_networks)))
 
+    @staticmethod
+    def from_dict(d: dict) -> "NodeContainerConfig":
+        """
+        Converts a dict representation to an instance
+        :param d:  the dict to convert
+        :return: the created instance
+        """
+        obj = NodeContainerConfig(
+            name = d["name"],
+            ips_and_networks=list(map(lambda x: (x[0], ContainerNetwork.from_dict(x[1])), d["ips_and_networks"])),
+            version=d["version"], level=d["level"], restart_policy=d["restart_policy"], suffix=d["suffix"], os=d["os"]
+        )
+        return obj
+
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the object

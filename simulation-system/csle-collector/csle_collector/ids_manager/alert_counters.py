@@ -51,6 +51,24 @@ class AlertCounters:
             obj.priority_alerts.append(int(round(float(parts[i]))))
         return obj
 
+    def update_with_kafka_record(self, record: str) -> None:
+        """
+        Updates the DTO with a kafka record
+
+        :param record: the kafka record to use for updating
+        :return: None
+        """
+        parts = record.split(",")
+        self.ts = float(parts[0])
+        self.ip = parts[1]
+        self.class_alerts = []
+        self.priority_alerts = []
+        for i in range(2, len(constants.IDS_ROUTER.ALERT_IDS_ID)+2):
+            self.class_alerts.append(int(round(float(parts[i]))))
+        for i in range(len(constants.IDS_ROUTER.ALERT_IDS_ID)+2, len(constants.IDS_ROUTER.ALERT_IDS_ID)+6):
+            self.priority_alerts.append(int(round(float(parts[i]))))
+
+
     def to_kafka_record(self, ip: str) -> str:
         """
         Converts the DTO into a kafka record

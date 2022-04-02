@@ -21,6 +21,21 @@ class KafkaTopic:
         self.num_replicas = num_replicas
         self.attributes = attributes
 
+
+    @staticmethod
+    def from_dict(d: dict) -> "KafkaTopic":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj= KafkaTopic(
+            name=d["name"], num_replicas=d["num_replicas"], num_partitions=d["num_partitions"],
+            attributes=d["attributes"]
+        )
+        return obj
+
     def to_dict(self) -> dict:
         """
         :return: a dict representation of the object

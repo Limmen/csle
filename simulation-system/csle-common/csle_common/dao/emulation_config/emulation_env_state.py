@@ -46,6 +46,20 @@ class EmulationEnvState:
         self.attacker_cached_backdoor_credentials = {}
         self.defender_cached_ssh_connections = {}
         self.reset()
+        self.initialize_defender_machines()
+
+
+    def initialize_defender_machines(self) -> None:
+        """
+        Initializes the defender observation state based on the emulation configuration
+
+        :return: None
+        """
+        defender_machines = []
+        for c in self.emulation_env_config.containers_config.containers:
+            defender_machines.append(EmulationDefenderMachineObservationState.from_container(
+                c, log_sink_config=self.emulation_env_config.log_sink_config))
+        self.defender_obs_state.machines = defender_machines
 
     def reset(self) -> None:
         """
@@ -78,7 +92,8 @@ class EmulationEnvState:
                 for c in m.ssh_connections:
                     self.defender_cached_ssh_connections[(c.ip, c.username, c.port)] = c
         else:
-            self.defender_obs_state = EmulationDefenderObservationState()
+            self.defender_obs_state = EmulationDefenderObservationState(
+                log_sink_config=self.emulation_env_config.log_sink_config)
 
     def cleanup(self) -> None:
         """
