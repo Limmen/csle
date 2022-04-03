@@ -142,3 +142,14 @@ class HostMetrics:
         d["ip"] = self.ip
         return d
 
+    def copy(self) -> "HostMetrics":
+        """
+        :return: a copy of the object
+        """
+        c = HostMetrics(
+            num_logged_in_users=self.num_logged_in_users, num_failed_login_attempts=self.num_failed_login_attempts,
+            num_open_connections=self.num_open_connections, num_login_events=self.num_login_events,
+            num_processes=self.num_processes, num_users=self.num_users, ip=self.ip, ts=self.ts
+        )
+        return c
+

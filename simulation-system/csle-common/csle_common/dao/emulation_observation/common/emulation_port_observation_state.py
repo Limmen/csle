@@ -103,3 +103,14 @@ class EmulationPortObservationState:
                                              service=s,
                                              protocol=network_service.protocol)
         return port
+
+
+    def copy(self) -> "EmulationPortObservationState":
+        """
+        :return: a copy of the object
+        """
+        c = EmulationPortObservationState(
+            port=self.port, open=self.open, service=self.service, protocol=self.protocol, http_enum=self.http_enum,
+            http_grep=self.http_grep, vulscan=self.vulscan, version=self.version, fingerprint=self.fingerprint
+        )
+        return c

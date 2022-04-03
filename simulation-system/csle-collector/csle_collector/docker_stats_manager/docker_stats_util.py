@@ -52,10 +52,10 @@ class DockerStatsUtil:
         return cpu_percent, cpu_system, cpu_total
 
     @staticmethod
-    def calculate_blkio_bytes(stats_dict):
+    def calculate_blkio_bytes(stats_dict) -> Tuple[float,float]:
         """
         :param stats_dict: the stats dict from the Docker API
-        :return: (read_bytes, wrote_bytes), ints
+        :return: (read_mb, wrote_mb)
         """
         bytes_stats = DockerStatsUtil.graceful_chain_get(stats_dict, constants.DOCKER_STATS.BLKIO_STATS,
                                                          constants.DOCKER_STATS.IO_SERVICE_BYTES_RECURSIVE)
@@ -68,13 +68,15 @@ class DockerStatsUtil:
                 r += s[constants.DOCKER_STATS.VALUE]
             elif s[constants.DOCKER_STATS.OP] == constants.DOCKER_STATS.WRITE:
                 w += s[constants.DOCKER_STATS.VALUE]
+        r = round(r/1000000, 1)
+        w = round(w/1000000, 1)
         return r, w
 
     @staticmethod
-    def calculate_network_bytes(stats_dict):
+    def calculate_network_bytes(stats_dict) -> Tuple[float,float]:
         """
         :param stats_dict: the stats dict from the Docker API
-        :return: (received_bytes, transceived_bytes), ints
+        :return: (received_mb, transceived_mb)
         """
         networks = DockerStatsUtil.graceful_chain_get(stats_dict, constants.DOCKER_STATS.NETWORKS)
         if not networks:
@@ -84,6 +86,8 @@ class DockerStatsUtil:
         for if_name, data in networks.items():
             r += data[constants.DOCKER_STATS.RX_BYTES]
             t += data[constants.DOCKER_STATS.TX_BYTES]
+        r = round(r/1000000, 1)
+        t = round(t/1000000, 1)
         return r, t
 
     @staticmethod

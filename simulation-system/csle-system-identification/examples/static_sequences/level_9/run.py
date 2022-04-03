@@ -12,7 +12,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_network_servic
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.container_manager import ContainerManager
-from csle_eval.emulator import Emulator
+from csle_system_identification.emulator import Emulator
 
 
 def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnvConfig) \

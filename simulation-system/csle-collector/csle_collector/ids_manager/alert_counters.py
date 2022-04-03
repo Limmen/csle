@@ -166,6 +166,18 @@ class AlertCounters:
         return d
 
 
+    def copy(self) -> "AlertCounters":
+        """
+        :return: a copy of the object
+        """
+        c = AlertCounters()
+        c.class_alerts = self.class_alerts
+        c.priority_alerts = self.priority_alerts
+        c.ip = self.ip
+        c.ts = self.ts
+
+
+
 
 
 

@@ -71,3 +71,11 @@ class ClientPopulationMetrics:
         :return: a string representation of the object
         """
         return f"ip: {self.ip}, ts: {self.ts}, num_clients: {self.num_clients}"
+
+
+    def copy(self) -> "ClientPopulationMetrics":
+        """
+        :return: a copy of the object
+        """
+        c = ClientPopulationMetrics(ip=self.ip, ts=self.ts, num_clients=self.num_clients)
+        return c

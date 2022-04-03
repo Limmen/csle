@@ -163,7 +163,7 @@ class LOG_SINK:
     HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
-                                     "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx"]
+                                     "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx", "pids",]
     ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
     DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
 

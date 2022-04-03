@@ -150,7 +150,11 @@ class EmulationDefenderObservationState:
         """
         :return: a copy of the object
         """
-        c = EmulationDefenderObservationState(log_sink_config=self.log_sink_config)
+        c = EmulationDefenderObservationState(
+            log_sink_config=self.log_sink_config,
+            client_population_metrics=self.client_population_metrics.copy(), docker_stats=self.docker_stats.copy(),
+            ids_alert_counters=self.ids_alert_counters.copy(), attacker_actions=self.attacker_actions.copy(),
+            defender_actions=self.defender_actions.copy())
         c.actions_tried = self.actions_tried.copy()
 
         for m in self.machines:

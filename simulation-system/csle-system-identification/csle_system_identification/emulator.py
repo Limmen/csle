@@ -57,8 +57,8 @@ class Emulator:
                 logger.debug(f"Defender action complete, defender state:{s_prime.defender_obs_state}, ips:{a1.ips}")
                 EnvDynamicsUtil.cache_defender_action(a=a1, s=s_prime_prime)
                 s = s_prime_prime
-                trace.attacker_observation_states.append(s_prime_prime.attacker_obs_state)
-                trace.defender_observation_states.append(s_prime_prime.defender_obs_state)
+                trace.attacker_observation_states.append(s_prime_prime.attacker_obs_state.copy())
+                trace.defender_observation_states.append(s_prime_prime.defender_obs_state.copy())
                 trace.attacker_actions.append(a2)
                 trace.defender_actions.append(a1)
                 time.sleep(sleep_time)

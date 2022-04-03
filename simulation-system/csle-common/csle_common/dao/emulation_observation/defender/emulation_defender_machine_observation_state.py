@@ -114,9 +114,9 @@ class EmulationDefenderMachineObservationState:
         m_copy = EmulationDefenderMachineObservationState(
             ips=self.ips, log_sink_config=self.log_sink_config, host_metrics=self.host_metrics)
         m_copy.os = self.os
-        m_copy.ports = copy.deepcopy(self.ports)
+        m_copy.ports = list(map(lambda x: x.copy(), self.ports))
         m_copy.ssh_connections = self.ssh_connections
-        m_copy.host_metrics = self.host_metrics
+        m_copy.host_metrics = self.host_metrics.copy()
         return m_copy
 
 

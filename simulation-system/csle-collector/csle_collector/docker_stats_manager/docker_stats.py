@@ -140,7 +140,7 @@ class DockerStats:
         ts = stats_list[0].timestamp
         container_name=stats_list[0].container_name
 
-        return DockerStats(pids=avg_pids, timestamp=ts, cpu_percent=avg_cpu_percent, mem_current=avg_mem_current,
+        DockerStats(pids=avg_pids, timestamp=ts, cpu_percent=avg_cpu_percent, mem_current=avg_mem_current,
                            mem_total=avg_mem_total, mem_percent=avg_mem_percent,
                            blk_read=avg_blk_read, blk_write=avg_blk_write, net_rx=avg_net_rx, net_tx=avg_net_tx,
                            container_name=container_name)
@@ -161,7 +161,6 @@ class DockerStats:
             container_name="", pids=int(round(float(parts[10]))), timestamp=str(parts[0])
         )
         return obj
-
 
     def update_with_kafka_record(self, record: str) -> None:
         """
@@ -199,3 +198,13 @@ class DockerStats:
                  f"{self.net_rx},{self.net_tx},{self.pids}"
         return record
 
+    def copy(self) -> "DockerStats":
+        """
+        :return: a copy of the object
+        """
+        c = DockerStats(
+            pids=self.pids, timestamp=self.timestamp, cpu_percent=self.cpu_percent, mem_current=self.mem_current,
+            mem_total=self.mem_total, mem_percent=self.mem_percent, blk_read = self.blk_read, blk_write=self.blk_write,
+            net_rx=self.net_rx, net_tx = self.net_tx, container_name=self.container_name, ip=self.ip, ts=self.ts
+        )
+        return c
