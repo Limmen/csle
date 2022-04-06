@@ -141,11 +141,18 @@ class EmulationEnvConfig:
         :return: SSH connecton to the hacker
         """
         hacker_ip = self.containers_config.agent_ip
-        if hacker_ip in self.connections:
+        if hacker_ip in self.connections and self.connections[hacker_ip] is not None \
+                and self.connections[hacker_ip].get_transport() is not None \
+                and self.connections[hacker_ip].get_transport().is_active():
             return self.connections[hacker_ip]
         else:
             self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
             return self.connections[hacker_ip]
+
+    def cleanup(self):
+        for ip, conn in self.connections.items():
+            conn.close()
+        self.connections = {}
 
     def create_producer(self) -> None:
         """

@@ -1074,6 +1074,8 @@ class SYSTEM_IDENTIFICATION:
     SIMULATION_TRACES_FILE = "simulation_taus.json"
     EMULATION_TRACES_FILE = "emulation_traces.json"
     SYSTEM_ID_LOGS_FILE = "system_id_log.csv"
+    INTRUSION_CONDITIONAL = "intrusion"
+    NO_INTRUSION_CONDITIONAL = "no_intrusion"
 
 
 class AUXILLARY_COMMANDS:

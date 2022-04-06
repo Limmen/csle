@@ -50,3 +50,4 @@ class IdsLogConsumerThread(threading.Thread):
                         raise KafkaException(msg.error())
                 else:
                     self.ids_alert_counters.update_with_kafka_record(record=msg.value().decode())
+        self.consumer.close()

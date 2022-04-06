@@ -52,3 +52,4 @@ class HostMetricsConsumerThread(threading.Thread):
                         raise KafkaException(msg.error())
                 else:
                     self.host_metrics.update_with_kafka_record(record=msg.value().decode(), ip=self.host_ip)
+        self.consumer.close()

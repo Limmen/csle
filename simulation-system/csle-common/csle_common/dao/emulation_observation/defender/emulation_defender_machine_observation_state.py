@@ -13,7 +13,7 @@ from csle_collector.docker_stats_manager.docker_stats import DockerStats
 
 class EmulationDefenderMachineObservationState:
     """
-    Represent's the defender's belief state of a component in the emulation
+    Represents the defender's belief state of a component in the emulation
     """
 
     def __init__(self, ips : List[str], log_sink_config: LogSinkConfig,
@@ -126,6 +126,9 @@ class EmulationDefenderMachineObservationState:
 
         :return: None
         """
+        if self.docker_stats_consumer_thread is not None:
+            self.docker_stats_consumer_thread.running = False
+            self.docker_stats_consumer_thread.consumer.close()
         for c in self.ssh_connections:
             c.cleanup()
 

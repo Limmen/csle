@@ -50,7 +50,7 @@ class Credential:
         :return: a dto representation of the object
         """
         dto = Credential(username = d["username"], port = d["port"],
-                         protocol=d["protocol"], pw=d["pw"], service=d["service"],
+                         protocol=TransportProtocol._from_str(d["protocol"]), pw=d["pw"], service=d["service"],
                          root = d["root"])
         return dto
 

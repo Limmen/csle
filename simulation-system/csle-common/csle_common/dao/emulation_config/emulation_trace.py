@@ -32,6 +32,7 @@ class EmulationTrace:
         self.attacker_actions : List[EmulationAttackerAction] = []
         self.defender_actions : List[EmulationDefenderAction] = []
         self.emulation_name = emulation_name
+        self.id = -1
 
     def __str__(self):
         """
@@ -43,7 +44,8 @@ class EmulationTrace:
               f"defender_observation_states:{self.defender_observation_states}\n"
               f"attacker_actions:{self.attacker_actions}\n"
               f"defender_actions:{self.defender_actions}\n"
-              f"emulation_name: {self.emulation_name}")
+              f"emulation_name: {self.emulation_name},"
+              f"id:{self.id}")
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationTrace":
@@ -82,6 +84,7 @@ class EmulationTrace:
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
         d["emulation_name"] = self.emulation_name
+        d["id"] = self.id
         return d
 
     @staticmethod

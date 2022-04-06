@@ -241,16 +241,25 @@ class DockerStats:
         :param max_counter: the maximum counter_value
         :return: the deltas and the labels
         """
+        # deltas = [
+        #     float(min(100.0,max(-100.0, float(round(stats_prime.cpu_percent - self.cpu_percent, 1))))),
+        #     int(min(max_counter, max(-max_counter, int(stats_prime.mem_current - self.mem_current)))),
+        #     int(min(max_counter, max(-max_counter, int(stats_prime.mem_total - self.mem_total)))),
+        #     float(min(100.0, max(-100.0, float(round(stats_prime.mem_percent - self.mem_percent, 1))))),
+        #     int(min(max_counter, max(-max_counter, int(stats_prime.blk_read - self.blk_read)))),
+        #     int(min(max_counter, max(-max_counter, int(stats_prime.blk_write - self.blk_write)))),
+        #     int(min(max_counter, max(-max_counter, int(stats_prime.net_rx - self.net_rx)))),
+        #     int(min(max_counter, max(-max_counter, int(stats_prime.net_tx - self.net_tx)))),
+        #     int(min(max_counter, max(-max_counter, int(stats_prime.pids - self.pids))))
+        # ]
+
         deltas = [
-            float(min(100.0,max(-100.0, float(round(stats_prime.cpu_percent - self.cpu_percent, 1))))),
-            int(min(max_counter, max(-max_counter, int(stats_prime.mem_current - self.mem_current)))),
-            int(min(max_counter, max(-max_counter, int(stats_prime.mem_total - self.mem_total)))),
-            float(min(100.0, max(-100.0, float(round(stats_prime.mem_percent - self.mem_percent, 1))))),
-            int(min(max_counter, max(-max_counter, int(stats_prime.blk_read - self.blk_read)))),
-            int(min(max_counter, max(-max_counter, int(stats_prime.blk_write - self.blk_write)))),
-            int(min(max_counter, max(-max_counter, int(stats_prime.net_rx - self.net_rx)))),
-            int(min(max_counter, max(-max_counter, int(stats_prime.net_tx - self.net_tx)))),
-            int(min(max_counter, max(-max_counter, int(stats_prime.pids - self.pids))))
+            round(stats_prime.cpu_percent,1), min(max_counter, int(stats_prime.mem_current)),
+            min(max_counter, int(stats_prime.mem_total)),
+            min(max_counter, int(stats_prime.mem_percent)),
+            min(max_counter, int(stats_prime.blk_read)), min(max_counter, int(stats_prime.blk_write)),
+            min(max_counter, int(stats_prime.net_rx)),
+            min(max_counter, int(stats_prime.net_tx), int(stats_prime.pids))
         ]
         labels = [
             "cpu_percent", "mem_current", "mem_total", "mem_percent", "blk_read", "blk_write", "net_rx",

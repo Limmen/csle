@@ -51,3 +51,4 @@ class ClientPopulationConsumerThread(threading.Thread):
                         raise KafkaException(msg.error())
                 else:
                     self.client_population_metrics.update_with_kafka_record(record=msg.value().decode())
+        self.consumer.close()

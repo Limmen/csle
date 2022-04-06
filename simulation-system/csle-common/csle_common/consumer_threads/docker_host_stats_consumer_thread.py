@@ -52,3 +52,4 @@ class DockerHostStatsConsumerThread(threading.Thread):
                         raise KafkaException(msg.error())
                 else:
                     self.docker_stats.update_with_kafka_record_ip(record=msg.value().decode(), ip=self.host_ip)
+        self.consumer.close()

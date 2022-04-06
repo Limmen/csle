@@ -97,8 +97,6 @@ const Monitoring = () => {
     }
 
     const updateEmulation = (emulation_name) => {
-        console.log("update emulation")
-        console.log(emulation_name)
         setSelectedEmulation(emulation_name)
         for (let i = 0; i < runningEmulations.length; i++) {
             if(runningEmulations[i].name === emulation_name) {

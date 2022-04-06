@@ -177,7 +177,6 @@ def emulation(emulation_name: str):
 
 @app.route('/emulationtraces', methods=['GET'])
 def emulation_traces():
-    print("emulatio ntraces request")
     emulation_trcs = MetastoreFacade.list_emulation_traces()
     traces_dicts = list(map(lambda x: x.to_dict(), emulation_trcs))
     response = jsonify(traces_dicts)
@@ -190,6 +189,15 @@ def simulation_traces():
     simulation_trcs = MetastoreFacade.list_emulation_traces()
     traces_dicts = list(map(lambda x: x.to_dict(), simulation_trcs))
     response = jsonify(traces_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/dynamicsmodels', methods=['GET'])
+def dynamics_models():
+    models = MetastoreFacade.list_emulation_statistics()
+    models_dicts = list(map(lambda x: x.to_dict(), models))
+    response = jsonify(models_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

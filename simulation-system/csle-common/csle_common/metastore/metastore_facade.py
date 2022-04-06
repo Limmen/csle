@@ -70,6 +70,7 @@ class MetastoreFacade:
         """
         emulation_trace_json_str = json.dumps(emulation_trace_record[2], indent=4, sort_keys=True)
         emulation_trace: EmulationTrace = EmulationTrace.from_dict(json.loads(emulation_trace_json_str))
+        emulation_trace.id = emulation_trace_record[0]
         return emulation_trace
 
     @staticmethod
@@ -109,6 +110,7 @@ class MetastoreFacade:
         emulation_statistics_json_str = json.dumps(emulation_statistics_record[2], indent=4, sort_keys=True)
         emulation_statistics: EmulationStatistics = EmulationStatistics.from_dict(
             json.loads(emulation_statistics_json_str))
+        emulation_statistics.id = emulation_statistics_record[0]
         return emulation_statistics
 
     @staticmethod

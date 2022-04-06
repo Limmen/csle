@@ -1,5 +1,6 @@
 from typing import Dict, Any
 import numpy as np
+import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
@@ -12,28 +13,30 @@ class EmulationStatistics:
     DTO representing delta-statistics measured from teh emulation
     """
 
-    def __init__(self, emulation_name: str, max_counts : int = 10000):
+    def __init__(self, emulation_name: str, max_counts : int = 1000, descr: str=""):
         """
         Initializes the statistics DTO
 
+        :param emulation_name: the name of the emulation that the statistics is linked to
+        :param descr: a free text description of the statistics
         :param max_counts: the max number a given counter
-        :param emulation_name: the name of the emulation
         """
-        self.max_counts = max_counts
         self.emulation_name = emulation_name
-        self.intrusion_counts = {}
-        self.no_intrusion_counts = {}
+        self.descr = descr
+        self.max_counts = max_counts
         self.ids_counter_labels = collector_constants.LOG_SINK.IDS_ALERTS_LABELS
         self.host_metrics_counter_labels = collector_constants.LOG_SINK.HOST_METRICS_LABELS
         self.docker_stats_counter_labels = collector_constants.LOG_SINK.DOCKER_STATS_COUNTER_LABELS
         self.docker_stats_percent_labels = collector_constants.LOG_SINK.DOCKER_STATS_PERCENT_LABELS
-        self.client_population_counter_labels = collector_constants.LOG_SINK.CLIENT_POPULATION_METRIC_LABELS
+        self.client_metrics_labels = collector_constants.LOG_SINK.CLIENT_POPULATION_METRIC_LABELS
         self.counter_labels = self.ids_counter_labels \
                               + self.host_metrics_counter_labels + self.docker_stats_counter_labels \
-                              + self.client_population_counter_labels
+                              + self.client_metrics_labels
         self.percent_labels = self.docker_stats_percent_labels
-        self.intrusion_counts = self.initialize_counters(self.intrusion_counts)
-        self.no_intrusion_counts = self.initialize_counters(self.no_intrusion_counts)
+        self.conditionals = {}
+        self.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL] = self.initialize_counters(d={})
+        self.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL] = self.initialize_counters(d={})
+        self.id = -1
 
     def initialize_counters(self, d: Dict[str, Dict[int,int]]) -> Dict[str, Dict[int,int]]:
         """
@@ -44,10 +47,10 @@ class EmulationStatistics:
 
         for label in self.counter_labels:
             d[label] = {}
-            for val in range(-self.max_counts, self.max_counts+1):
+            for val in range(0, self.max_counts+1):
                 d[label][val] = 0
 
-        percent_space = np.array(list(range(-100,101,1)))/100
+        percent_space = np.array(list(range(0,101,1)))/100
         for label in self.percent_labels:
             d[label] = {}
             for val in percent_space:
@@ -97,15 +100,18 @@ class EmulationStatistics:
         :return: None
         """
         if a2.id == EmulationAttackerActionId.CONTINUE:
-            self.update_counters(d=self.no_intrusion_counts, s=s, s_prime=s_prime)
+            self.update_counters(d=self.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL],
+                                 s=s, s_prime=s_prime)
         else:
-            self.update_counters(d=self.intrusion_counts, s=s, s_prime=s_prime)
+            self.update_counters(d=self.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL],
+                                 s=s, s_prime=s_prime)
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"intrusion_counts:{self.intrusion_counts}, no_intrusion_counts:{self.no_intrusion_counts}"
+        return f"conditionals:{self.conditionals}" \
+               f"emulation_name: {self.emulation_name}, description: {self.descr}"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationStatistics":
@@ -117,10 +123,12 @@ class EmulationStatistics:
         """
         obj = EmulationStatistics(
             emulation_name=d["emulation_name"],
-            max_counts=d["max_counts"]
+            max_counts=d["max_counts"],
+            descr=d["descr"]
         )
-        obj.intrusion_counts = d["intrusion_counts"]
-        obj.no_intrusion_counts = d["no_intrusion_counts"]
+        obj.conditionals = d["conditionals"]
+        if "id" in d:
+            obj.id = d["id"]
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -128,8 +136,9 @@ class EmulationStatistics:
         :return: a dict representation of the object
         """
         d = {}
-        d["intrusion_counts"] = self.intrusion_counts
-        d["no_intrusion_counts"] = self.no_intrusion_counts
+        d["descr"] = self.descr
+        d["id"] = self.id
+        d["conditionals"] = self.conditionals
         d["max_counts"] = self.max_counts
         d["emulation_name"] = self.emulation_name
         return d

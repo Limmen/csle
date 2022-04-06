@@ -24,7 +24,7 @@ class Emulator:
                              attacker_sequence: List[EmulationAttackerAction],
                              defender_sequence: List[EmulationDefenderAction],
                              repeat_times:int = 1, sleep_time : int = 1, save_dir: str = None,
-                             emulation_statistics: EmulationStatistics = None) -> None:
+                             emulation_statistics: EmulationStatistics = None, descr: str = "") -> None:
         """
         Runs an attacker and defender sequence in the emulation <repeat_times> times
 
@@ -35,6 +35,7 @@ class Emulator:
         :param sleep_time: the number of seconds to sleep between time-steps
         :param save_dir: the directory to save the collected traces
         :param emulation_statistics: the emulation statistics to update
+        :param descr of the execution
         :return: None
         """
         logger = Logger.__call__().get_logger()
@@ -42,12 +43,13 @@ class Emulator:
             save_dir = ExperimentUtil.default_output_dir() + "/results"
         assert len(attacker_sequence) == len(defender_sequence)
         if emulation_statistics is None:
-            emulation_statistics = EmulationStatistics(emulation_name=emulation_env_config.name)
+            emulation_statistics = EmulationStatistics(emulation_name=emulation_env_config.name, descr=descr)
         T = len(attacker_sequence)
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         emulation_traces = []
         for i in range(repeat_times):
             logger.info(f"Starting execution of static action sequences, iteration :{i}")
+            s.reset()
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
                                    initial_defender_observation_state=s.defender_obs_state,
                                    emulation_name=emulation_env_config.name)

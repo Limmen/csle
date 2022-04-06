@@ -47,10 +47,7 @@ class EmulationUtil:
         :return: outdata, errdata, total_time
         """
         transport_conn = conn.get_transport()
-        try:
-            session = transport_conn.open_session(timeout=60)
-        except Exception:
-            raise IOError("Connection timed out")
+        session = transport_conn.open_session(timeout=60)
         start = time.time()
         session.exec_command(cmd)
         outdata, errdata = b'', b''

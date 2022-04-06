@@ -38,7 +38,7 @@ class EmulationAttackerObservationState:
         obj = EmulationAttackerObservationState(
             catched_flags=d["catched_flags"], agent_reachable=set(d["agent_reachable"]),
         )
-        obj.machines = d["machines"]
+        obj.machines = list(map(lambda x: EmulationAttackerMachineObservationState.from_dict(x), d["machines"]))
         obj.actions_tried = d["actions_tried"]
         return obj
 

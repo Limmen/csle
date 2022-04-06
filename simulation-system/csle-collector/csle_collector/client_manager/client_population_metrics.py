@@ -90,6 +90,6 @@ class ClientPopulationMetrics:
         :param max_counter: the maximum counter_value
         :return: the deltas and the labels
         """
-        deltas = [min(max_counter, max(-max_counter, int(stats_prime.num_clients - self.num_clients)))]
+        deltas = [min(max_counter, stats_prime.num_clients)]
         labels = ["num_clients"]
         return deltas, labels

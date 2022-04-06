@@ -64,8 +64,6 @@ class EmulationDefenderObservationState:
         self.ids_log_consumer_thread = None
         self.attacker_actions_consumer_thread = None
         self.defender_actions_consumer_thread = None
-        self.attacker_actions_consumer_thread = None
-        self.defender_actions_consumer_thread = None
         self.aggregated_host_metrics_thread = None
 
     def start_monitoring_threads(self) -> None:
@@ -122,13 +120,14 @@ class EmulationDefenderObservationState:
         """
         obj = EmulationDefenderObservationState(log_sink_config=d["log_sink_config"])
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(d=x), d["machines"]))
-        obj.actions_tried = set(d["actions_tried"])
+        obj.actions_tried = set(list(map(lambda x: tuple(x), d["actions_tried"])))
         obj.client_population_metrics = ClientPopulationMetrics.from_dict(d["client_population_metrics"])
         obj.docker_stats = DockerStats.from_dict(d["docker_stats"])
         obj.ids_alert_counters = AlertCounters.from_dict(d["ids_alert_counters"])
         obj.aggregated_host_metrics = HostMetrics.from_dict(d["aggregated_host_metrics"])
         obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
         obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"]))
+        obj.log_sink_config = LogSinkConfig.from_dict(d["log_sink_config"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -161,6 +160,23 @@ class EmulationDefenderObservationState:
 
         :return: None
         """
+        if self.docker_stats_consumer_thread is not None:
+            self.docker_stats_consumer_thread.running = False
+            self.docker_stats_consumer_thread.consumer.close()
+        if self.client_population_consumer_thread is not None:
+            self.client_population_consumer_thread.running = False
+            self.client_population_consumer_thread.consumer.close()
+        if self.ids_log_consumer_thread is not None:
+            self.ids_log_consumer_thread.running = False
+            self.ids_log_consumer_thread.consumer.close()
+        if self.attacker_actions_consumer_thread is not None:
+            self.attacker_actions_consumer_thread.running = False
+            self.attacker_actions_consumer_thread.consumer.close()
+        if self.defender_actions_consumer_thread is not None:
+            self.defender_actions_consumer_thread.running = False
+            self.defender_actions_consumer_thread.consumer.close()
+        if self.aggregated_host_metrics_thread is not None:
+            self.aggregated_host_metrics_thread.running = False
         for m in self.machines:
             m.cleanup()
 

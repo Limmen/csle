@@ -53,7 +53,7 @@ class NodeResourcesConfig:
         """
         d = {}
         d["container_name"] = self.container_name
-        d["ips_gw_default_policy_networks"] = list(map(lambda x: (x[0], None if x[1] is None else x[1].to_dict()),
+        d["ips_and_network_configs"] = list(map(lambda x: (x[0], None if x[1] is None else x[1].to_dict()),
                                                        self.ips_and_network_configs))
         d["num_cpus"] = self.num_cpus
         d["available_memory_gb"] = self.available_memory_gb

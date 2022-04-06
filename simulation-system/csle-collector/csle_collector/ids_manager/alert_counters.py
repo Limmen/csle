@@ -74,9 +74,9 @@ class AlertCounters:
         parts = record.split(",")
         self.ts = float(parts[0])
         self.ip = parts[1]
-        self.total_alerts = parts[2]
-        self.warning_alerts = parts[3]
-        self.severe_alerts = parts[4]
+        self.total_alerts = int(round(float(parts[2])))
+        self.warning_alerts = int(round(float(parts[3])))
+        self.severe_alerts = int(round(float(parts[4])))
         self.class_alerts = []
         self.priority_alerts = []
         for i in range(5, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+5):
@@ -206,6 +206,7 @@ class AlertCounters:
         c.total_alerts = self.total_alerts
         c.warning_alerts = self.warning_alerts
         c.severe_alerts = self.severe_alerts
+        return c
 
     def get_deltas(self, counters_prime: "AlertCounters", max_counter: int) -> Tuple[List[int], List[str]]:
         """
@@ -215,17 +216,13 @@ class AlertCounters:
         :param max_counter: the maximum counter value
         :return: the deltas and the labels
         """
-        deltas_priority = list(np.minimum([max_counter]*len(counters_prime.priority_alerts),
-                                     np.maximum([-max_counter]*len(counters_prime.priority_alerts),
-                                     np.array(counters_prime.priority_alerts) - np.array(self.priority_alerts))))
-        deltas_class = list(np.minimum([max_counter]*len(counters_prime.class_alerts),
-                                  np.maximum([-max_counter]*len(counters_prime.class_alerts),
-                                  np.array(counters_prime.class_alerts) - np.array(self.class_alerts))))
+        deltas_priority = np.minimum([max_counter]*len(counters_prime.priority_alerts),counters_prime.priority_alerts).astype(int).tolist()
+        deltas_class = np.minimum([max_counter]*len(counters_prime.class_alerts), counters_prime.class_alerts).astype(int).tolist()
         deltas = [
-                     min(max_counter, max(-max_counter, counters_prime.total_alerts-self.total_alerts)),
-                     min(max_counter, max(-max_counter, counters_prime.warning_alerts-self.warning_alerts)),
-                     min(max_counter, max(-max_counter, counters_prime.severe_alerts-self.severe_alerts))
-                  ] + deltas_priority + deltas_class
+                     int(min(max_counter, counters_prime.total_alerts)),
+                     int(min(max_counter, counters_prime.warning_alerts)),
+                     int(min(max_counter, counters_prime.severe_alerts))
+                 ] + deltas_priority + deltas_class
         labels = constants.LOG_SINK.IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels

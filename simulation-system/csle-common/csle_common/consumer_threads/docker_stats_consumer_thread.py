@@ -51,3 +51,4 @@ class DockerStatsConsumerThread(threading.Thread):
                         raise KafkaException(msg.error())
                 else:
                     self.docker_stats.update_with_kafka_record(record=msg.value().decode())
+        self.consumer.close()

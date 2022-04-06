@@ -163,14 +163,22 @@ class HostMetrics:
         :param max_counter: the maximum counter_value
         :return: the deltas and the labels
         """
+        # deltas = [
+        #     min(max_counter, max(-max_counter, int(stats_prime.num_logged_in_users - self.num_logged_in_users))),
+        #     min(max_counter, max(-max_counter, int(stats_prime.num_failed_login_attempts -
+        #                                            self.num_failed_login_attempts))),
+        #     min(max_counter, max(-max_counter, int(stats_prime.num_open_connections - self.num_open_connections))),
+        #     min(max_counter, max(-max_counter, int(stats_prime.num_login_events - self.num_login_events))),
+        #     min(max_counter, max(-max_counter, int(stats_prime.num_processes - self.num_processes))),
+        #     min(max_counter, max(-max_counter, int(stats_prime.num_users - self.num_users)))
+        # ]
         deltas = [
-            min(max_counter, max(-max_counter, int(stats_prime.num_logged_in_users - self.num_logged_in_users))),
-            min(max_counter, max(-max_counter, int(stats_prime.num_failed_login_attempts -
-                                                   self.num_failed_login_attempts))),
-            min(max_counter, max(-max_counter, int(stats_prime.num_open_connections - self.num_open_connections))),
-            min(max_counter, max(-max_counter, int(stats_prime.num_login_events - self.num_login_events))),
-            min(max_counter, max(-max_counter, int(stats_prime.num_processes - self.num_processes))),
-            min(max_counter, max(-max_counter, int(stats_prime.num_users - self.num_users)))
+            min(max_counter, stats_prime.num_logged_in_users),
+            min(max_counter, stats_prime.num_failed_login_attempts),
+            min(max_counter, stats_prime.num_open_connections),
+            min(max_counter, stats_prime.num_login_events),
+            min(max_counter, stats_prime.num_processes),
+            min(max_counter, stats_prime.num_users)
         ]
         labels = ["num_logged_in_users", "num_failed_login_attempts", "num_open_connections",
                   "num_login_events", "num_processes", "num_users"]

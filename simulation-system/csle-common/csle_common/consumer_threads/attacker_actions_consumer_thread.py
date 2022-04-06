@@ -52,3 +52,4 @@ class AttackerActionsConsumerThread(threading.Thread):
                 else:
                     self.attacker_actions.append(EmulationAttackerAction.from_kafka_record(
                         record=msg.value().decode()))
+        self.consumer.close()

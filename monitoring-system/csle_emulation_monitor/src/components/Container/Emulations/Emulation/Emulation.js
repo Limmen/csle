@@ -404,8 +404,12 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {emulation.resources_config.node_resources_configurations.map((rc, index) =>
-                        rc.ips_gw_default_policy_networks.map((rc_net, index) =>
+                    {emulation.resources_config.node_resources_configurations.filter(rc =>
+                        rc !== null && rc !== undefined &&
+                        rc.ips_gw_default_policy_networks !== null
+                        && rc.ips_gw_default_policy_networks !== undefined).map((rc, index) =>
+                        rc.ips_gw_default_policy_networks.filter((rc_net) =>
+                            rc_net !== null && rc_net !== undefined).map((rc_net, index) =>
                             <tr key={rc_net[0] + "-" + index}>
                                 <td>{rc_net[0]}</td>
                                 <td>{rc_net[1].interface}</td>

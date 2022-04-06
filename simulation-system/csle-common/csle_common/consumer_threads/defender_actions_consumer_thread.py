@@ -53,3 +53,4 @@ class DefenderActionsConsumerThread(threading.Thread):
                 else:
                     self.defender_actions.append(EmulationDefenderAction.from_kafka_record(
                         record=msg.value().decode()))
+        self.consumer.close()
