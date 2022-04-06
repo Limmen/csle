@@ -5,6 +5,9 @@ import NotFound from "./components/Container/NotFound/NotFound";
 import Emulations from "./components/Container/Emulations/Emulations";
 import Monitoring from "./components/Container/Monitoring/Monitoring";
 import Traces from "./components/Container/Traces/Traces";
+import DynamicsModels from "./components/Container/DynamicsModels/DynamicsModels";
+import PolicyExamination from "./components/Container/PolicyExamination/PolicyExamination";
+import ContainerImages from "./components/Container/ContainerImages/ContainerImages";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
@@ -23,6 +26,12 @@ function App() {
                                 <Route path="monitoring" index element={<Monitoring/>}>
                                 </Route>
                                 <Route path="traces" index element={<Traces/>}>
+                                </Route>
+                                <Route path="dynamicsmodels" index element={<DynamicsModels/>}>
+                                </Route>
+                                <Route path="policyexamination" index element={<PolicyExamination/>}>
+                                </Route>
+                                <Route path="images" index element={<ContainerImages/>}>
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
                             </Route>

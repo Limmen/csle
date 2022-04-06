@@ -98,6 +98,7 @@ class EmulationDefenderMachineObservationState:
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
         d["host_metrics"] = self.host_metrics.to_dict()
         d["docker_stats"] = self.docker_stats.to_dict()
+        d["log_sink_config"] = self.log_sink_config.to_dict()
         return d
 
     def __str__(self) -> str:

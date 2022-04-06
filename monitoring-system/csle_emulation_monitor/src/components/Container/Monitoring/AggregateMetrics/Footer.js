@@ -1,7 +1,7 @@
 import React from 'react';
 import './Footer.css';
 
-const Footer = () => (
+const EmulationTrace = () => (
   <div className="Footer">
       <footer className="footer">
           <div className="container">

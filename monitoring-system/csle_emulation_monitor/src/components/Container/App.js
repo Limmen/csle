@@ -10,11 +10,9 @@ function App() {
       <div className="App index container-fluid">
         <Header></Header>
         <div className="row">
-          <div className="col-sm-1"></div>
-          <div className="col-sm-10">
+          <div className="col-sm-12">
               <Outlet/>
           </div>
-          <div className="col-sm-1"></div>
         </div>
         <Footer/>
       </div>

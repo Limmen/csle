@@ -1,6 +1,3 @@
-.Footer {
-    margin-top:100px;
-}
 
 .aggregatedMetrics {
     margin-bottom: 55px
@@ -65,4 +62,13 @@
 
 .toolTipRefresh {
     font-size: 20px;
+}
+
+.emptyEmulations {
+    font-size: 22px;
+}
+
+.grafanaStatus {
+    font-size: 22px;
+    margin-left:20px
 }

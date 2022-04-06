@@ -26,6 +26,21 @@ const Header = () => {
                                 Traces
                             </NavLink>
                         </li>
+                        <li className="nav-item navtabheader">
+                            <NavLink className="nav-link navtablabel largeFont" to={"dynamicsmodels"}>
+                                Dynamics Models
+                            </NavLink>
+                        </li>
+                        <li className="nav-item navtabheader">
+                            <NavLink className="nav-link navtablabel largeFont" to={"policyexamination"}>
+                                Policy Examination
+                            </NavLink>
+                        </li>
+                        <li className="nav-item navtabheader">
+                            <NavLink className="nav-link navtablabel largeFont" to={"images"}>
+                                Container Images
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
             </div>

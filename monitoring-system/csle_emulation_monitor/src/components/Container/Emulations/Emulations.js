@@ -8,14 +8,14 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const Emulations = () => {
-    const [envs, setEnvs] = useState([]);
+    const [emulations, setEmulations] = useState([]);
     const [loading, setLoading] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
     const fetchEmulations = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/envs',
+            `http://` + ip + ':7777/emulations',
             {
                 method: "GET",
                 headers: new Headers({
@@ -25,7 +25,7 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setEnvs(response);
+                setEmulations(response);
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -50,8 +50,8 @@ const Emulations = () => {
         } else {
             return (
                 <Accordion defaultActiveKey="0">
-                    {props.envs.map((env, index) =>
-                        <Emulation env={env} wrapper={wrapper} key={env.name + "-" + index}/>
+                    {props.emulations.map((emulation, index) =>
+                        <Emulation emulation={emulation} wrapper={wrapper} key={emulation.name + "-" + index}/>
                     )}
                 </Accordion>
             )
@@ -81,7 +81,7 @@ const Emulations = () => {
                 </OverlayTrigger>
 
             </h3>
-            <EmulationAccordions loading={loading} envs={envs}/>
+            <EmulationAccordions loading={loading} emulations={emulations}/>
         </div>
     );
 }

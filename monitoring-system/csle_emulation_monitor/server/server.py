@@ -1,10 +1,11 @@
 import base64
 from flask import Flask, jsonify, request
+import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.container_manager import ContainerManager
 from csle_common.util.read_emulation_statistics import ReadEmulationStatistics
 from csle_common.controllers.emulation_env_manager import EmulationEnvManager
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 from waitress import serve
 
 app = Flask(__name__, static_url_path='', static_folder='../build/')
@@ -15,8 +16,100 @@ def root():
     return app.send_static_file('index.html')
 
 
-@app.route('/envs', methods=['GET'])
-def environments():
+@app.route('/nodeexporter', methods=['GET', 'POST'])
+def node_exporter():
+    running = MonitorToolsController.is_node_exporter_running()
+    port = constants.COMMANDS.NODE_EXPORTER_PORT
+    node_exporter_dict = {
+        "running": running,
+        "port": port,
+        "url": f"http://localhost:{port}/"
+    }
+    response = jsonify(node_exporter_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/prometheus', methods=['GET', 'POST'])
+def prometheus():
+    running = MonitorToolsController.is_prometheus_running()
+    port = constants.COMMANDS.PROMETHEUS_PORT
+    if request.method == "POST":
+        if running:
+            MonitorToolsController.stop_prometheus()
+            running = False
+        else:
+            MonitorToolsController.start_prometheus()
+            running = True
+    prometheus_dict = {
+        "running": running,
+        "port": port,
+        "url": f"http://localhost:{port}/"
+    }
+    response = jsonify(prometheus_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/cadvisor', methods=['GET', 'POST'])
+def cadvisor():
+    running = MonitorToolsController.is_cadvisor_running()
+    port = constants.COMMANDS.CADVISOR_PORT
+    if request.method == "POST":
+        if running:
+            MonitorToolsController.stop_cadvisor()
+            running = False
+        else:
+            MonitorToolsController.start_cadvisor()
+            running = True
+    cadvisor_dict = {
+        "running": running,
+        "port": port,
+        "url": f"http://localhost:{port}/"
+    }
+    response = jsonify(cadvisor_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/grafana', methods=['GET', 'POST'])
+def grafana():
+    running = MonitorToolsController.is_grafana_running()
+    port = constants.COMMANDS.GRAFANA_PORT
+    if request.method == "POST":
+        if running:
+            MonitorToolsController.stop_grafana()
+            running = False
+        else:
+            MonitorToolsController.start_grafana()
+            running = True
+    grafana_dict = {
+        "running": running,
+        "port": port,
+        "url": f"http://localhost:{port}/"
+    }
+    response = jsonify(grafana_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/images', methods=['GET'])
+def images():
+    images=ContainerManager.list_all_images()
+    images_dicts = []
+    for img in images:
+        images_dicts.append(
+            {
+                "name": img[0],
+                "size": img[4]
+            }
+        )
+    response = jsonify(images_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/emulations', methods=['GET'])
+def emulations():
     all_emulations = MetastoreFacade.list_emulations()
     all_images = MetastoreFacade.list_emulation_images()
     rc_emulations = ContainerManager.list_running_emulations()
@@ -29,17 +122,16 @@ def environments():
             em_name, img = em_name_img
             if em_name == em.name:
                 em.image = base64.b64encode(img).decode()
-    envs_dicts = list(map(lambda x: x.to_dict(), all_emulations))
-    response = jsonify(envs_dicts)
+    emulations_dicts = list(map(lambda x: x.to_dict(), all_emulations))
+    response = jsonify(emulations_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
 
-@app.route('/monitor/<envname>/<minutes>', methods=['GET'])
-def monitor_env(envname: str, minutes: int):
+@app.route('/monitor/<emulation>/<minutes>', methods=['GET'])
+def monitor_emulation(emulation: str, minutes: int):
     minutes = int(minutes)
-    print(minutes)
-    em = MetastoreFacade.get_emulation(name=envname)
+    em = MetastoreFacade.get_emulation(name=emulation)
     if em is None:
         time_series = None
     else:
@@ -49,9 +141,9 @@ def monitor_env(envname: str, minutes: int):
     return response
 
 
-@app.route('/envs/<envname>', methods=['GET', 'POST'])
-def env(envname: str):
-    em = MetastoreFacade.get_emulation(name=envname)
+@app.route('/emulations/<emulation>', methods=['GET', 'POST'])
+def emulation(emulation_name: str):
+    em = MetastoreFacade.get_emulation(name=emulation_name)
     rc_emulations = ContainerManager.list_running_emulations()
     if em is not None:
         if em.name in rc_emulations:
@@ -69,9 +161,7 @@ def env(envname: str):
                 EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=em)
                 em.running = False
             else:
-                print("Running")
                 EmulationEnvManager.run_containers(emulation_env_config=em)
-                print("Config")
                 EmulationEnvManager.apply_emulation_env_config(emulation_env_config=em)
                 em.running = True
     if em is None:
@@ -84,8 +174,10 @@ def env(envname: str):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/emulation-traces', methods=['GET'])
+
+@app.route('/emulationtraces', methods=['GET'])
 def emulation_traces():
+    print("emulatio ntraces request")
     emulation_trcs = MetastoreFacade.list_emulation_traces()
     traces_dicts = list(map(lambda x: x.to_dict(), emulation_trcs))
     response = jsonify(traces_dicts)
@@ -93,7 +185,7 @@ def emulation_traces():
     return response
 
 
-@app.route('/simulation-traces', methods=['GET'])
+@app.route('/simulationtraces', methods=['GET'])
 def simulation_traces():
     simulation_trcs = MetastoreFacade.list_emulation_traces()
     traces_dicts = list(map(lambda x: x.to_dict(), simulation_trcs))
@@ -103,5 +195,5 @@ def simulation_traces():
 
 
 if __name__ == "__main__":
-    serve(app, host='0.0.0.0', port=7777)
+    serve(app, host='0.0.0.0', port=7777, threads=100)
     #app.run(port=7777,host='0.0.0.0')

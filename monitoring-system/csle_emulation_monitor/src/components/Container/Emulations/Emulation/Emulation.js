@@ -11,14 +11,14 @@ import Accordion from 'react-bootstrap/Accordion';
 
 const Emulation = (props) => {
     const [loading, setLoading] = useState(false);
-    const [env,setEnv] = useState(props.env);
+    const [emulation,setEmulation] = useState(props.emulation);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
 
-    const startOrStopEmulationRequest = useCallback((env_name) => {
+    const startOrStopEmulationRequest = useCallback((emulation_name) => {
         fetch(
-            `http://` + ip + ':7777/envs/' + env_name,
+            `http://` + ip + ':7777/emulations/' + emulation_name,
             {
                 method: "POST",
                 headers: new Headers({
@@ -29,18 +29,18 @@ const Emulation = (props) => {
             .then(res => res.json())
             .then(response => {
                 setLoading(false)
-                setEnv(response)
+                setEmulation(response)
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const startorStopEmulation = (env) => {
+    const startorStopEmulation = (emulation) => {
         setLoading(true)
-        startOrStopEmulationRequest(env.name)
+        startOrStopEmulationRequest(emulation.name)
     }
 
-    const getSubnetMasks = (env) => {
-        let networks = env.containers_config.networks
+    const getSubnetMasks = (emulation) => {
+        let networks = emulation.containers_config.networks
         const subnets = []
         for (let i = 0; i < networks.length; i++) {
             subnets.push(networks[i].subnet_mask)
@@ -48,8 +48,8 @@ const Emulation = (props) => {
         return subnets.join(", ")
     }
 
-    const getNetworkNames = (env) => {
-        let networks = env.containers_config.networks
+    const getNetworkNames = (emulation) => {
+        let networks = emulation.containers_config.networks
         const network_names = []
         for (let i = 0; i < networks.length; i++) {
             network_names.push(networks[i].name)
@@ -73,30 +73,22 @@ const Emulation = (props) => {
         }
     }
 
-    const getCircleColor = (env) => {
-        if (env.running) {
-            return "green"
-        } else {
-            return "red"
-        }
-    }
-
-    const getStatus = (env) => {
+    const getStatus = (emulation) => {
         if (loading) {
-            if (env.running) {
+            if (emulation.running) {
                 return "stopping.."
             } else {
                 return "starting.."
             }
         }
-        if (env.running) {
+        if (emulation.running) {
             return "running"
         } else {
             return "stopped"
         }
     }
 
-    const getSpinnerOrCircle = (env) => {
+    const getSpinnerOrCircle = (emulation) => {
         if (loading) {
             return (<Spinner
                 as="span"
@@ -106,7 +98,7 @@ const Emulation = (props) => {
                 aria-hidden="true"
             />)
         }
-        if (env.running) {
+        if (emulation.running) {
             return (
                 <svg id="svg-1" height="15px" width="15px" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"
                      version="1.1">
@@ -136,37 +128,9 @@ const Emulation = (props) => {
     );
 
 
-    const StartStopEmulation = (props) => {
-        if (env.running) {
-            return (
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 250, hide: 400}}
-                    overlay={renderStopEmulationTooltip()}
-                >
-                    <Button variant="outline-dark" className="startButton" onClick={() => startorStopEmulation(env)}>
-                        <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-            )
-        } else {
-            return (
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 250, hide: 400}}
-                    overlay={renderStartEmulationTooltip}
-                >
-                    <Button variant="outline-dark" className="startButton" onClick={() => startorStopEmulation(env)}>
-                        <i className="fa fa-play startStopIcon" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-            )
-        }
-    };
-
     const SpinnerOrStatus = (props) => {
         if (loading) {
-            if (env.name.running) {
+            if (emulation.name.running) {
                 return (
                     <Spinner
                         as="span"
@@ -188,7 +152,7 @@ const Emulation = (props) => {
                 )
             }
         } else {
-            if (env.running) {
+            if (emulation.running) {
                 return (
                     <OverlayTrigger
                         placement="right"
@@ -196,7 +160,7 @@ const Emulation = (props) => {
                         overlay={renderStopEmulationTooltip()}
                     >
                         <Button variant="outline-dark" className="startButton"
-                                onClick={() => startorStopEmulation(env)}>
+                                onClick={() => startorStopEmulation(emulation)}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -209,7 +173,7 @@ const Emulation = (props) => {
                         overlay={renderStartEmulationTooltip}
                     >
                         <Button variant="outline-dark" className="startButton"
-                                onClick={() => startorStopEmulation(env)}>
+                                onClick={() => startorStopEmulation(emulation)}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -219,18 +183,18 @@ const Emulation = (props) => {
     };
 
 
-    return (<Card key={env.name} ref={props.wrapper}>
+    return (<Card key={emulation.name} ref={props.wrapper}>
         <Card.Header>
-            <Accordion.Toggle as={Button} variant="link" eventKey={env.name} className="mgHeader">
-                <span className="subnetTitle">Name: {env.name}</span>
-                # Containers: {env.containers_config.containers.length}, Status: {getStatus(env)}
-                {getSpinnerOrCircle(env)}
+            <Accordion.Toggle as={Button} variant="link" eventKey={emulation.name} className="mgHeader">
+                <span className="subnetTitle">Name: {emulation.name}</span>
+                # Containers: {emulation.containers_config.containers.length}, Status: {getStatus(emulation)}
+                {getSpinnerOrCircle(emulation)}
             </Accordion.Toggle>
         </Card.Header>
-        <Accordion.Collapse eventKey={env.name}>
+        <Accordion.Collapse eventKey={emulation.name}>
             <Card.Body>
                 <h5 className="semiTitle">
-                    General Information about the environment:
+                    General Information about the emulation:
                 </h5>
                 <Table striped bordered hover>
                     <thead>
@@ -242,29 +206,29 @@ const Emulation = (props) => {
                     <tbody>
                     <tr>
                         <td>Status</td>
-                        <td>{getStatus(env)} <SpinnerOrStatus env={env}/></td>
+                        <td>{getStatus(emulation)} <SpinnerOrStatus emulation={emulation}/></td>
                     </tr>
                     <tr>
                         <td>Emulation name</td>
-                        <td>{env.name}</td>
+                        <td>{emulation.name}</td>
                     </tr>
                     <tr>
                         <td>Subnets</td>
-                        <td>{getSubnetMasks(env)}</td>
+                        <td>{getSubnetMasks(emulation)}</td>
                     </tr>
                     <tr>
                         <td>Network names</td>
-                        <td>{getNetworkNames(env)}</td>
+                        <td>{getNetworkNames(emulation)}</td>
                     </tr>
                     <tr>
                         <td># Containers</td>
-                        <td>{env.containers_config.containers.length}</td>
+                        <td>{emulation.containers_config.containers.length}</td>
                     </tr>
                     <tr>
                         <td>Configuration</td>
                         <td>
                             <Button variant="link"
-                                    onClick={() => fileDownload(JSON.stringify(env), "config.json")}>
+                                    onClick={() => fileDownload(JSON.stringify(emulation), "config.json")}>
                                 config.json
                             </Button>
                         </td>
@@ -274,7 +238,7 @@ const Emulation = (props) => {
                 <h5 className="semiTitle">
                     Topology
                 </h5>
-                <img src={`data:image/jpeg;base64,${env.image}`} className="topologyImg" alt="Topology"/>
+                <img src={`data:image/jpeg;base64,${emulation.image}`} className="topologyImg" alt="Topology"/>
                 <h5 className="semiTitle">
                     Containers:
                 </h5>
@@ -287,7 +251,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.containers_config.containers.map((container, index) =>
+                    {emulation.containers_config.containers.map((container, index) =>
                         <tr key={container.full_name_str + "-" + index}>
                             <td>{container.full_name_str}</td>
                             <td>{getIps(container.ips_and_networks)}</td>
@@ -311,7 +275,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.flags_config.node_flag_configs.map((flag_config, index) =>
+                    {emulation.flags_config.node_flag_configs.map((flag_config, index) =>
                         flag_config.flags.map((flag, index) =>
                             <tr key={flag_config.ip + "-" + flag.id}>
                                 <td>{flag_config.ip}</td>
@@ -336,7 +300,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.users_config.users_configs.map((user_config, index) =>
+                    {emulation.users_config.users_configs.map((user_config, index) =>
                         user_config.users.map((user, index) =>
                             <tr key={user_config.ip + "-" + user.username}>
                                 <td>{user_config.ip}</td>
@@ -360,7 +324,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.services_config.services_configs.map((service_config, index) =>
+                    {emulation.services_config.services_configs.map((service_config, index) =>
                         service_config.services.map((service, index) =>
                             <tr key={service_config.ip + "-" + service.name + "-" + index}>
                                 <td>{service_config.ip}</td>
@@ -386,7 +350,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.vuln_config.vulnerabilities.map((vuln, index) =>
+                    {emulation.vuln_config.vulnerabilities.map((vuln, index) =>
                         <tr key={vuln.ip + "-" + vuln.name + "-" + index}>
                             <td>{vuln.ip}</td>
                             <td>{vuln.name}</td>
@@ -410,7 +374,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.resources_config.node_resources_configurations.map((rc, index) =>
+                    {emulation.resources_config.node_resources_configurations.map((rc, index) =>
                         <tr key={rc.container_name + "-" + index}>
                             <td>{rc.container_name}</td>
                             <td>{rc.available_memory_gb}GB</td>
@@ -440,7 +404,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.resources_config.node_resources_configurations.map((rc, index) =>
+                    {emulation.resources_config.node_resources_configurations.map((rc, index) =>
                         rc.ips_gw_default_policy_networks.map((rc_net, index) =>
                             <tr key={rc_net[0] + "-" + index}>
                                 <td>{rc_net[0]}</td>
@@ -472,11 +436,11 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr key={env.traffic_config.client_population_config.ip}>
-                        <td>{env.traffic_config.client_population_config.ip}</td>
-                        <td>{env.traffic_config.client_population_config.client_population_process_type}</td>
-                        <td>{env.traffic_config.client_population_config.lamb}</td>
-                        <td>{env.traffic_config.client_population_config.mu}</td>
+                    <tr key={emulation.traffic_config.client_population_config.ip}>
+                        <td>{emulation.traffic_config.client_population_config.ip}</td>
+                        <td>{emulation.traffic_config.client_population_config.client_population_process_type}</td>
+                        <td>{emulation.traffic_config.client_population_config.lamb}</td>
+                        <td>{emulation.traffic_config.client_population_config.mu}</td>
                     </tr>
                     </tbody>
                 </Table>
@@ -492,7 +456,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.traffic_config.node_traffic_configs.map((node_traffic_config, index) =>
+                    {emulation.traffic_config.node_traffic_configs.map((node_traffic_config, index) =>
                         node_traffic_config.commands.map((cmd, index2) =>
                             <tr key={node_traffic_config.ip + "-" + cmd + "-" + index + "-" + index2}>
                                 <td>{node_traffic_config.ip}</td>
@@ -518,14 +482,14 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr key={env.log_sink_config.container.full_name_str}>
-                        <td>{env.log_sink_config.container.full_name_str}</td>
-                        <td>{getIps(env.log_sink_config.container.ips_and_networks)}</td>
-                        <td>{env.log_sink_config.container.os}</td>
-                        <td>{env.log_sink_config.kafka_port}</td>
-                        <td>{env.log_sink_config.default_grpc_port}</td>
-                        <td>{env.log_sink_config.resources.available_memory_gb}GB</td>
-                        <td>{env.log_sink_config.resources.num_cpus}</td>
+                    <tr key={emulation.log_sink_config.container.full_name_str}>
+                        <td>{emulation.log_sink_config.container.full_name_str}</td>
+                        <td>{getIps(emulation.log_sink_config.container.ips_and_networks)}</td>
+                        <td>{emulation.log_sink_config.container.os}</td>
+                        <td>{emulation.log_sink_config.kafka_port}</td>
+                        <td>{emulation.log_sink_config.default_grpc_port}</td>
+                        <td>{emulation.log_sink_config.resources.available_memory_gb}GB</td>
+                        <td>{emulation.log_sink_config.resources.num_cpus}</td>
                     </tr>
                     </tbody>
                 </Table>
@@ -543,7 +507,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.log_sink_config.topics.map((topic, index) =>
+                    {emulation.log_sink_config.topics.map((topic, index) =>
                         <tr key={topic.name + "-" + index}>
                             <td>{topic.name}</td>
                             <td>{topic.num_partitions}</td>
@@ -571,7 +535,7 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {env.topology_config.node_configs.map((node_config, index) =>
+                    {emulation.topology_config.node_configs.map((node_config, index) =>
                         node_config.ips_gw_default_policy_networks.map((ip_fw_config, index2) =>
                             <tr key={node_config.hostname + "-" + ip_fw_config.ip + "-" + index + "-" + index2}>
                                 <td>{node_config.hostname}</td>
