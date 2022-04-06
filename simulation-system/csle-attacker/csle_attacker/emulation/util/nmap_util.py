@@ -698,7 +698,7 @@ class NmapUtil:
             if machine.logged_in and machine.tools_installed:
                 machine = EnvDynamicsUtil.ssh_backdoor_tried_flags(a=a, m_obs=machine)
 
-            if machine.ips_match(reachable) and (machine.ips_match(a.ips) or a.subnet):
+            if machine.ips_match(reachable) and (machine.ips_match(a.ips) or a.index == -1):
                 machine = EnvDynamicsUtil.exploit_tried_flags(a=a, m_obs=machine)
 
             valid_ips = True

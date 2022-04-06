@@ -27,5 +27,5 @@ class EmulationAttackerNIKTOActions:
         return EmulationAttackerAction(id=id, name="Nikto Web Scan", cmds=cmd,
                                        type=EmulationAttackerActionType.RECON,
                                        descr="Nikto Web Scan",
-                                       ips=ips, subnet=False, index=index,
+                                       ips=ips, index=index,
                                        action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING)

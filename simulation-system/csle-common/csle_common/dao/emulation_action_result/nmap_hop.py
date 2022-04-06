@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 
 class NmapHop:
     """
@@ -18,7 +20,7 @@ class NmapHop:
         self.rtt = rtt
         self.host =host
 
-    def from_dict(self, d: dict) -> "NmapHop":
+    def from_dict(self, d: Dict[str, Any]) -> "NmapHop":
         """
         Converts a dict representation into an instance
 
@@ -30,7 +32,7 @@ class NmapHop:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

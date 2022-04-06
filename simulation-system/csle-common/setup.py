@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name='csle_common',
       version='0.0.1',
       install_requires=['gym', 'pyglet', 'numpy', 'torch', 'docker', 'paramiko', 'stable_baselines3', 'scp',
-                        'random_username', 'jsonpickle==1.2.0', 'Sphinx', 'sphinxcontrib-napoleon',
+                        'random_username', 'jsonpickle', 'Sphinx', 'sphinxcontrib-napoleon',
                         'sphinx-rtd-theme', 'psycopg', 'click', 'flask', 'waitress', 'csle_collector'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',

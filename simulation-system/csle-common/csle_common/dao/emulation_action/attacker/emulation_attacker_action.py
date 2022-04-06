@@ -1,5 +1,5 @@
+from typing import List, Tuple, Dict, Any
 import time
-from typing import List, Tuple
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
@@ -12,7 +12,7 @@ class EmulationAttackerAction:
     """
     def __init__(self, id : EmulationAttackerActionId, name :str, cmds : List[str],
                  type: EmulationAttackerActionType, descr: str,
-                 ips :List[str], index: int, subnet : bool = False,
+                 ips :List[str], index: int,
                  action_outcome: EmulationAttackerActionOutcome = EmulationAttackerActionOutcome.INFORMATION_GATHERING,
                  vulnerability: str = None, alt_cmds : List[str] = None, backdoor: bool = False,
                  execution_time : float = 0, ts: float = None):
@@ -26,7 +26,6 @@ class EmulationAttackerAction:
         :param descr: description of the action (documentation)
         :param ips: ips of the machines to apply the action to
         :param index: index of the machien to apply the action to
-        :param subnet: if True, apply action to entire subnet
         :param action_outcome: type of the outcome of the action
         :param vulnerability: type of vulnerability that the action exploits (in case an exploit)
         :param alt_cmds: alternative command if the first command does not work
@@ -38,14 +37,19 @@ class EmulationAttackerAction:
         self.id = id
         self.name = name
         self.cmds = cmds
+        if self.cmds is None:
+            self.cmds = []
         self.descr = descr
         self.index = index
-        self.subnet = subnet
         self.ips = ips
+        if self.ips is None:
+            self.ips = []
         self.vulnerability = vulnerability
         self.action_outcome = action_outcome
         self.backdoor = backdoor
         self.alt_cmds = alt_cmds
+        if self.alt_cmds is None:
+            self.alt_cmds = []
         self.index = index
         self.backdoor = backdoor
         self.execution_time = execution_time
@@ -99,7 +103,7 @@ class EmulationAttackerAction:
         file_names = []
         for ip in self.ips:
             file_name = str(self.id.value) + "_" + str(self.index) + "_" + ip + ".xml "
-            if self.subnet:
+            if self.index == -1:
                 file_name = str(self.id.value) + "_" + str(self.index) + ".xml "
             commands.append(self.cmds[0] + constants.MASSCAN.OUTPUT_ARG + " " + file_name + ip)
             file_names.append(file_name)
@@ -109,10 +113,10 @@ class EmulationAttackerAction:
         """
         :return: a string representation of the object
         """
-        return "id:{},name:{},ips:{},subnet:{},index:{}".format(self.id, self.name, self.ips, self.subnet, self.index)
+        return "id:{},name:{},ips:{},index:{}".format(self.id, self.name, self.ips, self.index)
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationAttackerAction":
+    def from_dict(d: Dict[str, Any]) -> "EmulationAttackerAction":
         """
         Converts a dict representation to an instance
 
@@ -121,12 +125,12 @@ class EmulationAttackerAction:
         """
         obj = EmulationAttackerAction(
             type = d["type"], id=d["id"], name=d["name"], cmds=d["cmds"], descr=d["descr"], index=d["index"],
-            subnet=d["subnet"], ips=d["ips"], vulnerability=d["vulnerability"], action_outcome=d["action_outcome"],
+            ips=d["ips"], vulnerability=d["vulnerability"], action_outcome=d["action_outcome"],
             backdoor=d["backdoor"], alt_cmds=d["alt_cmds"], execution_time=d["execution_time"], ts=d["ts"]
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -138,7 +142,6 @@ class EmulationAttackerAction:
         d["descr"] = self.descr
         d["ips"] = self.ips
         d["index"] = self.index
-        d["subnet"] = self.subnet
         d["action_outcome"] = self.action_outcome
         d["vulnerability"] = self.vulnerability
         d["alt_cmds"] = self.alt_cmds
@@ -167,9 +170,14 @@ class EmulationAttackerAction:
         :return: the kafka record
         """
         ts = time.time()
-        record = f"{ts},{self.id.value},{self.descr},{self.index},{self.name}," \
-                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type},{self.subnet}," \
+        if self.alt_cmds is None or len(self.alt_cmds) == 0:
+            self.alt_cmds = ["-"]
+        if self.cmds is None or len(self.cmds) == 0:
+            self.cmds = ["-"]
+        record = f"{ts},{self.id.value},{self.descr.replace(',', '' )},{self.index},{self.name}," \
+                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type}," \
                  f"{self.action_outcome},{self.vulnerability},{'_'.join(self.alt_cmds)},{self.backdoor}"
+        parts = record.split(",")
         return record
 
 
@@ -188,9 +196,8 @@ class EmulationAttackerAction:
                                       execution_time=float(parts[5]), ips = parts[6].split("_"),
                                       cmds=parts[7].split("_"),
                                       type=EmulationAttackerActionType(int(parts[8])),
-                                      subnet=parts[9] == "True",
-                                      action_outcome=EmulationAttackerActionOutcome(int(parts[10])),
-                                      vulnerability=parts[11], alt_cmds=parts[12].split("_"),
-                                      backdoor=parts[13] == "True")
+                                      action_outcome=EmulationAttackerActionOutcome(int(parts[9])),
+                                      vulnerability=parts[10], alt_cmds=parts[11].split("_"),
+                                      backdoor=parts[12] == "True")
         return obj
 

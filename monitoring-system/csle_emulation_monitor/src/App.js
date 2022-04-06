@@ -1,23 +1,37 @@
-//import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
-import Main from "./components/Main/Main";
+import Container from "./components/Container/Container";
+import NotFound from "./components/Container/NotFound/NotFound";
+import Emulations from "./components/Container/Emulations/Emulations";
+import Monitoring from "./components/Container/Monitoring/Monitoring";
+import Traces from "./components/Container/Traces/Traces";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
-  return (
-      <div className="App index container-fluid">
-        <Header></Header>
-        <div className="row">
-          <div className="col-sm-1"></div>
-          <div className="col-sm-10">
-            <Main/>
-          </div>
-          <div className="col-sm-1"></div>
+    return (
+        <div className="App index container-fluid">
+            <div className="row contentRow">
+                <div className="col-sm-12">
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/"
+                                   element={<Container/>}>
+                                <Route index element={<Emulations/>}>
+                                </Route>
+                                <Route path="emulations" index element={<Emulations/>}>
+                                </Route>
+                                <Route path="monitoring" index element={<Monitoring/>}>
+                                </Route>
+                                <Route path="traces" index element={<Traces/>}>
+                                </Route>
+                                <Route path="*" element={<NotFound/>}/>
+                            </Route>
+                        </Routes>
+                    </BrowserRouter>
+                </div>
+            </div>
         </div>
-        <Footer/>
-      </div>
-  );
+    );
 }
 
 export default App;

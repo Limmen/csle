@@ -49,12 +49,11 @@ class EmulationDefenderActionConfig:
         print("Defender Actions:")
         for i, action in enumerate(self.actions):
             tag = "-"
-            if not action.subnet:
-                if action.index is not None:
-                    tag = str(action.index)
+            if not action.index == -1 and action.index is not None:
+                tag = str(action.index)
             else:
                 tag = "*"
-            print(str(i) + ":" + action.name + "[" + tag + "] c:" + str(action.cost))
+            print(str(i) + ":" + action.name + "[" + tag + "]")
 
     def get_continue_action_idx(self) -> int:
         """

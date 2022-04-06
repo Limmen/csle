@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 
 
 class NodeTrafficConfig:
@@ -16,7 +16,21 @@ class NodeTrafficConfig:
         self.ip = ip
         self.commands = commands
 
-    def to_dict(self) -> dict:
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NodeTrafficConfig":
+        """
+        Converts a dict representation into an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj= NodeTrafficConfig(
+            ip=d["ip"], commands=d["commands"]
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

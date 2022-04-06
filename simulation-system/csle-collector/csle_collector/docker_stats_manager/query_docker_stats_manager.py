@@ -21,7 +21,7 @@ def get_docker_stats_manager_status(
 def start_docker_stats_monitor(
         stub: csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub,
         emulation: str, sink_ip: str, stats_queue_maxsize : int, time_step_len_seconds: int, sink_port: int,
-        containers: List[str]) \
+        containers: List[csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp]) \
         -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
     """
     Sends a request to the docker stats manager to start a new monitor thread
@@ -32,7 +32,7 @@ def start_docker_stats_monitor(
     :param stats_queue_maxsize: the maximum size of the queue
     :param the length of the period between pushing data to Kafka
     :param sink_port: the port of the Kafka server
-    :param containers: list of names of containers to monitor
+    :param containers: list of names and ips of  containers to monitor
     :return: a DockerStatsManagerDTO describing the status of the server
     """
     start_docker_stats_monitor_msg = \

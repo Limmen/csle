@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.flag import Flag
 
 
@@ -17,7 +17,7 @@ class NodeFlagsConfig:
         self.ip = ip
         self.flags = flags
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 
 class ContainerNetwork:
     """
@@ -17,7 +19,7 @@ class ContainerNetwork:
 
 
     @staticmethod
-    def from_dict(d: dict) -> "ContainerNetwork":
+    def from_dict(d: Dict[str, Any]) -> "ContainerNetwork":
         """
         Converts a dict representation to an instance
 
@@ -29,7 +31,7 @@ class ContainerNetwork:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
@@ -31,7 +31,25 @@ class ClientPopulationConfig:
         self.client_time_step_len_seconds = client_time_step_len_seconds
 
 
-    def to_dict(self) -> dict:
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "ClientPopulationConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = ClientPopulationConfig(
+            ip = d["ip"],
+            networks=list(map(lambda x: ContainerNetwork.from_dict(x), d["networks"])),
+            client_process_type=d["client_process_type"],
+            lamb=d["lamb"], mu=d["mu"], client_manager_port=d["client_manager_port"],
+            num_commands=d["num_commands"], client_time_step_len_seconds=d["client_time_step_len_seconds"]
+        )
+        return obj
+
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

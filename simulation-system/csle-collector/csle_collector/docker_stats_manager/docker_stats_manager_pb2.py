@@ -14,11 +14,12 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1a\x64ocker_stats_manager.proto\".\n\x19StopDockerStatsMonitorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\"\xa3\x01\n\x1aStartDockerStatsMonitorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x0f\n\x07sink_ip\x18\x02 \x01(\t\x12\x1b\n\x13stats_queue_maxsize\x18\x03 \x01(\x05\x12\x1d\n\x15time_step_len_seconds\x18\x04 \x01(\x05\x12\x11\n\tsink_port\x18\x05 \x01(\x05\x12\x12\n\ncontainers\x18\x06 \x03(\t\" \n\x1eGetDockerStatsMonitorStatusMsg\"-\n\x15\x44ockerStatsMonitorDTO\x12\x14\n\x0cnum_monitors\x18\x01 \x01(\x05\x32\x90\x02\n\x12\x44ockerStatsManager\x12X\n\x1bgetDockerStatsMonitorStatus\x12\x1f.GetDockerStatsMonitorStatusMsg\x1a\x16.DockerStatsMonitorDTO\"\x00\x12N\n\x16stopDockerStatsMonitor\x12\x1a.StopDockerStatsMonitorMsg\x1a\x16.DockerStatsMonitorDTO\"\x00\x12P\n\x17startDockerStatsMonitor\x12\x1b.StartDockerStatsMonitorMsg\x1a\x16.DockerStatsMonitorDTO\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1a\x64ocker_stats_manager.proto\".\n\x19StopDockerStatsMonitorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\",\n\x0b\x43ontainerIp\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x11\n\tcontainer\x18\x02 \x01(\t\"\xb1\x01\n\x1aStartDockerStatsMonitorMsg\x12\x11\n\temulation\x18\x01 \x01(\t\x12\x0f\n\x07sink_ip\x18\x02 \x01(\t\x12\x1b\n\x13stats_queue_maxsize\x18\x03 \x01(\x05\x12\x1d\n\x15time_step_len_seconds\x18\x04 \x01(\x05\x12\x11\n\tsink_port\x18\x05 \x01(\x05\x12 \n\ncontainers\x18\x06 \x03(\x0b\x32\x0c.ContainerIp\" \n\x1eGetDockerStatsMonitorStatusMsg\"-\n\x15\x44ockerStatsMonitorDTO\x12\x14\n\x0cnum_monitors\x18\x01 \x01(\x05\x32\x90\x02\n\x12\x44ockerStatsManager\x12X\n\x1bgetDockerStatsMonitorStatus\x12\x1f.GetDockerStatsMonitorStatusMsg\x1a\x16.DockerStatsMonitorDTO\"\x00\x12N\n\x16stopDockerStatsMonitor\x12\x1a.StopDockerStatsMonitorMsg\x1a\x16.DockerStatsMonitorDTO\"\x00\x12P\n\x17startDockerStatsMonitor\x12\x1b.StartDockerStatsMonitorMsg\x1a\x16.DockerStatsMonitorDTO\"\x00\x62\x06proto3')
 
 
 
 _STOPDOCKERSTATSMONITORMSG = DESCRIPTOR.message_types_by_name['StopDockerStatsMonitorMsg']
+_CONTAINERIP = DESCRIPTOR.message_types_by_name['ContainerIp']
 _STARTDOCKERSTATSMONITORMSG = DESCRIPTOR.message_types_by_name['StartDockerStatsMonitorMsg']
 _GETDOCKERSTATSMONITORSTATUSMSG = DESCRIPTOR.message_types_by_name['GetDockerStatsMonitorStatusMsg']
 _DOCKERSTATSMONITORDTO = DESCRIPTOR.message_types_by_name['DockerStatsMonitorDTO']
@@ -28,6 +29,13 @@ StopDockerStatsMonitorMsg = _reflection.GeneratedProtocolMessageType('StopDocker
   # @@protoc_insertion_point(class_scope:StopDockerStatsMonitorMsg)
   })
 _sym_db.RegisterMessage(StopDockerStatsMonitorMsg)
+
+ContainerIp = _reflection.GeneratedProtocolMessageType('ContainerIp', (_message.Message,), {
+  'DESCRIPTOR' : _CONTAINERIP,
+  '__module__' : 'docker_stats_manager_pb2'
+  # @@protoc_insertion_point(class_scope:ContainerIp)
+  })
+_sym_db.RegisterMessage(ContainerIp)
 
 StartDockerStatsMonitorMsg = _reflection.GeneratedProtocolMessageType('StartDockerStatsMonitorMsg', (_message.Message,), {
   'DESCRIPTOR' : _STARTDOCKERSTATSMONITORMSG,
@@ -56,12 +64,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _STOPDOCKERSTATSMONITORMSG._serialized_start=30
   _STOPDOCKERSTATSMONITORMSG._serialized_end=76
-  _STARTDOCKERSTATSMONITORMSG._serialized_start=79
-  _STARTDOCKERSTATSMONITORMSG._serialized_end=242
-  _GETDOCKERSTATSMONITORSTATUSMSG._serialized_start=244
-  _GETDOCKERSTATSMONITORSTATUSMSG._serialized_end=276
-  _DOCKERSTATSMONITORDTO._serialized_start=278
-  _DOCKERSTATSMONITORDTO._serialized_end=323
-  _DOCKERSTATSMANAGER._serialized_start=326
-  _DOCKERSTATSMANAGER._serialized_end=598
+  _CONTAINERIP._serialized_start=78
+  _CONTAINERIP._serialized_end=122
+  _STARTDOCKERSTATSMONITORMSG._serialized_start=125
+  _STARTDOCKERSTATSMONITORMSG._serialized_end=302
+  _GETDOCKERSTATSMONITORSTATUSMSG._serialized_start=304
+  _GETDOCKERSTATSMONITORSTATUSMSG._serialized_end=336
+  _DOCKERSTATSMONITORDTO._serialized_start=338
+  _DOCKERSTATSMONITORDTO._serialized_end=383
+  _DOCKERSTATSMANAGER._serialized_start=386
+  _DOCKERSTATSMANAGER._serialized_end=658
 # @@protoc_insertion_point(module_scope)

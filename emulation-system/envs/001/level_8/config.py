@@ -36,6 +36,7 @@ from csle_common.dao.emulation_config.transport_protocol import TransportProtoco
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
+from csle_common.dao.emulation_config.user import User
 
 
 def default_config(name: str, network_id: int = 8, level: int = 8, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -2742,6 +2743,12 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             num_replicas=1,
             num_partitions=1,
             attributes=collector_constants.LOG_SINK.DEFENDER_ACTIONS_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         )
     ]
 
@@ -2757,85 +2764,85 @@ def default_users_config(network_id: int) -> UsersConfig:
     """
     users = [
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191", users=[
-            ("agent", "agent", True)
+            User(username="agent", pw="agent", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21", users=[
-            ("admin", "admin31151x", True),
-            ("test", "qwerty", True),
-            ("oracle", "abc123", False)
+            User(username="admin", pw="admin31151x", root=True),
+            User(username="test", pw="qwerty", root=True),
+            User(username="oracle", pw="abc123", root=False)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10", users=[
-            ("admin", "admin1235912", True),
-            ("jessica", "water", False)
+            User(username="admin", pw="admin1235912", root=True),
+            User(username="jessica", pw="water", root=False)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2", users=[
-            ("admin", "test32121", True),
-            ("user1", "123123", True)
+            User(username="admin", pw="test32121", root=True),
+            User(username="user1", pw="123123", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3", users=[
-            ("john", "doe", True),
-            ("vagrant", "test_pw1", False)
+            User(username="john", pw="doe", root=True),
+            User(username="vagrant", pw="test_pw1", root=False)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.19", users=[
-            ("karl", "gustaf", True),
-            ("steven", "carragher", False)
+            User(username="karl", pw="gustaf", root=True),
+            User(username="steven", pw="carragher", root=False)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.31", users=[
-            ("stefan", "zweig", True)
+            User(username="stefan", pw="zweig", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.42", users=[
-            ("roy", "neruda", True)
+            User(username="roy", pw="neruda", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.37", users=[
-            ("john", "conway", True)
+            User(username="john", pw="conway", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.82", users=[
-            ("john", "nash", True)
+            User(username="john", pw="nash", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.75", users=[
-            ("larry", "samuelson", True)
+            User(username="larry", pw="samuelson", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71", users=[
-            ("robbins", "monro", True)
+            User(username="robbins", pw="monro", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.11", users=[
-            ("rich", "sutton", True)
+            User(username="rich", pw="sutton", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.51", users=[
-            ("ian", "goodwille", True)
+            User(username="ian", pw="goodwille", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.52", users=[
-            ("david", "silver", True)
+            User(username="david", pw="silver", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.53", users=[
-            ("pieter", "abbeel", True)
+            User(username="pieter", pw="abbeel", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.54", users=[
-            ("sergey", "levine", True)
+            User(username="sergey", pw="levine", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.55", users=[
-            ("chelsea", "finn", True)
+            User(username="chelsea", pw="finn", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.56", users=[
-            ("andrew", "barto", True)
+            User(username="andrew", pw="barto", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.57", users=[
-            ("michael", "littman", True)
+            User(username="michael", pw="littman", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.58", users=[
-            ("leslie", "kaebling", True)
+            User(username="leslie", pw="kaebling", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.59", users=[
-            ("michael", "puterman", True)
+            User(username="michael", pw="puterman", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.60", users=[
-            ("dimitri", "bertsekas", True)
+            User(username="dimitri", pw="bertsekas", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.12.61", users=[
-            ("john", "tsiklis", True)
+            User(username="john", pw="tsiklis", root=True)
         ]),
         NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.62", users=[
-            ("hans", "peters", True)
+            User(username="hans", pw="peters", root=True)
         ])
     ]
     users_conf = UsersConfig(users_configs=users)
@@ -3205,7 +3212,13 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.FTP.DEFAULT_PORT,
-                               name=constants.FTP.SERVICE_NAME, credentials=[])
+                               name=constants.FTP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.MONGO.DEFAULT_PORT,
+                               name=constants.MONGO.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TEAMSPEAK3.DEFAULT_PORT,
+                               name=constants.TEAMSPEAK3.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TOMCAT.DEFAULT_PORT,
+                               name=constants.TOMCAT.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3219,7 +3232,17 @@ def default_services_config(network_id: int) -> ServicesConfig:
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.POSTGRES.DEFAULT_PORT,
+                               name=constants.POSTGRES.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SMTP.DEFAULT_PORT,
+                               name=constants.SMTP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.NTP.DEFAULT_PORT,
+                               name=constants.NTP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3233,7 +3256,13 @@ def default_services_config(network_id: int) -> ServicesConfig:
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.DNS.DEFAULT_PORT,
+                               name=constants.DNS.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.HTTP.DEFAULT_PORT,
+                               name=constants.HTTP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3242,7 +3271,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.TELNET.DEFAULT_PORT,
-                               name=constants.TELNET.SERVICE_NAME, credentials=[])
+                               name=constants.TELNET.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.HTTP.DEFAULT_PORT,
+                               name=constants.HTTP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3251,7 +3282,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SAMBA.PORT,
-                               name=constants.SAMBA.SERVICE_NAME, credentials=[])
+                               name=constants.SAMBA.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.NTP.DEFAULT_PORT,
+                               name=constants.NTP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3260,7 +3293,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SHELLSHOCK.PORT,
-                               name=constants.SHELLSHOCK.SERVICE_NAME, credentials=[])
+                               name=constants.SHELLSHOCK.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3269,7 +3304,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.DVWA_SQL_INJECTION.PORT,
-                               name=constants.DVWA_SQL_INJECTION.SERVICE_NAME, credentials=[])
+                               name=constants.DVWA_SQL_INJECTION.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.IRC.DEFAULT_PORT,
+                               name=constants.IRC.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3278,7 +3315,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.CVE_2015_3306.PORT,
-                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[])
+                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3287,7 +3326,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.CVE_2015_3306.PORT,
-                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[])
+                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3303,7 +3344,11 @@ def default_services_config(network_id: int) -> ServicesConfig:
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.71",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TEAMSPEAK3.DEFAULT_PORT,
+                               name=constants.TEAMSPEAK3.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TOMCAT.DEFAULT_PORT,
+                               name=constants.TOMCAT.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3317,21 +3362,41 @@ def default_services_config(network_id: int) -> ServicesConfig:
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.51",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.HTTP.DEFAULT_PORT,
+                               name=constants.HTTP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.DNS.DEFAULT_PORT,
+                               name=constants.DNS.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.52",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.HTTP.DEFAULT_PORT,
+                               name=constants.HTTP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.DNS.DEFAULT_PORT,
+                               name=constants.DNS.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.53",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.POSTGRES.DEFAULT_PORT,
+                               name=constants.POSTGRES.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SMTP.DEFAULT_PORT,
+                               name=constants.SMTP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.NTP.DEFAULT_PORT,
+                               name=constants.NTP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3340,7 +3405,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SAMBA.PORT,
-                               name=constants.SAMBA.SERVICE_NAME, credentials=[])
+                               name=constants.SAMBA.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.NTP.DEFAULT_PORT,
+                               name=constants.NTP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3349,7 +3416,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SHELLSHOCK.PORT,
-                               name=constants.SHELLSHOCK.SERVICE_NAME, credentials=[])
+                               name=constants.SHELLSHOCK.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3358,7 +3427,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.DVWA_SQL_INJECTION.PORT,
-                               name=constants.DVWA_SQL_INJECTION.SERVICE_NAME, credentials=[])
+                               name=constants.DVWA_SQL_INJECTION.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.IRC.DEFAULT_PORT,
+                               name=constants.IRC.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3367,7 +3438,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.CVE_2015_3306.PORT,
-                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[])
+                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3376,7 +3449,9 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[]),
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.CVE_2015_3306.PORT,
-                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[])
+                               name=constants.CVE_2015_3306.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SNMP.DEFAULT_PORT,
+                               name=constants.SNMP.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3392,14 +3467,11 @@ def default_services_config(network_id: int) -> ServicesConfig:
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.60",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
-            ]
-        ),
-        NodeServicesConfig(
-            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.12.60",
-            services=[
-                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TOMCAT.DEFAULT_PORT,
+                               name=constants.TOMCAT.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.TEAMSPEAK3.DEFAULT_PORT,
+                               name=constants.TEAMSPEAK3.SERVICE_NAME, credentials=[])
             ]
         ),
         NodeServicesConfig(
@@ -3413,7 +3485,11 @@ def default_services_config(network_id: int) -> ServicesConfig:
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.62",
             services=[
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-                               name=constants.SSH.SERVICE_NAME, credentials=[])
+                               name=constants.SSH.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.HTTP.DEFAULT_PORT,
+                               name=constants.HTTP.SERVICE_NAME, credentials=[]),
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.DNS.DEFAULT_PORT,
+                               name=constants.DNS.SERVICE_NAME, credentials=[])
             ]
         )
     ]
@@ -3445,6 +3521,10 @@ if __name__ == '__main__':
 
     if args.install:
         EmulationEnvManager.install_emulation(config=config)
+        img_path = ExperimentUtil.default_emulation_picture_path()
+        if os.path.exists(img_path):
+            encoded_image_str = ExperimentUtil.read_env_picture(img_path)
+            EmulationEnvManager.save_emulation_image(img=encoded_image_str, emulation_name=config.name)
     if args.uninstall:
         EmulationEnvManager.uninstall_emulation(config=config)
     if args.run:

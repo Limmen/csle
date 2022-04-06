@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any
 from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
 
 
@@ -32,7 +32,7 @@ class NodeResourcesConfig:
 
 
     @staticmethod
-    def from_dict(d: dict) -> "NodeResourcesConfig":
+    def from_dict(d: Dict[str, Any]) -> "NodeResourcesConfig":
         """
         Converts a dict representation into an instance
 
@@ -47,13 +47,14 @@ class NodeResourcesConfig:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
         d = {}
         d["container_name"] = self.container_name
-        d["ips_gw_default_policy_networks"] = list(map(lambda x: (x[0], x[1].to_dict()), self.ips_and_network_configs))
+        d["ips_gw_default_policy_networks"] = list(map(lambda x: (x[0], None if x[1] is None else x[1].to_dict()),
+                                                       self.ips_and_network_configs))
         d["num_cpus"] = self.num_cpus
         d["available_memory_gb"] = self.available_memory_gb
         return d

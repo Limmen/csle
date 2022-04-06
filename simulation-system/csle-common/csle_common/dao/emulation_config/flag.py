@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 
 class Flag:
     """
@@ -30,8 +32,22 @@ class Flag:
             self.name, self.id, self.path, self.requires_root, self.score, self.dir
         )
 
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "Flag":
+        """
+        Converts a dict representation into an instance
 
-    def to_dict(self) -> dict:
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = Flag(
+            name=d["name"], dir=d["dir"], id=d["id"], path=d["path"], requires_root=d["requires_root"],
+            score=d["score"]
+        )
+        return obj
+
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

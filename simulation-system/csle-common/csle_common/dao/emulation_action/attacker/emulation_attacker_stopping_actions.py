@@ -24,7 +24,7 @@ class EmulationAttackerStoppingActions:
                                        type=EmulationAttackerActionType.STOP,
                                        descr="Aborts an ongoing intrusion",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.GAME_END, alt_cmds=alt_cmd)
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.GAME_END, alt_cmds=alt_cmd)
 
     @staticmethod
     def CONTINUE(index: int) -> EmulationAttackerAction:
@@ -41,4 +41,4 @@ class EmulationAttackerStoppingActions:
                                        type=EmulationAttackerActionType.CONTINUE,
                                        descr="A 'continue' action, the attacker chooses to not make any action",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.CONTINUE, alt_cmds=alt_cmd)
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.CONTINUE, alt_cmds=alt_cmd)

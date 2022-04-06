@@ -15,6 +15,7 @@ from csle_common.controllers.forward_tunnel_thread import ForwardTunnelThread
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.connection_setup_dto import ConnectionSetupDTO
+from csle_common.logging.log import Logger
 
 
 class ConnectionUtil:
@@ -239,6 +240,7 @@ class ConnectionUtil:
         :param s: env state
         :return: a DTO with connection setup information
         """
+        logger = Logger.__call__().get_logger()
         connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
         for proxy_conn in proxy_connections:
@@ -272,10 +274,11 @@ class ConnectionUtil:
                             connection_setup_dto.ip = ip
                             break
                         except Exception as e:
-                            print("SSH exception :{}".format(str(e)))
-                            print("user:{}, pw:{}".format(cr.username, cr.pw))
-                            print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
-                            print("Action:{}, {}, {}".format(a.id, a.ips, a.descr))
+                            Logger.__call__().get_logger().warning("SSH exception :{}".format(str(e)))
+                            Logger.__call__().get_logger().warning("user:{}, pw:{}".format(cr.username, cr.pw))
+                            Logger.__call__().get_logger().warningf("Agent reachable:{}".format(
+                                s.attacker_obs_state.agent_reachable))
+                            Logger.__call__().get_logger().warning("Action:{}, {}, {}".format(a.id, a.ips, a.descr))
                     else:
                         connection_setup_dto.non_failed_credentials.append(cr)
             if connection_setup_dto.connected:

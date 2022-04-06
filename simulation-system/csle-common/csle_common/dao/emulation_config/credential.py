@@ -1,3 +1,4 @@
+from typing import Dict, Any
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 
 
@@ -25,8 +26,7 @@ class Credential:
         self.service = service
         self.root = root
 
-
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -42,9 +42,8 @@ class Credential:
         d["root"] = self.root
         return d
 
-
     @staticmethod
-    def from_dict(d) -> "Credential":
+    def from_dict(d: Dict[str, Any]) -> "Credential":
         """
         Convert a dict representation to a DTO representation
 
@@ -54,7 +53,6 @@ class Credential:
                          protocol=d["protocol"], pw=d["pw"], service=d["service"],
                          root = d["root"])
         return dto
-
 
     def __str__(self) -> str:
         """

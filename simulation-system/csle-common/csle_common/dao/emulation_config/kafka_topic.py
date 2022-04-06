@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 
 
 class KafkaTopic:
@@ -23,7 +23,7 @@ class KafkaTopic:
 
 
     @staticmethod
-    def from_dict(d: dict) -> "KafkaTopic":
+    def from_dict(d: Dict[str, Any]) -> "KafkaTopic":
         """
         Converts a dict representation to an instance
 
@@ -36,7 +36,7 @@ class KafkaTopic:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

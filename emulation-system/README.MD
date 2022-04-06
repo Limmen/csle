@@ -68,4 +68,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2022, Kim Hammar
+(C) 2020-2022, Kim Hammar

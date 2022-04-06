@@ -1,3 +1,4 @@
+from typing import Dict, Any, Tuple, List
 import time
 
 
@@ -44,7 +45,7 @@ class ClientPopulationMetrics:
         self.num_clients=int(parts[2])
 
     @staticmethod
-    def from_dict(d: dict) -> "ClientPopulationMetrics":
+    def from_dict(d: Dict[str, Any]) -> "ClientPopulationMetrics":
         """
         Converts a dict representation of the object into an instance
         :param d: the dict representation
@@ -55,7 +56,7 @@ class ClientPopulationMetrics:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -79,3 +80,16 @@ class ClientPopulationMetrics:
         """
         c = ClientPopulationMetrics(ip=self.ip, ts=self.ts, num_clients=self.num_clients)
         return c
+
+
+    def get_deltas(self, stats_prime: "ClientPopulationMetrics", max_counter: int) -> Tuple[List[float], List[str]]:
+        """
+        Get the deltas between two stats objects
+
+        :param stats_prime: the stats object to compare with
+        :param max_counter: the maximum counter_value
+        :return: the deltas and the labels
+        """
+        deltas = [min(max_counter, max(-max_counter, int(stats_prime.num_clients - self.num_clients)))]
+        labels = ["num_clients"]
+        return deltas, labels

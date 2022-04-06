@@ -285,6 +285,18 @@ class ExperimentUtil:
         return emulation_env_config
 
     @staticmethod
+    def read_env_picture(env_picture_path) -> bytes:
+        """
+        Reads the environment topology picture from a file
+
+        :param env_picture_path: the path to picture
+        :return: the emulation env configuration
+        """
+        with open(env_picture_path, "rb") as image_file:
+            image_data = image_file.read()
+            return image_data
+
+    @staticmethod
     def read_log_sink_config(log_sink_config_path) -> LogSinkConfig:
         """
         Reads log sink config from a json file
@@ -466,6 +478,20 @@ class ExperimentUtil:
             config_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.EMULATION_ENV_CFG_PATH)
         return config_path
+
+    @staticmethod
+    def default_emulation_picture_path(out_dir : str = None) -> str:
+        """
+        :param out_dir: directory to write
+        :return: the default path to emulation config file
+        """
+        if out_dir is None:
+            img_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                       + constants.DOCKER.EMULATION_ENV_IMAGE)
+        else:
+            img_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                       + constants.DOCKER.EMULATION_ENV_IMAGE)
+        return img_path
 
     @staticmethod
     def default_log_sink_config_path(out_dir : str = None) -> str:

@@ -12,7 +12,7 @@ class HostMetricsConsumerThread(threading.Thread):
     """
 
     def __init__(self, host_ip: str, kafka_server_ip: str, kafka_port: int,
-                 host_metrics: HostMetrics) -> None:
+                 host_metrics: HostMetrics, auto_offset_reset: str = "latest") -> None:
         """
         Initializes the thread
 
@@ -20,6 +20,7 @@ class HostMetricsConsumerThread(threading.Thread):
         :param kafka_server_ip: the ip of the kafka server
         :param kafka_port: the port of the kafka server
         :param machine: the machine state to update
+        :param auto_offset_reset: the offset for kafka to start reading from
         """
         threading.Thread.__init__(self)
         self.running =True
@@ -29,7 +30,7 @@ class HostMetricsConsumerThread(threading.Thread):
         self.ts = time.time()
         self.kafka_conf = {'bootstrap.servers': f"{self.kafka_server_ip}:{self.kafka_port}",
                            'group.id':  f"host_metrics_consumer_thread_{self.host_ip}_{self.ts}",
-                           'auto.offset.reset': 'latest'}
+                           'auto.offset.reset': auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME])
         self.host_metrics = host_metrics
@@ -40,7 +41,7 @@ class HostMetricsConsumerThread(threading.Thread):
 
         :return: None
         """
-        while True:
+        while self.running:
             msg = self.consumer.poll(timeout=5.0)
             if msg is not None:
                 if msg.error():

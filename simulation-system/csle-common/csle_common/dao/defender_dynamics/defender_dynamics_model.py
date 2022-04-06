@@ -1,9 +1,10 @@
+from typing import Dict, Any
 import json
 import os
 from enum import IntEnum
 from scipy import stats
 import numpy as np
-from csle_common.util import experiment_util
+import csle_common.util.experiment_util as util
 from csle_common.dao.defender_dynamics.defender_machine_dynamics_model import DefenderMachineDynamicsModel
 from csle_common.dao.defender_dynamics.defender_dynamics_tensorboard_dto import DefenderDynamicsTensorboardDTO
 import csle_common.constants.constants as constants
@@ -1460,7 +1461,7 @@ class DefenderDynamicsModel:
                    f"norm_init_new_net_rx: {self.norm_init_new_net_rx}, " \
                    f"norm_init_new_net_tx: {self.norm_init_new_net_tx}"
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         Converts the model to a dict representation
 
@@ -1500,7 +1501,7 @@ class DefenderDynamicsModel:
         d["machines_dynamics_model"] = m_dynamics_model_new
         return d
 
-    def from_dict(self, d) -> None:
+    def from_dict(self, d: Dict[str, Any]) -> None:
         """
         Bootstraps the model with data from a dict
 

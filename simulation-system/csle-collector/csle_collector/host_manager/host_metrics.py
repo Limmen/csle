@@ -1,3 +1,4 @@
+from typing import Dict, Any, Tuple, List
 import time
 import csle_collector.host_manager.host_manager_pb2
 
@@ -71,7 +72,7 @@ class HostMetrics:
         """
         parts = record.split(",")
         obj = HostMetrics(
-            ip = record[1], ts=float(parts[0]),
+            ip = parts[1], ts=float(parts[0]),
             num_logged_in_users=int(parts[2]), num_failed_login_attempts=int(parts[3]),
             num_open_connections=int(parts[4]),
             num_login_events=int(parts[5]), num_processes=int(parts[6]), num_users=int(parts[7])
@@ -108,7 +109,7 @@ class HostMetrics:
                f"num_users: {self.num_users}"
 
     @staticmethod
-    def from_dict(d: dict) -> "HostMetrics":
+    def from_dict(d: Dict[str, Any]) -> "HostMetrics":
         """
         Converts a dict representation to an instance
 
@@ -127,7 +128,7 @@ class HostMetrics:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the instance
         """
@@ -152,4 +153,26 @@ class HostMetrics:
             num_processes=self.num_processes, num_users=self.num_users, ip=self.ip, ts=self.ts
         )
         return c
+
+
+    def get_deltas(self, stats_prime: "HostMetrics", max_counter: int) -> Tuple[List[float], List[str]]:
+        """
+        Get the deltas between two stats objects
+
+        :param stats_prime: the stats object to compare with
+        :param max_counter: the maximum counter_value
+        :return: the deltas and the labels
+        """
+        deltas = [
+            min(max_counter, max(-max_counter, int(stats_prime.num_logged_in_users - self.num_logged_in_users))),
+            min(max_counter, max(-max_counter, int(stats_prime.num_failed_login_attempts -
+                                                   self.num_failed_login_attempts))),
+            min(max_counter, max(-max_counter, int(stats_prime.num_open_connections - self.num_open_connections))),
+            min(max_counter, max(-max_counter, int(stats_prime.num_login_events - self.num_login_events))),
+            min(max_counter, max(-max_counter, int(stats_prime.num_processes - self.num_processes))),
+            min(max_counter, max(-max_counter, int(stats_prime.num_users - self.num_users)))
+        ]
+        labels = ["num_logged_in_users", "num_failed_login_attempts", "num_open_connections",
+                  "num_login_events", "num_processes", "num_users"]
+        return deltas, labels
 

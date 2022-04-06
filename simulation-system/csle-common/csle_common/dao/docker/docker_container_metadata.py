@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 
 class DockerContainerMetadata:
     """
@@ -7,7 +9,7 @@ class DockerContainerMetadata:
     def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
                  name2: str, level: str, hostname: str, image_name : str, net: str,
-                 dir: str, config_path : str, container_handle, emulation: str, log_sink: str):
+                 dir: str, config_path : str, container_handle : str, emulation: str, log_sink: str):
         """
         Intializes the DTO
 
@@ -57,7 +59,42 @@ class DockerContainerMetadata:
         self.emulation = emulation
         self.log_sink = log_sink
 
-    def to_dict(self) -> dict:
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "DockerContainerMetadata":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the converted instance
+        """
+        obj = DockerContainerMetadata(
+            name=d["name"],
+            status=d["status"],
+            short_id=d["short_id"],
+            image_short_id=d["image_short_id"],
+            image_tags=d["image_tags"],
+            id=d["id"],
+            created=d["created"],
+            ip=d["ip"],
+            network_id=d["network_id"],
+            gateway=d["gateway"],
+            mac=d["mac"],
+            ip_prefix_len=d["ip_prefix_len"],
+            name2=d["name2"],
+            level=d["level"],
+            hostname=d["hostname"],
+            image_name=d["image_name"],
+            net=d["net"],
+            dir=d["dir"],
+            config_path=d["config_path"],
+            container_handle=d["container_handle"],
+            emulation=d["emulation"],
+            log_sink=d["log_sink"]
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

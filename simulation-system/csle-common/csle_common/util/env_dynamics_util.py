@@ -22,7 +22,8 @@ class EnvDynamicsUtil:
     """
 
     @staticmethod
-    def merge_complete_obs_state(old_obs_state: EmulationAttackerObservationState, new_obs_state : EmulationAttackerObservationState,
+    def merge_complete_obs_state(old_obs_state: EmulationAttackerObservationState,
+                                 new_obs_state : EmulationAttackerObservationState,
                                  emulation_env_config: EmulationEnvConfig) -> EmulationAttackerObservationState:
         """
         Merges an old observation state with a new one
@@ -34,8 +35,8 @@ class EnvDynamicsUtil:
         """
         merged_obs_state = old_obs_state.copy()
         merged_obs_state.catched_flags = max(old_obs_state.catched_flags, new_obs_state.catched_flags)
-        merged_obs_state.machines = EnvDynamicsUtil.merge_new_obs_with_old(old_obs_state.machines, new_obs_state.machines,
-                                                             emulation_env_config=emulation_env_config, action=None)
+        merged_obs_state.machines = EnvDynamicsUtil.merge_new_obs_with_old(
+            old_obs_state.machines, new_obs_state.machines, emulation_env_config=emulation_env_config, action=None)
         merged_obs_state.agent_reachable = old_obs_state.agent_reachable.union(new_obs_state.agent_reachable)
         return merged_obs_state
 
@@ -43,7 +44,8 @@ class EnvDynamicsUtil:
     def merge_new_obs_with_old(old_machines_obs: List[EmulationAttackerMachineObservationState],
                                new_machines_obs: List[EmulationAttackerMachineObservationState],
                                emulation_env_config: EmulationEnvConfig,
-                               action : Union[EmulationAttackerAction, None]) -> List[EmulationAttackerMachineObservationState]:
+                               action : Union[EmulationAttackerAction, None]) \
+            -> List[EmulationAttackerMachineObservationState]:
         """
         Helper function for merging an old network observation with new information collected
 
@@ -81,7 +83,8 @@ class EnvDynamicsUtil:
     @staticmethod
     def merge_new_machine_obs_with_old_machine_obs(o_m: EmulationAttackerMachineObservationState,
                                                    n_m: EmulationAttackerMachineObservationState,
-                                                   action: EmulationAttackerAction) -> EmulationAttackerMachineObservationState:
+                                                   action: EmulationAttackerAction) \
+            -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation with new information collected
 
@@ -136,7 +139,8 @@ class EnvDynamicsUtil:
         return merged_os, new_os
 
     @staticmethod
-    def merge_shell_access(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) -> \
+    def merge_shell_access(o_m: EmulationAttackerMachineObservationState,
+                           n_m: EmulationAttackerMachineObservationState) -> \
             Tuple[EmulationAttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation shell access with new information collected
@@ -163,7 +167,8 @@ class EnvDynamicsUtil:
         return n_m, new_access
 
     @staticmethod
-    def merge_reachable(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
+    def merge_reachable(o_m: EmulationAttackerMachineObservationState,
+                        n_m: EmulationAttackerMachineObservationState) \
             -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation reachable nodes with new information collected
@@ -176,7 +181,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_backdoor_credentials(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
+    def merge_backdoor_credentials(o_m: EmulationAttackerMachineObservationState,
+                                   n_m: EmulationAttackerMachineObservationState) \
             -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation backdoor credentials nodes with new information collected
@@ -189,7 +195,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_logged_in(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
+    def merge_logged_in(o_m: EmulationAttackerMachineObservationState,
+                        n_m: EmulationAttackerMachineObservationState) \
             -> Tuple[EmulationAttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation logged in with new information collected
@@ -206,7 +213,8 @@ class EnvDynamicsUtil:
         return n_m, num_new_logged_in
 
     @staticmethod
-    def merge_tools_installed(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
+    def merge_tools_installed(o_m: EmulationAttackerMachineObservationState,
+                              n_m: EmulationAttackerMachineObservationState) \
             -> Tuple[EmulationAttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation "tools installed flag" with new information collected
@@ -223,7 +231,8 @@ class EnvDynamicsUtil:
         return n_m, num_new_tools_installed
 
     @staticmethod
-    def merge_backdoor_installed(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
+    def merge_backdoor_installed(o_m: EmulationAttackerMachineObservationState,
+                                 n_m: EmulationAttackerMachineObservationState) \
             -> Tuple[EmulationAttackerMachineObservationState, int]:
         """
         Helper function for merging an old machine observation "backdoor installed" flag with new information collected
@@ -240,7 +249,8 @@ class EnvDynamicsUtil:
         return n_m, num_new_backdoor_installed
 
     @staticmethod
-    def merge_backdoor_tried(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
+    def merge_backdoor_tried(o_m: EmulationAttackerMachineObservationState,
+                             n_m: EmulationAttackerMachineObservationState) \
             -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "backdoor tried" flag with new information collected
@@ -398,7 +408,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_trace(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) -> EmulationAttackerMachineObservationState:
+    def merge_trace(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
+            -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation trace with new information collected
 
@@ -522,31 +533,31 @@ class EnvDynamicsUtil:
         :return: the updated observation
         """
         # Subnet scans sometimes fail due to stagnation, https://github.com/nmap/nmap/issues/1321
-        if (a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        if (a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.ftp_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        elif (a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.ssh_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        elif (a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.telnet_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        elif (a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.irc_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        elif (a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.postgres_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        elif (a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.smtp_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        elif (a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.mysql_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials)\
+        elif (a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials)\
                 or a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.mongo_brute_tried = True
-        elif (a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET and m_obs.untried_credentials) \
+        elif (a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL and m_obs.untried_credentials) \
                 or a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             m_obs.cassandra_brute_tried = True
         elif a.id == EmulationAttackerActionId.SAMBACRY_EXPLOIT:
@@ -647,31 +658,31 @@ class EnvDynamicsUtil:
         :param a: the action
         :return: the name of hte corresponding vulnerability
         """
-        if a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+        if a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.FTP_DICT_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.SSH_DICT_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.TELNET_DICTS_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST \
+                or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL:
             return constants.EXPLOIT_VULNERABILITES.IRC_DICTS_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.POSTGRES_DICTS_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.SMTP_DICTS_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.MYSQL_DICTS_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.MONGO_DICTS_SAME_USER_PASS
-        elif a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.EXPLOIT_VULNERABILITES.CASSANDRA_DICTS_SAME_USER_PASS
         return constants.EXPLOIT_VULNERABILITES.UNKNOWN
@@ -696,31 +707,31 @@ class EnvDynamicsUtil:
         :param a: the action
         :return: the name of the service
         """
-        if a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+        if a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.FTP.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.SSH.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.TELNET.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
-                or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET:
+        elif a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL \
+                or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.IRC.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.POSTGRES.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.SMTP.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.MYSQL.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.MONGO.SERVICE_NAME
-        elif a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
+        elif a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL \
                 or a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST:
             return constants.CASSANDRA.SERVICE_NAME
         return constants.EXPLOIT_VULNERABILITES.UNKNOWN

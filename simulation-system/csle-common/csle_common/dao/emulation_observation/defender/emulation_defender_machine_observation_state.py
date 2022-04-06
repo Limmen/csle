@@ -1,13 +1,14 @@
-from typing import List
-import copy
+from typing import List, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_port_observation_state \
     import EmulationPortObservationState
 from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.consumer_threads.host_metrics_consumer_thread import HostMetricsConsumerThread
+from csle_common.consumer_threads.docker_host_stats_consumer_thread import DockerHostStatsConsumerThread
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_collector.host_manager.host_metrics import HostMetrics
+from csle_collector.docker_stats_manager.docker_stats import DockerStats
 
 
 class EmulationDefenderMachineObservationState:
@@ -15,13 +16,15 @@ class EmulationDefenderMachineObservationState:
     Represent's the defender's belief state of a component in the emulation
     """
 
-    def __init__(self, ips : List[str], log_sink_config: LogSinkConfig, host_metrics : HostMetrics = None):
+    def __init__(self, ips : List[str], log_sink_config: LogSinkConfig,
+                 host_metrics : HostMetrics = None, docker_stats: DockerStats = None):
         """
         Initializes the DTO
 
         :param ips: the ip of the machine
         :param log_sink_config: the log sink config
         :param host_metrics: the host metrics object
+        :param docker_stats: the docker stats objecty
         """
         self.ips = ips
         self.os="unknown"
@@ -31,11 +34,27 @@ class EmulationDefenderMachineObservationState:
         self.host_metrics = host_metrics
         if self.host_metrics is None:
             self.host_metrics = HostMetrics()
-        self.consumer_thread = HostMetricsConsumerThread(
-            host_ip=self.ips[0],  kafka_server_ip=log_sink_config.container.get_ips()[0],
-            kafka_port=log_sink_config.kafka_port, host_metrics=self.host_metrics)
-        self.consumer_thread.start()
+        self.docker_stats = docker_stats
+        if self.docker_stats is None:
+            self.docker_stats = DockerStats()
+        self.host_metrics_consumer_thread = None
+        self.docker_stats_consumer_thread = None
 
+    def start_monitor_threads(self) -> None:
+        """
+        Starts the monitoring threads
+
+        :return: None
+        """
+        self.host_metrics_consumer_thread = HostMetricsConsumerThread(
+            host_ip=self.ips[0],  kafka_server_ip=self.log_sink_config.container.get_ips()[0],
+            kafka_port=self.log_sink_config.kafka_port, host_metrics=self.host_metrics)
+        self.docker_stats_consumer_thread = DockerHostStatsConsumerThread(
+            host_ip=self.ips[0],  kafka_server_ip=self.log_sink_config.container.get_ips()[0],
+            kafka_port=self.log_sink_config.kafka_port, docker_stats=self.docker_stats
+        )
+        self.host_metrics_consumer_thread.start()
+        self.docker_stats_consumer_thread.start()
 
     @staticmethod
     def from_container(container: NodeContainerConfig, log_sink_config: LogSinkConfig):
@@ -47,12 +66,12 @@ class EmulationDefenderMachineObservationState:
         :return: the c reated instance
         """
         obj = EmulationDefenderMachineObservationState(ips=container.get_ips(), log_sink_config=log_sink_config,
-                                                       host_metrics=None)
+                                                       host_metrics=None, docker_stats=None)
         obj.os = container.os
         return obj
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationDefenderMachineObservationState":
+    def from_dict(d: Dict[str, Any]) -> "EmulationDefenderMachineObservationState":
         """
         Converts a dict representation of the object to an instance
 
@@ -61,13 +80,14 @@ class EmulationDefenderMachineObservationState:
         """
         obj = EmulationDefenderMachineObservationState(
             ips=d["ips"], log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
-            host_metrics=HostMetrics.from_dict(d["host_metrics"]))
+            host_metrics=HostMetrics.from_dict(d["host_metrics"]),
+            docker_stats=DockerStats.from_dict(d["docker_stats"]))
         obj.os = d["os"]
         obj.ports=list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
         obj.ssh_connections=list(map(lambda x: EmulationConnectionObservationState.from_dict(x), d["ssh_connections"]))
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -77,6 +97,7 @@ class EmulationDefenderMachineObservationState:
         d["ports"] = list(map(lambda x: x.to_dict(), self.ports))
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
         d["host_metrics"] = self.host_metrics.to_dict()
+        d["docker_stats"] = self.docker_stats.to_dict()
         return d
 
     def __str__(self) -> str:
@@ -85,7 +106,7 @@ class EmulationDefenderMachineObservationState:
         """
         return f"ips:{self.ips}, os:{self.os}, ports: {list(map(lambda x: str(x), self.ports))}, " \
                f"ssh_connections: {list(map(lambda x: str(x), self.ssh_connections))}, " \
-               f"host_metrics: {self.host_metrics}"
+               f"host_metrics: {self.host_metrics}, docker_stats: {self.docker_stats}"
 
     def sort_ports(self) -> None:
         """
@@ -112,11 +133,13 @@ class EmulationDefenderMachineObservationState:
         :return: a copy of the object
         """
         m_copy = EmulationDefenderMachineObservationState(
-            ips=self.ips, log_sink_config=self.log_sink_config, host_metrics=self.host_metrics)
+            ips=self.ips, log_sink_config=self.log_sink_config, host_metrics=self.host_metrics.copy(),
+            docker_stats=self.docker_stats.copy())
         m_copy.os = self.os
         m_copy.ports = list(map(lambda x: x.copy(), self.ports))
         m_copy.ssh_connections = self.ssh_connections
         m_copy.host_metrics = self.host_metrics.copy()
+        m_copy.docker_stats = self.docker_stats.copy()
         return m_copy
 
 

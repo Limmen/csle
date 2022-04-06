@@ -1,4 +1,4 @@
-from typing import Set, List
+from typing import Set, List, Dict, Any
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 
 
@@ -44,20 +44,42 @@ class NodeFirewallConfig:
         """
         return list(filter(lambda x: x is not None, map(lambda x: x.ip, self.ips_gw_default_policy_networks)))
 
-    def to_dict(self) -> dict:
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NodeFirewallConfig":
+        """
+        Converts a dict representation into an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = NodeFirewallConfig(
+            hostname=d["hostname"],
+            ips_gw_default_policy_networks=list(map(lambda x: DefaultNetworkFirewallConfig.from_dict(x),
+                                                    d["ips_gw_default_policy_networks"])),
+            output_accept=set(d["output_accept"]),
+            input_accept=set(d["input_accept"]),
+            forward_accept=set(d["forward_accept"]),
+            output_drop=set(d["output_drop"]),
+            input_drop=set(d["input_drop"]),
+            forward_drop=set(d["forward_drop"]),
+            routes=set(d["routes"])
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
         d = {}
         d["hostname"] = self.hostname
         d["ips_gw_default_policy_networks"] = list(map(lambda x: x.to_dict(), self.ips_gw_default_policy_networks))
-        d["output_accept"] = self.output_accept
-        d["input_accept"] = self.input_accept
-        d["forward_accept"] = self.forward_accept
-        d["output_drop"] = self.output_drop
-        d["input_drop"] = self.input_drop
-        d["forward_drop"] = self.forward_drop
-        d["routes"] = self.routes
+        d["output_accept"] = list(self.output_accept)
+        d["input_accept"] = list(self.input_accept)
+        d["forward_accept"] = list(self.forward_accept)
+        d["output_drop"] = list(self.output_drop)
+        d["input_drop"] = list(self.input_drop)
+        d["forward_drop"] = list(self.forward_drop)
+        d["routes"] = list(self.routes)
         return d
 
     def __str__(self) -> str:

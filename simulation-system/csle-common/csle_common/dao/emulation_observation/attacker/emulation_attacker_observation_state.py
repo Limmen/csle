@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import List, Set, Dict, Any
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
     import EmulationAttackerMachineObservationState
@@ -28,7 +28,7 @@ class EmulationAttackerObservationState:
 
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationAttackerObservationState":
+    def from_dict(d: Dict[str, Any]) -> "EmulationAttackerObservationState":
         """
         Converts a dict representation to an instance
 
@@ -42,7 +42,7 @@ class EmulationAttackerObservationState:
         obj.actions_tried = d["actions_tried"]
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -81,8 +81,10 @@ class EmulationAttackerObservationState:
         """
         if a.index == -1 or a.index == len(self.machines):
             return emulation_env_config.topology_config.subnetwork_masks
-        if a.index < len(self.machines):
+        elif a.index < len(self.machines):
             return self.machines[a.index].ips
+        else:
+            raise ValueError(f"invalid index: {a.index}, num machines: {len(self.machines)}")
         return a.ips
 
     def exploit_tried(self, a: EmulationAttackerAction, m: EmulationAttackerMachineObservationState) -> bool:

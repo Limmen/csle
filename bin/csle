@@ -25,6 +25,7 @@ from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.experiment_util import ExperimentUtil
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 from csle_attacker.attacker import Attacker
 import gym_csle_stopping_game.envs.stopping_game_env  # for registering the gym environments
@@ -207,6 +208,7 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
+
 @click.argument('emulation', default="")
 @click.command(help="emulation-name")
 def stop_traffic(emulation : str) -> None:
@@ -388,10 +390,11 @@ def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -
 
 
 @click.argument('entity', default="")
-@click.command(help="container-name | all")
+@click.command(help="prometheus | node_exporter | cadvisor | grafana container-name | emulation-name | "
+                    "statsmanager | all")
 def stop(entity: str) -> None:
     """
-    Stops a container or all containers
+    Stops an entity
 
     :param entity: the name of the container to stop or "all"
     :return: None
@@ -400,6 +403,16 @@ def stop(entity: str) -> None:
         ContainerManager.stop_all_running_containers()
         for emulation in MetastoreFacade.list_emulations():
             stop_emulation(emulation_env_config=emulation)
+    elif entity == "node_exporter":
+        MonitorToolsController.stop_node_exporter()
+    elif entity == "prometheus":
+        MonitorToolsController.stop_prometheus()
+    elif entity == "cadvisor":
+        MonitorToolsController.stop_cadvisor()
+    elif entity == "grafana":
+        MonitorToolsController.stop_grafana()
+    elif entity == "statsmanager":
+        MonitorToolsController.stop_docker_stats_manager()
     else:
         container_stopped = ContainerManager.stop_container(name=entity)
         if not container_stopped:
@@ -432,16 +445,18 @@ def start_docker_stats_manager() -> None:
     :return: None
     """
     port = 50051
-    started = ContainerManager.start_docker_stats_manager(port=port)
+    started = MonitorToolsController.start_docker_stats_manager(port=port)
     if started:
         click.secho(f"Starting docker stats manager on port:{port}", bold=False)
     else:
         click.secho(f"Docker stats manager is already running on port:{port}", bold=False)
 
+
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str)
-@click.command(help="container-name | emulation-name | all | statsmanager")
+@click.command(help="prometheus | node_exporter | grafana | cadvisor | container-name | "
+                    "emulation-name | all | statsmanager")
 def start(entity : str, no_traffic: bool, name: str) -> None:
     """
     Starts a container or all containers
@@ -455,6 +470,14 @@ def start(entity : str, no_traffic: bool, name: str) -> None:
         ContainerManager.start_all_stopped_containers()
     elif entity == "statsmanager":
         start_docker_stats_manager()
+    elif entity == "node_exporter":
+         MonitorToolsController.start_node_exporter()
+    elif entity == "prometheus":
+        MonitorToolsController.start_prometheus()
+    elif entity == "cadvisor":
+        MonitorToolsController.start_cadvisor()
+    elif entity == "grafana":
+        MonitorToolsController.start_grafana()
     else:
         container_started = ContainerManager.start_container(name=entity)
         if not container_started:
@@ -531,7 +554,8 @@ def clean(entity : str) -> None:
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-@click.command(help="containers | networks | images | emulations | all | environments")
+@click.command(help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
+                    "| cadvisor | statsmanager ")
 def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
@@ -559,6 +583,16 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
         list_emulations(all=all, stopped=stopped)
     elif entity == "environments":
         list_csle_gym_envs()
+    elif entity == "prometheus":
+        list_prometheus()
+    elif entity == "node_exporter":
+        list_node_exporter()
+    elif entity == "cadvisor":
+        list_cadvisor()
+    elif entity == "grafana":
+        list_grafana()
+    elif entity == "statsmanager":
+        list_statsmanager()
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -647,6 +681,77 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_images()
     list_emulations(all=all, stopped=stopped, running=running)
     list_csle_gym_envs()
+    click.secho("CSLE Monitoring System:", fg="magenta", bold=True)
+    list_prometheus()
+    list_node_exporter()
+    list_cadvisor()
+    list_grafana()
+    list_statsmanager()
+
+
+def list_statsmanager() -> None:
+    """
+    List status of the docker host manager
+
+    :return: None
+    """
+    if MonitorToolsController.is_statsmanager_running():
+        click.secho("Docker statsmanager status: " + f" {click.style('[running]', fg='green')} "
+                                         f"port:{50051}", bold=False)
+    else:
+        click.secho("Docker statsmanager status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+
+def list_grafana() -> None:
+    """
+    List status of grafana
+
+    :return: None
+    """
+    if MonitorToolsController.is_grafana_running():
+        click.secho("Grafana status: " + f" {click.style('[running]', fg='green')} "
+                                         f"port:{constants.COMMANDS.GRAFANA_PORT}", bold=False)
+    else:
+        click.secho("Grafana status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+
+def list_cadvisor() -> None:
+    """
+    Lists status of cadvisor
+
+    :return: None
+    """
+    if MonitorToolsController.is_cadvisor_running():
+        click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
+                                          f"port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
+    else:
+        click.secho("Cadvisor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+
+def list_node_exporter() -> None:
+    """
+    Lists status of node exporter
+
+    :return: None
+    """
+    if MonitorToolsController.is_node_exporter_running():
+        click.secho("Node exporter status: " + f" {click.style('[running]', fg='green')} "
+                                               f"port:{constants.COMMANDS.NODE_EXPORTER_PORT}", bold=False)
+    else:
+        click.secho("Node exporter status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+
+def list_prometheus() -> None:
+    """
+    Lists status of prometheus
+
+    :return: None
+    """
+    if MonitorToolsController.is_prometheus_running():
+        click.secho("Prometheus status: " + f" {click.style('[running]', fg='green')} "
+                                            f"port:{constants.COMMANDS.PROMETHEUS_PORT}", bold=False)
+    else:
+        click.secho("Prometheus status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_emulations(all: bool = False, stopped: bool = False, running: bool = True) -> None:

@@ -1,3 +1,4 @@
+from typing import Dict, Any
 from scipy import stats
 import numpy as np
 from enum import Enum
@@ -1222,7 +1223,7 @@ class DefenderMachineDynamicsModel:
                    f"norm_init_new_net_rx: {self.norm_init_new_net_rx}, " \
                    f"\n norm_init_new_net_tx: {self.norm_init_new_net_tx}"
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         Converts the model to a dict representation
 
@@ -1258,7 +1259,7 @@ class DefenderMachineDynamicsModel:
         return d
 
 
-    def from_dict(self, d) -> None:
+    def from_dict(self, d: Dict[str, Any]) -> None:
         """
         Populates the model with data from a dict
 

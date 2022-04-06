@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
@@ -30,7 +30,23 @@ class DockerEnvMetadata:
         self.config = config
         self.log_sink_config = log_sink_config
 
-    def to_dict(self) -> dict:
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "DockerEnvMetadata":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = DockerEnvMetadata(
+            containers=list(map(lambda x: DockerContainerMetadata.from_dict(x), d["containers"])),
+            name=d["name"], subnet_prefix=d["subnet_prefix"], subnet_mask=d["subnet_mask"],
+            level=d["level"], config=d["config"], log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"])
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

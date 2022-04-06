@@ -1,3 +1,4 @@
+from typing import List, Tuple
 import time
 import subprocess
 import random
@@ -14,6 +15,7 @@ from csle_common.controllers.vulnerabilities_manager import VulnerabilitiesManag
 from csle_common.controllers.flags_manager import FlagsManager
 from csle_common.controllers.traffic_manager import TrafficManager
 from csle_common.controllers.topology_manager import TopologyManager
+from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 from csle_common.controllers.resource_constraints_manager import ResourceConstraintsManager
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.experiment_util import ExperimentUtil
@@ -34,7 +36,7 @@ class EmulationEnvManager:
         :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
         :return: None
         """
-        steps = 13
+        steps = 17
         if no_traffic:
             steps = steps-1
         current_step = 1
@@ -94,12 +96,32 @@ class EmulationEnvManager:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
-        ContainerManager.start_docker_stats_manager(port=50051)
+        MonitorToolsController.start_docker_stats_manager(port=50051)
         time.sleep(10)
         ContainerManager.start_docker_stats_thread(
             log_sink_config=emulation_env_config.log_sink_config,
             containers_config=emulation_env_config.containers_config,
             emulation_name=emulation_env_config.name)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
+        MonitorToolsController.start_cadvisor()
+        time.sleep(2)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Grafana --")
+        MonitorToolsController.start_grafana()
+        time.sleep(2)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Node_exporter --")
+        MonitorToolsController.start_node_exporter()
+        time.sleep(2)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Prometheus --")
+        MonitorToolsController.start_prometheus()
+        time.sleep(2)
 
     @staticmethod
     def apply_log_sink_config(emulation_env_config: EmulationEnvConfig) -> None:
@@ -216,6 +238,7 @@ class EmulationEnvManager:
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+                  f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
                   f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
@@ -229,6 +252,7 @@ class EmulationEnvManager:
         cmd = f"docker container run -dt --name {name} " \
               f"--hostname={c.name}{c.suffix} --label dir={path} " \
               f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+              f"-e TZ=Europe/Stockholm " \
               f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
               f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
               f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
@@ -257,6 +281,7 @@ class EmulationEnvManager:
         Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle-{name}-001")
         cmd = f"docker container run -dt --name csle-{name}-001 " \
               f"--hostname={name} " \
+              f"-e TZ=Europe/Stockholm " \
               f"--network={net_name} --ip {ip} --publish-all=true " \
               f"--memory={memory}G --cpus={num_cpus} " \
               f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
@@ -313,6 +338,17 @@ class EmulationEnvManager:
         MetastoreFacade.install_emulation(config=config)
 
     @staticmethod
+    def save_emulation_image(img: bytes, emulation_name: str) -> None:
+        """
+        Saves the emulation image
+
+        :param image: the image data
+        :param emulation_name: the name of the emulation
+        :return: None
+        """
+        MetastoreFacade.save_emulation_image(img=img, emulation_name=emulation_name)
+
+    @staticmethod
     def uninstall_emulation(config: EmulationEnvConfig) -> None:
         """
         Uninstalls the emulation configuration in the metastore
@@ -321,4 +357,23 @@ class EmulationEnvManager:
         :return: None
         """
         MetastoreFacade.uninstall_emulation(config=config)
+
+    @staticmethod
+    def separate_running_and_stopped_emulations_dtos(emulations : List[EmulationEnvConfig]) \
+            -> Tuple[List[EmulationEnvConfig], List[EmulationEnvConfig]]:
+        """
+        Partitions the set of emulations into a set of running emulations and a set of stopped emulations
+
+        :param emulations: the list of emulations
+        :return: running_emulations, stopped_emulations
+        """
+        rc_emulations = ContainerManager.list_running_emulations()
+        stopped_emulations = []
+        running_emulations = []
+        for em in emulations:
+            if em.name in rc_emulations:
+                running_emulations.append(em)
+            else:
+                stopped_emulations.append(em)
+        return running_emulations, stopped_emulations
 

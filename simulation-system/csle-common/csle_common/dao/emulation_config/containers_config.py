@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Dict, Any
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
@@ -30,7 +30,25 @@ class ContainersConfig:
         self.networks = networks
         self.agent_reachable_nodes = agent_reachable_nodes
 
-    def to_dict(self) -> dict:
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "ContainersConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = ContainersConfig(
+            containers=list(map(lambda x: NodeContainerConfig.from_dict(x), d["containers"])),
+            agent_ip=d["agent_ip"], router_ip=d["router_ip"],
+            networks=list(map(lambda x: ContainerNetwork.from_dict(x), d["networks"])),
+            ids_enabled=d["ids_enabled"], vulnerable_nodes=d["vulnerable_nodes"],
+            agent_reachable_nodes=d["agent_reachable_nodes"]
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -85,3 +103,16 @@ class ContainersConfig:
         """
         agent_container = self.get_agent_container()
         return self.get_reachable_ips(container=agent_container)
+
+
+    def get_container_from_ip(self, ip: str) -> Union[NodeContainerConfig, None]:
+        """
+        Utility function for getting the container
+
+        :param ip: the ip of the container
+        :return: the container with the given ip or None
+        """
+        for c in self.containers:
+            if ip in c.get_ips():
+                return c
+        return None

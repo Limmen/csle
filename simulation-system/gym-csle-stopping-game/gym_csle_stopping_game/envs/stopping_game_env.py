@@ -1,7 +1,7 @@
 from typing import Tuple
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
-from csle_common.dao.simulation_config.simulation_trajectory import SimulationTrajectory
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
@@ -31,9 +31,9 @@ class StoppingGameEnv(BaseEnv):
             'video.frames_per_second': 50  # Video rendering speed
         }
 
-        # Setup trajectories
-        self.trajectories = []
-        self.trajectory = SimulationTrajectory()
+        # Setup traces
+        self.traces = []
+        self.trace = SimulationTrace(simulation_env=self.unwrapped.spec.id)
 
         # Reset
         self.reset()
@@ -78,18 +78,18 @@ class StoppingGameEnv(BaseEnv):
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
 
-        # Log trajectory
-        self.trajectory.defender_rewards.append(r)
-        self.trajectory.attacker_rewards.append(-r)
-        self.trajectory.attacker_actions.append(a2)
-        self.trajectory.defender_actions.append(a1)
-        self.trajectory.infos.append(info)
-        self.trajectory.states.append(self.state.s)
-        self.trajectory.beliefs.append(self.state.b[1])
-        self.trajectory.infrastructure_metrics.append(o)
+        # Log trace
+        self.trace.defender_rewards.append(r)
+        self.trace.attacker_rewards.append(-r)
+        self.trace.attacker_actions.append(a2)
+        self.trace.defender_actions.append(a1)
+        self.trace.infos.append(info)
+        self.trace.states.append(self.state.s)
+        self.trace.beliefs.append(self.state.b[1])
+        self.trace.infrastructure_metrics.append(o)
         if not done:
-            self.trajectory.attacker_observations.append(attacker_obs)
-            self.trajectory.defender_observations.append(defender_obs)
+            self.trace.attacker_observations.append(attacker_obs)
+            self.trace.defender_observations.append(defender_obs)
 
         return (defender_obs, attacker_obs), (r,-r), done, info
 
@@ -100,15 +100,15 @@ class StoppingGameEnv(BaseEnv):
         :return: initial observation
         """
         self.state.reset()
-        if len(self.trajectory .attacker_rewards) > 0:
-            self.trajectories.append(self.trajectory)
-        if len(self.trajectories) > 1 and len(self.trajectories) % 100 == 0:
-            self.__checkpoint_trajectories()
-        self.trajectory = SimulationTrajectory()
+        if len(self.trace .attacker_rewards) > 0:
+            self.traces.append(self.trace)
+        if len(self.traces) > 1 and len(self.traces) % 100 == 0:
+            self.__checkpoint_traces()
+        self.trace = SimulationTrace()
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
-        self.trajectory.attacker_observations.append(attacker_obs)
-        self.trajectory.defender_observations.append(defender_obs)
+        self.trace.attacker_observations.append(attacker_obs)
+        self.trace.defender_observations.append(defender_obs)
         return defender_obs, attacker_obs
 
     def render(self, mode: str = 'human'):
@@ -142,11 +142,11 @@ class StoppingGameEnv(BaseEnv):
         """
         return True
 
-    def __checkpoint_trajectories(self) -> None:
+    def __checkpoint_traces(self) -> None:
         """
-        Checkpoints agent trajectories
+        Checkpoints agent traces
         :return: None
         """
-        SimulationTrajectory.save_trajectories(trajectories_save_dir=self.config.save_dir,
-                                               trajectories=self.trajectories, trajectories_file="taus.json")
+        SimulationTrace.save_traces(traces_save_dir=self.config.save_dir,
+                                    traces=self.traces, traces_file="taus.json")
 

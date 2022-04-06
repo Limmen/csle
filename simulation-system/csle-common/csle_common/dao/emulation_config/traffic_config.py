@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
 
@@ -17,7 +17,21 @@ class TrafficConfig:
         self.node_traffic_configs = node_traffic_configs
         self.client_population_config = client_population_config
 
-    def to_dict(self) -> dict:
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "TrafficConfig":
+        """
+        Converts a dict representation of the object into a an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = TrafficConfig(
+            node_traffic_configs=list(map(lambda x: NodeTrafficConfig.from_dict(x), d["node_traffic_configs"])),
+            client_population_config=d["client_population_config"]
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

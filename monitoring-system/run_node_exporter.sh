@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nohup ./node_exporter/node_exporter & > node_exporter.log
+nohup node_exporter & > /var/log/csle/node_exporter.log

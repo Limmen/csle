@@ -12,12 +12,11 @@ class EmulationAttackerMasscanActions:
     """
 
     @staticmethod
-    def MASSCAN_HOST_SCAN(index: int, subnet=True, ips: List[str] = None, host_ip : str = "") -> EmulationAttackerAction:
+    def MASSCAN_HOST_SCAN(index: int, ips: List[str] = None, host_ip : str = "") -> EmulationAttackerAction:
         """
         Action for running a MASSCAN network scan
 
         :param index: the index of the action
-        :param subnet: if true, apply action to entire subnet
         :param ips: ips of the machines or subnets to apply the action to
         :param host_ip: the host ip
         :return: The created action
@@ -26,11 +25,11 @@ class EmulationAttackerMasscanActions:
         if ips is None:
             ips = []
         cmd = ["sudo masscan " + constants.MASSCAN.BASE_ARGS + " " + constants.MASSCAN.HOST_ARG + host_ip + " "]
-        if subnet:
-            id = EmulationAttackerActionId.MASSCAN_SUBNET_SCAN
+        if index == -1:
+            id = EmulationAttackerActionId.MASSCAN_ALL_SCAN
 
         return EmulationAttackerAction(id=id, name="Masscan port 0-1024", cmds=cmd,
                                        type=EmulationAttackerActionType.RECON,
                                        descr="Masscan port 0-1024",
-                                       ips=ips, subnet=subnet, index=index,
+                                       ips=ips, index=index,
                                        action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING)

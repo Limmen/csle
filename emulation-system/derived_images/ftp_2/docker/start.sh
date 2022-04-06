@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#./setup_firewall.sh
-service csle-firewall start
 nohup /usr/sbin/vsftpd &
 service rsyslog restart
 /usr/sbin/sshd -D &

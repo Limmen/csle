@@ -24,7 +24,7 @@ class EmulationDefenderStoppingActions:
                                        type=EmulationDefenderActionType.STOP,
                                        descr="Reports an ongoing intrusion to the infrastructure and stops",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.GAME_END, alt_cmds=alt_cmd)
+                                       ips=[], action_outcome=EmulationDefenderActionOutcome.GAME_END, alt_cmds=alt_cmd)
 
     @staticmethod
     def CONTINUE(index: int) -> EmulationDefenderAction:
@@ -41,7 +41,7 @@ class EmulationDefenderStoppingActions:
                                        type=EmulationDefenderActionType.CONTINUE,
                                        descr="A 'continue' action, the defender chooses to not make any action",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.CONTINUE, alt_cmds
+                                       ips=[], action_outcome=EmulationDefenderActionOutcome.CONTINUE, alt_cmds
                                        =alt_cmd)
 
     @staticmethod
@@ -61,7 +61,7 @@ class EmulationDefenderStoppingActions:
                                        descr="A non terminal stop action the defender resets all user accounts, "
                                     "which means that password vulnerabilities are mitigated",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
+                                       ips=[], action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                                        alt_cmds=alt_cmd)
 
     @staticmethod
@@ -79,7 +79,7 @@ class EmulationDefenderStoppingActions:
                                        type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
                                        descr="A non terminal stop action, the defender enables DPI by starting the IDS",
                                        index=index,
-                                       ips=[], subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
+                                       ips=[], action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                                        alt_cmds=alt_cmd)
 
     @staticmethod
@@ -101,5 +101,5 @@ class EmulationDefenderStoppingActions:
                                     "using the firewall.",
                                        index=index,
                                        ips=[],
-                                       subnet=False, action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
+                                       action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
                                        alt_cmds=alt_cmd)

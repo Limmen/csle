@@ -1,6 +1,6 @@
+from typing import Tuple, List, Dict
 import time
 import os
-from typing import Tuple, List
 import logging
 import threading
 import docker
@@ -21,24 +21,27 @@ class DockerStatsThread(threading.Thread):
     Thread that collects performance statistics of Docker containers
     """
 
-    def __init__(self, container_names: List[str], emulation: str, sink_ip: str,
+    def __init__(self, container_names_and_ips: List[
+        csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp],
+                 emulation: str, sink_ip: str,
                  stats_queue_maxsize: int,
                  time_step_len_seconds: int, sink_port: int):
         """
         Initializes the thread
 
-        :param container_names: list of container names to monitor
+        :param container_names_and_ips: list of container names and ips to monitor
         :param emulation: name of the emulation to monitor
         :param sink_ip: the ip of the Kafka server to produce stats to
         :param stats_queue_maxsize: max length of the queue before sending to Kafka
         :param time_step_len_seconds: the length of a time-step before sending stats to Kafka
         """
         threading.Thread.__init__(self)
-        self.container_names = container_names
+        self.container_names_and_ips = container_names_and_ips
         self.emulation = emulation
         self.client_1 = docker.from_env()
         self.client2 = docker.APIClient(base_url=constants.DOCKER_STATS.UNIX_DOCKER_SOCK_URL)
         self.containers = self.client_1.containers.list()
+        self.container_names = list(map(lambda x: x.container, self.container_names_and_ips))
         self.containers = list(filter(lambda x: x.name in self.container_names, self.containers))
         streams = []
         for container in self.containers:
@@ -57,7 +60,7 @@ class DockerStatsThread(threading.Thread):
         self.stopped = False
         logging.info(f"Producer thread starting, emulation:{self.emulation}, kafka ip: {self.kafka_ip}, "
                      f"kafka port:{self.port}, time_step_len_seconds: {self.time_step_len_seconds}, "
-                     f"container names:{self.container_names}")
+                     f"container and ips:{self.container_names_and_ips}")
 
     def run(self) -> None:
         """
@@ -71,6 +74,10 @@ class DockerStatsThread(threading.Thread):
                 aggregated_stats, avg_stats_dict = self.compute_averages()
                 record = aggregated_stats.to_kafka_record(ip=self.ip)
                 self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
+                for k,v in avg_stats_dict.items():
+                    ip = self.get_ip(k)
+                    record = v.to_kafka_record(ip=ip)
+                    self.producer.produce(constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME, record)
                 self.stats_queues = {}
                 start = time.time()
 
@@ -81,7 +88,19 @@ class DockerStatsThread(threading.Thread):
                     self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
                 self.stats_queues[parsed_stats.container_name].append(parsed_stats)
 
-    def compute_averages(self) -> Tuple[DockerStats, dict]:
+    def get_ip(self, container_name: str) -> str:
+        """
+        Gets the ip of a given container name
+
+        :param container_name: the name of the container
+        :return: the ip of the container
+        """
+        for name_ip in self.container_names_and_ips:
+            if name_ip.container == container_name:
+                return name_ip.ip
+        return "-"
+
+    def compute_averages(self) -> Tuple[DockerStats, Dict[str, DockerStats]]:
         """
         Compute averages and aggregates of the list of metrics
         :return: the average and aggregate metrics

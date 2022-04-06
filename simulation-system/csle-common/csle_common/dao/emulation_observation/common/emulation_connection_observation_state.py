@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 
 class EmulationConnectionObservationState:
     """
@@ -32,7 +34,7 @@ class EmulationConnectionObservationState:
         self.ip = ip
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationConnectionObservationState":
+    def from_dict(d: Dict[str, Any]) -> "EmulationConnectionObservationState":
         """
         Converts a dict representation of the object to an instance
 
@@ -45,7 +47,7 @@ class EmulationConnectionObservationState:
         )
         return obj
 
-    def to_dict(self)-> dict:
+    def to_dict(self)-> Dict[str, Any]:
         """
         :return: a dict represnetation of the object
         """

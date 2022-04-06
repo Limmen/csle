@@ -39,7 +39,8 @@ class Logger(metaclass=SingletonType):
 
         # Create logger object and set the format for logging and other attributes
         logger = logging.Logger(log_file_name)
-        logger.setLevel(logging.DEBUG)
+        # logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
         handler = logging.FileHandler(log_path, 'a+')
         handler.setFormatter(
             CustomFormatter('%(asctime)s - %(levelname)-10s - %(filename)s - %(funcName)s - %(message)s'))

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
@@ -35,7 +35,7 @@ class LogSinkConfig:
         self.secondary_grpc_port = secondary_grpc_port
 
     @staticmethod
-    def from_dict(d: dict) -> "LogSinkConfig":
+    def from_dict(d: Dict[str, Any]) -> "LogSinkConfig":
         """
         Converts a dict representation to an instance
 
@@ -52,7 +52,7 @@ class LogSinkConfig:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

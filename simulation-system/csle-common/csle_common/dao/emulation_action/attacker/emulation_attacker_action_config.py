@@ -92,12 +92,12 @@ class EmulationAttackerActionConfig:
         print("Attacker Actions:")
         for i, action in enumerate(self.actions):
             tag = "-"
-            if not action.subnet:
+            if not action.index == -1:
                 if action.index is not None:
                     tag = str(action.index)
             else:
                 tag = "*"
-            print(str(i) + ":" + action.name + "[" + tag + "] c:" + str(action.cost))
+            print(str(i) + ":" + action.name + "[" + tag + "]")
 
     @staticmethod
     def dict_brute_same_user_ids():
@@ -114,15 +114,15 @@ class EmulationAttackerActionConfig:
             EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST,
             EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST,
             EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST,
-            EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET
+            EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL
         ]
 
     def get_continue_action_idx(self) -> int:
@@ -160,32 +160,32 @@ class EmulationAttackerActionConfig:
 
         # Host actions
         for idx in range(num_nodes):
-            attacker_actions.append(EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.PING_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.UDP_PORT_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.TCP_FIN_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.TCP_NULL_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.OS_DETECTION_SCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.NMAP_VULNERS(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=idx, subnet=False))
+            attacker_actions.append(EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.PING_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.UDP_PORT_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.TCP_FIN_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.TCP_NULL_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.OS_DETECTION_SCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.NMAP_VULNERS(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=idx))
             attacker_actions.append(EmulationAttackerNIKTOActions.NIKTO_WEB_HOST_SCAN(index=idx))
             attacker_actions.append(
-                EmulationAttackerMasscanActions.MASSCAN_HOST_SCAN(index=idx, subnet=False, host_ip=hacker_ip))
-            attacker_actions.append(EmulationAttackerNMAPActions.FIREWALK(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.HTTP_ENUM(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.HTTP_GREP(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.VULSCAN(index=idx, subnet=False))
-            attacker_actions.append(EmulationAttackerNMAPActions.FINGER(index=idx, subnet=False)),
+                EmulationAttackerMasscanActions.MASSCAN_HOST_SCAN(index=idx, host_ip=hacker_ip))
+            attacker_actions.append(EmulationAttackerNMAPActions.FIREWALK(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.HTTP_ENUM(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.HTTP_GREP(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.VULSCAN(index=idx))
+            attacker_actions.append(EmulationAttackerNMAPActions.FINGER(index=idx)),
             attacker_actions.append(EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=idx))
             attacker_actions.append(EmulationAttackerShellActions.SHELLSHOCK_EXPLOIT(index=idx))
             attacker_actions.append(EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=idx))
@@ -197,91 +197,108 @@ class EmulationAttackerActionConfig:
 
         # Subnet actions
         attacker_actions.append(
-            EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.PING_SCAN(index=num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.UDP_PORT_SCAN(num_nodes + 1, ips=subnet_masks, subnet=True))
+            EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.UDP_PORT_SCAN(index=-1, ips=subnet_masks))
         attacker_actions.append(
-            EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.TCP_FIN_SCAN(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.TCP_NULL_SCAN(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.OS_DETECTION_SCAN(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.NMAP_VULNERS(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(num_nodes + 1,
-                                                                                              ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(num_nodes + 1,
-                                                                                           ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1,
-                                                                                           ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(num_nodes + 1,
-                                                                                                 ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY(num_nodes + 1,
-                                                                                           ips=subnet_masks, subnet=True))
+            EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.TCP_FIN_SCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.TCP_NULL_SCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.OS_DETECTION_SCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.NMAP_VULNERS(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=-1,
+                                                                                              ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=-1,
+                                                                                           ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=-1,
+                                                                                           ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY(index=-1,
+                                                                                                 ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY(index=-1,
+                                                                                           ips=subnet_masks))
         attacker_actions.append(
-            EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_masks, subnet=True))
+            EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY(index=-1, ips=subnet_masks))
         attacker_actions.append(
-            EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_masks, subnet=True))
+            EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY(index=-1, ips=subnet_masks))
         attacker_actions.append(
-            EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_masks, subnet=True))
+            EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY(index=-1, ips=subnet_masks))
         attacker_actions.append(
-            EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerShellActions.FIND_FLAG(index=num_nodes + 1))
-        attacker_actions.append(EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=num_nodes + 1))
-        attacker_actions.append(EmulationAttackerMasscanActions.MASSCAN_HOST_SCAN(index=num_nodes + 1, subnet=True,
+            EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerShellActions.FIND_FLAG(index=-1))
+        attacker_actions.append(EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1))
+        attacker_actions.append(EmulationAttackerMasscanActions.MASSCAN_HOST_SCAN(index=-1,
                                                                                   host_ip=hacker_ip, ips=subnet_masks))
-        attacker_actions.append(EmulationAttackerNMAPActions.FIREWALK(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.HTTP_ENUM(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.HTTP_GREP(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.VULSCAN(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerNMAPActions.FINGER(num_nodes + 1, ips=subnet_masks, subnet=True))
-        attacker_actions.append(EmulationAttackerShellActions.INSTALL_TOOLS(index=num_nodes + 1))
-        attacker_actions.append(EmulationAttackerShellActions.SSH_BACKDOOR(index=num_nodes + 1))
+        attacker_actions.append(EmulationAttackerNMAPActions.FIREWALK(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.HTTP_ENUM(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.HTTP_GREP(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.VULSCAN(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerNMAPActions.FINGER(index=-1, ips=subnet_masks))
+        attacker_actions.append(EmulationAttackerShellActions.INSTALL_TOOLS(index=-1))
+        attacker_actions.append(EmulationAttackerShellActions.SSH_BACKDOOR(index=-1))
 
-        attacker_actions.append(EmulationAttackerStoppingActions.STOP(index=num_nodes + 1))
-        attacker_actions.append(EmulationAttackerStoppingActions.CONTINUE(index=num_nodes + 1))
+        attacker_actions.append(EmulationAttackerStoppingActions.STOP(index=-1))
+        attacker_actions.append(EmulationAttackerStoppingActions.CONTINUE(index=-1))
 
         attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
         nmap_action_ids = [
-            EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST, EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET,
-            EmulationAttackerActionId.PING_SCAN_HOST, EmulationAttackerActionId.PING_SCAN_SUBNET,
-            EmulationAttackerActionId.UDP_PORT_SCAN_HOST, EmulationAttackerActionId.UDP_PORT_SCAN_SUBNET,
-            EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_HOST, EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET,
-            EmulationAttackerActionId.TCP_FIN_SCAN_HOST, EmulationAttackerActionId.TCP_FIN_SCAN_SUBNET,
-            EmulationAttackerActionId.TCP_NULL_SCAN_HOST, EmulationAttackerActionId.TCP_NULL_SCAN_SUBNET,
-            EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_HOST, EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_SUBNET,
-            EmulationAttackerActionId.OS_DETECTION_SCAN_HOST, EmulationAttackerActionId.OS_DETECTION_SCAN_SUBNET,
-            EmulationAttackerActionId.NMAP_VULNERS_HOST, EmulationAttackerActionId.NMAP_VULNERS_SUBNET,
+            EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
+            EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_ALL,
+            EmulationAttackerActionId.PING_SCAN_HOST,
+            EmulationAttackerActionId.PING_SCAN_ALL,
+            EmulationAttackerActionId.UDP_PORT_SCAN_HOST,
+            EmulationAttackerActionId.UDP_PORT_SCAN_ALL,
+            EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_HOST,
+            EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_ALL,
+            EmulationAttackerActionId.TCP_FIN_SCAN_HOST,
+            EmulationAttackerActionId.TCP_FIN_SCAN_ALL,
+            EmulationAttackerActionId.TCP_NULL_SCAN_HOST,
+            EmulationAttackerActionId.TCP_NULL_SCAN_ALL,
+            EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_HOST,
+            EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_ALL,
+            EmulationAttackerActionId.OS_DETECTION_SCAN_HOST,
+            EmulationAttackerActionId.OS_DETECTION_SCAN_ALL,
+            EmulationAttackerActionId.NMAP_VULNERS_HOST,
+            EmulationAttackerActionId.NMAP_VULNERS_ALL,
             EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST,
-            EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST, EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST, EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET,
+            EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST,
+            EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST,
+            EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL,
             EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST,
-            EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST, EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET,
+            EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST,
+            EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL,
             EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST,
-            EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET,
+            EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL,
             EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST,
-            EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET,
+            EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL,
             EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST,
-            EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET,
+            EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL,
             EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST,
-            EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET,
-            EmulationAttackerActionId.FIREWALK_HOST, EmulationAttackerActionId.FIREWALK_SUBNET,
-            EmulationAttackerActionId.HTTP_ENUM_HOST, EmulationAttackerActionId.HTTP_ENUM_SUBNET,
-            EmulationAttackerActionId.HTTP_GREP_HOST, EmulationAttackerActionId.HTTP_GREP_SUBNET,
-            EmulationAttackerActionId.VULSCAN_HOST, EmulationAttackerActionId.VULSCAN_SUBNET,
-            EmulationAttackerActionId.FINGER_HOST, EmulationAttackerActionId.FINGER_SUBNET
+            EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL,
+            EmulationAttackerActionId.FIREWALK_HOST, EmulationAttackerActionId.FIREWALK_ALL,
+            EmulationAttackerActionId.HTTP_ENUM_HOST, EmulationAttackerActionId.HTTP_ENUM_ALL,
+            EmulationAttackerActionId.HTTP_GREP_HOST, EmulationAttackerActionId.HTTP_GREP_ALL,
+            EmulationAttackerActionId.VULSCAN_HOST, EmulationAttackerActionId.VULSCAN_ALL,
+            EmulationAttackerActionId.FINGER_HOST, EmulationAttackerActionId.FINGER_ALL
         ]
         network_service_action_ids = [EmulationAttackerActionId.NETWORK_SERVICE_LOGIN]
-        shell_action_ids = [EmulationAttackerActionId.FIND_FLAG, EmulationAttackerActionId.INSTALL_TOOLS, EmulationAttackerActionId.SSH_BACKDOOR,
-                            EmulationAttackerActionId.SAMBACRY_EXPLOIT, EmulationAttackerActionId.SHELLSHOCK_EXPLOIT,
-                            EmulationAttackerActionId.DVWA_SQL_INJECTION, EmulationAttackerActionId.CVE_2015_3306_EXPLOIT,
+        shell_action_ids = [EmulationAttackerActionId.FIND_FLAG,
+                            EmulationAttackerActionId.INSTALL_TOOLS,
+                            EmulationAttackerActionId.SSH_BACKDOOR,
+                            EmulationAttackerActionId.SAMBACRY_EXPLOIT,
+                            EmulationAttackerActionId.SHELLSHOCK_EXPLOIT,
+                            EmulationAttackerActionId.DVWA_SQL_INJECTION,
+                            EmulationAttackerActionId.CVE_2015_3306_EXPLOIT,
                             EmulationAttackerActionId.CVE_2015_1427_EXPLOIT,
-                            EmulationAttackerActionId.CVE_2016_10033_EXPLOIT, EmulationAttackerActionId.CVE_2010_0426_PRIV_ESC,
+                            EmulationAttackerActionId.CVE_2016_10033_EXPLOIT,
+                            EmulationAttackerActionId.CVE_2010_0426_PRIV_ESC,
                             EmulationAttackerActionId.CVE_2015_5602_PRIV_ESC
                             ]
         nikto_action_ids = [EmulationAttackerActionId.NIKTO_WEB_HOST_SCAN]
-        masscan_action_ids = [EmulationAttackerActionId.MASSCAN_HOST_SCAN, EmulationAttackerActionId.MASSCAN_SUBNET_SCAN]
+        masscan_action_ids = [EmulationAttackerActionId.MASSCAN_HOST_SCAN, EmulationAttackerActionId.MASSCAN_ALL_SCAN]
         stopping_action_ids = [EmulationAttackerActionId.STOP, EmulationAttackerActionId.CONTINUE]
         attacker_action_config = EmulationAttackerActionConfig(num_indices=num_nodes + 1, actions=attacker_actions,
                                                                nmap_action_ids=nmap_action_ids,

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 import json
 import os
 import numpy as np
@@ -46,7 +46,7 @@ class EmulationTrace:
               f"emulation_name: {self.emulation_name}")
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationTrace":
+    def from_dict(d: Dict[str, Any]) -> "EmulationTrace":
         """
         Converts a dict representation into an instance
 
@@ -70,7 +70,7 @@ class EmulationTrace:
                                         d["defender_actions"]))
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -97,7 +97,7 @@ class EmulationTrace:
         """
         traces = list(map(lambda x: x.to_dict(), traces))
         if traces_file is None:
-            traces_file =  constants.SYSTEM_IDENTIFICATION.TRACES_FILE
+            traces_file =  constants.SYSTEM_IDENTIFICATION.EMULATION_TRACES_FILE
         if not os.path.exists(traces_save_dir):
             os.makedirs(traces_save_dir)
         with open(traces_save_dir + "/" + traces_file, 'w') as fp:

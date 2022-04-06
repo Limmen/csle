@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.network_service import NetworkService
 
 
@@ -16,7 +16,7 @@ class NodeServicesConfig:
         self.ip = ip
         self.services = services
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -26,7 +26,7 @@ class NodeServicesConfig:
         return d
 
     @staticmethod
-    def from_dict(d) -> "NodeServicesConfig":
+    def from_dict(d: Dict[str, Any]) -> "NodeServicesConfig":
         """
         Convert a dict representation to a DTO representation
 

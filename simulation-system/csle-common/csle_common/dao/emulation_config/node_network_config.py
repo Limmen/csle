@@ -1,6 +1,7 @@
 """
 Network configuration of a container in the emulation
 """
+from typing import Dict, Any
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
 import csle_common.constants.constants as constants
@@ -105,7 +106,7 @@ class NodeNetworkConfig:
         self.cell_overhead_bytes = cell_overhead_bytes
 
     @staticmethod
-    def from_dict(d: dict) -> "NodeNetworkConfig":
+    def from_dict(d: Dict[str, Any]) -> "NodeNetworkConfig":
         """
         Converts a dict representation to an instance
 
@@ -144,7 +145,7 @@ class NodeNetworkConfig:
         )
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

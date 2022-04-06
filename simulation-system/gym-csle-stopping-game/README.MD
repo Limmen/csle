@@ -71,4 +71,4 @@ Creative Commons
 
 [LICENSE](../../LICENSE.md)
 
-(C) 2022, Kim Hammar
+(C) 2020-2022, Kim Hammar

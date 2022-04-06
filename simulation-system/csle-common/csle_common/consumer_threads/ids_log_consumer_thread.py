@@ -11,13 +11,15 @@ class IdsLogConsumerThread(threading.Thread):
     Thread that polls the IDS log to get the latest metrics
     """
 
-    def __init__(self, kafka_server_ip: str, kafka_port: int, ids_alert_counters : AlertCounters) -> None:
+    def __init__(self, kafka_server_ip: str, kafka_port: int, ids_alert_counters : AlertCounters,
+                 auto_offset_reset: str = "latest") -> None:
         """
         Initializes the thread
 
         :param kafka_server_ip: the ip of the kafka server
         :param kafka_port: the port of the kafka server
         :param ids_alert_counters: the alert counters to updaten
+        :param auto_offset_reset: the offset for kafka to start reading from
         """
         threading.Thread.__init__(self)
         self.running =True
@@ -27,7 +29,7 @@ class IdsLogConsumerThread(threading.Thread):
         self.ts = time.time()
         self.kafka_conf = {'bootstrap.servers': f"{self.kafka_server_ip}:{self.kafka_port}",
                            'group.id':  f"ids_log_consumer_thread_{self.ts}",
-                           'auto.offset.reset': 'latest'}
+                           'auto.offset.reset': auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME])
 
@@ -37,7 +39,7 @@ class IdsLogConsumerThread(threading.Thread):
 
         :return: None
         """
-        while True:
+        while self.running:
             msg = self.consumer.poll(timeout=5.0)
             if msg is not None:
                 if msg.error():

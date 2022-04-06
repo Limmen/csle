@@ -75,4 +75,7 @@ message IdsLogDTO {
   int32 priority_2_alerts = 38;
   int32 priority_3_alerts = 39;
   int32 priority_4_alerts = 40;
+  int32 total_alerts = 41;
+  int32 warning_alerts = 42;
+  int32 severe_alerts = 43;
 }

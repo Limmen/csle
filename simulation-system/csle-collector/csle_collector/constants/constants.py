@@ -44,7 +44,7 @@ class IDS_ROUTER:
     """
     Constants related to the IDS
     """
-    MAX_ALERTS = 1000
+    MAX_ALERTS = 10000
     UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
     FAST_LOG_FILE = "/var/snort/fast.log"
     ALERTS_FILE = "/var/snort/alert.csv"
@@ -133,7 +133,7 @@ class HOST_METRICS:
     LIST_LOGGED_IN_USERS_CMD = "users"
     LIST_OPEN_CONNECTIONS_CMD = "netstat -n"
     LIST_USER_ACCOUNTS = "cat /etc/passwd"
-    LIST_FAILED_LOGIN_ATTEMPTS = "sudo tail -50 /var/log/auth.log"
+    LIST_FAILED_LOGIN_ATTEMPTS = "sudo tail -10000 /var/log/auth.log"
     LIST_SUCCESSFUL_LOGIN_ATTEMPTS = "last"
     LIST_NUMBER_OF_PROCESSES = "ps -e | wc -l"
 
@@ -146,6 +146,7 @@ class LOG_SINK:
     IDS_LOG_TOPIC_NAME = "ids_log"
     HOST_METRICS_TOPIC_NAME = "host_metrics"
     DOCKER_STATS_TOPIC_NAME = "docker_stats"
+    DOCKER_HOST_STATS_TOPIC_NAME = "docker_host_stats"
     ATTACKER_ACTIONS_TOPIC_NAME = "attacker_actions"
     DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients"]
@@ -163,9 +164,41 @@ class LOG_SINK:
     HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
-                                     "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx", "pids",]
+                                     "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx", "pids"]
     ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
     DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
+
+    IDS_ALERTS_LABELS = [
+        "total_alerts", "warning_alerts", "severe_alerts",
+        "priority_1_alerts", "priority_2_alerts",
+        "priority_3_alerts", "priority_4_alerts", "attempted-admin_alerts",
+        "attempted-user_alerts", "inappropriate-content_alerts", "policy-violation_alerts",
+        "shellcode-detect_alerts", "successful-admin_alerts",
+        "successful-user_alerts", "trojan-activity_alerts", "unsuccessful-user_alerts",
+        "web-application-attack_alerts",
+        "attempted-dos_alerts", "attempted-recon_alerts", "bad-unknown_alerts",
+        "default-login-attempt_alerts",
+        "denial-of-service_alerts", "misc-attack_alerts", "non-standard-protocol_alerts",
+        "rpc-portmap-decode_alerts",
+        "successful-dos_alerts", "successful-recon-largescale_alerts", "successful-recon-limited_alerts",
+        "suspicious-filename-detect_alerts", "suspicious-login_alerts", "system-call-detect_alerts",
+        "unusual-client-port-connection_alerts", "web-application-activity_alerts", "icmp-event_alerts",
+        "misc-activity_alerts", "network-scan_alerts", "not-suspicious_alerts", "protocol-command-decode_alerts",
+        "string-detect_alerts", "unknown_alerts", "tcp-connection_alerts"
+    ]
+    HOST_METRICS_LABELS = [
+        "num_logged_in_users", "severe_alerts", "warning_alerts",
+        "num_failed_login_attempts", "num_open_connections", "num_login_events",
+        "num_processes", "num_users"
+    ]
+    DOCKER_STATS_COUNTER_LABELS = [
+        "pids", "cpu_percent", "mem_current", "mem_total",
+        "mem_percent", "blk_read", "blk_write", "net_rx", "net_tx"
+    ]
+    DOCKER_STATS_PERCENT_LABELS = [
+        "cpu_percent", "cpu_percent"
+    ]
+    CLIENT_POPULATION_METRIC_LABELS = ["num_clients"]
 
 
 class KAFKA_COMMANDS:

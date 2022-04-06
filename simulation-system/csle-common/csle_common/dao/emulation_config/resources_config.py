@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 
 
@@ -15,8 +15,21 @@ class ResourcesConfig:
         """
         self.node_resources_configurations = node_resources_configurations
 
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "ResourcesConfig":
+        """
+        Converts a dict representation into an instance
 
-    def to_dict(self) -> dict:
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = ResourcesConfig(
+            node_resources_configurations=list(map(lambda x: NodeResourcesConfig.from_dict(x),
+                                                   d["node_resources_configurations"]))
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

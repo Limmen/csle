@@ -27,4 +27,4 @@ class EmulationAttackerNetworkServiceActions:
                                        type=EmulationAttackerActionType.POST_EXPLOIT,
                                        descr="Uses known credentials to login to network services on a server",
                                        index=index,
-                                       ips=ips, subnet=False, action_outcome=EmulationAttackerActionOutcome.LOGIN)
+                                       ips=ips, action_outcome=EmulationAttackerActionOutcome.LOGIN)

@@ -103,8 +103,8 @@ The monitoring system allows to track the execution of running emulations and th
      - [x] Custom system identifification algorithm to learn model of emulation
      - [ ] Function approximation
      
-- **Demonstrations**      
-     - [x] A Dashboard for Inspecting Automated Intrusion Prevention Policies     
+- **Policy-examination**      
+     - [x] A System for Inspecting Automated Intrusion Prevention Policies     
 
 ## Installation
 
@@ -112,10 +112,15 @@ Follow the instructions below to install CSLE.
 
 ### Install from source
 
-1. **Clone the repository**
+1. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
 ```bash
 git clone https://github.com/Limmen/clse
+export CSLE_HOME=/path/to/csle/
 ```
+To set CSLE_HOME permanently, add the following line to the .bashrc: `export CSLE_HOME=/path/to/csle/`
+
+Logs of CSLE will be stored in `/var/log/csle`, create this directory and set the permissions so that the user 
+used for running commands can read and write to this directory.
 
 2. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
@@ -197,7 +202,7 @@ git clone https://github.com/Limmen/clse
       ```bash
       export PATH=/path/to/csle/bin/:$PATH
       ```
-    - To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/bin/$PATH`
+    - To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/bin/:$PATH`
 
 5. **Install the emulation system** 
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
@@ -246,6 +251,16 @@ git clone https://github.com/Limmen/clse
       chmod u+x install.sh
       ./install.sh
     ```
+   - Add prometheus binary to the path
+     ```bash
+      export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
+      ```
+    To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
+   - Add node_exporter binary to the path
+     ```bash
+      export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH
+      ```
+    To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
    - Run the monitoring system (for more instructions see [README](monitoring system/README.MD)):
     ```bash
       cd monitoring-system
@@ -253,7 +268,7 @@ git clone https://github.com/Limmen/clse
       ./run_all.sh
     ```
     
-7. **Install the policy examination system** 
+9. **Install the policy examination system** 
    - Build the policy examination system (assuming that node and npm is already installed) (for more instructions see [README](policy-examination-system/README.MD)):
    ```bash
    cd policy-examination-system
@@ -357,7 +372,7 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2022, Kim Hammar
+(C) 2020-2022, Kim Hammar
 
 ## Publications
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.node_flags_config import NodeFlagsConfig
 from csle_common.dao.emulation_config.flag import Flag
 
@@ -16,12 +16,25 @@ class FlagsConfig:
         """
         self.node_flag_configs = node_flag_configs
 
-    def to_dict(self) -> dict:
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "FlagsConfig":
+        """
+        Converts a dict representation to a an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = FlagsConfig(
+            node_flag_configs=list(map(lambda x: NodeFlagsConfig.from_dict(x), d["node_flag_configs"]))
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
         d = {}
-        d["flags"] = list(map(lambda x: x.to_dict(), self.node_flag_configs))
+        d["node_flag_configs"] = list(map(lambda x: x.to_dict(), self.node_flag_configs))
         return d
 
     def __str__(self) -> str:

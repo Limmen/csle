@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any, Tuple
 from datetime import datetime
 import time
 import csle_collector.constants.constants as constants
@@ -45,7 +45,7 @@ class DockerStats:
         self.ts = ts
 
     @staticmethod
-    def from_dict(parsed_stats_dict: dict) -> "DockerStats":
+    def from_dict(parsed_stats_dict: Dict[str, Any]) -> "DockerStats":
         """
         Parses a DockerStats object from a dict
 
@@ -66,7 +66,7 @@ class DockerStats:
             container_name = parsed_stats_dict[constants.DOCKER_STATS.CONTAINER_NAME]
         )
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -88,10 +88,10 @@ class DockerStats:
         """
         :return: a string representation of the object
         """
-        return f"pids: {self.pids}, timestamp: {self.timestamp}, cpu_percent: {self.cpu_percent}, " \
-               f"mem_current: {self.mem_current}, mem_total: {self.mem_total}, mem_percent: {self.mem_percent}," \
-               f"blk_read: {self.blk_read}, blk_write: {self.blk_write}, net_rx: {self.net_rx}, " \
-               f"net_tx: {self.net_tx}, container_name: {self.container_name}"
+        return f"pids: {self.pids}, timestamp: {self.timestamp}, cpu_percent: {self.cpu_percent}%, " \
+               f"mem_current: {self.mem_current}MB, mem_total: {self.mem_total}MB, mem_percent: {self.mem_percent}%," \
+               f"blk_read: {self.blk_read}MB, blk_write: {self.blk_write}MB, net_rx: {self.net_rx}MB, " \
+               f"net_tx: {self.net_tx}MB, container_name: {self.container_name}"
 
 
     @staticmethod
@@ -140,7 +140,7 @@ class DockerStats:
         ts = stats_list[0].timestamp
         container_name=stats_list[0].container_name
 
-        DockerStats(pids=avg_pids, timestamp=ts, cpu_percent=avg_cpu_percent, mem_current=avg_mem_current,
+        return DockerStats(pids=avg_pids, timestamp=ts, cpu_percent=avg_cpu_percent, mem_current=avg_mem_current,
                            mem_total=avg_mem_total, mem_percent=avg_mem_percent,
                            blk_read=avg_blk_read, blk_write=avg_blk_write, net_rx=avg_net_rx, net_tx=avg_net_tx,
                            container_name=container_name)
@@ -179,10 +179,34 @@ class DockerStats:
         self.blk_read=float(parts[6])
         self.blk_write=float(parts[7])
         self.net_rx=float(parts[8])
-        self.net_tx=float(parts[9]),
+        self.net_tx=float(parts[9])
         self.container_name=""
         self.pids=int(round(float(parts[10])))
         self.timestamp=str(parts[0])
+
+    def update_with_kafka_record_ip(self, record: str, ip: str) -> None:
+        """
+        Updates the DTO with a given kafka record
+
+        :param record: the record to update with
+        :param ip: the ip of the host
+        :return: None
+        """
+        parts = record.split(",")
+        if parts[1] == ip:
+            self.ts=float(parts[0])
+            self.ip=parts[1]
+            self.cpu_percent=float(parts[2])
+            self.mem_current=float(parts[3])
+            self.mem_total = float(parts[4])
+            self.mem_percent=float(parts[5])
+            self.blk_read=float(parts[6])
+            self.blk_write=float(parts[7])
+            self.net_rx=float(parts[8])
+            self.net_tx=float(parts[9])
+            self.container_name=""
+            self.pids=int(round(float(parts[10])))
+            self.timestamp=str(parts[0])
 
     def to_kafka_record(self, ip: str) -> str:
         """
@@ -208,3 +232,28 @@ class DockerStats:
             net_rx=self.net_rx, net_tx = self.net_tx, container_name=self.container_name, ip=self.ip, ts=self.ts
         )
         return c
+
+    def get_deltas(self, stats_prime: "DockerStats", max_counter: int) -> Tuple[List[float], List[str]]:
+        """
+        Get the deltas between two stats objects
+
+        :param stats_prime: the stats object to compare with
+        :param max_counter: the maximum counter_value
+        :return: the deltas and the labels
+        """
+        deltas = [
+            float(min(100.0,max(-100.0, float(round(stats_prime.cpu_percent - self.cpu_percent, 1))))),
+            int(min(max_counter, max(-max_counter, int(stats_prime.mem_current - self.mem_current)))),
+            int(min(max_counter, max(-max_counter, int(stats_prime.mem_total - self.mem_total)))),
+            float(min(100.0, max(-100.0, float(round(stats_prime.mem_percent - self.mem_percent, 1))))),
+            int(min(max_counter, max(-max_counter, int(stats_prime.blk_read - self.blk_read)))),
+            int(min(max_counter, max(-max_counter, int(stats_prime.blk_write - self.blk_write)))),
+            int(min(max_counter, max(-max_counter, int(stats_prime.net_rx - self.net_rx)))),
+            int(min(max_counter, max(-max_counter, int(stats_prime.net_tx - self.net_tx)))),
+            int(min(max_counter, max(-max_counter, int(stats_prime.pids - self.pids))))
+        ]
+        labels = [
+            "cpu_percent", "mem_current", "mem_total", "mem_percent", "blk_read", "blk_write", "net_rx",
+            "net_tx", "pids"
+        ]
+        return deltas, labels

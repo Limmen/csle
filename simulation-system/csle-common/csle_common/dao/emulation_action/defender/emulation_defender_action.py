@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 import time
 from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
@@ -12,7 +12,7 @@ class EmulationDefenderAction:
 
     def __init__(self, id : EmulationDefenderActionId, name :str, cmds : List[str],
                  type: EmulationDefenderActionType, descr: str,
-                 ips : List[str], index: int, subnet : bool = False,
+                 ips : List[str], index: int,
                  action_outcome: EmulationDefenderActionOutcome = EmulationDefenderActionOutcome.GAME_END,
                  alt_cmds : List[str] = None, execution_time: float = 0.0, ts : float = 0.0):
         """
@@ -25,7 +25,6 @@ class EmulationDefenderAction:
         :param descr: description of the action (documentation)
         :param ips: ip of the machine to apply the action to
         :param index: index of the machine to apply the action to
-        :param subnet: if True, apply action to entire subnet
         :param action_outcome: type of the outcome of the action
         :param alt_cmds: alternative command if the first command does not work
         :param execution_time: the time it took to run the action
@@ -37,7 +36,6 @@ class EmulationDefenderAction:
         self.type = type
         self.descr = descr
         self.ips = ips
-        self.subnet = subnet
         self.action_outcome = action_outcome
         self.alt_cmds = alt_cmds
         self.index = index
@@ -48,10 +46,10 @@ class EmulationDefenderAction:
         """
         :return: a string representation of the object
         """
-        return "id:{},name:{},ips:{},subnet:{},index:{}".format(self.id, self.name, self.ips, self.subnet, self.index)
+        return "id:{},name:{},ips:{},index:{}".format(self.id, self.name, self.ips, self.index)
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationDefenderAction":
+    def from_dict(d: Dict[str, Any]) -> "EmulationDefenderAction":
         """
         Converts a dict representation to an instance
 
@@ -61,11 +59,11 @@ class EmulationDefenderAction:
         obj = EmulationDefenderAction(
             id=d["id"], name=d["name"], cmds=d["cmds"], type=d["type"], descr=d["descr"],
             ips=d["ips"],
-            index=d["index"], subnet=d["subnet"], action_outcome=d["action_outcome"], alt_cmds=d["alt_cmds"],
+            index=d["index"], action_outcome=d["action_outcome"], alt_cmds=d["alt_cmds"],
             ts=d["ts"])
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dicr representation of the object
         """
@@ -77,7 +75,6 @@ class EmulationDefenderAction:
         d["descr"] = self.descr
         d["ips"] = self.ips
         d["index"] = self.index
-        d["subnet"] = self.subnet
         d["action_outcome"] = self.action_outcome
         d["alt_cmds"] = self.alt_cmds
         d["execution_time"] = self.execution_time
@@ -105,7 +102,7 @@ class EmulationDefenderAction:
         """
         ts = time.time()
         record = f"{ts},{self.id.value},{self.descr},{self.index},{self.name}," \
-                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type},{self.subnet}," \
+                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type}," \
                  f"{self.action_outcome},{'_'.join(self.alt_cmds)}"
         return record
 
@@ -125,7 +122,6 @@ class EmulationDefenderAction:
                                       execution_time=float(parts[5]), ips = parts[6].split("_"),
                                       cmds=parts[7].split("_"),
                                       type=EmulationDefenderActionType(int(parts[8])),
-                                      subnet=parts[9] == "True",
-                                      action_outcome=EmulationDefenderActionOutcome(int(parts[10])),
-                                      alt_cmds=parts[11].split("_"))
+                                      action_outcome=EmulationDefenderActionOutcome(int(parts[9])),
+                                      alt_cmds=parts[10].split("_"))
         return obj

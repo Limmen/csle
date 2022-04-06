@@ -60,6 +60,7 @@ class EmulationEnvState:
             defender_machines.append(EmulationDefenderMachineObservationState.from_container(
                 c, log_sink_config=self.emulation_env_config.log_sink_config))
         self.defender_obs_state.machines = defender_machines
+        self.defender_obs_state.start_monitoring_threads()
 
     def reset(self) -> None:
         """
@@ -145,9 +146,7 @@ class EmulationEnvState:
         """
         :return: a copy of the env state
         """
-        copy = EmulationEnvState(emulation_env_config=self.emulation_env_config,
-                                 attacker_action_config=self.attacker_action_config,
-                                 defender_action_config=self.defender_action_config)
+        copy = self
         copy.attacker_obs_state = self.attacker_obs_state.copy()
         copy.defender_obs_state = self.defender_obs_state.copy()
         return copy

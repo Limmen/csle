@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#./setup_firewall.sh
-service csle-firewall start
 service rsyslog restart
 service postgresql restart
 sleep 2

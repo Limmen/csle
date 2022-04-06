@@ -28,7 +28,7 @@ class SimulatedAttacker:
             return SimulatedAttacker.attacker_recon_action(s=s, a=attacker_action)
         elif attacker_action.type == EmulationAttackerActionType.EXPLOIT \
                 or attacker_action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION:
-            if attacker_action.subnet:
+            if attacker_action.index == -1:
                 EnvDynamicsUtil.cache_attacker_action(a=attacker_action, s=s)
             return SimulatedAttacker.attacker_exploit_action(s=s, a=attacker_action)
         elif attacker_action.type == EmulationAttackerActionType.POST_EXPLOIT:
@@ -49,52 +49,49 @@ class SimulatedAttacker:
         :param a: the action to take
         :return: s_prime
         """
-        if a.id == EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_SUBNET \
-                or a.id == EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST \
+        if a.id == EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST \
                 or a.id == EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_ALL:
             return ReconSimulator.simulate_tcp_syn_stealth_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.PING_SCAN_SUBNET or a.id == EmulationAttackerActionId.PING_SCAN_HOST \
-                or a.id == EmulationAttackerActionId.PING_SCAN_ALL:
+        elif a.id == EmulationAttackerActionId.PING_SCAN_HOST or a.id == EmulationAttackerActionId.PING_SCAN_ALL:
             return ReconSimulator.simulate_ping_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.UDP_PORT_SCAN_SUBNET or a.id == EmulationAttackerActionId.UDP_PORT_SCAN_HOST \
+        elif a.id == EmulationAttackerActionId.UDP_PORT_SCAN_HOST \
                 or a.id == EmulationAttackerActionId.UDP_PORT_SCAN_ALL:
             return ReconSimulator.simulate_udp_port_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_SUBNET \
-                or a.id == EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_HOST \
+        elif a.id == EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_HOST \
                 or a.id == EmulationAttackerActionId.TCP_CON_NON_STEALTH_SCAN_ALL:
             return ReconSimulator.simulate_con_non_stealth_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.TCP_FIN_SCAN_SUBNET or a.id == EmulationAttackerActionId.TCP_FIN_SCAN_HOST \
+        elif a.id == EmulationAttackerActionId.TCP_FIN_SCAN_HOST \
                 or a.id == EmulationAttackerActionId.TCP_FIN_SCAN_ALL:
             return ReconSimulator.simulate_fin_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.TCP_NULL_SCAN_SUBNET or a.id == EmulationAttackerActionId.TCP_NULL_SCAN_HOST \
+        elif a.id == EmulationAttackerActionId.TCP_NULL_SCAN_HOST \
                 or a.id == EmulationAttackerActionId.TCP_NULL_SCAN_ALL:
             return ReconSimulator.simulate_tcp_null_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_HOST or a.id == EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_SUBNET \
+        elif a.id == EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_HOST \
                 or a.id == EmulationAttackerActionId.TCP_XMAS_TREE_SCAN_ALL:
             return ReconSimulator.simulate_tcp_xmas_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.OS_DETECTION_SCAN_HOST or a.id == EmulationAttackerActionId.OS_DETECTION_SCAN_SUBNET \
+        elif a.id == EmulationAttackerActionId.OS_DETECTION_SCAN_HOST \
                 or a.id == EmulationAttackerActionId.OS_DETECTION_SCAN_ALL:
             return ReconSimulator.simulate_os_detection_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.VULSCAN_HOST or a.id == EmulationAttackerActionId.VULSCAN_SUBNET \
+        elif a.id == EmulationAttackerActionId.VULSCAN_HOST \
                 or a.id == EmulationAttackerActionId.VULSCAN_ALL:
             return ReconSimulator.simulate_vulscan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.NMAP_VULNERS_HOST or a.id == EmulationAttackerActionId.NMAP_VULNERS_SUBNET \
+        elif a.id == EmulationAttackerActionId.NMAP_VULNERS_HOST \
                 or a.id == EmulationAttackerActionId.NMAP_VULNERS_ALL:
             return ReconSimulator.simulate_nmap_vulners(s=s, a=a)
         elif a.id == EmulationAttackerActionId.NIKTO_WEB_HOST_SCAN:
             return ReconSimulator.simulate_nikto_web_host_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.MASSCAN_HOST_SCAN or a.id == EmulationAttackerActionId.MASSCAN_SUBNET_SCAN:
+        elif a.id == EmulationAttackerActionId.MASSCAN_HOST_SCAN or a.id == EmulationAttackerActionId.MASSCAN_ALL_SCAN:
             return ReconSimulator.simulate_masscan_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.FIREWALK_HOST or a.id == EmulationAttackerActionId.FIREWALK_SUBNET \
+        elif a.id == EmulationAttackerActionId.FIREWALK_HOST or a.id == EmulationAttackerActionId.FIREWALK_ALL \
                 or a.id == EmulationAttackerActionId.FIREWALK_ALL:
             return ReconSimulator.simulate_firewalk_scan(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.HTTP_ENUM_HOST or a.id == EmulationAttackerActionId.HTTP_ENUM_SUBNET \
+        elif a.id == EmulationAttackerActionId.HTTP_ENUM_HOST or a.id == EmulationAttackerActionId.HTTP_ENUM_ALL \
                 or a.id == EmulationAttackerActionId.HTTP_ENUM_ALL:
             return ReconSimulator.simulate_http_enum(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.HTTP_GREP_HOST or a.id == EmulationAttackerActionId.HTTP_GREP_SUBNET \
+        elif a.id == EmulationAttackerActionId.HTTP_GREP_HOST or a.id == EmulationAttackerActionId.HTTP_GREP_ALL \
                 or a.id == EmulationAttackerActionId.HTTP_GREP_ALL:
             return ReconSimulator.simulate_http_grep(s=s, a=a)
-        elif a.id == EmulationAttackerActionId.FINGER_HOST or a.id == EmulationAttackerActionId.FINGER_SUBNET \
+        elif a.id == EmulationAttackerActionId.FINGER_HOST or a.id == EmulationAttackerActionId.FINGER_ALL \
                 or a.id == EmulationAttackerActionId.FINGER_ALL:
             return ReconSimulator.simulate_finger(s=s, a=a)
         else:
@@ -110,39 +107,30 @@ class SimulatedAttacker:
         :return: s_prime
         """
         if a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_telnet_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_ssh_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_ftp_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_cassandra_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_irc_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_mongo_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_mysql_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_smtp_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST \
-                or a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_SUBNET \
                 or a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL:
             return ExploitSimulator.simulate_postgres_same_user_dictionary(s=s, a=a)
         elif a.id == EmulationAttackerActionId.SAMBACRY_EXPLOIT:

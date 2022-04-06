@@ -70,7 +70,8 @@ class EmulationUtil:
         return outdata, errdata, total_time
 
     @staticmethod
-    def log_measured_action_time(total_time, action: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig) -> None:
+    def log_measured_action_time(total_time, action: EmulationAttackerAction,
+                                 emulation_env_config: EmulationEnvConfig) -> None:
         """
         Logs the measured time of an action to Kafka
 
@@ -318,7 +319,7 @@ class EmulationUtil:
             return False
 
         # Recon on subnet is always possible
-        if action.type == EmulationAttackerActionType.RECON and action.subnet:
+        if action.type == EmulationAttackerActionType.RECON and action.index == -1:
             return True
 
         # Recon on set of all found machines is always possible if there exists such machiens
@@ -371,7 +372,7 @@ class EmulationUtil:
             if m.untried_credentials:
                 untried_credentials = m.untried_credentials
 
-        if action.subnet or action.id == EmulationAttackerActionId.NETWORK_SERVICE_LOGIN:
+        if action.index == -1 or action.id == EmulationAttackerActionId.NETWORK_SERVICE_LOGIN:
             machine_discovered = True
 
         # Privilege escalation only legal if machine discovered and logged in and not root
@@ -397,7 +398,7 @@ class EmulationUtil:
         # If IP is discovered, then IP specific action without other prerequisites is legal
         if machine_discovered and (action.type == EmulationAttackerActionType.RECON or action.type == EmulationAttackerActionType.EXPLOIT
                                    or action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION):
-            if action.subnet and target_machine is None:
+            if action.index == -1 and target_machine is None:
                 return True
             else:
                 exploit_tried = env_state.attacker_obs_state.exploit_tried(a=action, m=target_machine)
@@ -425,7 +426,7 @@ class EmulationUtil:
         if machine_discovered and action.type == EmulationAttackerActionType.POST_EXPLOIT \
                 and ((target_machine is not None and target_machine.shell_access
                       and len(target_machine.shell_access_credentials) > 0)
-                     or action.subnet or action.id == EmulationAttackerActionId.NETWORK_SERVICE_LOGIN):
+                     or action.index == -1 or action.id == EmulationAttackerActionId.NETWORK_SERVICE_LOGIN):
             return True
 
         # Bash action not tied to specific IP only possible when having shell access and being logged in

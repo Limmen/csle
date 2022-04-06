@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
 
 
@@ -15,7 +15,7 @@ class VulnerabilitiesConfig:
         """
         self.node_vulnerability_configs = node_vulnerability_configs
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -24,7 +24,7 @@ class VulnerabilitiesConfig:
         return d
 
     @staticmethod
-    def from_dict(d) -> "VulnerabilitiesConfig":
+    def from_dict(d: Dict[str, Any]) -> "VulnerabilitiesConfig":
         """
         Converts a dict representation of the object to a DTO representation
         :return: a DTO representation of the object

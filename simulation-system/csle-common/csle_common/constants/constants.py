@@ -39,6 +39,8 @@ class CONTAINER_IMAGES:
     ROUTER_IMAGES = ["router_1", "router_2"]
     HACKER_IMAGES = ["hacker_kali_1"]
     CLIENT_IMAGES = ["client_1"]
+    CADVISOR = "cadvisor"
+    GRAFANA = "grafana"
 
 
 class CONTAINER_OS:
@@ -477,11 +479,51 @@ class FTP:
     ACCESS_FAILED = "Access failed"
 
 
+class HTTPS:
+    """
+    Constants related to the HTTPS service
+    """
+    SERVICE_NAME = "HTTPS"
+    DEFAULT_PORT = 443
+
+
+class RETHINKDB:
+    """
+    Constants related to the RethinkDb service
+    """
+    SERVICE_NAME = "rethinkdb"
+    DEFAULT_PORT = 28015
+
+
+class COCKROACH:
+    """
+    Constants related to the Cockroach service
+    """
+    SERVICE_NAME = "cockroach"
+    DEFAULT_PORT = 26257
+
+
+class TOMCAT:
+    """
+    Constants related to the TOMCAT service
+    """
+    SERVICE_NAME = "tomcat"
+    DEFAULT_PORT = 8080
+
+
+class TEAMSPEAK3:
+    """
+    Constants related to the Teamspeak3 service
+    """
+    SERVICE_NAME = "teamspeak3"
+    DEFAULT_PORT = 30033
+
 class IRC:
     """
     Constants related to the IRC service
     """
     SERVICE_NAME = "irc"
+    DEFAULT_PORT = 194
 
 
 class POSTGRES:
@@ -489,6 +531,7 @@ class POSTGRES:
     Constants related to the Postgres service
     """
     SERVICE_NAME = "postgres"
+    DEFAULT_PORT = 5432
 
 
 class SMTP:
@@ -496,6 +539,7 @@ class SMTP:
     Constants related to the SMTP service
     """
     SERVICE_NAME = "smtp"
+    DEFAULT_PORT = 25
 
 
 class MYSQL:
@@ -503,6 +547,37 @@ class MYSQL:
     Constants related to the MySQL service
     """
     SERVICE_NAME = "mysql"
+    DEFAULT_PORT = 3306
+
+
+class NTP:
+    """
+    Constants related to the NTP service
+    """
+    SERVICE_NAME = "ntp"
+    DEFAULT_PORT = 123
+
+
+class SNMP:
+    """
+    Constants related to the SNMP service
+    """
+    SERVICE_NAME = "snmp"
+    DEFAULT_PORT = 161
+
+class HTTP:
+    """
+    Constants related to the DNS service
+    """
+    SERVICE_NAME = "http"
+    DEFAULT_PORT = 80
+
+class DNS:
+    """
+    Constants related to the DNS service
+    """
+    SERVICE_NAME = "dns"
+    DEFAULT_PORT = 53
 
 
 class MONGO:
@@ -510,6 +585,7 @@ class MONGO:
     Constants related to the MongoDB service
     """
     SERVICE_NAME = "mongo"
+    DEFAULT_PORT = 27017
 
 
 class CASSANDRA:
@@ -517,7 +593,7 @@ class CASSANDRA:
     Constants related to the Cassandra service
     """
     SERVICE_NAME = "cassandra"
-
+    DEFAULT_PORT = 9042
 
 class SAMBA:
     """
@@ -534,7 +610,6 @@ class SAMBA:
     AUTH_OK = "Authentication ok"
     VERIFYING = "Verifying"
     VULNERABILITY_NAME = "cve-2017-7494"
-
 
 class CVE_2010_0426:
     """
@@ -692,8 +767,36 @@ class COMMANDS:
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
     SEARCH_IDS_MANAGER = "/root/miniconda3/bin/python3 /ids_manager.py"
     SEARCH_HOST_MANAGER = "/root/miniconda3/bin/python3 /host_manager.py"
-    START_DOCKER_STATS_MANAGER = "nohup csle statsmanager {} &"
-    SEARCH_DOCKER_STATS_MANAGER = "csle statsmanager"
+    DOCKER_STATS_MANAGER_PIDFILE = "/var/log/csle/statsmanager.pid"
+    DOCKER_STATS_MANAGER_OUTFILE = "/var/log/csle/statsmanager.out"
+    START_DOCKER_STATS_MANAGER = "nohup csle statsmanager {} " \
+                                 f"& > {DOCKER_STATS_MANAGER_OUTFILE} " \
+                                 f"&& echo $! > {DOCKER_STATS_MANAGER_PIDFILE}"
+    SEARCH_DOCKER_STATS_MANAGER = "statsmanager"
+    SEARCH_PROMETHEUS = "prometheus"
+    PROMETHEUS_PID_FILE = "/var/log/csle/prometheus.pid"
+    PROMETHEUS_LOG_FILE = "/var/log/csle/prometheus.log"
+    PROMETHEUS_CONFIG_FILE = "$CSLE_HOME/monitoring-system/prometheus.yml"
+    PROMETHEUS_PORT = 9090
+    START_PROMETHEUS = f"nohup prometheus --config.file={PROMETHEUS_CONFIG_FILE} " \
+                       "--storage.tsdb.retention.size=10GB " \
+                       f"--storage.tsdb.retention.time=5d & > {PROMETHEUS_LOG_FILE} " \
+                       f"&& echo $! > {PROMETHEUS_PID_FILE}"
+    SEARCH_NODE_EXPORTER = "node_exporter"
+    NODE_EXPORTER_PORT = 9100
+    GRAFANA_PORT = 3000
+    START_GRAFANA = f"docker run -d -p {GRAFANA_PORT}:{GRAFANA_PORT} --name grafana grafana/grafana"
+    CADVISOR_PORT=8080
+    START_CADVISOR = "docker run  -dt --volume=/:/rootfs:ro   --volume=/var/run:/var/run:ro   " \
+                     "--volume=/sys:/sys:ro   " \
+                     "--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   " \
+                     f"--publish={CADVISOR_PORT}:{CADVISOR_PORT}  --name=cadvisor  " \
+                     "google/cadvisor:latest"
+    NODE_EXPORTER_PID_FILE = "/var/log/csle/node_exporter.pid"
+    NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
+    START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
+                          f"> {NODE_EXPORTER_PID_FILE}"
+    KILL_PROCESS = "kill -9 {}"
 
 
 class ETC_HOSTS:
@@ -968,8 +1071,8 @@ class SYSTEM_IDENTIFICATION:
     """
     NETWORK_CONF_FILE = "network_conf.pickle"
     DEFENDER_DYNAMICS_MODEL_FILE = "defender_dynamics_model.json"
-    TRAJECTORIES_FILE = "taus.json"
-    TRACES_FILE = "traces.json"
+    SIMULATION_TRACES_FILE = "simulation_taus.json"
+    EMULATION_TRACES_FILE = "emulation_traces.json"
     SYSTEM_ID_LOGS_FILE = "system_id_log.csv"
 
 
@@ -1087,6 +1190,7 @@ class DOCKER:
     CONTAINER_CONFIG_TRAFFIC_CFG = "traffic_cfg"
     CONTAINER_CONFIG_CFG_PATH = "/containers.json"
     EMULATION_ENV_CFG_PATH = "/config.json"
+    EMULATION_ENV_IMAGE = "/env.png"
     LOG_SINK_CFG_PATH = "/log_sink_config.json"
     CONTAINER_CONFIG_FLAGS_CFG_PATH = "/flags.json"
     CONTAINER_CONFIG_TOPOLOGY_CFG_PATH = "/topology.json"
@@ -1129,6 +1233,7 @@ class DOCKER:
         "--name $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) " \
         "--hostname=$(CONTAINER)$(SUFFIX) --label dir=$(DIR) --label cfg=$(CFG) --label emulation=$(EMULATION)" \
         "--network=none --publish-all=true --memory=$(MEMORY) " \
+        "-e TZ=Europe/Stockholm " \
         "--cpus=$(NUM_CPUS) --restart=$(RESTART_POLICY) " \
         "--cap-add NET_ADMIN $(PROJECT)/$(CONTAINER):$(VERSION)\n\nshell:\n\t" \
         "docker exec -it $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) /bin/bash\n\nstart:\n\t" \
@@ -1223,7 +1328,11 @@ class METADATA_STORE:
     PASSWORD = "csle"
     HOST = "127.0.0.1"
     EMULATIONS_TABLE = "emulations"
-    TRACES_TABLE = "traces"
+    EMULATION_TRACES_TABLE = "emulation_traces"
+    SIMULATION_TRACES_TABLE = "simulation_traces"
+    EMULATION_STATISTICS_TABLE = "emulation_statistics"
+    EMULATION_IMAGES_TABLE = "emulation_images"
+    EMULATION_SIMULATION_TRACES_TABLE = "emulation_simulation_traces"
 
 
 class CONTAINER_POOLS:

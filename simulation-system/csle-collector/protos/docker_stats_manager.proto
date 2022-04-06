@@ -12,6 +12,12 @@ message StopDockerStatsMonitorMsg {
   string emulation = 1;
 }
 
+//DTO representing a pair of ip and container name
+message ContainerIp {
+  string ip = 1;
+  string container = 2;
+}
+
 // Message that the client sends to start the docker stats monitor
 message StartDockerStatsMonitorMsg {
   string emulation = 1;
@@ -19,7 +25,7 @@ message StartDockerStatsMonitorMsg {
   int32 stats_queue_maxsize = 3;
   int32 time_step_len_seconds = 4;
   int32 sink_port = 5;
-  repeated string containers = 6;
+  repeated ContainerIp containers = 6;
 }
 
 // Message that the client sends to extract the status of the docker stats monitor

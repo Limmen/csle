@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_action_result.nmap_hop import NmapHop
 
 
@@ -15,8 +15,8 @@ class NmapTrace:
         """
         self.hops = hops
 
-
-    def from_dict(self, d: dict) -> "NmapTrace":
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NmapTrace":
         """
         Converts a dict representation into an instance
 
@@ -28,8 +28,7 @@ class NmapTrace:
         )
         return obj
 
-
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

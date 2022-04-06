@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 import socket
 import paramiko
 from confluent_kafka import Producer
@@ -51,8 +51,33 @@ class EmulationEnvConfig:
         self.producer = None
         self.hostname = socket.gethostname()
         self.port_forward_port = 1900
+        self.running = False
+        self.image = None
 
-    def to_dict(self) -> dict:
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
+        """
+        Converts a dict representation into an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = EmulationEnvConfig(
+            name = d["name"], containers_config=ContainersConfig.from_dict(d["containers_config"]),
+            users_config=UsersConfig.from_dict(d["users_config"]),
+            flags_config = FlagsConfig.from_dict(d["flags_config"]),
+            vuln_config=VulnerabilitiesConfig.from_dict(d["vuln_config"]),
+            topology_config=TopologyConfig.from_dict(d["topology_config"]),
+            traffic_config=TrafficConfig.from_dict(d["traffic_config"]),
+            resources_config=ResourcesConfig.from_dict(d["resources_config"]),
+            log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
+            services_config=ServicesConfig.from_dict(d["services_config"])
+        )
+        obj.running = d["running"]
+        obj.image = d["image"]
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -61,13 +86,15 @@ class EmulationEnvConfig:
         d["containers_config"] = self.containers_config.to_dict()
         d["users_config"] = self.users_config.to_dict()
         d["flags_config"] = self.flags_config.to_dict()
-        d["vuln_config"] = len(self.vuln_config.to_dict())
+        d["vuln_config"] = self.vuln_config.to_dict()
         d["topology_config"] = self.topology_config.to_dict()
         d["traffic_config"] = self.traffic_config.to_dict()
         d["resources_config"] = self.resources_config.to_dict()
         d["log_sink_config"] = self.log_sink_config.to_dict()
         d["services_config"] = self.services_config.to_dict()
         d["hostname"] = self.hostname
+        d["running"] = self.running
+        d["image"] = self.image
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> None:
@@ -177,7 +204,7 @@ class EmulationEnvConfig:
                f"flags_config: {self.flags_config}, vuln_config: {self.vuln_config}, " \
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
-               f"services_config: {self.services_config}, hostname:{self.hostname}"
+               f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}"
 
     def get_all_ips(self) -> List[str]:
         """

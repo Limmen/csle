@@ -52,7 +52,7 @@ class DockerStatsUtil:
         return cpu_percent, cpu_system, cpu_total
 
     @staticmethod
-    def calculate_blkio_bytes(stats_dict) -> Tuple[float,float]:
+    def calculate_blkio_mb(stats_dict) -> Tuple[float, float]:
         """
         :param stats_dict: the stats dict from the Docker API
         :return: (read_mb, wrote_mb)
@@ -73,7 +73,7 @@ class DockerStatsUtil:
         return r, w
 
     @staticmethod
-    def calculate_network_bytes(stats_dict) -> Tuple[float,float]:
+    def calculate_network_mb(stats_dict) -> Tuple[float, float]:
         """
         :param stats_dict: the stats dict from the Docker API
         :return: (received_mb, transceived_mb)
@@ -119,10 +119,12 @@ class DockerStatsUtil:
         """
         cpu_total = 0.0
         cpu_system = 0.0
-        blk_read, blk_write = DockerStatsUtil.calculate_blkio_bytes(stats_dict)
-        net_r, net_w = DockerStatsUtil.calculate_network_bytes(stats_dict)
+        blk_read, blk_write = DockerStatsUtil.calculate_blkio_mb(stats_dict)
+        net_r, net_w = DockerStatsUtil.calculate_network_mb(stats_dict)
         mem_current = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.USAGE]
+        mem_current = round(mem_current/1000000, 1)
         mem_total = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.LIMIT]
+        mem_total = round(mem_total/1000000, 1)
         try:
             cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total, cpu_system)
         except KeyError:
@@ -133,8 +135,7 @@ class DockerStatsUtil:
             constants.DOCKER_STATS.TIMESTAMP: stats_dict[constants.DOCKER_STATS.READ.lower()],
             constants.DOCKER_STATS.CPU_PERCENT: cpu_percent,
             constants.DOCKER_STATS.MEM_CURRENT: mem_current,
-            constants.DOCKER_STATS.MEM_TOTAL: stats_dict[constants.DOCKER_STATS.MEMORY_STATS][
-                constants.DOCKER_STATS.LIMIT],
+            constants.DOCKER_STATS.MEM_TOTAL: mem_total,
             constants.DOCKER_STATS.MEM_PERCENT: (mem_current / mem_total) * 100.0,
             constants.DOCKER_STATS.BLK_READ: blk_read,
             constants.DOCKER_STATS.BLK_WRITE: blk_write,

@@ -13,22 +13,24 @@ class DefenderActionsConsumerThread(threading.Thread):
     """
 
     def __init__(self, kafka_server_ip: str, kafka_port: int,
-                 defender_actions : List[EmulationDefenderAction]) -> None:
+                 defender_actions : List[EmulationDefenderAction], auto_offset_reset: str = "latest") -> None:
         """
         Initializes the thread
 
         :param kafka_server_ip: the ip of the kafka server
         :param kafka_port: the port of the kafka server
         :param defender_actions: the defender actions to update
+        :param auto_offset_reset: the offset for kafka to start reading from
         """
         threading.Thread.__init__(self)
         self.running =True
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.ts = time.time()
+        self.auto_offset_reset = auto_offset_reset
         self.kafka_conf = {'bootstrap.servers': f"{self.kafka_server_ip}:{self.kafka_port}",
                            'group.id':  f"defender_actions_consumer_thread_{self.ts}",
-                           'auto.offset.reset': 'latest'}
+                           'auto.offset.reset': auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME])
         self.defender_actions = defender_actions
@@ -39,7 +41,7 @@ class DefenderActionsConsumerThread(threading.Thread):
 
         :return: None
         """
-        while True:
+        while self.running:
             msg = self.consumer.poll(timeout=5.0)
             if msg is not None:
                 if msg.error():

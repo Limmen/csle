@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import List, Set, Dict, Any
 import copy
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.emulation_observation.common.emulation_port_observation_state import EmulationPortObservationState
@@ -242,7 +242,7 @@ class EmulationAttackerMachineObservationState:
         return False
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationAttackerMachineObservationState":
+    def from_dict(d: Dict[str, Any]) -> "EmulationAttackerMachineObservationState":
         """
         Converts a dict representation to an instance
 
@@ -290,7 +290,7 @@ class EmulationAttackerMachineObservationState:
         obj.reachable = set(d["reachable"])
         return obj
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """

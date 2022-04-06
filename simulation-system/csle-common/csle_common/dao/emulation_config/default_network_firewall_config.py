@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Dict, Any
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
 
@@ -26,7 +26,22 @@ class DefaultNetworkFirewallConfig:
         self.default_forward = default_forward
         self.network = network
 
-    def to_dict(self) -> dict:
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "DefaultNetworkFirewallConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = DefaultNetworkFirewallConfig(
+            ip = d["ip"], default_gw=d["default_gw"], default_input=d["default_input"],
+            default_output=d["default_output"], default_forward=d["default_forward"],
+            network=ContainerNetwork.from_dict(d["network"])
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -36,7 +51,7 @@ class DefaultNetworkFirewallConfig:
         d["default_input"] = self.default_input
         d["default_output"] = self.default_output
         d["default_forward"] = self.default_forward
-        d["network"] = self.network
+        d["network"] = self.network.to_dict()
         return d
 
     def __str__(self) -> str:

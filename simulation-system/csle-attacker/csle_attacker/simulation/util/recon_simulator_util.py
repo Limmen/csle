@@ -31,7 +31,7 @@ class ReconSimulatorUtil:
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s)
         attacker_machine_observations= []
         # Scan action on a single host
-        if not a.subnet:
+        if not a.index == -1:
             new_m_obs = None
             for c in s.emulation_env_config.containers_config.containers:
                 for ip in a.ips:
@@ -113,7 +113,7 @@ class ReconSimulatorUtil:
         reachable_nodes = SimulatorUtil.reachable_nodes(state=s)
         attacker_machine_observations = []
         # Scan a a single host
-        if not a.subnet:
+        if not a.index == -1:
             new_m_obs = None
 
             for c in s.emulation_env_config.containers_config.containers:

@@ -1,11 +1,9 @@
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
 from csle_defender.emulation.defender_stopping_middleware import DefenderStoppingMiddleware
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
-from csle_defender.emulation.defender_update_state_middleware import DefenderUpdateStateMiddleware
 
 
 class EmulatedDefender:
@@ -56,13 +54,3 @@ class EmulatedDefender:
             raise ValueError("Stopping action id:{},name:{} "
                              "not recognized".format(defender_action.id, defender_action.name))
 
-
-    @staticmethod
-    def update_state(s: EmulationEnvState) -> EmulationEnvState:
-        """
-        Updates the defender's state by measuring metrics from the emulatio
-
-        :param s: the current state
-        :return: the updated state
-        """
-        return DefenderUpdateStateMiddleware.update_state(s)

@@ -28,7 +28,6 @@ class TrafficManager:
         except grpc.FutureTimeoutError:
             return False
 
-
     @staticmethod
     def stop_client_population(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -84,19 +83,15 @@ class TrafficManager:
             if client_dto.client_process_active:
                 csle_collector.client_manager.query_clients.stop_clients(stub)
 
-
     @staticmethod
     def start_client_population(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Starts the arrival process of clients
 
-        :param traffic_config: the configuration of the client population
-        :param containers_config: the container configurations
-        :param emulation_config: the configuration to connect to the emulation
-        :param log_sink_config: configuration of the log sink
+        :param emulation_env_config: the emulation environment configuration
         :return: None
         """
-        Logger.__call__().get_logger().info(f"starting client population on container:"
+        Logger.__call__().get_logger().info(f"Starting client population on container:"
               f" {emulation_env_config.traffic_config.client_population_config.ip}")
         commands = []
         reachable_containers = []
@@ -172,7 +167,8 @@ class TrafficManager:
             csle_collector.client_manager.query_clients.start_clients(
                 stub=stub, mu=emulation_env_config.traffic_config.client_population_config.mu,
                 lamb=emulation_env_config.traffic_config.client_population_config.lamb,
-                time_step_len_seconds=emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds,
+                time_step_len_seconds=
+                emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds,
                 commands=commands,
                 num_commands=emulation_env_config.traffic_config.client_population_config.num_commands)
 
@@ -183,7 +179,6 @@ class TrafficManager:
                 stub=stub, ip=emulation_env_config.log_sink_config.container.get_ips()[0],
                 port=emulation_env_config.log_sink_config.kafka_port,
                 time_step_len_seconds=emulation_env_config.log_sink_config.time_step_len_seconds)
-
 
     @staticmethod
     def get_num_active_clients(emulation_env_config : EmulationEnvConfig) \
@@ -224,7 +219,6 @@ class TrafficManager:
             client_dto = csle_collector.client_manager.query_clients.get_clients(stub)
             return client_dto
 
-
     @staticmethod
     def stop_internal_traffic_generators(emulation_env_config: EmulationEnvConfig) -> None:
         """
@@ -253,7 +247,6 @@ class TrafficManager:
 
             # Disconnect
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
-
 
     @staticmethod
     def create_and_start_internal_traffic_generators(emulation_env_config: EmulationEnvConfig) -> None:
@@ -290,7 +283,7 @@ class TrafficManager:
                         for cmd in node2.commands:
                             commands.append(cmd.format(ip))
 
-            Logger.__call__().get_logger().info("creating traffic generator script, node ip:{}".format(node.ip))
+            Logger.__call__().get_logger().info("Creating traffic generator script, node ip:{}".format(node.ip))
 
             # Connect
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node.ip)
@@ -356,7 +349,7 @@ class TrafficManager:
         """
         Stops running traffic generators at each node
 
-        :param emulation_config: the emulation configuration
+        :param emulation_env_config: the emulation environment configuration
         :return: None
         """
         for node in emulation_env_config.traffic_config.node_traffic_configs:

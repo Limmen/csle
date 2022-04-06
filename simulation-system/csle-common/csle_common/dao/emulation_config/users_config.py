@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
 
 
@@ -14,13 +14,25 @@ class UsersConfig:
         """
         self.users_configs = users_configs
 
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "UsersConfig":
+        """
+        Converts a dict representation to an instance
 
-    def to_dict(self) -> dict:
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = UsersConfig(
+            users_configs=list(map(lambda x: NodeUsersConfig.from_dict(x), d["users_configs"]))
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
         d = {}
-        d["users"] = list(map(lambda x: x.to_dict(), self.users_configs))
+        d["users_configs"] = list(map(lambda x: x.to_dict(), self.users_configs))
         return d
 
     def __str__(self) -> str:

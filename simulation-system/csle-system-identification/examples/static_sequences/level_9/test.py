@@ -10,4 +10,4 @@ if __name__ == '__main__':
     s = EmulationEnvState(emulation_env_config=emulation_env_config)
     while True:
         time.sleep(10)
-        print(s.defender_obs_state.docker_stats)
+        print(s.defender_obs_state.aggregated_host_metrics)

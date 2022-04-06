@@ -30,6 +30,21 @@ A webapp for monitoring emulation environments created with csle
 
 ## Useful scripts
 ```bash
+# Download and setup prometheus:
+cd csle/monitoring-system
+wget https://github.com/prometheus/prometheus/releases/download/v2.34.0/prometheus-2.34.0.linux-amd64.tar.gz
+tar -xf prometheus-2.34.0.linux-amd64.tar.gz
+mv prometheus-2.34.0.linux-amd64 prometheus
+rm -rf prometheus-2.34.0.linux-amd64.tar.gz
+export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
+
+# Download and setup node exporter:
+wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
+tar -xf node_exporter-1.3.1.linux-amd64.tar.gz
+mv node_exporter-1.3.1.linux-amd64 node_exporter
+rm -rf node_exporter-1.3.1.linux-amd64.tar.gz
+`export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
+
 ./install.sh   # Installs prometheus, grafana, csle_emulation_monitor, NodeExporter, Dashboards, C_Advisor etc.
 ./csle_emulation_monitor.sh  # Installs csle_emulation_monitor
 ./run_c_advisor.sh # Installs C_Advisor
@@ -80,7 +95,7 @@ http://172.31.212.92:9090
 
 When everything is running, use the following command to setup tunnels:
 ```bash
-ssh -L 2381:localhost:8080 -L 2382:localhost:3000 -L 2383:localhost:9090 -L 2384:localhost:9100 -L 2385:localhost:7777 kim@<server-ip>
+ssh -L 8080:localhost:8080 -L 3000:localhost:3000 -L 9090:localhost:9090 -L 9100:localhost:9100 -L 7777:localhost:7777 kim@<server-ip>
 ```
 then you can access Grafana at `localhost:2382`, Prometheus at `localhost:2383`, Node exporter at `localhost:2384`, and csle Monitor at `localhost:2385`
 

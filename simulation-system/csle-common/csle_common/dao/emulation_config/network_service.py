@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.credential import Credential
@@ -33,7 +33,7 @@ class NetworkService:
         return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name,
                                                                        cr)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
@@ -46,7 +46,7 @@ class NetworkService:
 
 
     @staticmethod
-    def from_dict(d) -> "NetworkService":
+    def from_dict(d: Dict[str, Any]) -> "NetworkService":
         """
         Convert a dict representation to a DTO representation
 
@@ -54,7 +54,7 @@ class NetworkService:
         """
         dto = NetworkService(name = d["name"], port = d["port"],
                              protocol=d["protocol"],
-                             credentials=list(map(lambda x: x.from_dict(), d["credentials"])))
+                             credentials=list(map(lambda x: Credential.from_dict(x), d["credentials"])))
         return dto
 
 

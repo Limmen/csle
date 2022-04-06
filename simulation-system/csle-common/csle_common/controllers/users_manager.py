@@ -32,13 +32,13 @@ class UsersManager:
                     EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.ip])
 
             for user in users_conf.users:
-                username, pw, root = user
-                if root:
+                if user.root:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p " \
-                          "\"$(openssl passwd -1 '{}')\" {}".format(username, pw, username)
+                          "\"$(openssl passwd -1 '{}')\" {}".format(user.username, user.pw, user.username)
                 else:
                     cmd = "sudo useradd -rm  -d /home/{} -s /bin/bash -g {}" \
-                          "-p \"$(openssl passwd -1 '{}')\" {}".format(username, username,pw,username)
+                          "-p \"$(openssl passwd -1 '{}')\" {}".format(user.username, user.username,user.pw,
+                                                                       user.username)
                 o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.ip])
 
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
@@ -52,6 +52,7 @@ class UsersManager:
                 else:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g {} " \
                           "-p \"$(openssl passwd -1 '{}')\" {}".format(cr.username, cr.username,cr.pw,cr.username)
-                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=vuln.ip))
+                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                        conn=emulation_env_config.get_connection(ip=vuln.ip))
 
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)

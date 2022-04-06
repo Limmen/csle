@@ -1,0 +1,68 @@
+.Footer {
+    margin-top:100px;
+}
+
+.aggregatedMetrics {
+    margin-bottom: 55px
+}
+
+.largeFont {
+    font-size: 22px;
+}
+
+.evolutionTitle {
+    font-size: 22px;
+}
+
+.formLabel {
+    font-size: 22px;
+}
+
+.chartsRow {
+    margin-bottom: 70px;
+}
+
+.dropdownText {
+    font-size: 22px;
+}
+.monitoringHeader {
+    display: inline-block;
+}
+
+.dropdownSpinner {
+    margin-left: 50px
+}
+
+.aggregatedMetricsSpinner {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.hostMetricsDropdownRow {
+    margin-top: 100px;
+}
+
+.monitoringHeader{
+    margin-right: 30px
+}
+
+.windowLength {
+    display: inline-block;
+}
+
+.windowLengthLabel {
+    display: inline-block;
+}
+
+.refreshButton {
+    margin-right: 10px;
+    font-size: 30px;
+}
+
+.windowLengthInput {
+    font-size: 18px;
+}
+
+.toolTipRefresh {
+    font-size: 20px;
+}
