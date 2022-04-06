@@ -142,7 +142,7 @@ def run() -> None:
     defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_env_config)
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,
-                                  defender_sequence=defender_sequence, repeat_times= 1,
+                                  defender_sequence=defender_sequence, repeat_times= 5,
                                   sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds)
 
 
