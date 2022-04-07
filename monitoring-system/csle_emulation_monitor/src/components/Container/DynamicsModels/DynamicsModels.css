@@ -1,3 +1,11 @@
 .modelDescription {
     font-size: 22px;
 }
+
+.emptyText {
+    margin-left:20px
+}
+
+.conditionalDist {
+    display: inline-block;
+}

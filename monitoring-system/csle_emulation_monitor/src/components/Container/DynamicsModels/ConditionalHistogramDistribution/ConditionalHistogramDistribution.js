@@ -15,7 +15,7 @@ import {
 
 const ConditionalHistogramDistribution = React.memo((props) => {
         const width = 500
-        const height = 200
+        const height = 600
         const margin = {
             top: 10,
             right: 30,
@@ -33,22 +33,22 @@ const ConditionalHistogramDistribution = React.memo((props) => {
             var domain = [0, Math.max(1, data.length)]
 
             return (
-                <ResponsiveContainer width='100%' height={300}>
+                <ResponsiveContainer width='100%' height={height}>
                     <BarChart
                         width={width}
                         height={height}
                         data={data}
                         margin={margin}
                     >
-                        <text x={650} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
+                        <text x={1300} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
                             <tspan fontSize="22">{props.title}</tspan>
                         </text>
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey="value" type="number" domain={domain}>
-                            <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>
+                        <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
+                            <Label value="Value" offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
-                        <YAxis type="number">
-                            <Label angle={270} value="# Proecsses" offset={0} position="insideLeft"
+                        <YAxis type="number" tick={{transform: 'translate(-10,3)'}}>
+                            <Label angle={270} value="# Count" offset={0} position="insideLeft"
                                    className="largeFont"
                                    dy={50}/>
                         </YAxis>
@@ -57,6 +57,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 className="largeFont"/>
                         <Bar dataKey="count" fill="#8884d8" stroke="black" animationEasing={'linear'}
                              animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}
+                             maxBarSize={15}
                         />
                     </BarChart>
                 </ResponsiveContainer>

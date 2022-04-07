@@ -67,3 +67,13 @@ CREATE TABLE IF NOT EXISTS emulation_images (
     );
 GRANT ALL ON emulation_images TO csle;
 GRANT USAGE, SELECT ON SEQUENCE emulation_images_id_seq TO csle;
+
+-- Create table that stores the simulations --
+CREATE TABLE IF NOT EXISTS simulations (
+    id serial PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    emulation_statistic_id int NOT NULL references emulation_statistics(id) ON DELETE CASCADE,
+    config json NOT NULL
+);
+GRANT ALL ON simulations TO csle;
+GRANT USAGE, SELECT ON SEQUENCE simulations_id_seq TO csle;

@@ -12,6 +12,8 @@ const DynamicsModels = () => {
     const [selectedDynamicsModel, setSelectedDynamicsModel] = useState(null);
     const [conditionals, setConditionals] = useState([]);
     const [selectedConditional, setSelectedConditional] = useState(null);
+    const [metrics, setMetrics] = useState([]);
+    const [selectedMetric, setSelectedMetric] = useState(null);
     const [loading, setLoading] = useState(true);
     const [animationDuration, setAnimationDuration] = useState(5);
     const [animation, setAnimation] = useState(false);
@@ -44,9 +46,15 @@ const DynamicsModels = () => {
         setSelectedDynamicsModel(dynamicsModelId)
         setConditionals(Object.keys(getSelectedDynamicsModel(dynamicsModelId).conditionals))
         setSelectedConditional(Object.keys(getSelectedDynamicsModel(dynamicsModelId).conditionals)[0])
+        setMetrics(Object.keys(getSelectedDynamicsModel(dynamicsModelId).conditionals[Object.keys(getSelectedDynamicsModel(dynamicsModelId).conditionals)[0]]))
+        setSelectedMetric(Object.keys(getSelectedDynamicsModel(dynamicsModelId).conditionals[Object.keys(getSelectedDynamicsModel(dynamicsModelId).conditionals)[0]])[0])
     }
     const updateConditional = (conditionalName) => {
-        return null
+        setSelectedConditional(conditionalName)
+    }
+
+    const updateMetric = (metricName) => {
+        setSelectedMetric(metricName)
     }
 
     const fetchDynamicsModels = useCallback(() => {
@@ -61,12 +69,15 @@ const DynamicsModels = () => {
         )
             .then(res => res.json())
             .then(response => {
+                console.log(response)
                 setDynamicsModels(response)
                 setLoading(false)
                 if (response.length > 0) {
                     setSelectedDynamicsModel(response[0].id + "-" + response[0].emulation_name)
                     setConditionals(Object.keys(response[0].conditionals))
                     setSelectedConditional(Object.keys(response[0].conditionals)[0])
+                    setMetrics(Object.keys(response[0].conditionals[Object.keys(response[0].conditionals)[0]]))
+                    setSelectedMetric(Object.keys(response[0].conditionals[Object.keys(response[0].conditionals)[0]])[0])
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -78,7 +89,12 @@ const DynamicsModels = () => {
     }, []);
 
     const SelectDynamicsModelDropdownOrSpinner = (props) => {
-        if (props.loading || props.selectedDynamicsModel === null || props.dynamicsModels.length === 0) {
+        if (!props.loading && props.dynamicsModels.length === 0) {
+            return (
+                <span className="emptyText">No models are available</span>
+            )
+        }
+        if (props.loading) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>
@@ -91,7 +107,8 @@ const DynamicsModels = () => {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {props.dynamicsModels.map((dynamicsModel, index) =>
-                            <Dropdown.Item key={dynamicsModel.id + "-" + dynamicsModel.emulation_name}
+                            <Dropdown.Item className="dropdownText"
+                                           key={dynamicsModel.id + "-" + dynamicsModel.emulation_name}
                                            onClick={() =>
                                                updateDynamicsModel(dynamicsModel.id + "-" +
                                                    dynamicsModel.emulation_name)}>
@@ -105,32 +122,77 @@ const DynamicsModels = () => {
     }
 
     const SelectConditionalDistributionDropdownOrSpinner = (props) => {
-        if (props.loading || props.selectedConditional === null || props.conditionals.length === 0) {
+        if (!props.loading && props.conditionals.length === 0) {
+            return (
+                <span>  </span>
+            )
+        }
+        if (props.loading || props.selectedConditional === null) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>
                 </Spinner>)
         } else {
             return (
-                <Dropdown className="d-inline mx-2 inline-block">
-                    <Dropdown.Toggle variant="secondary" id="dropdown-basic" size="md" className="dropdownText">
-                        {props.selectedConditional}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        {props.conditionals.map((conditional, index) =>
-                            <Dropdown.Item key={conditional}
-                                           onClick={() => updateConditional(conditional)}>
-                                {conditional}
-                            </Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
+                <div className="conditionalDist">
+                    Conditional distributions:
+                    <Dropdown className="d-inline mx-2 inline-block">
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic" size="md" className="dropdownText">
+                            {props.selectedConditional}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {props.conditionals.map((conditional, index) =>
+                                <Dropdown.Item className="dropdownText"
+                                               key={conditional}
+                                               onClick={() => updateConditional(conditional)}>
+                                    {conditional}
+                                </Dropdown.Item>
+                            )}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
+            )
+        }
+    }
+
+    const SelectMetricDistributionDropdownOrSpinner = (props) => {
+        if (!props.loading && props.metrics.length === 0) {
+            return (
+                <span>  </span>
+            )
+        }
+        if (props.loading || props.selectedMetric === null) {
+            return (
+                <Spinner animation="border" role="status" className="dropdownSpinner">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <div className="conditionalDist">
+                    Metric:
+                    <Dropdown className="d-inline mx-2 inline-block">
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic" size="md" className="dropdownText">
+                            {props.selectedMetric}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {props.metrics.map((metric, index) =>
+                                <Dropdown.Item className="dropdownText" key={metric}
+                                               onClick={() => updateMetric(metric)}>
+                                    {metric}
+                                </Dropdown.Item>
+                            )}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             )
         }
     }
 
     const ModelDescriptionOrSpinner = (props) => {
-        if (props.loading || props.selectedDynamicsModel === null || props.dynamicsModels.length === 0) {
+        if (!props.loading && props.dynamicsModels.length === 0) {
+            return (<span> </span>)
+        }
+        if (props.loading || props.selectedDynamicsModel === null) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>
@@ -145,7 +207,12 @@ const DynamicsModels = () => {
     }
 
     const ConditionalChartsOrSpinner = (props) => {
-        if (props.loading || props.selectedConditional === null || props.conditionals.length === 0) {
+        if (!props.loading && props.conditionals.length === 0) {
+            return (
+                <span></span>
+            )
+        }
+        if (props.loading || props.selectedConditional === null) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>
@@ -154,14 +221,13 @@ const DynamicsModels = () => {
             return (
                 <div>
                     <div className="row chartsRow">
-                        <div className="col-sm-6">
+                        <div className="col-sm-12">
                             <ConditionalHistogramDistribution
-                            stats={getSelectedDynamicsModel(props.selectedDynamicsModel).conditionals[props.selectedConditional].severe_alerts}
-                            title="Severe alerts" animationDuration={props.animationDuration}
-                            animationDurationFactor={props.animationDurationFactor}
+                                stats={getSelectedDynamicsModel(props.selectedDynamicsModel).conditionals[props.selectedConditional][props.selectedMetric]}
+                                title={"P(new " + props.selectedMetric + " | " + props.selectedConditional + ")"}
+                                animationDuration={props.animationDuration}
+                                animationDurationFactor={props.animationDurationFactor}
                             />
-                        </div>
-                        <div className="col-sm-6">
                         </div>
                     </div>
                 </div>
@@ -185,16 +251,19 @@ const DynamicsModels = () => {
                 </OverlayTrigger>
                 Dynamics Model:
                 <SelectDynamicsModelDropdownOrSpinner dynamicsModels={dynamicsModels}
-                                                                 selectedDynamicsModel={selectedDynamicsModel}/>
+                                                      selectedDynamicsModel={selectedDynamicsModel}/>
                 <SelectConditionalDistributionDropdownOrSpinner conditionals={conditionals}
-                                                      selectedConditional={selectedConditional}/>
+                                                                selectedConditional={selectedConditional}/>
+                <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
+                                                           selectedMetric={selectedMetric}/>
             </h3>
             <ModelDescriptionOrSpinner dynamicsModels={dynamicsModels}
                                        selectedDynamicsModel={selectedDynamicsModel}/>
             <ConditionalChartsOrSpinner
                 selectedDynamicsModel={selectedDynamicsModel} selectedConditional={selectedConditional}
                 animationDurationFactor={animationDurationFactor} animationDuration={animationDuration}
-                conditionals={conditionals} dynamicsModels={dynamicsModels}
+                conditionals={conditionals} dynamicsModels={dynamicsModels} selectedMetric={selectedMetric}
+                metrics={metrics}
             />
         </div>
     );

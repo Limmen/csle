@@ -1,6 +1,6 @@
 # Level 5
 
-A virtual environment with a set of nodes that run common networked services such as SSH, FTP, Telnet, IRC, Kafka, 
+An emulation environment with a set of nodes that run common networked services such as SSH, FTP, Telnet, IRC, Kafka, 
 Cassandra, etc. Some of the services are vulnerable to simple dictionary attacks as they use weak passwords. 
 The task of an attacker agent is to identify the vulnerabilities and exploit them and discover hidden flags
 on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to detect the 

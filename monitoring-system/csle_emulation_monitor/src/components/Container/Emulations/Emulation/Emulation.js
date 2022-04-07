@@ -186,7 +186,7 @@ const Emulation = (props) => {
     return (<Card key={emulation.name} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={emulation.name} className="mgHeader">
-                <span className="subnetTitle">Name: {emulation.name}</span>
+                <span className="subnetTitle">{emulation.name}</span>
                 # Containers: {emulation.containers_config.containers.length}, Status: {getStatus(emulation)}
                 {getSpinnerOrCircle(emulation)}
             </Accordion.Toggle>
@@ -204,6 +204,10 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
+                    <tr>
+                        <td>Description</td>
+                        <td>{emulation.descr}</td>
+                    </tr>
                     <tr>
                         <td>Status</td>
                         <td>{getStatus(emulation)} <SpinnerOrStatus emulation={emulation}/></td>

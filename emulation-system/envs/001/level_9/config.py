@@ -58,10 +58,22 @@ def default_config(name: str, network_id: int = 9, level: int = 9, version: str 
     vuln_cfg = default_vulns_config(network_id=network_id)
     log_sink_cfg = default_log_sink_config(network_id=network_id, level=level, version=version)
     services_cfg = default_services_config(network_id=network_id)
+    descr = "An emulation environment with a set of nodes that run common networked services " \
+            "such as SSH, FTP, Telnet, IRC, Kafka," \
+            " Cassandra, etc. Some of the services are vulnerable to different network attacks " \
+            "such as the SambaCry exploit, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, " \
+            "and SQL injection." \
+            " Moreover, some nodes are vulnerable to privilege escalation attacks " \
+            "(e.g. CVE-2010-0426 and CVE-2015-5602) " \
+            "which can be used by the attacker to extend his privileges after compromising the host. " \
+            "The task of an attacker agent is to identify the vulnerabilities and " \
+            "exploit them and discover hidden flags " \
+            "on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to detect the " \
+            "attacker."
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
-        log_sink_config=log_sink_cfg, services_config=services_cfg
+        log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr
     )
     return emulation_env_cfg
 

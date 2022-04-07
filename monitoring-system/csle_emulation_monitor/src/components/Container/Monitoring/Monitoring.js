@@ -369,7 +369,8 @@ const Monitoring = () => {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {props.runningEmulations.map((emulation, index) =>
-                            <Dropdown.Item key={emulation.name + "-" + index}
+                            <Dropdown.Item className="dropdownText"
+                                           key={emulation.name + "-" + index}
                                            onClick={() => updateEmulation(emulation.name)}>
                                 {emulation.name}
                             </Dropdown.Item>
@@ -394,7 +395,8 @@ const Monitoring = () => {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {props.selectedEmulation.containers_config.containers.map((container, index) =>
-                            <Dropdown.Item key={container.full_name_str + "-" + index}
+                            <Dropdown.Item className="dropdownText"
+                                           key={container.full_name_str + "-" + index}
                                            onClick={() => updateHost(container.full_name_str)}>
                                 {container.full_name_str}
                             </Dropdown.Item>

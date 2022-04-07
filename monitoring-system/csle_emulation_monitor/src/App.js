@@ -8,6 +8,8 @@ import Traces from "./components/Container/Traces/Traces";
 import DynamicsModels from "./components/Container/DynamicsModels/DynamicsModels";
 import PolicyExamination from "./components/Container/PolicyExamination/PolicyExamination";
 import ContainerImages from "./components/Container/ContainerImages/ContainerImages";
+import Simulations from "./components/Container/Simulations/Simulations";
+import TrainingResults from "./components/Container/TrainingResults/TrainingResults";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
                                 </Route>
                                 <Route path="emulations" index element={<Emulations/>}>
                                 </Route>
+                                <Route path="simulations" index element={<Simulations/>}>
+                                </Route>
                                 <Route path="monitoring" index element={<Monitoring/>}>
                                 </Route>
                                 <Route path="traces" index element={<Traces/>}>
@@ -32,6 +36,8 @@ function App() {
                                 <Route path="policyexamination" index element={<PolicyExamination/>}>
                                 </Route>
                                 <Route path="images" index element={<ContainerImages/>}>
+                                </Route>
+                                <Route path="training" index element={<TrainingResults/>}>
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
                             </Route>

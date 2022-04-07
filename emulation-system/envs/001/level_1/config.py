@@ -1,7 +1,6 @@
 import argparse
 import os
 import multiprocessing
-import base64
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
@@ -59,10 +58,19 @@ def default_config(name: str, network_id: int = 1, level: int = 1, version: str 
     vuln_cfg = default_vulns_config(network_id=network_id)
     log_sink_cfg = default_log_sink_config(network_id=network_id, level=level, version=version)
     services_cfg = default_services_config(network_id=network_id)
+    descr = "An emulation environment with a set of nodes that run common networked services such as SSH, FTP, " \
+            "Telnet, IRC, Kafka," \
+            "Cassandra, etc. Some of the services are vulnerable to simple dictionary attacks as " \
+            "they use weak passwords." \
+            "The task of an attacker agent is to identify the vulnerabilities and exploit them and " \
+            "discover hidden flags" \
+            "on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and " \
+            "to detect the attacker."
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
-        log_sink_config=log_sink_cfg, services_config=services_cfg
+        log_sink_config=log_sink_cfg, services_config=services_cfg,
+        descr=descr
     )
     return emulation_env_cfg
 
