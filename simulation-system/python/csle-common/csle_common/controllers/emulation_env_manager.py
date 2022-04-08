@@ -146,6 +146,7 @@ class EmulationEnvManager:
             f"-- Log sink configuration step {current_step}/{steps}: Connect log sink container to network --")
         ContainerManager.connect_logsink_to_network(log_sink_config=emulation_env_config.log_sink_config)
 
+        current_step += 1
         Logger.__call__().get_logger().info(
             f"-- Log sink configuration step {current_step}/{steps}: Restarting the Kafka server --")
         LogSinkManager.stop_kafka_server(emulation_env_config=emulation_env_config)

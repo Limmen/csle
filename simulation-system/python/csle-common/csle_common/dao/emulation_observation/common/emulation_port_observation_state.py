@@ -1,3 +1,4 @@
+from typing import Dict, Any, Union
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.network_service import NetworkService
 
@@ -32,8 +33,10 @@ class EmulationPortObservationState:
         self.version = version
         self.fingerprint = fingerprint
 
-
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
         d = {}
         d["port"] = self.port
         d["open"] = self.open
@@ -44,16 +47,18 @@ class EmulationPortObservationState:
         d["vulscan"] = self.vulscan
         d["version"] = self.version
         d["fingerprint"] = self.fingerprint
-
+        return d
 
     @staticmethod
-    def from_dict(d: dict) -> "EmulationPortObservationState":
+    def from_dict(d: Union[Dict[str, Any], None]) -> "EmulationPortObservationState":
         """
         Converts a dict representation of the object to an instance
 
         :param d: the dict to convert
         :return: the created object instance
         """
+        if d is None:
+            return None
         obj = EmulationPortObservationState(
             port=d["port"],
             open=d["open"],
@@ -66,7 +71,6 @@ class EmulationPortObservationState:
             fingerprint=d["fingerprint"]
         )
         return obj
-
 
     def __str__(self) -> str:
         """
@@ -103,7 +107,6 @@ class EmulationPortObservationState:
                                              service=s,
                                              protocol=network_service.protocol)
         return port
-
 
     def copy(self) -> "EmulationPortObservationState":
         """

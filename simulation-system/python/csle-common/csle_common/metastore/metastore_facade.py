@@ -214,6 +214,33 @@ class MetastoreFacade:
                                                      f"{emulation_statistics.emulation_name} saved successfully")
                 return id_of_new_row
 
+
+    @staticmethod
+    def update_emulation_statistic(emulation_statistics: EmulationStatistics, id: int) -> None:
+        """
+        Updates a row with emulation statistic in the metastore
+
+        :param emulation_statistics: the emulation statistics to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing statistics "
+                                             f"for emulation:{emulation_statistics.emulation_name} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
+                            f" SET statistics=%s "
+                            f"WHERE {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Statistics for emulation "
+                                                     f"{emulation_statistics.emulation_name} with id {id} "
+                                                     f"updated successfully")
+
     @staticmethod
     def list_emulation_statistics() -> List[EmulationStatistics]:
         """
@@ -306,7 +333,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} WHERE id = %d", (id,))
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
                 if record is not None:
                     record = MetastoreFacade._convert_simulation_trace_record_to_dto(simulation_trace_record=record)
@@ -361,7 +388,7 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} "
                             f"(emulation_trace, simulation_trace) "
-                            f"VALUES (%d, %d) RETURNING id", (emulation_trace_id, simulation_trace_id))
+                            f"VALUES (%s, %s) RETURNING id", (emulation_trace_id, simulation_trace_id))
                 conn.commit()
                 Logger.__call__().get_logger().debug(
                     f"Emulation-Simulation trace for "
@@ -426,3 +453,26 @@ class MetastoreFacade:
                 if record is not None:
                     record = MetastoreFacade._convert_emulation_image_record_to_tuple(emulation_image_record=record)
                 return record
+
+
+
+    @staticmethod
+    def delete_all(table: str) -> None:
+        """
+        Deletes all rows in the metastore from a given table
+
+        :param table: the table to delete from
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Deleting all traces from table "
+                                             f"{table}")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {table}")
+                conn.commit()
+
+                Logger.__call__().get_logger().debug(f"All traces deleted from table "
+                                                     f"{table} successfully")
+

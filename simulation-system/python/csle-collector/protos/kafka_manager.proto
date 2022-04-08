@@ -29,6 +29,7 @@ message CreateTopicMsg {
   string name = 1;
   int32 partitions = 2;
   int32 replicas = 3;
+  int32 retention_time_hours = 4;
 }
 
 //Message that the client sends to delete a Kafka topic

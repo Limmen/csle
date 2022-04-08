@@ -80,7 +80,7 @@ const ContainerImages = () => {
             <h3> Container Images
                 <OverlayTrigger
                     placement="right"
-                    delay={{show: 250, hide: 400}}
+                    delay={{show: 0, hide: 0}}
                     overlay={renderRefreshTooltip()}
                 >
                     <Button variant="button" onClick={refresh}>

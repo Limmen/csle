@@ -1,6 +1,6 @@
 # Emulation environments
 
-This folder contains emulation environments. 
+This folder contains emulation environments.
 
 - Version: **001** [./001](001):
   - *Level 1* [level_1](001/level_1): A simple infrastructure with 6 nodes and weak-password-vulnerabilities
@@ -13,7 +13,7 @@ This folder contains emulation environments.
   - *Level 8* [level_8](001/level_8): An infrastructure with 26 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
   - *Level 9* [./level_9](001/level_9): A complex infrastructure with 36 nodes and and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1, SQL injection, and brute-force vulnerabilities. Further, the infrastructure has IDS monitoring
   - *Level 10* [./level_10](001/level_10): An infrastructure with 16 nodes and several vulnerabilities: SambaCry, Shellshock, CVE-2015-1427, CVE-2015-3306, CVE-2016-100033_1,and SQL injection., Pengine Server RCE Exploit, as well as SSH, FTP, Telnet servers that can be compromised using dictionary attacks
-  
+
 ## Useful commands:
 
 - Install all emulations:

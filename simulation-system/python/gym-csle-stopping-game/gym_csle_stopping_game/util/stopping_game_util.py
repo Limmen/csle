@@ -2,6 +2,9 @@ from typing import List
 import numpy as np
 from scipy.stats import betabinom
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
+from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
+from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
+from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
 
@@ -43,7 +46,7 @@ class StoppingGameUtil:
         :param n: the maximum observation
         :return: O
         """
-        return np.array(list(range(n+1)))
+        return np.array(list(range(n + 1)))
 
     @staticmethod
     def reward_tensor(R_SLA: int, R_INT: int, R_COST: int, L: int, R_ST: int) -> np.ndarray:
@@ -55,23 +58,23 @@ class StoppingGameUtil:
         :return: a |L|x|A1|x|A2|x|S| tensor
         """
         R_l = []
-        for l in range(1, L+1):
+        for l in range(1, L + 1):
             R = [
-                    # Defender continues
-                    [
-                        # Attacker continues
-                        [R_SLA, R_SLA + R_INT, 0],
-                        # Attacker stops
-                        [R_SLA, R_SLA, 0]
-                    ],
-                    # Defender stops
-                    [
-                        # Attacker continues
-                        [R_COST / L, R_ST / l, 0],
-                        # Attacker stops
-                        [R_COST / L, R_SLA, 0]
-                    ]
+                # Defender continues
+                [
+                    # Attacker continues
+                    [R_SLA, R_SLA + R_INT, 0],
+                    # Attacker stops
+                    [R_SLA, R_SLA, 0]
+                ],
+                # Defender stops
+                [
+                    # Attacker continues
+                    [R_COST / L, R_ST / l, 0],
+                    # Attacker stops
+                    [R_COST / L, R_SLA, 0]
                 ]
+            ]
             R_l.append(R)
         R = np.array(R_l)
         return R
@@ -83,95 +86,149 @@ class StoppingGameUtil:
         :return: a |L|x|A1|x|A2||S|^2 tensor
         """
         T_l = []
-        for l in range(1, L+1):
+        for l in range(1, L + 1):
             if l == 1:
                 T = [
-                        # Defender continues
+                    # Defender continues
+                    [
+                        # Attacker continues
                         [
-                            # Attacker continues
-                            [
-                                [1 - p, 0, p],  # No intrusion
-                                [0, 1 - p, p],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ],
-                            # Attacker stops
-                            [
-                                [0, 1 - p, p],  # No intrusion
-                                [0, 0, 1],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ]
+                            [1 - p, 0, p],  # No intrusion
+                            [0, 1 - p, p],  # Intrusion
+                            [0, 0, 1]  # Terminal
                         ],
-
-                        # Defender stops
+                        # Attacker stops
                         [
-                            # Attacker continues
-                            [
-                                [0, 0, 1],  # No intrusion
-                                [0, 0, 1],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ],
-                            # Attacker stops
-                            [
-                                [0, 0, 1],  # No Intrusion
-                                [0, 0, 1],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ]
+                            [0, 1 - p, p],  # No intrusion
+                            [0, 0, 1],  # Intrusion
+                            [0, 0, 1]  # Terminal
+                        ]
+                    ],
+
+                    # Defender stops
+                    [
+                        # Attacker continues
+                        [
+                            [0, 0, 1],  # No intrusion
+                            [0, 0, 1],  # Intrusion
+                            [0, 0, 1]  # Terminal
+                        ],
+                        # Attacker stops
+                        [
+                            [0, 0, 1],  # No Intrusion
+                            [0, 0, 1],  # Intrusion
+                            [0, 0, 1]  # Terminal
                         ]
                     ]
+                ]
             else:
                 T = [
-                        # Defender continues
+                    # Defender continues
+                    [
+                        # Attacker continues
                         [
-                            # Attacker continues
-                            [
-                                [1 - p, 0, p],  # No intrusion
-                                [0, 1 - p, p],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ],
-                            # Attacker stops
-                            [
-                                [0, 1 - p, p],  # No intrusion
-                                [0, 0, 1],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ]
+                            [1 - p, 0, p],  # No intrusion
+                            [0, 1 - p, p],  # Intrusion
+                            [0, 0, 1]  # Terminal
                         ],
-
-                        # Defender stops
+                        # Attacker stops
                         [
-                            # Attacker continues
-                            [
-                                [1 - p, 0, p],  # No intrusion
-                                [0, 1 - p, p],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ],
-                            # Attacker stops
-                            [
-                                [0, 1 - p, p],  # No Intrusion
-                                [0, 0, 1],  # Intrusion
-                                [0, 0, 1]  # Terminal
-                            ]
+                            [0, 1 - p, p],  # No intrusion
+                            [0, 0, 1],  # Intrusion
+                            [0, 0, 1]  # Terminal
+                        ]
+                    ],
+
+                    # Defender stops
+                    [
+                        # Attacker continues
+                        [
+                            [1 - p, 0, p],  # No intrusion
+                            [0, 1 - p, p],  # Intrusion
+                            [0, 0, 1]  # Terminal
+                        ],
+                        # Attacker stops
+                        [
+                            [0, 1 - p, p],  # No Intrusion
+                            [0, 0, 1],  # Intrusion
+                            [0, 0, 1]  # Terminal
                         ]
                     ]
+                ]
             T_l.append(T)
         T = np.array(T_l)
         return T
 
     @staticmethod
-    def observation_tensor_from_emulation_statistics(emulation_statistic: EmulationStatistics) -> np.ndarray:
-        pass
+    def observation_tensor_from_emulation_statistics(
+            emulation_statistic: EmulationStatistics,
+            observation_space_defender: ObservationSpaceConfig, joint_action_space: JointActionSpaceConfig,
+            state_space: StateSpaceConfig) -> np.ndarray:
+        intrusion_severe_alerts_probabilities = []
+        intrusion_warning_alerts_probabilities = []
+        intrusion_login_attempts_probabilities = []
+        norm = sum(emulation_statistic.conditionals["intrusion"]["severe_alerts"].values())
+        for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
+            count = emulation_statistic.conditionals["intrusion"]["severe_alerts"][severe_alert_obs.id]
+            intrusion_severe_alerts_probabilities.append(count/norm)
+        for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
+            count = emulation_statistic.conditionals["intrusion"]["warning_alerts"][warning_alert_obs.id]
+            intrusion_warning_alerts_probabilities.append(count/norm)
+        for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
+            count = emulation_statistic.conditionals["intrusion"]["login_attempts"][login_attempt_obs.id]
+            intrusion_login_attempts_probabilities.append(count/norm)
+
+        no_intrusion_severe_alerts_probabilities = []
+        no_intrusion_warning_alerts_probabilities = []
+        no_intrusion_login_attempts_probabilities = []
+        norm = sum(emulation_statistic.conditionals["no_intrusion"]["severe_alerts"].values())
+        for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
+            count = emulation_statistic.conditionals["no_intrusion"]["severe_alerts"][severe_alert_obs.id]
+            no_intrusion_severe_alerts_probabilities.append(count/norm)
+        for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
+            count = emulation_statistic.conditionals["no_intrusion"]["warning_alerts"][warning_alert_obs.id]
+            no_intrusion_warning_alerts_probabilities.append(count/norm)
+        for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
+            count = emulation_statistic.conditionals["no_intrusion"]["login_attempts"][login_attempt_obs.id]
+            no_intrusion_login_attempts_probabilities.append(count/norm)
+
+        observation_tensor = []
+        for a1 in range(len(joint_action_space.action_spaces[0].actions)):
+            a1_a2_s_o_dist = []
+            for a2 in range(len(joint_action_space.action_spaces[1].actions)):
+                a2_s_o_dist = []
+                for s in range(len(state_space.states)):
+                    s_o_dist = []
+                    for o in range(len(observation_space_defender.observations)):
+                        obs_vector = observation_space_defender.observation_id_to_observation_id_vector[o]
+                        p = 0
+                        if s == 0:
+                            p = no_intrusion_severe_alerts_probabilities[obs_vector[0]]*\
+                                no_intrusion_warning_alerts_probabilities[obs_vector[1]]*\
+                                no_intrusion_login_attempts_probabilities[obs_vector[2]]
+                        else:
+                            p = intrusion_severe_alerts_probabilities[obs_vector[0]]* \
+                                intrusion_warning_alerts_probabilities[obs_vector[1]]* \
+                                intrusion_login_attempts_probabilities[obs_vector[2]]
+                        s_o_dist.append(p)
+                    a2_s_o_dist.append(s_o_dist)
+                a1_a2_s_o_dist.append(a2_s_o_dist)
+            observation_tensor.append(a1_a2_s_o_dist)
+        return np.array(observation_tensor)
+
 
     @staticmethod
     def observation_tensor(n):
         """
-        :return: a |S|x|O| tensor
+        :return: a |A1|x|A2|x|S|x|O| tensor
         """
         intrusion_dist = []
         no_intrusion_dist = []
-        terminal_dist = np.zeros(n+1)
+        terminal_dist = np.zeros(n + 1)
         terminal_dist[-1] = 1
         intrusion_rv = betabinom(n=n, a=1, b=0.9)
         no_intrusion_rv = betabinom(n=n, a=0.7, b=2)
-        for i in range(n+1):
+        for i in range(n + 1):
             intrusion_dist.append(intrusion_rv.pmf(i))
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))
         Z = np.array(
@@ -205,7 +262,7 @@ class StoppingGameUtil:
         return Z
 
     @staticmethod
-    def sample_next_state(T: np.ndarray, l:int, s: int, a1: int, a2: int, S: np.ndarray) -> int:
+    def sample_next_state(T: np.ndarray, l: int, s: int, a1: int, a2: int, S: np.ndarray) -> int:
         """
         Samples the next state
 
@@ -219,7 +276,7 @@ class StoppingGameUtil:
         """
         state_probs = []
         for s_prime in S:
-            state_probs.append(T[l-1][a1][a2][s][s_prime])
+            state_probs.append(T[l - 1][a1][a2][s][s_prime])
         s_prime = np.random.choice(np.arange(0, len(S)), p=state_probs)
         return s_prime
 
@@ -249,7 +306,6 @@ class StoppingGameUtil:
         o = np.random.choice(np.arange(0, len(O)), p=observation_probs)
         return o
 
-
     @staticmethod
     def bayes_filter(s_prime: int, o: int, a1: int, b: np.ndarray, pi2: np.ndarray, l: int,
                      config: StoppingGameConfig) -> float:
@@ -266,7 +322,7 @@ class StoppingGameUtil:
         :param l: stops remaining
         :return: b_prime(s_prime)
         """
-        l=l-1
+        l = l - 1
         norm = 0
         for s in config.S:
             for a2 in config.A2:
@@ -282,12 +338,12 @@ class StoppingGameUtil:
             for a2 in config.A2:
                 temp += config.Z[a1][a2][s_prime][o] * config.T[l][a1][a2][s][s_prime] * b[s] * pi2[s][a2]
 
-        b_prime_s_prime = temp/norm
-        if round(b_prime_s_prime,2) > 1:
+        b_prime_s_prime = temp / norm
+        if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, l:{l}, o:{o}, pi2:{pi2}")
-        assert round(b_prime_s_prime,2) <=1
+        assert round(b_prime_s_prime, 2) <= 1
         if s_prime == 2 and o != config.O[-1]:
-            assert round(b_prime_s_prime,2) <= 0.01
+            assert round(b_prime_s_prime, 2) <= 0.01
         return b_prime_s_prime
 
     @staticmethod
@@ -311,7 +367,7 @@ class StoppingGameUtil:
 
     @staticmethod
     def next_belief(o: int, a1: int, b: np.ndarray, pi2: np.ndarray, config: StoppingGameConfig, l: int,
-                    a2 : int = 0, s : int = 0) -> np.ndarray:
+                    a2: int = 0, s: int = 0) -> np.ndarray:
         """
         Computes the next belief using a Bayesian filter
 
@@ -335,9 +391,8 @@ class StoppingGameUtil:
         assert round(sum(b_prime), 2) == 1
         return b_prime
 
-
     @staticmethod
-    def sample_attacker_action(pi2: np.ndarray, s:int) -> int:
+    def sample_attacker_action(pi2: np.ndarray, s: int) -> int:
         """
         Samples the attacker action
 

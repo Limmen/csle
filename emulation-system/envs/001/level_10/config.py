@@ -1589,42 +1589,49 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             name=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes= collector_constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.ATTACKER_ACTIONS_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.DEFENDER_ACTIONS_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         )
     ]

@@ -25,7 +25,7 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
                         data = self.request.recv(1024)
                     except Exception as e:
                         if "Connection reset by peer" not in str(e):
-                            Logger.__call__().get_logger()(str(e))
+                            Logger.__call__().get_logger().warning(str(e))
                         data = []
                     if len(data) == 0:
                         break
@@ -40,4 +40,4 @@ class ForwardSSHHandler(SocketServer.BaseRequestHandler):
             self.request.close()
         except Exception as e:
             if "Transport endpoint" not in str(e):
-                Logger.__call__().get_logger()(str(e))
+                Logger.__call__().get_logger().warning(str(e))

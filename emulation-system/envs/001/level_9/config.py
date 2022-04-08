@@ -2709,10 +2709,11 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         )],
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb=0.025, mu=1, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=1)
+        lamb=0.75, mu=1, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=1)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf
+
 
 def default_log_sink_config(network_id: int, level: int, version: str) -> LogSinkConfig:
     """
@@ -2753,42 +2754,49 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             name=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes= collector_constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.ATTACKER_ACTIONS_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.DEFENDER_ACTIONS_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
+            retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         )
     ]
@@ -2797,6 +2805,7 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
                            version=version, kafka_port=9092, default_grpc_port=50051,
                            secondary_grpc_port = 50049, time_step_len_seconds=15)
     return config
+
 
 def default_users_config(network_id: int) -> UsersConfig:
     """

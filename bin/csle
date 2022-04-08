@@ -355,6 +355,35 @@ def stop_emulation(emulation_env_config: EmulationEnvConfig) -> None:
                                               containers_config=emulation_env_config.containers_config,
                                               emulation_name=emulation_env_config.name)
 
+def clean_emulation_statistics() -> None:
+    """
+    Deletes emulation statistics from the metastore
+
+    :return: None
+    """
+    click.secho(f"Deleting all emulation statistics from the metastore", bold=False)
+    MetastoreFacade.delete_all(constants.METADATA_STORE.EMULATION_STATISTICS_TABLE)
+
+
+def clean_emulation_traces() -> None:
+    """
+    Deletes emulation traces from the metastore
+
+    :return: None
+    """
+    click.secho(f"Deleting all emulation traces from the metastore", bold=False)
+    MetastoreFacade.delete_all(constants.METADATA_STORE.EMULATION_TRACES_TABLE)
+
+
+def clean_simulation_traces() -> None:
+    """
+    Deletes simulation traces from the metastore
+
+    :return: None
+    """
+    click.secho(f"Deleting all simulation traces from the metastore", bold=False)
+    MetastoreFacade.delete_all(constants.METADATA_STORE.SIMULATION_TRACES_TABLE)
+
 
 def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     """
@@ -527,10 +556,11 @@ def rm(entity : str) -> None:
         rm_name(name=entity)
 
 @click.argument('entity', default="")
-@click.command(help="all | containers | emulations | name")
+@click.command(help="all | containers | emulations | emulation_traces | simulation_traces | emulation_statistics "
+                    "| name")
 def clean(entity : str) -> None:
     """
-    Removes a container, a network, an image, all networks, all images, or all containers
+    Removes a container, a network, an image, all networks, all images, all containers, all traces, or all statistics
 
     :param entity: the container(s), network(s), or images(s) to remove
     :return: None
@@ -546,6 +576,12 @@ def clean(entity : str) -> None:
     elif entity == "emulations":
         for emulation in MetastoreFacade.list_emulations():
             clean_emulation(emulation_env_config=emulation)
+    elif entity == "emulation_traces":
+        clean_emulation_traces()
+    elif entity == "simulation_traces":
+        clean_simulation_traces()
+    elif entity == "emulation_statistics":
+        clean_emulation_statistics()
     else:
         clean_name(name=entity)
 

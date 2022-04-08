@@ -17,7 +17,7 @@ def get_kafka_status(stub: csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
 
 
 def create_topic(stub: csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub,
-                 name: str, partitions: int, replicas: int) \
+                 name: str, partitions: int, replicas: int, retention_time_hours: int) \
         -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
     """
     Sends a request to the KafkaManager to create a new Kafka topic
@@ -26,10 +26,11 @@ def create_topic(stub: csle_collector.kafka_manager.kafka_manager_pb2_grpc.Kafka
     :param name: the name of the Kafka topic
     :param partitions: the number of partitions of the Kafka topic
     :param replicas: the number of replicas of the Kafka topic
+    :param retention_time_hours: the retention time for the topic
     :return: a KafkaDTO describing the status of the kafka server
     """
     create_kafka_topic_msg = csle_collector.kafka_manager.kafka_manager_pb2.CreateTopicMsg(
-        name=name, partitions=partitions, replicas=replicas)
+        name=name, partitions=partitions, replicas=replicas, retention_time_hours=retention_time_hours)
     kafka_dto = stub.createTopic(create_kafka_topic_msg)
     return kafka_dto
 

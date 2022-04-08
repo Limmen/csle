@@ -65,9 +65,18 @@
 
 .refreshButton {
     margin-right: 10px;
-    font-size: 30px;
+    font-size: 20px;
+}
+
+.infoButton {
+    /*margin-right: 10px;*/
+    font-size: 20px;
 }
 
 .toolTipRefresh {
     font-size: 20px;
+}
+
+.modalText {
+    font-size: 22px;
 }

@@ -29,13 +29,23 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
 
 def default_config(name: str, version: str = "0.0.1") -> SimulationEnvConfig:
+    """
+    The default configuration of the simulation environment
+
+    :param name: the name of the environment
+    :param version: the version string
+    :return:the default configuration
+    """
     emulation_statistic = default_emulation_statistic()
     players_config = default_players_config()
     state_space_config = default_state_space_config()
     joint_action_space_config = default_joint_action_space_config()
     joint_observation_space_config = default_joint_observation_space_config(emulation_statistic=emulation_statistic)
     transition_operator_config = default_transition_operator_config()
-    observation_function_config = default_observation_function_config(emulation_statistic=emulation_statistic)
+    observation_function_config = default_observation_function_config(
+        emulation_statistic=emulation_statistic,
+        defender_obs_space=joint_observation_space_config.observation_spaces[0],
+        joint_action_space=joint_action_space_config, state_space=state_space_config)
     reward_function_config = default_reward_function_config()
     initial_state_distribution_config = default_initial_state_distribution_config()
     input_config = default_input_config(
@@ -44,7 +54,7 @@ def default_config(name: str, version: str = "0.0.1") -> SimulationEnvConfig:
         transition_tensor_config=transition_operator_config,
         observation_function_config=observation_function_config,
         initial_state_distribution_config=initial_state_distribution_config)
-    descr="An two-player zero-sum one-sided partially observed stochastic game. " \
+    descr="A two-player zero-sum one-sided partially observed stochastic game. " \
           "The game is based on the optimal stopping formulation of intrusion prevention from " \
           "(Hammar and Stadler 2021, https://arxiv.org/abs/2111.00289)"
     simulation_env_config = SimulationEnvConfig(
@@ -55,12 +65,16 @@ def default_config(name: str, version: str = "0.0.1") -> SimulationEnvConfig:
         transition_operator_config=transition_operator_config,
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
-        emulation_statistic=emulation_statistic, time_step_type=TimeStepType.DISCRETE
+        emulation_statistic=emulation_statistic, time_step_type=TimeStepType.DISCRETE,
+        gym_env_name="csle-stopping-game-v1"
     )
     return simulation_env_config
 
 
 def default_emulation_statistic() -> EmulationStatistics:
+    """
+    :return: the default emulation statistic to use for the simulation
+    """
     emulation_statistic_id = 1
     emulation_statistic = MetastoreFacade.get_emulation_statistic(id=emulation_statistic_id)
     if emulation_statistic is None:
@@ -69,6 +83,9 @@ def default_emulation_statistic() -> EmulationStatistics:
 
 
 def default_players_config() -> PlayersConfig:
+    """
+    :return: the default players configuration of the simulation
+    """
     player_configs = [
         PlayerConfig(name="defender", id=1, descr="The defender which tries to detect, prevent, "
                                                   "and interrupt intrusions for the infrastructure"),
@@ -81,6 +98,9 @@ def default_players_config() -> PlayersConfig:
 
 
 def default_state_space_config() -> StateSpaceConfig:
+    """
+    :return: the default state space configuration of the simulation
+    """
     states = [
         State(id=0, name="no intrusion state", descr="A Markov state representing the case where the attacker "
                                                      "has not yet started an intrusion"),
@@ -94,6 +114,9 @@ def default_state_space_config() -> StateSpaceConfig:
 
 
 def default_joint_action_space_config() -> JointActionSpaceConfig:
+    """
+    :return: the default joint action space of all players in the simulation
+    """
     action_spaces = [
         ActionSpaceConfig(
             actions=[
@@ -130,51 +153,73 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
 
 
 def default_joint_observation_space_config(emulation_statistic: EmulationStatistics) -> JointObservationSpaceConfig:
-    defender_observations = []
-    min_severe_alerts = min(
-        min(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
-                "severe_alerts"].keys()),
-        min(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
-                "severe_alerts"].keys()))
-    max_severe_alerts = max(
-        max(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
-                "severe_alerts"].keys()),
-        max(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
-                "severe_alerts"].keys()))
+    """
+    Gets the default joint observation space configuration of the simulation
 
-    min_warning_alerts = min(
-        min(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
-                "warning_alerts"].keys()),
-        min(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
-                "warning_alerts"].keys()))
-    max_warning_alerts = max(
-        max(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
-                "warning_alerts"].keys()),
-        max(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
-                "warning_alerts"].keys()))
-
-    min_login_attempts = min(
-        min(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
-                "severe_alerts"].keys()),
-        min(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
-                "severe_alerts"].keys()))
-    max_login_attempts = max(
-        max(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL][
-                "num_failed_login_attempts"].keys()),
-        max(emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][
-                "num_failed_login_attempts"].keys()))
-
+    :param emulation_statistic: the emulation statistic to use for generating the observation space
+    :return: the default joint observation space configuration
+    """
+    observation_id_to_observation_id_vector = {}
     observation_id_to_observation_vector = {}
+    defender_observations = []
+    component_observations = {}
+    if emulation_statistic is not None:
+        severe_alerts =emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["severe_alerts"].keys()
+        component_observations["severe_alerts"] = []
+        for i, val in enumerate(severe_alerts):
+            component_observations["severe_alerts"].append(Observation(id=i, val=val, descr=f"{val} severe IDS alerts"))
+        warning_alerts =emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["warning_alerts"].keys()
+        component_observations["warning_alerts"] = []
+        for i, val in enumerate(warning_alerts):
+            component_observations["warning_alerts"].append(Observation(id=i, val=val, descr=f"{val} warning IDS alerts"))
+        login_attempts =emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["login_attempts"].keys()
+        component_observations["login_attempts"] = []
+        for i,val in enumerate(login_attempts):
+            component_observations["login_attempts"].append(Observation(id=i, val=val, descr=f"{val} login attempts"))
 
-    for i in range(min_severe_alerts, max_severe_alerts+1):
-        for j in range(min_warning_alerts+max_warning_alerts):
-            for k in range(min_login_attempts, max_login_attempts):
-                id = i*(len(range(min_warning_alerts+max_warning_alerts)))
-                +j*len(range(min_login_attempts, max_login_attempts)) + k
-                defender_observations.append(Observation(
-                    id=id,
-                    descr=f"{i} severe IDS alerts, {j} warning ids alerts, f{k} login attempts"))
-                observation_id_to_observation_vector[id] = [i, j, k]
+        for idx1, i in enumerate(severe_alerts):
+            for idx2, j in enumerate(warning_alerts):
+                for idx3, k in enumerate(login_attempts):
+                    id = i*len(severe_alerts)*len(warning_alerts)**len(login_attempts) + j*len(login_attempts) + k
+                    defender_observations.append(Observation(
+                        id=id, val=id,
+                        descr=f"{i} severe IDS alerts, {j} warning ids alerts, f{k} login attempts"))
+                    observation_id_to_observation_vector[id] = [i, j, k]
+                    observation_id_to_observation_id_vector[id] = [idx1, idx2, idx3]
+
+    else:
+        min_severe_alerts = 0
+        max_severe_alerts = 1000
+        min_warning_alerts = 0
+        max_warning_alerts = 1000
+        min_login_attempts = 0
+        max_login_attempts = 100
+
+        component_observations["severe_alerts"] = []
+        for val in range(min_severe_alerts, max_severe_alerts):
+            component_observations["severe_alerts"].append(Observation(id=val, val=val,
+                                                                       descr=f"{val} severe IDS alerts"))
+
+        component_observations["warning_alerts"] = []
+        for val in range(min_warning_alerts, max_warning_alerts):
+            component_observations["warning_alerts"].append(Observation(id=val, val=val,
+                                                                        descr=f"{val} warning IDS alerts"))
+
+        component_observations["login_attempts"] = []
+        for val in range(min_login_attempts, max_login_attempts):
+            component_observations["login_attempts"].append(Observation(id=val, val=val,
+                                                                        descr=f"{val} login attempts"))
+
+        for i in range(min_severe_alerts, max_severe_alerts+1):
+            for j in range(min_warning_alerts+max_warning_alerts):
+                for k in range(min_login_attempts, max_login_attempts):
+                    id = i*(len(range(min_warning_alerts+max_warning_alerts)))
+                    +j*len(range(min_login_attempts, max_login_attempts)) + k
+                    defender_observations.append(Observation(
+                        id=id, val=id,
+                        descr=f"{i} severe IDS alerts, {j} warning ids alerts, f{k} login attempts"))
+                    observation_id_to_observation_vector[id] = [i, j, k]
+                    observation_id_to_observation_id_vector[id] = [i, j, k]
 
     observation_component_name_to_index = {
         "severe_alerts": 0,
@@ -189,8 +234,10 @@ def default_joint_observation_space_config(emulation_statistic: EmulationStatist
             player_id=1,
             descr="The observation space of the defender. The defender observes three metrics from the infrastructure: "
                   "the number of severe IDS alerts, the number of warning IDS alerts, the number of login attempts",
-            observation_id_to_observation_vector = observation_id_to_observation_vector,
-            observation_component_name_to_index = observation_component_name_to_index
+            observation_id_to_observation_id_vector= observation_id_to_observation_id_vector,
+            observation_component_name_to_index = observation_component_name_to_index,
+            component_observations=component_observations,
+            observation_id_to_observation_vector=observation_id_to_observation_vector
         ),
         ObservationSpaceConfig(
             observations=defender_observations,
@@ -198,8 +245,10 @@ def default_joint_observation_space_config(emulation_statistic: EmulationStatist
             player_id=0,
             descr="The observation space of the attacker. The attacker has inside information in the infrastructure "
                   "and observes the same metrics as the defender",
-            observation_id_to_observation_vector = observation_id_to_observation_vector,
-            observation_component_name_to_index = observation_component_name_to_index
+            observation_id_to_observation_id_vector= observation_id_to_observation_id_vector,
+            observation_component_name_to_index = observation_component_name_to_index,
+            component_observations=component_observations,
+            observation_id_to_observation_vector=observation_id_to_observation_vector
         )
     ]
     joint_observation_space_config = JointObservationSpaceConfig(
@@ -209,6 +258,9 @@ def default_joint_observation_space_config(emulation_statistic: EmulationStatist
 
 
 def default_reward_function_config() -> RewardFunctionConfig:
+    """
+    :return: the default reward function configuration
+    """
     reward_function_config = RewardFunctionConfig(
         reward_tensor=list(StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
     )
@@ -216,21 +268,62 @@ def default_reward_function_config() -> RewardFunctionConfig:
 
 
 def default_transition_operator_config() -> TransitionOperatorConfig:
+    """
+    :return: the default transition tensor configuration
+    """
     transition_operator_config = TransitionOperatorConfig(
         transition_tensor=list(StoppingGameUtil.transition_tensor(L=3, p=0.01))
     )
     return transition_operator_config
 
 
-def default_observation_function_config(emulation_statistic: EmulationStatistics) -> ObservationFunctionConfig:
-    observation_function_config = ObservationFunctionConfig(
+def default_observation_function_config(emulation_statistic: EmulationStatistics,
+                                        defender_obs_space: ObservationSpaceConfig,
+                                        joint_action_space: JointActionSpaceConfig,
+                                        state_space: StateSpaceConfig) -> ObservationFunctionConfig:
+    """
+    The default observation function configuration
+
+    :param emulation_statistic: the emulation statistic
+    :return: the default configuration of the observation function
+    """
+    if emulation_statistic is not None:
         observation_tensor=list(StoppingGameUtil.observation_tensor_from_emulation_statistics(
-            emulation_statistic=emulation_statistic))
+            emulation_statistic=emulation_statistic, observation_space_defender=defender_obs_space,
+            joint_action_space=joint_action_space, state_space=state_space))
+    else:
+        severe_alerts_tensor = StoppingGameUtil.observation_tensor(1000)
+        warning_alerts_tensor = StoppingGameUtil.observation_tensor(1000)
+        login_attempts_tensor = StoppingGameUtil.observation_tensor(1000)
+        observation_tensor = []
+        for a1 in range(len(joint_action_space.action_spaces[0].actions)):
+            a1_a2_s_o_dist = []
+            for a2 in range(len(joint_action_space.action_spaces[1].actions)):
+                a2_s_o_dist = []
+                for s in range(len(state_space.states)):
+                    s_o_dist = []
+                    for o in range(len(defender_obs_space.observations)):
+                        obs_vector = defender_obs_space.observation_id_to_observation_vector[o]
+                        p = 0
+                        p = severe_alerts_tensor[a1][a2][s][obs_vector[0]]*\
+                            warning_alerts_tensor[a1][a2][s][obs_vector[1]]*\
+                            login_attempts_tensor[a1][a2][s][obs_vector[2]]
+                        s_o_dist.append(p)
+                    a2_s_o_dist.append(s_o_dist)
+                a1_a2_s_o_dist.append(a2_s_o_dist)
+            observation_tensor.append(a1_a2_s_o_dist)
+
+        observation_tensor = 0
+    observation_function_config = ObservationFunctionConfig(
+        observation_tensor=observation_tensor
     )
     return observation_function_config
 
 
 def default_initial_state_distribution_config() -> InitialStateDistributionConfig:
+    """
+    :return: the default initial state distribution configuration
+    """
     initial_state_distribution_config = InitialStateDistributionConfig(
         initial_state_distribution=list(StoppingGameUtil.b1())
     )
@@ -242,6 +335,16 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
                          transition_tensor_config: TransitionOperatorConfig,
                          observation_function_config: ObservationFunctionConfig,
                          initial_state_distribution_config: InitialStateDistributionConfig) -> SimulationEnvInputConfig:
+    """
+    Gets the input configuration to the openai gym environment
+
+    :param defender_observation_space_config: the configuration of the defender's observation space
+    :param reward_function_config: the reward function configuration
+    :param transition_tensor_config: the transition tensor configuration
+    :param observation_function_config: the observation function configuration
+    :param initial_state_distribution_config: the initial state distribution configuration
+    :return: The default input configuration to the OpenAI gym environment
+    """
     L=3
     R_INT = -5
     R_COST = -5

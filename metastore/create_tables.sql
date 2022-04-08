@@ -77,3 +77,11 @@ CREATE TABLE IF NOT EXISTS simulations (
 );
 GRANT ALL ON simulations TO csle;
 GRANT USAGE, SELECT ON SEQUENCE simulations_id_seq TO csle;
+
+-- Create table that stores the experiment executions --
+CREATE TABLE IF NOT EXISTS experiment_executions (
+    id serial PRIMARY KEY,
+    execution json NOT NULL
+);
+GRANT ALL ON experiment_executions TO csle;
+GRANT USAGE, SELECT ON SEQUENCE experiment_executions_id_seq TO csle;

@@ -212,3 +212,4 @@ class KAFKA_COMMANDS:
     KAFKA_STATUS = "service kafka status"
     KAFKA_STOP = "service kafka stop"
     KAFKA_START = "service kafka start"
+    RETENTION_MS_CONFIG_PROPERTY = "retention.ms"

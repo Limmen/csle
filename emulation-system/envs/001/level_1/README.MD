@@ -23,14 +23,10 @@ pareto delay distribution with 2ms delay with 0.5ms jitter and 25% correlation b
 0.00001% packet duplication on all links with 25% correlation,
 0.00001% packet corruption between servers and 0.02% packet corruption between external attacker/clients and the servers with 25% correlation
 
-
-
-
 ## Architecture
 <p align="center">
 <img src="env.png" width="600">
 </p>
-
 
 ## Useful commands
 
@@ -59,4 +55,4 @@ Kim Hammar <kimham@kth.se>
 
 Creative Commons
 
-(C) 2020, Kim Hammar
+(C) 2020-2022, Kim Hammar

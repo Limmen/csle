@@ -169,15 +169,26 @@ class EmulationAttackerAction:
         :param total_time: the total time of execution
         :return: the kafka record
         """
+        if self.vulnerability is None:
+            vuln = ""
+        else:
+            vuln = self.vulnerability
+        if self.alt_cmds is None:
+            alt_cmds = []
+        else:
+            alt_cmds = self.alt_cmds
         ts = time.time()
         if self.alt_cmds is None or len(self.alt_cmds) == 0:
             self.alt_cmds = ["-"]
         if self.cmds is None or len(self.cmds) == 0:
             self.cmds = ["-"]
-        record = f"{ts},{self.id.value},{self.descr.replace(',', '' )},{self.index},{self.name}," \
-                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type}," \
-                 f"{self.action_outcome},{self.vulnerability},{'_'.join(self.alt_cmds)},{self.backdoor}"
-        parts = record.split(",")
+        alt_cmds = list(map(lambda x: x.replace(",", "-"), alt_cmds))
+        vuln = vuln.replace(",", "-")
+        cmds = list(map(lambda x: x.replace(",", "-"), self.cmds))
+        record = f"{ts},{self.id.value},{self.descr.replace(',', '')},{self.index},{self.name.replace(',', '-')}," \
+                 f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(cmds)},{self.type}," \
+                 f"{self.action_outcome},{vuln}," \
+                 f"{'_'.join(alt_cmds)},{self.backdoor}"
         return record
 
 

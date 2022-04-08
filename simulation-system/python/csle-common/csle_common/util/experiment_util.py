@@ -1,5 +1,5 @@
 """
-Utility functions for experiments with the csle environments
+Utility functions for training with the csle environments
 """
 import io
 import json
@@ -28,7 +28,7 @@ import csle_common.constants.constants as constants
 
 class ExperimentUtil:
     """
-    Class with utility functions related to experiments
+    Class with utility functions related to training
     """
 
     @staticmethod
@@ -86,7 +86,7 @@ class ExperimentUtil:
     @staticmethod
     def setup_experiment_logger(name: str, logdir: str, time_str = None):
         """
-        Configures the logger for writing log-data of experiments
+        Configures the logger for writing log-data of training
 
         :param name: name of the logger
         :param logdir: directory to save log files

@@ -1,0 +1,15 @@
+authors:
+- affiliation: "KTH Royal Institute of Technology"
+  family-names: Hammar
+  given-names: Kim
+- affiliation: "KTH Royal Institute of Technology"
+  family-names: Stadler
+  given-names: Rolf
+cff-version: 1.2.0
+keywords:
+  - "reinforcement learning"
+  - "cyber security"
+  - "intrusion prevention"
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/Limmen/csle"
+title: "Intrusion Prevention through Optimal Stopping"

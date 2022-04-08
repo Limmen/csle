@@ -100,7 +100,7 @@ const Traces = () => {
 
                 <OverlayTrigger
                     placement="right"
-                    delay={{show: 250, hide: 400}}
+                    delay={{show: 0, hide: 0}}
                     overlay={renderRefreshEmulationTracesTooltip}
                 >
                     <Button variant="button" onClick={refreshEmulationTraces}>

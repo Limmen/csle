@@ -9,3 +9,18 @@
 .conditionalDist {
     display: inline-block;
 }
+
+.conditionalLabel {
+    margin-right: 15px;
+    margin-left:15px;
+}
+
+.metricLabel {
+    margin-right: 15px;
+    margin-left:15px;
+}
+
+.metricLabel {
+    margin-left:15px;
+    margin-right:15px;
+}

@@ -101,6 +101,15 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         )
         return kafka_dto
 
+    def hours_to_ms(self, hours: int) -> float:
+        """
+        Convert hours to ms
+
+        :param hours: the hours to convert
+        :return: the ms
+        """
+        return int((((hours*1000)*60)*60))
+
     def createTopic(self, request: csle_collector.kafka_manager.kafka_manager_pb2.CreateTopicMsg,
                    context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
@@ -110,10 +119,15 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :param context: the gRPC context
         :return: a clients DTO with the state of the kafka server
         """
-        logging.info(f"Creating topic: {request.name}")
+        logging.info(f"Creating topic: {request.name}, partitions:{request.partitions}, replicas:{request.replicas}, "
+                     f"retention hours: {request.retention_time_hours}")
         running, topics = self._get_kafka_status_and_topics()
         client = confluent_kafka.admin.AdminClient(self.conf)
-        new_topic = confluent_kafka.admin.NewTopic(request.name, request.partitions, request.replicas)
+        config = {
+            constants.KAFKA_COMMANDS.RETENTION_MS_CONFIG_PROPERTY: self.hours_to_ms(request.retention_time_hours)}
+        new_topic = confluent_kafka.admin.NewTopic(
+            request.name, request.partitions, request.replicas,
+            config=config)
         client.create_topics([new_topic,])
         time.sleep(5)
         kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
@@ -137,6 +151,7 @@ def serve(port : int = 50051, ip=None, hostname=None) -> None:
     server.start()
     logging.info(f"KafkaManager Server Started, Listening on port: {port}")
     server.wait_for_termination()
+
 
 
 # Program entrypoint

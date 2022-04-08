@@ -88,12 +88,13 @@ class LogSinkManager:
             if not kafka_dto.running:
                 Logger.__call__().get_logger().info(f"Kafka server is not running, starting it.")
                 csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
-                time.sleep(15)
+                time.sleep(20)
 
             for topic in emulation_env_config.log_sink_config.topics:
                 Logger.__call__().get_logger().info(f"Creating topic: {topic.name}")
                 csle_collector.kafka_manager.query_kafka_server.create_topic(
-                    stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas
+                    stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas,
+                    retention_time_hours=topic.retention_time_hours
                 )
 
 

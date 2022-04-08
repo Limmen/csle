@@ -156,7 +156,7 @@ const Emulation = (props) => {
                 return (
                     <OverlayTrigger
                         placement="right"
-                        delay={{show: 250, hide: 400}}
+                        delay={{show: 0, hide: 0}}
                         overlay={renderStopEmulationTooltip()}
                     >
                         <Button variant="outline-dark" className="startButton"
@@ -169,7 +169,7 @@ const Emulation = (props) => {
                 return (
                     <OverlayTrigger
                         placement="right"
-                        delay={{show: 250, hide: 400}}
+                        delay={{show: 0, hide: 0}}
                         overlay={renderStartEmulationTooltip}
                     >
                         <Button variant="outline-dark" className="startButton"
@@ -511,6 +511,7 @@ const Emulation = (props) => {
                         <th>Name</th>
                         <th>Partitions</th>
                         <th>Replicas</th>
+                        <th>Retention time (hours)</th>
                         <th>Attributes</th>
                     </tr>
                     </thead>
@@ -520,6 +521,7 @@ const Emulation = (props) => {
                             <td>{topic.name}</td>
                             <td>{topic.num_partitions}</td>
                             <td>{topic.num_replicas}</td>
+                            <td>{topic.retention_time_hours}</td>
                             <td>{topic.attributes.join(",")}</td>
                         </tr>
                     )}

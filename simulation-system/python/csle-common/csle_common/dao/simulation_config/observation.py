@@ -6,14 +6,16 @@ class Observation:
     DTO class representing an observation in a simulation
     """
 
-    def __init__(self, id: Union[int, float], descr: str):
+    def __init__(self, id: Union[int, float], val: int, descr: str):
         """
         Initializes the DTO
 
         :param id: the id of the observation
+        :param val: in case the val and the id are different
         :param descr: a description of the observation
         """
         self.id = id
+        self.val = val
         self.descr = descr
 
     @staticmethod
@@ -24,7 +26,7 @@ class Observation:
         :return: the created instance
         """
         obj = Observation(
-            id=d["id"], descr=d["descr"]
+            id=d["id"], descr=d["descr"], val=d["val"]
         )
         return obj
 
@@ -35,10 +37,11 @@ class Observation:
         d = {}
         d["id"] = self.id
         d["descr"] = self.descr
+        d["val"] = self.val
         return d
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"id: {self.id}, descr: {self.descr}"
+        return f"id: {self.id}, descr: {self.descr}, val: {self.val}"

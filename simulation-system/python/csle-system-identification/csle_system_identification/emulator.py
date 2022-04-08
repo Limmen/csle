@@ -44,6 +44,10 @@ class Emulator:
         assert len(attacker_sequence) == len(defender_sequence)
         if emulation_statistics is None:
             emulation_statistics = EmulationStatistics(emulation_name=emulation_env_config.name, descr=descr)
+        if emulation_statistics.id == -1 or emulation_statistics.id is None:
+            statistics_id = MetastoreFacade.save_emulation_statistic(emulation_statistics=emulation_statistics)
+        else:
+            statistics_id = emulation_statistics.id
         T = len(attacker_sequence)
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         s.initialize_defender_machines()
@@ -62,6 +66,7 @@ class Emulator:
                 a1 = defender_sequence[t]
                 a2 = attacker_sequence[t]
                 a2.ips = s.attacker_obs_state.get_action_ips(a=a2, emulation_env_config=emulation_env_config)
+                print(f"t:{t}, a2:{a2}")
                 a1.ips = s.defender_obs_state.get_action_ips(a=a1, emulation_env_config=emulation_env_config)
                 logger.debug(f"Executing attacker action:{a2.name} on machine index: {a2.index}, t={t}, ips:{a2.ips}")
                 s_prime = Attacker.attacker_transition(s=s, attacker_action=a2, simulation=False)
@@ -78,11 +83,14 @@ class Emulator:
                 emulation_trace.defender_actions.append(a1)
                 time.sleep(sleep_time)
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
-                print(emulation_statistics)
+                print(emulation_statistics.conditionals["intrusion"]["total_alerts"])
+                print(emulation_statistics.conditionals["no_intrusion"]["total_alerts"])
+                print(statistics_id)
             id = MetastoreFacade.save_emulation_trace(emulation_trace)
+            MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
             print(f"saving emulation trace, id:{id}")
             emulation_traces.append(emulation_trace)
         logger.info(f"All sequences completed, saving traces and emulation statistics")
         EmulationTrace.save_traces_to_disk(traces_save_dir=save_dir, traces=emulation_traces)
-        MetastoreFacade.save_emulation_statistic(emulation_statistics=emulation_statistics)
+        MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
         s.cleanup()

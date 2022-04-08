@@ -10,6 +10,7 @@ import PolicyExamination from "./components/Container/PolicyExamination/PolicyEx
 import ContainerImages from "./components/Container/ContainerImages/ContainerImages";
 import Simulations from "./components/Container/Simulations/Simulations";
 import TrainingResults from "./components/Container/TrainingResults/TrainingResults";
+import About from "./components/Container/About/About";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
                                 <Route path="images" index element={<ContainerImages/>}>
                                 </Route>
                                 <Route path="training" index element={<TrainingResults/>}>
+                                </Route>
+                                <Route path="about" index element={<About/>}>
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
                             </Route>

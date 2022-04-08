@@ -18,6 +18,7 @@ class SimulationEnvConfig:
     """
 
     def __init__(self, name: str, descr: str, version: str,
+                 gym_env_name: str,
                  simulation_env_input_config: SimulationEnvInputConfig,
                  players_config: PlayersConfig, state_space_config: StateSpaceConfig,
                  joint_action_space_config: JointActionSpaceConfig,
@@ -30,6 +31,7 @@ class SimulationEnvConfig:
         Initializes the DTO
 
         :param name: the name of the simulation
+        :param gym_env_name: the name of the OpenAI gym environment
         :param descr: the description of the simulation
         :param simulation_env_input_config: the input configuration to the simulation
         :param players_config: the players configuration of the simulation
@@ -57,6 +59,7 @@ class SimulationEnvConfig:
         self.emulation_statistic = emulation_statistic
         self.initial_state_distribution_config= initial_state_distribution_config
         self.version = version
+        self.gym_env_name = gym_env_name
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "SimulationEnvConfig":
@@ -80,7 +83,7 @@ class SimulationEnvConfig:
             emulation_statistic=EmulationStatistics.from_dict(d["emulation_statistic"]),
             initial_state_distribution_config=InitialStateDistributionConfig.from_dict(
                 d["initial_state_distribution_config"]),
-            version=d["version"]
+            version=d["version"], gym_env_name=d["gym_env_name"]
         )
         return obj
 
@@ -103,6 +106,7 @@ class SimulationEnvConfig:
         d["emulation_statistic"] = self.emulation_statistic.to_dict()
         d["initial_state_distribution_config"] = self.initial_state_distribution_config.to_dict()
         d["version"] = self.version
+        d["gym_env_name"] = self.gym_env_name
         return d
 
     def __str__(self) -> str:
@@ -119,5 +123,5 @@ class SimulationEnvConfig:
                f"observation_function_config: {self.observation_function_config}," \
                f"emulation_statistic: {self.emulation_statistic}," \
                f"initial_state_distribution_config: {self.initial_state_distribution_config}," \
-               f"version: {self.version}"
+               f"version: {self.version}, gym_env_name: {self.gym_env_name}"
 
