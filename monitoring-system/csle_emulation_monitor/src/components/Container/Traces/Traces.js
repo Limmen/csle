@@ -4,10 +4,13 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Spinner from 'react-bootstrap/Spinner'
 import Button from 'react-bootstrap/Button'
 import Accordion from 'react-bootstrap/Accordion';
+import Modal from 'react-bootstrap/Modal'
 import EmulationTrace from "./EmulationTrace/EmulationTrace";
+import TraceImg from './TracesLoop.png'
 import './Traces.css';
 
 const Traces = () => {
+    const [showInfoModal, setShowInfoModal] = useState(false);
     const [emulationTraces, setEmulationTraces] = useState([]);
     const [simulationTraces, setSimulationTraces] = useState([]);
     const [loadingEmulationTraces, setLoadingEmulationTraces] = useState(true);
@@ -76,6 +79,45 @@ const Traces = () => {
         </Tooltip>
     );
 
+    const renderInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about how traces are collected
+        </Tooltip>
+    );
+
+    const InfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Traces
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4>Collection of emulation and simulation traces</h4>
+                    <p className="modalText">
+                        Simulation traces are collected from the simulation system. At every time-step of the simulation,
+                        the simulated observations, player actions, rewards, states, and beliefs are recorded.
+                        Emulation traces are collected from the emulation system. At every time-step of an emulation
+                        episode, observations, actions, rewards, states and beliefs are measured or computed based on
+                        data from the emulation.
+                    </p>
+                    <div className="text-center">
+                        <img src={TraceImg} alt="Markov chain"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={props.onHide}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
     const EmulationTracesAccordions = (props) => {
         if (props.loadingEmulationTraces) {
             return (
@@ -107,6 +149,17 @@ const Traces = () => {
                         <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
+
+                <OverlayTrigger
+                    placement="right"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderInfoTooltip}
+                >
+                    <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
             </h3>
             <EmulationTracesAccordions loadingEmulationTraces={loadingEmulationTraces} emulationTraces={emulationTraces}/>
