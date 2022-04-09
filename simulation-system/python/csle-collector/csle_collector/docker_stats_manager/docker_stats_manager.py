@@ -70,23 +70,26 @@ class DockerStatsThread(threading.Thread):
         """
         start = time.time()
         while not self.stopped:
-            if time.time()-start >= self.time_step_len_seconds:
-                aggregated_stats, avg_stats_dict = self.compute_averages()
-                record = aggregated_stats.to_kafka_record(ip=self.ip)
-                self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
-                for k,v in avg_stats_dict.items():
-                    ip = self.get_ip(k)
-                    record = v.to_kafka_record(ip=ip)
-                    self.producer.produce(constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME, record)
-                self.stats_queues = {}
-                start = time.time()
+            try:
+                if time.time()-start >= self.time_step_len_seconds:
+                    aggregated_stats, avg_stats_dict = self.compute_averages()
+                    record = aggregated_stats.to_kafka_record(ip=self.ip)
+                    self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
+                    for k,v in avg_stats_dict.items():
+                        ip = self.get_ip(k)
+                        record = v.to_kafka_record(ip=ip)
+                        self.producer.produce(constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME, record)
+                    self.stats_queues = {}
+                    start = time.time()
 
-            for stream, container in self.streams:
-                stats_dict = next(stream)
-                parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
-                if parsed_stats.container_name not in self.stats_queues:
-                    self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
-                self.stats_queues[parsed_stats.container_name].append(parsed_stats)
+                for stream, container in self.streams:
+                    stats_dict = next(stream)
+                    parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
+                    if parsed_stats.container_name not in self.stats_queues:
+                        self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
+                    self.stats_queues[parsed_stats.container_name].append(parsed_stats)
+            except Exception as e:
+                logging.warning(f"Exception in monitor thread for emulation: {self.emulation}, exception: {e}")
 
     def get_ip(self, container_name: str) -> str:
         """
@@ -153,12 +156,17 @@ class DockerStatsManagerServicer(
         :return: a clients DTO with the state of the docker stats manager
         """
         new_docker_stats_monitor_threads = []
+        emulations = []
         for dsmt in self.docker_stats_monitor_threads:
-            if dsmt.is_alive():
+            if dsmt.is_alive() and not dsmt.stopped:
                 new_docker_stats_monitor_threads.append(dsmt)
+                emulations.append(dsmt.emulation)
+            else:
+                dsmt.stopped = True
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
         docker_stats_monitor_dto = csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(
-            num_monitors = len(self.docker_stats_monitor_threads)
+            num_monitors = len(self.docker_stats_monitor_threads),
+            emulations=emulations
         )
         return docker_stats_monitor_dto
 
@@ -179,7 +187,7 @@ class DockerStatsManagerServicer(
             if dsmt.emulation == request.emulation:
                 dsmt.stopped = True
             else:
-                if dsmt.is_alive():
+                if dsmt.is_alive() and not dsmt.stopped:
                     new_docker_stats_monitor_threads.append(dsmt)
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
         return csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(
@@ -216,7 +224,7 @@ class DockerStatsManagerServicer(
         self.docker_stats_monitor_threads.append(docker_stats_monitor_thread)
         new_docker_stats_monitor_threads = []
         for dsmt in self.docker_stats_monitor_threads:
-            if dsmt.is_alive():
+            if dsmt.is_alive() and not dsmt.stopped:
                 new_docker_stats_monitor_threads.append(dsmt)
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
         return csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(

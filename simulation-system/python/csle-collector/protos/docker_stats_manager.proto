@@ -34,4 +34,5 @@ message GetDockerStatsMonitorStatusMsg {}
 // Message that the server returns when requested by the client, contains info about the docker stats monitor
 message DockerStatsMonitorDTO {
   int32 num_monitors = 1;
+  repeated string emulations = 2;
 }

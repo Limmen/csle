@@ -16,39 +16,39 @@ const Monitoring = () => {
     const windowLengthOptions = [
         {
             value: 15,
-            label: "15 minutes"
+            label: "15 min"
         },
         {
             value: 30,
-            label: "30 minutes"
+            label: "30 min"
         },
         {
             value: 60,
-            label: "60 minutes"
+            label: "1h"
         },
         {
             value: 120,
-            label: "120 minutes"
+            label: "2h"
         },
         {
             value: 240,
-            label: "240 minutes"
+            label: "4h"
         },
         {
             value: 480,
-            label: "480 minutes"
+            label: "8h"
         },
         {
             value: 960,
-            label: "960 minutes"
+            label: "16h"
         },
         {
             value: 1920,
-            label: "1920 minutes"
+            label: "32h"
         },
         {
             value: 3840,
-            label: "3840 minutes"
+            label: "64h"
         },
     ]
     const evolutionSpeedOptions = [
@@ -158,23 +158,27 @@ const Monitoring = () => {
         }
     }
 
-    const onChangeWindowLength = (event) => {
-        event.preventDefault();
-        setWindowLength(event.target.value)
+    const onChangeWindowLength = (windowLenSelection) => {
+        setWindowLength(windowLenSelection)
+        setLoading(true)
+        fetchMonitoringData(windowLength.value, selectedEmulation)
     }
 
     const updateEmulation = (emulation) => {
-        setSelectedEmulation(emulation)
-        const containerOptions = emulation.value.containers_config.containers.map((c, index) => {
-            return {
-                value: c,
-                label: c.full_name_str
-            }
-        })
-        setContainerOptions(containerOptions)
-        setSelectedContainer(containerOptions[0])
-        setLoading(true)
-        fetchMonitoringData(windowLength.value, emulation.value)
+        if(selectedEmulation === null || selectedEmulation === undefined ||
+            emulation.value.name !== selectedEmulation.value.name) {
+            setSelectedEmulation(emulation)
+            const containerOptions = emulation.value.containers_config.containers.map((c, index) => {
+                return {
+                    value: c,
+                    label: c.full_name_str
+                }
+            })
+            setContainerOptions(containerOptions)
+            setSelectedContainer(containerOptions[0])
+            setLoading(true)
+            fetchMonitoringData(windowLength.value, emulation)
+        }
     }
 
     const updateHost = (container) => {
@@ -326,7 +330,7 @@ const Monitoring = () => {
                     })
                     setContainerOptions(containerOptions)
                     setSelectedContainer(containerOptions[0])
-                    fetchMonitoringData(windowLength.value, rEmulations[0].name)
+                    fetchMonitoringData(windowLength.value, emulationOptions[0])
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -334,7 +338,7 @@ const Monitoring = () => {
 
 
     const fetchMonitoringData = useCallback((len, emulation) => fetch(
-        `http://` + ip + ':7777/monitor/' + emulation + "/" + len,
+        `http://` + ip + ':7777/monitor/' + emulation.value.name + "/" + len,
         {
             method: "GET",
             headers: new Headers({

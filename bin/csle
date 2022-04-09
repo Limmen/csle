@@ -732,8 +732,23 @@ def list_statsmanager() -> None:
     :return: None
     """
     if MonitorToolsController.is_statsmanager_running():
-        click.secho("Docker statsmanager status: " + f" {click.style('[running]', fg='green')} "
-                                         f"port:{50051}", bold=False)
+        emulations = MetastoreFacade.list_emulations()
+        running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
+        docker_stats_monitor_status = None
+        for em in emulations:
+            if em.name in running_emulations:
+                docker_stats_monitor_status = ContainerManager.get_docker_stats_manager_status(
+                    log_sink_config=em.log_sink_config)
+                break
+        active_monitor_threads = 0
+        active_emulations = []
+        if docker_stats_monitor_status is not None:
+            active_monitor_threads = docker_stats_monitor_status.num_monitors
+            active_emulations = docker_stats_monitor_status.emulations
+        click.secho("Docker statsmanager status: " + f" {click.style('[running], ', fg='green')} "
+                                                     f"port:{50051}, num active monitor threads: "
+                                                     f"{active_monitor_threads}, "
+                                                     f"active emulations: {','.join(active_emulations)}", bold=False)
     else:
         click.secho("Docker statsmanager status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 

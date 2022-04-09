@@ -1,5 +1,4 @@
 .Header {
-    font-weight: bolder;
     color: black !important;
 }
 
@@ -24,10 +23,13 @@
 }
 
 .navdropdownheader {
-    font-weight: bolder;
     color: black !important;
 }
 
 .navtablabel {
     color: black !important;
+}
+
+.active {
+    font-weight: bolder;
 }
