@@ -1194,6 +1194,7 @@ class DOCKER:
     CONTAINER_CONFIG_CFG_PATH = "/containers.json"
     EMULATION_ENV_CFG_PATH = "/config.json"
     EMULATION_ENV_IMAGE = "/env.png"
+    SIMULATION_ENV_IMAGE = "/env.png"
     LOG_SINK_CFG_PATH = "/log_sink_config.json"
     CONTAINER_CONFIG_FLAGS_CFG_PATH = "/flags.json"
     CONTAINER_CONFIG_TOPOLOGY_CFG_PATH = "/topology.json"
@@ -1331,11 +1332,12 @@ class METADATA_STORE:
     PASSWORD = "csle"
     HOST = "127.0.0.1"
     EMULATIONS_TABLE = "emulations"
-    SIMULATIONS_TABLE = "emulations"
+    SIMULATIONS_TABLE = "simulations"
     EMULATION_TRACES_TABLE = "emulation_traces"
     SIMULATION_TRACES_TABLE = "simulation_traces"
     EMULATION_STATISTICS_TABLE = "emulation_statistics"
     EMULATION_IMAGES_TABLE = "emulation_images"
+    SIMULATION_IMAGES_TABLE = "simulation_images"
     EMULATION_SIMULATION_TRACES_TABLE = "emulation_simulation_traces"
 
 

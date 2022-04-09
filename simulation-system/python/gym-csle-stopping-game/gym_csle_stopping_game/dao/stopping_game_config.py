@@ -1,3 +1,4 @@
+from typing import Dict, Any
 import gym
 import numpy as np
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
@@ -44,6 +45,43 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         self.A2 = A2
         self.b1 = b1
         self.save_dir = save_dir
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["T"] = list(self.T.tolist())
+        d["O"] = list(self.O.tolist())
+        d["Z"] = list(self.Z.tolist())
+        d["R"] = list(self.R.tolist())
+        d["S"] = list(self.S.tolist())
+        d["L"] = self.L
+        d["R_INT"] = self.R_INT
+        d["R_COST"] = self.R_COST
+        d["R_SLA"] = self.R_SLA
+        d["R_ST"] = self.R_ST
+        d["A1"] = list(self.A1.tolist())
+        d["A2"] = list(self.A2.tolist())
+        d["b1"] = list(self.b1.tolist())
+        d["save_dir"] = self.save_dir
+        return d
+
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "StoppingGameConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = StoppingGameConfig(
+            T = np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
+            A1=np.array(d["A1"]), A2=np.array(d["A2"]), L=d["L"], R_INT=d["R_INT"],
+            R_COST=d["R_COST"], R_SLA=d["R_SLA"], R_ST=d["R_ST"], b1=np.array(d["b1"]), save_dir=d["save_dir"]
+        )
+        return obj
 
 
     def __str__(self) -> str:

@@ -128,9 +128,7 @@ def default_players_config() -> PlayersConfig:
     :return: the default players configuration of the simulation
     """
     player_configs = [
-        PlayerConfig(name="defender", id=1, descr="The defender which tries to detect, prevent, "
-                                                  "and interrupt intrusions for the infrastructure"),
-        PlayerConfig(name="attacker", id=2, descr="The attacker which tries to intrude on the infrastructure")
+        PlayerConfig(name="attacker", id=1, descr="The attacker which tries to intrude on the infrastructure")
     ]
     players_config = PlayersConfig(
         player_configs=player_configs
@@ -162,19 +160,6 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
         ActionSpaceConfig(
             actions=[
                 Action(
-                    id=0, descr="Continue action, it means that the defender continues to monitor the system "
-                                "but does not take an active action"
-                ),
-                Action(
-                    id=1, descr="Stop action, it means that the defender takes an active defensive action"
-                )
-            ],
-            player_id = 1,
-            action_type=ValueType.INTEGER
-        ),
-        ActionSpaceConfig(
-            actions=[
-                Action(
                     id=0, descr="Continue action, it means that the attacker continues the intrusion if it "
                                 "is in progress or that it continues to wait if it has not started the intrusion "
                 ),
@@ -183,7 +168,7 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
                                 "progress and otherwise it starts the intrusion"
                 )
             ],
-            player_id = 2,
+            player_id = 1,
             action_type=ValueType.INTEGER
         )
     ]
@@ -275,17 +260,6 @@ def default_joint_observation_space_config(
             observations=defender_observations,
             observation_type=ValueType.INTEGER,
             player_id=1,
-            descr="The observation space of the defender. The defender observes three metrics from the infrastructure: "
-                  "the number of severe IDS alerts, the number of warning IDS alerts, the number of login attempts",
-            observation_id_to_observation_id_vector= observation_id_to_observation_id_vector,
-            observation_component_name_to_index = observation_component_name_to_index,
-            component_observations=component_observations,
-            observation_id_to_observation_vector=observation_id_to_observation_vector
-        ),
-        ObservationSpaceConfig(
-            observations=defender_observations,
-            observation_type=ValueType.INTEGER,
-            player_id=2,
             descr="The observation space of the attacker. The attacker has inside information in the infrastructure "
                   "and observes the same metrics as the defender",
             observation_id_to_observation_id_vector= observation_id_to_observation_id_vector,
@@ -426,7 +400,7 @@ if __name__ == '__main__':
                         action="store_true")
     args = parser.parse_args()
     if not os.path.exists(ExperimentUtil.default_simulation_config_path()):
-        config = default_config(name="csle-stopping-game-001", version="0.0.1")
+        config = default_config(name="csle-stopping-mdp-attacker-001", version="0.0.1")
         ExperimentUtil.write_simulation_config_file(config, ExperimentUtil.default_simulation_config_path())
     config = ExperimentUtil.read_simulation_env_config(ExperimentUtil.default_simulation_config_path())
 

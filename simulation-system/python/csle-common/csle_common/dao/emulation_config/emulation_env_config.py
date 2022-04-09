@@ -56,6 +56,7 @@ class EmulationEnvConfig:
         self.port_forward_port = 1900
         self.running = False
         self.image = None
+        self.id = -1
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -79,6 +80,7 @@ class EmulationEnvConfig:
         )
         obj.running = d["running"]
         obj.image = d["image"]
+        obj.id = d["id"]
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -100,6 +102,7 @@ class EmulationEnvConfig:
         d["running"] = self.running
         d["image"] = self.image
         d["descr"] = self.descr
+        d["id"] = self.id
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> None:
@@ -217,7 +220,7 @@ class EmulationEnvConfig:
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
-               f"descr: {self.descr}"
+               f"descr: {self.descr}, id:{self.id}"
 
     def get_all_ips(self) -> List[str]:
         """

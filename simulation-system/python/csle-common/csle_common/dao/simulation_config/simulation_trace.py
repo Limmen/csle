@@ -1,8 +1,8 @@
 from typing import List, Dict, Any
 import json
 import os
-import numpy as np
 import csle_common.constants.constants as constants
+from csle_common.util.np_encoder import NpEncoder
 
 
 class SimulationTrace:
@@ -131,17 +131,3 @@ class SimulationTrace:
         else:
             print("Warning: Could not read traces file, path does not exist:{}".format(path))
             return []
-
-
-class NpEncoder(json.JSONEncoder):
-    """
-    Encoder for Numpy arrays to JSON
-    """
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        if isinstance(obj, np.floating):
-            return float(obj)
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return super(NpEncoder, self).default(obj)

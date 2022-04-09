@@ -6,12 +6,13 @@ class ObservationFunctionConfig:
     DTO representing the configuration of the observation function of a simulation
     """
 
-    def __init__(self, observation_tensor: List):
+    def __init__(self, observation_tensor: List, component_observation_tensors: Dict[str, List]):
         """
         Initializes the DTO
         :param observation_tensor: the observation tensor
         """
         self.observation_tensor = observation_tensor
+        self.component_observation_tensors = component_observation_tensors
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ObservationFunctionConfig":
@@ -22,7 +23,8 @@ class ObservationFunctionConfig:
         :return: the created instance
         """
         obj = ObservationFunctionConfig(
-            observation_tensor=d["observation_tensor"]
+            observation_tensor=d["observation_tensor"],
+            component_observation_tensors=d["component_observation_tensors"]
         )
         return obj
 
@@ -32,10 +34,12 @@ class ObservationFunctionConfig:
         """
         d = {}
         d["observation_tensor"] = self.observation_tensor
+        d["component_observation_tensors"] = self.component_observation_tensors
         return d
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"observation tensor: {self.observation_tensor}"
+        return f"observation tensor: {self.observation_tensor}, " \
+               f"component_observation_tensors: {self.component_observation_tensors}"

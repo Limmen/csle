@@ -1,19 +1,61 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback, createRef} from 'react';
 import './Simulations.css';
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Accordion from 'react-bootstrap/Accordion';
+import Spinner from 'react-bootstrap/Spinner'
 import MarkovChain from './Markov.png'
+import Simulation from "./Simulation/Simulation";
 
 const Simulations = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
+    const [simulations, setSimulations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const ip = "localhost"
+    // const ip = "172.31.212.92"
+
+    const fetchSimulations = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/simulations',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                console.log(response)
+                setSimulations(response);
+                setLoading(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    useEffect(() => {
+        setLoading(true)
+        fetchSimulations();
+    }, []);
+
+    const renderRefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload simulations from the backend
+        </Tooltip>
+    );
 
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about the emulation environments
+            More information about the simulation environments
         </Tooltip>
     );
+
+    const refresh = () => {
+        setLoading(true)
+        fetchSimulations()
+    }
 
     const InfoModal = (props) => {
         return (
@@ -45,9 +87,38 @@ const Simulations = () => {
         );
     }
 
+    const SimulationAccordions = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    {props.simulations.map((simulation, index) =>
+                        <Simulation simulation={simulation} wrapper={wrapper} key={simulation.name + "-" + index}/>
+                    )}
+                </Accordion>
+            )
+        }
+    }
+
+    const wrapper = createRef();
+
     return (
         <div className="Simulations">
             <h3> Simulations
+
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRefreshTooltip}
+                >
+                    <Button variant="button" onClick={refresh}>
+                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
 
                 <OverlayTrigger
                     placement="right"
@@ -60,6 +131,7 @@ const Simulations = () => {
                 </OverlayTrigger>
                 <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
             </h3>
+            <SimulationAccordions loading={loading} simulations={simulations}/>
         </div>
     );
 }

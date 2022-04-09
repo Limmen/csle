@@ -4,6 +4,7 @@ import jsonpickle
 import json
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
@@ -49,6 +50,20 @@ class MetastoreFacade:
                 return record
 
     @staticmethod
+    def list_simulations() -> List[SimulationEnvConfig]:
+        """
+        :return: A list of emulations in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_simulation_record_to_dto(x), records))
+                return records
+
+    @staticmethod
     def _convert_emulation_record_to_dto(emulation_record) -> EmulationEnvConfig:
         """
         Converts an emulation record fetched from the metastore into a DTO
@@ -58,7 +73,22 @@ class MetastoreFacade:
         """
         emulation_config_json_str = json.dumps(emulation_record[2], indent=4, sort_keys=True)
         emulation_env_config: EmulationEnvConfig = jsonpickle.decode(emulation_config_json_str)
+        emulation_env_config.id = emulation_record[0]
         return emulation_env_config
+
+    @staticmethod
+    def _convert_simulation_record_to_dto(simulation_record) -> SimulationEnvConfig:
+        """
+        Converts an simulation record fetched from the metastore into a DTO
+
+        :param simulation_record: the record to convert
+        :return: the DTO representing the record
+        """
+        simulation_config_json_str = json.dumps(simulation_record[3], indent=4, sort_keys=True)
+        simulation_env_config: SimulationEnvConfig = SimulationEnvConfig.from_dict(
+            json.loads(simulation_config_json_str))
+        simulation_env_config.id = simulation_record[0]
+        return simulation_env_config
 
     @staticmethod
     def _convert_emulation_trace_record_to_dto(emulation_trace_record) -> EmulationTrace:
@@ -116,13 +146,26 @@ class MetastoreFacade:
     @staticmethod
     def _convert_emulation_image_record_to_tuple(emulation_image_record) -> Tuple[str, bytes]:
         """
-        Converts an emulation statistics record fetched from the metastore into a DTO
+        Converts an emulation image record fetched from the metastore into bytes
 
         :param emulation_image_record: the record to convert
         :return: a tuple (emulation name, image bytes)
         """
         emulation_name = emulation_image_record[1]
         image_bytes = emulation_image_record[2]
+        return emulation_name, image_bytes
+
+
+    @staticmethod
+    def _convert_simulation_image_record_to_tuple(simulation_image_record) -> Tuple[str, bytes]:
+        """
+        Converts a simulation image record fetched from the metastore into bytes
+
+        :param simulation_image_record: the record to convert
+        :return: a tuple (emulation name, image bytes)
+        """
+        emulation_name = simulation_image_record[1]
+        image_bytes = simulation_image_record[2]
         return emulation_name, image_bytes
 
     @staticmethod
@@ -165,6 +208,51 @@ class MetastoreFacade:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (config.name,))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Emulation {config.name} uninstalled successfully")
+
+
+    @staticmethod
+    def install_simulation(config: SimulationEnvConfig) -> Union[Any, int]:
+        """
+        Installs the simulation configuration in the metastore
+
+        :param config: the config to install
+        :return: id of the created row
+        """
+        Logger.__call__().get_logger().debug(f"Installing simulation:{config.name} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                try:
+                    config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
+                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATIONS_TABLE} "
+                                f"(name, emulation_statistic_id, config) "
+                                f"VALUES (%s, %s, %s) RETURNING id", (config.name, config.emulation_statistic_id,
+                                                                      config_json_str))
+                    id_of_new_row = cur.fetchone()[0]
+                    conn.commit()
+                    Logger.__call__().get_logger().debug(f"Simulation {config.name} installed successfully")
+                    return id_of_new_row
+                except psycopg.errors.UniqueViolation as e:
+                    Logger.__call__().get_logger().debug(f"Simulation {config.name} is already installed")
+
+    @staticmethod
+    def uninstall_simulation(config: SimulationEnvConfig) -> None:
+        """
+        Uninstalls the simulation configuration in the metastore
+
+        :param config: the config to uninstall
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Uninstalling simulation:{config.name} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE name = %s", (config.name,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Simulation {config.name} uninstalled successfully")
+
 
     @staticmethod
     def save_emulation_trace(emulation_trace: EmulationTrace) -> Union[Any, int]:
@@ -395,6 +483,7 @@ class MetastoreFacade:
                     f"emulation {emulation_simulation_trace.emulation_trace.emulation_name} "
                     f"and simulation: {emulation_simulation_trace.simulation_trace.simulation_env} saved successfully")
 
+
     @staticmethod
     def save_emulation_image(img: bytes, emulation_name: str) -> Union[Any, int]:
         """
@@ -436,7 +525,7 @@ class MetastoreFacade:
 
 
     @staticmethod
-    def get_emulation_img(emulation_name : str) -> Union[None, Tuple[str, bytes]]:
+    def get_emulation_image(emulation_name : str) -> Union[None, Tuple[str, bytes]]:
         """
         Function for fetching the image of a given emulation
 
@@ -453,8 +542,6 @@ class MetastoreFacade:
                 if record is not None:
                     record = MetastoreFacade._convert_emulation_image_record_to_tuple(emulation_image_record=record)
                 return record
-
-
 
     @staticmethod
     def delete_all(table: str) -> None:
@@ -476,3 +563,61 @@ class MetastoreFacade:
                 Logger.__call__().get_logger().debug(f"All traces deleted from table "
                                                      f"{table} successfully")
 
+    @staticmethod
+    def save_simulation_image(img: bytes, simulation_name: str) -> Union[Any, int]:
+        """
+        Saves the image of a simulation in the metastore
+
+        :param img: the image data to save
+        :param simulation_name: the name of the simulation
+        :return: id of the created row
+        """
+        Logger.__call__().get_logger().debug(f"Saving image for simulation:{simulation_name} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                try:
+                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} (simulation_name, image) "
+                                f"VALUES (%s, %s) RETURNING id", (simulation_name, img))
+                    id_of_new_row = cur.fetchone()[0]
+                    conn.commit()
+                    Logger.__call__().get_logger().debug(f"Saved image for simulation {simulation_name} successfully")
+                    return id_of_new_row
+                except Exception as e:
+                    Logger.__call__().get_logger().warning(f"There was an error saving an image "
+                                                           f"for simulation {simulation_name}")
+
+    @staticmethod
+    def list_simulation_images() -> List[Tuple[str, bytes]]:
+        """
+        :return: A list of simulation names and images in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_simulation_image_record_to_tuple(x), records))
+                return records
+
+
+    @staticmethod
+    def get_simulation_image(simulation_name : str) -> Union[None, Tuple[str, bytes]]:
+        """
+        Function for fetching the image of a given simulation
+
+        :param simulation_name: the name of the simulation to fetch the image for
+        :return: The simulation trace or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} "
+                            f"WHERE simulation_name = %s", (simulation_name,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_simulation_image_record_to_tuple(simulation_image_record=record)
+                return record

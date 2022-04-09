@@ -8,8 +8,11 @@ from csle_common.dao.simulation_config.time_step_type import TimeStepType
 from csle_common.dao.simulation_config.reward_function_config import RewardFunctionConfig
 from csle_common.dao.simulation_config.transition_operator_config import TransitionOperatorConfig
 from csle_common.dao.simulation_config.observation_function_config import ObservationFunctionConfig
-from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
+from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
+from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
+from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 
 
 class SimulationEnvConfig:
@@ -24,8 +27,10 @@ class SimulationEnvConfig:
                  joint_action_space_config: JointActionSpaceConfig,
                  joint_observation_space_config: JointObservationSpaceConfig, time_step_type: TimeStepType,
                  reward_function_config: RewardFunctionConfig, transition_operator_config: TransitionOperatorConfig,
-                 observation_function_config: ObservationFunctionConfig, emulation_statistic: EmulationStatistics,
-                 initial_state_distribution_config : InitialStateDistributionConfig
+                 observation_function_config: ObservationFunctionConfig, emulation_statistic_id: int,
+                 initial_state_distribution_config : InitialStateDistributionConfig,
+                 env_parameters_config: EnvParametersConfig, plot_transition_probabilities : bool = False,
+                 plot_observation_function: bool = False, plot_reward_function: bool = False
                  ):
         """
         Initializes the DTO
@@ -42,8 +47,13 @@ class SimulationEnvConfig:
         :param reward_function_config: the reward function configuration of the of the simulation
         :param transition_operator_config: the transition operator configuration of the simulation
         :param observation_function_config: the observation function configuration of the simulation
+        :param emulation_statistic_id: the id of the emulation statistic
         :param initial_state_distribution_config: the initial state distribution configuration of the simulation
         :param version: the version of the environment
+        :param env_parameters_config: parameters that are not part of the state but that the poliy depends on.
+        :param plot_transition_probabilities: boolean parameter whether to plot transition probabilities or not
+        :param plot_observation_function: boolean parameter whether to plot the observation function or not
+        :param plot_reward_function: boolean parameter whether to plot the reward function or not
         """
         self.name = name
         self.descr = descr
@@ -56,10 +66,16 @@ class SimulationEnvConfig:
         self.reward_function_config = reward_function_config
         self.transition_operator_config = transition_operator_config
         self.observation_function_config = observation_function_config
-        self.emulation_statistic = emulation_statistic
+        self.emulation_statistic_id = emulation_statistic_id
         self.initial_state_distribution_config= initial_state_distribution_config
         self.version = version
         self.gym_env_name = gym_env_name
+        self.image = None
+        self.id = -1
+        self.env_parameters_config = env_parameters_config
+        self.plot_transition_probabilities = plot_transition_probabilities
+        self.plot_observation_function = plot_observation_function
+        self.plot_reward_function = plot_reward_function
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "SimulationEnvConfig":
@@ -69,9 +85,17 @@ class SimulationEnvConfig:
         :param d: the dict to convert
         :return: the created instance
         """
+        input_config = None
+        try:
+            input_config = StoppingGameConfig.from_dict(d["simulation_env_input_config"])
+        except:
+            try:
+                input_config = StoppingGameAttackerMdpConfig.from_dict(d["simulation_env_input_config"])
+            except:
+                input_config = StoppingGameDefenderPomdpConfig.from_dict(d["simulation_env_input_config"])
         obj = SimulationEnvConfig(
             name = d["name"], descr = d["descr"],
-            simulation_env_input_config=SimulationEnvInputConfig.from_dict(d["simulation_env_input_config"]),
+            simulation_env_input_config=input_config,
             players_config=PlayersConfig.from_dict(d["players_config"]),
             state_space_config=StateSpaceConfig.from_dict(d["state_space_config"]),
             joint_action_space_config=JointActionSpaceConfig.from_dict(d["joint_action_space_config"]),
@@ -80,11 +104,17 @@ class SimulationEnvConfig:
             reward_function_config=RewardFunctionConfig.from_dict(d["reward_function_config"]),
             transition_operator_config=TransitionOperatorConfig.from_dict(d["transition_operator_config"]),
             observation_function_config=ObservationFunctionConfig.from_dict(d["observation_function_config"]),
-            emulation_statistic=EmulationStatistics.from_dict(d["emulation_statistic"]),
+            emulation_statistic_id=d["emulation_statistic_id"],
             initial_state_distribution_config=InitialStateDistributionConfig.from_dict(
                 d["initial_state_distribution_config"]),
-            version=d["version"], gym_env_name=d["gym_env_name"]
+            version=d["version"], gym_env_name=d["gym_env_name"],
+            env_parameters_config=EnvParametersConfig.from_dict(d["env_parameters_config"]),
+            plot_transition_probabilities=d["plot_transition_probabilities"],
+            plot_observation_function=d["plot_observation_function"],
+            plot_reward_function=d["plot_reward_function"]
         )
+        obj.id = d["id"]
+        obj.image = d["image"]
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -103,10 +133,16 @@ class SimulationEnvConfig:
         d["reward_function_config"] = self.reward_function_config.to_dict()
         d["transition_operator_config"] = self.transition_operator_config.to_dict()
         d["observation_function_config"] = self.observation_function_config.to_dict()
-        d["emulation_statistic"] = self.emulation_statistic.to_dict()
+        d["emulation_statistic_id"] = self.emulation_statistic_id
         d["initial_state_distribution_config"] = self.initial_state_distribution_config.to_dict()
         d["version"] = self.version
         d["gym_env_name"] = self.gym_env_name
+        d["id"] = self.id
+        d["image"] = self.image
+        d["env_parameters_config"] = self.env_parameters_config.to_dict()
+        d["plot_transition_probabilities"] = self.plot_transition_probabilities
+        d["plot_observation_function"] = self.plot_observation_function
+        d["plot_reward_function"] = self.plot_reward_function
         return d
 
     def __str__(self) -> str:
@@ -121,7 +157,11 @@ class SimulationEnvConfig:
                f"time_step_type: {self.time_step_type}, reward_function_config: {self.reward_function_config}, " \
                f"transition_operator_config: {self.transition_operator_config}, " \
                f"observation_function_config: {self.observation_function_config}," \
-               f"emulation_statistic: {self.emulation_statistic}," \
+               f"emulation_statistic_id: {self.emulation_statistic_id}," \
                f"initial_state_distribution_config: {self.initial_state_distribution_config}," \
-               f"version: {self.version}, gym_env_name: {self.gym_env_name}"
+               f"version: {self.version}, gym_env_name: {self.gym_env_name}, id: {self.id}," \
+               f"env_parameters_config: {self.env_parameters_config}," \
+               f"plot_observation_function: {self.plot_observation_function}," \
+               f"plot_transition_probabilities: {self.plot_transition_probabilities}," \
+               f"plot_reward_function: {self.plot_reward_function}"
 

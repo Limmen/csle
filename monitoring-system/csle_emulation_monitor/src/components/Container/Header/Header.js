@@ -62,10 +62,11 @@ const Header = () => {
 
     return (<div className="Header">
             <div className="row">
-                <div className="col-sm-12 p-5 mb-4 bg-light rounded-3 jumbotron">
+                <div className="col-sm-12 p-5 mb-4 bg-light rounded-3 jumbotron blue-grey lighten-5">
                     <h1 className="text-center title">
                         Cyber Security Learning Environment (CSLE)
                     </h1>
+
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     </nav>
                     <ul className="nav nav-tabs justify-content-center navtabsheader">

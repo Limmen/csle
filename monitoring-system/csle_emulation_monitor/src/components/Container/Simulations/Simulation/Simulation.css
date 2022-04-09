@@ -1,0 +1,22 @@
+.stateTransitionPlot {
+    margin-top:40px
+}
+
+.selectBlock {
+    display: inline-block;
+    margin-left:20px;
+    margin-right:20px
+}
+
+
+.obsFunction {
+    margin-top:50px
+}
+
+.obsFunctionHistogram {
+    margin-top: 50px
+}
+
+.rewardFun {
+    margin-top:50px
+}

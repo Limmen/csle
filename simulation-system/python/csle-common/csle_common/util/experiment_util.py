@@ -23,6 +23,7 @@ from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
+from csle_common.util.np_encoder import NpEncoder
 import csle_common.constants.constants as constants
 
 
@@ -202,7 +203,7 @@ class ExperimentUtil:
         :param path: the path to write the file
         :return: None
         """
-        json_str = json.dumps(simulation_env_config.to_dict(), indent=4, sort_keys=True)
+        json_str = json.dumps(simulation_env_config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
         with io.open(path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
@@ -523,7 +524,7 @@ class ExperimentUtil:
     def default_emulation_picture_path(out_dir : str = None) -> str:
         """
         :param out_dir: directory to write
-        :return: the default path to emulation config file
+        :return: the default path to emulation img file
         """
         if out_dir is None:
             img_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
@@ -531,6 +532,20 @@ class ExperimentUtil:
         else:
             img_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
                                        + constants.DOCKER.EMULATION_ENV_IMAGE)
+        return img_path
+
+    @staticmethod
+    def default_simulation_picture_path(out_dir : str = None) -> str:
+        """
+        :param out_dir: directory to write
+        :return: the default path to simulatio img file
+        """
+        if out_dir is None:
+            img_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
+                                    + constants.DOCKER.SIMULATION_ENV_IMAGE)
+        else:
+            img_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
+                                    + constants.DOCKER.SIMULATION_ENV_IMAGE)
         return img_path
 
     @staticmethod

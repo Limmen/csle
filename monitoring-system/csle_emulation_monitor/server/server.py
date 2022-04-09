@@ -108,6 +108,20 @@ def images():
     return response
 
 
+@app.route('/simulations', methods=['GET'])
+def simulations():
+    all_simulations = MetastoreFacade.list_simulations()
+    all_images = MetastoreFacade.list_simulation_images()
+    for sim in all_simulations:
+        for sim_name_img in all_images:
+            sim_name, img = sim_name_img
+            if sim_name == sim.name:
+                sim.image = base64.b64encode(img).decode()
+    simulations_dicts = list(map(lambda x: x.to_dict(), all_simulations))
+    response = jsonify(simulations_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/emulations', methods=['GET'])
 def emulations():
     all_emulations = MetastoreFacade.list_emulations()
@@ -167,7 +181,7 @@ def emulation(emulation_name: str):
     if em is None:
         em_dict = {}
     else:
-        em_name, img = MetastoreFacade.get_emulation_img(emulation_name=em.name)
+        em_name, img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
         em.image = base64.b64encode(img).decode()
         em_dict = em.to_dict()
     response = jsonify(em_dict)

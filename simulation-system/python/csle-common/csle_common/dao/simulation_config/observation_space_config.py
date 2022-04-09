@@ -66,9 +66,10 @@ class ObservationSpaceConfig:
         d["observation_component_name_to_index"] = self.observation_component_name_to_index
         d["observation_id_to_observation_vector"] = self.observation_id_to_observation_vector
         d["observation_id_to_observation_id_vector"] = self.observation_id_to_observation_id_vector
-        d["component_observations"] = {}
+        d2 = {}
         for k,v in self.component_observations.items():
-            d[k] = list(map(lambda x: x.to_dict(), v))
+            d2[k] = list(map(lambda x: x.to_dict(), v))
+        d["component_observations"] = d2
         return d
 
     def __str__(self):

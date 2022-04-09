@@ -40,4 +40,4 @@ class StateSpaceConfig:
         """
         :return: a string representation of the DTO
         """
-        return f"states: {list(map(lambda x: str(x)))}"
+        return f"states: {list(map(lambda x: str(x), self.states))}"
