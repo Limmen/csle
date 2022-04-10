@@ -9,10 +9,11 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir="/tmp/tspsa_test", title="T-SPSA test", random_seeds=[399], agent_type=AgentType.T_SPSA,
+        log_every=10,
         hparams={
-            "N": HParam(value=100, name="N", descr="the number of training iterations"),
+            "N": HParam(value=1000, name="N", descr="the number of training iterations"),
             "c": HParam(value=10, name="c", descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-            "a": HParam(value=50, name="a", descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
+            "a": HParam(value=1, name="a", descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             "A": HParam(value=100, name="A", descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             "lambda": HParam(value=0.602, name="lambda", descr="scalar coefficient for determining perturbation sizes "
                                                             "in T-SPSA"),

@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Dict, Union
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -74,6 +74,10 @@ class StoppingGameEnv(BaseEnv):
         # Update stops remaining
         self.state.l = self.state.l-a1
         info["l"] = self.state.l
+        info["s"] = self.state.s
+        info["a1"] = a1
+        info["a2"] = a2
+        info["o"] = o
 
         # Get observations
         attacker_obs = self.state.attacker_observation()
@@ -91,8 +95,20 @@ class StoppingGameEnv(BaseEnv):
         if not done:
             self.trace.attacker_observations.append(attacker_obs)
             self.trace.defender_observations.append(defender_obs)
+        else:
+            info = self._final_info(info)
 
         return (defender_obs, attacker_obs), (r,-r), done, info
+
+    def _final_info(self, info) -> Dict[str, Union[float, int]]:
+        """
+        Adds the cumulative reward and episode length to the info dict
+        :param info: the info dict to update
+        :return: the updated info dict
+        """
+        info["R"] = sum(self.trace.defender_rewards)
+        info["T"] = len(self.trace.defender_actions)
+        return info
 
     def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
         """

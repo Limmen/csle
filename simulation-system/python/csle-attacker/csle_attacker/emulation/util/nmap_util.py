@@ -661,7 +661,7 @@ class NmapUtil:
                         results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
                     except Exception as e:
                         print(f"exception execution commands for ip:{c.ip}, username: {c.username}, conn: {c.conn}, "
-                              f"{c.conn.get_transport()}")
+                              f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport.is_active()}")
                         raise ValueError("error")
                     total_time = sum(list(map(lambda x: x[2], results)))
                     total_cost += total_time

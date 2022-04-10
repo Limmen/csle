@@ -259,7 +259,6 @@ class StoppingGameUtil:
         component_observation_tensors["login_attempts"]=login_attempts_tensor
         return np.array(observation_tensor), component_observation_tensors
 
-
     @staticmethod
     def observation_tensor(n):
         """
@@ -269,8 +268,8 @@ class StoppingGameUtil:
         no_intrusion_dist = []
         terminal_dist = np.zeros(n + 1)
         terminal_dist[-1] = 1
-        intrusion_rv = betabinom(n=n, a=1, b=0.9)
-        no_intrusion_rv = betabinom(n=n, a=0.7, b=2)
+        intrusion_rv = betabinom(n=n, a=1, b=0.7)
+        no_intrusion_rv = betabinom(n=n, a=0.7, b=3)
         for i in range(n + 1):
             intrusion_dist.append(intrusion_rv.pmf(i))
             no_intrusion_dist.append(no_intrusion_rv.pmf(i))

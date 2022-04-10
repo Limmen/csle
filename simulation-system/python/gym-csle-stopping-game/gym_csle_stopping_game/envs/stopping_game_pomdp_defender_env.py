@@ -52,7 +52,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
 
         return defender_obs, r[0], d, info
 
-    def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
+    def reset(self, soft : bool = False) -> np.ndarray:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 

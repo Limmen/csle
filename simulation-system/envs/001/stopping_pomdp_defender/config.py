@@ -34,9 +34,9 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 import gym_csle_stopping_game.constants.constants as stopping_game_constants
 
 
-def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 20,
-                   min_warning_alerts :int = 0, max_warning_alerts :int = 20, min_login_attempts :int = 0,
-                   max_login_attempts :int = 10, emulation_statistic_id : Union[int, None] = None) -> SimulationEnvConfig:
+def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 10,
+                   min_warning_alerts :int = 0, max_warning_alerts :int = 10, min_login_attempts :int = 0,
+                   max_login_attempts :int = 5, emulation_statistic_id : Union[int, None] = None) -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
 
@@ -293,7 +293,7 @@ def default_reward_function_config() -> RewardFunctionConfig:
     :return: the default reward function configuration
     """
     reward_function_config = RewardFunctionConfig(
-        reward_tensor=list(-StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
+        reward_tensor=list(StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
     )
     return reward_function_config
 

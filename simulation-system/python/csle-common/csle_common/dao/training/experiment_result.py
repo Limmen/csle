@@ -1,4 +1,5 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, List
+from csle_common.dao.training.policy import Policy
 
 
 class ExperimentResult:
@@ -7,21 +8,8 @@ class ExperimentResult:
     """
 
     def __init__(self):
-        self.metrics = {}
-
-
-    def update_metric(self, metric_name: str, value: Union[float, int, str]) -> None:
-        """
-        Updates a given metric with a given value
-
-        :param metric_name: the metric to update
-        :param value: the new value
-        :return: None
-        """
-        if metric_name in self.metrics:
-            self.metrics[metric_name].append(value)
-        else:
-            self.metrics[metric_name] = [value]
+        self.metrics : Dict[int, Dict[str, List[Union[int, float]]]]= {}
+        self.policies: Dict[int, Policy] = {}
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ExperimentResult":
@@ -33,6 +21,10 @@ class ExperimentResult:
         """
         obj = ExperimentResult()
         obj.metrics = d["metrics"]
+        d2 = {}
+        for k,v in d["policies"].items():
+            d2[k] = Policy.from_dict(v)
+        obj.policies = d2
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -41,10 +33,14 @@ class ExperimentResult:
         """
         d = {}
         d["metrics"] = self.metrics
+        d2 = {}
+        for k,v in self.policies.items():
+            d2[k] = v.to_dict()
+        d["policies"] = d2
         return d
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"metrics: {self.metrics}"
+        return f"metrics: {self.metrics}, policies: {self.policies}"
