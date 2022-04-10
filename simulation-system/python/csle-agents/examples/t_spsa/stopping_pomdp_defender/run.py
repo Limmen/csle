@@ -6,7 +6,7 @@ from csle_agents.t_spsa.t_spsa import TSPSA
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender")
+    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir="/tmp/tspsa_test", title="T-SPSA test", random_seeds=[399], agent_type=AgentType.T_SPSA,
         hparams={
@@ -18,8 +18,11 @@ if __name__ == '__main__':
                                                             "in T-SPSA"),
             "epsilon": HParam(value=0.101, name="epsilon", descr="scalar coefficient for determining "
                                                               "gradient step sizes in T-SPSA"),
-            "L": HParam(value=3, name="L", descr="the number of stop actions")
+            "L": HParam(value=3, name="L", descr="the number of stop actions"),
+            "eval_batch_size": HParam(value=100, name="eval_batch_size", descr="number of iterations to evaluate theta"),
+            "theta1": HParam(value=[-4,-4,-4], name="theta1", descr="initial thresholds")
         }
     )
     agent = TSPSA(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                   experiment_config=experiment_config)
+    agent.train()

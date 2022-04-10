@@ -9,16 +9,18 @@ class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
     when facing a static attacker policy
     """
 
-    def __init__(self, stopping_game_config: StoppingGameConfig, attacker_strategy_name,
+    def __init__(self, env_name: str, stopping_game_config: StoppingGameConfig, attacker_strategy_name,
                  stopping_game_name: str = "csle-stopping-game-v1"):
         """
         Initializes the DTO
 
+        :param env_name: the environment name
         :param stopping_game_config: The underlying stopping game config
         :param attacker_strategy_name: the attacker's strategy name
         :param stopping_game_name: the name of the underlying stopping game
         """
         super().__init__()
+        self.env_name = env_name
         self.stopping_game_config = stopping_game_config
         self.attacker_strategy_name = attacker_strategy_name
         self.stopping_game_name = stopping_game_name
@@ -33,7 +35,8 @@ class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
         """
         obj = StoppingGameDefenderPomdpConfig(
             stopping_game_config=StoppingGameConfig.from_dict(d["stopping_game_config"]),
-            attacker_strategy_name=d["attacker_strategy_name"], stopping_game_name=d["stopping_game_name"]
+            attacker_strategy_name=d["attacker_strategy_name"], stopping_game_name=d["stopping_game_name"],
+            env_name=d["env_name"]
         )
         return obj
 
@@ -45,6 +48,7 @@ class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
         d["stopping_game_config"] = self.stopping_game_config.to_dict()
         d["attacker_strategy_name"] = self.attacker_strategy_name
         d["stopping_game_name"] = self.stopping_game_name
+        d["env_name"] = self.env_name
         return d
 
     def __str__(self):
@@ -52,4 +56,5 @@ class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
         :return:  a string representation of the object
         """
         return f"stopping_game_config: {self.stopping_game_config}, " \
-               f"attacker_strategy_name: {self.attacker_strategy_name}, stopping_game_name: {self.stopping_game_name}"
+               f"attacker_strategy_name: {self.attacker_strategy_name}, stopping_game_name: {self.stopping_game_name}," \
+               f"env_name: {self.env_name}"

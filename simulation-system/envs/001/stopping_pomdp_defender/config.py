@@ -34,8 +34,8 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 import gym_csle_stopping_game.constants.constants as stopping_game_constants
 
 
-def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 50,
-                   min_warning_alerts :int = 0, max_warning_alerts :int = 50, min_login_attempts :int = 0,
+def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 20,
+                   min_warning_alerts :int = 0, max_warning_alerts :int = 20, min_login_attempts :int = 0,
                    max_login_attempts :int = 10, emulation_statistic_id : Union[int, None] = None) -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
@@ -252,8 +252,8 @@ def default_joint_observation_space_config(
             component_observations["login_attempts"].append(Observation(id=val, val=val,
                                                                         descr=f"{val} login attempts"))
 
-        for i in range(min_severe_alerts, max_severe_alerts+1):
-            for j in range(min_warning_alerts+max_warning_alerts):
+        for i in range(min_severe_alerts, max_severe_alerts):
+            for j in range(min_warning_alerts, max_warning_alerts):
                 for k in range(min_login_attempts, max_login_attempts):
                     id = (i*(len(range(min_warning_alerts,max_warning_alerts))*len(range(min_login_attempts,max_login_attempts)))
                     +j*len(range(min_login_attempts, max_login_attempts)) + k)
@@ -333,9 +333,9 @@ def default_observation_function_config(
             emulation_statistic=emulation_statistic, observation_space_defender=defender_obs_space,
             joint_action_space=joint_action_space, state_space=state_space))
     else:
-        severe_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_severe_alerts, max_severe_alerts)))
-        warning_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_warning_alerts, max_warning_alerts)))
-        login_attempts_tensor = StoppingGameUtil.observation_tensor(len(range(min_login_attempts, max_login_attempts)))
+        severe_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_severe_alerts, max_severe_alerts))-1)
+        warning_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_warning_alerts, max_warning_alerts))-1)
+        login_attempts_tensor = StoppingGameUtil.observation_tensor(len(range(min_login_attempts, max_login_attempts))-1)
         component_observation_tensors["severe_alerts"] = list(severe_alerts_tensor.tolist())
         component_observation_tensors["warning_alerts"] = list(warning_alerts_tensor.tolist())
         component_observation_tensors["login_attempts"] = list(login_attempts_tensor.tolist())
@@ -352,6 +352,7 @@ def default_observation_function_config(
                             warning_alerts_tensor[a1][a2][s][obs_vector[1]]*\
                             login_attempts_tensor[a1][a2][s][obs_vector[2]]
                         s_o_dist.append(p)
+                    assert round(sum(s_o_dist),2) == 1.0
                     a2_s_o_dist.append(s_o_dist)
                 a1_a2_s_o_dist.append(a2_s_o_dist)
             observation_tensor.append(a1_a2_s_o_dist)
@@ -401,10 +402,11 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         O=np.array(list(defender_observation_space_config.observation_id_to_observation_vector.keys())),
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
-        S=StoppingGameUtil.state_space())
+        S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1")
     config = StoppingGameDefenderPomdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        attacker_strategy_name=stopping_game_constants.STATIC_ATTACKER_STRATEGIES.RANDOM)
+        attacker_strategy_name=stopping_game_constants.STATIC_ATTACKER_STRATEGIES.RANDOM,
+        env_name="csle-stopping-game-pomdp-defender-v1")
     return config
 
 

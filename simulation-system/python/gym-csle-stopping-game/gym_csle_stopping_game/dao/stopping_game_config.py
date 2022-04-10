@@ -9,12 +9,14 @@ class StoppingGameConfig(SimulationEnvInputConfig):
     DTO class containing the configuration of the stopping game
     """
 
-    def __init__(self, T: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray, S: np.ndarray, A1: np.ndarray,
+    def __init__(self, env_name: str,
+                 T: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray, S: np.ndarray, A1: np.ndarray,
                  A2: np.ndarray, L: int, R_INT: int, R_COST: int, R_SLA: int, R_ST: int, b1: np.ndarray,
                  save_dir: str) -> None:
         """
         Initializes the DTO
 
+        :param env_name: the name of the environment
         :param T: the transition tensor
         :param O: the observation space
         :param Z: the observation tensor
@@ -45,6 +47,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         self.A2 = A2
         self.b1 = b1
         self.save_dir = save_dir
+        self.env_name = env_name
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -65,8 +68,8 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         d["A2"] = list(self.A2.tolist())
         d["b1"] = list(self.b1.tolist())
         d["save_dir"] = self.save_dir
+        d["env_name"] = self.env_name
         return d
-
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "StoppingGameConfig":
@@ -79,10 +82,10 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         obj = StoppingGameConfig(
             T = np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
             A1=np.array(d["A1"]), A2=np.array(d["A2"]), L=d["L"], R_INT=d["R_INT"],
-            R_COST=d["R_COST"], R_SLA=d["R_SLA"], R_ST=d["R_ST"], b1=np.array(d["b1"]), save_dir=d["save_dir"]
+            R_COST=d["R_COST"], R_SLA=d["R_SLA"], R_ST=d["R_ST"], b1=np.array(d["b1"]), save_dir=d["save_dir"],
+            env_name = d["env_name"]
         )
         return obj
-
 
     def __str__(self) -> str:
         """
@@ -90,7 +93,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         """
         return f"T:{self.T}, O:{self.O}, Z:{self.Z}, R:{self.R}, S:{self.S}, A1:{self.A1}, A2:{self.A2}, L:{self.L}, " \
                f"R_INT:{self.R_INT}, R_COST:{self.R_COST}, R_SLA:{self.R_SLA}, R_ST:{self.R_ST}, b1:{self.b1}, " \
-               f"save_dir: {self.save_dir}"
+               f"save_dir: {self.save_dir}, env_name: {self.env_name}"
 
     def attacker_observation_space(self) -> gym.spaces.Box:
         """

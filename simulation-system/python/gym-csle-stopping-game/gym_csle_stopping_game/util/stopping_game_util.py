@@ -469,7 +469,7 @@ class StoppingGameUtil:
         :return: the static defender strategy (a function)
         """
         if attacker_strategy_name == constants.STATIC_ATTACKER_STRATEGIES.RANDOM:
-            return attacker_strategies.random_attacker_strategy()
+            return attacker_strategies.random_attacker_strategy
         else:
             raise ValueError(f"Static attacker strategy with name {attacker_strategy_name} not recognized")
 

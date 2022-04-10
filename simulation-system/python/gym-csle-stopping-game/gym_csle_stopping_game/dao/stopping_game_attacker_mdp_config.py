@@ -9,16 +9,18 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
     when facing a static defender policy
     """
 
-    def __init__(self, stopping_game_config: StoppingGameConfig, defender_strategy_name,
+    def __init__(self, env_name: str, stopping_game_config: StoppingGameConfig, defender_strategy_name,
                  stopping_game_name: str = "csle-stopping-game-v1"):
         """
         Initalizes the DTO
 
+        :param env_name: the environment name
         :param stopping_game_config: the underlying stopping game config
         :param defender_strategy_name: the static defender strategy name
         :param stopping_game_name: the underlying stopping game name
         """
         super().__init__()
+        self.env_name = env_name
         self.stopping_game_config = stopping_game_config
         self.defender_strategy_name = defender_strategy_name
         self.stopping_game_name = stopping_game_name
@@ -34,7 +36,7 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         obj = StoppingGameAttackerMdpConfig(
             stopping_game_config=StoppingGameConfig.from_dict(d["stopping_game_config"]),
             defender_strategy_name=d["defender_strategy_name"],
-            stopping_game_name=d["stopping_game_name"]
+            stopping_game_name=d["stopping_game_name"], env_name=d["env_name"]
         )
         return obj
 
@@ -46,6 +48,7 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         d["stopping_game_config"] = self.stopping_game_config.to_dict()
         d["defender_strategy_name"] = self.defender_strategy_name
         d["stopping_game_name"] = self.stopping_game_name
+        d["env_name"] = self.env_name
         return d
 
     def __str__(self):
@@ -53,4 +56,4 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         :return: a string representation of the object
         """
         return f"stopping_game_config: {self.stopping_game_config}, defender_strategy:{self.defender_strategy_name}, " \
-               f"stopping_game_name:{self.stopping_game_name}"
+               f"stopping_game_name:{self.stopping_game_name}, env_name: {self.env_name}"

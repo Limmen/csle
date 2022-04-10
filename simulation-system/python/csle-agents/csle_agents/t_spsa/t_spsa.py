@@ -3,6 +3,7 @@ import math
 import random
 import gym
 import sys
+import numpy as np
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -43,7 +44,11 @@ class TSPSA(BaseAgent):
         exp_result.metrics[seed] = {}
         exp_result.metrics[seed]["thetas"] = []
         exp_result.metrics[seed]["values"] = []
-        theta = self.experiment_config.hparams["theta1"].value
+        L = self.experiment_config.hparams["L"].value
+        if "theta1" in self.experiment_config.hparams["theta1"].value:
+            theta = self.experiment_config.hparams["theta1"].value
+        else:
+            theta = TSPSA.initial_theta(L=L)
         eval_batch_size = self.experiment_config.hparams["eval_batch_size"].value
         avg_metrics = self.eval_theta(theta=theta, eval_batch_size=eval_batch_size, env=env)
         print(avg_metrics)
@@ -158,3 +163,17 @@ class TSPSA(BaseAgent):
         :return: sigmoid(x)
         """
         return 1/(1 + math.exp(-x))
+
+    @staticmethod
+    def initial_theta(L: int) -> np.ndarray:
+        """
+        Initializes theta randomly
+
+        :param L: the dimension of theta
+        :return: the initialized theta vector
+        """
+        theta_1 = []
+        for k in range(L):
+            theta_1.append(np.random.uniform(-3, 3))
+        theta_1 = np.array(theta_1)
+        return theta_1

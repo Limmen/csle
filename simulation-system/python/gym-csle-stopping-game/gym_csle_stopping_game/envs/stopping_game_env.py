@@ -33,7 +33,7 @@ class StoppingGameEnv(BaseEnv):
 
         # Setup traces
         self.traces = []
-        self.trace = SimulationTrace(simulation_env=self.unwrapped.spec.id)
+        self.trace = SimulationTrace(simulation_env=self.config.env_name)
 
         # Reset
         self.reset()
@@ -105,7 +105,7 @@ class StoppingGameEnv(BaseEnv):
             self.traces.append(self.trace)
         if len(self.traces) > 1 and len(self.traces) % 100 == 0:
             self.__checkpoint_traces()
-        self.trace = SimulationTrace()
+        self.trace = SimulationTrace(simulation_env=self.config.env_name)
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
         self.trace.attacker_observations.append(attacker_obs)
