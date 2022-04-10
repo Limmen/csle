@@ -1,4 +1,5 @@
 from typing import List
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions \
@@ -26,25 +27,7 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     """
     subnet_masks = emulation_env_config.topology_config.subnetwork_masks
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = [
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=1),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=12),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.CVE_2015_1427_EXPLOIT(index=12),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=6),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks)
-    ]
+    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -60,25 +43,7 @@ def experienced_attacker_sequence(wait_steps: int, emulation_env_config: Emulati
     """
     subnet_masks = emulation_env_config.topology_config.subnetwork_masks
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = [
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=1),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=11),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.CVE_2010_0426_PRIV_ESC(index=11),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=12),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.CVE_2015_1427_EXPLOIT(index=19),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks)
-    ]
+    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERIENCED]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -94,23 +59,7 @@ def novice_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     """
     subnet_masks = emulation_env_config.topology_config.subnetwork_masks
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = [
-        EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
-        EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
-        EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=10),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerShellActions.SSH_BACKDOOR(index=-1),
-        EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks),
-        EmulationAttackerShellActions.SHELLSHOCK_EXPLOIT(index=12),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
-        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=13),
-        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
-        EmulationAttackerShellActions.CVE_2010_0426_PRIV_ESC(index=13),
-        EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks)
-    ]
+    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.NOVICE]
     seq = wait_seq + intrusion_seq
     return seq
 

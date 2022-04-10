@@ -5,9 +5,10 @@ import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
 import Accordion from 'react-bootstrap/Accordion';
-import RewardFunction from "./RewardFunction/RewardFunction";
-import ObservationFunction from "./ObservationFunction/ObservationFunction";
 import TransitionProbabilities from "./TransitionProbabilities/TransitionProbabilities";
+import ObservationFunction from "./ObservationFunction/ObservationFunction";
+import RewardFunction from "./RewardFunction/RewardFunction";
+
 
 const Simulation = (props) => {
     var A1Options = []
@@ -52,10 +53,14 @@ const Simulation = (props) => {
         }
     }
 
+    const player_ids = props.simulation.players_config.player_configs.map((player, index) => (player.id))
+    const filtered_action_spaces = props.simulation.joint_action_space_config.action_spaces.filter(action_space => (player_ids.includes(action_space.player_id)))
+
     return (<Card key={props.simulation.name} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.simulation.name} className="mgHeader">
                 <span className="subnetTitle">ID: {props.simulation.id}, name: {props.simulation.name}</span>
+                # players: {player_ids.length}
             </Accordion.Toggle>
         </Card.Header>
         <Accordion.Collapse eventKey={props.simulation.name}>
@@ -149,7 +154,7 @@ const Simulation = (props) => {
                     )}
                     </tbody>
                 </Table>
-                {props.simulation.joint_action_space_config.action_spaces.map((action_space, index1) =>
+                {filtered_action_spaces.map((action_space, index1) =>
                     <div key={action_space.player_id + "-" + index1}>
                         <h5 className="semiTitle">
                             Action space for player {action_space.player_id}
@@ -263,8 +268,7 @@ const Simulation = (props) => {
                                      A2Options={A2Options} sOptions={sOptions} minState={minState}/>
                 <RewardFunction simulation={props.simulation}
                                 A1Options={A1Options} A2Options={A2Options} lOptions={lOptions} minState={minState}
-                                maxState={maxState}
-                />
+                                maxState={maxState} />
             </Card.Body>
         </Accordion.Collapse>
     </Card>)

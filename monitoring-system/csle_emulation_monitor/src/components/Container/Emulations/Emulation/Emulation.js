@@ -11,7 +11,7 @@ import Accordion from 'react-bootstrap/Accordion';
 
 const Emulation = (props) => {
     const [loading, setLoading] = useState(false);
-    const [emulation,setEmulation] = useState(props.emulation);
+    const [emulation, setEmulation] = useState(props.emulation);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -560,6 +560,41 @@ const Emulation = (props) => {
                     )}
                     </tbody>
                 </Table>
+                {Object.keys(emulation.static_attacker_sequences).map((attackerName, index) =>
+                    (<div key={attackerName + "-" + index}>
+                            <h5 className="semiTitle">
+                                Static {attackerName} attacker sequence
+                            </h5>
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Attacker name</th>
+                                    <th>Time-step</th>
+                                    <th>Action name</th>
+                                    <th>Action id</th>
+                                    <th>Action index</th>
+                                    <th>Action commands</th>
+                                    <th>Action description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {Object.keys(emulation.static_attacker_sequences).map((attackerName, index) =>
+                                    emulation.static_attacker_sequences[attackerName].map((action, index2) =>
+                                        <tr key={attackerName + "-" + index + "-" + index2}>
+                                            <td>{attackerName}</td>
+                                            <td>{index2}</td>
+                                            <td>{action.name}</td>
+                                            <td>{action.id}</td>
+                                            <td>{action.index}</td>
+                                            <td>{action.cmds.join(",")}</td>
+                                            <td>{action.descr}</td>
+                                        </tr>)
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    )
+                )}
             </Card.Body>
         </Accordion.Collapse>
     </Card>)

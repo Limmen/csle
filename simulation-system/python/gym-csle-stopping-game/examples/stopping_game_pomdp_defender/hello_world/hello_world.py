@@ -5,16 +5,7 @@ from gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env import Stoppin
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
-
-
-def static_attacker_strategy(obs: np.ndarray, config: StoppingGameConfig) -> np.ndarray:
-    pi2 = np.zeros((3,2))
-    pi2[0][0] = np.random.rand()
-    pi2[0][1] = 1-pi2[0][0]
-    pi2[1][0] = np.random.rand()
-    pi2[1][1] = 1-pi2[1][0]
-    pi2[2] = pi2[1]
-    return pi2
+import gym_csle_stopping_game.constants.constants as constants
 
 
 def test_env():
@@ -37,7 +28,7 @@ def test_env():
         S = StoppingGameUtil.state_space())
     config = StoppingGameDefenderPomdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        attacker_strategy=static_attacker_strategy)
+        attacker_strategy_name=constants.STATIC_ATTACKER_STRATEGIES.RANDOM)
 
     env = gym.make("csle-stopping-game-pomdp-defender-v1", config=config)
     num_episodes = 150

@@ -28,7 +28,6 @@ const Simulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setSimulations(response);
                 setLoading(false)
             })

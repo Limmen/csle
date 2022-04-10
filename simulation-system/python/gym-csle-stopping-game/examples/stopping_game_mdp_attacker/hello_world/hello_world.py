@@ -1,3 +1,4 @@
+from typing import Tuple, List
 import gym
 import numpy as np
 from csle_common.util.experiment_util import ExperimentUtil
@@ -5,12 +6,7 @@ from gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env import StoppingG
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
-
-
-def static_defender_strategy(obs: np.ndarray, config: StoppingGameConfig) -> int:
-    a1 = np.random.choice(np.arange(0, len(config.A1)),
-                          p=[1/len(config.A1)]*len(config.A1))
-    return a1
+import gym_csle_stopping_game.constants.constants as constants
 
 
 def test_env():
@@ -33,7 +29,7 @@ def test_env():
         S = StoppingGameUtil.state_space())
     config = StoppingGameAttackerMdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        defender_strategy=static_defender_strategy)
+        defender_strategy_name=constants.STATIC_DEFENDER_STRATEGIES.RANDOM)
 
     env = gym.make("csle-stopping-game-mdp-attacker-v1", config=config)
     num_episodes = 50

@@ -37,7 +37,7 @@ const Emulations = () => {
     useEffect(() => {
         setLoading(true)
         fetchEmulations();
-    }, []);
+    }, [fetchEmulations]);
 
     const refresh = () => {
         setLoading(true)

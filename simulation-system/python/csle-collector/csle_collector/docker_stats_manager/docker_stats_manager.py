@@ -70,28 +70,27 @@ class DockerStatsThread(threading.Thread):
         """
         start = time.time()
         while not self.stopped:
-            # time.sleep(10)
-            # try:
-            print("running")
-            if time.time()-start >= self.time_step_len_seconds:
-                aggregated_stats, avg_stats_dict = self.compute_averages()
-                record = aggregated_stats.to_kafka_record(ip=self.ip)
-                self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
-                for k,v in avg_stats_dict.items():
-                    ip = self.get_ip(k)
-                    record = v.to_kafka_record(ip=ip)
-                    self.producer.produce(constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME, record)
-                self.stats_queues = {}
-                start = time.time()
+            time.sleep(10)
+            try:
+                if time.time()-start >= self.time_step_len_seconds:
+                    aggregated_stats, avg_stats_dict = self.compute_averages()
+                    record = aggregated_stats.to_kafka_record(ip=self.ip)
+                    self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
+                    for k,v in avg_stats_dict.items():
+                        ip = self.get_ip(k)
+                        record = v.to_kafka_record(ip=ip)
+                        self.producer.produce(constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME, record)
+                    self.stats_queues = {}
+                    start = time.time()
 
-            for stream, container in self.streams:
-                stats_dict = next(stream)
-                parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
-                if parsed_stats.container_name not in self.stats_queues:
-                    self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
-                self.stats_queues[parsed_stats.container_name].append(parsed_stats)
-            # except BaseException as e:
-            #     logging.warning(f"Exception in monitor thread for emulation: {self.emulation}, exception: {str(e)}, {repr(e)}")
+                for stream, container in self.streams:
+                    stats_dict = next(stream)
+                    parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
+                    if parsed_stats.container_name not in self.stats_queues:
+                        self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
+                    self.stats_queues[parsed_stats.container_name].append(parsed_stats)
+            except BaseException as e:
+                logging.warning(f"Exception in monitor thread for emulation: {self.emulation}, exception: {str(e)}, {repr(e)}")
 
     def get_ip(self, container_name: str) -> str:
         """

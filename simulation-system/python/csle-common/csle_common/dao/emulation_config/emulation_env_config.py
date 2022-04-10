@@ -12,6 +12,7 @@ from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.logging.log import Logger
 
 
@@ -24,7 +25,7 @@ class EmulationEnvConfig:
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
                  resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig,
-                 descr: str):
+                 descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]]):
         """
         Initializes the object
 
@@ -38,6 +39,7 @@ class EmulationEnvConfig:
         :param resources_config: the resources configuration
         :param services_config: the services configuration
         :param descr: a description of the environment configuration
+        :param static_attacker_sequences: dict with static attacker sequences
         """
         self.name = name
         self.descr = descr
@@ -57,6 +59,7 @@ class EmulationEnvConfig:
         self.running = False
         self.image = None
         self.id = -1
+        self.static_attacker_sequences = static_attacker_sequences
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -66,6 +69,9 @@ class EmulationEnvConfig:
         :param d: the dict to convert
         :return: the created instance
         """
+        static_attacker_sequences = {}
+        for k,v in d["static_attacker_sequences"].items():
+            static_attacker_sequences[k] = list(map(lambda x: EmulationAttackerAction.from_dict(x), v))
         obj = EmulationEnvConfig(
             name = d["name"], containers_config=ContainersConfig.from_dict(d["containers_config"]),
             users_config=UsersConfig.from_dict(d["users_config"]),
@@ -76,7 +82,7 @@ class EmulationEnvConfig:
             resources_config=ResourcesConfig.from_dict(d["resources_config"]),
             log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
             services_config=ServicesConfig.from_dict(d["services_config"]),
-            descr=d["descr"]
+            descr=d["descr"], static_attacker_sequences=static_attacker_sequences
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -103,6 +109,10 @@ class EmulationEnvConfig:
         d["image"] = self.image
         d["descr"] = self.descr
         d["id"] = self.id
+        d2 = {}
+        for k,v in self.static_attacker_sequences.items():
+            d2[k] = list(map(lambda x: x.to_dict(), v))
+        d["static_attacker_sequences"] = d2
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> None:
@@ -220,7 +230,7 @@ class EmulationEnvConfig:
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
-               f"descr: {self.descr}, id:{self.id}"
+               f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}"
 
     def get_all_ips(self) -> List[str]:
         """

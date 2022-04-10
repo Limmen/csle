@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Callable
 import numpy as np
 from scipy.stats import betabinom
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
@@ -6,6 +6,9 @@ from csle_common.dao.simulation_config.observation_space_config import Observati
 from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
 from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
+import gym_csle_stopping_game.static_strategies.defender_strategies as defender_strategies
+import gym_csle_stopping_game.static_strategies.attacker_strategies as attacker_strategies
+import gym_csle_stopping_game.constants.constants as constants
 
 
 class StoppingGameUtil:
@@ -158,6 +161,7 @@ class StoppingGameUtil:
             T_l.append(T)
         T = np.array(T_l)
         return T
+
 
     @staticmethod
     def observation_tensor_from_emulation_statistics(
@@ -441,3 +445,33 @@ class StoppingGameUtil:
         """
         a2 = np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s])
         return a2
+
+    @staticmethod
+    def get_static_defender_strategy(defender_strategy_name: str) -> Callable:
+        """
+        Gets the static defender strategy corresponding to a specific name
+
+        :param defender_strategy_name: the static defender strategy name
+        :return: the static defender strategy (a function)
+        """
+        if defender_strategy_name == constants.STATIC_DEFENDER_STRATEGIES.RANDOM:
+            return defender_strategies.random_defender_strategy
+        else:
+            raise ValueError(f"Static defender strategy with name {defender_strategy_name} not recognized")
+
+
+    @staticmethod
+    def get_static_attacker_strategy(attacker_strategy_name: str) -> Callable:
+        """
+        Gets the static defender strategy corresponding to a specific name
+
+        :param attacker_strategy_name: the static defender strategy name
+        :return: the static defender strategy (a function)
+        """
+        if attacker_strategy_name == constants.STATIC_ATTACKER_STRATEGIES.RANDOM:
+            return attacker_strategies.random_attacker_strategy()
+        else:
+            raise ValueError(f"Static attacker strategy with name {attacker_strategy_name} not recognized")
+
+
+

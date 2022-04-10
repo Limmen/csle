@@ -1,3 +1,4 @@
+from typing import Dict, List
 import argparse
 import os
 import multiprocessing
@@ -37,6 +38,7 @@ from csle_common.dao.emulation_config.node_services_config import NodeServicesCo
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.user import User
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 
 
 def default_config(name: str, network_id: int = 2, level: int = 2, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -67,10 +69,12 @@ def default_config(name: str, network_id: int = 2, level: int = 2, version: str 
             "on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to " \
             "detect the" \
             "attacker."
+    static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
-        log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr
+        log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
+        static_attacker_sequences=static_attackers_cfg
     )
     return emulation_env_cfg
 
@@ -1684,6 +1688,12 @@ def default_services_config(network_id: int) -> ServicesConfig:
     )
     return service_cfg
 
+def default_static_attacker_sequences(subnet_masks: List[str]) -> Dict[str, List[EmulationAttackerAction]]:
+    """
+    :param subnetmasks: list of subnet masks for the emulation
+    :return: the default static attacker sequences configuration
+    """
+    return {}
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

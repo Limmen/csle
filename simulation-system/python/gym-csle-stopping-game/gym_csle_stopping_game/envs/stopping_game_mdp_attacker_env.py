@@ -3,6 +3,7 @@ from typing import Tuple
 import gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 
 
@@ -18,6 +19,10 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         # Setup spaces
         self.attacker_observation_space = self.config.stopping_game_config.attacker_observation_space()
         self.attacker_action_space = self.config.stopping_game_config.attacker_action_space()
+
+        # Setup static defender
+        self.static_defender_strategy = StoppingGameUtil.get_static_defender_strategy(
+            defender_strategy_name=self.config.defender_strategy_name)
 
         # Setup Config
         self.viewer = None
@@ -42,7 +47,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
 
         # Get defender action from static strategy
-        a1 = self.config.defender_strategy(self.latest_defender_obs, self.config.stopping_game_config)
+        a1, _ = self.static_defender_strategy(self.latest_defender_obs, self.config.stopping_game_config)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, pi2))

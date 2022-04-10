@@ -1,9 +1,9 @@
 from typing import Tuple
-
 import gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
 class StoppingGamePomdpDefenderEnv(BaseEnv):
@@ -18,6 +18,10 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         # Setup spaces
         self.defender_observation_space = self.config.stopping_game_config.defender_observation_space()
         self.defender_action_space = self.config.stopping_game_config.defender_action_space()
+
+        # Setup static attacker strategy
+        self.static_attacker_strategy = StoppingGameUtil.get_static_attacker_strategy(
+            attacker_strategy_name=self.config.attacker_strategy_name)
 
         # Setup Config
         self.viewer = None
@@ -39,7 +43,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :return: (obs, reward, done, info)
         """
         # Get defender action from static strategy
-        pi2 = self.config.attacker_strategy(self.latest_attacker_obs, self.config.stopping_game_config)
+        pi2 = self.static_attacker_strategy(self.latest_attacker_obs, self.config.stopping_game_config)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, pi2))

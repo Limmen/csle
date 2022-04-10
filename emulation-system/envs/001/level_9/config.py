@@ -1,3 +1,4 @@
+from typing import Dict, List
 import argparse
 import os
 import multiprocessing
@@ -37,6 +38,11 @@ from csle_common.dao.emulation_config.node_services_config import NodeServicesCo
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.user import User
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions import EmulationAttackerShellActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions \
+    import EmulationAttackerNetworkServiceActions
 
 
 def default_config(name: str, network_id: int = 9, level: int = 9, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -70,10 +76,12 @@ def default_config(name: str, network_id: int = 9, level: int = 9, version: str 
             "exploit them and discover hidden flags " \
             "on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to detect the " \
             "attacker."
+    static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
-        log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr
+        log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
+        static_attacker_sequences=static_attackers_cfg
     )
     return emulation_env_cfg
 
@@ -3572,6 +3580,70 @@ def default_services_config(network_id: int) -> ServicesConfig:
     )
     return service_cfg
 
+
+def default_static_attacker_sequences(subnet_masks: List[str]) -> Dict[str, List[EmulationAttackerAction]]:
+    """
+    :param subnetmasks: list of subnet masks for the emulation
+    :return: the default static attacker sequences configuration
+    """
+    d = {}
+    d[constants.STATIC_ATTACKERS.NOVICE] = [
+        EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+        EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
+        EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=10),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerShellActions.SSH_BACKDOOR(index=-1),
+        EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.SHELLSHOCK_EXPLOIT(index=12),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=13),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.CVE_2010_0426_PRIV_ESC(index=13),
+        EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks)
+    ]
+    d[constants.STATIC_ATTACKERS.EXPERIENCED] = [
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=1),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=11),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.CVE_2010_0426_PRIV_ESC(index=11),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=12),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.CVE_2015_1427_EXPLOIT(index=19),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks)
+    ]
+
+    d[constants.STATIC_ATTACKERS.EXPERT] = [
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=1),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=12),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.CVE_2015_1427_EXPLOIT(index=12),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+        EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=6),
+        EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+        EmulationAttackerShellActions.INSTALL_TOOLS(index=-1),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks)
+    ]
+    return d
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

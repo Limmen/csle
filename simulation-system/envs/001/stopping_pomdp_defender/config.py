@@ -30,7 +30,7 @@ from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
-from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 import gym_csle_stopping_game.constants.constants as stopping_game_constants
 
 
@@ -78,7 +78,7 @@ def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0
         observation_function_config=observation_function_config,
         initial_state_distribution_config=initial_state_distribution_config)
     env_parameters_config = default_env_parameters_config()
-    descr="A MDP based on the optimal stopping formulation of intrusion prevention from " \
+    descr="A POMDP based on the optimal stopping formulation of intrusion prevention from " \
           "(Hammar and Stadler 2021, https://arxiv.org/abs/2111.00289)."
     simulation_env_config = SimulationEnvConfig(
         name=name, version=version, descr=descr,
@@ -89,7 +89,7 @@ def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
         emulation_statistic_id=emulation_statistic_id, time_step_type=TimeStepType.DISCRETE,
-        gym_env_name="csle-stopping-game-mdp-attacker-v1", env_parameters_config=env_parameters_config,
+        gym_env_name="csle-stopping-game-pomdp-defender-v1", env_parameters_config=env_parameters_config,
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
     return simulation_env_config
@@ -129,7 +129,8 @@ def default_players_config() -> PlayersConfig:
     :return: the default players configuration of the simulation
     """
     player_configs = [
-        PlayerConfig(name="attacker", id=2, descr="The attacker which tries to intrude on the infrastructure")
+        PlayerConfig(name="defender", id=1, descr="The defender which tries to detect, prevent, "
+                                                  "and interrupt intrusions for the infrastructure")
     ]
     players_config = PlayersConfig(
         player_configs=player_configs
@@ -272,9 +273,9 @@ def default_joint_observation_space_config(
         ObservationSpaceConfig(
             observations=defender_observations,
             observation_type=ValueType.INTEGER,
-            player_id=2,
-            descr="The observation space of the attacker. The attacker has inside information in the infrastructure "
-                  "and observes the same metrics as the defender",
+            player_id=1,
+            descr="The observation space of the defender. The defender observes three metrics from the infrastructure: "
+                  "the number of severe IDS alerts, the number of warning IDS alerts, the number of login attempts",
             observation_id_to_observation_id_vector= observation_id_to_observation_id_vector,
             observation_component_name_to_index = observation_component_name_to_index,
             component_observations=component_observations,
@@ -295,6 +296,7 @@ def default_reward_function_config() -> RewardFunctionConfig:
         reward_tensor=list(-StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
     )
     return reward_function_config
+
 
 def default_transition_operator_config() -> TransitionOperatorConfig:
     """
@@ -400,9 +402,9 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
         S=StoppingGameUtil.state_space())
-    config = StoppingGameAttackerMdpConfig(
+    config = StoppingGameDefenderPomdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        defender_strategy_name=stopping_game_constants.STATIC_DEFENDER_STRATEGIES.RANDOM)
+        attacker_strategy_name=stopping_game_constants.STATIC_ATTACKER_STRATEGIES.RANDOM)
     return config
 
 
@@ -414,7 +416,7 @@ if __name__ == '__main__':
                         action="store_true")
     args = parser.parse_args()
     if not os.path.exists(ExperimentUtil.default_simulation_config_path()):
-        config = default_config(name="csle-stopping-mdp-attacker-001", version="0.0.1")
+        config = default_config(name="csle-stopping-pomdp-defender-001", version="0.0.1")
         ExperimentUtil.write_simulation_config_file(config, ExperimentUtil.default_simulation_config_path())
     config = ExperimentUtil.read_simulation_env_config(ExperimentUtil.default_simulation_config_path())
 

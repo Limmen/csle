@@ -1,5 +1,5 @@
 """
-Constants for the csle environment
+Constants for csle-common
 """
 
 import re
@@ -1444,4 +1444,16 @@ class LOGGING:
 
 
 class SIMULATION:
+    """
+    Constants related to simulations
+    """
     SIMULATION_ENV_CFG_PATH = "/config.json"
+
+
+class STATIC_ATTACKERS:
+    """
+    Constants related to static attackers
+    """
+    EXPERT = "expert"
+    EXPERIENCED = "experienced"
+    NOVICE = "novice"
