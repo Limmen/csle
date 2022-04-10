@@ -6,10 +6,6 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actio
     import EmulationAttackerStoppingActions
 from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
     import EmulationDefenderStoppingActions
-from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions
-from csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions import EmulationAttackerShellActions
-from csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions \
-    import EmulationAttackerNetworkServiceActions
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.container_manager import ContainerManager
@@ -25,7 +21,6 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :param emulation_env_config: the emulation configuration
     :return: the list of attacker actions
     """
-    subnet_masks = emulation_env_config.topology_config.subnetwork_masks
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
     intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT]
     seq = wait_seq + intrusion_seq
@@ -41,7 +36,6 @@ def experienced_attacker_sequence(wait_steps: int, emulation_env_config: Emulati
     :param emulation_env_config: the emulation config
     :return: the list of emulation actions
     """
-    subnet_masks = emulation_env_config.topology_config.subnetwork_masks
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
     intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERIENCED]
     seq = wait_seq + intrusion_seq
@@ -57,7 +51,6 @@ def novice_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :param emulation_env_config: the emulation config
     :return: the list of actions
     """
-    subnet_masks = emulation_env_config.topology_config.subnetwork_masks
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
     intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.NOVICE]
     seq = wait_seq + intrusion_seq
@@ -85,9 +78,9 @@ def run() -> None:
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
     assert emulation_env_config is not None
     assert ContainerManager.is_emulation_running(emulation_env_config=emulation_env_config) is True
-    # attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
+    attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
     # attacker_sequence = experienced_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
-    attacker_sequence = expert_attacker_sequence(wait_steps=2, emulation_env_config=emulation_env_config)
+    # attacker_sequence = expert_attacker_sequence(wait_steps=2, emulation_env_config=emulation_env_config)
     defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_env_config)
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,

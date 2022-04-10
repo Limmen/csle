@@ -73,6 +73,7 @@ class StoppingGameEnv(BaseEnv):
 
         # Update stops remaining
         self.state.l = self.state.l-a1
+        info["l"] = self.state.l
 
         # Get observations
         attacker_obs = self.state.attacker_observation()

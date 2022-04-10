@@ -169,7 +169,7 @@ class ShellUtil:
                 while not command_complete:
                     while not c.interactive_shell.recv_ready():
                         if timeouts > constants.ENV_CONSTANTS.SHELL_MAX_TIMEOUTS:
-                            loger("max timeouts FTP, env:{}".format(
+                            Logger.__call__().get_logger().warning("max timeouts FTP, env:{}".format(
                                 emulation_env_config.containers_config.agent_ip))
                             break
                         time.sleep(constants.ENV_CONSTANTS.SHELL_READ_WAIT)
@@ -412,12 +412,12 @@ class ShellUtil:
                 # Check cached connections
                 for cr in s.attacker_cached_backdoor_credentials.values():
                     for ip in machine.ips:
-                        if (ip, cr.username, cr.kafka_port) in s.attacker_cached_ssh_connections:
+                        if (ip, cr.username, cr.port) in s.attacker_cached_ssh_connections:
                             conn_dto = s.attacker_cached_ssh_connections[
-                                (ip, cr.username, cr.kafka_port)]
+                                (ip, cr.username, cr.port)]
                             connection_dto = EmulationConnectionObservationState(
                                 conn=conn_dto.conn, username=cr.username, root=machine.root,
-                                service=constants.SSH.SERVICE_NAME, port=cr.kafka_port, ip=ip)
+                                service=constants.SSH.SERVICE_NAME, port=cr.port, ip=ip)
                             new_m_obs.shell_access_credentials.append(cr)
                             new_m_obs.backdoor_credentials.append(cr)
                             new_m_obs.ssh_connections.append(connection_dto)

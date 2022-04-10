@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Union
 from csle_common.dao.training.agent_type import AgentType
+from csle_common.dao.training.hparam import HParam
 
 
 class ExperimentConfig:
@@ -8,7 +9,7 @@ class ExperimentConfig:
     """
 
     def __init__(self, output_dir:str, title: str, random_seeds: List[int], agent_type: AgentType,
-                 hparams: Dict[str, Union[int, float, str]]):
+                 hparams: Dict[str, HParam]):
         self.output_dir = output_dir
         self.title = title
         self.random_seeds = random_seeds
@@ -23,9 +24,12 @@ class ExperimentConfig:
         :param d: the dict to convert
         :return: the created instance
         """
+        h_d = {}
+        for k,v in d["hparams"].items():
+            h_d[k] = HParam.from_dict(v)
         obj = ExperimentConfig(
             output_dir=d["output_dir"], title=d["title"], random_seeds=d["random_seeds"],
-            agent_type=d["agent_type"], hparams=d["hparams"]
+            agent_type=d["agent_type"], hparams=h_d
         )
         return obj
 
@@ -38,7 +42,10 @@ class ExperimentConfig:
         d["title"] = self.title
         d["random_seeds"] = self.random_seeds
         d["agent_type"] = self.agent_type
-        d["hparams"] = self.hparams
+        d_h = {}
+        for k,v in self.hparams.items():
+            d_h[k] = v.to_dict()
+        d["hparams"] = d_h
         return d
 
     def __str__(self):

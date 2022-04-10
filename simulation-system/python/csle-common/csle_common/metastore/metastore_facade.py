@@ -52,7 +52,7 @@ class MetastoreFacade:
     @staticmethod
     def list_simulations() -> List[SimulationEnvConfig]:
         """
-        :return: A list of emulations in the metastore
+        :return: A list of simulations in the metastore
         """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
@@ -62,6 +62,24 @@ class MetastoreFacade:
                 records = cur.fetchall()
                 records = list(map(lambda x: MetastoreFacade._convert_simulation_record_to_dto(x), records))
                 return records
+
+    @staticmethod
+    def get_simulation(name: str) -> Union[None, SimulationEnvConfig]:
+        """
+        Function for extracting the metadata of a simulation with a given name
+
+        :param name: the name of the simulation
+        :return: The simulation config or None if the simulation was not found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE name = %s", (name,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_simulation_record_to_dto(simulation_record=record)
+                return record
 
     @staticmethod
     def _convert_emulation_record_to_dto(emulation_record) -> EmulationEnvConfig:

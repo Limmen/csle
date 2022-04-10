@@ -646,6 +646,10 @@ class NmapUtil:
         for machine in s.attacker_obs_state.machines:
             scan_result = None
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
+                ssh_connections_alive = list(filter(
+                    lambda x: (x.conn is not None and x.conn.get_transport() is not None
+                               and x.conn.get_transport().is_active()), machine.ssh_connections))
+                machine.ssh_connections = ssh_connections_alive
                 ssh_connections_sorted_by_root = sorted(
                     machine.ssh_connections,
                     key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
@@ -653,7 +657,12 @@ class NmapUtil:
                 for c in ssh_connections_sorted_by_root:
                     cwd = "/home/" + c.username + "/"
                     cmds, file_names = a.nmap_cmds(machine_ips=machine.ips)
-                    results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
+                    try:
+                        results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
+                    except Exception as e:
+                        print(f"exception execution commands for ip:{c.ip}, username: {c.username}, conn: {c.conn}, "
+                              f"{c.conn.get_transport()}")
+                        raise ValueError("error")
                     total_time = sum(list(map(lambda x: x[2], results)))
                     total_cost += total_time
                     EmulationUtil.log_measured_action_time(
