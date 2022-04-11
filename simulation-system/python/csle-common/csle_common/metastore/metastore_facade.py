@@ -12,6 +12,8 @@ from csle_common.logging.log import Logger
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 from csle_common.util.np_encoder import NpEncoder
 
 
@@ -786,3 +788,235 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"T-SPSA policy saved successfully")
                 return id_of_new_row
+
+    @staticmethod
+    def _convert_training_job_record_to_dto(training_job_record) -> TrainingJobConfig:
+        """
+        Converts a T-SPSA record fetched from the metastore into a DTO
+
+        :param training_job_record: the record to convert
+        :return: the DTO representing the record
+        """
+        tranining_job_config_json = json.dumps(training_job_record[1], indent=4, sort_keys=True)
+        training_job_config: TrainingJobConfig = TrainingJobConfig.from_dict(json.loads(tranining_job_config_json))
+        training_job_config.id = training_job_record[0]
+        return training_job_config
+
+    @staticmethod
+    def list_training_jobs() -> List[TrainingJobConfig]:
+        """
+        :return: A list of training jobs in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_training_job_record_to_dto(x), records))
+                return records
+
+
+    @staticmethod
+    def get_training_job_config(id: int) -> Union[None, TrainingJobConfig]:
+        """
+        Function for fetching a training job config with a given id from the metastore
+
+        :param id: the id of the training job config
+        :return: The trainign job config or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_training_job_record_to_dto(training_job_record=record)
+                return record
+
+    @staticmethod
+    def save_training_job(training_job: TrainingJobConfig) -> Union[Any, int]:
+        """
+        Saves a training job to the metastore
+
+        :param training_job: the training job to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a training job in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
+                            f"(config, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (training_job_str, training_job.simulation_env_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Training job saved successfully")
+                return id_of_new_row
+
+
+    @staticmethod
+    def _convert_system_identification_job_record_to_dto(system_identification_job_record) -> \
+            SystemIdentificationJobConfig:
+        """
+        Converts a T-SPSA record fetched from the metastore into a DTO
+
+        :param system_identification_job_record: the record to convert
+        :return: the DTO representing the record
+        """
+        system_identification_job_config_json = json.dumps(system_identification_job_record[1], indent=4,
+                                                           sort_keys=True)
+        system_identification_job_config: SystemIdentificationJobConfig = \
+            SystemIdentificationJobConfig.from_dict(json.loads(system_identification_job_config_json))
+        system_identification_job_config.id = system_identification_job_record[0]
+        return system_identification_job_config
+
+    @staticmethod
+    def list_system_identification_jobs() -> List[SystemIdentificationJobConfig]:
+        """
+        :return: A list of system identification jobs in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
+                                   records))
+                return records
+
+
+    @staticmethod
+    def get_system_identification_job_config(id: int) -> Union[None, SystemIdentificationJobConfig]:
+        """
+        Function for fetching a system identification job config with a given id from the metastore
+
+        :param id: the id of the system identification job config
+        :return: The system identification job config or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_system_identification_job_record_to_dto(
+                        system_identification_job_record=record)
+                return record
+
+    @staticmethod
+    def save_system_identification_job(system_identification_job: SystemIdentificationJobConfig) -> Union[Any, int]:
+        """
+        Saves a system identification job to the metastore
+
+        :param system_identification_job: the system identification job to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a system identification job in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
+                                                            sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+                            f"(config, emulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (system_identification_job_json,
+                                                              system_identification_job.emulation_env_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"System identification job saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_training_job(training_job: TrainingJobConfig, id: int) -> None:
+        """
+        Updates a training job in the metastore
+
+        :param training_job: the training job to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating training job with id: {id} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.TRAINING_JOBS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Training job with id: {id} updated successfully")
+
+
+    @staticmethod
+    def update_system_identification_job(system_identification_job: SystemIdentificationJobConfig, id: int) -> None:
+        """
+        Updates a system identification job in the metastore
+
+        :param training_job: the training job to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating system identification job with id: {id} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(system_identification_job.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"System identification job with id: {id} updated successfully")
+
+
+    @staticmethod
+    def remove_training_job(training_job: TrainingJobConfig) -> None:
+        """
+        Removes a training job from the metastore
+
+        :param config: the config to uninstall
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing training job with id:{training_job.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE} WHERE id = %s",
+                            (training_job.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Training job with id {training_job.id} deleted successfully")
+
+
+
+    @staticmethod
+    def remove_system_identification_job(system_identification_job: SystemIdentificationJobConfig) -> None:
+        """
+        Removes a system identification job from the metastore
+
+        :param config: the config to uninstall
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing system identification job with "
+                                             f"id:{system_identification_job.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s",
+                            (system_identification_job.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Training job with "
+                                                     f"id {system_identification_job.id} deleted successfully")

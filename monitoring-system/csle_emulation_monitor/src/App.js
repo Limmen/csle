@@ -12,6 +12,7 @@ import Simulations from "./components/Container/Simulations/Simulations";
 import TrainingResults from "./components/Container/TrainingResults/TrainingResults";
 import About from "./components/Container/About/About";
 import Policies from "./components/Container/Policies/Policies";
+import Jobs from "./components/Container/Jobs/Jobs";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
                                 <Route path="training" index element={<TrainingResults/>}>
                                 </Route>
                                 <Route path="policies" index element={<Policies/>}>
+                                </Route>
+                                <Route path="jobs" index element={<Jobs/>}>
                                 </Route>
                                 <Route path="about" index element={<About/>}>
                                 </Route>

@@ -59,9 +59,10 @@ const PolicyExamination = () => {
                     placement="top"
                     delay={{show: 0, hide: 0}}
                     overlay={renderInfoTooltip}
+                    className="overLayInfo"
                 >
                     <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
-                        <i className="fa fa-info-circle" aria-hidden="true"/>
+                        <i className="infoButton2 fa fa-info-circle" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
                 <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>

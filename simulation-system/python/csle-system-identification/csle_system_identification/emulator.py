@@ -1,5 +1,6 @@
 from typing import List, Tuple
 import time
+import os
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
@@ -12,6 +13,7 @@ from csle_common.logging.log import Logger
 from csle_attacker.attacker import Attacker
 from csle_defender.defender import Defender
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
+from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 
 
 class Emulator:
@@ -41,6 +43,14 @@ class Emulator:
         :return: None
         """
         logger = Logger.__call__().get_logger()
+        pid = os.getpid()
+        job_config = SystemIdentificationJobConfig(emulation_env_name=emulation_env_config.name,
+                                                   num_collected_steps=0, progress_percentage=0.0,
+                                                   attacker_sequence=attacker_sequence,
+                                                   defender_sequence=defender_sequence,
+                                                   pid=pid)
+        job_id = MetastoreFacade.save_system_identification_job(system_identification_job=job_config)
+        job_config.id = job_id
         if save_dir is None:
             save_dir = ExperimentUtil.default_output_dir() + "/results"
         assert len(attacker_sequence) == len(defender_sequence)
@@ -82,12 +92,18 @@ class Emulator:
                 MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
                 print(f"saving emulation trace, id:{id}")
             emulation_traces.append(emulation_trace)
+            total_steps = T*repeat_times
+            collected_steps = (i+1)*T
+            job_config.num_collected_steps=collected_steps
+            job_config.progress_percentage = (round(collected_steps/total_steps, 2))
+            MetastoreFacade.update_system_identification_job(system_identification_job=job_config, id=job_config.id)
+
         logger.info(f"All sequences completed, saving traces and emulation statistics")
         if save:
             EmulationTrace.save_traces_to_disk(traces_save_dir=save_dir, traces=emulation_traces)
             MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
         s.cleanup()
-
+        MetastoreFacade.remove_system_identification_job(system_identification_job=job_config)
 
     @staticmethod
     def run_actions(emulation_env_config: EmulationEnvConfig, attacker_action: EmulationAttackerAction,

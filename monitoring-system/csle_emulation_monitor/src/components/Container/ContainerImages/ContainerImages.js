@@ -4,11 +4,14 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Spinner from 'react-bootstrap/Spinner'
 import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
 import './ContainerImages.css';
+import Docker from './docker.png'
 
 const ContainerImages = () => {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState([]);
+    const [showInfoModal, setShowInfoModal] = useState(false);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -45,6 +48,44 @@ const ContainerImages = () => {
             Reload images from the backend
         </Tooltip>
     );
+
+    const renderInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about the container images.
+        </Tooltip>
+    );
+
+    const InfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Container images
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4>Containers</h4>
+                    <p className="modalText">
+                        Emulation environments are built using Docker containers which encapsulate
+                        functionalities of emulated hosts and can be connected in complex networks.
+                        From the list of docker images, new emulation environments can be generated programmatically
+                        by combining images in novel topologies and configurations.
+                    </p>
+                    <div className="text-center">
+                        <img src={Docker} alt="Docker" width="700"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={props.onHide}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
 
 
     const SpinnerOrTable = (props) => {
@@ -84,9 +125,20 @@ const ContainerImages = () => {
                     overlay={renderRefreshTooltip()}
                 >
                     <Button variant="button" onClick={refresh}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        <i className="fa fa-refresh refreshButton3" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderInfoTooltip}
+                    className="overLayInfo"
+                >
+                    <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton3">
+                        <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
             </h3>
             <SpinnerOrTable images={images} loading={loading}/>
         </div>

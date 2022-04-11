@@ -60,6 +60,12 @@ const Header = () => {
         </Tooltip>
     );
 
+    const renderJobsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Ongoing jobs in the environment
+        </Tooltip>
+    );
+
     const renderAboutTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Information about the environment
@@ -163,6 +169,16 @@ const Header = () => {
                                 overlay={renderPoliciesTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={"policies"}>
                                     Policies
+                                </NavLink>
+                            </OverlayTrigger>
+                        </li>
+                        <li className="nav-item navtabheader">
+                            <OverlayTrigger
+                                placement="top"
+                                delay={{show: 0, hide: 0}}
+                                overlay={renderJobsTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"jobs"}>
+                                    Jobs
                                 </NavLink>
                             </OverlayTrigger>
                         </li>

@@ -106,3 +106,21 @@ CREATE TABLE IF NOT EXISTS t_spsa_policies (
 );
 GRANT ALL ON t_spsa_policies TO csle;
 GRANT USAGE, SELECT ON SEQUENCE t_spsa_policies_id_seq TO csle;
+
+-- Create table that stores training jobs --
+CREATE TABLE IF NOT EXISTS training_jobs (
+    id serial PRIMARY KEY,
+    config json NOT NULL,
+    simulation_name TEXT references simulations(name)
+);
+GRANT ALL ON training_jobs TO csle;
+GRANT USAGE, SELECT ON SEQUENCE training_jobs_id_seq TO csle;
+
+-- Create table that stores system_identification_jobs --
+CREATE TABLE IF NOT EXISTS system_identification_jobs (
+    id serial PRIMARY KEY,
+    config json NOT NULL,
+    emulation_name TEXT references emulations(name)
+);
+GRANT ALL ON system_identification_jobs TO csle;
+GRANT USAGE, SELECT ON SEQUENCE system_identification_jobs_id_seq TO csle;

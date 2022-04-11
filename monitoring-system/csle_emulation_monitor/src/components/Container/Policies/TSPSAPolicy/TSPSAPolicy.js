@@ -18,7 +18,7 @@ const TSPSAPolicy = (props) => {
         <Accordion.Collapse eventKey={props.policy.id}>
             <Card.Body>
                 <h5 className="semiTitle">
-                    General Information about the training run:
+                    General Information about the policy:
                 </h5>
                 <Table striped bordered hover>
                     <thead>

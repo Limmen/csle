@@ -13,6 +13,7 @@ from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
 
 
@@ -163,10 +164,14 @@ class EmulationEnvConfig:
         if hacker_ip in self.connections and self.connections[hacker_ip] is not None \
                 and self.connections[hacker_ip].get_transport() is not None \
                 and self.connections[hacker_ip].get_transport().is_active():
-            return self.connections[hacker_ip]
+            try:
+                SSHUtil.execute_ssh_cmds(cmds = ["ls"], conn=self.connections[hacker_ip])
+            except Exception as e:
+                print("reconnecting attacker")
+                self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
         else:
             self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
-            return self.connections[hacker_ip]
+        return self.connections[hacker_ip]
 
     def cleanup(self):
         for ip, conn in self.connections.items():

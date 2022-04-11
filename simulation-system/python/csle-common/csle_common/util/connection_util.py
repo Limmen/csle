@@ -587,6 +587,7 @@ class ConnectionUtil:
 
     @staticmethod
     def reconnect(c: EmulationConnectionObservationState) -> EmulationConnectionObservationState:
+        print("RECONNECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         if not c.conn.get_transport().is_active():
             if c.proxy is None:
                 c.conn = paramiko.SSHClient()

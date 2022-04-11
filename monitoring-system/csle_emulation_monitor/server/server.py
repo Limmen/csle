@@ -232,6 +232,24 @@ def policies():
     return response
 
 
+@app.route('/trainingjobs', methods=['GET'])
+def trainingjobs():
+    training_jobs = MetastoreFacade.list_training_jobs()
+    training_jobs_dicts = list(map(lambda x: x.to_dict(), training_jobs))
+    response = jsonify(training_jobs_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/systemidentificationjobs', methods=['GET'])
+def systemidentificationjobs():
+    system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
+    system_identification_jobs_dicts = list(map(lambda x: x.to_dict(), system_identification_jobs))
+    response = jsonify(system_identification_jobs_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 if __name__ == "__main__":
     serve(app, host='0.0.0.0', port=7777, threads=100)
     #app.run(port=7777,host='0.0.0.0')

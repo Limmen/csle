@@ -1340,6 +1340,8 @@ class METADATA_STORE:
     SIMULATION_IMAGES_TABLE = "simulation_images"
     EMULATION_SIMULATION_TRACES_TABLE = "emulation_simulation_traces"
     EXPERIMENT_EXECUTIONS = "experiment_executions"
+    TRAINING_JOBS_TABLE = "training_jobs"
+    SYSTEM_IDENTIFICATION_JOBS_TABLE = "system_identification_jobs"
     T_SPSA_POLICIES = "t_spsa_policies"
 
 

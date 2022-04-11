@@ -17,8 +17,8 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
 
         # Setup spaces
-        self.defender_observation_space = self.config.stopping_game_config.defender_observation_space()
-        self.defender_action_space = self.config.stopping_game_config.defender_action_space()
+        self.observation_space = self.config.stopping_game_config.defender_observation_space()
+        self.action_space = self.config.stopping_game_config.defender_action_space()
 
         # Setup static attacker strategy
         self.static_attacker_strategy = StoppingGameUtil.get_static_attacker_strategy(

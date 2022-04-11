@@ -2,6 +2,7 @@ from typing import Union, List, Dict
 import random
 import time
 import gym
+import os
 import numpy as np
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -14,9 +15,10 @@ from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 
 
-class TSPSA(BaseAgent):
+class TSPSAAgent(BaseAgent):
     """
     RL Agent implementing the T-SPSA algorithm from
     (Hammar, Stadler 2021 - Intrusion Prevention through Optimal Stopping))
@@ -41,15 +43,24 @@ class TSPSA(BaseAgent):
 
         :return: the training metrics and the trained policies
         """
+        pid = os.getpid()
+        training_job = TrainingJobConfig(simulation_env_name=self.simulation_env_config.name,
+                                         experiment_config=self.experiment_config, average_r=-1,
+                                         progress_percentage=0, pid=pid)
+        training_job_id = MetastoreFacade.save_training_job(training_job=training_job)
+        training_job.id = training_job_id
         config = self.simulation_env_config.simulation_env_input_config
         env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append("average_reward")
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.spsa(exp_result=exp_result, seed=seed, env=env)
+            exp_result = self.spsa(exp_result=exp_result, seed=seed, env=env, training_job=training_job,
+                                   random_seeds=self.experiment_config.random_seeds)
+            training_job = MetastoreFacade.get_training_job_config(id=training_job_id)
 
-        # Calcualte average and std metrics
+
+        # Calculate average and std metrics
         exp_result.avg_metrics = {}
         exp_result.std_metrics = {}
         for metric in exp_result.all_metrics[self.experiment_config.random_seeds[0]].keys():
@@ -79,6 +90,7 @@ class TSPSA(BaseAgent):
         traces = env.get_traces()
         if len(traces) > 0:
             MetastoreFacade.save_simulation_trace(traces[-1])
+        MetastoreFacade.remove_training_job(training_job)
         return exp_execution
 
     def hparam_names(self) -> List[str]:
@@ -87,13 +99,16 @@ class TSPSA(BaseAgent):
         """
         return ["a", "c", "lambda", "A", "epsilon", "N", "L", "theta1", "eval_batch_size"]
 
-    def spsa(self, exp_result: ExperimentResult, seed: int, env: gym.Env) -> ExperimentResult:
+    def spsa(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
+             training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
         Runs the SPSA algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
         :param env: the environment for evaluation
+        :param training_job: the training job config
+        :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
         # Initialize metrics
@@ -105,7 +120,7 @@ class TSPSA(BaseAgent):
         if "theta1" in self.experiment_config.hparams:
             theta = self.experiment_config.hparams["theta1"].value
         else:
-            theta = TSPSA.initial_theta(L=L)
+            theta = TSPSAAgent.initial_theta(L=L)
 
         # Initial eval
         policy = TSPSAPolicy(theta=theta, simulation_name=self.simulation_env_config.name)
@@ -152,6 +167,14 @@ class TSPSA(BaseAgent):
             if i % self.experiment_config.log_every == 0 and i > 0:
                 Logger.__call__().get_logger().info(f"[T-SPSA] i: {i}, J:{J}, "
                                                     f"sigmoid(theta):{policy.thresholds()}")
+                # Update training job
+                total_iterations = len(random_seeds)*N
+                iterations_done = (random_seeds.index(seed))*N + i
+                progress = round(iterations_done/total_iterations,2)
+                training_job.progress_percentage = progress
+                training_job.average_r = J
+                MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
+
         policy = TSPSAPolicy(theta=theta, simulation_name=self.simulation_env_config.name)
         exp_result.policies[seed] = policy
         return exp_result
@@ -182,8 +205,8 @@ class TSPSA(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            metrics = TSPSA.update_metrics(metrics=metrics, info=info)
-        avg_metrics = TSPSA.compute_avg_metrics(metrics=metrics)
+            metrics = TSPSAAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = TSPSAAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
     @staticmethod

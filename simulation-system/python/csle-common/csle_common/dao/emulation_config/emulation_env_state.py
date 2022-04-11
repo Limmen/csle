@@ -71,11 +71,11 @@ class EmulationEnvState:
             agent_reachable = self.attacker_obs_state.agent_reachable
             for m in self.attacker_obs_state.machines:
                 for c in m.ssh_connections:
-                    self.attacker_cached_ssh_connections[(c.ip, c.username, c.port)] = c
+                    self.attacker_cached_ssh_connections[(c.ip, c.credential.username, c.port)] = c
                 for c in m.telnet_connections:
-                    self.attacker_cached_telnet_connections[(c.ip, c.username, c.port)] = c
+                    self.attacker_cached_telnet_connections[(c.ip, c.credential.username, c.port)] = c
                 for c in m.ftp_connections:
-                    self.attacker_cached_ftp_connections[(c.ip, c.username, c.port)] = c
+                    self.attacker_cached_ftp_connections[(c.ip, c.credential.username, c.port)] = c
                 for cr in m.backdoor_credentials:
                     for ip in m.ips:
                         self.attacker_cached_backdoor_credentials[(ip, cr.username, cr.pw)] = cr
@@ -89,7 +89,7 @@ class EmulationEnvState:
         if self.defender_obs_state is not None:
             for m in self.defender_obs_state.machines:
                 for c in m.ssh_connections:
-                    self.defender_cached_ssh_connections[(c.ip, c.username, c.port)] = c
+                    self.defender_cached_ssh_connections[(c.ip, c.credential.username, c.port)] = c
         else:
             self.defender_obs_state = EmulationDefenderObservationState(
                 log_sink_config=self.emulation_env_config.log_sink_config)
