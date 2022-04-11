@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button'
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal'
 import EmulationTrace from "./EmulationTrace/EmulationTrace";
+import SimulationTrace from "./SimulationTrace/SimulationTrace";
 import TraceImg from './TracesLoop.png'
 import './Traces.css';
 
@@ -50,6 +51,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
+                console.log(response)
                 setSimulationTraces(response)
                 setLoadingSimulationTraces(false)
             })
@@ -82,6 +84,12 @@ const Traces = () => {
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             More information about how traces are collected
+        </Tooltip>
+    );
+
+    const renderRefreshSimulationTracesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload simulation traces from the backend
         </Tooltip>
     );
 
@@ -136,6 +144,24 @@ const Traces = () => {
         }
     }
 
+    const SimulationTracesAccordions = (props) => {
+        if (props.loadingSimulationTraces) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    {props.simulationTraces.map((simulationTrace, index) =>
+                        <SimulationTrace simulationTrace={simulationTrace}
+                                         wrapper={wrapper} key={simulationTrace.id + "-" + index}/>
+                    )}
+                </Accordion>
+            )
+        }
+    }
+
     return (
         <div className="Traces">
             <h3 className="text-center inline-block emulationsHeader"> Emulation Traces
@@ -163,6 +189,32 @@ const Traces = () => {
 
             </h3>
             <EmulationTracesAccordions loadingEmulationTraces={loadingEmulationTraces} emulationTraces={emulationTraces}/>
+
+            <h3 className="text-center inline-block simulationTracesHeader"> Simulation Traces
+
+                <OverlayTrigger
+                    placement="right"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRefreshSimulationTracesTooltip}
+                >
+                    <Button variant="button" onClick={refreshSimulationTraces}>
+                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+
+                <OverlayTrigger
+                    placement="right"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderInfoTooltip}
+                >
+                    <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+            </h3>
+            <SimulationTracesAccordions loadingSimulationTraces={loadingSimulationTraces}
+                                        simulationTraces={simulationTraces}/>
         </div>
     );
 }

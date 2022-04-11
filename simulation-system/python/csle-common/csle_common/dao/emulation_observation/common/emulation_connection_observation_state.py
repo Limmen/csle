@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from csle_common.dao.emulation_config.credential import Credential
 
 
 class EmulationConnectionObservationState:
@@ -6,13 +7,14 @@ class EmulationConnectionObservationState:
     A DTO representing a connection observation in the emulation
     """
 
-    def __init__(self, conn, username : str, root: bool, service: str, port: int, tunnel_thread = None,
-                 tunnel_port : int = None, interactive_shell = None, proxy = None, ip = None):
+    def __init__(self, conn, credential: Credential, root: bool, service: str, port: int, tunnel_thread = None,
+                 tunnel_port : int = None, interactive_shell = None,
+                 proxy : "EmulationConnectionObservationState" = None, ip = None):
         """
         Intializes the DTO
 
         :param conn: the connection object
-        :param username: the username of the connection
+        :param credential: the credential of the connection
         :param root: whether the connection is root or not
         :param service: the service of the connection
         :param port: the port of the connection
@@ -22,8 +24,10 @@ class EmulationConnectionObservationState:
         :param proxy: a proxy for the connection
         :param ip: the ip of the connection
         """
+        if proxy is not None:
+            assert ip != proxy.ip
         self.conn = conn
-        self.username = username
+        self.credential = credential
         self.root = root
         self.port = port
         self.service = service
@@ -42,7 +46,7 @@ class EmulationConnectionObservationState:
         :return: the created instance
         """
         obj = EmulationConnectionObservationState(
-            conn=None, username=d["username"], root=d["root"], port=d["port"], service=d["service"],
+            conn=None, credential=Credential.from_dict(d["credential"]), root=d["root"], port=d["port"], service=d["service"],
             tunnel_port=d["tunnel_port"], tunnel_thread=None, interactive_shell=None, ip=d["ip"], proxy=None
         )
         return obj
@@ -52,7 +56,7 @@ class EmulationConnectionObservationState:
         :return: a dict represnetation of the object
         """
         d = {}
-        d["username"] = self.username
+        d["credential"] = self.credential.to_dict()
         d["root"] = self.root
         d["port"] = self.port
         d["service"] = self.service
@@ -64,7 +68,7 @@ class EmulationConnectionObservationState:
         """
         :return: a string representation of the connection observation
         """
-        return "username:{},root:{},service:{},port:{}".format(self.username, self.root, self.service, self.port)
+        return "credential:{},root:{},service:{},port:{}".format(self.credential, self.root, self.service, self.port)
 
     def __eq__(self, other) -> bool:
         """
@@ -77,14 +81,16 @@ class EmulationConnectionObservationState:
             # don't attempt to compare against unrelated types
             return NotImplemented
 
-        return self.username == other.username and self.root == other.root and self.service == other.service \
+        return self.credential.username == other.credential.username and self.root == other.root \
+               and self.service == other.service \
                and self.port == other.port and self.ip == other.ip
 
     def __hash__(self):
         """
         :return: a hash representation of the object
         """
-        return hash(self.username) + 31 * hash(self.root) + 31 * hash(self.service) + 31 * hash(self.port) \
+        return hash(self.credential.username) + 31 * hash(self.root) \
+               + 31 * hash(self.service) + 31 * hash(self.port) \
                + 31 * hash(self.ip)
 
     def cleanup(self) -> None:

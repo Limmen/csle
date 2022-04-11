@@ -1,10 +1,10 @@
-from typing import Tuple
-
+from typing import Tuple, List
 import gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 
 
 class StoppingGameMdpAttackerEnv(BaseEnv):
@@ -97,6 +97,20 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :return: True or False
         """
         return True
+
+    def get_traces(self) -> List[SimulationTrace]:
+        """
+        :return: the list of simulation traces
+        """
+        return self.stopping_game_env.get_traces()
+
+    def reset_traces(self) -> None:
+        """
+        Resets the list of traces
+
+        :return: None
+        """
+        return self.stopping_game_env.reset_traces()
 
     def close(self) -> None:
         """

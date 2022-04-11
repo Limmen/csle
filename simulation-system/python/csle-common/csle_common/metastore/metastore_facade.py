@@ -10,6 +10,9 @@ from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.logging.log import Logger
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
+from csle_common.dao.training.experiment_execution import ExperimentExecution
+from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.util.np_encoder import NpEncoder
 
 
 class MetastoreFacade:
@@ -145,6 +148,7 @@ class MetastoreFacade:
         """
         simulation_trace_json_str = json.dumps(simulation_trace_record[2], indent=4, sort_keys=True)
         simulation_trace: SimulationTrace = SimulationTrace.from_dict(json.loads(simulation_trace_json_str))
+        simulation_trace.id = simulation_trace_record[0]
         return simulation_trace
 
     @staticmethod
@@ -460,8 +464,8 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(simulation_trace.to_dict(), indent=4, sort_keys=True)
-                cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} (gym_env, trace) "
+                config_json_str = json.dumps(simulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} (gym_env, trace) "
                             f"VALUES (%s, %s) RETURNING id", (simulation_trace.simulation_env, config_json_str))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
@@ -639,3 +643,146 @@ class MetastoreFacade:
                 if record is not None:
                     record = MetastoreFacade._convert_simulation_image_record_to_tuple(simulation_image_record=record)
                 return record
+
+    @staticmethod
+    def save_experiment_execution(experiment_execution: ExperimentExecution) -> Union[Any, int]:
+        """
+        Saves an experiment execution to the metastore
+
+        :param experiment_execution: the experiment execution to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing experiment exection for emulation: "
+                                             f"{experiment_execution.emulation_name} "
+                                             f"and simulation: {experiment_execution.simulation_name} "
+                                             f"in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(experiment_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS} "
+                            f"(execution, simulation_name, emulation_name) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (config_json_str, experiment_execution.simulation_name,
+                                                              experiment_execution.emulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Experiment execution for "
+                                                     f"emulation {experiment_execution.emulation_name} "
+                                                     f"and simulation {experiment_execution.simulation_name} "
+                                                     f"saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def list_experiment_executions() -> List[EmulationTrace]:
+        """
+        :return: A list of emulation traces in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_experiment_execution_record_to_dto(x), records))
+                return records
+
+    @staticmethod
+    def _convert_experiment_execution_record_to_dto(experiment_execution_record) -> ExperimentExecution:
+        """
+        Converts an experiment execution record fetched from the metastore into a DTO
+
+        :param experiment_execution_record: the record to convert
+        :return: the DTO representing the record
+        """
+        experiment_execution_json = json.dumps(experiment_execution_record[1], indent=4, sort_keys=True)
+        experiment_execution: ExperimentExecution = ExperimentExecution.from_dict(json.loads(experiment_execution_json))
+        experiment_execution.id = experiment_execution_record[0]
+        return experiment_execution
+
+    @staticmethod
+    def get_experiment_execution(id: int) -> Union[None, EmulationTrace]:
+        """
+        Function for fetching an experiment execution with a given id from the metastore
+
+        :param id: the id of the emulation trace
+        :return: The emulation trace or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_emulation_trace_record_to_dto(emulation_trace_record=record)
+                return record
+
+    @staticmethod
+    def list_t_spsa_policies() -> List[TSPSAPolicy]:
+        """
+        :return: A list of T_SPSA policies in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.T_SPSA_POLICIES}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_tspsa_policy_record_to_dto(x), records))
+                return records
+
+
+    @staticmethod
+    def _convert_tspsa_policy_record_to_dto(tspsa_policy_record) -> TSPSAPolicy:
+        """
+        Converts a T-SPSA record fetched from the metastore into a DTO
+
+        :param tspsa_policy_record: the record to convert
+        :return: the DTO representing the record
+        """
+        t_spsa_policy_json = json.dumps(tspsa_policy_record[1], indent=4, sort_keys=True)
+        t_spsa_policy: TSPSAPolicy = TSPSAPolicy.from_dict(json.loads(t_spsa_policy_json))
+        t_spsa_policy.id = tspsa_policy_record[0]
+        return t_spsa_policy
+
+
+    @staticmethod
+    def get_t_spsa_policy(id: int) -> Union[None, TSPSAPolicy]:
+        """
+        Function for fetching a T-SPSA policy with a given id from the metastore
+
+        :param id: the id of the t_spsa policy
+        :return: The T-SPSA policy or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.T_SPSA_POLICIES} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_tspsa_policy_record_to_dto(tspsa_policy_record=record)
+                return record
+
+    @staticmethod
+    def save_tspsa_policy(t_spsa_policy: TSPSAPolicy) -> Union[Any, int]:
+        """
+        Saves a T-SPSA policy to the metastore
+
+        :param t_spsa_policy: the policy to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing TSPSA policy in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                policy_json_str = json.dumps(t_spsa_policy.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.T_SPSA_POLICIES} "
+                            f"(policy, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, t_spsa_policy.simulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"T-SPSA policy saved successfully")
+                return id_of_new_row

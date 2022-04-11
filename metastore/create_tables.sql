@@ -81,7 +81,9 @@ GRANT USAGE, SELECT ON SEQUENCE simulations_id_seq TO csle;
 -- Create table that stores the experiment executions --
 CREATE TABLE IF NOT EXISTS experiment_executions (
     id serial PRIMARY KEY,
-    execution json NOT NULL
+    execution json NOT NULL,
+    simulation_name TEXT references simulations(name),
+    emulation_name TEXT references emulations(name)
 );
 GRANT ALL ON experiment_executions TO csle;
 GRANT USAGE, SELECT ON SEQUENCE experiment_executions_id_seq TO csle;
@@ -94,3 +96,13 @@ CREATE TABLE IF NOT EXISTS simulation_images (
 );
 GRANT ALL ON simulation_images TO csle;
 GRANT USAGE, SELECT ON SEQUENCE simulation_images_id_seq TO csle;
+
+
+-- Create table that stores the t_spsa_policies --
+CREATE TABLE IF NOT EXISTS t_spsa_policies (
+    id serial PRIMARY KEY,
+    policy json NOT NULL,
+    simulation_name TEXT references simulations(name)
+);
+GRANT ALL ON t_spsa_policies TO csle;
+GRANT USAGE, SELECT ON SEQUENCE t_spsa_policies_id_seq TO csle;

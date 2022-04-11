@@ -408,26 +408,27 @@ const Emulation = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {emulation.resources_config.node_resources_configurations.filter(rc =>
-                        rc !== null && rc !== undefined &&
-                        rc.ips_gw_default_policy_networks !== null
-                        && rc.ips_gw_default_policy_networks !== undefined).map((rc, index) =>
-                        rc.ips_gw_default_policy_networks.filter((rc_net) =>
-                            rc_net !== null && rc_net !== undefined).map((rc_net, index) =>
-                            <tr key={rc_net[0] + "-" + index}>
-                                <td>{rc_net[0]}</td>
-                                <td>{rc_net[1].interface}</td>
-                                <td>{rc_net[1].rate_limit_mbit}Mbit/s</td>
-                                <td>{rc_net[1].packet_duplicate_percentage}%</td>
-                                <td>{rc_net[1].loss_gemodel_h}%</td>
-                                <td>{rc_net[1].loss_gemodel_p}%</td>
-                                <td>{rc_net[1].packet_delay_distribution}, {rc_net[1].packet_delay_ms}ms</td>
-                                <td>{rc_net[1].packet_delay_jitter_ms}ms</td>
-                                <td>{rc_net[1].packet_overhead}bytes</td>
-                                <td>{rc_net[1].packet_reorder_percentage}%</td>
-                                <td>{rc_net[1].packet_corrupt_percentage}%</td>
-                            </tr>
-                        ))}
+                    {emulation.resources_config.node_resources_configurations.filter(rc => (rc !== null && rc !== undefined &&
+                        rc.ips_and_network_configs !== null
+                        && rc.ips_and_network_configs !== undefined)).map((rc, index) => {
+                        return rc.ips_and_network_configs.filter((rc_net) =>
+                            rc_net !== null && rc_net !== undefined).map((rc_net, index) => {
+                                return (<tr key={rc_net[0] + "-" + index}>
+                                    <td>{rc_net[0]}</td>
+                                    <td>{rc_net[1].interface}</td>
+                                    <td>{rc_net[1].rate_limit_mbit}Mbit/s</td>
+                                    <td>{rc_net[1].packet_duplicate_percentage}%</td>
+                                    <td>{rc_net[1].loss_gemodel_h}%</td>
+                                    <td>{rc_net[1].loss_gemodel_p}%</td>
+                                    <td>{rc_net[1].packet_delay_distribution}, {rc_net[1].packet_delay_ms}ms</td>
+                                    <td>{rc_net[1].packet_delay_jitter_ms}ms</td>
+                                    <td>{rc_net[1].packet_overhead}bytes</td>
+                                    <td>{rc_net[1].packet_reorder_percentage}%</td>
+                                    <td>{rc_net[1].packet_corrupt_percentage}%</td>
+                                </tr>)
+                            }
+                        )
+                    })}
                     </tbody>
                 </Table>
 

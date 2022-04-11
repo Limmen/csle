@@ -1339,6 +1339,8 @@ class METADATA_STORE:
     EMULATION_IMAGES_TABLE = "emulation_images"
     SIMULATION_IMAGES_TABLE = "simulation_images"
     EMULATION_SIMULATION_TRACES_TABLE = "emulation_simulation_traces"
+    EXPERIMENT_EXECUTIONS = "experiment_executions"
+    T_SPSA_POLICIES = "t_spsa_policies"
 
 
 class CONTAINER_POOLS:

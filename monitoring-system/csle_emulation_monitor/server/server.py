@@ -200,7 +200,7 @@ def emulation_traces():
 
 @app.route('/simulationtraces', methods=['GET'])
 def simulation_traces():
-    simulation_trcs = MetastoreFacade.list_emulation_traces()
+    simulation_trcs = MetastoreFacade.list_simulation_traces()
     traces_dicts = list(map(lambda x: x.to_dict(), simulation_trcs))
     response = jsonify(traces_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -212,6 +212,22 @@ def dynamics_models():
     models = MetastoreFacade.list_emulation_statistics()
     models_dicts = list(map(lambda x: x.to_dict(), models))
     response = jsonify(models_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/experiments', methods=['GET'])
+def experiments():
+    experiments = MetastoreFacade.list_experiment_executions()
+    experiment_dicts = list(map(lambda x: x.to_dict(), experiments))
+    response = jsonify(experiment_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/tspsapolicies', methods=['GET'])
+def policies():
+    t_spsa_policies = MetastoreFacade.list_t_spsa_policies()
+    t_spsa_policies_dicts = list(map(lambda x: x.to_dict(), t_spsa_policies))
+    response = jsonify(t_spsa_policies_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

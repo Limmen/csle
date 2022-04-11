@@ -1,10 +1,21 @@
-from typing import Tuple, Dict, Union
+from typing import Tuple, Dict, Union, List
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_common.dao.training.policy import Policy
+from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
+from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
+from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions \
+    import EmulationAttackerStoppingActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_system_identification.emulator import Emulator
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
+from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
+    import EmulationDefenderStoppingActions
 
 
 class StoppingGameEnv(BaseEnv):
@@ -108,6 +119,11 @@ class StoppingGameEnv(BaseEnv):
         """
         info["R"] = sum(self.trace.defender_rewards)
         info["T"] = len(self.trace.defender_actions)
+        stop = self.config.L
+        for i in range(len(self.trace.defender_actions)):
+            if self.trace.defender_actions[i] == 1:
+                info[f"stop_{stop}"] = i
+                stop -= 1
         return info
 
     def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
@@ -127,6 +143,47 @@ class StoppingGameEnv(BaseEnv):
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
         return defender_obs, attacker_obs
+
+    def emulation_evaluation(self, n_episodes: int, intrusion_seq: List[EmulationAttackerAction],
+                             defender_policy: Policy,
+                             attacker_policy: Policy,
+                             emulation_env_config: EmulationEnvConfig) -> List[EmulationSimulationTrace]:
+        traces = []
+        for i in range(n_episodes):
+            done = False
+            s = EmulationEnvState(emulation_env_config=emulation_env_config)
+            s.initialize_defender_machines()
+            o = self.reset()
+            (d_obs, a_obs) = o
+            t = 0
+            s.reset()
+            emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
+                                             initial_defender_observation_state=s.defender_obs_state,
+                                             emulation_name=emulation_env_config.name)
+            while not done:
+                a1 = defender_policy.action(d_obs)
+                a2 = attacker_policy.action(a_obs)
+                o, r, done, info = self.step((a1,a2))
+                (d_obs, a_obs) = o
+                r_1, r_2 = r
+                if a1 == 0:
+                    defender_action = EmulationDefenderStoppingActions.CONTINUE(index=-1)
+                else:
+                    defender_action = EmulationDefenderStoppingActions.CONTINUE(index=-1)
+                if self.state.s == 1:
+                    if t >= len(intrusion_seq):
+                        t = 0
+                    attacker_action = intrusion_seq[t]
+                else:
+                    attacker_action = EmulationAttackerStoppingActions.CONTINUE(index=-1)
+                emulation_trace = Emulator.run_actions(
+                    emulation_env_config=emulation_env_config, attacker_action=attacker_action,
+                    defender_action=defender_action, trace=emulation_trace,
+                    sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds)
+            simulation_trace = self.trace
+            em_sim_trace = EmulationSimulationTrace(emulation_trace=emulation_trace, simulation_trace=simulation_trace)
+            traces.append(em_sim_trace)
+        return traces
 
     def render(self, mode: str = 'human'):
         """
@@ -158,6 +215,20 @@ class StoppingGameEnv(BaseEnv):
         :return: True or False
         """
         return True
+
+    def get_traces(self) -> List[SimulationTrace]:
+        """
+        :return: the list of simulation traces
+        """
+        return self.traces
+
+    def reset_traces(self) -> None:
+        """
+        Resets the list of traces
+
+        :return: None
+        """
+        self.traces = []
 
     def __checkpoint_traces(self) -> None:
         """

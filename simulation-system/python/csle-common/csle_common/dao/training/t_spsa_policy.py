@@ -6,10 +6,21 @@ from csle_common.dao.training.agent_type import AgentType
 
 
 class TSPSAPolicy(Policy):
+    """
+    A multi-threshold policy learned with T-SPSA
+    """
 
-    def __init__(self, theta):
+    def __init__(self, theta, simulation_name: str):
+        """
+        Initializes the policy
+
+        :param theta: the threshold vector
+        :param simulation_name: the simulation name
+        """
         super(TSPSAPolicy, self).__init__(agent_type=AgentType.T_SPSA)
         self.theta = theta
+        self.id = -1
+        self.simulation_name = simulation_name
 
     def action(self, o: List[float]) -> int:
         """
@@ -58,6 +69,9 @@ class TSPSAPolicy(Policy):
         """
         d = {}
         d["theta"] = self.theta
+        d["id"] = self.id
+        d["simulation_name"] = self.simulation_name
+        d["thresholds"] = self.thresholds()
         return d
 
     @staticmethod
@@ -68,18 +82,20 @@ class TSPSAPolicy(Policy):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = TSPSAPolicy(theta=d["theta"])
+        obj = TSPSAPolicy(theta=d["theta"], simulation_name=d["simulation_name"])
+        obj.id = d["id"]
         return obj
 
     def thresholds(self) -> List[float]:
         """
         :return: the thresholds
         """
-        return list(map(lambda x: TSPSAPolicy.sigmoid(x), self.theta))
+        return list(map(lambda x: round(TSPSAPolicy.sigmoid(x),3), self.theta))
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"theta: {self.theta}"
+        return f"theta: {self.theta}, id: {self.id}, simulation_name: {self.simulation_name}, " \
+               f"thresholds: {self.thresholds()}"
 

@@ -26,6 +26,7 @@ class SimulationTrace:
         self.states = []
         self.beliefs = []
         self.infrastructure_metrics = []
+        self.id = -1
 
     def __str__(self) -> str:
         """
@@ -34,10 +35,10 @@ class SimulationTrace:
         return "simulation_env: {}, attacker_rewards:{}, defender_rewards:{}, attacker_observations:{}, " \
                "defender_observations:{}, " \
                "infos:{}, dones:{}, attacker_actions:{}, defender_actions:{}, states: {}, beliefs: {}, " \
-               "infrastructure_metrics: {}".format(self.simulation_env,
+               "infrastructure_metrics: {}, id: {}".format(self.simulation_env,
             self.attacker_rewards, self.defender_rewards, self.attacker_observations,
             self.defender_observations, self.infos, self.dones, self.attacker_actions,
-            self.defender_actions, self.states, self.beliefs, self.infrastructure_metrics)
+            self.defender_actions, self.states, self.beliefs, self.infrastructure_metrics, self.id)
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -55,7 +56,8 @@ class SimulationTrace:
             "defender_actions": self.defender_actions,
             "states": self.states,
             "beliefs": self.beliefs,
-            "infrastructure_metrics": self.infrastructure_metrics
+            "infrastructure_metrics": self.infrastructure_metrics,
+            "id": self.id
         }
 
     @staticmethod
@@ -89,6 +91,8 @@ class SimulationTrace:
             trace.states = d["states"]
         if "infrastructure_metrics" in d:
             trace.infrastructure_metrics = d["infrastructure_metrics"]
+        if "id" in d:
+            trace.id = d["id"]
         return trace
 
     @staticmethod

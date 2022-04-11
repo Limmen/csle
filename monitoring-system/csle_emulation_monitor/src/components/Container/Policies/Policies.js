@@ -1,24 +1,24 @@
 import React, {useState, useEffect, useCallback, createRef} from 'react';
-import Modal from 'react-bootstrap/Modal'
-import Accordion from 'react-bootstrap/Accordion';
-import Spinner from 'react-bootstrap/Spinner'
+import './Policies.css';
 import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Spinner from 'react-bootstrap/Spinner';
+import Accordion from 'react-bootstrap/Accordion';
 import Tooltip from 'react-bootstrap/Tooltip';
-import Experiment from "./Experiment/Experiment";
-import './TrainingResults.css';
-import TrainingEnv from './RL_training_env.png'
+import TSPSAPolicy from "./TSPSAPolicy/TSPSAPolicy";
+import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
 
-const TrainingResults = () => {
-    const [experiments, setExperiments] = useState([]);
-    const [loading, setLoading] = useState(true);
+const Policies = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
+    const [tspsaPolicies, setTSPSAPolicies] = useState([]);
+    const [loadingspsaPolicies, setLoadingSpsaPolicies] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-    const fetchExperiments = useCallback(() => {
+    const fetchTSPSAPolicies = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/experiments',
+            `http://` + ip + ':7777/tspsapolicies',
             {
                 method: "GET",
                 headers: new Headers({
@@ -28,35 +28,32 @@ const TrainingResults = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setExperiments(response);
-                setLoading(false)
+                console.log(response)
+                setTSPSAPolicies(response);
+                setLoadingSpsaPolicies(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
     useEffect(() => {
-        setLoading(true)
-        fetchExperiments()
-    }, [fetchExperiments]);
+        setLoadingSpsaPolicies(true)
+        fetchTSPSAPolicies()
+    }, [fetchTSPSAPolicies]);
 
-    const refresh = () => {
-        setLoading(true)
-        fetchExperiments()
+    const refreshTSPSAPolicies = () => {
+        setLoadingSpsaPolicies(true)
+        fetchTSPSAPolicies()
     }
-
-    const info = () => {
-        setShowInfoModal(true)
-    }
-
-    const renderRefreshTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload training runs from the backend
-        </Tooltip>
-    );
 
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about the training runs
+            More information about learned policies.
+        </Tooltip>
+    );
+
+    const renderTSPSARefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload T-SPSA policies from the backend
         </Tooltip>
     );
 
@@ -70,17 +67,17 @@ const TrainingResults = () => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Policy training
+                        Trained policies
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Training policies using reinforcement learning</h4>
+                    <h4>Policies</h4>
                     <p className="modalText">
-                        Policies are trained through reinforcement learning in the simulation system.
-                        Different reinforcement learning algorithms can be used, e.g. PPO, T-SPSA, DQN, etc.
+                        Trained policies are typically in the form of deep neural networks but can also be in tabular
+                        representations or in special parameterizations such as Gaussian policies or threshold policies.
                     </p>
                     <div className="text-center">
-                        <img src={TrainingEnv} alt="Emulated infrastructures"/>
+                        <img src={NeuralNetworkPolicies} alt="neural network policies"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -92,7 +89,7 @@ const TrainingResults = () => {
 
     const wrapper = createRef();
 
-    const TrainingRunAccordions = (props) => {
+    const TSPSAPoliciesAccordions = (props) => {
         if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
@@ -101,24 +98,25 @@ const TrainingResults = () => {
         } else {
             return (
                 <Accordion defaultActiveKey="0">
-                    {props.experiments.map((experiment, index) =>
-                        <Experiment experiment={experiment} wrapper={wrapper} key={experiment.id + "-" + index}/>
+                    {props.policies.map((policy, index) =>
+                        <TSPSAPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}/>
                     )}
                 </Accordion>
             )
         }
     }
 
+
     return (
-        <div className="TrainingResults">
-            <h3 className="text-center inline-block experimentsHeader"> Training runs
+        <div className="policyExamination">
+            <h3> T-SPSA policies
 
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshTooltip}
+                    overlay={renderTSPSARefreshTooltip}
                 >
-                    <Button variant="button" onClick={refresh}>
+                    <Button variant="button" onClick={refreshTSPSAPolicies}>
                         <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
@@ -128,18 +126,17 @@ const TrainingResults = () => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderInfoTooltip}
                 >
-                    <Button variant="button" onClick={info}>
-                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                    <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <i className="fa fa-info-circle" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
-
                 <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
             </h3>
-            <TrainingRunAccordions loading={loading} experiments={experiments}/>
+            <TSPSAPoliciesAccordions loading={loadingspsaPolicies} policies={tspsaPolicies}/>
         </div>
     );
 }
 
-TrainingResults.propTypes = {};
-TrainingResults.defaultProps = {};
-export default TrainingResults;
+Policies.propTypes = {};
+Policies.defaultProps = {};
+export default Policies;

@@ -134,6 +134,7 @@ class EmulationEnvConfig:
             conn = paramiko.SSHClient()
             conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             conn.connect(ip, username=username, password=pw)
+            conn.get_transport().set_keepalive(5)
             self.connections[ip] = conn
             if self.producer is None and create_producer:
                 self.create_producer()
@@ -156,7 +157,7 @@ class EmulationEnvConfig:
         """
         Gets an SSH connection to the hacker agent, creates one if it does not exist
 
-        :return: SSH connecton to the hacker
+        :return: SSH connection to the hacker
         """
         hacker_ip = self.containers_config.agent_ip
         if hacker_ip in self.connections and self.connections[hacker_ip] is not None \

@@ -150,6 +150,7 @@ class ProducerThread(threading.Thread):
                 num_clients = len(self.arrival_thread.client_threads)
                 self.producer.produce(constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
                                       f"{ts},{self.ip},{num_clients}")
+                self.producer.poll(0)
 
 
 class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerServicer):

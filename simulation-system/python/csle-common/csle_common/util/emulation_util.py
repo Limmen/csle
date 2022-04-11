@@ -12,6 +12,8 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id impo
 from csle_common.util.env_dynamics_util import EnvDynamicsUtil
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
+from csle_common.dao.emulation_config.credential import Credential
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 
 
 class EmulationUtil:
@@ -88,6 +90,7 @@ class EmulationUtil:
         if emulation_env_config.producer is None:
             emulation_env_config.create_producer()
         emulation_env_config.producer.produce(collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME, record)
+        emulation_env_config.producer.poll(0)
         emulation_env_config.producer.flush()
 
     @staticmethod
@@ -174,6 +177,8 @@ class EmulationUtil:
         :param root: whether it is a root connection or not
         :return: the new connection
         """
+        cr = Credential(username=user, pw=pw, root=root, protocol = TransportProtocol.TCP,
+                        service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT)
         agent_addr = (source_ip, port)
         target_addr = (target_ip, port)
         agent_transport = proxy_conn.conn.get_transport()
@@ -182,12 +187,11 @@ class EmulationUtil:
                                                          timeout=3)
             target_conn = paramiko.SSHClient()
             target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            target_conn.connect(target_ip, username=user, password=pw, sock=relay_channel,
-                                timeout=3)
-            connection_dto = EmulationConnectionObservationState(conn=target_conn, username=user, root=root,
-                                                                 service=constants.SSH.SERVICE_NAME,
-                                                                 port=constants.SSH.DEFAULT_PORT,
-                                                                 proxy=proxy_conn, ip=target_ip)
+            target_conn.connect(target_ip, username=user, password=pw, sock=relay_channel)
+            target_conn.get_transport().set_keepalive(5)
+            connection_dto = EmulationConnectionObservationState(
+                conn=target_conn, credential=cr, root=root, service=constants.SSH.SERVICE_NAME,
+                port=constants.SSH.DEFAULT_PORT, proxy=proxy_conn, ip=target_ip)
             return connection_dto
         except Exception as e:
             print("Custom connection setup failed:{}".format(str(e)))

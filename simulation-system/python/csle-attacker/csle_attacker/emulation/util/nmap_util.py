@@ -24,6 +24,7 @@ from csle_common.dao.emulation_action_result.nmap_http_enum import NmapHttpEnum
 from csle_common.dao.emulation_action_result.nmap_http_grep import NmapHttpGrep
 from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.util.connection_util import ConnectionUtil
 from csle_common.logging.log import Logger
 
 
@@ -652,16 +653,20 @@ class NmapUtil:
                 machine.ssh_connections = ssh_connections_alive
                 ssh_connections_sorted_by_root = sorted(
                     machine.ssh_connections,
-                    key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+                    key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                                   x.credential.username),
                     reverse=True)
                 for c in ssh_connections_sorted_by_root:
-                    cwd = "/home/" + c.username + "/"
+                    cwd = "/home/" + c.credential.username + "/"
                     cmds, file_names = a.nmap_cmds(machine_ips=machine.ips)
                     try:
+                        if not c.conn.get_transport().is_active():
+                            c = ConnectionUtil.reconnect(c)
                         results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
                     except Exception as e:
-                        print(f"exception execution commands for ip:{c.ip}, username: {c.username}, conn: {c.conn}, "
-                              f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport.is_active()}")
+                        print(f"exception execution commands for ip:{c.ip}, "
+                              f"username: {c.credential.username}, conn: {c.conn}, "
+                              f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport().is_active()}")
                         raise ValueError("error")
                     total_time = sum(list(map(lambda x: x[2], results)))
                     total_cost += total_time

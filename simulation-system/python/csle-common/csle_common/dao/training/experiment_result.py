@@ -1,5 +1,6 @@
 from typing import Any, Dict, Union, List
 from csle_common.dao.training.policy import Policy
+from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
 
 
 class ExperimentResult:
@@ -8,8 +9,14 @@ class ExperimentResult:
     """
 
     def __init__(self):
-        self.metrics : Dict[int, Dict[str, List[Union[int, float]]]]= {}
+        """
+        Initializes the DTO
+        """
+        self.all_metrics : Dict[int, Dict[str, List[Union[int, float]]]]= {}
         self.policies: Dict[int, Policy] = {}
+        self.plot_metrics = []
+        self.avg_metrics = {}
+        self.std_metrics = {}
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ExperimentResult":
@@ -20,10 +27,16 @@ class ExperimentResult:
         :return: the created insatnce
         """
         obj = ExperimentResult()
-        obj.metrics = d["metrics"]
+        obj.std_metrics = d["std_metrics"]
+        obj.avg_metrics = d["avg_metrics"]
+        obj.all_metrics = d["all_metrics"]
+        obj.plot_metrics = d["plot_metrics"]
         d2 = {}
         for k,v in d["policies"].items():
-            d2[k] = Policy.from_dict(v)
+            try:
+                d2[k] = TSPSAPolicy.from_dict(v)
+            except Exception as e:
+                raise Exception()
         obj.policies = d2
         return obj
 
@@ -32,15 +45,19 @@ class ExperimentResult:
         :return: a dict representation of the object
         """
         d = {}
-        d["metrics"] = self.metrics
+        d["all_metrics"] = self.all_metrics
         d2 = {}
         for k,v in self.policies.items():
             d2[k] = v.to_dict()
         d["policies"] = d2
+        d["plot_metrics"] = self.plot_metrics
+        d["avg_metrics"] = self.avg_metrics
+        d["std_metrics"] = self.std_metrics
         return d
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"metrics: {self.metrics}, policies: {self.policies}"
+        return f"all_metrics: {self.all_metrics}, policies: {self.policies}, plot_metrics: {self.plot_metrics}, " \
+               f"avg_metrtics: {self.avg_metrics}, std metrics: {self.std_metrics}"

@@ -11,6 +11,7 @@ import ContainerImages from "./components/Container/ContainerImages/ContainerIma
 import Simulations from "./components/Container/Simulations/Simulations";
 import TrainingResults from "./components/Container/TrainingResults/TrainingResults";
 import About from "./components/Container/About/About";
+import Policies from "./components/Container/Policies/Policies";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
                                 <Route path="images" index element={<ContainerImages/>}>
                                 </Route>
                                 <Route path="training" index element={<TrainingResults/>}>
+                                </Route>
+                                <Route path="policies" index element={<Policies/>}>
                                 </Route>
                                 <Route path="about" index element={<About/>}>
                                 </Route>

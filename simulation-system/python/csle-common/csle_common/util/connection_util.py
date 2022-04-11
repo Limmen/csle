@@ -15,6 +15,7 @@ from csle_common.controllers.forward_tunnel_thread import ForwardTunnelThread
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.connection_setup_dto import ConnectionSetupDTO
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.logging.log import Logger
 
 
@@ -84,7 +85,7 @@ class ConnectionUtil:
                     for c in alive_connections:
                         if not root and c.root:
                             root = True
-                        if c.username == cr.username:
+                        if c.credential.username == cr.username:
                             already_logged_in = True
                     if not already_logged_in:
                         non_used_credentials.append(cr)
@@ -156,14 +157,19 @@ class ConnectionUtil:
             return s_prime, False
 
         # If not logged in and there are credentials, setup a new connection
+        agent_cr = Credential(
+            username=constants.AGENT.USER, pw = constants.AGENT.PW, root=True,
+            protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT
+        )
         proxy_connections = [EmulationConnectionObservationState(
-            conn=s.emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
+            conn=s.emulation_env_config.get_hacker_connection(), credential=agent_cr,
             root=True, port=22, service=constants.SSH.SERVICE_NAME, proxy=None,
             ip=s.emulation_env_config.containers_config.agent_ip)]
         for m in s.attacker_obs_state.machines:
             ssh_connections_sorted_by_root = sorted(
                 m.ssh_connections,
-                key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+                key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                               x.credential.username),
                 reverse=True)
             if len(ssh_connections_sorted_by_root) > 0:
                 proxy_connections.append(ssh_connections_sorted_by_root[0])
@@ -240,7 +246,6 @@ class ConnectionUtil:
         :param s: env state
         :return: a DTO with connection setup information
         """
-        logger = Logger.__call__().get_logger()
         connection_setup_dto = ConnectionSetupDTO()
         start = time.time()
         for proxy_conn in proxy_connections:
@@ -259,14 +264,13 @@ class ConnectionUtil:
                             target_addr = (ip, cr.port)
                             agent_transport = proxy_conn.conn.get_transport()
                             relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
-                                                                         agent_addr,
-                                                                         timeout=3)
+                                                                         agent_addr)
                             target_conn = paramiko.SSHClient()
                             target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                            target_conn.connect(ip, username=cr.username, password=cr.pw, sock=relay_channel,
-                                                timeout=3)
+                            target_conn.connect(ip, username=cr.username, password=cr.pw, sock=relay_channel)
+                            target_conn.get_transport().set_keepalive(5)
                             connection_setup_dto.connected = True
-                            connection_setup_dto.users.append(cr.username)
+                            connection_setup_dto.credentials.append(cr)
                             connection_setup_dto.target_connections.append(target_conn)
                             connection_setup_dto.proxies.append(proxy_conn)
                             connection_setup_dto.ports.append(cr.port)
@@ -304,7 +308,7 @@ class ConnectionUtil:
             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
                 cmd="sudo -l", conn=connection_setup_dto.target_connections[i])
             root = False
-            if not "may not run sudo".format(connection_setup_dto.users[i]) in errdata.decode("utf-8") \
+            if not "may not run sudo".format(connection_setup_dto.credentials[i].username) in errdata.decode("utf-8") \
                     and ("(ALL) NOPASSWD: ALL" in outdata.decode("utf-8") or
                          "(ALL : ALL) ALL" in outdata.decode("utf-8")):
                 root = True
@@ -313,7 +317,7 @@ class ConnectionUtil:
             else:
                 time.sleep(1)
         connection_dto = EmulationConnectionObservationState(conn=connection_setup_dto.target_connections[i],
-                                                             username=connection_setup_dto.users[i],
+                                                             credential=connection_setup_dto.credentials[i],
                                                              root=root,
                                                              service=constants.SSH.SERVICE_NAME,
                                                              port=connection_setup_dto.ports[i],
@@ -368,7 +372,7 @@ class ConnectionUtil:
                             response = response.decode()
                             if not constants.TELNET.INCORRECT_LOGIN in response and response != "":
                                 connection_setup_dto.connected = True
-                                connection_setup_dto.users.append(cr.username)
+                                connection_setup_dto.credentials.append(cr)
                                 connection_setup_dto.target_connections.append(target_conn)
                                 connection_setup_dto.proxies.append(proxy_conn)
                                 connection_setup_dto.tunnel_threads.append(tunnel_thread)
@@ -409,7 +413,7 @@ class ConnectionUtil:
             connection_setup_dto.target_connections[i].write("sudo -l\n".encode())
             response = connection_setup_dto.target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
             root = False
-            if not "may not run sudo".format(connection_setup_dto.users[i]) in response.decode("utf-8") \
+            if not "may not run sudo".format(connection_setup_dto.credentials[i].username) in response.decode("utf-8") \
                     and ("(ALL) NOPASSWD: ALL" in response.decode("utf-8") or
                          "(ALL : ALL) ALL" in response.decode("utf-8")):
                 root = True
@@ -417,7 +421,8 @@ class ConnectionUtil:
             else:
                 time.sleep(1)
         connection_dto = EmulationConnectionObservationState(conn=connection_setup_dto.target_connections[i],
-                                                             username=connection_setup_dto.users[i], root=root,
+                                                             credential=connection_setup_dto.credentials[i],
+                                                             root=root,
                                                              service=constants.TELNET.SERVICE_NAME,
                                                              tunnel_thread=connection_setup_dto.tunnel_threads[i],
                                                              tunnel_port=connection_setup_dto.forward_ports[i],
@@ -467,7 +472,7 @@ class ConnectionUtil:
                             login_result = target_conn.login(cr.username, cr.pw)
                             if constants.FTP.INCORRECT_LOGIN not in login_result:
                                 connection_setup_dto.connected = True
-                                connection_setup_dto.users.append(cr.username)
+                                connection_setup_dto.credentials.append(cr)
                                 connection_setup_dto.target_connections.append(target_conn)
                                 connection_setup_dto.proxies.append(proxy_conn)
                                 connection_setup_dto.tunnel_threads.append(tunnel_thread)
@@ -516,7 +521,8 @@ class ConnectionUtil:
         """
         root = False
         connection_dto = EmulationConnectionObservationState(
-            conn=connection_setup_dto.target_connections[i], username=connection_setup_dto.users[i], root=root,
+            conn=connection_setup_dto.target_connections[i], credential=connection_setup_dto.credentials[i],
+            root=root,
             service=constants.FTP.SERVICE_NAME, tunnel_thread=connection_setup_dto.tunnel_threads[i],
             tunnel_port=connection_setup_dto.forward_ports[i], port=connection_setup_dto.ports[i],
             interactive_shell=connection_setup_dto.interactive_shells[i], ip=connection_setup_dto.ip,
@@ -537,8 +543,12 @@ class ConnectionUtil:
         """
 
         if ip in s.attacker_obs_state.agent_reachable:
+            cr = Credential(
+                username=constants.AGENT.USER, pw = constants.AGENT.PW, root=True,
+                protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT
+            )
             c = EmulationConnectionObservationState(
-                conn=s.emulation_env_config.get_hacker_connection(), username=constants.AGENT.USER,
+                conn=s.emulation_env_config.get_hacker_connection(), credential=cr,
                 root=True, port=constants.SSH.DEFAULT_PORT, service=constants.SSH.SERVICE_NAME,
                 proxy=None, ip=s.emulation_env_config.containers_config.agent_ip)
             return c
@@ -550,7 +560,8 @@ class ConnectionUtil:
                 # Start with ssh connections
                 ssh_connections_sorted_by_root = sorted(
                     m.ssh_connections,
-                    key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+                    key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                                   x.credential.username),
                     reverse=True)
 
                 for c in ssh_connections_sorted_by_root:
@@ -573,3 +584,28 @@ class ConnectionUtil:
             return True
         else:
             return False
+
+    @staticmethod
+    def reconnect(c: EmulationConnectionObservationState) -> EmulationConnectionObservationState:
+        if not c.conn.get_transport().is_active():
+            if c.proxy is None:
+                c.conn = paramiko.SSHClient()
+                c.conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                c.conn.connect(c.ip, username=c.credential.username, password=c.credential.pw)
+                c.conn.get_transport().set_keepalive(5)
+            else:
+                proxy = c.proxy
+                if proxy.conn.get_transport() is None or not proxy.conn.get_transport().is_active():
+                    proxy = ConnectionUtil.reconnect(c=proxy)
+
+                agent_addr = (proxy.ip, c.credential.port)
+                target_addr = (c.ip, c.credential.port)
+                agent_transport = proxy.conn.get_transport()
+                relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
+                                                             agent_addr)
+                c.conn = paramiko.SSHClient()
+                c.conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                c.conn.connect(c.ip, username=c.credential.username, password=c.credential.pw, sock=relay_channel)
+                c.conn.get_transport().set_keepalive(5)
+                c.proxy = proxy
+        return c

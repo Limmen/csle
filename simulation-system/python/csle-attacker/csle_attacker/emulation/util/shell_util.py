@@ -38,7 +38,7 @@ class ShellUtil:
         total_cost = 0
         ssh_connections_sorted_by_root = sorted(
             machine.ssh_connections,
-            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root, x.credential.username),
             reverse=True)
         root_scan = False
         flag_paths = []
@@ -100,7 +100,7 @@ class ShellUtil:
         total_cost = 0
         telnet_connections_sorted_by_root = sorted(
             machine.telnet_connections,
-            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root, x.credential.username),
             reverse=True)
         root_scan = False
         for c in telnet_connections_sorted_by_root:
@@ -148,7 +148,7 @@ class ShellUtil:
         total_cost = 0
         ftp_connections_sorted_by_root = sorted(
             machine.ftp_connections,
-            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.username, x.root, x.username),
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root, x.credential.username),
             reverse=True)
         root_scan = False
         flag_paths = []
@@ -273,7 +273,7 @@ class ShellUtil:
             if machine.logged_in and machine.root and not machine.tools_installed:
                 # Start with ssh connections
                 ssh_root_connections = filter(lambda x: x.root, machine.ssh_connections)
-                ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.username)
+                ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.credential.username)
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     cmd = a.cmds[0]
@@ -313,9 +313,9 @@ class ShellUtil:
                 if installed:
                     continue
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
-                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
+                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.credential.username)
                 for c in telnet_root_connections:
-                    key = (machine.ips, c.username)
+                    key = (machine.ips, c.credential.username)
                     # Install packages
                     cmd = a.cmds[0] + "\n"
                     start = time.time()
@@ -416,7 +416,7 @@ class ShellUtil:
                             conn_dto = s.attacker_cached_ssh_connections[
                                 (ip, cr.username, cr.port)]
                             connection_dto = EmulationConnectionObservationState(
-                                conn=conn_dto.conn, username=cr.username, root=machine.root,
+                                conn=conn_dto.conn, credential=cr, root=machine.root,
                                 service=constants.SSH.SERVICE_NAME, port=cr.port, ip=ip)
                             new_m_obs.shell_access_credentials.append(cr)
                             new_m_obs.backdoor_credentials.append(cr)
@@ -431,7 +431,7 @@ class ShellUtil:
 
                 # Try first to setup new ssh connections
                 ssh_root_connections = list(filter(lambda x: x.root, machine.ssh_connections))
-                ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.username)
+                ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.credential.username)
                 ssh_cost = 0
                 for c in ssh_root_connections:
                     #try:
@@ -475,9 +475,8 @@ class ShellUtil:
                     if len(setup_connection_dto.target_connections) == 0:
                         Logger.__call__().get_logger().warning(
                             "cannot install backdoor, machine:{}, credentials:{}".format(machine.ips, credential))
-
                     connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
-                                                                         username=credential.username,
+                                                                         credential=credential,
                                                                          root=machine.root,
                                                                          service=constants.SSH.SERVICE_NAME,
                                                                          port=credential.port,
@@ -498,7 +497,7 @@ class ShellUtil:
                 if backdoor_created:
                     continue
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
-                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.username)
+                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.credential.username)
                 for c in telnet_root_connections:
                     try:
                         users = EmulationUtil._list_all_users(c,
@@ -533,7 +532,7 @@ class ShellUtil:
                             a=a, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         telnet_cost += setup_connection_dto.total_time
                         connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
-                                                                             username=credential.username,
+                                                                             credential=credential,
                                                                              root=machine.root,
                                                                              service=constants.SSH.SERVICE_NAME,
                                                                              port=credential.port,

@@ -54,6 +54,12 @@ const Header = () => {
         </Tooltip>
     );
 
+    const renderPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Learned policies
+        </Tooltip>
+    );
+
     const renderAboutTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Information about the environment
@@ -116,7 +122,7 @@ const Header = () => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderDynamicsModelsTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={"dynamicsmodels"}>
-                                    Dynamics Models
+                                    Models
                                 </NavLink>
                             </OverlayTrigger>
                         </li>
@@ -136,7 +142,7 @@ const Header = () => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderContainerImagesTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={"images"}>
-                                    Container Images
+                                    Images
                                 </NavLink>
                             </OverlayTrigger>
                         </li>
@@ -146,7 +152,17 @@ const Header = () => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderTrainingResultsTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={"training"}>
-                                    Training Results
+                                    Training
+                                </NavLink>
+                            </OverlayTrigger>
+                        </li>
+                        <li className="nav-item navtabheader">
+                            <OverlayTrigger
+                                placement="top"
+                                delay={{show: 0, hide: 0}}
+                                overlay={renderPoliciesTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"policies"}>
+                                    Policies
                                 </NavLink>
                             </OverlayTrigger>
                         </li>
