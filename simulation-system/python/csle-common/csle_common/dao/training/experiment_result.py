@@ -33,10 +33,7 @@ class ExperimentResult:
         obj.plot_metrics = d["plot_metrics"]
         d2 = {}
         for k,v in d["policies"].items():
-            try:
-                d2[k] = TSPSAPolicy.from_dict(v)
-            except Exception as e:
-                raise Exception()
+            d2[k] = TSPSAPolicy.from_dict(v)
         obj.policies = d2
         return obj
 

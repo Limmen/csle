@@ -8,11 +8,14 @@ import Accordion from 'react-bootstrap/Accordion';
 import Tooltip from 'react-bootstrap/Tooltip';
 import TSPSAPolicy from "./TSPSAPolicy/TSPSAPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
+import PPOPolicy from "./PPOPolicy/PPOPolicy";
 
 const Policies = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [tspsaPolicies, setTSPSAPolicies] = useState([]);
+    const [ppoPolicies, setPPOPolicies] = useState([]);
     const [loadingspsaPolicies, setLoadingSpsaPolicies] = useState(true);
+    const [loadingPPOPoliies, setLoadingPPOPolicies] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -28,9 +31,27 @@ const Policies = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setTSPSAPolicies(response);
                 setLoadingSpsaPolicies(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchPPOPolicies = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/ppopolicies',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                console.log(response)
+                setPPOPolicies(response);
+                setLoadingPPOPolicies(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -38,11 +59,18 @@ const Policies = () => {
     useEffect(() => {
         setLoadingSpsaPolicies(true)
         fetchTSPSAPolicies()
-    }, [fetchTSPSAPolicies]);
+        setLoadingPPOPolicies(true)
+        fetchPPOPolicies()
+    }, [fetchTSPSAPolicies, fetchPPOPolicies]);
 
     const refreshTSPSAPolicies = () => {
         setLoadingSpsaPolicies(true)
         fetchTSPSAPolicies()
+    }
+
+    const refreshPPOPolicies = () => {
+        setLoadingPPOPolicies(true)
+        fetchPPOPolicies()
     }
 
     const renderInfoTooltip = (props) => (
@@ -54,6 +82,12 @@ const Policies = () => {
     const renderTSPSARefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload T-SPSA policies from the backend
+        </Tooltip>
+    );
+
+    const renderPPORefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload PPO policies from the backend
         </Tooltip>
     );
 
@@ -106,6 +140,23 @@ const Policies = () => {
         }
     }
 
+    const PPOPoliciesAccordions = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    {props.policies.map((policy, index) =>
+                        <PPOPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}/>
+                    )}
+                </Accordion>
+            )
+        }
+    }
+
 
     return (
         <div className="policyExamination">
@@ -133,6 +184,31 @@ const Policies = () => {
                 <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
             </h3>
             <TSPSAPoliciesAccordions loading={loadingspsaPolicies} policies={tspsaPolicies}/>
+
+            <h3 className="ppoPolicies"> PPO policies
+
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderPPORefreshTooltip}
+                >
+                    <Button variant="button" onClick={refreshPPOPolicies}>
+                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderInfoTooltip}
+                >
+                    <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <i className="fa fa-info-circle" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+            </h3>
+            <PPOPoliciesAccordions loading={loadingPPOPoliies} policies={ppoPolicies}/>
         </div>
     );
 }

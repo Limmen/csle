@@ -1,5 +1,6 @@
 from typing import Tuple, List, Union
 import time
+import os
 import paramiko
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
@@ -15,6 +16,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.util.ssh_util import SSHUtil
+from csle_common.logging.log import Logger
 
 
 class EmulationUtil:
@@ -173,7 +175,7 @@ class EmulationUtil:
                 port=constants.SSH.DEFAULT_PORT, proxy=proxy_conn, ip=target_ip)
             return connection_dto
         except Exception as e:
-            print("Custom connection setup failed:{}".format(str(e)))
+            Logger.__call__().get_logger().warning(f"Custom connection setup failed: {str(e)}, {repr(e)}")
             return None
 
 
@@ -193,7 +195,7 @@ class EmulationUtil:
         try:
             remote_file.write(contents)
         except Exception as e:
-            print("exception writing file:{}".format(str(e)))
+            Logger.__call__().get_logger().warning(f"Exception writing file: {str(e)}, {repr(e)}")
         finally:
             remote_file.close()
 
@@ -423,3 +425,18 @@ class EmulationUtil:
             return True
 
         return False
+
+    @staticmethod
+    def check_pid(pid: int) -> bool:
+        """
+        Check if a given pid is running on the host
+
+        :param pid: the pid to check
+        :return: True if it is running otherwise false.
+        """
+        try:
+            os.kill(pid, 0)
+        except OSError:
+            return False
+        else:
+            return True

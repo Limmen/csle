@@ -9,7 +9,7 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir="/tmp/ppo_test", title="PPO test", random_seeds=[399, 98912], agent_type=AgentType.PPO,
-        log_every=10,
+        log_every=1,
         hparams={
             "num_neurons_per_hidden_layer": HParam(value=64, name="num_neurons_per_hidden_layer",
                                                    descr="neurons per hidden layer of the policy network"),
@@ -30,7 +30,7 @@ if __name__ == '__main__':
             "vf_coef": HParam(value=0.5, name="vf_coef", descr="the coefficient of the value network for the loss"),
             "max_grad_norm": HParam(value=0.5, name="max_grad_norm", descr="the maximum allows gradient norm"),
             "target_kl": HParam(value=None, name="target_kl", descr="the target kl"),
-            "num_training_timesteps": HParam(value=int(1e6), name="num_training_timesteps", descr="number "
+            "num_training_timesteps": HParam(value=int(100000), name="num_training_timesteps", descr="number "
                                                                                               "of timesteps to train"),
             "eval_every": HParam(value=10, name="eval_every",
                                  descr="training iterations between evaluations"),
@@ -38,9 +38,10 @@ if __name__ == '__main__':
                                  descr="the batch size for evaluation")
         }
     )
+    # simulation_env_config.simulation_env_input_config
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_tspsa_policy(t_spsa_policy=policy)
+    for policy in experiment_execution.result.policies.values():
+        MetastoreFacade.save_ppo_policy(ppo_policy=policy)

@@ -286,7 +286,7 @@ class ContainerManager:
         client_1 = docker.from_env()
         client2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_stopped_containers = DockerUtil.parse_stopped_containers(client_1=client_1, client2=client2)
-        container_name_image_ips = list(map(lambda x: (x.name, x.image_name, x.ips), parsed_stopped_containers))
+        container_name_image_ips = list(map(lambda x: (x.name, x.image_name, x.ip), parsed_stopped_containers))
         return container_name_image_ips
 
     @staticmethod

@@ -11,6 +11,7 @@ from csle_common.dao.emulation_action_result.nikto_scan_result \
 from csle_common.dao.emulation_action_result.nikto_vuln import NiktoVuln
 from csle_common.util.emulation_util import EmulationUtil
 from csle_attacker.emulation.util.nmap_util import NmapUtil
+from csle_common.logging.log import Logger
 
 
 class NiktoUtil:
@@ -65,7 +66,8 @@ class NiktoUtil:
                         scan_result=scan_result, s=s, a=a)
                     break
                 except Exception as e:
-                    break
+                    Logger.__call__().get_logger().warning(
+                        f"There was an error parsing the Nikto scan output: {e}, {repr(e)}")
         s_prime = s
         return s_prime
 

@@ -1,3 +1,4 @@
+import time
 from typing import List, Dict, Any
 import socket
 import paramiko
@@ -116,7 +117,7 @@ class EmulationEnvConfig:
         d["static_attacker_sequences"] = d2
         return d
 
-    def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> None:
+    def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> paramiko.SSHClient:
         """
         Connects to the agent's host with SSH, either directly or through a jumphost
 
@@ -125,22 +126,24 @@ class EmulationEnvConfig:
         :param pw: the password to connect with
         :param create_producer: whether the producer should be created if it not already created
 
-        :return: None
+        :return: the created conn
         """
-        if ip not in self.connections or (ip in self.connections
-                and not EmulationEnvConfig.check_if_ssh_connection_is_alive(self.connections[ip])):
-            if ip in self.connections:
-                self.connections.pop(ip)
-            Logger.__call__().get_logger().info(f"Connecting to host: {ip}")
-            conn = paramiko.SSHClient()
-            conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            conn.connect(ip, username=username, password=pw)
-            conn.get_transport().set_keepalive(5)
-            self.connections[ip] = conn
-            if self.producer is None and create_producer:
-                self.create_producer()
+        if ip in self.connections:
+            old_conn = self.connections[ip]
+            old_conn.close()
+        if ip in self.connections:
+            self.connections.pop(ip)
+        Logger.__call__().get_logger().info(f"Connecting to host: {ip}")
+        conn = paramiko.SSHClient()
+        conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        conn.connect(ip, username=username, password=pw)
+        conn.get_transport().set_keepalive(5)
+        self.connections[ip] = conn
+        if self.producer is None and create_producer:
+            self.create_producer()
 
         Logger.__call__().get_logger().info("Connected successfully")
+        return conn
 
     def get_connection(self, ip: str) -> paramiko.SSHClient:
         """
@@ -165,7 +168,9 @@ class EmulationEnvConfig:
                 and self.connections[hacker_ip].get_transport() is not None \
                 and self.connections[hacker_ip].get_transport().is_active():
             try:
-                SSHUtil.execute_ssh_cmds(cmds = ["ls"], conn=self.connections[hacker_ip])
+                results = SSHUtil.execute_ssh_cmds(cmds = ["ls > /dev/null"], conn=self.connections[hacker_ip])
+                print(f"ls succeeded, {results}")
+                time.sleep(2)
             except Exception as e:
                 print("reconnecting attacker")
                 self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)

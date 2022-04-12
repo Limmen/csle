@@ -1343,6 +1343,7 @@ class METADATA_STORE:
     TRAINING_JOBS_TABLE = "training_jobs"
     SYSTEM_IDENTIFICATION_JOBS_TABLE = "system_identification_jobs"
     T_SPSA_POLICIES = "t_spsa_policies"
+    PPO_POLICIES = "ppo_policies"
 
 
 class CONTAINER_POOLS:
@@ -1437,7 +1438,8 @@ class ENV_CONSTANTS:
     SHELL_MAX_TIMEOUTS = 4000
     MAX_NMAP_COMMAND_OUTPUT_SIZE = 10000000
     RETRY_TIMEOUT = 2
-    NUM_RETRIES = 2
+    NUM_RETRIES = 5
+    SLEEP_RETRY = 5
 
 
 class LOGGING:

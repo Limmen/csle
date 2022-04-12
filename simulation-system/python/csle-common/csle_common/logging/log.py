@@ -42,6 +42,7 @@ class Logger(metaclass=SingletonType):
         # logger.setLevel(logging.DEBUG)
         logger.setLevel(logging.INFO)
         handler = logging.FileHandler(log_path, 'a+')
+        os.chmod(log_path, 0o777)
         handler.setFormatter(
             CustomFormatter('%(asctime)s - %(levelname)-10s - %(filename)s - %(funcName)s - %(message)s'))
         logger.addHandler(handler)

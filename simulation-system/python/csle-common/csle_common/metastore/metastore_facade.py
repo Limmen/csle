@@ -15,6 +15,7 @@ from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 from csle_common.util.np_encoder import NpEncoder
+from csle_common.dao.training.ppo_policy import PPOPolicy
 
 
 class MetastoreFacade:
@@ -127,7 +128,7 @@ class MetastoreFacade:
         return emulation_trace
 
     @staticmethod
-    def _convert_emulation_simulationtrace_record_to_dto(emulation_simulation_trace_record) -> EmulationSimulationTrace:
+    def _convert_emulation_simulation_trace_record_to_dto(emulation_simulation_trace_record) -> EmulationSimulationTrace:
         """
         Converts an emulation-simulkation trace record fetched from the metastore into a DTO
 
@@ -506,6 +507,41 @@ class MetastoreFacade:
                     f"Emulation-Simulation trace for "
                     f"emulation {emulation_simulation_trace.emulation_trace.emulation_name} "
                     f"and simulation: {emulation_simulation_trace.simulation_trace.simulation_env} saved successfully")
+
+    @staticmethod
+    def list_emulation_simulation_traces() -> List[EmulationSimulationTrace]:
+        """
+        :return: A list of emulation-simulation traces in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_emulation_simulation_trace_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def get_emulation_simulation_trace(id: int) -> Union[None, EmulationSimulationTrace]:
+        """
+        Function for fetching a simulation trace with a given id from the metastore
+
+        :param id: the id of the emulation-simulation trace
+        :return: The emulation-simulation trace or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_emulation_simulation_trace_record_to_dto(
+                        emulation_simulation_trace_record=record)
+                return record
 
 
     @staticmethod
@@ -956,7 +992,6 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Training job with id: {id} updated successfully")
 
-
     @staticmethod
     def update_system_identification_job(system_identification_job: SystemIdentificationJobConfig, id: int) -> None:
         """
@@ -980,7 +1015,6 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"System identification job with id: {id} updated successfully")
 
-
     @staticmethod
     def remove_training_job(training_job: TrainingJobConfig) -> None:
         """
@@ -998,8 +1032,6 @@ class MetastoreFacade:
                             (training_job.id,))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Training job with id {training_job.id} deleted successfully")
-
-
 
     @staticmethod
     def remove_system_identification_job(system_identification_job: SystemIdentificationJobConfig) -> None:
@@ -1020,3 +1052,70 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Training job with "
                                                      f"id {system_identification_job.id} deleted successfully")
+
+    @staticmethod
+    def list_ppo_policies() -> List[PPOPolicy]:
+        """
+        :return: A list of PPO policies in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.PPO_POLICIES}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_ppo_policy_record_to_dto(x), records))
+                return records
+
+    @staticmethod
+    def _convert_ppo_policy_record_to_dto(ppo_policy_record) -> PPOPolicy:
+        """
+        Converts a PPO policy record fetched from the metastore into a DTO
+
+        :param ppo_policy_record: the record to convert
+        :return: the DTO representing the record
+        """
+        ppo_policy_json = json.dumps(ppo_policy_record[1], indent=4, sort_keys=True)
+        ppo_policy: PPOPolicy = PPOPolicy.from_dict(json.loads(ppo_policy_json))
+        ppo_policy.id = ppo_policy_record[0]
+        return ppo_policy
+
+    @staticmethod
+    def get_ppo_policy(id: int) -> Union[None, PPOPolicy]:
+        """
+        Function for fetching a PPO policy with a given id from the metastore
+
+        :param id: the id of the PPO policy
+        :return: The PPO policy or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.PPO_POLICIES} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_ppo_policy_record_to_dto(ppo_policy_record=record)
+                return record
+
+    @staticmethod
+    def save_ppo_policy(ppo_policy: PPOPolicy) -> Union[Any, int]:
+        """
+        Saves a PPO policy to the metastore
+
+        :param ppo_policy: the policy to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing PPO policy in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                policy_json_str = json.dumps(ppo_policy.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.PPO_POLICIES} "
+                            f"(policy, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, ppo_policy.simulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"PPO policy saved successfully")
+                return id_of_new_row

@@ -1,3 +1,5 @@
+import time
+import threading
 from typing import Tuple, List, Union
 import xml.etree.ElementTree as ET
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -26,6 +28,7 @@ from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.util.connection_util import ConnectionUtil
 from csle_common.logging.log import Logger
+import sys
 
 
 class NmapUtil:
@@ -644,72 +647,76 @@ class NmapUtil:
         total_cost = 0
         merged_scan_result = partial_result
         total_results = []
-
+        threads = []
         for machine in s.attacker_obs_state.machines:
             scan_result = None
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
-                ssh_connections_alive = []
-                for c in machine.ssh_connections:
-                    try:
-                        EmulationUtil.execute_ssh_cmds(cmds = ["ls"], conn=c.conn)
-                        ssh_connections_alive.append(c)
-                    except Exception as e:
-                        new_conn = ConnectionUtil.reconnect(c)
-                        ssh_connections_alive.append(new_conn)
-                machine.ssh_connections = ssh_connections_alive
-                ssh_connections_sorted_by_root = sorted(
-                    machine.ssh_connections,
-                    key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
-                                   x.credential.username),
-                    reverse=True)
-                for c in ssh_connections_sorted_by_root:
-                    cwd = "/home/" + c.credential.username + "/"
-                    cmds, file_names = a.nmap_cmds(machine_ips=machine.ips)
-                    for i in range(5):
-                        try:
-                            if not c.conn.get_transport().is_active():
-                                print("connection not active, reconnecting!")
-                                c = ConnectionUtil.reconnect(c)
-                            results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
-                            break
-                        except Exception as e:
-                            print(f"exception execution commands for ip:{c.ip}, "
-                                  f"username: {c.credential.username}, conn: {c.conn}, "
-                                  f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport().is_active()},"
-                                  f"{str(e)}, {repr(e)}")
-                            c = ConnectionUtil.reconnect(c)
-                            if not c.conn.get_transport().is_active():
-                                print("connection not active, reconnecting!")
-                    total_time = sum(list(map(lambda x: x[2], results)))
-                    total_cost += total_time
-                    EmulationUtil.log_measured_action_time(
-                        total_time=total_time, action=a, emulation_env_config=s.emulation_env_config)
-
-                    # Read result
-                    scan_result = NmapScanResult(hosts=[], ips=machine.ips)
-                    for file_name in file_names:
-                        for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
-                            try:
-                                xml_data = NmapUtil.parse_nmap_scan(
-                                    file_name=file_name, emulation_env_config=s.emulation_env_config,
-                                    conn=c.conn, dir=cwd)
-                                new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ips=machine.ips, action=a)
-                                scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
-                                                                               scan_result_2=new_scan_result)
-                                machine.reachable.update(scan_result.reachable)
-                            except Exception as e:
-                                Logger.__call__().get_logger().warning(
-                                    f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
-                    break
-
-                # Update state with scan result
-                if merged_scan_result is not None and scan_result is not None:
-                    total_results.append(scan_result)
-                    merged_scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=merged_scan_result,
-                                                                             scan_result_2=scan_result.copy())
-                elif merged_scan_result is None:
-                    total_results.append(scan_result)
-                    merged_scan_result = scan_result.copy()
+                thread = PivotNMAPScanThread(machine=machine, s=s, a=a)
+                thread.start()
+                threads.append(thread)
+                # ssh_connections_alive = []
+                # for c in machine.ssh_connections:
+                #     try:
+                #         EmulationUtil.execute_ssh_cmds(cmds = ["ls"], conn=c.conn)
+                #         ssh_connections_alive.append(c)
+                #     except Exception as e:
+                #         new_conn = ConnectionUtil.reconnect_ssh(c)
+                #         ssh_connections_alive.append(new_conn)
+                # machine.ssh_connections = ssh_connections_alive
+                # ssh_connections_sorted_by_root = sorted(
+                #     machine.ssh_connections,
+                #     key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                #                    x.credential.username),
+                #     reverse=True)
+                # for c in ssh_connections_sorted_by_root:
+                #     cwd = "/home/" + c.credential.username + "/"
+                #     cmds, file_names = a.nmap_cmds(machine_ips=machine.ips)
+                #     results = []
+                #     for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+                #         try:
+                #             results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
+                #             break
+                #         except Exception as e:
+                #             Logger.__call__().get_logger().warning(
+                #                 f"exception execution commands for ip:{c.ip}, "
+                #                 f"username: {c.credential.username}, conn: {c.conn}, "
+                #                 f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport().is_active()},"
+                #                 f"{str(e)}, {repr(e)}")
+                #             c = ConnectionUtil.reconnect_ssh(c)
+                #     total_time = sum(list(map(lambda x: x[2], results)))
+                #     total_cost += total_time
+                #     EmulationUtil.log_measured_action_time(
+                #         total_time=total_time, action=a, emulation_env_config=s.emulation_env_config)
+                #
+                #     # Read result
+                #     scan_result = NmapScanResult(hosts=[], ips=machine.ips)
+                #     for file_name in file_names:
+                #         for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+                #             try:
+                #                 xml_data = NmapUtil.parse_nmap_scan(
+                #                     file_name=file_name, emulation_env_config=s.emulation_env_config,
+                #                     conn=c.conn, dir=cwd)
+                #                 new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ips=machine.ips, action=a)
+                #                 scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
+                #                                                                scan_result_2=new_scan_result)
+                #                 machine.reachable.update(scan_result.reachable)
+                #             except Exception as e:
+                #                 Logger.__call__().get_logger().warning(
+                #                     f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
+                #                 time.sleep(constants.ENV_CONSTANTS.SLEEP_RETRY)
+                #     break
+                #
+                # # Update state with scan result
+                # if merged_scan_result is not None and scan_result is not None:
+                #     total_results.append(scan_result)
+                #     merged_scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=merged_scan_result,
+                #                                                              scan_result_2=scan_result.copy())
+                # elif merged_scan_result is None:
+                #     total_results.append(scan_result)
+                #     merged_scan_result = scan_result.copy()
+        for thread in threads:
+            thread.join()
+        sys.exist()
 
         s_prime = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a)
         new_machines_obs_1 = []
@@ -737,3 +744,65 @@ class NmapUtil:
         s_prime.attacker_obs_state.sort_machines()
         s_prime.defender_obs_state.sort_machines()
         return s_prime
+
+
+class PivotNMAPScanThread(threading.Thread):
+
+    def __init__(self, machine: EmulationAttackerMachineObservationState, a: EmulationAttackerAction,
+                 s: EmulationEnvState):
+        threading.Thread.__init__(self)
+        self.machine = machine
+        self.a = a
+        self.s = s
+        self.total_time = 0
+
+    def run(self) -> None:
+        ssh_connections_alive = []
+        for c in self.machine.ssh_connections:
+            try:
+                EmulationUtil.execute_ssh_cmds(cmds = ["ls"], conn=c.conn)
+                ssh_connections_alive.append(c)
+            except Exception as e:
+                new_conn = ConnectionUtil.reconnect_ssh(c)
+                ssh_connections_alive.append(new_conn)
+        self.machine.ssh_connections = ssh_connections_alive
+        ssh_connections_sorted_by_root = sorted(
+            self.machine.ssh_connections,
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                           x.credential.username),
+            reverse=True)
+        for c in ssh_connections_sorted_by_root:
+            cwd = "/home/" + c.credential.username + "/"
+            cmds, file_names = self.a.nmap_cmds(machine_ips=self.machine.ips)
+            results = []
+            for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+                try:
+                    results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
+                    break
+                except Exception as e:
+                    Logger.__call__().get_logger().warning(
+                        f"exception execution commands for ip:{c.ip}, "
+                        f"username: {c.credential.username}, conn: {c.conn}, "
+                        f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport().is_active()},"
+                        f"{str(e)}, {repr(e)}")
+                    c = ConnectionUtil.reconnect_ssh(c)
+            total_time = sum(list(map(lambda x: x[2], results)))
+            EmulationUtil.log_measured_action_time(
+                total_time=total_time, action=self.a, emulation_env_config=self.s.emulation_env_config)
+
+            # Read result
+            scan_result = NmapScanResult(hosts=[], ips=self.machine.ips)
+            for file_name in file_names:
+                for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+                    try:
+                        xml_data = NmapUtil.parse_nmap_scan(
+                            file_name=file_name, emulation_env_config=self.s.emulation_env_config,
+                            conn=c.conn, dir=cwd)
+                        new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ips=self.machine.ips, action=self.a)
+                        scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
+                                                                       scan_result_2=new_scan_result)
+                        self.machine.reachable.update(scan_result.reachable)
+                    except Exception as e:
+                        Logger.__call__().get_logger().warning(
+                            f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
+                        time.sleep(constants.ENV_CONSTANTS.SLEEP_RETRY)

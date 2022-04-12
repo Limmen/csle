@@ -287,7 +287,7 @@ class ShellUtil:
                             new_m_obs.tools_installed = True
                         else:
                             Logger.__call__().get_logger().warning(
-                                "tools installed failed result. out:{}, err:{}".format(outdata, errdata))
+                                "SSH tools installed failed result. out:{}, err:{}".format(outdata, errdata))
                         if installed:
                             break
 
@@ -320,20 +320,26 @@ class ShellUtil:
                     cmd = a.cmds[0] + "\n"
                     start = time.time()
                     for i in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_INSTALL_TOOLS):
-                        c.conn.write(cmd.encode())
-                        response = c.conn.read_until(constants.TELNET.PROMPT, timeout=25)
-                        response = response.decode()
-                        end = time.time()
-                        total_time = end - start
-                        telnet_cost += float(total_time)
-                        if ShellUtil._parse_tools_installed_check_result(result=response):
-                            installed = True
-                            new_m_obs.tools_installed = True
-                        else:
+                        try:
+                            c.conn.write(cmd.encode())
+                            response = c.conn.read_until(constants.TELNET.PROMPT, timeout=25)
+                            response = response.decode()
+                            end = time.time()
+                            total_time = end - start
+                            telnet_cost += float(total_time)
+                            if ShellUtil._parse_tools_installed_check_result(result=response):
+                                installed = True
+                                new_m_obs.tools_installed = True
+                            else:
+                                Logger.__call__().get_logger().warning(
+                                    "Telnet tools installed failed result.{}".format(response))
+                            if installed:
+                                break
+                        except Exception as e:
                             Logger.__call__().get_logger().warning(
-                                "tools installed failed result.{}".format(response))
-                        if installed:
-                            break
+                                f"Telnet tools installed exception {str(e)}, {repr(e)}")
+                            c = ConnectionUtil.reconnect_telnet(
+                                c=c, forward_port=s.emulation_env_config.get_port_forward_port())
 
                     seclists_installed = ShellUtil._check_if_seclists_is_installed(conn=c.conn, telnet=True)
                     if not seclists_installed:
@@ -543,7 +549,8 @@ class ShellUtil:
                         new_machines_obs.append(new_m_obs)
                         backdoor_created = True
                     except Exception as e:
-                        pass
+                        Logger.__call__().get_logger().warning(
+                            f"Exception occurred while setting up backdoors , {str(e)}, {repr(e)}")
                     if backdoor_created:
                         break
 

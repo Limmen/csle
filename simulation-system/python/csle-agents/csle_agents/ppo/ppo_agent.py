@@ -15,6 +15,7 @@ from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.training.ppo_policy import PPOPolicy
 from stable_baselines3 import PPO
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import BaseCallback
@@ -50,10 +51,11 @@ class PPOAgent(BaseAgent):
                                      eval_batch_size=self.experiment_config.hparams["eval_batch_size"].value,
                                      random_seeds=self.experiment_config.random_seeds, training_job=training_job,
                                      max_steps=self.experiment_config.hparams["num_training_timesteps"].value,
-                                     seed=seed, exp_result=exp_result)
+                                     seed=seed, exp_result=exp_result, simulation_name=self.simulation_env_config.name)
             policy_kwargs = dict(
-                net_arch=[self.experiment_config.hparams["num_neurons_per_hidden_layer"].value*
-                          self.experiment_config.hparams["num_hidden_layers"].value])
+                net_arch=[self.experiment_config.hparams[
+                              "num_neurons_per_hidden_layer"].value]*self.experiment_config.hparams[
+                    "num_hidden_layers"].value)
             model = PPO(
                 "MlpPolicy", env, verbose=0, policy_kwargs=policy_kwargs,
                 n_steps=self.experiment_config.hparams["steps_between_updates"].value,
@@ -71,7 +73,9 @@ class PPOAgent(BaseAgent):
             )
             model.learn(total_timesteps=self.experiment_config.hparams["num_training_timesteps"].value, callback=cb)
             exp_result=cb.exp_result
-            exp_result.policies[seed] = model.policy
+            ts = time.time()
+            exp_result.policies[seed] = PPOPolicy(model=model, simulation_name=self.simulation_env_config.name,
+                                                  save_path=f"/var/log/ppo_policy_seed_{seed}_{ts}")
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -88,7 +92,6 @@ class PPOAgent(BaseAgent):
                 data=x, confidence=confidence)[1], value_vectors)))
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
-
 
         ts = time.time()
         emulation_name = None
@@ -121,9 +124,11 @@ class PPOTrainingCallback(BaseCallback):
     Callback for monitoring PPO training
     """
     def __init__(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
-                 training_job: TrainingJobConfig, max_steps: int, verbose=0,
+                 training_job: TrainingJobConfig, max_steps: int, simulation_name: str,
+                 verbose=0,
                  eval_every: int = 100, eval_batch_size: int = 10):
         super(PPOTrainingCallback, self).__init__(verbose)
+        self.simulation_name = simulation_name
         self.iter = 0
         self.eval_every = eval_every
         self.eval_batch_size = eval_batch_size
@@ -168,21 +173,26 @@ class PPOTrainingCallback(BaseCallback):
         """
         This event is triggered before updating the policy.
         """
-        Logger.__call__().get_logger().info(f"Training iteration: {self.iter}")
+        Logger.__call__().get_logger().info(f"Training iteration: {self.iter}, seed:{self.seed}, "
+                                            f"progress: {100*round(self.num_timesteps/self.max_steps,2)}%")
         if self.iter % self.eval_every == 0:
-            s = self.training_env.reset()
+            policy = PPOPolicy(model=self.model, simulation_name=self.simulation_name,
+                               save_path=f"/var/log/csle/ppo_model{self.iter}.zip")
+            self.model.save(policy.save_path)
+            o = self.training_env.reset()
             max_horizon = 200
             avg_rewards = []
             for i in range(self.eval_batch_size):
                 done = False
                 t = 0
-                rewards = []
+                cumulative_reward = 0
                 while not done and t <= max_horizon:
-                    a, _ = self.model.predict(s, deterministic=True)
-                    s, r, done, info = self.training_env.step(a)
-                    rewards.append(r)
+                    a = policy.action(o=o)
+                    o, r, done, info = self.training_env.step(a)
+                    cumulative_reward +=r
                     t+= 1
-                avg_rewards.append(np.mean(rewards))
+                    # print(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
+                avg_rewards.append(cumulative_reward)
             avg_R = np.mean(avg_rewards)
             Logger.__call__().get_logger().info(f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}")
             self.exp_result.all_metrics[self.seed]["average_reward"].append(avg_R)
@@ -193,6 +203,6 @@ class PPOTrainingCallback(BaseCallback):
             steps_done = (self.random_seeds.index(self.seed))*self.max_steps + self.num_timesteps
             progress = round(steps_done/total_steps_done,2)
             self.training_job.progress_percentage = progress
-            self.training_job.average_r = avg_R
+            self.training_job.average_r = round(avg_R,3)
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
         self.iter += 1

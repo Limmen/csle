@@ -315,7 +315,7 @@ class ConnectionUtil:
                 target_machine.root = True
                 break
             else:
-                time.sleep(1)
+                time.sleep(constants.ENV_CONSTANTS.SLEEP_RETRY)
         connection_dto = EmulationConnectionObservationState(conn=connection_setup_dto.target_connections[i],
                                                              credential=connection_setup_dto.credentials[i],
                                                              root=root,
@@ -382,10 +382,11 @@ class ConnectionUtil:
                             connection_setup_dto.non_failed_credentials.append(cr)
                             break
                         except Exception as e:
-                            print("telnet exception:{}".format(str(e)))
-                            print("Target ip in agent reachable: {}".format(
-                                a.ips_match(s.attacker_obs_state.agent_reachable)))
-                            print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
+                            Logger.__call__().get_logger().warning(f"telnet exception:{str(e)}, {repr(e)}")
+                            Logger.__call__().get_logger().warning(
+                                f"Target ip in agent reachable: {s.attacker_obs_state.agent_reachable}")
+                            Logger.__call__().get_logger().warning(
+                                f"Agent reachable:{s.attacker_obs_state.agent_reachable}")
                     else:
                         connection_setup_dto.non_failed_credentials.append(cr)
                 if connection_setup_dto.connected:
@@ -419,7 +420,7 @@ class ConnectionUtil:
                 root = True
                 break
             else:
-                time.sleep(1)
+                time.sleep(constants.ENV_CONSTANTS.SLEEP_RETRY)
         connection_dto = EmulationConnectionObservationState(conn=connection_setup_dto.target_connections[i],
                                                              credential=connection_setup_dto.credentials[i],
                                                              root=root,
@@ -493,10 +494,12 @@ class ConnectionUtil:
                                 connection_setup_dto.non_failed_credentials.append(cr)
                                 break
                         except Exception as e:
-                            print("FTP exception: {}".format(str(e)))
-                            print("Target ip in agent reachable: {}".format(
-                                a.ips_match(s.attacker_obs_state.agent_reachable)))
-                            print("Agent reachable:{}".format(s.attacker_obs_state.agent_reachable))
+                            Logger.__call__().get_logger().warning(f"FTP exception: {str(e)}, {repr(e)}")
+                            Logger.__call__().get_logger().warning(
+                                f"Target ip in agent reacahble " 
+                                f"{a.ips_match(s.attacker_obs_state.agent_reachable)}")
+                            Logger.__call__().get_logger().warning(f"Agent reachable: "
+                                                                   f"{s.attacker_obs_state.agent_reachable}")
                     else:
                         connection_setup_dto.non_failed_credentials.append(cr)
                 if connection_setup_dto.connected:
@@ -586,27 +589,62 @@ class ConnectionUtil:
             return False
 
     @staticmethod
-    def reconnect(c: EmulationConnectionObservationState) -> EmulationConnectionObservationState:
-        print("RECONNECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        if not c.conn.get_transport().is_active():
-            if c.proxy is None:
-                c.conn = paramiko.SSHClient()
-                c.conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                c.conn.connect(c.ip, username=c.credential.username, password=c.credential.pw)
-                c.conn.get_transport().set_keepalive(5)
-            else:
-                proxy = c.proxy
-                if proxy.conn.get_transport() is None or not proxy.conn.get_transport().is_active():
-                    proxy = ConnectionUtil.reconnect(c=proxy)
+    def reconnect_ssh(c: EmulationConnectionObservationState) -> EmulationConnectionObservationState:
+        """
+        Reconnects the given SSH connection if it has died for some reason
 
-                agent_addr = (proxy.ip, c.credential.port)
-                target_addr = (c.ip, c.credential.port)
-                agent_transport = proxy.conn.get_transport()
-                relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
-                                                             agent_addr)
-                c.conn = paramiko.SSHClient()
-                c.conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                c.conn.connect(c.ip, username=c.credential.username, password=c.credential.pw, sock=relay_channel)
-                c.conn.get_transport().set_keepalive(5)
-                c.proxy = proxy
+        :param c: the connection to reconnect
+        :return: the new connection
+        """
+        if c.proxy is None:
+            c.conn = paramiko.SSHClient()
+            c.conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            c.conn.connect(c.ip, username=c.credential.username, password=c.credential.pw)
+            c.conn.get_transport().set_keepalive(5)
+        else:
+            proxy = c.proxy
+            if proxy.conn.get_transport() is None or not proxy.conn.get_transport().is_active():
+                proxy = ConnectionUtil.reconnect_ssh(c=proxy)
+
+            agent_addr = (proxy.ip, c.credential.port)
+            target_addr = (c.ip, c.credential.port)
+            agent_transport = proxy.conn.get_transport()
+            relay_channel = agent_transport.open_channel(constants.SSH.DIRECT_CHANNEL, target_addr,
+                                                         agent_addr)
+            c.conn = paramiko.SSHClient()
+            c.conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            c.conn.connect(c.ip, username=c.credential.username, password=c.credential.pw, sock=relay_channel)
+            c.conn.get_transport().set_keepalive(5)
+            c.proxy = proxy
+        return c
+
+    @staticmethod
+    def reconnect_telnet(c: EmulationConnectionObservationState, forward_port = 9000) -> EmulationConnectionObservationState:
+        """
+        Reconnects the given Telnet connection if it has died for some reason
+
+        :param c: the connection to reconnect
+        :return: the new connection
+        """
+        if c.proxy.conn.get_transport() is None or not c.proxy.conn.get_transport().is_active():
+            proxy = ConnectionUtil.reconnect_ssh(c=c.proxy)
+            c.proxy = proxy
+        for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
+            try:
+                agent_transport = c.proxy.conn.get_transport()
+                tunnel_thread = ForwardTunnelThread(local_port=forward_port,
+                                                    remote_host=c.ip, remote_port=constants.TELNET.DEFAULT_PORT,
+                                                    transport=agent_transport)
+                tunnel_thread.start()
+                target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port, timeout=3)
+                target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=3)
+                target_conn.write((c.credential.username + "\n").encode())
+                target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=3)
+                target_conn.write((c.credential.pw + "\n").encode())
+                response = target_conn.read_until(constants.TELNET.PROMPT, timeout=3)
+                response = response.decode()
+                if not constants.TELNET.INCORRECT_LOGIN in response and response != "":
+                    c.conn = target_conn
+            except Exception as e:
+                Logger.__call__().get_logger().warning(f"telnet exception:{str(e)}, {repr(e)}")
         return c

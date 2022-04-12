@@ -330,7 +330,7 @@ class TrafficManager:
             try:
                 remote_file.write(script_file)
             except Exception as e:
-                Logger.__call__().get_logger().info("exception writing traffic generation file:{}".format(str(e)))
+                Logger.__call__().get_logger().warning("exception writing traffic generation file:{}".format(str(e)))
             finally:
                 remote_file.close()
 

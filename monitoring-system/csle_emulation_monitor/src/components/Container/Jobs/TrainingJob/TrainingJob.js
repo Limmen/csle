@@ -12,7 +12,7 @@ const TrainingJob = (props) => {
             <Accordion.Toggle as={Button} variant="link" eventKey={props.job.id} className="mgHeader">
                 <span
                     className="subnetTitle">ID: {props.job.id}, Simulation: {props.job.simulation_env_name}</span>
-                Progress: {props.job.progress_percentage}%
+                Progress: {100*props.job.progress_percentage}%
                 <span className="greenCircle"><svg id="svg-1" height="15px" width="15px" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"
                            version="1.1">
                     <circle r="15" cx="15" cy="15" fill="green"></circle>

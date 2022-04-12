@@ -6,6 +6,7 @@ from csle_common.controllers.container_manager import ContainerManager
 from csle_common.util.read_emulation_statistics import ReadEmulationStatistics
 from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.util.emulation_util import EmulationUtil
 from waitress import serve
 
 app = Flask(__name__, static_url_path='', static_folder='../build/')
@@ -232,10 +233,25 @@ def policies():
     return response
 
 
+@app.route('/ppopolicies', methods=['GET'])
+def ppo_policies():
+    ppo_policies = MetastoreFacade.list_ppo_policies()
+    ppo_policies_dicts = list(map(lambda x: x.to_dict(), ppo_policies))
+    response = jsonify(ppo_policies_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 @app.route('/trainingjobs', methods=['GET'])
 def trainingjobs():
     training_jobs = MetastoreFacade.list_training_jobs()
-    training_jobs_dicts = list(map(lambda x: x.to_dict(), training_jobs))
+    alive_jobs = []
+    for job in training_jobs:
+        if EmulationUtil.check_pid(job.pid):
+            alive_jobs.append(job)
+        else:
+            MetastoreFacade.remove_training_job(job)
+    training_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
     response = jsonify(training_jobs_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
@@ -244,8 +260,23 @@ def trainingjobs():
 @app.route('/systemidentificationjobs', methods=['GET'])
 def systemidentificationjobs():
     system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
+    alive_jobs = []
+    for job in system_identification_jobs:
+        if EmulationUtil.check_pid(job.pid):
+            alive_jobs.append(job)
+        else:
+            MetastoreFacade.remove_system_identification_job(job)
     system_identification_jobs_dicts = list(map(lambda x: x.to_dict(), system_identification_jobs))
     response = jsonify(system_identification_jobs_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/emulationsimulationtraces', methods=['GET'])
+def emulationsimulationtraces():
+    emulation_simulation_traces = MetastoreFacade.list_emulation_simulation_traces()
+    emulation_simulation_traces_dicts = list(map(lambda x: x.to_dict(), emulation_simulation_traces))
+    response = jsonify(emulation_simulation_traces_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

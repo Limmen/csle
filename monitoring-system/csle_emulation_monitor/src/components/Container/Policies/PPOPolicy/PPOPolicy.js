@@ -1,11 +1,11 @@
 import React from 'react';
-import './TSPSAPolicy.css';
+import './PPOPolicy.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import Accordion from 'react-bootstrap/Accordion';
 
-const TSPSAPolicy = (props) => {
+const PPOPolicy = (props) => {
 
     return (<Card key={props.policy.id} ref={props.wrapper}>
         <Card.Header>
@@ -19,27 +19,11 @@ const TSPSAPolicy = (props) => {
                 <h5 className="semiTitle">
                     General Information about the policy:
                 </h5>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>Threshold</th>
-                        <th> Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.policy.thresholds.map((threshold, index) => {
-                        return <tr key={threshold + "-" + index}>
-                            <td>{index}</td>
-                            <td>{threshold}</td>
-                        </tr>
-                    })}
-                    </tbody>
-                </Table>
             </Card.Body>
         </Accordion.Collapse>
     </Card>)
 }
 
-TSPSAPolicy.propTypes = {};
-TSPSAPolicy.defaultProps = {};
-export default TSPSAPolicy;
+PPOPolicy.propTypes = {};
+PPOPolicy.defaultProps = {};
+export default PPOPolicy;
