@@ -1,9 +1,9 @@
 from typing import Union, List, Dict
-import random
 import time
 import gym
 import os
 import numpy as np
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -74,8 +74,11 @@ class PPOAgent(BaseAgent):
             model.learn(total_timesteps=self.experiment_config.hparams["num_training_timesteps"].value, callback=cb)
             exp_result=cb.exp_result
             ts = time.time()
+            save_path = f"{constants.LOGGING.DEFAULT_LOG_DIR}/ppo_policy_seed_{seed}_{ts}.zip"
+            model.save(save_path)
             exp_result.policies[seed] = PPOPolicy(model=model, simulation_name=self.simulation_env_config.name,
-                                                  save_path=f"/var/log/ppo_policy_seed_{seed}_{ts}")
+                                                  save_path=save_path)
+            os.chmod(save_path, 0o777)
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -86,10 +89,15 @@ class PPOAgent(BaseAgent):
             value_vectors = []
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
-            avg_metrics = np.array(list(map(lambda x: ExperimentUtil.mean_confidence_interval(
-                data=x, confidence=confidence)[0], value_vectors)))
-            std_metrics = np.array(list(map(lambda x: ExperimentUtil.mean_confidence_interval(
-                data=x, confidence=confidence)[1], value_vectors)))
+
+            avg_metrics = []
+            std_metrics = []
+            for i in range(len(value_vectors[0])):
+                seed_values = []
+                for seed_idx in range(len(self.experiment_config.random_seeds)):
+                    seed_values.append(value_vectors[seed_idx][i])
+                avg_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
+                std_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
@@ -176,9 +184,11 @@ class PPOTrainingCallback(BaseCallback):
         Logger.__call__().get_logger().info(f"Training iteration: {self.iter}, seed:{self.seed}, "
                                             f"progress: {100*round(self.num_timesteps/self.max_steps,2)}%")
         if self.iter % self.eval_every == 0:
+            ts = time.time()
             policy = PPOPolicy(model=self.model, simulation_name=self.simulation_name,
-                               save_path=f"/var/log/csle/ppo_model{self.iter}.zip")
+                               save_path=f"{constants.LOGGING.DEFAULT_LOG_DIR}/ppo_model{self.iter}_{ts}.zip")
             self.model.save(policy.save_path)
+            os.chmod(policy.save_path, 0o777)
             o = self.training_env.reset()
             max_horizon = 200
             avg_rewards = []
@@ -195,7 +205,7 @@ class PPOTrainingCallback(BaseCallback):
                 avg_rewards.append(cumulative_reward)
             avg_R = np.mean(avg_rewards)
             Logger.__call__().get_logger().info(f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}")
-            self.exp_result.all_metrics[self.seed]["average_reward"].append(avg_R)
+            self.exp_result.all_metrics[self.seed]["average_reward"].append(round(avg_R, 3))
             self.training_env.reset()
 
             # Update training job

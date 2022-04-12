@@ -28,7 +28,6 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setEmulations(response);
                 setLoading(false)
             })

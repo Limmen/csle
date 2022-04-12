@@ -1446,7 +1446,7 @@ class LOGGING:
     """
     Constants related to logging
     """
-    DEFAULT_LOG_DIR = "/var/log/csle/"
+    DEFAULT_LOG_DIR = "/tmp/csle/"
 
 
 class SIMULATION:

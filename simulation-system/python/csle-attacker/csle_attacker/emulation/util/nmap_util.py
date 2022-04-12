@@ -27,8 +27,8 @@ from csle_common.dao.emulation_action_result.nmap_http_grep import NmapHttpGrep
 from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.util.connection_util import ConnectionUtil
+from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
-import sys
 
 
 class NmapUtil:
@@ -716,7 +716,14 @@ class NmapUtil:
                 #     merged_scan_result = scan_result.copy()
         for thread in threads:
             thread.join()
-        sys.exist()
+        for i in range(len(threads)):
+            if merged_scan_result is not None and threads[i].scan_result is not None:
+                total_results.append(threads[i].scan_result)
+                merged_scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=merged_scan_result,
+                                                                         scan_result_2=threads[i].scan_result.copy())
+            elif merged_scan_result is None:
+                total_results.append(threads[i].scan_result)
+                merged_scan_result = threads[i].scan_result.copy()
 
         s_prime = NmapUtil.merge_nmap_scan_result_with_state(scan_result=merged_scan_result, s=s, a=a)
         new_machines_obs_1 = []
@@ -755,6 +762,7 @@ class PivotNMAPScanThread(threading.Thread):
         self.a = a
         self.s = s
         self.total_time = 0
+        self.scan_result = None
 
     def run(self) -> None:
         ssh_connections_alive = []
@@ -775,9 +783,10 @@ class PivotNMAPScanThread(threading.Thread):
             cwd = "/home/" + c.credential.username + "/"
             cmds, file_names = self.a.nmap_cmds(machine_ips=self.machine.ips)
             results = []
+            c2 = c
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
                 try:
-                    results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
+                    results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c2.conn)
                     break
                 except Exception as e:
                     Logger.__call__().get_logger().warning(
@@ -785,7 +794,8 @@ class PivotNMAPScanThread(threading.Thread):
                         f"username: {c.credential.username}, conn: {c.conn}, "
                         f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport().is_active()},"
                         f"{str(e)}, {repr(e)}")
-                    c = ConnectionUtil.reconnect_ssh(c)
+                    c2 = ConnectionUtil.reconnect_ssh(c2)
+                    time.sleep(constants.ENV_CONSTANTS.SLEEP_RETRY)
             total_time = sum(list(map(lambda x: x[2], results)))
             EmulationUtil.log_measured_action_time(
                 total_time=total_time, action=self.a, emulation_env_config=self.s.emulation_env_config)
@@ -806,3 +816,5 @@ class PivotNMAPScanThread(threading.Thread):
                         Logger.__call__().get_logger().warning(
                             f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
                         time.sleep(constants.ENV_CONSTANTS.SLEEP_RETRY)
+            self.scan_result = scan_result
+            break

@@ -147,6 +147,7 @@ class DockerStatsManagerServicer(
         self.docker_stats_monitor_threads = []
         logging.info(f"Setting up DockerStatsManager")
 
+
     def getDockerStatsMonitorStatus(
             self, request: csle_collector.docker_stats_manager.docker_stats_manager_pb2.GetDockerStatsMonitorStatusMsg,
             context: grpc.ServicerContext) \

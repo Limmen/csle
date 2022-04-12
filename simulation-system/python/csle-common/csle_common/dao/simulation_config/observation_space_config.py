@@ -30,8 +30,16 @@ class ObservationSpaceConfig:
         self.player_id = player_id
         self.observation_component_name_to_index = observation_component_name_to_index
         self.observation_id_to_observation_id_vector = observation_id_to_observation_id_vector
+        self.observation_id_to_observation_id_vector_inv = dict(zip(
+            list(map(lambda x: ",".join(list(map(lambda y: str(y), x))), self.observation_id_to_observation_id_vector.values())),
+            self.observation_id_to_observation_id_vector.keys()))
         self.observation_id_to_observation_vector = observation_id_to_observation_vector
+        self.observation_id_to_observation_vector_inv = dict(
+            zip(list(map(lambda x: ",".join(list(map(lambda y: str(y), x))),
+                         self.observation_id_to_observation_id_vector.values())),
+                self.observation_id_to_observation_vector.keys()))
         self.component_observations = component_observations
+
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ObservationSpaceConfig":

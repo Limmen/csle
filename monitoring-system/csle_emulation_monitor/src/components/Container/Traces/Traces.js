@@ -51,7 +51,6 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setSimulationTraces(response)
                 setLoadingSimulationTraces(false)
             })

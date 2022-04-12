@@ -226,20 +226,6 @@ const DynamicsModels = () => {
             )
         }
     }
-    // <Dropdown className="d-inline mx-2 inline-block">
-    //     <Dropdown.Toggle variant="secondary" id="dropdown-basic" size="md" className="dropdownText">
-    //         {props.selectedConditionals}
-    //     </Dropdown.Toggle>
-    //     <Dropdown.Menu>
-    //         {props.conditionals.map((conditional, index) =>
-    //             <Dropdown.Item className="dropdownText"
-    //                            key={conditional}
-    //                            onClick={() => updateConditional(conditional)}>
-    //                 {conditional}
-    //            </Dropdown.Item>*/}
-    //        )}*/
-    //    </Dropdown.Menu>*/}
-    // </Dropdown>
 
     const SelectMetricDistributionDropdownOrSpinner = (props) => {
         if (!props.loading && props.metrics.length === 0) {

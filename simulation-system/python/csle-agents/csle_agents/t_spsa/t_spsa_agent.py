@@ -69,10 +69,15 @@ class TSPSAAgent(BaseAgent):
             value_vectors = []
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
-            avg_metrics = np.array(list(map(lambda x: ExperimentUtil.mean_confidence_interval(
-                data=x, confidence=confidence)[0], value_vectors)))
-            std_metrics = np.array(list(map(lambda x: ExperimentUtil.mean_confidence_interval(
-                data=x, confidence=confidence)[1], value_vectors)))
+
+            avg_metrics = []
+            std_metrics = []
+            for i in range(len(value_vectors[0])):
+                seed_values = []
+                for seed_idx in range(len(self.experiment_config.random_seeds)):
+                    seed_values.append(value_vectors[seed_idx][i])
+                avg_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
+                std_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 

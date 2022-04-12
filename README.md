@@ -68,16 +68,14 @@ such as, web servers, databases, and an IDS.
 The simulation system implements a MDP/POMDP/Markov Game that can be used to 
 train defender policies using reinforcement learning. It exposes an OpenAI-gym interface.
 
-### Policy Examination System
-
-The policy examination system is a system for interactive examination of  learned security policies. It allows a user to traverse episodes of
-Markov decision processes in a controlled manner and to track the actions triggered by security policies. Similar to a software 
-debugger, a user can continue or or halt an episode at any time step and inspect parameters and probability distributions  
-of interest. The system enables insight into the structure of a given policy and in the behavior of a policy in edge cases.
-
 ### Monitoring System
 
-The monitoring system allows to track the execution of running emulations and their resource consumptions.
+The monitoring system allows to track the execution of running emulations and their resource consumptions. It also 
+includes an operations center where emulations can be managed and learned policies can be examines. Specifically, 
+the policy examination component of the monitoring system is a component for interactive examination of  learned security policies. 
+It allows a user to traverse episodes of Markov decision processes in a controlled manner and to track the actions triggered by security policies. Similar to a software
+debugger, a user can continue or or halt an episode at any time step and inspect parameters and probability distributions  
+of interest. The system enables insight into the structure of a given policy and in the behavior of a policy in edge cases.
 
 ## Features
 
@@ -267,19 +265,6 @@ used for running commands can read and write to this directory.
       chmod u+x run_all.sh
       ./run_all.sh
     ```
-    
-9. **Install the policy examination system** 
-   - Build the policy examination system (assuming that node and npm is already installed) (for more instructions see [README](policy-examination-system/README.MD)):
-   ```bash
-   cd policy-examination-system
-   ./install_csle_pes.sh   
-   ```
-   - Start the policy examination system:
-   ```bash
-   cd policy-examination-system/csle_pvs/server
-   nohup python server.py &  
-   ```
-
 ## Uninstall
 
 ```bash
@@ -354,7 +339,6 @@ For documentation, see the README.md files inside each sub-directory,
 - **Emulation System** ([emulation-system](./emulation-system)).
 - **Simulation System** ([simulation-system](./simulation-system)).
 - **Monitoring System** ([monitoring-system](./monitoring-system)).
-- **Policy Examination System** ([policy-examination-system](./policy-examination-system)).
 - **Metastore** ([metastore](./metastore)).
 - **General Documentation** ([docs](./docs)).
 

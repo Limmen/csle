@@ -1,6 +1,7 @@
 from typing import Any, Dict, Union, List
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.training.ppo_policy import PPOPolicy
 
 
 class ExperimentResult:
@@ -33,7 +34,14 @@ class ExperimentResult:
         obj.plot_metrics = d["plot_metrics"]
         d2 = {}
         for k,v in d["policies"].items():
-            d2[k] = TSPSAPolicy.from_dict(v)
+            try:
+                d2[k] = TSPSAPolicy.from_dict(v)
+            except:
+                pass
+            try:
+                d2[k] = PPOPolicy.from_dict(v)
+            except:
+                pass
         obj.policies = d2
         return obj
 

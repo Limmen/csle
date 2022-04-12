@@ -101,12 +101,14 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                         className="largeFont"/>
                                 {props.selectedConditionals.map((conditional, index) => {
                                     if (index === 0) {
-                                        return (<Scatter name={conditional.label}
+                                        return (<Scatter key={conditional.label + "-" + index}
+                                                         name={conditional.label}
                                                          data={data3} fill={colors[0]} stroke="black" animationEasing={'linear'}
                                                  animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}
                                                  shape={shapes[0]}/>)
                                     } else {
-                                        return (<Scatter name={conditional.label}
+                                        return (<Scatter key={conditional.label + "-" + index}
+                                            name={conditional.label}
                                                          data={data4} fill={colors[1]} stroke="black" animationEasing={'linear'}
                                                  animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}
                                                  shapes={shapes[1]}/>)
@@ -140,7 +142,8 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                         className="largeFont"/>
                                 {props.selectedConditionals.map((conditional, index) => {
                                     return (
-                                        <Bar dataKey={conditional.label}
+                                        <Bar key={conditional.label + "-" + index}
+                                             dataKey={conditional.label}
                                              fill={colors[index]} stroke="black" animationEasing={'linear'}
                                              animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}
                                              maxBarSize={15}

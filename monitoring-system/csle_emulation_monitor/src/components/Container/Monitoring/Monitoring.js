@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import './Monitoring.css';
 import Select from 'react-select'

@@ -74,23 +74,16 @@ class Emulator:
                                    emulation_name=emulation_env_config.name)
             time.sleep(sleep_time)
             emulation_statistics.update_initial_statistics(s=s)
-            print(emulation_statistics)
             for t in range(T):
                 old_state = s.copy()
                 a1 = defender_sequence[t]
                 a2 = attacker_sequence[t]
-                print(f"a1:{a1}, a2:{a2}")
                 emulation_trace, s = Emulator.run_actions(
                     emulation_env_config=emulation_env_config,  attacker_action=a2, defender_action=a1,
                     sleep_time=sleep_time, trace=emulation_trace, s=s)
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
-                print(emulation_statistics.conditionals["intrusion"]["total_alerts"])
-                print(emulation_statistics.conditionals["no_intrusion"]["total_alerts"])
-                print(statistics_id)
             if save:
-                id = MetastoreFacade.save_emulation_trace(emulation_trace)
                 MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
-                print(f"saving emulation trace, id:{id}")
             emulation_traces.append(emulation_trace)
             total_steps = T*repeat_times
             collected_steps = (i+1)*T

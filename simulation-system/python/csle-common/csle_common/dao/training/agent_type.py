@@ -11,3 +11,4 @@ class AgentType(IntEnum):
     DQN=3
     REINFORCE=4
     NFSP=5
+    STATIC=6

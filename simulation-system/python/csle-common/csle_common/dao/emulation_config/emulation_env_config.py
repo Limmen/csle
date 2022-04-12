@@ -168,9 +168,7 @@ class EmulationEnvConfig:
                 and self.connections[hacker_ip].get_transport() is not None \
                 and self.connections[hacker_ip].get_transport().is_active():
             try:
-                results = SSHUtil.execute_ssh_cmds(cmds = ["ls > /dev/null"], conn=self.connections[hacker_ip])
-                print(f"ls succeeded, {results}")
-                time.sleep(2)
+                SSHUtil.execute_ssh_cmds(cmds = ["ls > /dev/null"], conn=self.connections[hacker_ip])
             except Exception as e:
                 print("reconnecting attacker")
                 self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)

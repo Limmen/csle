@@ -19,6 +19,26 @@ const PPOPolicy = (props) => {
                 <h5 className="semiTitle">
                     General Information about the policy:
                 </h5>
+                <Table striped bordered hover>
+                    <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th> Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Num hidden layers:</td>
+                        <td>{props.policy.policy_kwargs.net_arch.length}</td>
+                    </tr>
+                    {props.policy.policy_kwargs.net_arch.map((layer, index) => {
+                        return (<tr key={layer + "-" + index}>
+                            <td>Num neurons for hidden layer: {index}</td>
+                            <td>{layer}</td>
+                        </tr>)
+                    })}
+                    </tbody>
+                </Table>
             </Card.Body>
         </Accordion.Collapse>
     </Card>)

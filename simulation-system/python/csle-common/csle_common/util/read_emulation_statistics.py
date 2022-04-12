@@ -112,7 +112,6 @@ class ReadEmulationStatistics:
                         total_host_metrics = []
             else:
                 done=True
-        print(f"done, {num_msg}")
         consumer.close()
         dto = EmulationMetricsTimeSeries(
             client_metrics=client_metrics, aggregated_docker_stats=agg_docker_stats, host_metrics=host_metrics,

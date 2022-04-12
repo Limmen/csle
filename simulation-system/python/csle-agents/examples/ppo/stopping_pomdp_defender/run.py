@@ -30,7 +30,7 @@ if __name__ == '__main__':
             "vf_coef": HParam(value=0.5, name="vf_coef", descr="the coefficient of the value network for the loss"),
             "max_grad_norm": HParam(value=0.5, name="max_grad_norm", descr="the maximum allows gradient norm"),
             "target_kl": HParam(value=None, name="target_kl", descr="the target kl"),
-            "num_training_timesteps": HParam(value=int(100000), name="num_training_timesteps", descr="number "
+            "num_training_timesteps": HParam(value=int(1000000), name="num_training_timesteps", descr="number "
                                                                                               "of timesteps to train"),
             "eval_every": HParam(value=10, name="eval_every",
                                  descr="training iterations between evaluations"),

@@ -1,21 +1,25 @@
 from typing import Tuple, Dict, Union, List
 import numpy as np
+import time
+import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions \
     import EmulationAttackerStoppingActions
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
+    import EmulationDefenderStoppingActions
+from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_system_identification.emulator import Emulator
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
-from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
-    import EmulationDefenderStoppingActions
 
 
 class StoppingGameEnv(BaseEnv):
@@ -144,44 +148,78 @@ class StoppingGameEnv(BaseEnv):
         self.trace.defender_observations.append(defender_obs)
         return defender_obs, attacker_obs
 
-    def emulation_evaluation(self, n_episodes: int, intrusion_seq: List[EmulationAttackerAction],
+    @staticmethod
+    def emulation_evaluation(env: "StoppingGameEnv", n_episodes: int, intrusion_seq: List[EmulationAttackerAction],
                              defender_policy: Policy,
                              attacker_policy: Policy,
-                             emulation_env_config: EmulationEnvConfig) -> List[EmulationSimulationTrace]:
+                             emulation_env_config: EmulationEnvConfig,
+                             simulation_env_config: SimulationEnvConfig
+                             ) -> List[EmulationSimulationTrace]:
         traces = []
+        s = EmulationEnvState(emulation_env_config=emulation_env_config)
+        s.initialize_defender_machines()
         for i in range(n_episodes):
             done = False
-            s = EmulationEnvState(emulation_env_config=emulation_env_config)
-            s.initialize_defender_machines()
-            o = self.reset()
+            defender_obs_space = simulation_env_config.joint_observation_space_config.observation_spaces[0]
+            b = env.state.b1
+            o = env.reset()
             (d_obs, a_obs) = o
             t = 0
             s.reset()
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
                                              initial_defender_observation_state=s.defender_obs_state,
                                              emulation_name=emulation_env_config.name)
+            simulation_trace = SimulationTrace(simulation_env=env.config.env_name)
             while not done:
                 a1 = defender_policy.action(d_obs)
                 a2 = attacker_policy.action(a_obs)
-                o, r, done, info = self.step((a1,a2))
+                o, r, done, info = env.step((a1,a2))
                 (d_obs, a_obs) = o
                 r_1, r_2 = r
+                print(f"a1:{a1}, a2:{a2}, d_obs:{d_obs}, a_obs:{a_obs}, r:{r}, done:{done}, info: {info}")
                 if a1 == 0:
                     defender_action = EmulationDefenderStoppingActions.CONTINUE(index=-1)
                 else:
                     defender_action = EmulationDefenderStoppingActions.CONTINUE(index=-1)
-                if self.state.s == 1:
+                if env.state.s == 1:
                     if t >= len(intrusion_seq):
                         t = 0
                     attacker_action = intrusion_seq[t]
                 else:
                     attacker_action = EmulationAttackerStoppingActions.CONTINUE(index=-1)
-                emulation_trace = Emulator.run_actions(
+                print(f"emulation a1:{defender_action}, emulation a2:{attacker_action}")
+                emulation_trace, s = Emulator.run_actions(
+                    s=s,
                     emulation_env_config=emulation_env_config, attacker_action=attacker_action,
                     defender_action=defender_action, trace=emulation_trace,
                     sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds)
-            simulation_trace = self.trace
+                o_components = [s.defender_obs_state.ids_alert_counters.severe_alerts,
+                                s.defender_obs_state.ids_alert_counters.warning_alerts,
+                                s.defender_obs_state.aggregated_host_metrics.num_failed_login_attempts]
+                o_components_str = ",".join(list(map(lambda x: str(x), o_components)))
+                print(f"o_components:{o_components}")
+                print(f"observation_id_to_observation_vector_inv:{defender_obs_space.observation_id_to_observation_vector_inv}")
+                print(f"observation_id_to_observation_vector_inv:{o_components_str in defender_obs_space.observation_id_to_observation_vector_inv}")
+                if o_components_str in defender_obs_space.observation_id_to_observation_vector_inv:
+                    o = defender_obs_space.observation_id_to_observation_vector_inv[o_components_str]
+                else:
+                    o = 0
+                print(f"o:{o}")
+                b = StoppingGameUtil.next_belief(o=o, a1=a1, b=b, pi2=a2, config=env.config, l=env.state.l, a2=a2)
+                d_obs[1] = b[1]
+                a_obs[1] = b[1]
+                print(f"b:{b}")
+                simulation_trace.defender_rewards.append(r_1)
+                simulation_trace.attacker_rewards.append(r_2)
+                simulation_trace.attacker_actions.append(a2)
+                simulation_trace.defender_actions.append(a1)
+                simulation_trace.infos.append(info)
+                simulation_trace.states.append(s)
+                simulation_trace.beliefs.append(b[1])
+                simulation_trace.infrastructure_metrics.append(o)
+
             em_sim_trace = EmulationSimulationTrace(emulation_trace=emulation_trace, simulation_trace=simulation_trace)
+            MetastoreFacade.save_emulation_simulation_trace(em_sim_trace)
             traces.append(em_sim_trace)
         return traces
 
@@ -235,6 +273,7 @@ class StoppingGameEnv(BaseEnv):
         Checkpoints agent traces
         :return: None
         """
-        SimulationTrace.save_traces(traces_save_dir=self.config.save_dir,
-                                    traces=self.traces, traces_file="taus.json")
+        ts = time.time()
+        SimulationTrace.save_traces(traces_save_dir=constants.LOGGING.DEFAULT_LOG_DIR,
+                                    traces=self.traces, traces_file=f"taus{ts}.json")
 

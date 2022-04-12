@@ -78,9 +78,9 @@ def run() -> None:
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
     assert emulation_env_config is not None
     assert ContainerManager.is_emulation_running(emulation_env_config=emulation_env_config) is True
-    attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
+    # attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
     # attacker_sequence = experienced_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
-    # attacker_sequence = expert_attacker_sequence(wait_steps=2, emulation_env_config=emulation_env_config)
+    attacker_sequence = expert_attacker_sequence(wait_steps=10, emulation_env_config=emulation_env_config)
     defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_env_config)
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,
