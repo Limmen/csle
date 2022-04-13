@@ -16,6 +16,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action import 
 from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
     import EmulationDefenderStoppingActions
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.logging.log import Logger
 from csle_system_identification.emulator import Emulator
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
@@ -155,6 +156,7 @@ class StoppingGameEnv(BaseEnv):
                              emulation_env_config: EmulationEnvConfig,
                              simulation_env_config: SimulationEnvConfig
                              ) -> List[EmulationSimulationTrace]:
+        logger = Logger.__call__().get_logger()
         traces = []
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         s.initialize_defender_machines()
@@ -176,7 +178,7 @@ class StoppingGameEnv(BaseEnv):
                 o, r, done, info = env.step((a1,a2))
                 (d_obs, a_obs) = o
                 r_1, r_2 = r
-                print(f"a1:{a1}, a2:{a2}, d_obs:{d_obs}, a_obs:{a_obs}, r:{r}, done:{done}, info: {info}")
+                logger.debug(f"a1:{a1}, a2:{a2}, d_obs:{d_obs}, a_obs:{a_obs}, r:{r}, done:{done}, info: {info}")
                 if a1 == 0:
                     defender_action = EmulationDefenderStoppingActions.CONTINUE(index=-1)
                 else:
@@ -197,18 +199,18 @@ class StoppingGameEnv(BaseEnv):
                                 s.defender_obs_state.ids_alert_counters.warning_alerts,
                                 s.defender_obs_state.aggregated_host_metrics.num_failed_login_attempts]
                 o_components_str = ",".join(list(map(lambda x: str(x), o_components)))
-                print(f"o_components:{o_components}")
-                print(f"observation_id_to_observation_vector_inv:{defender_obs_space.observation_id_to_observation_vector_inv}")
-                print(f"observation_id_to_observation_vector_inv:{o_components_str in defender_obs_space.observation_id_to_observation_vector_inv}")
+                logger.debug(f"o_components:{o_components}")
+                logger.debug(f"observation_id_to_observation_vector_inv:{defender_obs_space.observation_id_to_observation_vector_inv}")
+                logger.debug(f"observation_id_to_observation_vector_inv:{o_components_str in defender_obs_space.observation_id_to_observation_vector_inv}")
                 if o_components_str in defender_obs_space.observation_id_to_observation_vector_inv:
                     o = defender_obs_space.observation_id_to_observation_vector_inv[o_components_str]
                 else:
                     o = 0
-                print(f"o:{o}")
+                logger.debug(f"o:{o}")
                 b = StoppingGameUtil.next_belief(o=o, a1=a1, b=b, pi2=a2, config=env.config, l=env.state.l, a2=a2)
                 d_obs[1] = b[1]
                 a_obs[1] = b[1]
-                print(f"b:{b}")
+                logger.debug(f"b:{b}")
                 simulation_trace.defender_rewards.append(r_1)
                 simulation_trace.attacker_rewards.append(r_2)
                 simulation_trace.attacker_actions.append(a2)

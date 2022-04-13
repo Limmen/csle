@@ -26,6 +26,7 @@ from csle_common.dao.simulation_config.initial_state_distribution_config import 
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
+from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
@@ -143,13 +144,14 @@ def default_state_space_config() -> StateSpaceConfig:
     :return: the default state space configuration of the simulation
     """
     states = [
-        State(id=0, name="no intrusion state", descr="A Markov state representing the case where the attacker "                                                     "has not yet started an intrusion"),
-        State(id=1, name="intrusion state", descr="A Markov state representing the state of intrusion"),
-        State(id=2, name="terminal state", descr="A terminal state the models the end of a game episode")
+        State(id=0, name="no intrusion state", descr="A Markov state representing the case where the attacker "
+                                                     "has not yet started an intrusion", state_type=StateType.ACTIVE),
+        State(id=1, name="intrusion state", descr="A Markov state representing the state of intrusion",
+              state_type=StateType.ACTIVE),
+        State(id=2, name="terminal state", descr="A terminal state the models the end of a game episode",
+              state_type=StateType.TERMINAL)
     ]
-    state_space_config = StateSpaceConfig(
-        states=states
-    )
+    state_space_config = StateSpaceConfig(states=states)
     return state_space_config
 
 

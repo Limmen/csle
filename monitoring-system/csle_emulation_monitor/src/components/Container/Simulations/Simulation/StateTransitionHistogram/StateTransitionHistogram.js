@@ -3,8 +3,7 @@ import './StateTransitionHistogram.css';
 import {
     CartesianGrid,
     Label,
-    Legend, Line,
-    LineChart, Scatter, ScatterChart,
+    Legend,
     ResponsiveContainer,
     Tooltip,
     BarChart,

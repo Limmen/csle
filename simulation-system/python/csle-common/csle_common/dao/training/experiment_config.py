@@ -1,5 +1,6 @@
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any
 from csle_common.dao.training.agent_type import AgentType
+from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.hparam import HParam
 
 
@@ -9,13 +10,15 @@ class ExperimentConfig:
     """
 
     def __init__(self, output_dir:str, title: str, random_seeds: List[int], agent_type: AgentType,
-                 hparams: Dict[str, HParam], log_every: int):
+                 hparams: Dict[str, HParam], log_every: int, player_type: PlayerType, player_idx: int):
         self.output_dir = output_dir
         self.title = title
         self.random_seeds = random_seeds
         self.agent_type = agent_type
         self.hparams = hparams
         self.log_every = log_every
+        self.player_type = player_type
+        self.player_idx = player_idx
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ExperimentConfig":
@@ -30,7 +33,8 @@ class ExperimentConfig:
             h_d[k] = HParam.from_dict(v)
         obj = ExperimentConfig(
             output_dir=d["output_dir"], title=d["title"], random_seeds=d["random_seeds"],
-            agent_type=d["agent_type"], hparams=h_d, log_every=d["log_every"]
+            agent_type=d["agent_type"], hparams=h_d, log_every=d["log_every"], player_type=d["player_type"],
+            player_idx=d["player_idx"]
         )
         return obj
 
@@ -48,6 +52,8 @@ class ExperimentConfig:
             d_h[k] = v.to_dict()
         d["hparams"] = d_h
         d["log_every"] = self.log_every
+        d["player_type"] = self.player_type
+        d["player_idx"] = self.player_idx
         return d
 
     def __str__(self) -> str:
@@ -55,4 +61,5 @@ class ExperimentConfig:
         :return: a string representation of the object
         """
         return f"output_dir:{self.output_dir}, title:{self.title}, random_seeds:{self.random_seeds}, " \
-               f"agent_type: {self.agent_type}, hparams: {self.hparams}, log_every: {self.log_every}"
+               f"agent_type: {self.agent_type}, hparams: {self.hparams}, log_every: {self.log_every}, " \
+               f"player_type: {self.player_type}, player_idx: {self.player_idx}"

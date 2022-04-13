@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, createRef} from 'react';
+import React from 'react';
 import './Simulation.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'

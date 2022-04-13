@@ -3,8 +3,8 @@ import './ConditionalHistogramDistribution.css';
 import {
     CartesianGrid,
     Label,
-    Legend, Line,
-    LineChart, Scatter, ScatterChart,
+    Legend,
+    Scatter, ScatterChart,
     ResponsiveContainer,
     Tooltip,
     BarChart,
@@ -55,14 +55,14 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                 for (let j = 0; j < props.selectedConditionals.length; j++) {
                     if (props.data[props.selectedConditionals[j].value][props.selectedMetric.value].hasOwnProperty(keys[i])) {
                         dataRow[props.selectedConditionals[j].label] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
-                        if(j == 0) {
+                        if(j === 0) {
                             scatterDataRow1["count"] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
                         } else {
                             scatterDataRow2["count"] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
                         }
                     } else {
                         dataRow[props.selectedConditionals[j].label] = 0
-                        if(j == 0) {
+                        if(j === 0) {
                             scatterDataRow1["count"] = 0
                         } else {
                             scatterDataRow2["count"] = 0

@@ -7,9 +7,10 @@ from csle_common.dao.training.player_type import PlayerType
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
+    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-mdp-attacker-001")
     experiment_config = ExperimentConfig(
-        output_dir="/tmp/tspsa_test", title="T-SPSA test", random_seeds=[399, 98912,999,555], agent_type=AgentType.T_SPSA,
+        output_dir="/tmp/tspsa_test", title="T-SPSA training attacker to learn 2L thresholds",
+        random_seeds=[399, 98912], agent_type=AgentType.T_SPSA,
         log_every=10,
         hparams={
             "N": HParam(value=200, name="N", descr="the number of training iterations"),
@@ -22,9 +23,9 @@ if __name__ == '__main__':
                                                               "gradient step sizes in T-SPSA"),
             "L": HParam(value=3, name="L", descr="the number of stop actions"),
             "eval_batch_size": HParam(value=100, name="eval_batch_size", descr="number of iterations to evaluate theta"),
-            "theta1": HParam(value=[-4,-4,-4], name="theta1", descr="initial thresholds")
+            "theta1": HParam(value=[-4]*(3*2), name="theta1", descr="initial thresholds")
         },
-        player_type=PlayerType.DEFENDER, player_idx=0
+        player_type=PlayerType.ATTACKER, player_idx=1
     )
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)

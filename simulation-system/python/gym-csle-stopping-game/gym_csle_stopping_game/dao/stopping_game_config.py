@@ -99,8 +99,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         """
         :return: the attacker's observation space
         """
-        return gym.spaces.Box(low=np.array([0,0,0]), high=np.array([self.L,1,2]), dtype=np.float32,
-                       shape=(3,))
+        return gym.spaces.Box(low=np.array([0,0,0]), high=np.array([self.L,1,2]), dtype=np.float32, shape=(3,))
 
     def defender_observation_space(self) -> gym.spaces.Box:
         """

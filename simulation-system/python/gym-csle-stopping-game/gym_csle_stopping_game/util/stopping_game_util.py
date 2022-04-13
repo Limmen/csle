@@ -6,6 +6,7 @@ from csle_common.dao.simulation_config.observation_space_config import Observati
 from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
 from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from csle_common.dao.training.static_policy import StaticPolicy
+from csle_common.dao.training.player_type import PlayerType
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 import gym_csle_stopping_game.static_strategies.defender_strategies as defender_strategies
 import gym_csle_stopping_game.static_strategies.attacker_strategies as attacker_strategies
@@ -455,7 +456,8 @@ class StoppingGameUtil:
         :return: the static defender strategy (a function)
         """
         if defender_strategy_name == constants.STATIC_DEFENDER_STRATEGIES.RANDOM:
-            return StaticPolicy(action_selection_function=defender_strategies.random_defender_strategy)
+            return StaticPolicy(action_selection_function=defender_strategies.random_defender_strategy,
+                                player_type=PlayerType.DEFENDER)
         else:
             raise ValueError(f"Static defender strategy with name {defender_strategy_name} not recognized")
 
@@ -469,7 +471,8 @@ class StoppingGameUtil:
         :return: the static attacker strategy (a function)
         """
         if attacker_strategy_name == constants.STATIC_ATTACKER_STRATEGIES.RANDOM:
-            return StaticPolicy(action_selection_function=attacker_strategies.random_attacker_strategy)
+            return StaticPolicy(action_selection_function=attacker_strategies.random_attacker_strategy,
+                                player_type=PlayerType.ATTACKER)
         else:
             raise ValueError(f"Static attacker strategy with name {attacker_strategy_name} not recognized")
 

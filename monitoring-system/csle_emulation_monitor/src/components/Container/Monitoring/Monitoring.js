@@ -158,9 +158,11 @@ const Monitoring = () => {
     }
 
     const onChangeWindowLength = (windowLenSelection) => {
-        setWindowLength(windowLenSelection)
-        setLoading(true)
-        fetchMonitoringData(windowLength.value, selectedEmulation)
+        if(windowLenSelection.value !== windowLength) {
+            setWindowLength(windowLenSelection)
+            setLoading(true)
+            fetchMonitoringData(windowLength.value, selectedEmulation)
+        }
     }
 
     const updateEmulation = (emulation) => {
@@ -329,6 +331,7 @@ const Monitoring = () => {
                     })
                     setContainerOptions(containerOptions)
                     setSelectedContainer(containerOptions[0])
+                    setLoading(false)
                     fetchMonitoringData(windowLength.value, emulationOptions[0])
                 }
             })
@@ -348,7 +351,7 @@ const Monitoring = () => {
         .then(res => res.json())
         .then(response => {
             setMonitoringData(response)
-            setSelectedEmulation(emulation)
+            // setSelectedEmulation(emulation)
             setLoading(false)
         })
         .catch(error => console.log("error:" + error)), []);
@@ -380,7 +383,7 @@ const Monitoring = () => {
     useEffect(() => {
         setLoading(true)
         fetchGrafanaStatus()
-    }, []);
+    }, [fetchGrafanaStatus]);
 
 
     const fetchCadvisorStatus = useCallback(() => {
@@ -403,7 +406,7 @@ const Monitoring = () => {
     useEffect(() => {
         setLoading(true)
         fetchCadvisorStatus()
-    }, []);
+    }, [fetchCadvisorStatus]);
 
     const fetchPrometheusStatus = useCallback(() => {
         fetch(
@@ -425,7 +428,7 @@ const Monitoring = () => {
     useEffect(() => {
         setLoading(true)
         fetchPrometheusStatus()
-    }, []);
+    }, [fetchPrometheusStatus]);
 
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
@@ -447,7 +450,7 @@ const Monitoring = () => {
     useEffect(() => {
         setLoading(true)
         fetchNodeExporterStatus()
-    }, []);
+    }, [fetchNodeExporterStatus]);
 
 
     const startOrStopGrafana = () => {
@@ -536,37 +539,6 @@ const Monitoring = () => {
                         />
                     </div>
                 </div>
-            )
-        }
-    }
-    // <Dropdown className="d-inline mx-2 inline-block">
-    //     <Dropdown.Toggle variant="secondary" id="dropdown-basic" size="md" className="dropdownText">
-    //         {props.selectedHost}
-    //     </Dropdown.Toggle>
-    //     <Dropdown.Menu>
-    //         {props.selectedEmulation.containers_config.containers.map((container, index) =>
-    //             <Dropdown.Item className="dropdownText"
-    //                            key={container.full_name_str + "-" + index}
-    //                            onClick={() => updateHost(container.full_name_str)}>
-    //                 {container.full_name_str}
-    //             </Dropdown.Item>
-    //         )}
-    //     </Dropdown.Menu>
-    // </Dropdown>
-
-    const MonitoringDataOrEmpty = (props) => {
-        if (runningEmulations.length === 0 && !loading) {
-            return (
-                <div>
-                    <h3>No running emulations</h3>
-                    <p className="emptyEmulations">
-                        Start an emulation to enable monitoring.
-                    </p>
-                </div>
-            )
-        } else {
-            return (
-                <div></div>
             )
         }
     }

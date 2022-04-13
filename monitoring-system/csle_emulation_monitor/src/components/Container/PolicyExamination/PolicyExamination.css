@@ -54,3 +54,7 @@
 .DefenderPolicy {
     margin-top: 0px;
 }
+
+.policyExamination {
+    outline:none
+}

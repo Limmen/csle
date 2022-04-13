@@ -10,12 +10,15 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
-from csle_agents.base.base_agent import BaseAgent
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.simulation_config.state import State
+from csle_common.dao.simulation_config.action import Action
+from csle_common.dao.training.player_type import PlayerType
+from csle_agents.base.base_agent import BaseAgent
 from stable_baselines3 import PPO
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import BaseCallback
@@ -33,6 +36,7 @@ class PPOAgent(BaseAgent):
 
     def train(self) -> ExperimentExecution:
         pid = os.getpid()
+        print(f"save training job pid:{pid}")
         training_job = TrainingJobConfig(simulation_env_name=self.simulation_env_config.name,
                                          experiment_config=self.experiment_config, average_r=-1,
                                          progress_percentage=0, pid=pid)
@@ -51,7 +55,11 @@ class PPOAgent(BaseAgent):
                                      eval_batch_size=self.experiment_config.hparams["eval_batch_size"].value,
                                      random_seeds=self.experiment_config.random_seeds, training_job=training_job,
                                      max_steps=self.experiment_config.hparams["num_training_timesteps"].value,
-                                     seed=seed, exp_result=exp_result, simulation_name=self.simulation_env_config.name)
+                                     seed=seed, exp_result=exp_result, simulation_name=self.simulation_env_config.name,
+                                     player_type=self.experiment_config.player_type,
+                                     states=self.simulation_env_config.state_space_config.states,
+                                     actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                                         self.experiment_config.player_idx].actions)
             policy_kwargs = dict(
                 net_arch=[self.experiment_config.hparams[
                               "num_neurons_per_hidden_layer"].value]*self.experiment_config.hparams[
@@ -76,8 +84,11 @@ class PPOAgent(BaseAgent):
             ts = time.time()
             save_path = f"{constants.LOGGING.DEFAULT_LOG_DIR}/ppo_policy_seed_{seed}_{ts}.zip"
             model.save(save_path)
-            exp_result.policies[seed] = PPOPolicy(model=model, simulation_name=self.simulation_env_config.name,
-                                                  save_path=save_path)
+            exp_result.policies[seed] = PPOPolicy(
+                model=model, simulation_name=self.simulation_env_config.name, save_path=save_path,
+                states=self.simulation_env_config.state_space_config.states,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type)
             os.chmod(save_path, 0o777)
 
         # Calculate average and std metrics
@@ -97,7 +108,7 @@ class PPOAgent(BaseAgent):
                 for seed_idx in range(len(self.experiment_config.random_seeds)):
                     seed_values.append(value_vectors[seed_idx][i])
                 avg_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
-                std_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
+                std_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[1])
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
@@ -133,9 +144,10 @@ class PPOTrainingCallback(BaseCallback):
     """
     def __init__(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
                  training_job: TrainingJobConfig, max_steps: int, simulation_name: str,
-                 verbose=0,
+                 states: List[State], actions: List[Action], player_type: PlayerType, verbose=0,
                  eval_every: int = 100, eval_batch_size: int = 10):
         super(PPOTrainingCallback, self).__init__(verbose)
+        self.states = states
         self.simulation_name = simulation_name
         self.iter = 0
         self.eval_every = eval_every
@@ -145,6 +157,8 @@ class PPOTrainingCallback(BaseCallback):
         self.random_seeds = random_seeds
         self.training_job = training_job
         self.max_steps = max_steps
+        self.player_type = player_type
+        self.actions = actions
 
     def _on_training_start(self) -> None:
         """
@@ -182,11 +196,13 @@ class PPOTrainingCallback(BaseCallback):
         This event is triggered before updating the policy.
         """
         Logger.__call__().get_logger().info(f"Training iteration: {self.iter}, seed:{self.seed}, "
-                                            f"progress: {100*round(self.num_timesteps/self.max_steps,2)}%")
+                                            f"progress: {round(100*round(self.num_timesteps/self.max_steps,2),2)}%")
         if self.iter % self.eval_every == 0:
             ts = time.time()
             policy = PPOPolicy(model=self.model, simulation_name=self.simulation_name,
-                               save_path=f"{constants.LOGGING.DEFAULT_LOG_DIR}/ppo_model{self.iter}_{ts}.zip")
+                               save_path=f"{constants.LOGGING.DEFAULT_LOG_DIR}/ppo_model{self.iter}_{ts}.zip",
+                               states=self.states, player_type=self.player_type,
+                               actions=self.actions)
             self.model.save(policy.save_path)
             os.chmod(policy.save_path, 0o777)
             o = self.training_env.reset()
@@ -197,11 +213,14 @@ class PPOTrainingCallback(BaseCallback):
                 t = 0
                 cumulative_reward = 0
                 while not done and t <= max_horizon:
-                    a = policy.action(o=o)
+                    if self.player_type == PlayerType.ATTACKER:
+                        a = policy.stage_policy(o=o)
+                    else:
+                        a = policy.action(o=o)
                     o, r, done, info = self.training_env.step(a)
                     cumulative_reward +=r
                     t+= 1
-                    # print(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
+                    Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
                 avg_rewards.append(cumulative_reward)
             avg_R = np.mean(avg_rewards)
             Logger.__call__().get_logger().info(f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}")

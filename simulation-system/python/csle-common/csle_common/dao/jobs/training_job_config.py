@@ -19,8 +19,8 @@ class TrainingJobConfig:
         """
         self.simulation_env_name = simulation_env_name
         self.experiment_config = experiment_config
-        self.average_r = average_r
-        self.progress_percentage = progress_percentage
+        self.average_r = round(average_r, 3)
+        self.progress_percentage = round(progress_percentage, 3)
         self.pid = pid
         self.id = -1
 
@@ -31,8 +31,8 @@ class TrainingJobConfig:
         d = {}
         d["simulation_env_name"] = self.simulation_env_name
         d["experiment_config"] = self.experiment_config.to_dict()
-        d["average_r"] = self.average_r
-        d["progress_percentage"] = self.progress_percentage
+        d["average_r"] = round(self.average_r,2)
+        d["progress_percentage"] = round(self.progress_percentage,2)
         d["pid"] = self.pid
         d["id"] = self.id
         return d

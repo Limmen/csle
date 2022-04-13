@@ -37,7 +37,7 @@ const Simulations = () => {
     useEffect(() => {
         setLoading(true)
         fetchSimulations();
-    }, []);
+    }, [fetchSimulations]);
 
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

@@ -9,9 +9,6 @@ import MetricPlot from "./MetricPlot/MetricPlot";
 
 const Experiment = (props) => {
 
-    console.log("experiment")
-    console.log(props.experiment.result.avg_metrics)
-
     const getDateStr = (ts) => {
         var date = new Date(ts * 1000);
         var year = date.getFullYear()

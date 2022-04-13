@@ -74,7 +74,6 @@ const PolicyExamination = () => {
     const ip = "localhost"
     const rawElements = getElements({x: 0, y: 0})
     const [elements, setElements] = useState(rawElements);
-    const [isHidden, setIsHidden] = useState(false);
     const [attackerFoundNodes, setAttackerFoundNodes] = useState([]);
     const height = 900
     const nodeTypes = {
@@ -165,7 +164,7 @@ const PolicyExamination = () => {
 
     const incrementT = () => {
         if (traces.length > 0 && activeTrace !== null) {
-            if (activeTrace.value.defender_actions[t + 1] == 0 && l > 0) {
+            if (activeTrace.value.defender_actions[t + 1] === 0 && l > 0) {
                 setL(l - 1)
             }
             if (t >= activeTrace.value.defender_actions.length - 1) {
@@ -262,21 +261,13 @@ const PolicyExamination = () => {
     }
 
     const decrementT = () => {
-        if (activeTrace !== null && activeTrace.value.defender_actions[t] == 0) {
+        if (activeTrace !== null && activeTrace.value.defender_actions[t] === 0) {
             setL(l + 1)
         }
         if (t > 0) {
             setT(t - 1)
         }
     }
-
-    // useEffect(() => {
-    //     setElements((els) => els.map((e, index) => {
-    //         e.isHidden = ((!attacker_found_nodes.includes(e.id)) && !(attacker_found_nodes.includes(e.source) && attacker_found_nodes.includes(e.target)) && !(attacker_found_nodes.includes(e.source) && (e.target.includes("notfound" || e.target.includes("notstarted")))) && !((e.source != undefined && (e.source.includes("notfound") || e.source.includes("notstarted")) && !attacker_found_nodes.includes(e.source)) && (e.target.includes("notfound" || e.target.includes("notstarted")))) && !(e.id.includes("notfound")) && !(e.id.includes("notstarted") && !attacker_found_nodes.includes("attacker")) && !(e.id.includes("compromised") && attacker_compromised_nodes.includes(e.id.replace("_compromised", ""))));
-    //         return e;
-    //     }));
-    // }, [attacker_found_nodes]);
-
 
     const InfoModal = (props) => {
         return (<Modal

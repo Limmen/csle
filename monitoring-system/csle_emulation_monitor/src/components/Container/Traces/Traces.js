@@ -62,7 +62,7 @@ const Traces = () => {
         setLoadingSimulationTraces(true)
         fetchEmulationTraces()
         fetchSimulationTraces()
-    }, []);
+    }, [fetchSimulationTraces, fetchEmulationTraces]);
 
     const refreshEmulationTraces = () => {
         setLoadingEmulationTraces(true)
@@ -180,7 +180,7 @@ const Traces = () => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderInfoTooltip}
                 >
-                    <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                    <Button className="infoButton5" variant="button" onClick={() => setShowInfoModal(true)}>
                         <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>

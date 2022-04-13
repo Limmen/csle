@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './AggregateMetrics.css';
 import AlertsChart from "../AlertsChart/AlertsChart";
 import Spinner from 'react-bootstrap/Spinner'

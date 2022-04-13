@@ -20,7 +20,7 @@ class SystemIdentificationJobConfig:
         :param progress_percentage:
         """
         self.emulation_env_name = emulation_env_name
-        self.progress_percentage = progress_percentage
+        self.progress_percentage = round(progress_percentage,3)
         self.pid = pid
         self.num_collected_steps = num_collected_steps
         self.progress_percentage = self.progress_percentage
@@ -34,7 +34,7 @@ class SystemIdentificationJobConfig:
         """
         d = {}
         d["emulation_env_name"] = self.emulation_env_name
-        d["progress_percentage"] = self.progress_percentage
+        d["progress_percentage"] = round(self.progress_percentage,2)
         d["pid"] = self.pid
         d["num_collected_steps"] = self.num_collected_steps
         d["progress_percentage"] = self.progress_percentage

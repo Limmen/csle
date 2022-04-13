@@ -246,7 +246,6 @@ def ppo_policies():
 @app.route('/trainingjobs', methods=['GET'])
 def trainingjobs():
     training_jobs = MetastoreFacade.list_training_jobs()
-    print(training_jobs)
     alive_jobs = []
     for job in training_jobs:
         if EmulationUtil.check_pid(job.pid):

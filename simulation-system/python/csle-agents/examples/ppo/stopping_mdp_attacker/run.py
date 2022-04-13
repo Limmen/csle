@@ -7,9 +7,9 @@ from csle_common.dao.training.player_type import PlayerType
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
+    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-mdp-attacker-001")
     experiment_config = ExperimentConfig(
-        output_dir="/tmp/ppo_test", title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        output_dir="/tmp/ppo_test", title="PPO test", random_seeds=[399, 98912], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             "num_neurons_per_hidden_layer": HParam(value=64, name="num_neurons_per_hidden_layer",
@@ -21,7 +21,7 @@ if __name__ == '__main__':
                                                   "rollouts between policy updates"),
             "batch_size": HParam(value=64, name="batch_size", descr="batch size for updates"),
             "learning_rate": HParam(value=0.0001, name="learning_rate", descr="learning rate for updating the policy"),
-            "device": HParam(value="cuda:1", name="device", descr="the device to train on (cpu or cuda:x)"),
+            "device": HParam(value="cpu", name="device", descr="the device to train on (cpu or cuda:x)"),
             "gamma": HParam(value=1, name="gamma", descr="the discount factor"),
             "gae_lambda": HParam(value=0.95, name="gae_lambda", descr="the GAE weighting term"),
             "clip_range": HParam(value=0.2, name="clip_range", descr="the clip range for PPO"),
@@ -31,14 +31,14 @@ if __name__ == '__main__':
             "vf_coef": HParam(value=0.5, name="vf_coef", descr="the coefficient of the value network for the loss"),
             "max_grad_norm": HParam(value=0.5, name="max_grad_norm", descr="the maximum allows gradient norm"),
             "target_kl": HParam(value=None, name="target_kl", descr="the target kl"),
-            "num_training_timesteps": HParam(value=int(200000), name="num_training_timesteps",
-                                             descr="number of timesteps to train"),
+            "num_training_timesteps": HParam(value=int(1000000), name="num_training_timesteps", descr="number "
+                                                                                              "of timesteps to train"),
             "eval_every": HParam(value=10, name="eval_every",
                                  descr="training iterations between evaluations"),
             "eval_batch_size": HParam(value=10, name="eval_batch_size",
                                  descr="the batch size for evaluation")
         },
-        player_type=PlayerType.DEFENDER, player_idx=0
+        player_type=PlayerType.ATTACKER, player_idx=1
     )
     # simulation_env_config.simulation_env_input_config
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,

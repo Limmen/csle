@@ -17,8 +17,8 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
 
         # Setup spaces
-        self.attacker_observation_space = self.config.stopping_game_config.attacker_observation_space()
-        self.attacker_action_space = self.config.stopping_game_config.attacker_action_space()
+        self.observation_space = self.config.stopping_game_config.attacker_observation_space()
+        self.action_space = self.config.stopping_game_config.attacker_action_space()
 
         # Setup static defender
         self.static_defender_strategy = StoppingGameUtil.get_static_defender_strategy(
@@ -36,18 +36,19 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, pi2 : np.ndarray) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, pi2 : List[List[float]]) -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
         :param pi2: attacker stage policy
         :return: (obs, reward, done, info)
         """
+        pi2 = np.array(pi2)
         assert pi2.shape[0] == len(self.config.stopping_game_config.S)
         assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
 
         # Get defender action from static strategy
-        a1, _ = self.static_defender_strategy(self.latest_defender_obs, self.config.stopping_game_config)
+        a1, _ = self.static_defender_strategy.action(o=self.latest_defender_obs)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, pi2))

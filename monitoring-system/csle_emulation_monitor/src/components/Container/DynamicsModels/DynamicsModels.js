@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, createRef} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Spinner from 'react-bootstrap/Spinner'
@@ -18,7 +18,6 @@ const DynamicsModels = () => {
     const [selectedMetric, setSelectedMetric] = useState(null);
     const [loading, setLoading] = useState(true);
     const [animationDuration, setAnimationDuration] = useState(5);
-    const [animation, setAnimation] = useState(false);
     const animationDurationFactor = 50000
     const [showInfoModal, setShowInfoModal] = useState(false);
 
@@ -160,7 +159,7 @@ const DynamicsModels = () => {
     useEffect(() => {
         setLoading(true)
         fetchDynamicsModels()
-    }, []);
+    }, [fetchDynamicsModels]);
 
     const SelectDynamicsModelDropdownOrSpinner = (props) => {
         if (!props.loading && props.dynamicsModels.length === 0) {
