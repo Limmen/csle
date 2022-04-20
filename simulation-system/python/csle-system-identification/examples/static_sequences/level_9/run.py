@@ -83,12 +83,11 @@ def run() -> None:
     attacker_sequence = expert_attacker_sequence(wait_steps=10, emulation_env_config=emulation_env_config)
     defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_env_config)
-    em_statistic = MetastoreFacade.get_emulation_statistic(id=9)
+    # em_statistic = MetastoreFacade.get_emulation_statistic(id=9)
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,
                                   defender_sequence=defender_sequence, repeat_times= 50,
                                   sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds,
-                                  descr="Intrusion data collected against expert attacker",
-                                  emulation_statistics=em_statistic)
+                                  descr="Intrusion data collected against expert attacker")
 
 
 # Program entrypoint

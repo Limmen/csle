@@ -157,7 +157,7 @@ const PolicyExamination = () => {
         if (event.key === 'ArrowRight') {
             incrementT()
         }
-        if(activeTrace !== null) {
+        if (activeTrace !== null) {
             updateFoundNodes(activeTrace.value)
         }
     }
@@ -176,7 +176,7 @@ const PolicyExamination = () => {
     }
 
     const updateTrace = (trace) => {
-        if(activeTrace === null || activeTrace === undefined ||
+        if (activeTrace === null || activeTrace === undefined ||
             trace.value.name !== activeTrace.value.name) {
             setActiveTrace(trace)
         }
@@ -337,11 +337,14 @@ const PolicyExamination = () => {
                         <h4 className="cardTitle">
                             The Defender's View
                         </h4>
-                        <PolicyAndBeliefChart activeTrace={activeTrace} t={t}
-                                              fullDomain={fullDomain} fullRange={fullRange}
-                                              animation={animation} animationDuration={animationDuration}
-                                              animationDurationFactor={animiationDurationFactor}/>
-                        <DeltaAlertsLineChart activeTrace={activeTrace} t={t} fullDomain={fullDomain}
+                        <div className="pChart">
+                            <PolicyAndBeliefChart activeTrace={activeTrace} t={t}
+                                                  fullDomain={fullDomain} fullRange={fullRange}
+                                                  animation={animation} animationDuration={animationDuration}
+                                                  animationDurationFactor={animiationDurationFactor}/>
+                        </div>
+                        <DeltaAlertsLineChart className="deltaAlertsRow"
+                                              activeTrace={activeTrace} t={t} fullDomain={fullDomain}
                                               fullRange={fullRange}
                                               animation={animation} animationDuration={animationDuration}
                                               animationDurationFactor={animiationDurationFactor}/>

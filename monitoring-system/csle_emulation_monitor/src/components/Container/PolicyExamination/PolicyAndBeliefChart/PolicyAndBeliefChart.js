@@ -86,8 +86,6 @@ const PolicyAndBeliefChart = React.memo((props) => {
                             }} strokeDasharray="3 3"/>
                             <ReferenceLine y={0.5}
                                            stroke="black" strokeDasharray="5 5 "/>
-                            <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
-                                    className="largeFont"/>
                             <Area type="monotone" dataKey="Probability of next defensive action" stroke="#8884d8"
                                   isAnimationActive={props.animation} fillOpacity={1} fill="url(#colorProb)"
                                   animationEasing={'linear'}
@@ -97,6 +95,8 @@ const PolicyAndBeliefChart = React.memo((props) => {
                                   isAnimationActive={props.animation} fillOpacity={1} fill="url(#colorPv)"
                                   animationEasing={'linear'}
                                   animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}/>
+                            <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                                    className="largeFont"/>
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>

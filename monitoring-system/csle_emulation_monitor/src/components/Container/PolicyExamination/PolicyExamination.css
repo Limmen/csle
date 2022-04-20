@@ -13,6 +13,10 @@
     margin-top: 20px
 }
 
+.pChart {
+    margin-bottom:50px
+}
+
 .traceDropdownDemoLabel {
     display: inline;
 }

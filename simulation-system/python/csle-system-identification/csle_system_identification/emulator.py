@@ -78,6 +78,7 @@ class Emulator:
                 old_state = s.copy()
                 a1 = defender_sequence[t]
                 a2 = attacker_sequence[t]
+                logger.info(f"t:{t}, a1: {a1}, a2: {a2}")
                 emulation_trace, s = Emulator.run_actions(
                     emulation_env_config=emulation_env_config,  attacker_action=a2, defender_action=a1,
                     sleep_time=sleep_time, trace=emulation_trace, s=s)
@@ -89,6 +90,8 @@ class Emulator:
             collected_steps = (i+1)*T
             job_config.num_collected_steps=collected_steps
             job_config.progress_percentage = (round(collected_steps/total_steps, 2))
+            logger.info(f"job updated, steps: {job_config.num_collected_steps}, "
+                        f"progress: {job_config.progress_percentage}")
             MetastoreFacade.update_system_identification_job(system_identification_job=job_config, id=job_config.id)
 
         logger.info(f"All sequences completed, saving traces and emulation statistics")
