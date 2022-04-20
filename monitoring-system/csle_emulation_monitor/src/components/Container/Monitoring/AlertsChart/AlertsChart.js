@@ -27,6 +27,7 @@ const AlertsChart = React.memo((props) => {
                     "t": (index + 1),
                     "Severe alerts Δx": parseInt(alert_counters.severe_alerts),
                     "Warning alerts Δy": parseInt(alert_counters.warning_alerts),
+                    "Alerts weighted by priority Δz": parseInt(alert_counters.alerts_weighted_by_priority),
                 }
             })
             var domain = [0, Math.max(1, data.length)]
@@ -61,6 +62,10 @@ const AlertsChart = React.memo((props) => {
                               animationDuration={((1 - (props.animationDuration / 100)) * props.animationDurationFactor)}/>
                         <Line animation={props.animation} type="monotone" dataKey="Warning alerts Δy"
                               stroke="#82ca9d" animationEasing={'linear'}
+                              animationDuration={((1 - (props.animationDuration / 100)) * props.animationDurationFactor)}
+                              isAnimationActive={props.animation}/>
+                        <Line animation={props.animation} type="monotone" dataKey="Alerts weighted by priority Δz"
+                              stroke="#8b0000" animationEasing={'linear'}
                               animationDuration={((1 - (props.animationDuration / 100)) * props.animationDurationFactor)}
                               isAnimationActive={props.animation}/>
                     </LineChart>

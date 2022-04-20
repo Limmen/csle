@@ -114,7 +114,7 @@ class TrafficManager:
                     commands.append(cmd.format(node_traffic_cfg.ip))
 
         for net in emulation_env_config.traffic_config.client_population_config.networks:
-            for cmd in constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS["client_1_subnet"]:
+            for cmd in constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.CLIENT_1_SUBNET]:
                 commands.append(cmd.format(net.subnet_mask))
 
         # Connect

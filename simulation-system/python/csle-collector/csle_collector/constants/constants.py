@@ -172,7 +172,7 @@ class LOG_SINK:
     DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
 
     IDS_ALERTS_LABELS = [
-        "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_priority"
+        "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_priority",
         "priority_1_alerts", "priority_2_alerts",
         "priority_3_alerts", "priority_4_alerts", "attempted-admin_alerts",
         "attempted-user_alerts", "inappropriate-content_alerts", "policy-violation_alerts",

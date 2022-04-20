@@ -114,7 +114,7 @@ const DynamicsModels = () => {
 
     const fetchDynamicsModels = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/dynamicsmodels',
+            `http://` + ip + ':7777/dynamicsmodelsdata',
             {
                 method: "GET",
                 headers: new Headers({

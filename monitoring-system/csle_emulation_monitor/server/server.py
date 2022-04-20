@@ -17,6 +17,49 @@ app = Flask(__name__, static_url_path='', static_folder='../build/')
 def root():
     return app.send_static_file('index.html')
 
+@app.route('/emulations', methods=['GET'])
+def emulationspage():
+    return app.send_static_file('index.html')
+
+@app.route('/simulations', methods=['GET'])
+def simulationspage():
+    return app.send_static_file('index.html')
+
+@app.route('/monitoring', methods=['GET'])
+def monitoringpage():
+    return app.send_static_file('index.html')
+
+@app.route('/traces', methods=['GET'])
+def tracespage():
+    return app.send_static_file('index.html')
+
+@app.route('/dynamicsmodels', methods=['GET'])
+def modelspage():
+    return app.send_static_file('index.html')
+
+@app.route('/policyexamination', methods=['GET'])
+def policy_examination_page():
+    return app.send_static_file('index.html')
+
+@app.route('/images', methods=['GET'])
+def images_page():
+    return app.send_static_file('index.html')
+
+@app.route('/training', methods=['GET'])
+def training_page():
+    return app.send_static_file('index.html')
+
+@app.route('/policies', methods=['GET'])
+def policies_page():
+    return app.send_static_file('index.html')
+
+@app.route('/jobs', methods=['GET'])
+def jobs_page():
+    return app.send_static_file('index.html')
+
+@app.route('/about', methods=['GET'])
+def about_page():
+    return app.send_static_file('index.html')
 
 @app.route('/nodeexporter', methods=['GET', 'POST'])
 def node_exporter():
@@ -94,7 +137,7 @@ def grafana():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/images', methods=['GET'])
+@app.route('/imagesdata', methods=['GET'])
 def images():
     images=ContainerManager.list_all_images()
     images_dicts = []
@@ -110,7 +153,7 @@ def images():
     return response
 
 
-@app.route('/simulations', methods=['GET'])
+@app.route('/simulationsdata', methods=['GET'])
 def simulations():
     all_simulations = MetastoreFacade.list_simulations()
     all_images = MetastoreFacade.list_simulation_images()
@@ -124,7 +167,7 @@ def simulations():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/emulations', methods=['GET'])
+@app.route('/emulationsdata', methods=['GET'])
 def emulations():
     all_emulations = MetastoreFacade.list_emulations()
     all_images = MetastoreFacade.list_emulation_images()
@@ -157,7 +200,7 @@ def monitor_emulation(emulation: str, minutes: int):
     return response
 
 
-@app.route('/emulations/<emulation>', methods=['GET', 'POST'])
+@app.route('/emulationsdata/<emulation>', methods=['GET', 'POST'])
 def emulation(emulation_name: str):
     em = MetastoreFacade.get_emulation(name=emulation_name)
     rc_emulations = ContainerManager.list_running_emulations()
@@ -209,7 +252,7 @@ def simulation_traces():
     return response
 
 
-@app.route('/dynamicsmodels', methods=['GET'])
+@app.route('/dynamicsmodelsdata', methods=['GET'])
 def dynamics_models():
     models = MetastoreFacade.list_emulation_statistics()
     models_dicts = list(map(lambda x: x.to_dict(), models))
@@ -217,7 +260,7 @@ def dynamics_models():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/experiments', methods=['GET'])
+@app.route('/experimentsdata', methods=['GET'])
 def experiments():
     experiments = MetastoreFacade.list_experiment_executions()
     experiment_dicts = list(map(lambda x: x.to_dict(), experiments))

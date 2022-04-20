@@ -8,6 +8,8 @@ class COMMON:
     Common string constants among all agents
     """
     AVERAGE_REWARD = "average_reward"
+    DEFENDER_AVERAGE_REWARD = "defender_average_reward"
+    ATTACKER_AVERAGE_REWARD = "attacker_average_reward"
     EVAL_EVERY = "eval_every"
     EVAL_BATCH_SIZE = "eval_batch_size"
     NUM_TRAINING_TIMESTEPS = "num_training_timesteps"
@@ -17,6 +19,7 @@ class COMMON:
     LEARNING_RATE = "learning_rate"
     DEVICE = "device"
     GAMMA = "gamma"
+    EXPLOITABILITY = "exploitability"
 
 
 class PPO:
@@ -49,3 +52,12 @@ class T_SPSA:
     THETAS = "thetas"
     THRESHOLDS = "thresholds"
     R = "R"
+
+
+class T_FP:
+    """
+    String constants related to T-FP
+    """
+    N_2 = "N_2"
+    DEFENDER_THRESHOLDS = "defender_thresholds"
+    ATTACKER_THRESHOLDS = "attacker_thresholds"

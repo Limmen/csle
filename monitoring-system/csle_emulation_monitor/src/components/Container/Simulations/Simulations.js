@@ -18,7 +18,7 @@ const Simulations = () => {
 
     const fetchSimulations = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulations',
+            `http://` + ip + ':7777/simulationsdata',
             {
                 method: "GET",
                 headers: new Headers({

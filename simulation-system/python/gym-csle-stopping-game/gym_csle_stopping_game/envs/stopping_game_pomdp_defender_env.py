@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple, List, Callable
 import gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
@@ -18,7 +18,14 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
     OpenAI Gym Env for the MDP of the defender when facing a static attacker
     """
 
-    def __init__(self, config: StoppingGameDefenderPomdpConfig):
+    def __init__(self, config: StoppingGameDefenderPomdpConfig, attacker_strategy: Callable = None):
+        """
+        Initializes the environment
+
+        :param config: the environment configuration
+        :param attacker_strategy: the strategy of the static attacker
+        """
+
         self.config = config
         self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
 
@@ -27,8 +34,11 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.action_space = self.config.stopping_game_config.defender_action_space()
 
         # Setup static attacker strategy
-        self.static_attacker_strategy = StoppingGameUtil.get_static_attacker_strategy(
-            attacker_strategy_name=self.config.attacker_strategy_name)
+        if attacker_strategy is None:
+            self.static_attacker_strategy = StoppingGameUtil.get_static_attacker_strategy(
+                attacker_strategy_name=self.config.attacker_strategy_name)
+        else:
+            self.static_attacker_strategy = attacker_strategy
 
         # Setup Config
         self.viewer = None

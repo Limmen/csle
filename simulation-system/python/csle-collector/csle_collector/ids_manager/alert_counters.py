@@ -57,10 +57,10 @@ class AlertCounters:
         obj = AlertCounters()
         obj.ts = float(parts[0])
         obj.ip = parts[1]
-        obj.total_alerts = parts[2]
-        obj.warning_alerts = parts[3]
-        obj.severe_alerts = parts[4]
-        obj.alerts_weighted_by_priority = parts[5]
+        obj.total_alerts = int(round(float(parts[2])))
+        obj.warning_alerts = int(round(float(parts[3])))
+        obj.severe_alerts = int(round(float(parts[4])))
+        obj.alerts_weighted_by_priority = int(round(float(parts[5])))
         obj.class_alerts = []
         obj.priority_alerts = []
         for i in range(6, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6):

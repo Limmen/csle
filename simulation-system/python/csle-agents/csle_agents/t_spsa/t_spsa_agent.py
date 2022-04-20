@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Optional
 import random
 import time
 import gym
@@ -27,17 +27,20 @@ class TSPSAAgent(BaseAgent):
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
-                 emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig):
+                 emulation_env_config: Union[None, EmulationEnvConfig],
+                 experiment_config: ExperimentConfig, env: Optional[gym.Env] = None):
         """
         Initializes the TSPSA agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
         :param experiment_config: the experiment config
+        :param env: (optional)
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.T_SPSA
+        self.env = env
 
     def train(self) -> ExperimentExecution:
         """
@@ -52,12 +55,13 @@ class TSPSAAgent(BaseAgent):
         training_job_id = MetastoreFacade.save_training_job(training_job=training_job)
         training_job.id = training_job_id
         config = self.simulation_env_config.simulation_env_input_config
-        env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        if self.env is None:
+            self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.spsa(exp_result=exp_result, seed=seed, env=env, training_job=training_job,
+            exp_result = self.spsa(exp_result=exp_result, seed=seed, training_job=training_job,
                                    random_seeds=self.experiment_config.random_seeds)
             training_job = MetastoreFacade.get_training_job_config(id=training_job_id)
 
@@ -92,7 +96,7 @@ class TSPSAAgent(BaseAgent):
         exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
                                             emulation_name=emulation_name, simulation_name=simulation_name,
                                             descr=descr)
-        traces = env.get_traces()
+        traces = self.env.get_traces()
         if len(traces) > 0:
             MetastoreFacade.save_simulation_trace(traces[-1])
         MetastoreFacade.remove_training_job(training_job)
@@ -106,14 +110,13 @@ class TSPSAAgent(BaseAgent):
                 agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
                 agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE]
 
-    def spsa(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
+    def spsa(self, exp_result: ExperimentResult, seed: int,
              training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
         Runs the SPSA algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
-        :param env: the environment for evaluation
         :param training_job: the training job config
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
@@ -135,10 +138,10 @@ class TSPSAAgent(BaseAgent):
                              player_type=self.experiment_config.player_type, L=L,
                              actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                  self.experiment_config.player_idx].actions)
-        avg_metrics = self.eval_theta(policy=policy, env=env)
+        avg_metrics = self.eval_theta(policy=policy)
         J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
-        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(self.round_vec(theta))
+        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
 
         # Iterations
         N = self.experiment_config.hparams[agents_constants.T_SPSA.N].value
@@ -156,7 +159,7 @@ class TSPSAAgent(BaseAgent):
             deltak = self.standard_deltak(dimension=len(theta), k=i)
 
             # Get estimated gradient
-            gk = self.estimate_gk(theta=theta, deltak=deltak, ck=ck, env=env, L=L)
+            gk = self.estimate_gk(theta=theta, deltak=deltak, ck=ck, L=L)
 
             # Adjust theta using SA
             theta = [t + ak * gkk for t, gkk in zip(theta, gk)]
@@ -171,13 +174,13 @@ class TSPSAAgent(BaseAgent):
                                  player_type=self.experiment_config.player_type, L=L,
                                  actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                      self.experiment_config.player_idx].actions)
-            avg_metrics = self.eval_theta(policy=policy, env=env)
+            avg_metrics = self.eval_theta(policy=policy)
             J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
 
             # Record metrics
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(self.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(self.round_vec(policy.thresholds()))
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(TSPSAAgent.round_vec(policy.thresholds()))
 
             if i % self.experiment_config.log_every == 0 and i > 0:
                 Logger.__call__().get_logger().info(f"[T-SPSA] i: {i}, J:{J}, "
@@ -198,19 +201,18 @@ class TSPSAAgent(BaseAgent):
         exp_result.policies[seed] = policy
         return exp_result
 
-    def eval_theta(self, policy: TSPSAPolicy, env: gym.Env) -> Dict[str, Union[float, int]]:
+    def eval_theta(self, policy: TSPSAPolicy) -> Dict[str, Union[float, int]]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
         :param policy: the policy to evaluate
-        :param env: the simulation environment
         :return: the average metrics of the evaluation
         """
         eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
         metrics = {}
         for j in range(eval_batch_size):
             done = False
-            o = env.reset()
+            o = self.env.reset()
             l = int(o[0])
             b1 = o[1]
             t = 1
@@ -223,7 +225,7 @@ class TSPSAAgent(BaseAgent):
                     a = policy.stage_policy(o=o)
                 else:
                     a = policy.action(o=o)
-                o, r, done, info = env.step(a)
+                o, r, done, info = self.env.step(a)
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
@@ -313,7 +315,7 @@ class TSPSAAgent(BaseAgent):
         theta_1 = np.array(theta_1)
         return theta_1
 
-    def estimate_gk(self, theta: List[float], deltak: List[float], ck: float, env: gym.Env, L: int):
+    def estimate_gk(self, theta: List[float], deltak: List[float], ck: float, L: int):
         """
         Estimate the gradient at iteration k of the T-SPSA algorithm
 
@@ -335,19 +337,20 @@ class TSPSAAgent(BaseAgent):
             player_type=self.experiment_config.player_type,
             states=self.simulation_env_config.state_space_config.states, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions), env=env)
+                self.experiment_config.player_idx].actions))
         J_a = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         avg_metrics = self.eval_theta(TSPSAPolicy(
             theta=tb, simulation_name=self.simulation_env_config.name,
             player_type=self.experiment_config.player_type,states=self.simulation_env_config.state_space_config.states,
             L=L, actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions), env=env)
+                self.experiment_config.player_idx].actions))
         J_b = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         gk = [(J_a - J_b) / (2 * ck * dk) for dk in deltak]
 
         return gk
 
-    def round_vec(self, vec) -> List[float]:
+    @staticmethod
+    def round_vec(vec) -> List[float]:
         """
         Rounds a vector to 3 decimals
 

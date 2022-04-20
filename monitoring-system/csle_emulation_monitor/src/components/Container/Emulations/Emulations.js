@@ -18,7 +18,7 @@ const Emulations = () => {
 
     const fetchEmulations = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulations',
+            `http://` + ip + ':7777/emulationsdata',
             {
                 method: "GET",
                 headers: new Headers({

@@ -44,7 +44,7 @@ class TSPSAPolicy(Policy):
         if not self.player_type == PlayerType.ATTACKER:
             return self._defender_action(o=o)
         else:
-            pass
+            self._attacker_action(o=o)
 
     def _attacker_action(self, o) -> int:
         """

@@ -301,7 +301,7 @@ const Monitoring = () => {
 
     const fetchEmulations = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulations',
+            `http://` + ip + ':7777/emulationsdata',
             {
                 method: "GET",
                 headers: new Headers({
@@ -350,8 +350,8 @@ const Monitoring = () => {
     )
         .then(res => res.json())
         .then(response => {
+            console.log(response)
             setMonitoringData(response)
-            // setSelectedEmulation(emulation)
             setLoading(false)
         })
         .catch(error => console.log("error:" + error)), []);

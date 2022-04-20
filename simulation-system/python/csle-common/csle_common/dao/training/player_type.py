@@ -7,3 +7,4 @@ class PlayerType(IntEnum):
     """
     ATTACKER=0
     DEFENDER=1
+    SELF_PLAY=2

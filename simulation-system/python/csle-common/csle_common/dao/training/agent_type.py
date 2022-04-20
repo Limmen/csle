@@ -7,7 +7,7 @@ class AgentType(IntEnum):
     """
     T_SPSA=0
     PPO=1
-    FP_SPSA=2
+    T_FP=2
     DQN=3
     REINFORCE=4
     NFSP=5

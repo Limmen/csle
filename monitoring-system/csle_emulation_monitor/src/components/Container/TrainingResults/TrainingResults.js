@@ -18,7 +18,7 @@ const TrainingResults = () => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/experiments',
+            `http://` + ip + ':7777/experimentsdata',
             {
                 method: "GET",
                 headers: new Headers({

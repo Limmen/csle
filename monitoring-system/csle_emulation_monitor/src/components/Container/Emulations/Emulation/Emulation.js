@@ -18,7 +18,7 @@ const Emulation = (props) => {
 
     const startOrStopEmulationRequest = useCallback((emulation_name) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_name,
+            `http://` + ip + ':7777/emulationsdata/' + emulation_name,
             {
                 method: "POST",
                 headers: new Headers({

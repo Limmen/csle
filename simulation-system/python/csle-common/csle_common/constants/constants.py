@@ -1022,16 +1022,16 @@ class TRAFFIC_COMMANDS:
         f"{CONTAINER_IMAGES.ROUTER_2}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         f"{CLIENT_1_SUBNET}": [
-            "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap -sP " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap -sT -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap -sF -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap -sN -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap -sX -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap -O --osscan-guess --max-os-tries 1 " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1"
+            # "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -sP " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -sU -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -sT -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -sF -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -sN -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -sX -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -O --osscan-guess --max-os-tries 1 " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1"
         ],
         f"{GENERIC_COMMANDS}": [
             "timeout 5 ping {} > /dev/null 2>&1",

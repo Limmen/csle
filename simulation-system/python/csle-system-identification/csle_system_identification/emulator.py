@@ -1,6 +1,7 @@
 from typing import List, Tuple
 import time
 import os
+import sys
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
@@ -68,6 +69,7 @@ class Emulator:
         emulation_traces = []
         for i in range(repeat_times):
             logger.info(f"Starting execution of static action sequences, iteration :{i}")
+            sys.stdout.flush()
             s.reset()
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
                                    initial_defender_observation_state=s.defender_obs_state,
@@ -92,9 +94,11 @@ class Emulator:
             job_config.progress_percentage = (round(collected_steps/total_steps, 2))
             logger.info(f"job updated, steps: {job_config.num_collected_steps}, "
                         f"progress: {job_config.progress_percentage}")
+            sys.stdout.flush()
             MetastoreFacade.update_system_identification_job(system_identification_job=job_config, id=job_config.id)
 
         logger.info(f"All sequences completed, saving traces and emulation statistics")
+        sys.stdout.flush()
         if save:
             EmulationTrace.save_traces_to_disk(traces_save_dir=save_dir, traces=emulation_traces)
             MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
@@ -131,6 +135,7 @@ class Emulator:
         s_prime_prime = Defender.defender_transition(s=s_prime, defender_action=defender_action, simulation=False)
         logger.debug(f"Defender action complete, defender state:{s_prime.defender_obs_state}, "
                      f"ips:{defender_action.ips}")
+        sys.stdout.flush()
         EnvDynamicsUtil.cache_defender_action(a=defender_action, s=s_prime_prime)
         s = s_prime_prime
         time.sleep(sleep_time)
