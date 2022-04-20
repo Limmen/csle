@@ -19,6 +19,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.base.base_agent import BaseAgent
+import csle_agents.constants.constants as agents_constants
 from stable_baselines3 import PPO
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import BaseCallback
@@ -36,7 +37,6 @@ class PPOAgent(BaseAgent):
 
     def train(self) -> ExperimentExecution:
         pid = os.getpid()
-        print(f"save training job pid:{pid}")
         training_job = TrainingJobConfig(simulation_env_name=self.simulation_env_config.name,
                                          experiment_config=self.experiment_config, average_r=-1,
                                          progress_percentage=0, pid=pid)
@@ -46,40 +46,41 @@ class PPOAgent(BaseAgent):
         env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         env = Monitor(env)
         exp_result = ExperimentResult()
-        exp_result.plot_metrics.append("average_reward")
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed]["average_reward"] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
             ExperimentUtil.set_seed(seed)
-            cb = PPOTrainingCallback(eval_every=self.experiment_config.hparams["eval_every"].value,
-                                     eval_batch_size=self.experiment_config.hparams["eval_batch_size"].value,
-                                     random_seeds=self.experiment_config.random_seeds, training_job=training_job,
-                                     max_steps=self.experiment_config.hparams["num_training_timesteps"].value,
-                                     seed=seed, exp_result=exp_result, simulation_name=self.simulation_env_config.name,
-                                     player_type=self.experiment_config.player_type,
-                                     states=self.simulation_env_config.state_space_config.states,
-                                     actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+            cb = PPOTrainingCallback(
+                eval_every=self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value,
+                eval_batch_size=self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value,
+                random_seeds=self.experiment_config.random_seeds, training_job=training_job,
+                max_steps=self.experiment_config.hparams[agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value,
+                seed=seed, exp_result=exp_result, simulation_name=self.simulation_env_config.name,
+                player_type=self.experiment_config.player_type,
+                states=self.simulation_env_config.state_space_config.states,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                          self.experiment_config.player_idx].actions)
             policy_kwargs = dict(
-                net_arch=[self.experiment_config.hparams[
-                              "num_neurons_per_hidden_layer"].value]*self.experiment_config.hparams[
-                    "num_hidden_layers"].value)
+                net_arch=[self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value
+                          ]*self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value)
             model = PPO(
-                "MlpPolicy", env, verbose=0, policy_kwargs=policy_kwargs,
-                n_steps=self.experiment_config.hparams["steps_between_updates"].value,
-                batch_size=self.experiment_config.hparams["batch_size"].value,
-                learning_rate=self.experiment_config.hparams["learning_rate"].value,
-                seed=seed, device=self.experiment_config.hparams["device"].value,
-                gamma=self.experiment_config.hparams["gamma"].value,
-                gae_lambda=self.experiment_config.hparams["gae_lambda"].value,
-                clip_range=self.experiment_config.hparams["clip_range"].value,
-                clip_range_vf=self.experiment_config.hparams["clip_range_vf"].value,
-                ent_coef=self.experiment_config.hparams["ent_coef"].value,
-                vf_coef=self.experiment_config.hparams["vf_coef"].value,
-                max_grad_norm=self.experiment_config.hparams["max_grad_norm"].value,
-                target_kl=self.experiment_config.hparams["target_kl"].value,
+                agents_constants.PPO.MLP_POLICY, env, verbose=0, policy_kwargs=policy_kwargs,
+                n_steps=self.experiment_config.hparams[agents_constants.PPO.STEPS_BETWEEN_UPDATES].value,
+                batch_size=self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE].value,
+                learning_rate=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value,
+                seed=seed, device=self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value,
+                gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value,
+                gae_lambda=self.experiment_config.hparams[agents_constants.PPO.GAE_LAMBDA].value,
+                clip_range=self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE].value,
+                clip_range_vf=self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE_VF].value,
+                ent_coef=self.experiment_config.hparams[agents_constants.PPO.ENT_COEF].value,
+                vf_coef=self.experiment_config.hparams[agents_constants.PPO.VF_COEF].value,
+                max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
+                target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value,
             )
-            model.learn(total_timesteps=self.experiment_config.hparams["num_training_timesteps"].value, callback=cb)
+            model.learn(total_timesteps=self.experiment_config.hparams[
+                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value, callback=cb)
             exp_result=cb.exp_result
             ts = time.time()
             save_path = f"{constants.LOGGING.DEFAULT_LOG_DIR}/ppo_policy_seed_{seed}_{ts}.zip"
@@ -132,10 +133,14 @@ class PPOAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return ["num_neurons_per_hidden_layer", "num_hidden_layers", "steps_between_updates",
-                "learning_rate", "batch_size", "gamma", "gae_lambda", "clip_range", "clip_range_vf", "ent_coef",
-                "vf_coef", "max_grad_norm", "target_kl", "num_training_timesteps", "eval_every",
-                "eval_batch_size", "device"]
+        return [agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER, agents_constants.COMMON.NUM_HIDDEN_LAYERS,
+                agents_constants.PPO.STEPS_BETWEEN_UPDATES,
+                agents_constants.COMMON.LEARNING_RATE, agents_constants.COMMON.BATCH_SIZE,
+                agents_constants.COMMON.GAMMA, agents_constants.PPO.GAE_LAMBDA, agents_constants.PPO.CLIP_RANGE,
+                agents_constants.PPO.CLIP_RANGE_VF, agents_constants.PPO.ENT_COEF,
+                agents_constants.PPO.VF_COEF, agents_constants.PPO.MAX_GRAD_NORM, agents_constants.PPO.TARGET_KL,
+                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS, agents_constants.COMMON.EVAL_EVERY,
+                agents_constants.COMMON.EVAL_BATCH_SIZE, agents_constants.COMMON.DEVICE]
 
 
 class PPOTrainingCallback(BaseCallback):

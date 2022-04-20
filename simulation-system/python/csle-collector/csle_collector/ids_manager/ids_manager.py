@@ -19,7 +19,7 @@ class IDSMonitorThread(threading.Thread):
     def __init__(self, kafka_ip: str, kafka_port: int, ip: str, hostname: str, log_file_path: str,
                  time_step_len_seconds: int):
         """
-        Intializes the thread
+        Initializes the thread
 
         :param kafka_ip: IP of the Kafka server to push to
         :param kafka_port: port of the Kafka server to push to
@@ -36,7 +36,8 @@ class IDSMonitorThread(threading.Thread):
         self.log_file_path = log_file_path
         self.latest_ts = time.time()
         self.time_step_len_seconds = time_step_len_seconds
-        self.conf = {'bootstrap.servers': f"{self.kafka_ip}:{self.kafka_port}", 'client.id': self.hostname}
+        self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.kafka_port}",
+                     constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**self.conf)
         self.running = True
         logging.info(f"IDSMonitor thread started successfully")
@@ -68,8 +69,9 @@ class IdsManagerServicer(csle_collector.ids_manager.ids_manager_pb2_grpc.IdsMana
         logging.basicConfig(filename="/ids_manager.log", level=logging.INFO)
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
-        self.conf = {'bootstrap.servers': f"{self.ip}:9092",
-                     'client.id': self.hostname}
+        self.conf = {
+            constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
+            constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.ids_monitor_thread = None
         logging.info(f"Starting the IDSManager hostname: {self.hostname} ip: {self.ip}")
 

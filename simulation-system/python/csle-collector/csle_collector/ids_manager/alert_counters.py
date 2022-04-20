@@ -20,6 +20,7 @@ class AlertCounters:
         self.severe_alerts = 0
         self.warning_alerts = 0
         self.total_alerts = 0
+        self.alerts_weighted_by_priority = 0
         self.ip = None
         self.ts = None
 
@@ -39,6 +40,10 @@ class AlertCounters:
         self.total_alerts = len(alerts)
         self.severe_alerts = sum(self.priority_alerts[0:constants.IDS_ROUTER.SEVERE_ALERT_PRIORITY_THRESHOLD])
         self.warning_alerts = sum(self.priority_alerts[constants.IDS_ROUTER.SEVERE_ALERT_PRIORITY_THRESHOLD:])
+        self.alerts_weighted_by_priority = 0
+        for idx in range(len(self.priority_alerts)):
+            priority = (5-idx+1)
+            self.alerts_weighted_by_priority += priority*self.priority_alerts[idx]
 
     @staticmethod
     def from_kafka_record(record: str) -> "AlertCounters":
@@ -55,12 +60,13 @@ class AlertCounters:
         obj.total_alerts = parts[2]
         obj.warning_alerts = parts[3]
         obj.severe_alerts = parts[4]
+        obj.alerts_weighted_by_priority = parts[5]
         obj.class_alerts = []
         obj.priority_alerts = []
-        for i in range(5, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+5):
+        for i in range(6, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6):
             obj.class_alerts.append(int(round(float(parts[i]))))
-        for i in range(len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+5,
-                       len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+9):
+        for i in range(len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6,
+                       len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+10):
             obj.priority_alerts.append(int(round(float(parts[i]))))
         return obj
 
@@ -77,14 +83,14 @@ class AlertCounters:
         self.total_alerts = int(round(float(parts[2])))
         self.warning_alerts = int(round(float(parts[3])))
         self.severe_alerts = int(round(float(parts[4])))
+        self.alerts_weighted_by_priority = int(round(float(parts[5])))
         self.class_alerts = []
         self.priority_alerts = []
-        for i in range(5, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+5):
+        for i in range(6, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6):
             self.class_alerts.append(int(round(float(parts[i]))))
-        for i in range(len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+5,
-                       len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+9):
+        for i in range(len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6,
+                       len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+10):
             self.priority_alerts.append(int(round(float(parts[i]))))
-
 
     def to_kafka_record(self, ip: str) -> str:
         """
@@ -94,7 +100,8 @@ class AlertCounters:
         :return: a comma-separated string representing the kafka record
         """
         ts = time.time()
-        total_counters = [ts, ip, self.total_alerts, self.warning_alerts, self.severe_alerts] \
+        total_counters = [ts, ip, self.total_alerts, self.warning_alerts, self.severe_alerts,
+                          self.alerts_weighted_by_priority] \
                          + self.class_alerts + self.priority_alerts
         record_str = ",".join(list(map(lambda x: str(x), total_counters)))
         return record_str
@@ -150,7 +157,8 @@ class AlertCounters:
             priority_4_alerts=self.priority_alerts[4],
             total_alerts=self.total_alerts,
             warning_alerts=self.warning_alerts,
-            severe_alerts=self.severe_alerts
+            severe_alerts=self.severe_alerts,
+            alerts_weighted_by_priority = self.alerts_weighted_by_priority
         )
 
     def __str__(self) -> str:
@@ -159,7 +167,8 @@ class AlertCounters:
         """
         return f"total_alerts: {self.total_alerts}, warning_alerts: {self.warning_alerts}, " \
                f"severe_alerts: {self.severe_alerts}, " \
-               f"priority_alerts: {self.priority_alerts}, class_alerts: {self.class_alerts}"
+               f"priority_alerts: {self.priority_alerts}, class_alerts: {self.class_alerts}," \
+               f"alerts_weighted_by_priority: {self.alerts_weighted_by_priority}"
 
 
     @staticmethod
@@ -178,6 +187,7 @@ class AlertCounters:
         obj.severe_alerts = d["severe_alerts"]
         obj.priority_alerts = d["priority_alerts"]
         obj.class_alerts = d["class_alerts"]
+        obj.alerts_weighted_by_priority = d["alerts_weighted_by_priority"]
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -192,6 +202,7 @@ class AlertCounters:
         d["total_alerts"] = self.total_alerts
         d["warning_alerts"] = self.warning_alerts
         d["severe_alerts"] = self.severe_alerts
+        d["alerts_weighted_by_priority"] = self.alerts_weighted_by_priority
         return d
 
     def copy(self) -> "AlertCounters":
@@ -220,32 +231,9 @@ class AlertCounters:
         deltas = [
                      int(counters_prime.total_alerts),
                      int(counters_prime.warning_alerts),
-                     int(counters_prime.severe_alerts)
+                     int(counters_prime.severe_alerts),
+                     int(counters_prime.alerts_weighted_by_priority)
                  ] + deltas_priority + deltas_class
         labels = constants.LOG_SINK.IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels
-
-
-    def get_values(self) -> Tuple[List[int], List[str]]:
-        """
-        Get the deltas between two counters objects
-
-        :return: the deltas and the labels
-        """
-        deltas_priority = list(np.array(self.priority_alerts).astype(int).tolist())
-        deltas_class = list(np.array(self.class_alerts).astype(int).tolist())
-        deltas = [
-                     int(self.total_alerts),
-                     int(self.warning_alerts),
-                     int(self.severe_alerts)
-                 ] + deltas_priority + deltas_class
-        labels = constants.LOG_SINK.IDS_ALERTS_LABELS
-        assert len(labels) == len(deltas)
-
-
-
-
-
-
-

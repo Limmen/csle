@@ -1,4 +1,3 @@
-import time
 from typing import List, Dict, Any
 import socket
 import paramiko
@@ -16,6 +15,7 @@ from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
+import csle_collector.constants.constants as collector_constants
 
 
 class EmulationEnvConfig:
@@ -187,8 +187,10 @@ class EmulationEnvConfig:
 
         :return: None
         """
-        conf = {'bootstrap.servers': f"{self.log_sink_config.container.get_ips()[0]}:{self.log_sink_config.kafka_port}",
-                'client.id': self.hostname}
+        conf = {
+            collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
+                f"{self.log_sink_config.container.get_ips()[0]}:{self.log_sink_config.kafka_port}",
+                collector_constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**conf)
 
     def close_all_connections(self) -> None:

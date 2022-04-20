@@ -132,7 +132,9 @@ class ProducerThread(threading.Thread):
         self.port = port
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
-        self.conf = {'bootstrap.servers': f"{self.kafka_ip}:{self.port}", 'client.id': self.hostname}
+        self.conf = {
+            constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.port}",
+            constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**self.conf)
         logging.info(f"Starting producer thread, ip:{self.ip}, kafka port:{self.port}, "
                      f"time_step_len:{self.time_step_len_seconds}, kafka_ip:{self.kafka_ip}")

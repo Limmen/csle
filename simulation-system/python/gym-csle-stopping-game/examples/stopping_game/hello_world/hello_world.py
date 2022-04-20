@@ -21,7 +21,7 @@ def test_env():
         T=StoppingGameUtil.transition_tensor(L=L, p=p), O=StoppingGameUtil.observation_space(num_observations),
         Z=StoppingGameUtil.observation_tensor(num_observations),
         R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
-        S = StoppingGameUtil.state_space())
+        S = StoppingGameUtil.state_space(), checkpoint_traces_freq= 1000)
 
     env = gym.make("csle-stopping-game-v1", config=config)
     num_episodes = 50

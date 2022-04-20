@@ -12,7 +12,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
     def __init__(self, env_name: str,
                  T: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray, S: np.ndarray, A1: np.ndarray,
                  A2: np.ndarray, L: int, R_INT: int, R_COST: int, R_SLA: int, R_ST: int, b1: np.ndarray,
-                 save_dir: str) -> None:
+                 save_dir: str, checkpoint_traces_freq: int) -> None:
         """
         Initializes the DTO
 
@@ -31,6 +31,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         :param R_ST: the R_ST constant for the reward function
         :param b1: the initial belief
         :param save_dir: the directory to save artefacts produced by the environment
+        :param checkpoint_traces_freq: how frequently to checkpoint traces to disk
         """
         super().__init__()
         self.T = T
@@ -48,6 +49,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         self.b1 = b1
         self.save_dir = save_dir
         self.env_name = env_name
+        self.checkpoint_traces_freq = checkpoint_traces_freq
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -69,6 +71,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         d["b1"] = list(self.b1.tolist())
         d["save_dir"] = self.save_dir
         d["env_name"] = self.env_name
+        d["checkpoint_traces_freq"] = self.checkpoint_traces_freq
         return d
 
     @staticmethod
@@ -83,7 +86,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
             T = np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
             A1=np.array(d["A1"]), A2=np.array(d["A2"]), L=d["L"], R_INT=d["R_INT"],
             R_COST=d["R_COST"], R_SLA=d["R_SLA"], R_ST=d["R_ST"], b1=np.array(d["b1"]), save_dir=d["save_dir"],
-            env_name = d["env_name"]
+            env_name = d["env_name"], checkpoint_traces_freq = d["checkpoint_traces_freq"]
         )
         return obj
 
@@ -93,7 +96,8 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         """
         return f"T:{self.T}, O:{self.O}, Z:{self.Z}, R:{self.R}, S:{self.S}, A1:{self.A1}, A2:{self.A2}, L:{self.L}, " \
                f"R_INT:{self.R_INT}, R_COST:{self.R_COST}, R_SLA:{self.R_SLA}, R_ST:{self.R_ST}, b1:{self.b1}, " \
-               f"save_dir: {self.save_dir}, env_name: {self.env_name}"
+               f"save_dir: {self.save_dir}, env_name: {self.env_name}, " \
+               f"checkpoint_traces_freq: {self.checkpoint_traces_freq}"
 
     def attacker_observation_space(self) -> gym.spaces.Box:
         """

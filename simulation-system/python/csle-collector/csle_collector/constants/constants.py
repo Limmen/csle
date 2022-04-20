@@ -3,6 +3,7 @@ Constants for csle collector
 """
 import re
 
+
 class DOCKER_STATS:
     CPU_STATS = "cpu_stats"
     CPU_USAGE = "cpu_usage"
@@ -39,6 +40,7 @@ class DOCKER_STATS:
     CONTAINER_ID = "container_id"
     CONTAINER_IP = "container_ip"
     UNIX_DOCKER_SOCK_URL = "unix://var/run/docker.sock"
+
 
 class IDS_ROUTER:
     """
@@ -160,7 +162,8 @@ class LOG_SINK:
                                 "unusual-client-port-connection", "web-application-activity", "icmp-event",
                                 "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
                                 "string-detect",
-                                "unknown", "tcp-connection", "priority_1", "priority_2", "priority_3", "priority_4"]
+                                "unknown", "tcp-connection", "priority_1", "priority_2", "priority_3", "priority_4",
+                                "alerts_weighted_by_priority"]
     HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
@@ -169,7 +172,7 @@ class LOG_SINK:
     DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
 
     IDS_ALERTS_LABELS = [
-        "total_alerts", "warning_alerts", "severe_alerts",
+        "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_priority"
         "priority_1_alerts", "priority_2_alerts",
         "priority_3_alerts", "priority_4_alerts", "attempted-admin_alerts",
         "attempted-user_alerts", "inappropriate-content_alerts", "policy-violation_alerts",
@@ -199,13 +202,13 @@ class LOG_SINK:
         "cpu_percent", "cpu_percent"
     ]
     CLIENT_POPULATION_METRIC_LABELS = ["num_clients"]
-    ALL_DELTA_LABELS = IDS_ALERTS_LABELS +HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + \
+    ALL_DELTA_LABELS = IDS_ALERTS_LABELS + HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + \
                        DOCKER_STATS_PERCENT_LABELS + CLIENT_POPULATION_METRIC_LABELS
     ALL_INITIAL_LABELS = HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + DOCKER_STATS_PERCENT_LABELS \
                          + CLIENT_POPULATION_METRIC_LABELS
 
 
-class KAFKA_COMMANDS:
+class KAFKA:
     """
     String constants for managing Kafka
     """
@@ -213,3 +216,10 @@ class KAFKA_COMMANDS:
     KAFKA_STOP = "service kafka stop"
     KAFKA_START = "service kafka start"
     RETENTION_MS_CONFIG_PROPERTY = "retention.ms"
+    BOOTSTRAP_SERVERS_PROPERTY = "bootstrap.servers"
+    CLIENT_ID_PROPERTY = "client.id"
+    GROUP_ID_PROPERTY = "group.id"
+    AUTO_OFFSET_RESET_PROPERTY = "auto.offset.reset"
+    EARLIEST_OFFSET = "earliest"
+    PORT = 9092
+

@@ -32,8 +32,8 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
             self.hostname = socket.gethostname()
         if self.ip is None:
             self.ip = socket.gethostbyname(self.hostname)
-        self.conf = {'bootstrap.servers': f"{self.ip}:9092",
-                'client.id': self.hostname}
+        self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
+                constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         logging.info(f"Setting up KafkaManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_kafka_status_and_topics(self) -> Tuple[bool, List[str]]:
@@ -42,7 +42,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
 
         :return: status and list of topics
         """
-        stat = os.system(constants.KAFKA_COMMANDS.KAFKA_STATUS)
+        stat = os.system(constants.KAFKA.KAFKA_STATUS)
         running = (stat == 0)
         client = confluent_kafka.admin.AdminClient(self.conf)
         cluster_metadata = client.list_topics()
@@ -78,7 +78,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :return: a clients DTO with the state of the kafka server
         """
         logging.info("Stopping kafka")
-        os.system(constants.KAFKA_COMMANDS.KAFKA_STOP)
+        os.system(constants.KAFKA.KAFKA_STOP)
         return csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
             running = False,
             topics = []
@@ -94,7 +94,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :return: a clients DTO with the state of the kafka server
         """
         logging.info(f"Starting kafka")
-        os.system(constants.KAFKA_COMMANDS.KAFKA_START)
+        os.system(constants.KAFKA.KAFKA_START)
         kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
             running = True,
             topics = []
@@ -124,7 +124,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         running, topics = self._get_kafka_status_and_topics()
         client = confluent_kafka.admin.AdminClient(self.conf)
         config = {
-            constants.KAFKA_COMMANDS.RETENTION_MS_CONFIG_PROPERTY: self.hours_to_ms(request.retention_time_hours)}
+            constants.KAFKA.RETENTION_MS_CONFIG_PROPERTY: self.hours_to_ms(request.retention_time_hours)}
         new_topic = confluent_kafka.admin.NewTopic(
             request.name, request.partitions, request.replicas,
             config=config)

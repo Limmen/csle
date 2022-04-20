@@ -404,7 +404,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         O=np.array(list(defender_observation_space_config.observation_id_to_observation_vector.keys())),
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
-        S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1")
+        S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq= 1000)
     config = StoppingGameDefenderPomdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
         attacker_strategy_name=stopping_game_constants.STATIC_ATTACKER_STRATEGIES.RANDOM,

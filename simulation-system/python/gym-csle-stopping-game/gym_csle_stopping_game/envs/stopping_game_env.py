@@ -89,6 +89,8 @@ class StoppingGameEnv(BaseEnv):
 
         # Update stops remaining
         self.state.l = self.state.l-a1
+
+        # Populate info dict
         info["l"] = self.state.l
         info["s"] = self.state.s
         info["a1"] = a1
@@ -140,7 +142,7 @@ class StoppingGameEnv(BaseEnv):
         self.state.reset()
         if len(self.trace .attacker_rewards) > 0:
             self.traces.append(self.trace)
-        if len(self.traces) > 1 and len(self.traces) % 100 == 0:
+        if len(self.traces) > 1 and len(self.traces) % self.config.checkpoint_traces_freq == 0:
             self.__checkpoint_traces()
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         attacker_obs = self.state.attacker_observation()

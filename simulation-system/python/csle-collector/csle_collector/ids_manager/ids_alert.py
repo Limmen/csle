@@ -4,8 +4,18 @@ import csle_collector.constants.constants as constants
 
 
 class FastLogAlert:
+    """
+    DTO representing an alert entry in the fast log of Snort
+    """
 
-    def __init__(self, timestamp: float, priority: int, class_id: int):
+    def __init__(self, timestamp: float, priority: int, class_id: int) -> None:
+        """
+        Initializes the DTO
+
+        :param timestamp: the timestamp of the record
+        :param priority: the priority of the record
+        :param class_id: the class id of the record
+        """
         self.timestamp = timestamp
         self.priority = priority
         self.class_id = class_id

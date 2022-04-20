@@ -11,12 +11,13 @@ from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.base.base_agent import BaseAgent
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_agents.base.base_agent import BaseAgent
+import csle_agents.constants.constants as agents_constants
 
 
 class TSPSAAgent(BaseAgent):
@@ -53,7 +54,7 @@ class TSPSAAgent(BaseAgent):
         config = self.simulation_env_config.simulation_env_input_config
         env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         exp_result = ExperimentResult()
-        exp_result.plot_metrics.append("average_reward")
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
             exp_result = self.spsa(exp_result=exp_result, seed=seed, env=env, training_job=training_job,
@@ -101,7 +102,9 @@ class TSPSAAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return ["a", "c", "lambda", "A", "epsilon", "N", "L", "theta1", "eval_batch_size"]
+        return [agents_constants.T_SPSA.a, agents_constants.T_SPSA.c, agents_constants.T_SPSA.LAMBDA,
+                agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
+                agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE]
 
     def spsa(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
              training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
@@ -117,12 +120,12 @@ class TSPSAAgent(BaseAgent):
         """
         # Initialize metrics
         exp_result.all_metrics[seed] = {}
-        exp_result.all_metrics[seed]["thetas"] = []
-        exp_result.all_metrics[seed]["average_reward"] = []
-        exp_result.all_metrics[seed]["thresholds"] = []
-        L = self.experiment_config.hparams["L"].value
-        if "theta1" in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams["theta1"].value
+        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
+        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
+        exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
+        L = self.experiment_config.hparams[agents_constants.T_SPSA.L].value
+        if agents_constants.T_SPSA.THETA1 in self.experiment_config.hparams:
+            theta = self.experiment_config.hparams[agents_constants.T_SPSA.THETA1].value
         else:
             theta = TSPSAAgent.initial_theta(L=L)
 
@@ -133,17 +136,17 @@ class TSPSAAgent(BaseAgent):
                              actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                  self.experiment_config.player_idx].actions)
         avg_metrics = self.eval_theta(policy=policy, env=env)
-        J = round(avg_metrics["R"], 3)
-        exp_result.all_metrics[seed]["average_reward"].append(J)
-        exp_result.all_metrics[seed]["thetas"].append(self.round_vec(theta))
+        J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
+        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
+        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(self.round_vec(theta))
 
         # Iterations
-        N = self.experiment_config.hparams["N"].value
-        a = self.experiment_config.hparams["a"].value
-        c = self.experiment_config.hparams["c"].value
-        A = self.experiment_config.hparams["A"].value
-        lamb = self.experiment_config.hparams["lambda"].value
-        epsilon = self.experiment_config.hparams["epsilon"].value
+        N = self.experiment_config.hparams[agents_constants.T_SPSA.N].value
+        a = self.experiment_config.hparams[agents_constants.T_SPSA.a].value
+        c = self.experiment_config.hparams[agents_constants.T_SPSA.c].value
+        A = self.experiment_config.hparams[agents_constants.T_SPSA.A].value
+        lamb = self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA].value
+        epsilon = self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON].value
         Logger.__call__().get_logger().info(f"[T-SPSA] i: {0}, J:{J}, "
                                             f"thresholds:{policy.thresholds()}")
         for i in range(N):
@@ -169,12 +172,12 @@ class TSPSAAgent(BaseAgent):
                                  actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                      self.experiment_config.player_idx].actions)
             avg_metrics = self.eval_theta(policy=policy, env=env)
-            J = round(avg_metrics["R"], 3)
+            J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
 
             # Record metrics
-            exp_result.all_metrics[seed]["average_reward"].append(J)
-            exp_result.all_metrics[seed]["thetas"].append(self.round_vec(theta))
-            exp_result.all_metrics[seed]["thresholds"].append(self.round_vec(policy.thresholds()))
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(self.round_vec(theta))
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(self.round_vec(policy.thresholds()))
 
             if i % self.experiment_config.log_every == 0 and i > 0:
                 Logger.__call__().get_logger().info(f"[T-SPSA] i: {i}, J:{J}, "
@@ -203,7 +206,7 @@ class TSPSAAgent(BaseAgent):
         :param env: the simulation environment
         :return: the average metrics of the evaluation
         """
-        eval_batch_size = self.experiment_config.hparams["eval_batch_size"].value
+        eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
         metrics = {}
         for j in range(eval_batch_size):
             done = False
@@ -333,13 +336,13 @@ class TSPSAAgent(BaseAgent):
             states=self.simulation_env_config.state_space_config.states, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                 self.experiment_config.player_idx].actions), env=env)
-        J_a = round(avg_metrics["R"], 3)
+        J_a = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         avg_metrics = self.eval_theta(TSPSAPolicy(
             theta=tb, simulation_name=self.simulation_env_config.name,
             player_type=self.experiment_config.player_type,states=self.simulation_env_config.state_space_config.states,
             L=L, actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                 self.experiment_config.player_idx].actions), env=env)
-        J_b = round(avg_metrics["R"], 3)
+        J_b = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         gk = [(J_a - J_b) / (2 * ck * dk) for dk in deltak]
 
         return gk

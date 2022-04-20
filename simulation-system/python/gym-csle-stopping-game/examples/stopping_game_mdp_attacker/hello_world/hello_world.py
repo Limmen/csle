@@ -26,10 +26,11 @@ def test_env():
         T=StoppingGameUtil.transition_tensor(L=L, p=p), O=StoppingGameUtil.observation_space(num_observations),
         Z=StoppingGameUtil.observation_tensor(num_observations),
         R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
-        S = StoppingGameUtil.state_space())
+        S = StoppingGameUtil.state_space(), checkpoint_traces_freq= 1000, env_name="csle-stopping-game-v1")
     config = StoppingGameAttackerMdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        defender_strategy_name=constants.STATIC_DEFENDER_STRATEGIES.RANDOM)
+        defender_strategy_name=constants.STATIC_DEFENDER_STRATEGIES.RANDOM,
+        env_name="csle-stopping-game-mdp-attacker-v1")
 
     env = gym.make("csle-stopping-game-mdp-attacker-v1", config=config)
     num_episodes = 50

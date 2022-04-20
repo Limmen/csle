@@ -28,9 +28,10 @@ class HostMetricsConsumerThread(threading.Thread):
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.ts = time.time()
-        self.kafka_conf = {'bootstrap.servers': f"{self.kafka_server_ip}:{self.kafka_port}",
-                           'group.id':  f"host_metrics_consumer_thread_{self.host_ip}_{self.ts}",
-                           'auto.offset.reset': auto_offset_reset}
+        self.kafka_conf = {
+            collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_server_ip}:{self.kafka_port}",
+            collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"host_metrics_consumer_thread_{self.host_ip}_{self.ts}",
+            collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME])
         self.host_metrics = host_metrics
