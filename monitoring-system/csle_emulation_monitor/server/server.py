@@ -6,6 +6,7 @@ from csle_common.controllers.container_manager import ContainerManager
 from csle_common.util.read_emulation_statistics import ReadEmulationStatistics
 from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.controllers.simulation_env_manager import SimulationEnvManager
 from csle_common.util.emulation_util import EmulationUtil
 import json
 from waitress import serve
@@ -167,6 +168,16 @@ def simulations():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/simulationsdata/remove/<simulation_name>', methods=['POST'])
+def remove_simulation(simulation_name: str):
+    all_simulations = MetastoreFacade.list_simulations()
+    for simulation in all_simulations:
+        if simulation.name == simulation_name:
+            SimulationEnvManager.uninstall_simulation(simulation)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/emulationsdata', methods=['GET'])
 def emulations():
     all_emulations = MetastoreFacade.list_emulations()
@@ -200,7 +211,7 @@ def monitor_emulation(emulation: str, minutes: int):
     return response
 
 
-@app.route('/emulationsdata/<emulation>', methods=['GET', 'POST'])
+@app.route('/emulationsdata/<emulation_name>', methods=['GET', 'POST'])
 def emulation(emulation_name: str):
     em = MetastoreFacade.get_emulation(name=emulation_name)
     rc_emulations = ContainerManager.list_running_emulations()
@@ -234,6 +245,20 @@ def emulation(emulation_name: str):
     return response
 
 
+@app.route('/emulationsdata/remove/<emulation_name>', methods=['POST'])
+def remove_emulation(emulation_name: str):
+    emulations = MetastoreFacade.list_emulations()
+    rc_emulations = ContainerManager.list_running_emulations()
+    for emulation in emulations:
+        if emulation.name == emulation_name:
+            if emulation_name in rc_emulations:
+                EmulationEnvManager.clean_emulation(emulation)
+            EmulationEnvManager.uninstall_emulation(config=emulation)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 @app.route('/emulationtraces', methods=['GET'])
 def emulation_traces():
     emulation_trcs = MetastoreFacade.list_emulation_traces()
@@ -257,6 +282,15 @@ def dynamics_models():
     models = MetastoreFacade.list_emulation_statistics()
     models_dicts = list(map(lambda x: x.to_dict(), models))
     response = jsonify(models_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/dynamicsmodelsdata/remove/<dynamics_model_id>', methods=['POST'])
+def remove_dynamics_model(dynamics_model_id: int):
+    model = MetastoreFacade.get_emulation_statistic(id=dynamics_model_id)
+    if model is not None:
+        MetastoreFacade.remove_emulation_statistic(model)
+    response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

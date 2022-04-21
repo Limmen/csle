@@ -8,6 +8,8 @@ import Accordion from 'react-bootstrap/Accordion';
 import TransitionProbabilities from "./TransitionProbabilities/TransitionProbabilities";
 import ObservationFunction from "./ObservationFunction/ObservationFunction";
 import RewardFunction from "./RewardFunction/RewardFunction";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 
 const Simulation = (props) => {
@@ -53,6 +55,12 @@ const Simulation = (props) => {
         }
     }
 
+    const renderRemoveSimulationTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove simulation
+        </Tooltip>
+    );
+
     const player_ids = props.simulation.players_config.player_configs.map((player, index) => (player.id))
     const filtered_action_spaces = props.simulation.joint_action_space_config.action_spaces.filter(action_space => (player_ids.includes(action_space.player_id)))
 
@@ -66,6 +74,18 @@ const Simulation = (props) => {
         <Accordion.Collapse eventKey={props.simulation.name}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="left"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveSimulationTooltip}
+                    >
+                        <Button variant="outline-dark" className="removeButton"
+                                onClick={() => props.removeSimulation(props.simulation)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
                     General Information about the simulation:
                 </h5>
                 <Table striped bordered hover>

@@ -34,6 +34,28 @@ const Emulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeEmulationRequest = useCallback((emulation_name) => {
+        fetch(
+            `http://` + ip + ':7777/emulationsdata/remove/' + emulation_name,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchEmulations()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeEmulation = (emulation) => {
+        setLoading(true)
+        removeEmulationRequest(emulation.name)
+    }
+
     useEffect(() => {
         setLoading(true)
         fetchEmulations();
@@ -58,7 +80,8 @@ const Emulations = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.emulations.map((emulation, index) =>
-                        <Emulation emulation={emulation} wrapper={wrapper} key={emulation.name + "-" + index}/>
+                        <Emulation emulation={emulation} wrapper={wrapper} key={emulation.name + "-" + index}
+                                   removeEmulation={removeEmulation}/>
                     )}
                 </Accordion>
             )

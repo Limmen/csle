@@ -312,6 +312,25 @@ class EmulationEnvManager:
         cmd = f"docker stop {name}"
         subprocess.call(cmd, shell=True)
 
+
+    @staticmethod
+    def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Cleans an emulation
+
+        :param emulation_env_config: the config of the emulation to clean
+        :return: None
+        """
+        EmulationEnvManager.stop_containers(emulation_env_config=emulation_env_config)
+        EmulationEnvManager.rm_containers(emulation_env_config=emulation_env_config)
+        try:
+            ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
+                                                      containers_config=emulation_env_config.containers_config,
+                                                      emulation_name=emulation_env_config.name)
+        except Exception as e:
+            pass
+        EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
+
     @staticmethod
     def rm_containers(emulation_env_config: EmulationEnvConfig) -> None:
         """

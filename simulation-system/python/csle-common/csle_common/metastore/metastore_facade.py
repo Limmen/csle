@@ -434,6 +434,27 @@ class MetastoreFacade:
                         emulation_statistics_record=record)
                 return record
 
+
+    @staticmethod
+    def remove_emulation_statistic(emulation_statistic: EmulationStatistics) -> None:
+        """
+        Removes an emulation statistic from the metastore
+
+        :param emulation_statistic: the emulation statistic to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing emulation statistic with "
+                                             f"id:{emulation_statistic.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} WHERE id = %s",
+                            (emulation_statistic.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Emulation statistic "
+                                                     f"with id {emulation_statistic.id} deleted successfully")
+
     @staticmethod
     def get_simulation_trace(id: int) -> Union[None, SimulationTrace]:
         """
@@ -924,7 +945,6 @@ class MetastoreFacade:
                 records = list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
                                    records))
                 return records
-
 
     @staticmethod
     def get_system_identification_job_config(id: int) -> Union[None, SystemIdentificationJobConfig]:

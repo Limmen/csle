@@ -393,15 +393,7 @@ def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
     :return: None
     """
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.stop_containers(emulation_env_config=emulation_env_config)
-    EmulationEnvManager.rm_containers(emulation_env_config=emulation_env_config)
-    try:
-        ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
-                                                  containers_config=emulation_env_config.containers_config,
-                                                  emulation_name=emulation_env_config.name)
-    except Exception as e:
-        pass
-    EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.clean_emulation(emulation_env_config=emulation_env_config)
 
 
 def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -> None:

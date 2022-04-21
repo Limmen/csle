@@ -39,6 +39,29 @@ const Simulations = () => {
         fetchSimulations();
     }, [fetchSimulations]);
 
+
+    const removeSimulationRequest = useCallback((simulation_name) => {
+        fetch(
+            `http://` + ip + ':7777/simulationsdata/remove/' + simulation_name,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSimulations()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeSimulation = (simulation) => {
+        setLoading(true)
+        removeSimulationRequest(simulation.name)
+    }
+
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload simulations from the backend
@@ -96,7 +119,9 @@ const Simulations = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.simulations.map((simulation, index) =>
-                        <Simulation simulation={simulation} wrapper={wrapper} key={simulation.name + "-" + index}/>
+                        <Simulation simulation={simulation} wrapper={wrapper} key={simulation.name + "-" + index}
+                                    removeSimulation={removeSimulation}
+                        />
                     )}
                 </Accordion>
             )

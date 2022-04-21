@@ -121,6 +121,12 @@ const Emulation = (props) => {
         </Tooltip>
     );
 
+    const renderRemoveEmulationTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove emulation
+        </Tooltip>
+    );
+
     const renderStopEmulationTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Stop emulation
@@ -194,6 +200,18 @@ const Emulation = (props) => {
         <Accordion.Collapse eventKey={emulation.name}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="left"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveEmulationTooltip}
+                    >
+                        <Button variant="outline-dark" className="removeButton"
+                                onClick={() => props.removeEmulation(emulation)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
                     General Information about the emulation:
                 </h5>
                 <Table striped bordered hover>

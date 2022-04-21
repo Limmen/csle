@@ -41,6 +41,12 @@ const DynamicsModels = () => {
         </Tooltip>
     );
 
+    const renderRemoveModelTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove the selected dynamics model.
+        </Tooltip>
+    );
+
     const InfoModal = (props) => {
         return (
             <Modal
@@ -160,6 +166,29 @@ const DynamicsModels = () => {
         setLoading(true)
         fetchDynamicsModels()
     }, [fetchDynamicsModels]);
+
+
+    const removeModelRequest = useCallback((model_id) => {
+        fetch(
+            `http://` + ip + ':7777/dynamicsmodelsdata/remove/' + model_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchDynamicsModels()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeModel = (model) => {
+        setLoading(true)
+        removeModelRequest(model.id)
+    }
 
     const SelectDynamicsModelDropdownOrSpinner = (props) => {
         if (!props.loading && props.dynamicsModels.length === 0) {
@@ -333,17 +362,35 @@ const DynamicsModels = () => {
                         <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
+
+                <OverlayTrigger
+                    className="removeButton"
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveModelTooltip}
+                >
+                    <Button variant="outline-dark" className="removeButton"
+                            onClick={() => removeModel(selectedDynamicsModel.value)}>
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+
                 <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
                 <SelectDynamicsModelDropdownOrSpinner dynamicsModels={dynamicsModels}
-                                                      selectedDynamicsModel={selectedDynamicsModel}/>
+                                                      selectedDynamicsModel={selectedDynamicsModel}
+                                                      loading={loading}
+                />
                 <SelectConditionalDistributionDropdownOrSpinner conditionals={conditionals}
-                                                                selectedConditionals={selectedConditionals}/>
+                                                                selectedConditionals={selectedConditionals}
+                                                                loading={loading}/>
                 <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
-                                                           selectedMetric={selectedMetric}/>
+                                                           selectedMetric={selectedMetric}
+                                                           loading={loading}/>
             </h5>
             <ModelDescriptionOrSpinner dynamicsModels={dynamicsModels}
-                                       selectedDynamicsModel={selectedDynamicsModel}/>
+                                       selectedDynamicsModel={selectedDynamicsModel}
+                                       loading={loading}/>
 
             <ConditionalChartsOrSpinner key={animationDuration}
                                         selectedDynamicsModel={selectedDynamicsModel}
@@ -353,6 +400,7 @@ const DynamicsModels = () => {
                                         conditionals={conditionals} dynamicsModels={dynamicsModels}
                                         selectedMetric={selectedMetric}
                                         metrics={metrics}
+                                        loading={loading}
             />
 
         </div>
