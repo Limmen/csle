@@ -176,28 +176,4 @@ class VulnerabilityGenerator:
             protocol=TransportProtocol.TCP)
         return vuln_config
 
-    @staticmethod
-    def write_vuln_config(vulns_cfg: VulnerabilitiesConfig, path: str = None) -> None:
-        """
-        Writes the default configuration to a json file
-
-        :param vulns_cfg: the config to write
-        :param path: the path to write the configuration to
-        :return: None
-        """
-        path = ExperimentUtil.default_vulnerabilities_path(out_dir=path)
-        ExperimentUtil.write_vulns_config_file(vulns_cfg, path)
-
-
-if __name__ == '__main__':
-    topology, agent_ip, router_ip, vulnerable_nodes = TopologyGenerator.generate(
-        num_nodes=15, subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}2", subnet_id=2)
-    vulnerabilities = VulnerabilityGenerator.generate(
-        topology=topology, vulnerable_nodes=vulnerable_nodes,
-        agent_ip=agent_ip, router_ip=router_ip, subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}2",
-        num_flags = 3, access_vuln_types=[VulnType.WEAK_PW])
-    print(vulnerabilities)
-
-
-
 

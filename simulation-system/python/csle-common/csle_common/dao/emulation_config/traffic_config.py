@@ -27,7 +27,7 @@ class TrafficConfig:
         """
         obj = TrafficConfig(
             node_traffic_configs=list(map(lambda x: NodeTrafficConfig.from_dict(x), d["node_traffic_configs"])),
-            client_population_config=d["client_population_config"]
+            client_population_config=ClientPopulationConfig.from_dict(d["client_population_config"])
         )
         return obj
 

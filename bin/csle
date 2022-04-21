@@ -29,6 +29,8 @@ from csle_common.controllers.monitor_tools_controller import MonitorToolsControl
 import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
 from csle_attacker.attacker import Attacker
 import gym_csle_stopping_game.envs.stopping_game_env  # for registering the gym environments
+from csle_agents.job_controllers.training_job_manager import TrainingJobManager
+from csle_system_identification.system_identification_job_manager import SystemIdentificationJobManager
 
 
 @click.group()
@@ -458,6 +460,31 @@ def statsmanager(port: int) -> None:
     """
     docker_stats_manager.serve(port=port)
 
+@click.argument('id', default=None, type=int)
+@click.command(help="id")
+def trainingjob(id: int) -> None:
+    """
+    Starts a training job with the given id
+
+    :param id: the id of the training job to start
+    :return: None
+    """
+    training_job = MetastoreFacade.get_training_job_config(id=id)
+    TrainingJobManager.run_training_job(job_config=training_job)
+
+
+@click.argument('id', default=None, type=int)
+@click.command(help="id")
+def systemidentificationjob(id: int) -> None:
+    """
+    Starts a system identification job with the given id
+
+    :param id: the id of the training job to start
+    :return: None
+    """
+    sys_id_job = MetastoreFacade.get_system_identification_job_config(id=id)
+    SystemIdentificationJobManager.run_system_identification_job(job_config=sys_id_job)
+
 
 def start_docker_stats_manager() -> None:
     """
@@ -473,18 +500,20 @@ def start_docker_stats_manager() -> None:
         click.secho(f"Docker stats manager is already running on port:{port}", bold=False)
 
 
+@click.option('--id', default=None, type=int)
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str)
 @click.command(help="prometheus | node_exporter | grafana | cadvisor | container-name | "
-                    "emulation-name | all | statsmanager")
-def start(entity : str, no_traffic: bool, name: str) -> None:
+                    "emulation-name | all | statsmanager | training_job | system_id_job")
+def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
     """
     Starts a container or all containers
 
     :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
+    :param id: (optional) an id parameter to identify the entity to start
     :return: None
     """
     if entity == "all":
@@ -499,6 +528,13 @@ def start(entity : str, no_traffic: bool, name: str) -> None:
         MonitorToolsController.start_cadvisor()
     elif entity == "grafana":
         MonitorToolsController.start_grafana()
+    elif entity == "training_job":
+        training_job = MetastoreFacade.get_training_job_config(id=id)
+        TrainingJobManager.start_training_job_in_background(training_job=training_job)
+    elif entity == "system_id_job":
+        system_id_job = MetastoreFacade.get_system_identification_job_config(id=id)
+        SystemIdentificationJobManager.start_system_identification_job_in_background(
+            system_identification_job=system_id_job)
     else:
         container_started = ContainerManager.start_container(name=entity)
         if not container_started:
@@ -1056,6 +1092,8 @@ commands.add_command(stop_traffic)
 commands.add_command(statsmanager)
 commands.add_command(em)
 commands.add_command(attacker)
+commands.add_command(trainingjob)
+commands.add_command(systemidentificationjob)
 
 
 # Script entrypoint

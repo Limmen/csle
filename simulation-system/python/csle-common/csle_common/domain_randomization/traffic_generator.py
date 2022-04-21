@@ -59,18 +59,6 @@ class TrafficGenerator:
         traffic_config = TrafficConfig(node_traffic_configs = node_traffic_configs)
         return traffic_config
 
-    @staticmethod
-    def write_traffic_config(traffic_config: TrafficConfig, path: str = None) -> None:
-        """
-        Writes the default configuration to a json file
-
-        :param traffic_config: the traffic config to write
-        :param path: the path to write the configuration to
-        :return: None
-        """
-        path = ExperimentUtil.default_traffic_path(out_dir=path)
-        ExperimentUtil.write_traffic_config_file(traffic_config, path)
-
 
     @staticmethod
     def _find_jumphosts(topology: TopologyConfig, ip: str) -> List[str]:

@@ -39,6 +39,28 @@ const TrainingResults = () => {
         fetchExperiments()
     }, [fetchExperiments]);
 
+    const removeExperimentRequest = useCallback((experiment_id) => {
+        fetch(
+            `http://` + ip + ':7777/experimentsdata/remove/' + experiment_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchExperiments()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeExperiment = (experiment) => {
+        setLoading(true)
+        removeExperimentRequest(experiment.id)
+    }
+
     const refresh = () => {
         setLoading(true)
         fetchExperiments()
@@ -102,7 +124,9 @@ const TrainingResults = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.experiments.map((experiment, index) =>
-                        <Experiment experiment={experiment} wrapper={wrapper} key={experiment.id + "-" + index}/>
+                        <Experiment experiment={experiment} wrapper={wrapper} key={experiment.id + "-" + index}
+                                    removeExperiment={removeExperiment}
+                        />
                     )}
                 </Accordion>
             )

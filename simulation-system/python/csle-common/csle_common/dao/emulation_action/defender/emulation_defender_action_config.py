@@ -32,7 +32,7 @@ class EmulationDefenderActionConfig:
         self.action_lookup_d_val = {}
         for action in actions:
             self.action_lookup_d[(action.id, action.index)] = action
-            self.action_lookup_d_val[(action.id.value, action.index)] = action
+            self.action_lookup_d_val[(action.id, action.index)] = action
 
         self.stopping_action_ids = stopping_action_ids
         self.action_ids = self.stopping_action_ids
@@ -85,7 +85,7 @@ class EmulationDefenderActionConfig:
         defender_actions.append(EmulationDefenderStoppingActions.STOP(index=num_nodes + 1))
         defender_actions.append(EmulationDefenderStoppingActions.CONTINUE(index=num_nodes + 1))
 
-        defender_actions = sorted(defender_actions, key=lambda x: (x.id.value, x.index))
+        defender_actions = sorted(defender_actions, key=lambda x: (x.id, x.index))
         stopping_action_ids = [
             EmulationDefenderActionId.STOP, EmulationDefenderActionId.CONTINUE
         ]

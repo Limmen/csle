@@ -4,8 +4,16 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import Accordion from 'react-bootstrap/Accordion';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const PPOPolicy = (props) => {
+
+    const renderRemovePPOPolicy = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove PPO policy
+        </Tooltip>
+    );
 
     return (<Card key={props.policy.id} ref={props.wrapper}>
         <Card.Header>
@@ -17,6 +25,18 @@ const PPOPolicy = (props) => {
         <Accordion.Collapse eventKey={props.policy.id}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="left"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemovePPOPolicy}
+                    >
+                        <Button variant="outline-dark" className="removeButton"
+                                onClick={() => props.removePPOPolicy(props.policy)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
                     General Information about the policy:
                 </h5>
                 <Table striped bordered hover>

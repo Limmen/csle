@@ -31,9 +31,9 @@ class VulnerabilitiesManager:
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=vuln.ip))
 
                 # Install sudoers vulnerability
-                if vuln.cve.lower() == constants.EXPLOIT_VULNERABILITES.CVE_2010_0426:
+                if vuln.cve is not None and vuln.cve.lower() == constants.EXPLOIT_VULNERABILITES.CVE_2010_0426:
                     cmd = "sudo su root -c \"echo '{} ALL=NOPASSWD: sudoedit /etc/fstab' >> /etc/sudoers\""
-                elif vuln.cve.lower() == constants.EXPLOIT_VULNERABILITES.CVE_2015_5602:
+                elif vuln.cve is not None and vuln.cve.lower() == constants.EXPLOIT_VULNERABILITES.CVE_2015_5602:
                     cmd = "sudo su root -c \"echo '{} ALL=NOPASSWD: sudoedit /home/*/*/esc.txt' >> /etc/sudoers\""
                 else:
                     raise ValueError("CVE not recognized:{}".format(vuln.cve))

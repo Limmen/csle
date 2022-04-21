@@ -1,3 +1,4 @@
+import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
@@ -10,7 +11,8 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-mdp-attacker-001")
     experiment_config = ExperimentConfig(
-        output_dir="/tmp/tspsa_test", title="T-SPSA training attacker to learn 2L thresholds",
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test",
+        title="T-SPSA training attacker to learn 2L thresholds",
         random_seeds=[399, 98912], agent_type=AgentType.T_SPSA,
         log_every=10,
         hparams={
@@ -38,7 +40,9 @@ if __name__ == '__main__':
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.T_SPSA.THETA1: HParam(value=[-4]*(3*2), name=agents_constants.T_SPSA.THETA1,
-                                                   descr="initial thresholds")
+                                                   descr="initial thresholds"),
+            agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
+                                                       descr="how frequently to save the model")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

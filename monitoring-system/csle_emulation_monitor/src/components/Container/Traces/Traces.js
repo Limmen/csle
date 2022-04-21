@@ -33,6 +33,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
+                console.log(response)
                 setEmulationTraces(response)
                 setLoadingEmulationTraces(false)
             })
@@ -63,6 +64,50 @@ const Traces = () => {
         fetchEmulationTraces()
         fetchSimulationTraces()
     }, [fetchSimulationTraces, fetchEmulationTraces]);
+
+    const removeSimulationTraceRequest = useCallback((simulation_id) => {
+        fetch(
+            `http://` + ip + ':7777/simulationtraces/remove/' + simulation_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSimulationTraces()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeSimulationTrace = (simulationTrace) => {
+        setLoadingSimulationTraces(true)
+        removeSimulationTraceRequest(simulationTrace.id)
+    }
+
+    const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
+        fetch(
+            `http://` + ip + ':7777/emulationtraces/remove/' + emulation_trace_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchEmulationTraces()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeEmulationTrace = (emulationTrace) => {
+        setLoadingEmulationTraces(true)
+        removeEmulationTraceRequest(emulationTrace.id)
+    }
 
     const refreshEmulationTraces = () => {
         setLoadingEmulationTraces(true)
@@ -136,7 +181,9 @@ const Traces = () => {
                 <Accordion defaultActiveKey="0">
                     {props.emulationTraces.map((emulationTrace, index) =>
                         <EmulationTrace emulationTrace={emulationTrace}
-                                        wrapper={wrapper} key={emulationTrace.id + "-" + index}/>
+                                        wrapper={wrapper} key={emulationTrace.id + "-" + index}
+                                        removeEmulationTrace={removeEmulationTrace}
+                        />
                     )}
                 </Accordion>
             )
@@ -154,7 +201,9 @@ const Traces = () => {
                 <Accordion defaultActiveKey="0">
                     {props.simulationTraces.map((simulationTrace, index) =>
                         <SimulationTrace simulationTrace={simulationTrace}
-                                         wrapper={wrapper} key={simulationTrace.id + "-" + index}/>
+                                         wrapper={wrapper} key={simulationTrace.id + "-" + index}
+                                         removeSimulationTrace={removeSimulationTrace}
+                        />
                     )}
                 </Accordion>
             )

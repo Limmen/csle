@@ -1,42 +1,65 @@
+import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
-from csle_agents.ppo.ppo_agent import PPOAgent
 from csle_common.dao.training.player_type import PlayerType
+from csle_agents.ppo.ppo_agent import PPOAgent
+import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
-        output_dir="/tmp/ppo_test", title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
+        title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
-            "num_neurons_per_hidden_layer": HParam(value=64, name="num_neurons_per_hidden_layer",
-                                                   descr="neurons per hidden layer of the policy network"),
-            "num_hidden_layers": HParam(value=4, name="num_neurons_per_hidden_layer",
-                                        descr="number of layers of the policy network"),
-            "steps_between_updates": HParam(value=4096, name="steps_between_updates",
-                                            descr="number of steps in the environment for doing "
-                                                  "rollouts between policy updates"),
-            "batch_size": HParam(value=64, name="batch_size", descr="batch size for updates"),
-            "learning_rate": HParam(value=0.0001, name="learning_rate", descr="learning rate for updating the policy"),
-            "device": HParam(value="cuda:1", name="device", descr="the device to train on (cpu or cuda:x)"),
-            "gamma": HParam(value=1, name="gamma", descr="the discount factor"),
-            "gae_lambda": HParam(value=0.95, name="gae_lambda", descr="the GAE weighting term"),
-            "clip_range": HParam(value=0.2, name="clip_range", descr="the clip range for PPO"),
-            "clip_range_vf": HParam(value=None, name="clip_range_vf", descr="the clip range for PPO-update of the "
-                                                                            "value network"),
-            "ent_coef": HParam(value=0.0, name="ent_coef", descr="the entropy coefficient for exploration"),
-            "vf_coef": HParam(value=0.5, name="vf_coef", descr="the coefficient of the value network for the loss"),
-            "max_grad_norm": HParam(value=0.5, name="max_grad_norm", descr="the maximum allows gradient norm"),
-            "target_kl": HParam(value=None, name="target_kl", descr="the target kl"),
-            "num_training_timesteps": HParam(value=int(200000), name="num_training_timesteps",
-                                             descr="number of timesteps to train"),
-            "eval_every": HParam(value=10, name="eval_every",
+            agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
+                value=64, name=agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER,
+                descr="neurons per hidden layer of the policy network"),
+            agents_constants.COMMON.NUM_HIDDEN_LAYERS: HParam(
+                value=4, name=agents_constants.COMMON.NUM_HIDDEN_LAYERS,
+                descr="number of layers of the policy network"),
+            agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
+                value=4096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
+                descr="number of steps in the environment for doing rollouts between policy updates"),
+            agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
+                                                       descr="batch size for updates"),
+            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.0001,
+                                                          name=agents_constants.COMMON.LEARNING_RATE,
+                                                          descr="learning rate for updating the policy"),
+            agents_constants.COMMON.DEVICE: HParam(value="cuda:1",
+                                                   name=agents_constants.COMMON.DEVICE,
+                                                   descr="the device to train on (cpu or cuda:x)"),
+            agents_constants.COMMON.GAMMA: HParam(
+                value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
+            agents_constants.PPO.GAE_LAMBDA: HParam(
+                value=0.95, name=agents_constants.PPO.GAE_LAMBDA, descr="the GAE weighting term"),
+            agents_constants.PPO.CLIP_RANGE: HParam(
+                value=0.2, name=agents_constants.PPO.CLIP_RANGE, descr="the clip range for PPO"),
+            agents_constants.PPO.CLIP_RANGE_VF: HParam(
+                value=None, name=agents_constants.PPO.CLIP_RANGE_VF,
+                descr="the clip range for PPO-update of the value network"),
+            agents_constants.PPO.ENT_COEF: HParam(
+                value=0.0, name=agents_constants.PPO.ENT_COEF,
+                descr="the entropy coefficient for exploration"),
+            agents_constants.PPO.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
+                                                 descr="the coefficient of the value network for the loss"),
+            agents_constants.PPO.MAX_GRAD_NORM: HParam(
+                value=0.5, name=agents_constants.PPO.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
+            agents_constants.PPO.TARGET_KL: HParam(value=None,
+                                                   name=agents_constants.PPO.TARGET_KL,
+                                                   descr="the target kl"),
+            agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
+                value=int(150000),  name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                descr="number of timesteps to train"),
+            agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
                                  descr="training iterations between evaluations"),
-            "eval_batch_size": HParam(value=10, name="eval_batch_size",
-                                 descr="the batch size for evaluation")
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+                                                            descr="the batch size for evaluation"),
+            agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
+                                                       descr="how frequently to save the model")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

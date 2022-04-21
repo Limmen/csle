@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
 import Accordion from 'react-bootstrap/Accordion';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import MetricPlot from "./MetricPlot/MetricPlot";
 
 const Experiment = (props) => {
@@ -21,6 +23,12 @@ const Experiment = (props) => {
         return formattedTime
     }
 
+    const renderRemoveExperimentTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove experiment execution
+        </Tooltip>
+    );
+
     return (<Card key={props.experiment.id} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.experiment.id} className="mgHeader">
@@ -31,6 +39,18 @@ const Experiment = (props) => {
         <Accordion.Collapse eventKey={props.experiment.id}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="left"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveExperimentTooltip}
+                    >
+                        <Button variant="outline-dark" className="removeButton"
+                                onClick={() => props.removeExperiment(props.experiment)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
                     General Information about the training run:
                 </h5>
                 <Table striped bordered hover>
@@ -123,28 +143,36 @@ const Experiment = (props) => {
 
                 {Object.keys(props.experiment.result.all_metrics).map((seed, index1) => {
                         return Object.keys(props.experiment.result.all_metrics[seed]).map((metric, index2) => {
-                            return (
-                                <div className="metricsTable" key={seed + "-" + metric + "-" + index1 + "-" + index2}>
-                                    <h5 className="semiTitle">
-                                        Metric: {metric}, seed: {seed}
-                                    </h5>
-                                    <Table striped bordered hover>
-                                        <thead>
-                                        <tr>
-                                            <th>Training iteration</th>
-                                            <th>{metric}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {props.experiment.result.all_metrics[seed][metric].map((metricValue, index3) => {
-                                            return <tr key={metricValue + "-" + index3}>
-                                                <td>{index3}</td>
-                                                <td>{metricValue}</td>
+                            if(props.experiment.result.all_metrics[seed][metric].length > 0) {
+                                return (
+                                    <div className="metricsTable" key={seed + "-" + metric + "-" + index1 + "-" + index2}>
+                                        <MetricPlot key={metric + "-" + seed + "-" + index1 + "-" + index2}
+                                                    className="metricPlot" metricName={metric}
+                                                    data={props.experiment.result.all_metrics[seed][metric]}
+                                                    stds={null}/>
+                                        <h5 className="semiTitle semiTitle2">
+                                            Metric: {metric}, seed: {seed}
+                                        </h5>
+                                        <Table striped bordered hover>
+                                            <thead>
+                                            <tr>
+                                                <th>Training iteration</th>
+                                                <th>{metric}</th>
                                             </tr>
-                                        })}
-                                        </tbody>
-                                    </Table>
-                                </div>)
+                                            </thead>
+                                            <tbody>
+                                            {props.experiment.result.all_metrics[seed][metric].map((metricValue, index3) => {
+                                                return <tr key={metricValue + "-" + index3}>
+                                                    <td>{index3}</td>
+                                                    <td>{metricValue}</td>
+                                                </tr>
+                                            })}
+                                            </tbody>
+                                        </Table>
+                                    </div>)
+                            } else {
+                                return (<span></span>)
+                            }
                         })
                     }
                 )

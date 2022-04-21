@@ -48,17 +48,6 @@ class UsersGenerator:
         users_conf = UsersConfig(users_configs=user_configs)
         return users_conf
 
-    @staticmethod
-    def write_users_config(users_config: UsersConfig, path: str = None) -> None:
-        """
-        Writes the default configuration to a json file
-
-        :param path: the path to write the configuration to
-        :return: None
-        """
-        path = ExperimentUtil.default_users_path(out_dir=path)
-        ExperimentUtil.write_users_config_file(users_config, path)
-
 
 if __name__ == '__main__':
     topology, agent_ip, router_ip, vulnerable_nodes = TopologyGenerator.generate(

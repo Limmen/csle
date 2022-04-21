@@ -41,7 +41,7 @@ class EmulationAttackerActionConfig:
         self.action_lookup_d_val = {}
         for action in actions:
             self.action_lookup_d[(action.id, action.index)] = action
-            self.action_lookup_d_val[(action.id.value, action.index)] = action
+            self.action_lookup_d_val[(action.id, action.index)] = action
 
         self.nmap_action_ids = nmap_action_ids
         self.network_service_action_ids = network_service_action_ids
@@ -240,7 +240,7 @@ class EmulationAttackerActionConfig:
         attacker_actions.append(EmulationAttackerStoppingActions.STOP(index=-1))
         attacker_actions.append(EmulationAttackerStoppingActions.CONTINUE(index=-1))
 
-        attacker_actions = sorted(attacker_actions, key=lambda x: (x.id.value, x.index))
+        attacker_actions = sorted(attacker_actions, key=lambda x: (x.id, x.index))
         nmap_action_ids = [
             EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
             EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_ALL,

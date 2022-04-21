@@ -9,7 +9,6 @@ TODO
 - NumPy
 - Pyglet (OpenGL 3D graphics)
 - GPU for 3D graphics acceleration (optional)
-- Jsonpickle (for configuration files)
 - Torch (for baseline algorithms)
 - Paramiko (for SSH tunnels)
 - Docker (for interacting with the emulations)
@@ -19,7 +18,7 @@ TODO
 
 This section contains instructions for generating API documentation using `sphinx`.
 
-### Latest documentatation
+### Latest documentation
 
 TODO
 

@@ -615,7 +615,7 @@ class EnvDynamicsUtil:
         :return: None
         """
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
-        s.attacker_obs_state.actions_tried.add((a.id.name, a.index, logged_in_ips_str))
+        s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
 
     @staticmethod
@@ -629,7 +629,7 @@ class EnvDynamicsUtil:
         :return: None
         """
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
-        s.defender_obs_state.actions_tried.add((a.id.name, a.index, logged_in_ips_str))
+        s.defender_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
     @staticmethod
     def logged_in_ips_str(emulation_env_config: EmulationEnvConfig, s: EmulationEnvState) -> str:

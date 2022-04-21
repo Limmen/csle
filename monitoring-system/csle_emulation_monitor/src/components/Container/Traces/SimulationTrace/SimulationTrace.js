@@ -3,9 +3,17 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Accordion from 'react-bootstrap/Accordion';
 import Table from 'react-bootstrap/Table'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import './SimulationTrace.css';
 
 const SimulationTrace = (props) => {
+
+    const renderRemoveSimulationTraceTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove simulation trace
+        </Tooltip>
+    );
 
     return (<Card key={props.simulationTrace.id} ref={props.wrapper}>
         <Card.Header>
@@ -16,6 +24,18 @@ const SimulationTrace = (props) => {
         <Accordion.Collapse eventKey={props.simulationTrace.id}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="left"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveSimulationTraceTooltip}
+                    >
+                        <Button variant="outline-dark" className="removeButton"
+                                onClick={() => props.removeSimulationTrace(props.simulationTrace)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
                     Trace
                 </h5>
                 <Table striped bordered hover>

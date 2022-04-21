@@ -217,8 +217,8 @@ const Monitoring = () => {
                 <Modal.Body>
                     <h4>Monitoring setup</h4>
                     <p className="modalText">
-                        A simulation is defined as a Markov decision process or stochastic game, which models
-                        how a discrete-time dynamical system is evolved and can be controlled.
+                        Host and network metrics are collected at each emulated host and sent periodically to a
+                        distributed Kafka queue.
                     </p>
                     <div className="text-center">
                         <img src={DataCollection} alt="Markov chain"/>
@@ -350,7 +350,6 @@ const Monitoring = () => {
     )
         .then(res => res.json())
         .then(response => {
-            console.log(response)
             setMonitoringData(response)
             setLoading(false)
         })

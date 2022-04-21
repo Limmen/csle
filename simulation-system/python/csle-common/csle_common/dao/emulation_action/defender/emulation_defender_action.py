@@ -101,7 +101,7 @@ class EmulationDefenderAction:
         :return: the kafka record
         """
         ts = time.time()
-        record = f"{ts},{self.id.value},{self.descr},{self.index},{self.name}," \
+        record = f"{ts},{self.id},{self.descr},{self.index},{self.name}," \
                  f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(self.cmds)},{self.type}," \
                  f"{self.action_outcome},{'_'.join(self.alt_cmds)}"
         return record

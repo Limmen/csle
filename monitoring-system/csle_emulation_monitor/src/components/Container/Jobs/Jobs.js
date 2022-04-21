@@ -51,7 +51,6 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setSystemIdentificationJobs(response);
                 setSystemIdentificationJobsLoading(false)
             })
@@ -64,6 +63,138 @@ const Jobs = () => {
         setSystemIdentificationJobsLoading(true)
         fetchSystemIdentificationJobs()
     }, [fetchTrainingJobs, fetchSystemIdentificationJobs]);
+
+    const removeTrainingJobRequest = useCallback((training_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/trainingjobs/remove/' + training_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTrainingJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeTrainingJob = (job) => {
+        setTrainingJobsLoading(true)
+        removeTrainingJobRequest(job.id)
+    }
+
+    const stopTrainingJobRequest = useCallback((training_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/trainingjobs/stop/' + training_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTrainingJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const stopTrainingJob = (job) => {
+        setTrainingJobsLoading(true)
+        stopTrainingJobRequest(job.id)
+    }
+
+    const startTrainingJobRequest = useCallback((training_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/trainingjobs/start/' + training_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTrainingJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startTrainingJob = (job) => {
+        setTrainingJobsLoading(true)
+        startTrainingJobRequest(job.id)
+    }
+
+    const removeSystemIdJobRequest = useCallback((sys_id_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/remove/' + sys_id_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSystemIdentificationJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeSystemIdentificationJob = (job) => {
+        setSystemIdentificationJobsLoading(true)
+        removeSystemIdJobRequest(job.id)
+    }
+
+    const stopSystemIdentificationJobRequest = useCallback((sys_id_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/stop/' + sys_id_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSystemIdentificationJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const stopSystemIdentificationJob = (job) => {
+        setSystemIdentificationJobsLoading(true)
+        stopSystemIdentificationJobRequest(job.id)
+    }
+
+    const startSystemIdentificationJobRequest = useCallback((sys_id_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/start/' + sys_id_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSystemIdentificationJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startSystemIdentificationJob = (job) => {
+        setSystemIdentificationJobsLoading(true)
+        startSystemIdentificationJobRequest(job.id)
+    }
 
     const refreshTrainingJobs = () => {
         setTrainingJobsLoading(true)
@@ -165,7 +296,9 @@ const Jobs = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.jobs.map((job, index) =>
-                        <TrainingJob job={job} wrapper={wrapper} key={job.id + "-" + index}/>
+                        <TrainingJob job={job} wrapper={wrapper} key={job.id + "-" + index}
+                                     removeTrainingJob={removeTrainingJob} stopTrainingJob={stopTrainingJob}
+                                     startTrainingJob={startTrainingJob}/>
                     )}
                 </Accordion>
             )
@@ -182,7 +315,11 @@ const Jobs = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.jobs.map((job, index) =>
-                        <SystemIdentificationJob job={job} wrapper={wrapper} key={job.id + "-" + index}/>
+                        <SystemIdentificationJob job={job} wrapper={wrapper} key={job.id + "-" + index}
+                                                 removeSystemIdentificationJob={removeSystemIdentificationJob}
+                                                 stopSystemIdentificationJob={stopSystemIdentificationJob}
+                                                 startSystemIdentificationJob={startSystemIdentificationJob}
+                        />
                     )}
                 </Accordion>
             )

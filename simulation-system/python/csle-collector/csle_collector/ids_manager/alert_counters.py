@@ -84,6 +84,7 @@ class AlertCounters:
         self.warning_alerts = int(round(float(parts[3])))
         self.severe_alerts = int(round(float(parts[4])))
         self.alerts_weighted_by_priority = int(round(float(parts[5])))
+
         self.class_alerts = []
         self.priority_alerts = []
         for i in range(6, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6):
@@ -217,6 +218,7 @@ class AlertCounters:
         c.total_alerts = self.total_alerts
         c.warning_alerts = self.warning_alerts
         c.severe_alerts = self.severe_alerts
+        c.alerts_weighted_by_priority = self.alerts_weighted_by_priority
         return c
 
     def get_deltas(self, counters_prime: "AlertCounters") -> Tuple[List[int], List[str]]:

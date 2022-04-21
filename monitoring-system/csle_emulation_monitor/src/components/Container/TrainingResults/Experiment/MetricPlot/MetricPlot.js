@@ -21,12 +21,16 @@ const MetricPlot = React.memo((props) => {
             left: 15,
             bottom: 25
         }
-        if (props.data !== undefined) {
+        if (props.data !== undefined && props.data !== null && props.data.length > 0 && !Array.isArray(props.data[0])) {
             const data = props.data.map((metric, index) => {
                 var row = {}
                 row["t"] = index
                 row[props.metricName] = metric
-                row["err"] =props.stds[index]
+                if(props.stds !== undefined && props.stds !== null) {
+                    row["err"] =props.stds[index]
+                } else {
+                    row["err"] =0
+                }
                 return row
             })
             var domain = [0, 1]

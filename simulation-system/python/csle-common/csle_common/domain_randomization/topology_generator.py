@@ -142,17 +142,6 @@ class TopologyGenerator:
                 done = True
         return ip_suffix
 
-    @staticmethod
-    def write_topology(topology: TopologyConfig, path: str = None) -> None:
-        """
-        Writes the default configuration to a json file
-
-        :param path: the path to write the configuration to
-        :return: None
-        """
-        path = ExperimentUtil.default_topology_path(out_dir=path)
-        ExperimentUtil.write_topology_file(topology, path)
-
 
 if __name__ == '__main__':
     topology, agent_ip, router_ip, vulnerable_nodes = TopologyGenerator.generate(

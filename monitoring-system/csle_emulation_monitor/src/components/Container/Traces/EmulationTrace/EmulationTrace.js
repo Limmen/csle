@@ -3,9 +3,17 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Accordion from 'react-bootstrap/Accordion';
 import Table from 'react-bootstrap/Table'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import './EmulationTrace.css';
 
 const EmulationTrace = (props) => {
+
+    const renderRemoveEmulationTraceTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove emulation trace
+        </Tooltip>
+    );
 
     const getIpString = (ips) => {
         var ipsStr = ""
@@ -100,6 +108,17 @@ const EmulationTrace = (props) => {
         <Accordion.Collapse eventKey={props.emulationTrace.id}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="left"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveEmulationTraceTooltip}
+                    >
+                        <Button variant="outline-dark" className="removeButton"
+                                onClick={() => props.removeEmulationTrace(props.emulationTrace)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
                     Attacker actions
                 </h5>
                 <Table striped bordered hover>
@@ -215,6 +234,9 @@ const EmulationTrace = (props) => {
                         <th># Received MB</th>
                         <th># Transmitted MB</th>
                         <th># PIDs</th>
+                        <th>Alerts weighted by priority</th>
+                        <th># Severe alerts</th>
+                        <th># Warning alerts</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -234,6 +256,9 @@ const EmulationTrace = (props) => {
                             <td>{obs_state.docker_stats.net_rx}</td>
                             <td>{obs_state.docker_stats.net_tx}</td>
                             <td>{obs_state.docker_stats.pids}</td>
+                            <td>{obs_state.ids_alert_counters.alerts_weighted_by_priority}</td>
+                            <td>{obs_state.ids_alert_counters.severe_alerts}</td>
+                            <td>{obs_state.ids_alert_counters.warning_alerts}</td>
                         </tr>
                     )}
                     </tbody>

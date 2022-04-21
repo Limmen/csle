@@ -38,7 +38,7 @@ class NetworkService:
         :return: a dict representation of the object
         """
         d = {}
-        d["protocol"] = self.protocol.name
+        d["protocol"] = self.protocol
         d["port"] = self.port
         d["name"] = self.name
         d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))

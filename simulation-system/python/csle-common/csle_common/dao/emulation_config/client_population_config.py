@@ -55,7 +55,7 @@ class ClientPopulationConfig:
         """
         d = {}
         d["ip"] = self.ip
-        d["client_population_process_type"] = self.client_process_type.name
+        d["client_process_type"] = self.client_process_type
         d["lamb"] = self.lamb
         d["mu"] = self.mu
         d["networks"] = list(map(lambda x: x.to_dict(), self.networks))

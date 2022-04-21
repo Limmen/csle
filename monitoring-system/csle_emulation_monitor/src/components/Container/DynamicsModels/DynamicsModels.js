@@ -118,6 +118,18 @@ const DynamicsModels = () => {
         }
     }
 
+    const getNumSamples = (model) => {
+        var num_samples = 0
+        for (let i = 0; i < Object.keys(model.conditionals).length; i++) {
+            var metric= Object.keys(model.conditionals[Object.keys(model.conditionals)[i]])[0]
+            for (let j = 0; j < Object.keys(model.conditionals[Object.keys(model.conditionals)[i]][metric]).length; j++) {
+                var value = Object.keys(model.conditionals[Object.keys(model.conditionals)[i]][metric])[j]
+                num_samples = num_samples + model.conditionals[Object.keys(model.conditionals)[i]][metric][value]
+            }
+        }
+        return num_samples
+    }
+
     const fetchDynamicsModels = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/dynamicsmodelsdata',
@@ -130,6 +142,7 @@ const DynamicsModels = () => {
         )
             .then(res => res.json())
             .then(response => {
+                console.log(response)
 
                 const modelOptions = response.map((model, index) => {
                     return {
@@ -298,9 +311,14 @@ const DynamicsModels = () => {
                 </Spinner>)
         } else {
             return (
-                <p className="modelDescription">
-                    Model description: {props.selectedDynamicsModel.value.descr}
-                </p>
+                <div>
+                    <p className="modelDescription">
+                        Model description: {props.selectedDynamicsModel.value.descr}
+                        <span className="numSamples">
+                        Number of samples: {getNumSamples(props.selectedDynamicsModel.value)}
+                    </span>
+                    </p>
+                </div>
             )
         }
     }

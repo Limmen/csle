@@ -97,7 +97,6 @@ CREATE TABLE IF NOT EXISTS simulation_images (
 GRANT ALL ON simulation_images TO csle;
 GRANT USAGE, SELECT ON SEQUENCE simulation_images_id_seq TO csle;
 
-
 -- Create table that stores the t_spsa_policies --
 CREATE TABLE IF NOT EXISTS t_spsa_policies (
     id serial PRIMARY KEY,
@@ -111,7 +110,8 @@ GRANT USAGE, SELECT ON SEQUENCE t_spsa_policies_id_seq TO csle;
 CREATE TABLE IF NOT EXISTS training_jobs (
     id serial PRIMARY KEY,
     config json NOT NULL,
-    simulation_name TEXT references simulations(name)
+    simulation_name TEXT references simulations(name) ON DELETE CASCADE,
+    emulation_name TEXT references emulations(name) ON DELETE CASCADE
 );
 GRANT ALL ON training_jobs TO csle;
 GRANT USAGE, SELECT ON SEQUENCE training_jobs_id_seq TO csle;

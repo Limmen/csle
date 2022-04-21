@@ -1,3 +1,4 @@
+import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
@@ -10,15 +11,19 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
-        output_dir="/tmp/tspsa_test", title="T-SPSA test", random_seeds=[399, 98912,999,555], agent_type=AgentType.T_SPSA,
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
+        random_seeds=[399, 98912,999,555],
+        agent_type=AgentType.T_SPSA,
         log_every=10,
         hparams={
             agents_constants.T_SPSA.N: HParam(value=200, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
-            agents_constants.T_SPSA.c: HParam(value=10, name=agents_constants.T_SPSA.c,
-                                              descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-            agents_constants.T_SPSA.a: HParam(value=1, name=agents_constants.T_SPSA.a,
-                                              descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
+            agents_constants.T_SPSA.c: HParam(
+                value=10, name=agents_constants.T_SPSA.c,
+                descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
+            agents_constants.T_SPSA.a: HParam(
+                value=1, name=agents_constants.T_SPSA.a,
+                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             agents_constants.T_SPSA.A: HParam(
                 value=100, name=agents_constants.T_SPSA.A,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
@@ -32,7 +37,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.T_SPSA.THETA1: HParam(value=[-4,-4,-4], name=agents_constants.T_SPSA.THETA1,
-                                                   descr="initial thresholds")
+                                                   descr="initial thresholds"),
+            agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
+                                                       descr="how frequently to save the model")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Tuple, Callable
+from typing import Union, List, Dict, Tuple, Callable, Optional
 import time
 import gym
 import os
@@ -28,7 +28,8 @@ class TFPAgent(BaseAgent):
 
     def __init__(self, defender_simulation_env_config: SimulationEnvConfig,
                  attacker_simulation_env_config: SimulationEnvConfig,
-                 emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig):
+                 emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
+                 training_job: Optional[TrainingJobConfig] = None):
         """
         Initializes the T-FP agent
 
@@ -36,6 +37,7 @@ class TFPAgent(BaseAgent):
         :param defender_simulation_env_config: the simulation env config of the defender
         :param emulation_env_config: the emulation env config
         :param experiment_config: the experiment config
+        :param training_job: (optional) reuse an existing training job configuration
         """
         super().__init__(simulation_env_config=defender_simulation_env_config,
                          emulation_env_config=emulation_env_config,
@@ -45,6 +47,7 @@ class TFPAgent(BaseAgent):
         self.attacker_experiment_config = self.get_attacker_experiment_config()
         self.attacker_simulation_env_config = attacker_simulation_env_config
         self.defender_simulation_env_config = defender_simulation_env_config
+        self.training_job = training_job
 
     def train(self) -> ExperimentExecution:
         """
@@ -53,20 +56,38 @@ class TFPAgent(BaseAgent):
         :return: the training metrics and the trained policies
         """
         pid = os.getpid()
-        training_job = TrainingJobConfig(simulation_env_name=self.simulation_env_config.name,
-                                         experiment_config=self.experiment_config, average_r=-1,
-                                         progress_percentage=0, pid=pid)
-        training_job_id = MetastoreFacade.save_training_job(training_job=training_job)
-        training_job.id = training_job_id
-        config = self.simulation_env_config.simulation_env_input_config
-        env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+
+        # Initialize result metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
         for seed in self.experiment_config.random_seeds:
+            exp_result.all_metrics[seed] = {}
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.DEFENDER_AVERAGE_REWARD] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.ATTACKER_AVERAGE_REWARD] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EXPLOITABILITY] = []
+            exp_result.all_metrics[seed][agents_constants.T_FP.DEFENDER_THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.T_FP.ATTACKER_THRESHOLDS] = []
+
+        if self.training_job is None:
+            self.training_job = TrainingJobConfig(
+                simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
+                experiment_result=exp_result, progress_percentage=0, pid=pid,
+                emulation_env_name=self.emulation_env_config.name)
+            training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
+            self.training_job.id = training_job_id
+        else:
+            self.training_job.pid = pid
+            self.training_job.progress_percentage = 0
+            self.training_job.experiment_result = exp_result
+            MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
+        config = self.simulation_env_config.simulation_env_input_config
+        env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.t_fp(exp_result=exp_result, seed=seed, env=env, training_job=training_job,
+            exp_result = self.t_fp(exp_result=exp_result, seed=seed, env=env, training_job=self.training_job,
                                    random_seeds=self.experiment_config.random_seeds)
-            training_job = MetastoreFacade.get_training_job_config(id=training_job_id)
+            self.training_job = MetastoreFacade.get_training_job_config(id=self.training_job.id)
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -102,20 +123,11 @@ class TFPAgent(BaseAgent):
         traces = env.get_traces()
         if len(traces) > 0:
             MetastoreFacade.save_simulation_trace(traces[-1])
-        MetastoreFacade.remove_training_job(training_job)
+        MetastoreFacade.remove_training_job(self.training_job)
         return exp_execution
 
     def t_fp(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
              training_job: TrainingJobConfig, random_seeds: List[int]):
-
-        # Initialize metrics
-        exp_result.all_metrics[seed] = {}
-        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
-        exp_result.all_metrics[seed][agents_constants.COMMON.DEFENDER_AVERAGE_REWARD] = []
-        exp_result.all_metrics[seed][agents_constants.COMMON.ATTACKER_AVERAGE_REWARD] = []
-        exp_result.all_metrics[seed][agents_constants.COMMON.EXPLOITABILITY] = []
-        exp_result.all_metrics[seed][agents_constants.T_FP.DEFENDER_THRESHOLDS] = []
-        exp_result.all_metrics[seed][agents_constants.T_FP.ATTACKER_THRESHOLDS] = []
 
         # Initialize variables
         pi_2 = np.zeros((2, self.experiment_config.hparams[agents_constants.T_SPSA.L])).tolist()
@@ -175,7 +187,6 @@ class TFPAgent(BaseAgent):
                                   * self.experiment_config.hparams[agents_constants.T_FP.N_2].value + i
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
-                training_job.average_r = J
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
     def defender_best_response(self, seed: int, attacker_strategy: Callable) -> Tuple[List, float]:

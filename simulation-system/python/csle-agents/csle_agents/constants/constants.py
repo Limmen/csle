@@ -11,6 +11,7 @@ class COMMON:
     DEFENDER_AVERAGE_REWARD = "defender_average_reward"
     ATTACKER_AVERAGE_REWARD = "attacker_average_reward"
     EVAL_EVERY = "eval_every"
+    SAVE_EVERY = "save_every"
     EVAL_BATCH_SIZE = "eval_batch_size"
     NUM_TRAINING_TIMESTEPS = "num_training_timesteps"
     NUM_NEURONS_PER_HIDDEN_LAYER = "num_neurons_per_hidden_layer"

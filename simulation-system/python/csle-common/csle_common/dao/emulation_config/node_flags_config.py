@@ -26,6 +26,16 @@ class NodeFlagsConfig:
         d["flags"] = list(map(lambda x: x.to_dict(), self.flags))
         return d
 
+    @staticmethod
+    def from_dict(d: Dict[str,Any]) -> "NodeFlagsConfig":
+        """
+        Converts a dict representation of the object to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        return NodeFlagsConfig(ip=d["ip"], flags=list(map(lambda x: Flag.from_dict(x), d["flags"])))
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object

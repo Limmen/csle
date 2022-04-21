@@ -250,46 +250,6 @@ class EmulationEnvConfigGenerator:
             f.write(makefile_template_str)
 
     @staticmethod
-    def cleanup_env_config(path: str = None) -> None:
-        """
-        A utility function for cleaning up the environment configuration
-
-        :param path: the path to where the configuration is stored
-        :return: None
-        """
-        # try:
-        if os.path.exists(ExperimentUtil.default_users_path(out_dir=path)):
-            os.remove(ExperimentUtil.default_users_path(out_dir=path))
-        if os.path.exists(ExperimentUtil.default_topology_path(out_dir=path)):
-            os.remove(ExperimentUtil.default_topology_path(out_dir=path))
-        if os.path.exists(ExperimentUtil.default_flags_path(out_dir=path)):
-            os.remove(ExperimentUtil.default_flags_path(out_dir=path))
-        if os.path.exists(ExperimentUtil.default_vulnerabilities_path(out_dir=path)):
-            os.remove(ExperimentUtil.default_vulnerabilities_path(out_dir=path))
-        if os.path.exists(ExperimentUtil.default_containers_path(out_dir=path)):
-            os.remove(ExperimentUtil.default_containers_path(out_dir=path))
-        if os.path.exists(ExperimentUtil.default_containers_folders_path(out_dir=path)):
-            shutil.rmtree(ExperimentUtil.default_containers_folders_path(out_dir=path))
-        if os.path.exists(ExperimentUtil.default_traffic_path(out_dir=path)):
-            os.remove(ExperimentUtil.default_traffic_path(out_dir=path))
-        # except Exception as e:
-        #     pass
-
-    @staticmethod
-    def cleanup_envs(path: str = None) -> None:
-        """
-        Utility function for cleaning up the artifacts of a created emulation environment
-
-        :param path: the path where the emulation is created
-        :return: None
-        """
-        if path == None:
-            path = ExperimentUtil.default_output_dir()
-        for f in os.listdir(path):
-            if re.search("env_*", f):
-                ExperimentUtil.rmtree(os.path.join(path, f))
-
-    @staticmethod
     def get_env_dirs(path: str = None) -> List[str]:
         """
         Utility function for getting the directories of the emulation environment
@@ -320,33 +280,6 @@ class EmulationEnvConfigGenerator:
         for d in env_dirs:
             containers_configs.append(ExperimentUtil.read_containers_config(d + constants.DOCKER.CONTAINER_CONFIG_CFG_PATH))
         return containers_configs
-
-    @staticmethod
-    def config_exists(path: str = None) -> bool:
-        """
-        Checks whether a complete environment configuration exists in a given path or not
-
-        :param path: the path to check
-        :return: True if it exists, otherwise False
-        """
-        if not os.path.exists(ExperimentUtil.default_users_path(out_dir=path)):
-            return False
-        if not os.path.exists(ExperimentUtil.default_topology_path(out_dir=path)):
-            return False
-        if not os.path.exists(ExperimentUtil.default_flags_path(out_dir=path)):
-            return False
-        if not os.path.exists(ExperimentUtil.default_vulnerabilities_path(out_dir=path)):
-            return False
-        if not os.path.exists(ExperimentUtil.default_containers_path(out_dir=path)):
-            return False
-        if not os.path.exists(ExperimentUtil.default_containers_folders_path(out_dir=path)):
-            return False
-        if not os.path.exists(ExperimentUtil.default_makefile_path(out_dir=path)):
-            return False
-        if not os.path.exists(ExperimentUtil.default_traffic_path(out_dir=path)):
-            return False
-
-        return True
 
     @staticmethod
     def materialize_emulation_env_config(emulation_env_config: EmulationEnvConfig,

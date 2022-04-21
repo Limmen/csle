@@ -157,7 +157,7 @@ class NodeNetworkConfig:
         d["packet_delay_ms"] = self.packet_delay_ms
         d["packet_delay_jitter_ms"] = self.packet_delay_jitter_ms
         d["packet_delay_correlation_percentage"] = self.packet_delay_correlation_percentage
-        d["packet_delay_distribution"] = self.packet_delay_distribution.name
+        d["packet_delay_distribution"] = self.packet_delay_distribution
         d["packet_loss_type"] = self.packet_loss_type
         d["packet_loss_rate_random_percentage"] = self.packet_loss_rate_random_percentage
         d["packet_loss_random_correlation_percentage"] = self.packet_loss_random_correlation_percentage

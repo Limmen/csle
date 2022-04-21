@@ -32,7 +32,9 @@ class MonitorToolsController:
         pid = MonitorToolsController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
         if pid == -1:
             return False
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM \
+              + constants.COMMANDS.SPACE_DELIM\
+              + constants.COMMANDS.GREP \
               + constants.COMMANDS.SPACE_DELIM + "prometheus"
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
@@ -49,7 +51,9 @@ class MonitorToolsController:
         pid = MonitorToolsController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
         if pid == -1:
             return False
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
+              constants.COMMANDS.SPACE_DELIM \
+              + constants.COMMANDS.GREP \
               + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SEARCH_NODE_EXPORTER
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
@@ -216,7 +220,9 @@ class MonitorToolsController:
         pid = MonitorToolsController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
         if pid == -1:
             return False
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
+              constants.COMMANDS.SPACE_DELIM\
+              + constants.COMMANDS.GREP \
               + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
@@ -248,6 +254,37 @@ class MonitorToolsController:
         if not MonitorToolsController.is_statsmanager_running():
             return False
         pid = MonitorToolsController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
+        cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+        return True
+
+    @staticmethod
+    def is_pid_running(pid: int) -> bool:
+        """
+        Checks if the given pid is running on the host
+
+        :param pid: the pid to check
+        :return: True if it is running, false otherwise
+        """
+        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
+              constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP \
+              + constants.COMMANDS.SPACE_DELIM + str(pid)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        output = str(output)
+        return str(pid) in output
+
+    @staticmethod
+    def stop_pid(pid) -> bool:
+        """
+        Stops a process with a given pid
+
+        :param pid: the pid to stop
+        :return: True if the pid was stopped, false if it was not running
+        """
+        if not MonitorToolsController.is_pid_running(pid):
+            return False
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()

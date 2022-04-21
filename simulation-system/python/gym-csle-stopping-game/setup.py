@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name='gym_csle_stopping_game',
       version='0.0.1',
       install_requires=['gym', 'pyglet', 'numpy', 'torch', 'docker', 'paramiko', 'stable_baselines3', 'scp',
-                        'random_username', 'jsonpickle', 'Sphinx', 'sphinxcontrib-napoleon',
+                        'random_username', 'Sphinx', 'sphinxcontrib-napoleon',
                         'sphinx-rtd-theme', 'csle-common', 'pyperclip', 'psycopg', 'click', 'csle-attacker',
                         'csle-defender', 'csle-collector'],
       author='Kim Hammar',

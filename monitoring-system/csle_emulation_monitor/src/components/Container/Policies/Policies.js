@@ -49,7 +49,6 @@ const Policies = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setPPOPolicies(response);
                 setLoadingPPOPolicies(false)
             })
@@ -62,6 +61,50 @@ const Policies = () => {
         setLoadingPPOPolicies(true)
         fetchPPOPolicies()
     }, [fetchTSPSAPolicies, fetchPPOPolicies]);
+
+    const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/ppopolicies/remove/' + ppo_policy_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchPPOPolicies()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removePPOPolicy = (ppoPolicy) => {
+        setLoadingPPOPolicies(true)
+        removePpoPoliciesRequest(ppoPolicy.id)
+    }
+
+    const removeTSPSAPoliciesRequest = useCallback((t_spsa_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/tspsapolicies/remove/' + t_spsa_policy_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTSPSAPolicies()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeTSPSAPolicy = (ppoPolicy) => {
+        setLoadingSpsaPolicies(true)
+        removeTSPSAPoliciesRequest(ppoPolicy.id)
+    }
 
     const refreshTSPSAPolicies = () => {
         setLoadingSpsaPolicies(true)
@@ -133,7 +176,9 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.policies.map((policy, index) =>
-                        <TSPSAPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}/>
+                        <TSPSAPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}
+                                     removeTSPSAPolicy={removeTSPSAPolicy}
+                        />
                     )}
                 </Accordion>
             )
@@ -150,7 +195,9 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.policies.map((policy, index) =>
-                        <PPOPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}/>
+                        <PPOPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}
+                                   removePPOPolicy={removePPOPolicy}
+                        />
                     )}
                 </Accordion>
             )

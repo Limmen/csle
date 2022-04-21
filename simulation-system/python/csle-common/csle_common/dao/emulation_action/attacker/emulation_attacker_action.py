@@ -66,14 +66,14 @@ class EmulationAttackerAction:
         commands = []
         file_names = []
         for ip in self.ips:
-            file_name = str(self.id.value) + "_" + str(self.index) + "_" + ip.replace("/", "_")
+            file_name = str(self.id) + "_" + str(self.index) + "_" + ip.replace("/", "_")
             file_name = file_name + ".xml "
             commands.append(self.cmds[0] + constants.NMAP.FILE_ARGS + " " + file_name + ip)
             file_names.append(file_name)
         if machine_ips is None:
             machine_ips = []
         for ip in machine_ips:
-            file_name = str(self.id.value) + "_" + str(self.index) + "_" + ip.replace("/", "_")
+            file_name = str(self.id) + "_" + str(self.index) + "_" + ip.replace("/", "_")
             file_name = file_name + ".xml "
             commands.append(self.cmds[0] + constants.NMAP.FILE_ARGS + " " + file_name + ip)
             file_names.append(file_name)
@@ -88,7 +88,7 @@ class EmulationAttackerAction:
         file_names = []
         commands = []
         for ip in self.ips:
-            file_name = str(self.id.value) + "_" + str(self.index) + "_" + ip + ".xml "
+            file_name = str(self.id) + "_" + str(self.index) + "_" + ip + ".xml "
             commands.append(self.cmds[0] + constants.NIKTO.HOST_ARG + ip + " " + constants.NIKTO.OUTPUT_ARG + file_name)
             file_names.append(file_name)
         return commands, file_names
@@ -102,9 +102,9 @@ class EmulationAttackerAction:
         commands = []
         file_names = []
         for ip in self.ips:
-            file_name = str(self.id.value) + "_" + str(self.index) + "_" + ip + ".xml "
+            file_name = str(self.id) + "_" + str(self.index) + "_" + ip + ".xml "
             if self.index == -1:
-                file_name = str(self.id.value) + "_" + str(self.index) + ".xml "
+                file_name = str(self.id) + "_" + str(self.index) + ".xml "
             commands.append(self.cmds[0] + constants.MASSCAN.OUTPUT_ARG + " " + file_name + ip)
             file_names.append(file_name)
         return commands, file_names
@@ -185,7 +185,7 @@ class EmulationAttackerAction:
         alt_cmds = list(map(lambda x: x.replace(",", "-"), alt_cmds))
         vuln = vuln.replace(",", "-")
         cmds = list(map(lambda x: x.replace(",", "-"), self.cmds))
-        record = f"{ts},{self.id.value},{self.descr.replace(',', '')},{self.index},{self.name.replace(',', '-')}," \
+        record = f"{ts},{self.id},{self.descr.replace(',', '')},{self.index},{self.name.replace(',', '-')}," \
                  f"{self.execution_time},{'_'.join(self.ips)},{'_'.join(cmds)},{self.type}," \
                  f"{self.action_outcome},{vuln}," \
                  f"{'_'.join(alt_cmds)},{self.backdoor}"

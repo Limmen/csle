@@ -1,5 +1,6 @@
 from typing import List, Union
 from abc import ABC, abstractmethod
+import os
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -24,6 +25,9 @@ class BaseAgent(ABC):
         self.simulation_env_config = simulation_env_config
         self.emulation_env_config = emulation_env_config
         self.experiment_config = experiment_config
+        if not os.path.exists(self.experiment_config.output_dir):
+            os.makedirs(self.experiment_config.output_dir)
+
 
     @abstractmethod
     def train(self) -> ExperimentExecution:

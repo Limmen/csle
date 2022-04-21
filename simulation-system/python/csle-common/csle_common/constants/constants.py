@@ -727,6 +727,7 @@ class COMMANDS:
     UNDERSCORE_DELIM = "_"
     STAR_DELIM = "*"
     DOT_DELIM = "."
+    PIPE_DELIM = "|"
     TOUCH = "touch"
     NOHUP = "nohup"
     AMP = "&"
@@ -759,6 +760,7 @@ class COMMANDS:
     SNORT_ROTATE_STATS="kill -SIGUSR2 {}"
     STOP_IDS = "kill -9 $(pgrep snort)"
     PS_AUX = "ps -aux"
+    PS_AXR = "ps -axr"
     GREP = "grep"
     START_CLIENT_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /client_manager.py --port {} &"
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
@@ -798,6 +800,8 @@ class COMMANDS:
     START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
     KILL_PROCESS = "kill -9 {}"
+    START_TRAINING_JOB = "nohup csle trainingjob {} &"
+    START_SYSTEM_IDENTIFICATION_JOB = "nohup csle systemidentificationjob {} &"
 
 
 class ETC_HOSTS:
@@ -1339,11 +1343,11 @@ class METADATA_STORE:
     EMULATION_IMAGES_TABLE = "emulation_images"
     SIMULATION_IMAGES_TABLE = "simulation_images"
     EMULATION_SIMULATION_TRACES_TABLE = "emulation_simulation_traces"
-    EXPERIMENT_EXECUTIONS = "experiment_executions"
+    EXPERIMENT_EXECUTIONS_TABLE = "experiment_executions"
     TRAINING_JOBS_TABLE = "training_jobs"
     SYSTEM_IDENTIFICATION_JOBS_TABLE = "system_identification_jobs"
-    T_SPSA_POLICIES = "t_spsa_policies"
-    PPO_POLICIES = "ppo_policies"
+    T_SPSA_POLICIES_TABLE = "t_spsa_policies"
+    PPO_POLICIES_TABLE = "ppo_policies"
 
 
 class CONTAINER_POOLS:

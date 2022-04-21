@@ -98,15 +98,3 @@ class ContainerGenerator:
         return containers_cfg
 
 
-    @staticmethod
-    def write_containers_config(containers_cfg: ContainersConfig, path: str = None) -> None:
-        """
-        Writes the default configuration to a json file
-
-        :param containers_cfg: the config to write
-        :param path: the path to write the configuration to
-        :return: None
-        """
-        path = ExperimentUtil.default_containers_path(out_dir=path)
-        ExperimentUtil.write_containers_config_file(containers_cfg, path)
-

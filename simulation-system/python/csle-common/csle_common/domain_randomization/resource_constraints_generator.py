@@ -76,16 +76,3 @@ class ResourceConstraintsGenerator:
         resources_config = ResourcesConfig(node_resources_configurations=node_resources_configs)
         return resources_config
 
-
-    @staticmethod
-    def write_resources_config(resources_config: ResourcesConfig, path: str = None) -> None:
-        """
-        Writes the default configuration to a json file
-
-        :param path: the path to write the configuration to
-        :return: None
-        """
-        path = ExperimentUtil.default_resources_path(out_dir=path)
-        ExperimentUtil.write_resources_config_file(resources_config, path)
-
-
