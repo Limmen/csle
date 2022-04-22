@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './SystemIdentificationJob.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
@@ -6,8 +6,13 @@ import Table from 'react-bootstrap/Table'
 import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Collapse from 'react-bootstrap/Collapse'
 
 const SystemIdentificationJob = (props) => {
+    const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
+    const [attackerActionSequenceOpen, setAttackerActionSequenceOpen] = useState(false);
+    const [defenderActionSequenceOpen, setDefenderActionSequenceOpen] = useState(false);
+    const [tracesOpen, setTracesOpen] = useState(false);
 
     const renderRemoveSystemIdentificationJobTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -177,6 +182,7 @@ const SystemIdentificationJob = (props) => {
         <Accordion.Collapse eventKey={props.job.id}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    Actions:
                     {startOrStopButton()}
                     <OverlayTrigger
                         className="removeButton"
@@ -189,199 +195,260 @@ const SystemIdentificationJob = (props) => {
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-
-                    General Information about the system identification job
                 </h5>
 
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th> Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>ID</td>
-                        <td>{props.job.id}</td>
-                    </tr>
-                    <tr>
-                        <td>PID</td>
-                        <td>{props.job.pid}</td>
-                    </tr>
-                    <tr>
-                        <td>Emulation</td>
-                        <td>{props.job.emulation_env_name}</td>
-                    </tr>
-                    <tr>
-                        <td>Repeat times</td>
-                        <td>{props.job.repeat_times}</td>
-                    </tr>
-                    <tr>
-                        <td>Description</td>
-                        <td>{props.job.descr}</td>
-                    </tr>
-                    <tr>
-                        <td>Sequences completed</td>
-                        <td>{props.job.num_sequences_completed}/{props.job.repeat_times}</td>
-                    </tr>
-                    <tr>
-                        <td>Steps collected</td>
-                        <td>{props.job.num_collected_steps}/{getMaxSteps()}</td>
-                    </tr>
-                    <tr>
-                        <td>Dynamics model ID</td>
-                        <td>{props.job.emulation_statistic_id}</td>
-                    </tr>
-                    </tbody>
-                </Table>
-
-                <h5 className="semiTitle">Attacker action sequence </h5>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>t</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Commands</th>
-                        <th>Description</th>
-                        <th>Execution time</th>
-                        <th>IPs</th>
-                        <th>Index</th>
-                        <th>Action outcome</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.job.attacker_sequence.map((a_action, index) => <tr key={a_action.id + "-" + index}>
-                        <td>{index + 1}</td>
-                        <td>{a_action.id}</td>
-                        <td>{a_action.name}</td>
-                        <td>{a_action.cmds}</td>
-                        <td>{a_action.descr}</td>
-                        <td>{a_action.execution_time}</td>
-                        <td>{getIpString(a_action.ips)}</td>
-                        <td>{a_action.index}</td>
-                        <td>{getAttackerActionOutcome(a_action.action_outcome)}</td>
-                    </tr>)}
-                    </tbody>
-                </Table>
-
-                <h5 className="semiTitle">Defender action sequence </h5>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>t</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Commands</th>
-                        <th>Description</th>
-                        <th>Execution time</th>
-                        <th>IPs</th>
-                        <th>Index</th>
-                        <th>Action outcome</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.job.defender_sequence.map((a_action, index) => <tr key={a_action.id + "-" + index}>
-                        <td>{index + 1}</td>
-                        <td>{a_action.id}</td>
-                        <td>{a_action.name}</td>
-                        <td>{a_action.cmds}</td>
-                        <td>{a_action.descr}</td>
-                        <td>{a_action.execution_time}</td>
-                        <td>{getIpString(a_action.ips)}</td>
-                        <td>{a_action.index}</td>
-                        <td>{getDefenderActionOutcome(a_action.action_outcome)}</td>
-                    </tr>)}
-                    </tbody>
-                </Table>
-
-                {props.job.traces.map((trace, index) => {
-                    return (
-                        <div>
-                            <h4 className="semiTitle">
-                                Trace {index}
-                            </h4>
-                            <h5 className="semiTitle">
-                                Attacker observations
-                            </h5>
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
+                            aria-controls="generalInfoBody"
+                            aria-expanded={generalInfoOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> General Information about the system identification job</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={generalInfoOpen}>
+                        <div id="generalInfoBody" className="cardBodyHidden">
                             <Table striped bordered hover>
                                 <thead>
                                 <tr>
-                                    <th>t</th>
-                                    <th># Found nodes</th>
-                                    <th># Catched flags</th>
-                                    <th># Compromised nodes</th>
-                                    <th>Found nodes ips</th>
-                                    <th>Compromised nodes ips</th>
+                                    <th>Attribute</th>
+                                    <th> Value</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {trace.attacker_observation_states.map((obs_state, index) =>
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{obs_state.machines.length}</td>
-                                        <td>{obs_state.catched_flags}</td>
-                                        <td>{getNumCompromisedMachines(obs_state.machines)}</td>
-                                        <td>{getFoundNodesIps(obs_state.machines)}</td>
-                                        <td>{getCompromisedNodesIps(obs_state.machines)}</td>
-                                    </tr>
-                                )}
-                                </tbody>
-                            </Table>
-                            <h5 className="semiTitle">
-                                Defender observations
-                            </h5>
-                            <Table striped bordered hover>
-                                <thead>
                                 <tr>
-                                    <th>t</th>
-                                    <th># Clients</th>
-                                    <th># Failed logins</th>
-                                    <th># Logged in users </th>
-                                    <th># Successful logins</th>
-                                    <th># Open TCP connections </th>
-                                    <th># Users</th>
-                                    <th># Block read</th>
-                                    <th># Block written</th>
-                                    <th># CPU utilization %</th>
-                                    <th># Memory utilization %</th>
-                                    <th># Received MB</th>
-                                    <th># Transmitted MB</th>
-                                    <th># PIDs</th>
-                                    <th>Alerts weighted by priority</th>
-                                    <th># Severe alerts</th>
-                                    <th># Warning alerts</th>
+                                    <td>ID</td>
+                                    <td>{props.job.id}</td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                {trace.defender_observation_states.map((obs_state, index) =>
-                                    <tr key={index}>
-                                        <td>{index+1}</td>
-                                        <td>{obs_state.client_population_metrics.num_clients}</td>
-                                        <td>{obs_state.aggregated_host_metrics.num_failed_login_attempts}</td>
-                                        <td>{obs_state.aggregated_host_metrics.num_logged_in_users}</td>
-                                        <td>{obs_state.aggregated_host_metrics.num_login_events}</td>
-                                        <td>{obs_state.aggregated_host_metrics.num_open_connections}</td>
-                                        <td>{obs_state.aggregated_host_metrics.num_users}</td>
-                                        <td>{obs_state.docker_stats.blk_read}</td>
-                                        <td>{obs_state.docker_stats.blk_write}</td>
-                                        <td>{obs_state.docker_stats.cpu_percent}</td>
-                                        <td>{obs_state.docker_stats.mem_percent}</td>
-                                        <td>{obs_state.docker_stats.net_rx}</td>
-                                        <td>{obs_state.docker_stats.net_tx}</td>
-                                        <td>{obs_state.docker_stats.pids}</td>
-                                        <td>{obs_state.ids_alert_counters.alerts_weighted_by_priority}</td>
-                                        <td>{obs_state.ids_alert_counters.severe_alerts}</td>
-                                        <td>{obs_state.ids_alert_counters.warning_alerts}</td>
-                                    </tr>
-                                )}
+                                <tr>
+                                    <td>PID</td>
+                                    <td>{props.job.pid}</td>
+                                </tr>
+                                <tr>
+                                    <td>Emulation</td>
+                                    <td>{props.job.emulation_env_name}</td>
+                                </tr>
+                                <tr>
+                                    <td>Repeat times</td>
+                                    <td>{props.job.repeat_times}</td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <td>{props.job.descr}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sequences completed</td>
+                                    <td>{props.job.num_sequences_completed}/{props.job.repeat_times}</td>
+                                </tr>
+                                <tr>
+                                    <td>Steps collected</td>
+                                    <td>{props.job.num_collected_steps}/{getMaxSteps()}</td>
+                                </tr>
+                                <tr>
+                                    <td>Dynamics model ID</td>
+                                    <td>{props.job.emulation_statistic_id}</td>
+                                </tr>
                                 </tbody>
                             </Table>
                         </div>
-                    )
-                })}
+                    </Collapse>
+                </Card>
 
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setAttackerActionSequenceOpen(!attackerActionSequenceOpen)}
+                            aria-controls="attackerActionSequenceBody"
+                            aria-expanded={attackerActionSequenceOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">Attacker action sequence</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={attackerActionSequenceOpen}>
+                        <div id="attackerActionSequenceBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>t</th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Commands</th>
+                                    <th>Description</th>
+                                    <th>Execution time</th>
+                                    <th>IPs</th>
+                                    <th>Index</th>
+                                    <th>Action outcome</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.job.attacker_sequence.map((a_action, index) =>
+                                    <tr key={a_action.id + "-" + index}>
+                                        <td>{index + 1}</td>
+                                        <td>{a_action.id}</td>
+                                        <td>{a_action.name}</td>
+                                        <td>{a_action.cmds}</td>
+                                        <td>{a_action.descr}</td>
+                                        <td>{a_action.execution_time}</td>
+                                        <td>{getIpString(a_action.ips)}</td>
+                                        <td>{a_action.index}</td>
+                                        <td>{getAttackerActionOutcome(a_action.action_outcome)}</td>
+                                    </tr>)}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setDefenderActionSequenceOpen(!defenderActionSequenceOpen)}
+                            aria-controls="defenderActionSequenceBody"
+                            aria-expanded={defenderActionSequenceOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Defender action sequence</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={defenderActionSequenceOpen}>
+                        <div id="defenderActionSequenceBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>t</th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Commands</th>
+                                    <th>Description</th>
+                                    <th>Execution time</th>
+                                    <th>IPs</th>
+                                    <th>Index</th>
+                                    <th>Action outcome</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.job.defender_sequence.map((a_action, index) =>
+                                    <tr key={a_action.id + "-" + index}>
+                                        <td>{index + 1}</td>
+                                        <td>{a_action.id}</td>
+                                        <td>{a_action.name}</td>
+                                        <td>{a_action.cmds}</td>
+                                        <td>{a_action.descr}</td>
+                                        <td>{a_action.execution_time}</td>
+                                        <td>{getIpString(a_action.ips)}</td>
+                                        <td>{a_action.index}</td>
+                                        <td>{getDefenderActionOutcome(a_action.action_outcome)}</td>
+                                    </tr>)}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setTracesOpen(!tracesOpen)}
+                            aria-controls="tracesBody"
+                            aria-expanded={tracesOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Emulation traces </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={tracesOpen}>
+                        <div id="tracesBody" className="cardBodyHidden">
+                            {props.job.traces.map((trace, index) => {
+                                return (
+                                    <div key={trace.id + "-" + index}>
+                                        <h4 className="semiTitle">
+                                            Trace {index}
+                                        </h4>
+                                        <h5 className="semiTitle">
+                                            Attacker observations
+                                        </h5>
+                                        <Table striped bordered hover>
+                                            <thead>
+                                            <tr>
+                                                <th>t</th>
+                                                <th># Found nodes</th>
+                                                <th># Catched flags</th>
+                                                <th># Compromised nodes</th>
+                                                <th>Found nodes ips</th>
+                                                <th>Compromised nodes ips</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {trace.attacker_observation_states.map((obs_state, index) =>
+                                                <tr key={index}>
+                                                    <td>{index + 1}</td>
+                                                    <td>{obs_state.machines.length}</td>
+                                                    <td>{obs_state.catched_flags}</td>
+                                                    <td>{getNumCompromisedMachines(obs_state.machines)}</td>
+                                                    <td>{getFoundNodesIps(obs_state.machines)}</td>
+                                                    <td>{getCompromisedNodesIps(obs_state.machines)}</td>
+                                                </tr>
+                                            )}
+                                            </tbody>
+                                        </Table>
+                                        <h5 className="semiTitle">
+                                            Defender observations
+                                        </h5>
+                                        <Table striped bordered hover>
+                                            <thead>
+                                            <tr>
+                                                <th>t</th>
+                                                <th># Clients</th>
+                                                <th># Failed logins</th>
+                                                <th># Logged in users </th>
+                                                <th># Successful logins</th>
+                                                <th># Open TCP connections </th>
+                                                <th># Users</th>
+                                                <th># Block read</th>
+                                                <th># Block written</th>
+                                                <th># CPU utilization %</th>
+                                                <th># Memory utilization %</th>
+                                                <th># Received MB</th>
+                                                <th># Transmitted MB</th>
+                                                <th># PIDs</th>
+                                                <th>Alerts weighted by priority</th>
+                                                <th># Severe alerts</th>
+                                                <th># Warning alerts</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {trace.defender_observation_states.map((obs_state, index) =>
+                                                <tr key={index}>
+                                                    <td>{index+1}</td>
+                                                    <td>{obs_state.client_population_metrics.num_clients}</td>
+                                                    <td>{obs_state.aggregated_host_metrics.num_failed_login_attempts}</td>
+                                                    <td>{obs_state.aggregated_host_metrics.num_logged_in_users}</td>
+                                                    <td>{obs_state.aggregated_host_metrics.num_login_events}</td>
+                                                    <td>{obs_state.aggregated_host_metrics.num_open_connections}</td>
+                                                    <td>{obs_state.aggregated_host_metrics.num_users}</td>
+                                                    <td>{obs_state.docker_stats.blk_read}</td>
+                                                    <td>{obs_state.docker_stats.blk_write}</td>
+                                                    <td>{obs_state.docker_stats.cpu_percent}</td>
+                                                    <td>{obs_state.docker_stats.mem_percent}</td>
+                                                    <td>{obs_state.docker_stats.net_rx}</td>
+                                                    <td>{obs_state.docker_stats.net_tx}</td>
+                                                    <td>{obs_state.docker_stats.pids}</td>
+                                                    <td>{obs_state.ids_alert_counters.alerts_weighted_by_priority}</td>
+                                                    <td>{obs_state.ids_alert_counters.severe_alerts}</td>
+                                                    <td>{obs_state.ids_alert_counters.warning_alerts}</td>
+                                                </tr>
+                                            )}
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </Collapse>
+                </Card>
             </Card.Body>
         </Accordion.Collapse>
     </Card>)

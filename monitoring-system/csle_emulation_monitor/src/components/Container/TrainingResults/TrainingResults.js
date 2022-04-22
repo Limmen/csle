@@ -13,6 +13,7 @@ const TrainingResults = () => {
     const [experiments, setExperiments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
+
     const ip = "localhost"
     // const ip = "172.31.212.92"
 

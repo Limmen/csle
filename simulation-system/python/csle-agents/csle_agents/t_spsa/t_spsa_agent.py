@@ -81,7 +81,7 @@ class TSPSAAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name)
+                emulation_env_name=self.emulation_env_config.name, simulation_traces=[])
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
@@ -97,6 +97,10 @@ class TSPSAAgent(BaseAgent):
             exp_result = self.spsa(exp_result=exp_result, seed=seed, training_job=self.training_job,
                                    random_seeds=self.experiment_config.random_seeds)
             self.training_job = MetastoreFacade.get_training_job_config(id=training_job_id)
+
+            # Save latest trace
+            MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
+            self.env.reset_traces()
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -214,6 +218,7 @@ class TSPSAAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
+                training_job.simulation_traces.append(self.env.get_traces()[-1])
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
                 # Update execution

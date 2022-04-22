@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Accordion from 'react-bootstrap/Accordion';
@@ -6,8 +6,13 @@ import Table from 'react-bootstrap/Table'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import './EmulationTrace.css';
+import Collapse from 'react-bootstrap/Collapse'
 
 const EmulationTrace = (props) => {
+    const [attackerActionsOpen, setAttackerActionsOpen] = useState(false);
+    const [defenderActionsOpen, setDefenderActionsOpen] = useState(false);
+    const [attackerObservationsOpen, setAttackerObservationsOpen] = useState(false);
+    const [defenderObservationsOpen, setDefenderObservationsOpen] = useState(false);
 
     const renderRemoveEmulationTraceTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -108,9 +113,10 @@ const EmulationTrace = (props) => {
         <Accordion.Collapse eventKey={props.emulationTrace.id}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    Actions:
                     <OverlayTrigger
                         className="removeButton"
-                        placement="left"
+                        placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveEmulationTraceTooltip}
                     >
@@ -119,157 +125,209 @@ const EmulationTrace = (props) => {
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    Attacker actions
                 </h5>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>t</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Commands</th>
-                        <th>Description</th>
-                        <th>Execution time</th>
-                        <th>IPs</th>
-                        <th>Index</th>
-                        <th>Action outcome</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.emulationTrace.attacker_actions.map((a_action, index) =>
-                        <tr key={a_action.id + "-" + index}>
-                            <td>{index+1}</td>
-                            <td>{a_action.id}</td>
-                            <td>{a_action.name}</td>
-                            <td>{a_action.cmds}</td>
-                            <td>{a_action.descr}</td>
-                            <td>{a_action.execution_time}</td>
-                            <td>{getIpString(a_action.ips)}</td>
-                            <td>{a_action.index}</td>
-                            <td>{getAttackerActionOutcome(a_action.action_outcome)}</td>
-                        </tr>
-                    )}
-                    </tbody>
-                </Table>
 
-                <h5 className="semiTitle">
-                    Defender actions
-                </h5>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>t</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Commands</th>
-                        <th>Description</th>
-                        <th>Execution time</th>
-                        <th>IPs</th>
-                        <th>Index</th>
-                        <th>Action outcome</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.emulationTrace.defender_actions.map((a_action, index) =>
-                        <tr key={a_action.id + "-" + index}>
-                            <td>{index+1}</td>
-                            <td>{a_action.id}</td>
-                            <td>{a_action.name}</td>
-                            <td>{a_action.cmds}</td>
-                            <td>{a_action.descr}</td>
-                            <td>{a_action.execution_time}</td>
-                            <td>{getIpString(a_action.ips)}</td>
-                            <td>{a_action.index}</td>
-                            <td>{getDefenderActionOutcome(a_action.action_outcome)}</td>
-                        </tr>
-                    )}
-                    </tbody>
-                </Table>
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setAttackerActionsOpen(!attackerActionsOpen)}
+                            aria-controls="attackerActionsBody"
+                            aria-expanded={attackerActionsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Attacker actions </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={attackerActionsOpen}>
+                        <div id="attackerActionsBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>t</th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Commands</th>
+                                    <th>Description</th>
+                                    <th>Execution time</th>
+                                    <th>IPs</th>
+                                    <th>Index</th>
+                                    <th>Action outcome</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.emulationTrace.attacker_actions.map((a_action, index) =>
+                                    <tr key={a_action.id + "-" + index}>
+                                        <td>{index+1}</td>
+                                        <td>{a_action.id}</td>
+                                        <td>{a_action.name}</td>
+                                        <td>{a_action.cmds}</td>
+                                        <td>{a_action.descr}</td>
+                                        <td>{a_action.execution_time}</td>
+                                        <td>{getIpString(a_action.ips)}</td>
+                                        <td>{a_action.index}</td>
+                                        <td>{getAttackerActionOutcome(a_action.action_outcome)}</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setDefenderActionsOpen(!defenderActionsOpen)}
+                            aria-controls="defenderActionsBody"
+                            aria-expanded={defenderActionsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Defender actions </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={defenderActionsOpen}>
+                        <div id="defenderActionsBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>t</th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Commands</th>
+                                    <th>Description</th>
+                                    <th>Execution time</th>
+                                    <th>IPs</th>
+                                    <th>Index</th>
+                                    <th>Action outcome</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.emulationTrace.defender_actions.map((a_action, index) =>
+                                    <tr key={a_action.id + "-" + index}>
+                                        <td>{index+1}</td>
+                                        <td>{a_action.id}</td>
+                                        <td>{a_action.name}</td>
+                                        <td>{a_action.cmds}</td>
+                                        <td>{a_action.descr}</td>
+                                        <td>{a_action.execution_time}</td>
+                                        <td>{getIpString(a_action.ips)}</td>
+                                        <td>{a_action.index}</td>
+                                        <td>{getDefenderActionOutcome(a_action.action_outcome)}</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
 
-                <h5 className="semiTitle">
-                    Attacker observations
-                </h5>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>t</th>
-                        <th># Found nodes</th>
-                        <th># Catched flags</th>
-                        <th># Compromised nodes </th>
-                        <th>Found nodes ips</th>
-                        <th>Compromised nodes ips</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.emulationTrace.attacker_observation_states.map((obs_state, index) =>
-                        <tr key={index}>
-                            <td>{index+1}</td>
-                            <td>{obs_state.machines.length}</td>
-                            <td>{obs_state.catched_flags}</td>
-                            <td>{getNumCompromisedMachines(obs_state.machines)}</td>
-                            <td>{getFoundNodesIps(obs_state.machines)}</td>
-                            <td>{getCompromisedNodesIps(obs_state.machines)}</td>
-                        </tr>
-                    )}
-                    </tbody>
-                </Table>
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setAttackerObservationsOpen(!attackerObservationsOpen)}
+                            aria-controls="attackerObservationsBody"
+                            aria-expanded={attackerObservationsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Attacker observations </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={attackerObservationsOpen}>
+                        <div id="attackerObservationsBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>t</th>
+                                    <th># Found nodes</th>
+                                    <th># Catched flags</th>
+                                    <th># Compromised nodes </th>
+                                    <th>Found nodes ips</th>
+                                    <th>Compromised nodes ips</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.emulationTrace.attacker_observation_states.map((obs_state, index) =>
+                                    <tr key={index}>
+                                        <td>{index+1}</td>
+                                        <td>{obs_state.machines.length}</td>
+                                        <td>{obs_state.catched_flags}</td>
+                                        <td>{getNumCompromisedMachines(obs_state.machines)}</td>
+                                        <td>{getFoundNodesIps(obs_state.machines)}</td>
+                                        <td>{getCompromisedNodesIps(obs_state.machines)}</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
 
-                <h5 className="semiTitle">
-                    Defender observations
-                </h5>
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>t</th>
-                        <th># Clients</th>
-                        <th># Failed logins</th>
-                        <th># Logged in users </th>
-                        <th># Successful logins</th>
-                        <th># Open TCP connections </th>
-                        <th># Users</th>
-                        <th># Block read</th>
-                        <th># Block written</th>
-                        <th># CPU utilization %</th>
-                        <th># Memory utilization %</th>
-                        <th># Received MB</th>
-                        <th># Transmitted MB</th>
-                        <th># PIDs</th>
-                        <th>Alerts weighted by priority</th>
-                        <th># Severe alerts</th>
-                        <th># Warning alerts</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.emulationTrace.defender_observation_states.map((obs_state, index) =>
-                        <tr key={index}>
-                            <td>{index+1}</td>
-                            <td>{obs_state.client_population_metrics.num_clients}</td>
-                            <td>{obs_state.aggregated_host_metrics.num_failed_login_attempts}</td>
-                            <td>{obs_state.aggregated_host_metrics.num_logged_in_users}</td>
-                            <td>{obs_state.aggregated_host_metrics.num_login_events}</td>
-                            <td>{obs_state.aggregated_host_metrics.num_open_connections}</td>
-                            <td>{obs_state.aggregated_host_metrics.num_users}</td>
-                            <td>{obs_state.docker_stats.blk_read}</td>
-                            <td>{obs_state.docker_stats.blk_write}</td>
-                            <td>{obs_state.docker_stats.cpu_percent}</td>
-                            <td>{obs_state.docker_stats.mem_percent}</td>
-                            <td>{obs_state.docker_stats.net_rx}</td>
-                            <td>{obs_state.docker_stats.net_tx}</td>
-                            <td>{obs_state.docker_stats.pids}</td>
-                            <td>{obs_state.ids_alert_counters.alerts_weighted_by_priority}</td>
-                            <td>{obs_state.ids_alert_counters.severe_alerts}</td>
-                            <td>{obs_state.ids_alert_counters.warning_alerts}</td>
-                        </tr>
-                    )}
-                    </tbody>
-                </Table>
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setDefenderObservationsOpen(!defenderObservationsOpen)}
+                            aria-controls="defenderActionsBody"
+                            aria-expanded={defenderObservationsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Defender observations </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={defenderObservationsOpen}>
+                        <div id="attackerActionsBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>t</th>
+                                    <th># Clients</th>
+                                    <th># Failed logins</th>
+                                    <th># Logged in users </th>
+                                    <th># Successful logins</th>
+                                    <th># Open TCP connections </th>
+                                    <th># Users</th>
+                                    <th># Block read</th>
+                                    <th># Block written</th>
+                                    <th># CPU utilization %</th>
+                                    <th># Memory utilization %</th>
+                                    <th># Received MB</th>
+                                    <th># Transmitted MB</th>
+                                    <th># PIDs</th>
+                                    <th>Alerts weighted by priority</th>
+                                    <th># Severe alerts</th>
+                                    <th># Warning alerts</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.emulationTrace.defender_observation_states.map((obs_state, index) =>
+                                    <tr key={index}>
+                                        <td>{index+1}</td>
+                                        <td>{obs_state.client_population_metrics.num_clients}</td>
+                                        <td>{obs_state.aggregated_host_metrics.num_failed_login_attempts}</td>
+                                        <td>{obs_state.aggregated_host_metrics.num_logged_in_users}</td>
+                                        <td>{obs_state.aggregated_host_metrics.num_login_events}</td>
+                                        <td>{obs_state.aggregated_host_metrics.num_open_connections}</td>
+                                        <td>{obs_state.aggregated_host_metrics.num_users}</td>
+                                        <td>{obs_state.docker_stats.blk_read}</td>
+                                        <td>{obs_state.docker_stats.blk_write}</td>
+                                        <td>{obs_state.docker_stats.cpu_percent}</td>
+                                        <td>{obs_state.docker_stats.mem_percent}</td>
+                                        <td>{obs_state.docker_stats.net_rx}</td>
+                                        <td>{obs_state.docker_stats.net_tx}</td>
+                                        <td>{obs_state.docker_stats.pids}</td>
+                                        <td>{obs_state.ids_alert_counters.alerts_weighted_by_priority}</td>
+                                        <td>{obs_state.ids_alert_counters.severe_alerts}</td>
+                                        <td>{obs_state.ids_alert_counters.warning_alerts}</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
             </Card.Body>
         </Accordion.Collapse>
     </Card>)
 }
 
 EmulationTrace.propTypes = {};
-
 EmulationTrace.defaultProps = {};
-
 export default EmulationTrace;

@@ -1,6 +1,7 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_result import ExperimentResult
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 
 
 class TrainingJobConfig:
@@ -10,7 +11,7 @@ class TrainingJobConfig:
 
     def __init__(self, simulation_env_name: str, experiment_config: ExperimentConfig,
                  progress_percentage: float, pid: int, experiment_result: ExperimentResult,
-                 emulation_env_name: str) -> None:
+                 emulation_env_name: str, simulation_traces: List[SimulationTrace]) -> None:
         """
         Initializes the DTO
 
@@ -22,6 +23,7 @@ class TrainingJobConfig:
         :param experiment_result: the result of the job
         :param emulation_env_config: the configuration of the emulation environment
         :param simulation_env_config: the configuration of the simulation environment
+        :param simulation_traces: the list of simulation traces
         """
         self.simulation_env_name = simulation_env_name
         self.emulation_env_name = emulation_env_name
@@ -31,6 +33,7 @@ class TrainingJobConfig:
         self.pid = pid
         self.id = -1
         self.running = False
+        self.simulation_traces = simulation_traces
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -45,6 +48,7 @@ class TrainingJobConfig:
         d["id"] = self.id
         d["experiment_result"] = self.experiment_result.to_dict()
         d["running"] = self.running
+        d["simulation_traces"] = list(map(lambda x: x.to_dict(), self.simulation_traces))
         return d
 
     @staticmethod
@@ -59,7 +63,8 @@ class TrainingJobConfig:
             experiment_config=ExperimentConfig.from_dict(d["experiment_config"]),
             progress_percentage=d["progress_percentage"], pid=d["pid"],
             experiment_result=ExperimentResult.from_dict(d["experiment_result"]),
-            emulation_env_name=d["emulation_env_name"])
+            emulation_env_name=d["emulation_env_name"],
+            simulation_traces=list(map(lambda x: SimulationTrace.from_dict(x), d["simulation_traces"])))
         obj.id = d["id"]
         obj.running = d["running"]
         return obj
@@ -71,4 +76,5 @@ class TrainingJobConfig:
         return f"simulation_env_name: {self.simulation_env_name}, experiment_config: {self.experiment_config}, " \
                f"progress_percentage: {self.progress_percentage}, pid: {self.pid}," \
                f"id: {self.id}, experiment_result: {self.experiment_result}, running: {self.running}, " \
-               f"emulation_env_name: {self.emulation_env_name}"
+               f"emulation_env_name: {self.emulation_env_name}, " \
+               f"simulation_traces: {list(map(lambda x: str(x), self.simulation_traces))}"

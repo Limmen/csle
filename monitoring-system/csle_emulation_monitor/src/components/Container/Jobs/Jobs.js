@@ -13,7 +13,6 @@ const Jobs = () => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
     const [trainingJobsLoading, setTrainingJobsLoading] = useState(false);
     const [trainingJobs, setTrainingJobs] = useState([]);
-
     const [showSystemIdentificationJobsInfoModal, setShowSystemIdentificationJobsInfoModal] = useState(false);
     const [systemIdentificationJobsLoading, setSystemIdentificationJobsLoading] = useState(false);
     const [systemIdentificationJobs, setSystemIdentificationJobs] = useState([]);

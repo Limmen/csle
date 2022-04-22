@@ -49,7 +49,7 @@ class PPOAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name)
+                emulation_env_name=self.emulation_env_config.name, simulation_traces=[])
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
@@ -74,8 +74,8 @@ class PPOAgent(BaseAgent):
         self.exp_execution.id = exp_execution_id
 
         config = self.simulation_env_config.simulation_env_input_config
-        env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-        env = Monitor(env)
+        orig_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        env = Monitor(orig_env)
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
@@ -91,7 +91,8 @@ class PPOAgent(BaseAgent):
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                          self.experiment_config.player_idx].actions,
                 save_every=self.experiment_config.hparams[agents_constants.COMMON.SAVE_EVERY].value,
-                save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution
+                save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution,
+                env=orig_env
             )
             policy_kwargs = dict(
                 net_arch=[self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value
@@ -123,9 +124,14 @@ class PPOAgent(BaseAgent):
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type)
             exp_result.policies[seed] = policy
+
             # Save policy
             MetastoreFacade.save_ppo_policy(ppo_policy=policy)
             os.chmod(save_path, 0o777)
+
+            # Save latest trace
+            MetastoreFacade.save_simulation_trace(orig_env.get_traces()[-1])
+            orig_env.reset_traces()
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -175,7 +181,9 @@ class PPOTrainingCallback(BaseCallback):
     def __init__(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
                  training_job: TrainingJobConfig, exp_execution: ExperimentExecution,
                  max_steps: int, simulation_name: str,
-                 states: List[State], actions: List[Action], player_type: PlayerType, verbose=0,
+                 states: List[State], actions: List[Action], player_type: PlayerType,
+                 env: gym.Env,
+                 verbose=0,
                  eval_every: int = 100, eval_batch_size: int = 10, save_every: int = 10, save_dir: str = ""):
         """
         Initializes the callback
@@ -195,6 +203,7 @@ class PPOTrainingCallback(BaseCallback):
         :param eval_batch_size: the batch size for evaluation
         :param save_every: how frequently to checkpoint the current model
         :param save_dir: the path to checkpoint models
+        :param env: the training environment
         """
         super(PPOTrainingCallback, self).__init__(verbose)
         self.states = states
@@ -212,6 +221,7 @@ class PPOTrainingCallback(BaseCallback):
         self.actions = actions
         self.save_every = save_every
         self.save_dir = save_dir
+        self.env = env
 
     def _on_training_start(self) -> None:
         """
@@ -297,6 +307,7 @@ class PPOTrainingCallback(BaseCallback):
             progress = round(steps_done/total_steps_done,2)
             self.training_job.progress_percentage = progress
             self.training_job.experiment_result = self.exp_result
+            self.training_job.simulation_traces.append(self.env.get_traces()[-1])
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
             # Update execution
