@@ -9,11 +9,19 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import TSPSAPolicy from "./TSPSAPolicy/TSPSAPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
 import PPOPolicy from "./PPOPolicy/PPOPolicy";
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import debounce from 'lodash.debounce';
 
 const Policies = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [tspsaPolicies, setTSPSAPolicies] = useState([]);
+    const [filteredTspsaPolicies, setFilteredTSPSAPolicies] = useState([]);
+    const [tSPSAPoliciesSearchString, setTSPSAPoliciesSearchString] = useState("");
     const [ppoPolicies, setPPOPolicies] = useState([]);
+    const [filteredPPOPolicies, setFilteredPPOPolicies] = useState([]);
+    const [ppoPoliciesSearchString, setPpoPoliciesSearchString] = useState("");
     const [loadingspsaPolicies, setLoadingSpsaPolicies] = useState(true);
     const [loadingPPOPoliies, setLoadingPPOPolicies] = useState(true);
     const ip = "localhost"
@@ -32,6 +40,7 @@ const Policies = () => {
             .then(res => res.json())
             .then(response => {
                 setTSPSAPolicies(response);
+                setFilteredTSPSAPolicies(response)
                 setLoadingSpsaPolicies(false)
             })
             .catch(error => console.log("error:" + error))
@@ -50,6 +59,7 @@ const Policies = () => {
             .then(res => res.json())
             .then(response => {
                 setPPOPolicies(response);
+                setFilteredPPOPolicies(response)
                 setLoadingPPOPolicies(false)
             })
             .catch(error => console.log("error:" + error))
@@ -204,58 +214,139 @@ const Policies = () => {
         }
     }
 
+    const searchTSPSAPoliciesFilter = (tSpsaPolicy, searchVal) => {
+        return (searchVal === "" ||
+            tSpsaPolicy.id.toString().indexOf(searchVal.toLowerCase()) !== -1 ||
+            tSpsaPolicy.simulation_name.indexOf(searchVal.toLowerCase()) !== -1
+        )
+    }
+
+    const searchTSPSAPolicyChange = (event) => {
+        var searchVal = event.target.value
+        const fPolicies = tspsaPolicies.filter(policy => {
+            return searchTSPSAPoliciesFilter(policy, searchVal)
+        });
+        setFilteredTSPSAPolicies(fPolicies)
+        setTSPSAPoliciesSearchString(searchVal)
+    }
+
+    const searchTSPSAPoliciesHandler = useCallback(debounce(searchTSPSAPolicyChange, 350), []);
+
+    const searchPPOPoliciesFilter = (ppoPolicy, searchVal) => {
+        return (searchVal === "" ||
+            ppoPolicy.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            ppoPolicy.simulation_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchPPOPolicyChange = (event) => {
+        var searchVal = event.target.value
+        const fPolicies = ppoPolicies.filter(policy => {
+            return searchPPOPoliciesFilter(policy, searchVal)
+        });
+        setFilteredPPOPolicies(fPolicies)
+        setPpoPoliciesSearchString(searchVal)
+    }
+
+    const searchPPOPoliciesHandler = useCallback(debounce(searchPPOPolicyChange, 350), []);
 
     return (
         <div className="policyExamination">
-            <h3> T-SPSA policies
+            <div className="row">
+                <div className="col-sm-3">
+                </div>
+                <div className="col-sm-3">
+                    <h3> T-SPSA policies
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderTSPSARefreshTooltip}
-                >
-                    <Button variant="button" onClick={refreshTSPSAPolicies}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderTSPSARefreshTooltip}
+                        >
+                            <Button variant="button" onClick={refreshTSPSAPolicies}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                >
-                    <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
-                        <i className="fa fa-info-circle" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-            </h3>
-            <TSPSAPoliciesAccordions loading={loadingspsaPolicies} policies={tspsaPolicies}/>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}
+                        >
+                            <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                                <i className="fa fa-info-circle" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="tSpsaPoliciesSearchField" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="tSpsaPoliciesSearchLabel"
+                                aria-describedby="tSpsaPoliciesSearchField"
+                                onChange={searchTSPSAPoliciesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2"></div>
+            </div>
+            <TSPSAPoliciesAccordions loading={loadingspsaPolicies} policies={filteredTspsaPolicies}/>
+            <div className="row ppoPolicies">
+                <div className="col-sm-3">
+                </div>
+                <div className="col-sm-3">
+                    <h3> PPO policies
 
-            <h3 className="ppoPolicies"> PPO policies
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderPPORefreshTooltip}
+                        >
+                            <Button variant="button" onClick={refreshPPOPolicies}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderPPORefreshTooltip}
-                >
-                    <Button variant="button" onClick={refreshPPOPolicies}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                >
-                    <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
-                        <i className="fa fa-info-circle" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-            </h3>
-            <PPOPoliciesAccordions loading={loadingPPOPoliies} policies={ppoPolicies}/>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}
+                        >
+                            <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                                <i className="fa fa-info-circle" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="ppoPoliciesSearchField" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="ppoPoliciesSearchLabel"
+                                aria-describedby="ppoPoliciesSearchField"
+                                onChange={searchPPOPoliciesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2"></div>
+            </div>
+            <PPOPoliciesAccordions loading={loadingPPOPoliies} policies={filteredPPOPolicies}/>
         </div>
     );
 }

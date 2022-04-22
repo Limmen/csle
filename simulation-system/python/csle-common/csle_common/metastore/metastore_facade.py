@@ -311,11 +311,12 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Installing statistics "
                                              f"for emulation:{emulation_statistics.emulation_name} in the metastore")
+        emulation_statistics.compute_descriptive_statistics_and_distributions()
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
                             f"(emulation_name, statistics) "
@@ -338,11 +339,12 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Installing statistics "
                                              f"for emulation:{emulation_statistics.emulation_name} in the metastore")
+        emulation_statistics.compute_descriptive_statistics_and_distributions()
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
                             f" SET statistics=%s "

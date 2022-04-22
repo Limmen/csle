@@ -29,8 +29,15 @@ const ConditionalHistogramDistribution = React.memo((props) => {
             var min_val = 999999
 
             var keys = []
-            for (let i = 0; i < props.selectedConditionals.length; i++) {
-                var tempKeys = Object.keys(props.data[props.selectedConditionals[i].value][props.selectedMetric.value])
+            if(props.selectedConditionals.length > 0){
+                for (let i = 0; i < props.selectedConditionals.length; i++) {
+                    var tempKeys = Object.keys(props.data[props.selectedConditionals[i].value][props.selectedMetric.value])
+                    for (let j = 0; j < tempKeys.length; j++) {
+                        keys.push(tempKeys[j])
+                    }
+                }
+            } else {
+                var tempKeys = Object.keys(props.data[props.selectedMetric.value])
                 for (let j = 0; j < tempKeys.length; j++) {
                     keys.push(tempKeys[j])
                 }
@@ -52,21 +59,31 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                 }
                 scatterDataRow1["value"] = dataRow["value"]
                 scatterDataRow2["value"] = dataRow["value"]
-                for (let j = 0; j < props.selectedConditionals.length; j++) {
-                    if (props.data[props.selectedConditionals[j].value][props.selectedMetric.value].hasOwnProperty(keys[i])) {
-                        dataRow[props.selectedConditionals[j].label] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
-                        if(j === 0) {
-                            scatterDataRow1["count"] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
+                if(props.selectedConditionals.length > 0){
+                    for (let j = 0; j < props.selectedConditionals.length; j++) {
+                        if (props.data[props.selectedConditionals[j].value][props.selectedMetric.value].hasOwnProperty(keys[i])) {
+                            dataRow[props.selectedConditionals[j].label] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
+                            if(j === 0) {
+                                scatterDataRow1[props.yAxisLabel] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
+                            } else {
+                                scatterDataRow2[props.yAxisLabel] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
+                            }
                         } else {
-                            scatterDataRow2["count"] = props.data[props.selectedConditionals[j].value][props.selectedMetric.value][keys[i]]
+                            dataRow[props.selectedConditionals[j].label] = 0
+                            if(j === 0) {
+                                scatterDataRow1[props.yAxisLabel] = 0
+                            } else {
+                                scatterDataRow2[props.yAxisLabel] = 0
+                            }
                         }
+                    }
+                } else {
+                    if (props.data[props.selectedMetric.value].hasOwnProperty(keys[i])) {
+                        dataRow["initial_value"] = props.data[props.selectedMetric.value][keys[i]]
+                        scatterDataRow1[props.yAxisLabel] = props.data[props.selectedMetric.value][keys[i]]
                     } else {
-                        dataRow[props.selectedConditionals[j].label] = 0
-                        if(j === 0) {
-                            scatterDataRow1["count"] = 0
-                        } else {
-                            scatterDataRow2["count"] = 0
-                        }
+                        dataRow["initial_value"] = 0
+                        scatterDataRow1[props.yAxisLabel] = 0
                     }
                 }
                 data2.push(dataRow)
@@ -74,6 +91,16 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                 data4.push(scatterDataRow2)
             }
             var domain = [min_val, max_val]
+            if (props.selectedConditionals.length === 0){
+                var selectedConditionals =[
+                    {
+                        label: "initial_value",
+                        value: "initial_value"
+                    }
+                ]
+            } else {
+                var selectedConditionals = props.selectedConditionals
+            }
             return (
                 <div className="row">
                     <div className="col-sm-6">
@@ -91,15 +118,15 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
                                     <Label value="Value" offset={-20} position="insideBottom" className="largeFont"/>
                                 </XAxis>
-                                <YAxis type="number" tick={{transform: 'translate(-10,3)'}} dataKey="count">
-                                    <Label angle={270} value="# Count" offset={0} position="insideLeft"
+                                <YAxis type="number" tick={{transform: 'translate(-10,3)'}} dataKey={props.yAxisLabel}>
+                                    <Label angle={270} value={props.yAxisLabel} offset={0} position="insideLeft"
                                            className="largeFont"
                                            dy={50}/>
                                 </YAxis>
                                 <Tooltip/>
                                 <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
                                         className="largeFont"/>
-                                {props.selectedConditionals.map((conditional, index) => {
+                                {selectedConditionals.map((conditional, index) => {
                                     if (index === 0) {
                                         return (<Scatter key={conditional.label + "-" + index}
                                                          name={conditional.label}
@@ -133,14 +160,14 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                     <Label value="Value" offset={-20} position="insideBottom" className="largeFont"/>
                                 </XAxis>
                                 <YAxis type="number" tick={{transform: 'translate(-10,3)'}}>
-                                    <Label angle={270} value="# Count" offset={0} position="insideLeft"
+                                    <Label angle={270} value={props.yAxisLabel} offset={0} position="insideLeft"
                                            className="largeFont"
                                            dy={50}/>
                                 </YAxis>
                                 <Tooltip/>
                                 <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
                                         className="largeFont"/>
-                                {props.selectedConditionals.map((conditional, index) => {
+                                {selectedConditionals.map((conditional, index) => {
                                     return (
                                         <Bar key={conditional.label + "-" + index}
                                              dataKey={conditional.label}

@@ -35,6 +35,7 @@ const Experiment = (props) => {
         </Tooltip>
     );
 
+
     return (<Card key={props.experiment.id} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.experiment.id} className="mgHeader">
@@ -73,7 +74,7 @@ const Experiment = (props) => {
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
                         <div id="generalInfoBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>Attribute</th>
@@ -129,7 +130,7 @@ const Experiment = (props) => {
                     </Card.Header>
                     <Collapse in={hyperparametersOpen}>
                         <div id="hyperparametersOpen" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -164,7 +165,7 @@ const Experiment = (props) => {
                     </Card.Header>
                     <Collapse in={randomSeedsAndOutputsOpen}>
                         <div id="randomSeedsAndOutputsOpen" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>Seed</th>
@@ -198,7 +199,7 @@ const Experiment = (props) => {
                     <Collapse in={metricPlotsOpen}>
                         <div id="metricPlotsBody" className="cardBodyHidden">
                             {props.experiment.result.plot_metrics.map((metric, index2) => {
-                                return <MetricPlot key={index2} className="metricPlot" metricName={metric}
+                                return <MetricPlot key={"plot_metrics-" + metric + "-" + index2} className="metricPlot" metricName={metric}
                                                    data={props.experiment.result.avg_metrics[metric]}
                                                    stds={props.experiment.result.std_metrics[metric]}/>
                             })}
@@ -209,7 +210,7 @@ const Experiment = (props) => {
                                             props.experiment.result.all_metrics[seed][metric].length > 0 &&
                                             !Array.isArray(props.experiment.result.all_metrics[seed][metric][0])) {
                                             return (
-                                                <div className="metricsTable" key={seed + "-" + metric + "-" + index1 + "-" + index2}>
+                                                <div className="metricsTable" key={"metricPlot-" + seed + "-" + metric + "-" + index1 + "-" + index2}>
                                                     <h5 className="semiTitle semiTitle2">
                                                         Metric: {metric}, seed: {seed}
                                                     </h5>
@@ -219,7 +220,7 @@ const Experiment = (props) => {
                                                                 stds={null}/>
                                                 </div>)
                                         } else {
-                                            return (<span></span>)
+                                            return (<span key={"metricPlot-" + seed + "-" + metric + "-" + index1 + "-" + index2}></span>)
                                         }
                                     })
                                 }
@@ -250,7 +251,7 @@ const Experiment = (props) => {
                                                     <h5 className="semiTitle semiTitle2">
                                                         Metric: {metric}, seed: {seed}
                                                     </h5>
-                                                    <Table striped bordered hover>
+                                                    <Table striped bordered hover className="table-responsive">
                                                         <thead>
                                                         <tr>
                                                             <th>Training iteration</th>
@@ -259,7 +260,7 @@ const Experiment = (props) => {
                                                         </thead>
                                                         <tbody>
                                                         {props.experiment.result.all_metrics[seed][metric].map((metricValue, index3) => {
-                                                            return <tr key={metricValue + "-" + index3}>
+                                                            return <tr key={metricValue + "-" + index3 + "-" + index2 + "-" + index1}>
                                                                 <td>{index3}</td>
                                                                 <td>{metricValue}</td>
                                                             </tr>
@@ -268,7 +269,7 @@ const Experiment = (props) => {
                                                     </Table>
                                                 </div>)
                                         } else {
-                                            return (<span></span>)
+                                            return (<span key={seed + "-" + metric + "-" + index1 + "-" + index2}></span>)
                                         }
                                     })
                                 }

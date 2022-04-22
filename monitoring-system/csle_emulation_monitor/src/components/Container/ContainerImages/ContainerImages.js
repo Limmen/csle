@@ -7,9 +7,15 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import './ContainerImages.css';
 import Docker from './docker.png'
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import debounce from 'lodash.debounce';
 
 const ContainerImages = () => {
     const [images, setImages] = useState([]);
+    const [filteredImages, setFilteredImages] = useState([]);
+    const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState([]);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const ip = "localhost"
@@ -28,6 +34,8 @@ const ContainerImages = () => {
             .then(res => res.json())
             .then(response => {
                 setImages(response);
+                setFilteredImages(response);
+                console.log(response)
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -96,7 +104,7 @@ const ContainerImages = () => {
                 </Spinner>)
         } else {
             return (
-                <Table bordered hover>
+                <Table bordered hover className="table-responsive">
                     <thead>
                     <tr className="containerImagesTable">
                         <th>Name</th>
@@ -116,31 +124,71 @@ const ContainerImages = () => {
         }
     }
 
+    const searchFilter = (image, searchVal) => {
+        return (searchVal === "" ||
+            image.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchChange = (event) => {
+        var searchVal = event.target.value
+        const fImg = images.filter(img => {
+            return searchFilter(img, searchVal)
+        });
+        setFilteredImages(fImg)
+        setSearchString(searchVal)
+    }
+
+    const searchHandler = useCallback(debounce(searchChange, 350), []);
+
     return (
         <div className="Monitoring">
-            <h3> Container Images
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshTooltip()}
-                >
-                    <Button variant="button" onClick={refresh}>
-                        <i className="fa fa-refresh refreshButton3" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                    className="overLayInfo"
-                >
-                    <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton3">
-                        <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-            </h3>
-            <SpinnerOrTable images={images} loading={loading}/>
+            <div className="row">
+                <div className="col-sm-3">
+                </div>
+                <div className="col-sm-3">
+                    <h3> Container Images
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshTooltip()}
+                        >
+                            <Button variant="button" onClick={refresh}>
+                                <i className="fa fa-refresh refreshButton3" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}
+                            className="overLayInfo"
+                        >
+                            <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton3">
+                                <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="basic-addon1" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="basic-addon1"
+                                onChange={searchHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2"></div>
+            </div>
+            <SpinnerOrTable images={filteredImages} loading={loading}/>
         </div>
     );
 }

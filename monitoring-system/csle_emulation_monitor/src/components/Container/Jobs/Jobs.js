@@ -8,14 +8,24 @@ import Spinner from 'react-bootstrap/Spinner';
 import Accordion from 'react-bootstrap/Accordion';
 import TrainingJob from "./TrainingJob/TrainingJob";
 import SystemIdentificationJob from "./SystemIdentificationJob/SystemIdentificationJob";
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import debounce from 'lodash.debounce';
 
 const Jobs = () => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
     const [trainingJobsLoading, setTrainingJobsLoading] = useState(false);
     const [trainingJobs, setTrainingJobs] = useState([]);
+    const [filteredTrainingJobs, setFilteredTrainingJobs] = useState([]);
     const [showSystemIdentificationJobsInfoModal, setShowSystemIdentificationJobsInfoModal] = useState(false);
     const [systemIdentificationJobsLoading, setSystemIdentificationJobsLoading] = useState(false);
     const [systemIdentificationJobs, setSystemIdentificationJobs] = useState([]);
+    const [showOnlyRunningTrainingJobs, setShowOnlyRunningTrainingJobs] = useState(false);
+    const [filteredSystemIdentificationJobs, setFilteredSystemIdentificationJobs] = useState([]);
+    const [showOnlyRunningSystemIdJobs, setShowOnlyRunningSystemIdJobs] = useState(false);
+    const [trainingJobsSearchString, setTrainingJobsSearchString] = useState("");
+    const [systemIdJobsSearchString, setSystemIdJobsSearchString] = useState("");
 
     const ip = "localhost"
     // const ip = "172.31.212.92"
@@ -33,6 +43,7 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 setTrainingJobs(response);
+                setFilteredTrainingJobs(response);
                 setTrainingJobsLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -51,6 +62,7 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 setSystemIdentificationJobs(response);
+                setFilteredSystemIdentificationJobs(response);
                 setSystemIdentificationJobsLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -128,6 +140,77 @@ const Jobs = () => {
         setTrainingJobsLoading(true)
         startTrainingJobRequest(job.id)
     }
+
+    const trainingJobSearchFilter = (job, searchVal) => {
+        return (searchVal === "" ||
+            job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.simulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.emulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.experiment_config.title.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
+        );
+    }
+
+    const searchTrainingJobChange = (event) => {
+        var searchVal = event.target.value
+        const filteredTrainingJobs = trainingJobs.filter(job => {
+            return trainingJobSearchFilter(job, searchVal)
+        });
+        setFilteredTrainingJobs(filteredTrainingJobs)
+        setTrainingJobsSearchString(trainingJobsSearchString)
+    }
+
+    const runningTrainingJobsChange = (event) => {
+        if(!showOnlyRunningTrainingJobs) {
+            const filteredTrainJobs = filteredTrainingJobs.filter(job => {
+                return job.running
+            });
+            setFilteredTrainingJobs(filteredTrainJobs)
+        } else {
+            const filteredTrainJobs = trainingJobs.filter(job => {
+                return trainingJobSearchFilter(job, trainingJobsSearchString)
+            });
+            setFilteredTrainingJobs(filteredTrainJobs)
+        }
+        setShowOnlyRunningTrainingJobs(!showOnlyRunningTrainingJobs)
+    }
+
+    const runningSystemIdJobsChange = (event) => {
+        if (!showOnlyRunningSystemIdJobs) {
+            const filteredSystemIdJobs = filteredSystemIdentificationJobs.filter(job => {
+                return job.running
+            });
+            setFilteredSystemIdentificationJobs(filteredSystemIdJobs)
+        } else {
+            const filteredSystemIdJobs = systemIdentificationJobs.filter(job => {
+                return systemIdentificationJobSearchFilter(job, systemIdJobsSearchString)
+            });
+            setFilteredSystemIdentificationJobs(filteredSystemIdJobs)
+        }
+        setShowOnlyRunningSystemIdJobs(!showOnlyRunningSystemIdJobs)
+    }
+
+
+    const searchTrainingJobHandler = useCallback(debounce(searchTrainingJobChange, 350), []);
+
+    const systemIdentificationJobSearchFilter = (job, searchVal) => {
+        return (searchVal === "" ||
+            job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.descr.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.emulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.pid.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
+        );
+    }
+
+    const searchSystemIdJobChange = (event) => {
+        var searchVal = event.target.value
+        const filteredSystemIdJobs = systemIdentificationJobs.filter(job => {
+            return systemIdentificationJobSearchFilter(job, searchVal)
+        });
+        setFilteredSystemIdentificationJobs(filteredSystemIdJobs)
+        setSystemIdJobsSearchString(searchVal)
+    }
+
+    const searchSystemIdJobHandler = useCallback(debounce(searchSystemIdJobChange, 350), []);
 
     const removeSystemIdJobRequest = useCallback((sys_id_job_id) => {
         fetch(
@@ -327,55 +410,130 @@ const Jobs = () => {
 
     return (
         <div className="policyExamination">
-            <h3> Training jobs
+            <div className="row">
+                <div className="col-sm-4"></div>
+                <div className="col-sm-2">
+                    <h3>
+                        Training jobs
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshTrainingJobsTooltip}
-                >
-                    <Button variant="button" onClick={refreshTrainingJobs}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshTrainingJobsTooltip}
+                        >
+                            <Button variant="button" onClick={refreshTrainingJobs}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderTrainingJobsInfoTooltip}
-                >
-                    <Button variant="button" onClick={() => setShowTrainingJobsInfoModal(true)} className="infoButton2">
-                        <i className="fa fa-info-circle" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <TrainingJobsInfoModal show={showTrainingJobsInfoModal} onHide={() => setShowTrainingJobsInfoModal(false)}/>
-            </h3>
-            <TrainingJobsAccordions jobs={trainingJobs} loading={trainingJobsLoading} />
-            <h3 className="systemIdentificationJobs"> System identification jobs
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderTrainingJobsInfoTooltip}
+                        >
+                            <Button variant="button" onClick={() => setShowTrainingJobsInfoModal(true)} className="infoButton2">
+                                <i className="fa fa-info-circle" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <TrainingJobsInfoModal show={showTrainingJobsInfoModal}
+                                               onHide={() => setShowTrainingJobsInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="trainingJobInput" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="trainingJobInput"
+                                onChange={searchTrainingJobHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="trainingSwitch"
+                            label="Show only running jobs"
+                            className="runningCheck"
+                            onChange={runningTrainingJobsChange}
+                        />
+                    </Form>
+                </div>
+            </div>
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshSystemIdentificationJobsTooltip}
-                >
-                    <Button variant="button" onClick={refreshSystemIdentificationJobs}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
+            <TrainingJobsAccordions jobs={filteredTrainingJobs} loading={trainingJobsLoading}/>
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderSystemIdentificationJobsInfoTooltip}
-                >
-                    <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)} className="infoButton2">
-                        <i className="fa fa-info-circle" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
-                                                   onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
-            </h3>
-            <SystemIdentificationJobsAccordions jobs={systemIdentificationJobs} loading={systemIdentificationJobsLoading} />
+
+            <div className="row systemIdentificationJobs">
+                <div className="col-sm-3"></div>
+                <div className="col-sm-3">
+                    <h3> System identification jobs
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshSystemIdentificationJobsTooltip}
+                        >
+                            <Button variant="button" onClick={refreshSystemIdentificationJobs}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderSystemIdentificationJobsInfoTooltip}
+                        >
+                            <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)}
+                                    className="infoButton2">
+                                <i className="fa fa-info-circle" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
+                                                           onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="systemIdJobInput" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="systemIdJobInput"
+                                onChange={searchSystemIdJobHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="systemIdSwitch"
+                            label="Show only running jobs"
+                            className="runningCheck"
+                            onChange={runningSystemIdJobsChange}
+                        />
+                    </Form>
+                </div>
+            </div>
+            <SystemIdentificationJobsAccordions jobs={filteredSystemIdentificationJobs}
+                                                loading={systemIdentificationJobsLoading}/>
         </div>
     );
 }

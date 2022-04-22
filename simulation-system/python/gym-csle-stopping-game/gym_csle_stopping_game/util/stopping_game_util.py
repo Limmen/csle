@@ -182,29 +182,29 @@ class StoppingGameUtil:
         intrusion_severe_alerts_probabilities = []
         intrusion_warning_alerts_probabilities = []
         intrusion_login_attempts_probabilities = []
-        norm = sum(emulation_statistic.conditionals["intrusion"]["severe_alerts"].values())
+        norm = sum(emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"].values())
         for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
-            count = emulation_statistic.conditionals["intrusion"]["severe_alerts"][severe_alert_obs.id]
+            count = emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"][severe_alert_obs.id]
             intrusion_severe_alerts_probabilities.append(count/norm)
         for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
-            count = emulation_statistic.conditionals["intrusion"]["warning_alerts"][warning_alert_obs.id]
+            count = emulation_statistic.conditionals_counts["intrusion"]["warning_alerts"][warning_alert_obs.id]
             intrusion_warning_alerts_probabilities.append(count/norm)
         for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
-            count = emulation_statistic.conditionals["intrusion"]["login_attempts"][login_attempt_obs.id]
+            count = emulation_statistic.conditionals_counts["intrusion"]["login_attempts"][login_attempt_obs.id]
             intrusion_login_attempts_probabilities.append(count/norm)
 
         no_intrusion_severe_alerts_probabilities = []
         no_intrusion_warning_alerts_probabilities = []
         no_intrusion_login_attempts_probabilities = []
-        norm = sum(emulation_statistic.conditionals["no_intrusion"]["severe_alerts"].values())
+        norm = sum(emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"].values())
         for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
-            count = emulation_statistic.conditionals["no_intrusion"]["severe_alerts"][severe_alert_obs.id]
+            count = emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"][severe_alert_obs.id]
             no_intrusion_severe_alerts_probabilities.append(count/norm)
         for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
-            count = emulation_statistic.conditionals["no_intrusion"]["warning_alerts"][warning_alert_obs.id]
+            count = emulation_statistic.conditionals_counts["no_intrusion"]["warning_alerts"][warning_alert_obs.id]
             no_intrusion_warning_alerts_probabilities.append(count/norm)
         for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
-            count = emulation_statistic.conditionals["no_intrusion"]["login_attempts"][login_attempt_obs.id]
+            count = emulation_statistic.conditionals_counts["no_intrusion"]["login_attempts"][login_attempt_obs.id]
             no_intrusion_login_attempts_probabilities.append(count/norm)
 
         component_observation_tensors = {}

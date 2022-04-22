@@ -8,11 +8,18 @@ import Modal from 'react-bootstrap/Modal'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import ConfigSpace from './ConfigSpace.png'
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import debounce from 'lodash.debounce';
 
 const Emulations = () => {
     const [emulations, setEmulations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
+    const [filteredEmulations, setFilteredEmulations] = useState([]);
+    const [showOnlyRunningEmulations, setShowOnlyRunningEmulations] = useState(false);
+    const [searchString, setSearchString] = useState("");
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -28,7 +35,9 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
+                console.log(response)
                 setEmulations(response);
+                setFilteredEmulations(response);
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -69,6 +78,39 @@ const Emulations = () => {
     const info = () => {
         setShowInfoModal(true)
     }
+
+    const searchFilter = (emulation, searchVal) => {
+        return (searchVal === "" ||
+            emulation.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            emulation.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            emulation.descr.toLowerCase().indexOf(searchVal.toString()) !== -1)
+    }
+
+    const searchChange = (event) => {
+        var searchVal = event.target.value
+        const filteredEmulations = emulations.filter(emulation => {
+            return searchFilter(emulation, searchVal)
+        });
+        setFilteredEmulations(filteredEmulations)
+        setSearchString(searchVal)
+    }
+
+    const runningEmulationsChange = (event) => {
+        if (!showOnlyRunningEmulations) {
+            const filteredEms = filteredEmulations.filter(emulation => {
+                return emulation.running
+            });
+            setFilteredEmulations(filteredEms)
+        } else {
+            const filteredEms = emulations.filter(emulation => {
+                return searchFilter(emulation, searchString)
+            });
+            setFilteredEmulations(filteredEms)
+        }
+        setShowOnlyRunningEmulations(!showOnlyRunningEmulations)
+    }
+
+    const searchHandler = useCallback(debounce(searchChange, 350), []);
 
     const EmulationAccordions = (props) => {
         if (props.loading) {
@@ -140,33 +182,64 @@ const Emulations = () => {
 
     return (
         <div className="Emulations">
-            <h3 className="text-center inline-block emulationsHeader"> Emulations
-
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshTooltip}
-                >
-                    <Button variant="button" onClick={refresh}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                >
-                    <Button variant="button" onClick={info}>
-                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
-
-            </h3>
-            <EmulationAccordions loading={loading} emulations={emulations}/>
+            <div className="row">
+                <div className="col-sm-2">
+                </div>
+                <div className="col-sm-3">
+                    <h3 className="text-center inline-block emulationsHeader">
+                        Emulations
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshTooltip}
+                        >
+                            <Button variant="button" onClick={refresh}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}
+                        >
+                            <Button variant="button" onClick={info}>
+                                <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="basic-addon1" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="basic-addon1"
+                                onChange={searchHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-3">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="runningEmulationsSwitch"
+                            label="Show only running emulations"
+                            className="runningCheck"
+                            onChange={runningEmulationsChange}
+                        />
+                    </Form>
+                </div>
+            </div>
+            <EmulationAccordions loading={loading} emulations={filteredEmulations}/>
         </div>
     );
 }

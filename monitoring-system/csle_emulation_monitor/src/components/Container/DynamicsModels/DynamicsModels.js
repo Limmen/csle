@@ -8,6 +8,10 @@ import Select from 'react-select'
 import ConditionalHistogramDistribution from "./ConditionalHistogramDistribution/ConditionalHistogramDistribution";
 import './DynamicsModels.css';
 import SystemIdentification from './SystemId.png'
+import Collapse from 'react-bootstrap/Collapse'
+import Card from 'react-bootstrap/Card';
+import Table from 'react-bootstrap/Table'
+import fileDownload from 'react-file-download'
 
 const DynamicsModels = () => {
     const [dynamicsModels, setDynamicsModels] = useState([]);
@@ -20,6 +24,11 @@ const DynamicsModels = () => {
     const [animationDuration, setAnimationDuration] = useState(5);
     const animationDurationFactor = 50000
     const [showInfoModal, setShowInfoModal] = useState(false);
+    const [deltaCountsOpen, setDeltaCountsOpen] = useState(false);
+    const [initialCountsOpen, setInitialCountsOpen] = useState(false);
+    const [deltaProbsOpen, setDeltaProbsOpen] = useState(false);
+    const [initialProbsOpen, setInitialProbsOpen] = useState(false);
+    const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
 
     const ip = "localhost"
     // const ip = "172.31.212.92"
@@ -85,7 +94,7 @@ const DynamicsModels = () => {
 
     const updateDynamicsModel = (dynModel) => {
         setSelectedDynamicsModel(dynModel)
-        const conditionalOptions = Object.keys(dynModel.value.conditionals).map((conditionalName, index) => {
+        const conditionalOptions = Object.keys(dynModel.value.conditionals_counts).map((conditionalName, index) => {
             return {
                 value: conditionalName,
                 label: conditionalName
@@ -93,7 +102,8 @@ const DynamicsModels = () => {
         })
         setConditionals(conditionalOptions)
         setSelectedConditionals([conditionalOptions[0]])
-        const metricOptions = Object.keys(dynModel.value.conditionals[Object.keys(dynModel.value.conditionals)[0]]).map((metricName, index) => {
+        const metricOptions = Object.keys(dynModel.value.conditionals_counts[
+            Object.keys(dynModel.value.conditionals_counts)[0]]).map((metricName, index) => {
             return {
                 value: metricName,
                 label: metricName
@@ -120,11 +130,11 @@ const DynamicsModels = () => {
 
     const getNumSamples = (model) => {
         var num_samples = 0
-        for (let i = 0; i < Object.keys(model.conditionals).length; i++) {
-            var metric= Object.keys(model.conditionals[Object.keys(model.conditionals)[i]])[0]
-            for (let j = 0; j < Object.keys(model.conditionals[Object.keys(model.conditionals)[i]][metric]).length; j++) {
-                var value = Object.keys(model.conditionals[Object.keys(model.conditionals)[i]][metric])[j]
-                num_samples = num_samples + model.conditionals[Object.keys(model.conditionals)[i]][metric][value]
+        for (let i = 0; i < Object.keys(model.conditionals_counts).length; i++) {
+            var metric= Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]])[0]
+            for (let j = 0; j < Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric]).length; j++) {
+                var value = Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric])[j]
+                num_samples = num_samples + model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric][value]
             }
         }
         return num_samples
@@ -154,7 +164,7 @@ const DynamicsModels = () => {
                 setLoading(false)
                 if (response.length > 0) {
                     setSelectedDynamicsModel(modelOptions[0])
-                    const conditionalOptions = Object.keys(response[0].conditionals).map((conditionalName, index) => {
+                    const conditionalOptions = Object.keys(response[0].conditionals_counts).map((conditionalName, index) => {
                         return {
                             value: conditionalName,
                             label: conditionalName
@@ -162,7 +172,8 @@ const DynamicsModels = () => {
                     })
                     setConditionals(conditionalOptions)
                     setSelectedConditionals([conditionalOptions[0]])
-                    const metricOptions = Object.keys(response[0].conditionals[Object.keys(response[0].conditionals)[0]]).map((metricName, index) => {
+                    const metricOptions = Object.keys(response[0].conditionals_counts[Object.keys(
+                        response[0].conditionals_counts)[0]]).map((metricName, index) => {
                         return {
                             value: metricName,
                             label: metricName
@@ -339,17 +350,211 @@ const DynamicsModels = () => {
             return (
                 <div>
                     <div className="row chartsRow">
-                        <div className="col-sm-12">
-                            <ConditionalHistogramDistribution
-                                data={props.selectedDynamicsModel.value.conditionals}
-                                selectedConditionals={getFirstTwoConditionals()}
-                                selectedMetric={props.selectedMetric}
-                                title1={"Histogram of observed " + props.selectedMetric.value + " counts"}
-                                title2={"Scatter plot of observed " + props.selectedMetric.value + " counts"}
-                                animationDuration={props.animationDuration}
-                                animationDurationFactor={props.animationDurationFactor}
-                            />
-                        </div>
+                        <Card className="col-sm-12">
+                            <Card.Header>
+                                <Button
+                                    onClick={() => setDeltaCountsOpen(!deltaCountsOpen)}
+                                    aria-controls="deltaCountsBody"
+                                    aria-expanded={deltaCountsOpen}
+                                    variant="link"
+                                >
+                                    <h5 className="cardHeaderDists">Delta value count distributions</h5>
+                                </Button>
+                            </Card.Header>
+                            <Collapse in={deltaCountsOpen}>
+                                <div id="deltaCountsBody" className="cardBodyHidden">
+                                    <div className="col-sm-12">
+                                        <ConditionalHistogramDistribution
+                                            data={props.selectedDynamicsModel.value.conditionals_counts}
+                                            selectedConditionals={getFirstTwoConditionals()}
+                                            selectedMetric={props.selectedMetric}
+                                            title1={"Delta counts: " + props.selectedMetric.value}
+                                            title2={"Delta counts: " + props.selectedMetric.value}
+                                            animationDuration={props.animationDuration}
+                                            animationDurationFactor={props.animationDurationFactor}
+                                            yAxisLabel={"Count"}
+                                        />
+                                    </div>
+                                </div>
+                            </Collapse>
+                        </Card>
+
+                        <Card className="col-sm-12">
+                            <Card.Header>
+                                <Button
+                                    onClick={() => setInitialCountsOpen(!initialCountsOpen)}
+                                    aria-controls="initialCountsBody"
+                                    aria-expanded={initialCountsOpen}
+                                    variant="link"
+                                >
+                                    <h5 className="cardHeaderDists">Initial value count distributions</h5>
+                                </Button>
+                            </Card.Header>
+                            <Collapse in={initialCountsOpen}>
+                                <div id="initialCountsBody" className="cardBodyHidden">
+                                    <div className="col-sm-12">
+                                        <ConditionalHistogramDistribution
+                                            data={props.selectedDynamicsModel.value.initial_distributions_counts}
+                                            selectedConditionals={[]}
+                                            selectedMetric={props.selectedMetric}
+                                            title1={"Initial counts of::" + props.selectedMetric.value}
+                                            title2={"Initial counts of:" + props.selectedMetric.value}
+                                            animationDuration={props.animationDuration}
+                                            animationDurationFactor={props.animationDurationFactor}
+                                            yAxisLabel={"Count"}
+                                        />
+                                    </div>
+                                </div>
+                            </Collapse>
+                        </Card>
+
+                        <Card className="col-sm-12">
+                            <Card.Header>
+                                <Button
+                                    onClick={() => setDeltaProbsOpen(!deltaProbsOpen)}
+                                    aria-controls="deltaProbsBody"
+                                    aria-expanded={deltaProbsOpen}
+                                    variant="link"
+                                >
+                                    <h5 className="cardHeaderDists">Delta value probability distributions</h5>
+                                </Button>
+                            </Card.Header>
+                            <Collapse in={deltaProbsOpen}>
+                                <div id="deltaProbsBody" className="cardBodyHidden">
+                                    <div className="col-sm-12">
+                                        <ConditionalHistogramDistribution
+                                            data={props.selectedDynamicsModel.value.conditionals_probs}
+                                            selectedConditionals={getFirstTwoConditionals()}
+                                            selectedMetric={props.selectedMetric}
+                                            title1={"Delta probabilities: " + props.selectedMetric.value}
+                                            title2={"Delta probabilities: " + props.selectedMetric.value}
+                                            animationDuration={props.animationDuration}
+                                            animationDurationFactor={props.animationDurationFactor}
+                                            yAxisLabel={"Probability"}
+                                        />
+                                    </div>
+                                </div>
+                            </Collapse>
+                        </Card>
+
+                        <Card className="col-sm-12">
+                            <Card.Header>
+                                <Button
+                                    onClick={() => setInitialProbsOpen(!initialProbsOpen)}
+                                    aria-controls="initialProbsBody"
+                                    aria-expanded={initialProbsOpen}
+                                    variant="link"
+                                >
+                                    <h5 className="cardHeaderDists">
+                                        Initial value probability distributions
+                                    </h5>
+                                </Button>
+                            </Card.Header>
+                            <Collapse in={initialProbsOpen}>
+                                <div id="initialProbsBody" className="cardBodyHidden">
+                                    <div className="col-sm-12">
+                                        <ConditionalHistogramDistribution
+                                            data={props.selectedDynamicsModel.value.initial_distributions_probs}
+                                            selectedConditionals={[]}
+                                            selectedMetric={props.selectedMetric}
+                                            title1={"Initial counts of::" + props.selectedMetric.value}
+                                            title2={"Initial counts of:" + props.selectedMetric.value}
+                                            animationDuration={props.animationDuration}
+                                            animationDurationFactor={props.animationDurationFactor}
+                                            yAxisLabel={"Probability"}
+                                        />
+                                    </div>
+                                </div>
+                            </Collapse>
+                        </Card>
+
+                        <Card className="col-sm-12">
+                            <Card.Header>
+                                <Button
+                                    onClick={() => setDescriptiveStatsOpen(!descriptiveStatsOpen)}
+                                    aria-controls="descriptiveStatsBody"
+                                    aria-expanded={descriptiveStatsOpen}
+                                    variant="link"
+                                >
+                                    <h5 className="cardHeaderDists">
+                                        Descriptive statistics
+                                    </h5>
+                                </Button>
+                            </Card.Header>
+                            <Collapse in={descriptiveStatsOpen}>
+                                <div id="descriptiveStatsBody" className="cardBodyHidden">
+                                    <Table striped bordered hover className="table-responsive">
+                                        <thead>
+                                        <tr>
+                                            <th>Attribute</th>
+                                            <th> Value</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {props.selectedConditionals.map((conditional, index) => {
+                                            return (
+                                                <tr key={conditional.label + "-" + index}>
+                                                    <td>{conditional.label} mean</td>
+                                                    <td>{props.selectedDynamicsModel.value.means[conditional.label][props.selectedMetric.label]}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                        {props.selectedConditionals.map((conditional, index) => {
+                                            return (
+                                                <tr key={conditional.label + "-" + index}>
+                                                    <td>{conditional.label} standard deviation</td>
+                                                    <td>{props.selectedDynamicsModel.value.stds[conditional.label][props.selectedMetric.label]}</td>
+                                                </tr>
+                                            )
+                                        })}
+
+                                        {props.selectedConditionals.map((conditional, index) => {
+                                            return (
+                                                <tr key={conditional.label + "-" + index}>
+                                                    <td>{conditional.label} minimum value</td>
+                                                    <td>{props.selectedDynamicsModel.value.mins[conditional.label][props.selectedMetric.label]}</td>
+                                                </tr>
+                                            )
+                                        })}
+
+                                        {props.selectedConditionals.map((conditional, index) => {
+                                            return (
+                                                <tr key={conditional.label + "-" + index}>
+                                                    <td>{conditional.label} maximum value</td>
+                                                    <td>{props.selectedDynamicsModel.value.maxs[conditional.label][props.selectedMetric.label]}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                        <tr>
+                                            <td>Initial value mean</td>
+                                            <td>{props.selectedDynamicsModel.value.initial_means[props.selectedMetric.label]}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Initial value standard deviation</td>
+                                            <td>{props.selectedDynamicsModel.value.initial_stds[props.selectedMetric.label]}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Initial minimum value</td>
+                                            <td>{props.selectedDynamicsModel.value.initial_mins[props.selectedMetric.label]}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Initial maximum value</td>
+                                            <td>{props.selectedDynamicsModel.value.initial_maxs[props.selectedMetric.label]}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Data</td>
+                                            <td>
+                                                <Button variant="link"
+                                                        onClick={() => fileDownload(JSON.stringify(props.selectedDynamicsModel.value), "config.json")}>
+                                                    data.json
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </Collapse>
+                        </Card>
                     </div>
                 </div>
             )

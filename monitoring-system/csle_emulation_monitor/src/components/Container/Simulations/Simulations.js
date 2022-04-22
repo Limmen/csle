@@ -8,10 +8,17 @@ import Accordion from 'react-bootstrap/Accordion';
 import Spinner from 'react-bootstrap/Spinner'
 import MarkovChain from './Markov.png'
 import Simulation from "./Simulation/Simulation";
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import debounce from 'lodash.debounce';
 
 const Simulations = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [simulations, setSimulations] = useState([]);
+    const [filteredSimulations, setFilteredSimulations] = useState([]);
+    const [showOnlyRunningSimulations, setShowOnlyRunningSimulations] = useState(false);
+    const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
@@ -29,6 +36,7 @@ const Simulations = () => {
             .then(res => res.json())
             .then(response => {
                 setSimulations(response);
+                setFilteredSimulations(response);
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -78,6 +86,24 @@ const Simulations = () => {
         setLoading(true)
         fetchSimulations()
     }
+
+    const searchFilter = (simulation, searchVal) => {
+        return (searchVal === "" ||
+            simulation.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            simulation.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            simulation.descr.toLowerCase().indexOf(searchVal.toString()) !== -1)
+    }
+
+    const searchChange = (event) => {
+        var searchVal = event.target.value
+        const filteredSims = simulations.filter(simulation => {
+            return searchFilter(simulation, searchVal)
+        });
+        setFilteredSimulations(filteredSims)
+        setSearchString(searchVal)
+    }
+
+    const searchHandler = useCallback(debounce(searchChange, 350), []);
 
     const InfoModal = (props) => {
         return (
@@ -132,30 +158,54 @@ const Simulations = () => {
 
     return (
         <div className="Simulations">
-            <h3> Simulations
+            <div className="row">
+                <div className="col-sm-4"></div>
+                <div className="col-sm-2">
+                    <h3> Simulations
 
-                <OverlayTrigger
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshTooltip}
-                >
-                    <Button variant="button" onClick={refresh}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshTooltip}
+                        >
+                            <Button variant="button" onClick={refresh}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
 
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                >
-                    <Button variant="button" onClick={() => setShowInfoModal(true)}>
-                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-            </h3>
-            <SimulationAccordions loading={loading} simulations={simulations}/>
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}
+                        >
+                            <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                                <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="basic-addon1" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="basic-addon1"
+                                onChange={searchHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
+            <SimulationAccordions loading={loading} simulations={filteredSimulations}/>
         </div>
     );
 }

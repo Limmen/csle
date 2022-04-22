@@ -27,3 +27,12 @@
 .numSamples {
     margin-left: 20px;
 }
+
+.initialStateDist {
+    margin-top: 75px
+}
+
+.cardHeaderDists  {
+    font-weight: bold;
+    color: black;
+}

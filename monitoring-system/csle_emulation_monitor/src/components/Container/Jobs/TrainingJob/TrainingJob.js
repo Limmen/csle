@@ -152,7 +152,7 @@ const TrainingJob = (props) => {
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
                         <div id="generalInfoBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>Attribute</th>
@@ -211,7 +211,7 @@ const TrainingJob = (props) => {
                     </Card.Header>
                     <Collapse in={hyperparametersOpen}>
                         <div id="hyperparametersBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -294,7 +294,7 @@ const TrainingJob = (props) => {
                                                     <h5 className="semiTitle semiTitle2">
                                                         Metric: {metric}, seed: {seed}
                                                     </h5>
-                                                    <Table striped bordered hover>
+                                                    <Table striped bordered hover className="table-responsive">
                                                         <thead>
                                                         <tr>
                                                             <th>Training iteration</th>
@@ -339,7 +339,7 @@ const TrainingJob = (props) => {
                               return (
                                   <div key={trace.id + "-" + index}>
                                       <h5> Trace index: {index} </h5>
-                                  <Table striped bordered hover>
+                                  <Table striped bordered hover className="table-responsive">
                                       <thead>
                                       <tr>
                                           <th>t</th>

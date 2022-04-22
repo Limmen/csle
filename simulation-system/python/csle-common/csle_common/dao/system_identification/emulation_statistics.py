@@ -1,4 +1,5 @@
 from typing import Dict, Any, List
+import numpy as np
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
@@ -21,14 +22,24 @@ class EmulationStatistics:
         """
         self.emulation_name = emulation_name
         self.descr = descr
-        self.initial_distributions = self.initialize_counters(
+        self.initial_distributions_counts = self.initialize_counters(
             d={}, labels=collector_constants.LOG_SINK.ALL_INITIAL_LABELS)
-        self.conditionals = {}
-        self.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL] = \
+        self.conditionals_counts = {}
+        self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL] = \
             EmulationStatistics.initialize_counters(d={}, labels=collector_constants.LOG_SINK.ALL_DELTA_LABELS)
-        self.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL] = \
+        self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL] = \
             EmulationStatistics.initialize_counters(d={}, labels=collector_constants.LOG_SINK.ALL_DELTA_LABELS)
         self.id = -1
+        self.means = {}
+        self.stds = {}
+        self.mins = {}
+        self.maxs = {}
+        self.conditionals_probs = {}
+        self.initial_distributions_probs = {}
+        self.initial_means = {}
+        self.initial_stds = {}
+        self.initial_mins = {}
+        self.initial_maxs = {}
 
     @staticmethod
     def initialize_counters(d: Dict[str, Dict[int,int]], labels: List[str]) -> Dict[str, Dict[int,int]]:
@@ -96,10 +107,10 @@ class EmulationStatistics:
         :return: None
         """
         if a2.id == EmulationAttackerActionId.CONTINUE:
-            self.update_counters(d=self.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL],
+            self.update_counters(d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL],
                                  s=s, s_prime=s_prime)
         else:
-            self.update_counters(d=self.conditionals[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL],
+            self.update_counters(d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL],
                                  s=s, s_prime=s_prime)
 
     def update_initial_statistics(self, s: EmulationEnvState) -> None:
@@ -109,34 +120,94 @@ class EmulationStatistics:
         :param s: the initial state
         :return: None
         """
+        alert_labels = collector_constants.LOG_SINK.IDS_ALERTS_LABELS
+        for i in range(len(alert_labels)):
+            if 0 in self.initial_distributions_counts[alert_labels[i]]:
+                self.initial_distributions_counts[alert_labels[i]][0] += 1
+            else:
+                self.initial_distributions_counts[alert_labels[i]][0] = 1
         docker_stats_values, docker_stats_labels = s.defender_obs_state.docker_stats.get_values()
         for i in range(len(docker_stats_values)):
-            if docker_stats_values[i] in self.initial_distributions[docker_stats_labels[i]]:
-                self.initial_distributions[docker_stats_labels[i]][docker_stats_values[i]] += 1
+            if docker_stats_values[i] in self.initial_distributions_counts[docker_stats_labels[i]]:
+                self.initial_distributions_counts[docker_stats_labels[i]][docker_stats_values[i]] += 1
             else:
-                self.initial_distributions[docker_stats_labels[i]][docker_stats_values[i]] = 1
+                self.initial_distributions_counts[docker_stats_labels[i]][docker_stats_values[i]] = 1
 
         client_population_metrics_values, client_population_metrics_labels = \
             s.defender_obs_state.client_population_metrics.get_values()
         for i in range(len(client_population_metrics_values)):
-            if client_population_metrics_values[i] in self.initial_distributions[client_population_metrics_labels[i]]:
-                self.initial_distributions[client_population_metrics_labels[i]][client_population_metrics_values[i]] += 1
+            if client_population_metrics_values[i] in self.initial_distributions_counts[client_population_metrics_labels[i]]:
+                self.initial_distributions_counts[client_population_metrics_labels[i]][client_population_metrics_values[i]] += 1
             else:
-                self.initial_distributions[client_population_metrics_labels[i]][client_population_metrics_values[i]] = 1
+                self.initial_distributions_counts[client_population_metrics_labels[i]][client_population_metrics_values[i]] = 1
         aggregated_host_metrics_values, aggregated_host_metrics_labels = \
             s.defender_obs_state.aggregated_host_metrics.get_values()
         for i in range(len(aggregated_host_metrics_values)):
-            if aggregated_host_metrics_values[i] in self.initial_distributions[aggregated_host_metrics_labels[i]]:
-                self.initial_distributions[aggregated_host_metrics_labels[i]][aggregated_host_metrics_values[i]] += 1
+            if aggregated_host_metrics_values[i] in self.initial_distributions_counts[aggregated_host_metrics_labels[i]]:
+                self.initial_distributions_counts[aggregated_host_metrics_labels[i]][aggregated_host_metrics_values[i]] += 1
             else:
-                self.initial_distributions[aggregated_host_metrics_labels[i]][aggregated_host_metrics_values[i]] = 1
+                self.initial_distributions_counts[aggregated_host_metrics_labels[i]][aggregated_host_metrics_values[i]] = 1
+
+    def compute_descriptive_statistics_and_distributions(self) -> None:
+        """
+        Computes descriptive statistics and empirical probability distributions based on the counters.
+
+        :return: None
+        """
+        for condition in self.conditionals_counts.keys():
+            self.means[condition] = {}
+            self.stds[condition]= {}
+            self.mins[condition]= {}
+            self.maxs[condition]= {}
+            self.conditionals_probs[condition]= {}
+            for metric in self.conditionals_counts[condition].keys():
+                self.conditionals_probs[condition][metric] = {}
+                observations = []
+                total_counts = sum(self.conditionals_counts[condition][metric].values())
+                for value in self.conditionals_counts[condition][metric].keys():
+                    self.conditionals_probs[condition][metric][value] = \
+                        self.conditionals_counts[condition][metric][value]/total_counts
+                    observations = observations + [int(round(float(value)))]*int(
+                        round(float(self.conditionals_counts[condition][metric][value])))
+                if len(observations) == 0:
+                    self.means[condition][metric] = -1
+                    self.stds[condition][metric] = -1
+                    self.mins[condition][metric] = -1
+                    self.maxs[condition][metric] = -1
+                else:
+                    self.means[condition][metric] = round(float(np.mean(observations)), 2)
+                    self.stds[condition][metric] = round(float(np.std(observations)), 2)
+                    self.mins[condition][metric] = round(float(np.min(observations)), 2)
+                    self.maxs[condition][metric] = round(float(np.max(observations)), 2)
+
+
+        for metric in self.initial_distributions_counts.keys():
+            self.initial_distributions_probs[metric] = {}
+            total_counts = sum(self.initial_distributions_counts[metric].values())
+            observations = []
+            for value in self.initial_distributions_counts[metric].keys():
+                self.initial_distributions_probs[metric][value] = \
+                    self.initial_distributions_counts[metric][value]/total_counts
+                observations = observations + [int(round(float(value)))]*int(round(float(
+                    self.initial_distributions_counts[metric][value])))
+            if len(observations) == 0:
+                self.initial_means[metric] = -1
+                self.initial_stds[metric] = -1
+                self.initial_mins[metric] = -1
+                self.initial_maxs[metric] = -1
+            else:
+                self.initial_means[metric] = round(float(np.mean(observations)), 2)
+                self.initial_stds[metric] = round(float(np.std(observations)), 2)
+                self.initial_mins[metric] = round(float(np.min(observations)), 2)
+                self.initial_maxs[metric] = round(float(np.max(observations)), 2)
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"conditionals:{self.conditionals}, initial distributions: {self.initial_distributions}" \
-               f"emulation_name: {self.emulation_name}, description: {self.descr}"
+        return f"conditionals:{self.conditionals_counts}, initial distributions: {self.initial_distributions_counts}" \
+               f"emulation_name: {self.emulation_name}, description: {self.descr}, means: {self.means}, " \
+               f"maxs: {self.maxs}, mins: {self.mins}, stds: {self.stds}"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationStatistics":
@@ -150,10 +221,30 @@ class EmulationStatistics:
             emulation_name=d["emulation_name"],
             descr=d["descr"]
         )
-        obj.conditionals = d["conditionals"]
-        obj.initial_distributions = d["initial_distributions"]
+        obj.conditionals_counts = d["conditionals_counts"]
+        obj.initial_distributions_counts = d["initial_distributions_counts"]
         if "id" in d:
             obj.id = d["id"]
+        if "means" in d:
+            obj.means = d["means"]
+        if "stds" in d:
+            obj.stds = d["stds"]
+        if "mins" in d:
+            obj.mins = d["mins"]
+        if "maxs" in d:
+            obj.maxs = d["maxs"]
+        if "initial_distributions_probs" in d:
+            obj.initial_distributions_probs = d["initial_distributions_probs"]
+        if "conditionals_probs" in d:
+            obj.conditionals_probs = d["conditionals_probs"]
+        if "initial_means" in d:
+            obj.initial_means = d["initial_means"]
+        if "initial_stds" in d:
+            obj.initial_stds = d["initial_stds"]
+        if "initial_mins" in d:
+            obj.initial_mins = d["initial_mins"]
+        if "initial_maxs" in d:
+            obj.initial_maxs = d["initial_maxs"]
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -163,8 +254,17 @@ class EmulationStatistics:
         d = {}
         d["descr"] = self.descr
         d["id"] = self.id
-        d["conditionals"] = self.conditionals
-        d["initial_distributions"] = self.initial_distributions
+        d["conditionals_counts"] = self.conditionals_counts
+        d["initial_distributions_counts"] = self.initial_distributions_counts
         d["emulation_name"] = self.emulation_name
+        d["means"] = self.means
+        d["stds"] = self.stds
+        d["maxs"] = self.maxs
+        d["mins"] = self.mins
+        d["conditionals_probs"] = self.conditionals_probs
+        d["initial_distributions_probs"] = self.initial_distributions_probs
+        d["initial_means"] = self.initial_means
+        d["initial_stds"] = self.initial_stds
+        d["initial_maxs"] = self.initial_maxs
+        d["initial_mins"] = self.initial_mins
         return d
-

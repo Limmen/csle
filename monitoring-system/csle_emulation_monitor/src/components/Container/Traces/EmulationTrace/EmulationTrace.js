@@ -140,7 +140,7 @@ const EmulationTrace = (props) => {
                     </Card.Header>
                     <Collapse in={attackerActionsOpen}>
                         <div id="attackerActionsBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>t</th>
@@ -186,7 +186,7 @@ const EmulationTrace = (props) => {
                     </Card.Header>
                     <Collapse in={defenderActionsOpen}>
                         <div id="defenderActionsBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>t</th>
@@ -233,7 +233,7 @@ const EmulationTrace = (props) => {
                     </Card.Header>
                     <Collapse in={attackerObservationsOpen}>
                         <div id="attackerObservationsBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>t</th>
@@ -274,7 +274,7 @@ const EmulationTrace = (props) => {
                     </Card.Header>
                     <Collapse in={defenderObservationsOpen}>
                         <div id="attackerActionsBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>t</th>

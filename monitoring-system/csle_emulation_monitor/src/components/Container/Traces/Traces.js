@@ -9,6 +9,10 @@ import EmulationTrace from "./EmulationTrace/EmulationTrace";
 import SimulationTrace from "./SimulationTrace/SimulationTrace";
 import TraceImg from './TracesLoop.png'
 import './Traces.css';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import debounce from 'lodash.debounce';
 
 const Traces = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -16,6 +20,10 @@ const Traces = () => {
     const [simulationTraces, setSimulationTraces] = useState([]);
     const [loadingEmulationTraces, setLoadingEmulationTraces] = useState(true);
     const [loadingSimulationTraces, setLoadingSimulationTraces] = useState(true);
+    const [filteredEmulationTraces, setFilteredEmulationTraces] = useState([]);
+    const [filteredSimulationTraces, setFilteredSimulationTraces] = useState([]);
+    const [emulationTracesSearchString, setEmulationTracesSearchString] = useState([]);
+    const [simulationTracesSearchString, setSimulationTracesSearchString] = useState([]);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -33,7 +41,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
+                setFilteredEmulationTraces(response)
                 setEmulationTraces(response)
                 setLoadingEmulationTraces(false)
             })
@@ -52,6 +60,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
+                setFilteredSimulationTraces(response)
                 setSimulationTraces(response)
                 setLoadingSimulationTraces(false)
             })
@@ -137,6 +146,39 @@ const Traces = () => {
         </Tooltip>
     );
 
+    const searchEmulationTracesFilter = (emulationTrace, searchVal) => {
+        return (searchVal === "" || emulationTrace.id.toString().toLowerCase().indexOf(
+            searchVal.toLowerCase()) !== -1 || emulationTrace.emulation_name.toLowerCase().indexOf(
+                searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchEmulationTracesChange = (event) => {
+        var searchVal = event.target.value
+        const filteredEmTraces = emulationTraces.filter(emulationTrace => {
+            return searchEmulationTracesFilter(emulationTrace, searchVal)
+        });
+        setFilteredEmulationTraces(filteredEmTraces)
+        setEmulationTracesSearchString(searchVal)
+    }
+    const searchEmulationTracesHandler = useCallback(debounce(searchEmulationTracesChange, 350), []);
+
+    const searchSimulationTracesFilter = (simulationTrace, searchVal) => {
+        return (searchVal === "" || simulationTrace.id.toString().toLowerCase().indexOf(
+            searchVal.toLowerCase()) !== -1 ||
+            simulationTrace.simulation_env.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
+        )
+    }
+
+    const searchSimulationTracesChange = (event) => {
+        var searchVal = event.target.value
+        const filteredSimTraces = simulationTraces.filter(simulationTrace => {
+            return searchSimulationTracesFilter(simulationTrace, searchVal)
+        });
+        setFilteredSimulationTraces(filteredSimTraces)
+        setSimulationTracesSearchString(searchVal)
+    }
+    const searchSimulationTracesHandler = useCallback(debounce(searchSimulationTracesChange, 350), []);
+
     const InfoModal = (props) => {
         return (
             <Modal
@@ -212,57 +254,110 @@ const Traces = () => {
 
     return (
         <div className="Traces">
-            <h3 className="text-center inline-block emulationsHeader"> Emulation Traces
+            <div className="row">
+                <div className="col-sm-3">
 
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshEmulationTracesTooltip}
-                >
-                    <Button variant="button" onClick={refreshEmulationTraces}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
+                </div>
+                <div className="col-sm-3">
+                    <h3 className="text-center inline-block emulationsHeader"> Emulation Traces
 
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                >
-                    <Button className="infoButton5" variant="button" onClick={() => setShowInfoModal(true)}>
-                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshEmulationTracesTooltip}
+                        >
+                            <Button variant="button" onClick={refreshEmulationTraces}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
 
-            </h3>
-            <EmulationTracesAccordions loadingEmulationTraces={loadingEmulationTraces} emulationTraces={emulationTraces}/>
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}
+                        >
+                            <Button className="infoButton5" variant="button" onClick={() => setShowInfoModal(true)}>
+                                <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-            <h3 className="text-center inline-block simulationTracesHeader"> Simulation Traces
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="emulationTracesInput" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="emulationTracesInput"
+                                onChange={searchEmulationTracesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
 
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshSimulationTracesTooltip}
-                >
-                    <Button variant="button" onClick={refreshSimulationTraces}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
+                </div>
+            </div>
+            <EmulationTracesAccordions loadingEmulationTraces={loadingEmulationTraces}
+                                       emulationTraces={filteredEmulationTraces}/>
 
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                >
-                    <Button variant="button" onClick={() => setShowInfoModal(true)}>
-                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-            </h3>
+            <div className="row simulationTracesHeader">
+                <div className="col-sm-3">
+                </div>
+                <div className="col-sm-3">
+                    <h3 className="text-center inline-block"> Simulation Traces
+
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshSimulationTracesTooltip}
+                        >
+                            <Button variant="button" onClick={refreshSimulationTraces}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoTooltip}
+                        >
+                            <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                                <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="simulationTracesInput" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="simulationTracesInput"
+                                onChange={searchSimulationTracesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
             <SimulationTracesAccordions loadingSimulationTraces={loadingSimulationTraces}
-                                        simulationTraces={simulationTraces}/>
+                                        simulationTraces={filteredSimulationTraces}/>
         </div>
     );
 }

@@ -210,7 +210,7 @@ const SystemIdentificationJob = (props) => {
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
                         <div id="generalInfoBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>Attribute</th>
@@ -269,7 +269,7 @@ const SystemIdentificationJob = (props) => {
                     </Card.Header>
                     <Collapse in={attackerActionSequenceOpen}>
                         <div id="attackerActionSequenceBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>t</th>
@@ -315,7 +315,7 @@ const SystemIdentificationJob = (props) => {
                     </Card.Header>
                     <Collapse in={defenderActionSequenceOpen}>
                         <div id="defenderActionSequenceBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>t</th>
@@ -370,7 +370,7 @@ const SystemIdentificationJob = (props) => {
                                         <h5 className="semiTitle">
                                             Attacker observations
                                         </h5>
-                                        <Table striped bordered hover>
+                                        <Table striped bordered hover className="table-responsive">
                                             <thead>
                                             <tr>
                                                 <th>t</th>
@@ -397,7 +397,7 @@ const SystemIdentificationJob = (props) => {
                                         <h5 className="semiTitle">
                                             Defender observations
                                         </h5>
-                                        <Table striped bordered hover>
+                                        <Table striped bordered hover className="table-responsive">
                                             <thead>
                                             <tr>
                                                 <th>t</th>

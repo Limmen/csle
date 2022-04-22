@@ -244,7 +244,7 @@ const Emulation = (props) => {
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
                         <div id="generalInfoBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
+                            <Table striped bordered hover className="table-responsive">
                                 <thead>
                                 <tr>
                                     <th>Attribute</th>

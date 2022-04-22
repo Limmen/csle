@@ -38,7 +38,7 @@ const TSPSAPolicy = (props) => {
                     </OverlayTrigger>
                     General Information about the policy:
                 </h5>
-                <Table striped bordered hover>
+                <Table striped bordered hover className="table-responsive">
                     <thead>
                     <tr>
                         <th>Threshold</th>

@@ -218,15 +218,15 @@ def default_joint_observation_space_config(
     defender_observations = []
     component_observations = {}
     if emulation_statistic is not None:
-        severe_alerts =emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["severe_alerts"].keys()
+        severe_alerts =emulation_statistic.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["severe_alerts"].keys()
         component_observations["severe_alerts"] = []
         for i, val in enumerate(severe_alerts):
             component_observations["severe_alerts"].append(Observation(id=i, val=val, descr=f"{val} severe IDS alerts"))
-        warning_alerts =emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["warning_alerts"].keys()
+        warning_alerts =emulation_statistic.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["warning_alerts"].keys()
         component_observations["warning_alerts"] = []
         for i, val in enumerate(warning_alerts):
             component_observations["warning_alerts"].append(Observation(id=i, val=val, descr=f"{val} warning IDS alerts"))
-        login_attempts =emulation_statistic.conditionals[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["login_attempts"].keys()
+        login_attempts =emulation_statistic.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["login_attempts"].keys()
         component_observations["login_attempts"] = []
         for i,val in enumerate(login_attempts):
             component_observations["login_attempts"].append(Observation(id=i, val=val, descr=f"{val} login attempts"))

@@ -38,7 +38,7 @@ const SimulationTrace = (props) => {
 
                     Trace
                 </h5>
-                <Table striped bordered hover>
+                <Table striped bordered hover className="table-responsive">
                     <thead>
                     <tr>
                         <th>t</th>
