@@ -33,6 +33,15 @@ const DynamicsModels = () => {
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
+    const resetState = () => {
+        setDynamicsModels([])
+        setSelectedDynamicsModel(null)
+        setConditionals([])
+        setSelectedConditionals(null)
+        setMetrics([])
+        setSelectedMetric(null)
+    }
+
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload dynamics models from the backend
@@ -41,6 +50,7 @@ const DynamicsModels = () => {
 
     const refresh = () => {
         setLoading(true)
+        resetState()
         fetchDynamicsModels()
     }
 
@@ -121,7 +131,7 @@ const DynamicsModels = () => {
     }
 
     const getFirstTwoConditionals = () => {
-        if(selectedConditionals.length>=2) {
+        if (selectedConditionals.length >= 2) {
             return [selectedConditionals[0], selectedConditionals[1]]
         } else {
             return selectedConditionals
@@ -131,7 +141,7 @@ const DynamicsModels = () => {
     const getNumSamples = (model) => {
         var num_samples = 0
         for (let i = 0; i < Object.keys(model.conditionals_counts).length; i++) {
-            var metric= Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]])[0]
+            var metric = Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]])[0]
             for (let j = 0; j < Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric]).length; j++) {
                 var value = Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric])[j]
                 num_samples = num_samples + model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric][value]
@@ -152,8 +162,6 @@ const DynamicsModels = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
-
                 const modelOptions = response.map((model, index) => {
                     return {
                         value: model,
@@ -211,6 +219,7 @@ const DynamicsModels = () => {
 
     const removeModel = (model) => {
         setLoading(true)
+        resetState()
         removeModelRequest(model.id)
     }
 
@@ -311,6 +320,25 @@ const DynamicsModels = () => {
         }
     }
 
+    const conditionalPairs = () => {
+        if (selectedConditionals.length < 2) {
+            return []
+        } else {
+            var conditionalPairs = []
+            for (let i = 0; i < selectedConditionals.length; i++) {
+                for (let j = 0; j < selectedConditionals.length; j++) {
+                    if (selectedConditionals[i] !== selectedConditionals[j]) {
+                        conditionalPairs.push({
+                            "conditional_1": selectedConditionals[i].label,
+                            "conditional_2": selectedConditionals[j].label
+                        })
+                    }
+                }
+            }
+            return conditionalPairs
+        }
+    }
+
     const ModelDescriptionOrSpinner = (props) => {
         if (!props.loading && props.dynamicsModels.length === 0) {
             return (<span> </span>)
@@ -363,7 +391,7 @@ const DynamicsModels = () => {
                             </Card.Header>
                             <Collapse in={deltaCountsOpen}>
                                 <div id="deltaCountsBody" className="cardBodyHidden">
-                                    <div className="col-sm-12">
+                                    <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
                                             data={props.selectedDynamicsModel.value.conditionals_counts}
                                             selectedConditionals={getFirstTwoConditionals()}
@@ -392,7 +420,7 @@ const DynamicsModels = () => {
                             </Card.Header>
                             <Collapse in={initialCountsOpen}>
                                 <div id="initialCountsBody" className="cardBodyHidden">
-                                    <div className="col-sm-12">
+                                    <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
                                             data={props.selectedDynamicsModel.value.initial_distributions_counts}
                                             selectedConditionals={[]}
@@ -421,7 +449,7 @@ const DynamicsModels = () => {
                             </Card.Header>
                             <Collapse in={deltaProbsOpen}>
                                 <div id="deltaProbsBody" className="cardBodyHidden">
-                                    <div className="col-sm-12">
+                                    <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
                                             data={props.selectedDynamicsModel.value.conditionals_probs}
                                             selectedConditionals={getFirstTwoConditionals()}
@@ -452,7 +480,7 @@ const DynamicsModels = () => {
                             </Card.Header>
                             <Collapse in={initialProbsOpen}>
                                 <div id="initialProbsBody" className="cardBodyHidden">
-                                    <div className="col-sm-12">
+                                    <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
                                             data={props.selectedDynamicsModel.value.initial_distributions_probs}
                                             selectedConditionals={[]}
@@ -483,75 +511,89 @@ const DynamicsModels = () => {
                             </Card.Header>
                             <Collapse in={descriptiveStatsOpen}>
                                 <div id="descriptiveStatsBody" className="cardBodyHidden">
-                                    <Table striped bordered hover className="table-responsive">
-                                        <thead>
-                                        <tr>
-                                            <th>Attribute</th>
-                                            <th> Value</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {props.selectedConditionals.map((conditional, index) => {
-                                            return (
-                                                <tr key={conditional.label + "-" + index}>
-                                                    <td>{conditional.label} mean</td>
-                                                    <td>{props.selectedDynamicsModel.value.means[conditional.label][props.selectedMetric.label]}</td>
-                                                </tr>
-                                            )
-                                        })}
-                                        {props.selectedConditionals.map((conditional, index) => {
-                                            return (
-                                                <tr key={conditional.label + "-" + index}>
-                                                    <td>{conditional.label} standard deviation</td>
-                                                    <td>{props.selectedDynamicsModel.value.stds[conditional.label][props.selectedMetric.label]}</td>
-                                                </tr>
-                                            )
-                                        })}
+                                    <div className="table-responsive">
+                                        <Table striped bordered hover>
+                                            <thead>
+                                            <tr>
+                                                <th>Attribute</th>
+                                                <th> Value</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {props.selectedConditionals.map((conditional, index) => {
+                                                return (
+                                                    <tr key={conditional.label + "-" + index}>
+                                                        <td>{conditional.label} mean</td>
+                                                        <td>{props.selectedDynamicsModel.value.means[conditional.label][props.selectedMetric.label]}</td>
+                                                    </tr>
+                                                )
+                                            })}
+                                            {props.selectedConditionals.map((conditional, index) => {
+                                                return (
+                                                    <tr key={conditional.label + "-" + index}>
+                                                        <td>{conditional.label} standard deviation</td>
+                                                        <td>{props.selectedDynamicsModel.value.stds[conditional.label][props.selectedMetric.label]}</td>
+                                                    </tr>
+                                                )
+                                            })}
 
-                                        {props.selectedConditionals.map((conditional, index) => {
-                                            return (
-                                                <tr key={conditional.label + "-" + index}>
-                                                    <td>{conditional.label} minimum value</td>
-                                                    <td>{props.selectedDynamicsModel.value.mins[conditional.label][props.selectedMetric.label]}</td>
-                                                </tr>
-                                            )
-                                        })}
+                                            {props.selectedConditionals.map((conditional, index) => {
+                                                return (
+                                                    <tr key={conditional.label + "-" + index}>
+                                                        <td>{conditional.label} minimum value</td>
+                                                        <td>{props.selectedDynamicsModel.value.mins[conditional.label][props.selectedMetric.label]}</td>
+                                                    </tr>
+                                                )
+                                            })}
 
-                                        {props.selectedConditionals.map((conditional, index) => {
-                                            return (
-                                                <tr key={conditional.label + "-" + index}>
-                                                    <td>{conditional.label} maximum value</td>
-                                                    <td>{props.selectedDynamicsModel.value.maxs[conditional.label][props.selectedMetric.label]}</td>
-                                                </tr>
-                                            )
-                                        })}
-                                        <tr>
-                                            <td>Initial value mean</td>
-                                            <td>{props.selectedDynamicsModel.value.initial_means[props.selectedMetric.label]}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Initial value standard deviation</td>
-                                            <td>{props.selectedDynamicsModel.value.initial_stds[props.selectedMetric.label]}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Initial minimum value</td>
-                                            <td>{props.selectedDynamicsModel.value.initial_mins[props.selectedMetric.label]}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Initial maximum value</td>
-                                            <td>{props.selectedDynamicsModel.value.initial_maxs[props.selectedMetric.label]}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Data</td>
-                                            <td>
-                                                <Button variant="link"
-                                                        onClick={() => fileDownload(JSON.stringify(props.selectedDynamicsModel.value), "config.json")}>
-                                                    data.json
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </Table>
+                                            {props.selectedConditionals.map((conditional, index) => {
+                                                return (
+                                                    <tr key={conditional.label + "-" + index}>
+                                                        <td>{conditional.label} maximum value</td>
+                                                        <td>{props.selectedDynamicsModel.value.maxs[conditional.label][props.selectedMetric.label]}</td>
+                                                    </tr>
+                                                )
+                                            })}
+                                            <tr>
+                                                <td>Initial value mean</td>
+                                                <td>{props.selectedDynamicsModel.value.initial_means[props.selectedMetric.label]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Initial value standard deviation</td>
+                                                <td>{props.selectedDynamicsModel.value.initial_stds[props.selectedMetric.label]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Initial minimum value</td>
+                                                <td>{props.selectedDynamicsModel.value.initial_mins[props.selectedMetric.label]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Initial maximum value</td>
+                                                <td>{props.selectedDynamicsModel.value.initial_maxs[props.selectedMetric.label]}</td>
+                                            </tr>
+                                            {conditionalPairs().map((conditionalPair, index) => {
+                                                return (
+                                                    <tr key={conditionalPair.conditional_1 + "-" +
+                                                        conditionalPair.conditional_2 + "-" + index}>
+                                                        <td>Kullback-Leibler divergence between conditional
+                                                            "{conditionalPair.conditional_1}" and
+                                                            "{conditionalPair.conditional_2}"
+                                                        </td>
+                                                        <td>{props.selectedDynamicsModel.value.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
+                                                    </tr>
+                                                )
+                                            })}
+                                            <tr>
+                                                <td>Data</td>
+                                                <td>
+                                                    <Button variant="link"
+                                                            onClick={() => fileDownload(JSON.stringify(props.selectedDynamicsModel.value), "config.json")}>
+                                                        data.json
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </Table>
+                                    </div>
                                 </div>
                             </Collapse>
                         </Card>

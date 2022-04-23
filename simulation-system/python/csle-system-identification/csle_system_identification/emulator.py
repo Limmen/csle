@@ -115,9 +115,11 @@ class Emulator:
                 system_identification_job.num_collected_steps=collected_steps
                 system_identification_job.progress_percentage = (round(collected_steps/total_steps, 2))
                 system_identification_job.num_sequences_completed = i
-                system_identification_job.traces = emulation_traces + [emulation_trace]
-                if len(system_identification_job.traces) > system_identification_job.num_cached_traces:
-                    system_identification_job.traces = system_identification_job.traces[1:]
+                traces = emulation_traces + [emulation_trace]
+                if len(traces) > system_identification_job.num_cached_traces:
+                    system_identification_job.traces = traces[-system_identification_job.num_cached_traces:]
+                else:
+                    system_identification_job.traces = traces
                 logger.info(f"job updated, steps collected: {system_identification_job.num_collected_steps}, "
                             f"progress: {system_identification_job.progress_percentage}, "
                             f"sequences completed: {i}/{repeat_times}")

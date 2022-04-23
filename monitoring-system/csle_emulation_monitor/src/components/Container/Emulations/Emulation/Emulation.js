@@ -244,49 +244,51 @@ const Emulation = (props) => {
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
                         <div id="generalInfoBody" className="cardBodyHidden">
-                            <Table striped bordered hover className="table-responsive">
-                                <thead>
-                                <tr>
-                                    <th>Attribute</th>
-                                    <th> Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>Description</td>
-                                    <td>{emulation.descr}</td>
-                                </tr>
-                                <tr>
-                                    <td>Status</td>
-                                    <td>{getStatus(emulation)} <SpinnerOrStatus emulation={emulation}/></td>
-                                </tr>
-                                <tr>
-                                    <td>Emulation name</td>
-                                    <td>{emulation.name}</td>
-                                </tr>
-                                <tr>
-                                    <td>Subnets</td>
-                                    <td>{getSubnetMasks(emulation)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Network names</td>
-                                    <td>{getNetworkNames(emulation)}</td>
-                                </tr>
-                                <tr>
-                                    <td># Containers</td>
-                                    <td>{emulation.containers_config.containers.length}</td>
-                                </tr>
-                                <tr>
-                                    <td>Configuration</td>
-                                    <td>
-                                        <Button variant="link"
-                                                onClick={() => fileDownload(JSON.stringify(emulation), "config.json")}>
-                                            config.json
-                                        </Button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </Table>
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th> Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Description</td>
+                                        <td>{emulation.descr}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td>{getStatus(emulation)} <SpinnerOrStatus emulation={emulation}/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Emulation name</td>
+                                        <td>{emulation.name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Subnets</td>
+                                        <td>{getSubnetMasks(emulation)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Network names</td>
+                                        <td>{getNetworkNames(emulation)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td># Containers</td>
+                                        <td>{emulation.containers_config.containers.length}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Configuration</td>
+                                        <td>
+                                            <Button variant="link"
+                                                    onClick={() => fileDownload(JSON.stringify(emulation), "config.json")}>
+                                                config.json
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
+                            </div>
                         </div>
                     </Collapse>
                 </Card>

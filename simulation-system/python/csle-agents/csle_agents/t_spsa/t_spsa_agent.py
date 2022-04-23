@@ -62,7 +62,6 @@ class TSPSAAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
 
-
         # Initialize execution result
         ts = time.time()
         emulation_name = None
@@ -81,7 +80,8 @@ class TSPSAAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[])
+                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES)
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
@@ -163,9 +163,11 @@ class TSPSAAgent(BaseAgent):
                              states=self.simulation_env_config.state_space_config.states,
                              player_type=self.experiment_config.player_type, L=L,
                              actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                 self.experiment_config.player_idx].actions)
+                                 self.experiment_config.player_idx].actions,
+                             experiment_config=self.experiment_config, avg_R=-1)
         avg_metrics = self.eval_theta(policy=policy)
         J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
+        policy.avg_R=J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
         exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
 
@@ -199,9 +201,11 @@ class TSPSAAgent(BaseAgent):
                                  states=self.simulation_env_config.state_space_config.states,
                                  player_type=self.experiment_config.player_type, L=L,
                                  actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                     self.experiment_config.player_idx].actions)
+                                     self.experiment_config.player_idx].actions,
+                                 experiment_config=self.experiment_config, avg_R=-1)
             avg_metrics = self.eval_theta(policy=policy)
             J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
+            policy.avg_R = J
 
             # Record metrics
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
@@ -219,6 +223,8 @@ class TSPSAAgent(BaseAgent):
                 training_job.progress_percentage = progress
                 training_job.experiment_result = exp_result
                 training_job.simulation_traces.append(self.env.get_traces()[-1])
+                if len(training_job.simulation_traces) > training_job.num_cached_traces:
+                    training_job.simulation_traces = training_job.simulation_traces[1:]
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
                 # Update execution
@@ -232,9 +238,10 @@ class TSPSAAgent(BaseAgent):
                              states=self.simulation_env_config.state_space_config.states,
                              player_type=self.experiment_config.player_type, L=L,
                              actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                 self.experiment_config.player_idx].actions)
+                                 self.experiment_config.player_idx].actions,
+                             experiment_config=self.experiment_config, avg_R=J)
         exp_result.policies[seed] = policy
-        # Save policu
+        # Save policy
         MetastoreFacade.save_tspsa_policy(t_spsa_policy=policy)
         return exp_result
 
@@ -374,13 +381,13 @@ class TSPSAAgent(BaseAgent):
             player_type=self.experiment_config.player_type,
             states=self.simulation_env_config.state_space_config.states, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions))
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1))
         J_a = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         avg_metrics = self.eval_theta(TSPSAPolicy(
             theta=tb, simulation_name=self.simulation_env_config.name,
             player_type=self.experiment_config.player_type,states=self.simulation_env_config.state_space_config.states,
             L=L, actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions))
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1))
         J_b = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         gk = [(J_a - J_b) / (2 * ck * dk) for dk in deltak]
 

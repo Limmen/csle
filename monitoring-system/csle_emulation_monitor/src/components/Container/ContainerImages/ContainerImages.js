@@ -10,7 +10,7 @@ import Docker from './docker.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import { useDebouncedCallback } from 'use-debounce';
+import {useDebouncedCallback} from 'use-debounce';
 
 const ContainerImages = () => {
     const [images, setImages] = useState([]);
@@ -35,7 +35,6 @@ const ContainerImages = () => {
             .then(response => {
                 setImages(response);
                 setFilteredImages(response);
-                console.log(response)
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -104,22 +103,24 @@ const ContainerImages = () => {
                 </Spinner>)
         } else {
             return (
-                <Table bordered hover className="table-responsive">
-                    <thead>
-                    <tr className="containerImagesTable">
-                        <th>Name</th>
-                        <th> Size (bytes)</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.images.map((img, index) =>
-                        <tr className="containerImagesTable" key={img.name + "-" + index}>
-                            <td>{img.name}</td>
-                            <td>{img.size}</td>
+                <div className="table-responsive">
+                    <Table bordered hover>
+                        <thead>
+                        <tr className="containerImagesTable">
+                            <th>Name</th>
+                            <th> Size (bytes)</th>
                         </tr>
-                    )}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                        {props.images.map((img, index) =>
+                            <tr className="containerImagesTable" key={img.name + "-" + index}>
+                                <td>{img.name}</td>
+                                <td>{img.size}</td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </Table>
+                </div>
             )
         }
     }

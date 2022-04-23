@@ -112,45 +112,47 @@ const Simulation = (props) => {
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
                         <div id="generalInfoBody" className="cardBodyHidden">
-                            <Table striped bordered hover className="table-responsive">
-                                <thead>
-                                <tr>
-                                    <th>Attribute</th>
-                                    <th> Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>Description</td>
-                                    <td>{props.simulation.descr}</td>
-                                </tr>
-                                <tr>
-                                    <td>Number of players</td>
-                                    <td>{props.simulation.players_config.player_configs.length}</td>
-                                </tr>
-                                <tr>
-                                    <td>OpenAI gym environment name</td>
-                                    <td>{props.simulation.gym_env_name}</td>
-                                </tr>
-                                <tr>
-                                    <td>Time</td>
-                                    <td>{getTimeStr(props.simulation.time_step_type)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Version</td>
-                                    <td>{props.simulation.version}</td>
-                                </tr>
-                                <tr>
-                                    <td>Configuration</td>
-                                    <td>
-                                        <Button variant="link"
-                                                onClick={() => fileDownload(JSON.stringify(props.simulation), "config.json")}>
-                                            config.json
-                                        </Button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </Table>
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th> Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Description</td>
+                                        <td>{props.simulation.descr}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Number of players</td>
+                                        <td>{props.simulation.players_config.player_configs.length}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OpenAI gym environment name</td>
+                                        <td>{props.simulation.gym_env_name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Time</td>
+                                        <td>{getTimeStr(props.simulation.time_step_type)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Version</td>
+                                        <td>{props.simulation.version}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Configuration</td>
+                                        <td>
+                                            <Button variant="link"
+                                                    onClick={() => fileDownload(JSON.stringify(props.simulation), "config.json")}>
+                                                config.json
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
+                            </div>
                             <img src={`data:image/jpeg;base64,${props.simulation.image}`} className="simulationImg"
                                  alt="Image of the simulation"/>
                         </div>
@@ -407,7 +409,8 @@ const Simulation = (props) => {
                     </Card.Header>
                     <Collapse in={transitionProbabilitiesOpen}>
                         <div id="transitionProbabilitiesBody" className="cardBodyHidden">
-                            <TransitionProbabilities simulation={props.simulation} A1Options={A1Options} lOptions={lOptions}
+                            <TransitionProbabilities simulation={props.simulation} A1Options={A1Options}
+                                                     lOptions={lOptions}
                                                      A2Options={A2Options} sOptions={sOptions} minState={minState}/>
                         </div>
                     </Collapse>
@@ -447,8 +450,9 @@ const Simulation = (props) => {
                     <Collapse in={rewardFunctionOpen}>
                         <div id="rewardFunctionBody" className="cardBodyHidden">
                             <RewardFunction simulation={props.simulation}
-                                            A1Options={A1Options} A2Options={A2Options} lOptions={lOptions} minState={minState}
-                                            maxState={maxState} />
+                                            A1Options={A1Options} A2Options={A2Options} lOptions={lOptions}
+                                            minState={minState}
+                                            maxState={maxState}/>
                         </div>
                     </Collapse>
                 </Card>

@@ -1,6 +1,10 @@
 from typing import Dict, Any
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
+from csle_common.dao.training.policy import Policy
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.training.ppo_policy import PPOPolicy
 
 
 class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
@@ -9,20 +13,20 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
     when facing a static defender policy
     """
 
-    def __init__(self, env_name: str, stopping_game_config: StoppingGameConfig, defender_strategy_name,
+    def __init__(self, env_name: str, stopping_game_config: StoppingGameConfig, defender_strategy: Policy,
                  stopping_game_name: str = "csle-stopping-game-v1"):
         """
-        Initalizes the DTO
+        Initializes the DTO
 
         :param env_name: the environment name
         :param stopping_game_config: the underlying stopping game config
-        :param defender_strategy_name: the static defender strategy name
+        :param defender_strategy: the static defender strategy name
         :param stopping_game_name: the underlying stopping game name
         """
         super().__init__()
         self.env_name = env_name
         self.stopping_game_config = stopping_game_config
-        self.defender_strategy_name = defender_strategy_name
+        self.defender_strategy = defender_strategy
         self.stopping_game_name = stopping_game_name
 
     @staticmethod
@@ -33,9 +37,17 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         :param d: the dict to convert
         :return: the created instance
         """
+        defender_strategy = None
+        try:
+            defender_strategy = TSPSAPolicy.from_dict(d["defender_strategy"])
+        except:
+            try:
+                defender_strategy = RandomPolicy.from_dict(d["defender_strategy"])
+            except:
+                defender_strategy = PPOPolicy.from_dict(d["defender_strategy"])
         obj = StoppingGameAttackerMdpConfig(
             stopping_game_config=StoppingGameConfig.from_dict(d["stopping_game_config"]),
-            defender_strategy_name=d["defender_strategy_name"],
+            defender_strategy=defender_strategy,
             stopping_game_name=d["stopping_game_name"], env_name=d["env_name"]
         )
         return obj
@@ -46,7 +58,7 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         """
         d = {}
         d["stopping_game_config"] = self.stopping_game_config.to_dict()
-        d["defender_strategy_name"] = self.defender_strategy_name
+        d["defender_strategy"] = self.defender_strategy.to_dict()
         d["stopping_game_name"] = self.stopping_game_name
         d["env_name"] = self.env_name
         return d
@@ -55,5 +67,5 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         """
         :return: a string representation of the object
         """
-        return f"stopping_game_config: {self.stopping_game_config}, defender_strategy:{self.defender_strategy_name}, " \
+        return f"stopping_game_config: {self.stopping_game_config}, defender_strategy:{self.defender_strategy}, " \
                f"stopping_game_name:{self.stopping_game_name}, env_name: {self.env_name}"

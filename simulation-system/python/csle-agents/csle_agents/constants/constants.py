@@ -21,6 +21,7 @@ class COMMON:
     DEVICE = "device"
     GAMMA = "gamma"
     EXPLOITABILITY = "exploitability"
+    NUM_CACHED_SIMULATION_TRACES = 3
 
 
 class PPO:

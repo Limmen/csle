@@ -14,7 +14,8 @@ def test_env():
     tspsa_policy = TSPSAPolicy(theta = [0.9, 0.7, 0.5], simulation_name=simulation_env_config.name,
                                states=simulation_env_config.state_space_config.states, L=3,
                                player_type=PlayerType.DEFENDER,
-                               actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions)
+                               actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+                               experiment_config=None, avg_R=-1)
 
     StoppingGamePomdpDefenderEnv.emulation_evaluation(
         env=env, n_episodes=10,

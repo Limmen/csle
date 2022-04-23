@@ -11,7 +11,8 @@ class TrainingJobConfig:
 
     def __init__(self, simulation_env_name: str, experiment_config: ExperimentConfig,
                  progress_percentage: float, pid: int, experiment_result: ExperimentResult,
-                 emulation_env_name: str, simulation_traces: List[SimulationTrace]) -> None:
+                 emulation_env_name: str, simulation_traces: List[SimulationTrace],
+                 num_cached_traces: int) -> None:
         """
         Initializes the DTO
 
@@ -24,6 +25,7 @@ class TrainingJobConfig:
         :param emulation_env_config: the configuration of the emulation environment
         :param simulation_env_config: the configuration of the simulation environment
         :param simulation_traces: the list of simulation traces
+        :param num_cached_traces: number of cached simulation traces
         """
         self.simulation_env_name = simulation_env_name
         self.emulation_env_name = emulation_env_name
@@ -34,6 +36,7 @@ class TrainingJobConfig:
         self.id = -1
         self.running = False
         self.simulation_traces = simulation_traces
+        self.num_cached_traces = num_cached_traces
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -49,6 +52,7 @@ class TrainingJobConfig:
         d["experiment_result"] = self.experiment_result.to_dict()
         d["running"] = self.running
         d["simulation_traces"] = list(map(lambda x: x.to_dict(), self.simulation_traces))
+        d["num_cached_traces"] = self.num_cached_traces
         return d
 
     @staticmethod
@@ -64,7 +68,8 @@ class TrainingJobConfig:
             progress_percentage=d["progress_percentage"], pid=d["pid"],
             experiment_result=ExperimentResult.from_dict(d["experiment_result"]),
             emulation_env_name=d["emulation_env_name"],
-            simulation_traces=list(map(lambda x: SimulationTrace.from_dict(x), d["simulation_traces"])))
+            simulation_traces=list(map(lambda x: SimulationTrace.from_dict(x), d["simulation_traces"])),
+            num_cached_traces=d["num_cached_traces"])
         obj.id = d["id"]
         obj.running = d["running"]
         return obj
@@ -77,4 +82,5 @@ class TrainingJobConfig:
                f"progress_percentage: {self.progress_percentage}, pid: {self.pid}," \
                f"id: {self.id}, experiment_result: {self.experiment_result}, running: {self.running}, " \
                f"emulation_env_name: {self.emulation_env_name}, " \
-               f"simulation_traces: {list(map(lambda x: str(x), self.simulation_traces))}"
+               f"simulation_traces: {list(map(lambda x: str(x), self.simulation_traces))}," \
+               f"num_cached_traces: {self.num_cached_traces}"

@@ -73,7 +73,8 @@ class TFPAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 experiment_result=exp_result, progress_percentage=0, pid=pid,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[])
+                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES)
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:

@@ -49,7 +49,8 @@ class PPOAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[])
+                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES)
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
@@ -92,7 +93,7 @@ class PPOAgent(BaseAgent):
                                          self.experiment_config.player_idx].actions,
                 save_every=self.experiment_config.hparams[agents_constants.COMMON.SAVE_EVERY].value,
                 save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution,
-                env=orig_env
+                env=orig_env, experiment_config=self.experiment_config
             )
             policy_kwargs = dict(
                 net_arch=[self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value
@@ -122,7 +123,9 @@ class PPOAgent(BaseAgent):
                 model=model, simulation_name=self.simulation_env_config.name, save_path=save_path,
                 states=self.simulation_env_config.state_space_config.states,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type)
+                    self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type,
+                experiment_config=self.experiment_config,
+                avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD][-1])
             exp_result.policies[seed] = policy
 
             # Save policy
@@ -182,8 +185,7 @@ class PPOTrainingCallback(BaseCallback):
                  training_job: TrainingJobConfig, exp_execution: ExperimentExecution,
                  max_steps: int, simulation_name: str,
                  states: List[State], actions: List[Action], player_type: PlayerType,
-                 env: gym.Env,
-                 verbose=0,
+                 env: gym.Env, experiment_config: ExperimentConfig, verbose=0,
                  eval_every: int = 100, eval_batch_size: int = 10, save_every: int = 10, save_dir: str = ""):
         """
         Initializes the callback
@@ -204,6 +206,7 @@ class PPOTrainingCallback(BaseCallback):
         :param save_every: how frequently to checkpoint the current model
         :param save_dir: the path to checkpoint models
         :param env: the training environment
+        :param experiment_config: the experiment configuration
         """
         super(PPOTrainingCallback, self).__init__(verbose)
         self.states = states
@@ -222,6 +225,7 @@ class PPOTrainingCallback(BaseCallback):
         self.save_every = save_every
         self.save_dir = save_dir
         self.env = env
+        self.experiment_config = experiment_config
 
     def _on_training_start(self) -> None:
         """
@@ -273,10 +277,10 @@ class PPOTrainingCallback(BaseCallback):
         if self.iter % self.eval_every == 0:
             ts = time.time()
             save_path = self.save_dir + f"ppo_model{self.iter}_{ts}.zip"
-            policy = PPOPolicy(model=self.model, simulation_name=self.simulation_name,
-                               save_path=save_path,
-                               states=self.states, player_type=self.player_type,
-                               actions=self.actions)
+            policy = PPOPolicy(
+                model=self.model, simulation_name=self.simulation_name, save_path=save_path,
+                states=self.states, player_type=self.player_type, actions=self.actions,
+                experiment_config=self.experiment_config, avg_R=-1)
             self.model.save(policy.save_path)
             os.chmod(policy.save_path, 0o777)
             o = self.training_env.reset()
@@ -297,6 +301,7 @@ class PPOTrainingCallback(BaseCallback):
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
                 avg_rewards.append(cumulative_reward)
             avg_R = np.mean(avg_rewards)
+            policy.avg_R = avg_R
             Logger.__call__().get_logger().info(f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}")
             self.exp_result.all_metrics[self.seed]["average_reward"].append(round(avg_R, 3))
             self.training_env.reset()
@@ -308,6 +313,8 @@ class PPOTrainingCallback(BaseCallback):
             self.training_job.progress_percentage = progress
             self.training_job.experiment_result = self.exp_result
             self.training_job.simulation_traces.append(self.env.get_traces()[-1])
+            if len(self.training_job.simulation_traces) > self.training_job.num_cached_traces:
+                self.training_job.simulation_traces = self.training_job.simulation_traces[1:]
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
             # Update execution

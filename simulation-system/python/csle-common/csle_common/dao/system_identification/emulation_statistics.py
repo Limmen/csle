@@ -1,3 +1,4 @@
+import math
 from typing import Dict, Any, List
 import numpy as np
 from scipy.special import rel_entr
@@ -7,6 +8,7 @@ from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvSta
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
+import csle_system_identification.constants.constants as system_id_constants
 
 
 class EmulationStatistics:
@@ -213,7 +215,7 @@ class EmulationStatistics:
                         normalized_p_1 = []
                         normalized_p_2 = []
                         for val in set(list(self.conditionals_probs[condition1][metric].keys()) +
-                            list(self.conditionals_probs[condition1][metric].keys())):
+                            list(self.conditionals_probs[condition2][metric].keys())):
                             if val in self.conditionals_probs[condition1][metric]:
                                 normalized_p_1.append(self.conditionals_probs[condition1][metric][val])
                             else:
@@ -222,11 +224,10 @@ class EmulationStatistics:
                                 normalized_p_2.append(self.conditionals_probs[condition2][metric][val])
                             else:
                                 normalized_p_2.append(0.0)
-                        print(f"cond1:{condition1}, cond2:{condition2}, "
-                              f"normalized p_1:{normalized_p_1}, normalized p_2:{normalized_p_2}, "
-                              f"kl divergence: {sum(rel_entr(normalized_p_1, normalized_p_2))}")
                         self.conditionals_kl_divergences[condition1][condition2][metric] = \
-                            sum(rel_entr(normalized_p_1, normalized_p_2))
+                            float(round(sum(rel_entr(normalized_p_1, normalized_p_2)), 3))
+                        if math.isinf(self.conditionals_kl_divergences[condition1][condition2][metric]):
+                            self.conditionals_kl_divergences[condition1][condition2][metric] = "inf"
                     else:
                         self.conditionals_kl_divergences[condition1][condition2][metric] = -1
 

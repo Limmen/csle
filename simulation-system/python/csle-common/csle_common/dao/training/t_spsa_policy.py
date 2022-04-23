@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple, Union, Optional
 import math
 import random
 from csle_common.dao.training.policy import Policy
@@ -7,6 +7,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.action import Action
+from csle_common.dao.training.experiment_config import ExperimentConfig
 
 
 class TSPSAPolicy(Policy):
@@ -15,7 +16,7 @@ class TSPSAPolicy(Policy):
     """
 
     def __init__(self, theta, simulation_name: str, L: int, states : List[State], player_type: PlayerType,
-                 actions: List[Action]):
+                 actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float):
         """
         Initializes the policy
 
@@ -25,6 +26,8 @@ class TSPSAPolicy(Policy):
         :param L: the number of stop actions
         :param states: list of states (required for computing stage policies)
         :param actions: list of actions
+        :param experiment_config: the experiment configuration used for training the policy
+        :param avg_R: the average reward of the policy when evaluated in the simulation
         """
         super(TSPSAPolicy, self).__init__(agent_type=AgentType.T_SPSA, player_type=player_type)
         self.theta = theta
@@ -33,6 +36,8 @@ class TSPSAPolicy(Policy):
         self.L = L
         self.states = states
         self.actions = actions
+        self.experiment_config = experiment_config
+        self.avg_R = avg_R
 
     def action(self, o: List[float]) -> int:
         """
@@ -159,6 +164,11 @@ class TSPSAPolicy(Policy):
         d["player_type"] = self.player_type
         d["agent_type"] = self.agent_type
         d["L"] = self.L
+        if self.experiment_config is not None:
+            d["experiment_config"] = self.experiment_config.to_dict()
+        else:
+            d["experiment_config"] = None
+        d["avg_R"] = self.avg_R
         return d
 
     @staticmethod
@@ -171,7 +181,8 @@ class TSPSAPolicy(Policy):
         """
         obj = TSPSAPolicy(theta=d["theta"], simulation_name=d["simulation_name"], L=d["L"],
                           states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
-                          actions=list(map(lambda x: Action.from_dict(x), d["actions"])))
+                          actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
+                          experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
         obj.id = d["id"]
         return obj
 
@@ -187,5 +198,6 @@ class TSPSAPolicy(Policy):
         """
         return f"theta: {self.theta}, id: {self.id}, simulation_name: {self.simulation_name}, " \
                f"thresholds: {self.thresholds()}, player_type: {self.player_type}, " \
-               f"L:{self.L}, states: {self.states}, agent_type: {self.agent_type}, actions: {self.actions}"
+               f"L:{self.L}, states: {self.states}, agent_type: {self.agent_type}, actions: {self.actions}," \
+               f"experiment_config: {self.experiment_config}, avg_R: {self.avg_R}"
 

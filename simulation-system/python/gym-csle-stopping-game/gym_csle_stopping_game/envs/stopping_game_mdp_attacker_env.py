@@ -1,8 +1,7 @@
-from typing import Tuple, List, Callable
+from typing import Tuple, List
 import gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
-from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 
@@ -12,12 +11,11 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
     OpenAI Gym Env for the MDP of the attacker when facing a static defender
     """
 
-    def __init__(self, config: StoppingGameAttackerMdpConfig, defender_strategy: Callable = None):
+    def __init__(self, config: StoppingGameAttackerMdpConfig):
         """
         Initializes the environment
 
         :param config: the configuration of the environment
-        :param defender_strategy: the defender strategy
         """
         self.config = config
         self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
@@ -27,11 +25,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.action_space = self.config.stopping_game_config.attacker_action_space()
 
         # Setup static defender
-        if defender_strategy is None:
-            self.static_defender_strategy = StoppingGameUtil.get_static_defender_strategy(
-                defender_strategy_name=self.config.defender_strategy_name)
-        else:
-            self.static_defender_strategy = defender_strategy
+        self.static_defender_strategy = self.config.defender_strategy
 
         # Setup Config
         self.viewer = None
@@ -58,7 +52,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
 
         # Get defender action from static strategy
-        a1, _ = self.static_defender_strategy.action(o=self.latest_defender_obs)
+        a1 = self.static_defender_strategy.action(o=self.latest_defender_obs)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, pi2))

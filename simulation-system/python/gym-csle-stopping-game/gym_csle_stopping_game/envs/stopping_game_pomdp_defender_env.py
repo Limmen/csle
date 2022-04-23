@@ -1,9 +1,8 @@
-from typing import Tuple, List, Callable
+from typing import Tuple, List
 import gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
-from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -18,7 +17,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
     OpenAI Gym Env for the MDP of the defender when facing a static attacker
     """
 
-    def __init__(self, config: StoppingGameDefenderPomdpConfig, attacker_strategy: Callable = None):
+    def __init__(self, config: StoppingGameDefenderPomdpConfig):
         """
         Initializes the environment
 
@@ -34,11 +33,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.action_space = self.config.stopping_game_config.defender_action_space()
 
         # Setup static attacker strategy
-        if attacker_strategy is None:
-            self.static_attacker_strategy = StoppingGameUtil.get_static_attacker_strategy(
-                attacker_strategy_name=self.config.attacker_strategy_name)
-        else:
-            self.static_attacker_strategy = attacker_strategy
+        self.static_attacker_strategy = self.config.attacker_strategy
 
         # Setup Config
         self.viewer = None
@@ -60,7 +55,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :return: (obs, reward, done, info)
         """
         # Get defender action from static strategy
-        pi2 = self.static_attacker_strategy.action(self.latest_attacker_obs)
+        pi2 = self.static_attacker_strategy.stage_policy(self.latest_attacker_obs)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, pi2))

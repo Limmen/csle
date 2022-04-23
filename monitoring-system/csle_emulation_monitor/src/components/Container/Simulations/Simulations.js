@@ -17,7 +17,6 @@ const Simulations = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [simulations, setSimulations] = useState([]);
     const [filteredSimulations, setFilteredSimulations] = useState([]);
-    const [showOnlyRunningSimulations, setShowOnlyRunningSimulations] = useState(false);
     const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState(true);
     const ip = "localhost"

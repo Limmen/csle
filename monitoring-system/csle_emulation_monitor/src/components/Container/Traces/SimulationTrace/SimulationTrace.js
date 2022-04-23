@@ -18,7 +18,8 @@ const SimulationTrace = (props) => {
     return (<Card key={props.simulationTrace.id} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.simulationTrace.id} className="mgHeader">
-                <span className="subnetTitle">ID: {props.simulationTrace.id},</span> Gym env: {props.simulationTrace.simulation_env}
+                <span className="subnetTitle">ID: {props.simulationTrace.id},</span> Gym
+                env: {props.simulationTrace.simulation_env}
             </Accordion.Toggle>
         </Card.Header>
         <Accordion.Collapse eventKey={props.simulationTrace.id}>
@@ -38,34 +39,36 @@ const SimulationTrace = (props) => {
 
                     Trace
                 </h5>
-                <Table striped bordered hover className="table-responsive">
-                    <thead>
-                    <tr>
-                        <th>t</th>
-                        <th>Attacker action</th>
-                        <th>Defender action</th>
-                        <th>Belief</th>
-                        <th>Observation</th>
-                        <th>Defender reward</th>
-                        <th>Attacker reward</th>
-                        <th>State</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {props.simulationTrace.attacker_actions.map((a_action, index) =>
-                        <tr key={a_action + "-" + index}>
-                            <td>{index+1}</td>
-                            <td>{a_action}</td>
-                            <td>{props.simulationTrace.defender_actions[index]}</td>
-                            <td>{props.simulationTrace.beliefs[index]}</td>
-                            <td>{props.simulationTrace.infrastructure_metrics[index]}</td>
-                            <td>{props.simulationTrace.defender_rewards[index]}</td>
-                            <td>{props.simulationTrace.attacker_rewards[index]}</td>
-                            <td>{props.simulationTrace.states[index]}</td>
+                <div className="table-responsive">
+                    <Table striped bordered hover>
+                        <thead>
+                        <tr>
+                            <th>t</th>
+                            <th>Attacker action</th>
+                            <th>Defender action</th>
+                            <th>Belief</th>
+                            <th>Observation</th>
+                            <th>Defender reward</th>
+                            <th>Attacker reward</th>
+                            <th>State</th>
                         </tr>
-                    )}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                        {props.simulationTrace.attacker_actions.map((a_action, index) =>
+                            <tr key={a_action + "-" + index}>
+                                <td>{index + 1}</td>
+                                <td>{a_action}</td>
+                                <td>{props.simulationTrace.defender_actions[index]}</td>
+                                <td>{props.simulationTrace.beliefs[index]}</td>
+                                <td>{props.simulationTrace.infrastructure_metrics[index]}</td>
+                                <td>{props.simulationTrace.defender_rewards[index]}</td>
+                                <td>{props.simulationTrace.attacker_rewards[index]}</td>
+                                <td>{props.simulationTrace.states[index]}</td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </Table>
+                </div>
             </Card.Body>
         </Accordion.Collapse>
     </Card>)

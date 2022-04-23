@@ -16,6 +16,7 @@ const Experiment = (props) => {
     const [randomSeedsAndOutputsOpen, setRandomSeedsAndOutputsOpen] = useState(false);
     const [metricTablesOpen, setMetricTablesOpen] = useState(false);
     const [metricPlotsOpen, setMetricPlotsOpen] = useState(false);
+    const [policiesOpen, setPoliciesOpen] = useState(false);
 
     const getDateStr = (ts) => {
         var date = new Date(ts * 1000);
@@ -34,6 +35,38 @@ const Experiment = (props) => {
             Remove experiment execution
         </Tooltip>
     );
+
+    const getAgentTypeStr = (agentType) => {
+        if(agentType === 0) {
+            return "T-SPSA"
+        }
+        if(agentType === 1) {
+            return "PPO"
+        }
+        else {
+            return "Unknown"
+        }
+    }
+
+    const getPlayerTypeStr = (playerType) => {
+        if(playerType === 1) {
+            return "Defender"
+        }
+        if(playerType === 2) {
+            return "Attacker"
+        }
+        else {
+            return "Unknown"
+        }
+    }
+
+    const getThresholds = (thresholds) => {
+        if (thresholds === null || thresholds === undefined) {
+            return "-"
+        } else {
+            return thresholds.join(", ")
+        }
+    }
 
 
     return (<Card key={props.experiment.id} ref={props.wrapper}>
@@ -74,45 +107,47 @@ const Experiment = (props) => {
                     </Card.Header>
                     <Collapse in={generalInfoOpen}>
                         <div id="generalInfoBody" className="cardBodyHidden">
-                            <Table striped bordered hover className="table-responsive">
-                                <thead>
-                                <tr>
-                                    <th>Attribute</th>
-                                    <th> Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>ID</td>
-                                    <td>{props.experiment.id}</td>
-                                </tr>
-                                <tr>
-                                    <td>Description</td>
-                                    <td>{props.experiment.descr}</td>
-                                </tr>
-                                <tr>
-                                    <td>Simulation</td>
-                                    <td>{props.experiment.simulation_name}</td>
-                                </tr>
-                                <tr>
-                                    <td>Emulation</td>
-                                    <td>{props.experiment.emulation_name}</td>
-                                </tr>
-                                <tr>
-                                    <td>Timestamp</td>
-                                    <td>{getDateStr(props.experiment.timestamp)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Configuration</td>
-                                    <td>
-                                        <Button variant="link"
-                                                onClick={() => fileDownload(JSON.stringify(props.experiment), "config.json")}>
-                                            training_run.json
-                                        </Button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </Table>
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th> Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>ID</td>
+                                        <td>{props.experiment.id}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Description</td>
+                                        <td>{props.experiment.descr}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Simulation</td>
+                                        <td>{props.experiment.simulation_name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Emulation</td>
+                                        <td>{props.experiment.emulation_name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Timestamp</td>
+                                        <td>{getDateStr(props.experiment.timestamp)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Configuration</td>
+                                        <td>
+                                            <Button variant="link"
+                                                    onClick={() => fileDownload(JSON.stringify(props.experiment), "config.json")}>
+                                                training_run.json
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
+                            </div>
                         </div>
                     </Collapse>
                 </Card>
@@ -130,24 +165,26 @@ const Experiment = (props) => {
                     </Card.Header>
                     <Collapse in={hyperparametersOpen}>
                         <div id="hyperparametersOpen" className="cardBodyHidden">
-                            <Table striped bordered hover className="table-responsive">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Value</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {Object.keys(props.experiment.config.hparams).map((hparamName, index) => {
-                                    return <tr key={hparamName + "-" + index}>
-                                        <td>{hparamName}</td>
-                                        <td>{props.experiment.config.hparams[hparamName].descr}</td>
-                                        <td>{props.experiment.config.hparams[hparamName].value}</td>
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Value</th>
                                     </tr>
-                                })}
-                                </tbody>
-                            </Table>
+                                    </thead>
+                                    <tbody>
+                                    {Object.keys(props.experiment.config.hparams).map((hparamName, index) => {
+                                        return <tr key={hparamName + "-" + index}>
+                                            <td>{hparamName}</td>
+                                            <td>{props.experiment.config.hparams[hparamName].descr}</td>
+                                            <td>{props.experiment.config.hparams[hparamName].value}</td>
+                                        </tr>
+                                    })}
+                                    </tbody>
+                                </Table>
+                            </div>
                         </div>
                     </Collapse>
                 </Card>
@@ -165,22 +202,24 @@ const Experiment = (props) => {
                     </Card.Header>
                     <Collapse in={randomSeedsAndOutputsOpen}>
                         <div id="randomSeedsAndOutputsOpen" className="cardBodyHidden">
-                            <Table striped bordered hover className="table-responsive">
-                                <thead>
-                                <tr>
-                                    <th>Seed</th>
-                                    <th>Output directory</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {props.experiment.config.random_seeds.map((seed, index) => {
-                                    return <tr key={seed + "-" + index}>
-                                        <td>{seed}</td>
-                                        <td>{props.experiment.config.output_dir}</td>
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Seed</th>
+                                        <th>Output directory</th>
                                     </tr>
-                                })}
-                                </tbody>
-                            </Table>
+                                    </thead>
+                                    <tbody>
+                                    {props.experiment.config.random_seeds.map((seed, index) => {
+                                        return <tr key={seed + "-" + index}>
+                                            <td>{seed}</td>
+                                            <td>{props.experiment.config.output_dir}</td>
+                                        </tr>
+                                    })}
+                                    </tbody>
+                                </Table>
+                            </div>
                         </div>
                     </Collapse>
                 </Card>
@@ -199,18 +238,20 @@ const Experiment = (props) => {
                     <Collapse in={metricPlotsOpen}>
                         <div id="metricPlotsBody" className="cardBodyHidden">
                             {props.experiment.result.plot_metrics.map((metric, index2) => {
-                                return <MetricPlot key={"plot_metrics-" + metric + "-" + index2} className="metricPlot" metricName={metric}
+                                return <MetricPlot key={"plot_metrics-" + metric + "-" + index2} className="metricPlot"
+                                                   metricName={metric}
                                                    data={props.experiment.result.avg_metrics[metric]}
                                                    stds={props.experiment.result.std_metrics[metric]}/>
                             })}
                             {Object.keys(props.experiment.result.all_metrics).map((seed, index1) => {
                                     return Object.keys(props.experiment.result.all_metrics[seed]).map((metric, index2) => {
-                                        if(props.experiment.result.all_metrics[seed][metric] !== undefined
+                                        if (props.experiment.result.all_metrics[seed][metric] !== undefined
                                             && props.experiment.result.all_metrics[seed][metric] !== null &&
                                             props.experiment.result.all_metrics[seed][metric].length > 0 &&
                                             !Array.isArray(props.experiment.result.all_metrics[seed][metric][0])) {
                                             return (
-                                                <div className="metricsTable" key={"metricPlot-" + seed + "-" + metric + "-" + index1 + "-" + index2}>
+                                                <div className="metricsTable"
+                                                     key={"metricPlot-" + seed + "-" + metric + "-" + index1 + "-" + index2}>
                                                     <h5 className="semiTitle semiTitle2">
                                                         Metric: {metric}, seed: {seed}
                                                     </h5>
@@ -220,7 +261,8 @@ const Experiment = (props) => {
                                                                 stds={null}/>
                                                 </div>)
                                         } else {
-                                            return (<span key={"metricPlot-" + seed + "-" + metric + "-" + index1 + "-" + index2}></span>)
+                                            return (<span
+                                                key={"metricPlot-" + seed + "-" + metric + "-" + index1 + "-" + index2}></span>)
                                         }
                                     })
                                 }
@@ -245,28 +287,32 @@ const Experiment = (props) => {
                         <div id="metricTablesBody" className="cardBodyHidden">
                             {Object.keys(props.experiment.result.all_metrics).map((seed, index1) => {
                                     return Object.keys(props.experiment.result.all_metrics[seed]).map((metric, index2) => {
-                                        if(props.experiment.result.all_metrics[seed][metric].length > 0) {
+                                        if (props.experiment.result.all_metrics[seed][metric].length > 0) {
                                             return (
-                                                <div className="metricsTable" key={seed + "-" + metric + "-" + index1 + "-" + index2}>
-                                                    <h5 className="semiTitle semiTitle2">
+                                                <div
+                                                    key={seed + "-" + metric + "-" + index1 + "-" + index2}>
+                                                    <h5 className="semiTitle">
                                                         Metric: {metric}, seed: {seed}
                                                     </h5>
-                                                    <Table striped bordered hover className="table-responsive">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Training iteration</th>
-                                                            <th>{metric}</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {props.experiment.result.all_metrics[seed][metric].map((metricValue, index3) => {
-                                                            return <tr key={metricValue + "-" + index3 + "-" + index2 + "-" + index1}>
-                                                                <td>{index3}</td>
-                                                                <td>{metricValue}</td>
+                                                    <div className="table-responsive">
+                                                        <Table striped bordered hover>
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Training iteration</th>
+                                                                <th>{metric}</th>
                                                             </tr>
-                                                        })}
-                                                        </tbody>
-                                                    </Table>
+                                                            </thead>
+                                                            <tbody>
+                                                            {props.experiment.result.all_metrics[seed][metric].map((metricValue, index3) => {
+                                                                return <tr
+                                                                    key={metricValue + "-" + index3 + "-" + index2 + "-" + index1}>
+                                                                    <td>{index3}</td>
+                                                                    <td>{metricValue}</td>
+                                                                </tr>
+                                                            })}
+                                                            </tbody>
+                                                        </Table>
+                                                    </div>
                                                 </div>)
                                         } else {
                                             return (<span key={seed + "-" + metric + "-" + index1 + "-" + index2}></span>)
@@ -275,6 +321,48 @@ const Experiment = (props) => {
                                 }
                             )
                             }
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setPoliciesOpen(!policiesOpen)}
+                            aria-controls="policiesOpenBody"
+                            aria-expanded={policiesOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Learned policies </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={policiesOpen}>
+                        <div id="policiesOpenBody" className="cardBodyHidden">
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Seed</th>
+                                        <th>Policy ID</th>
+                                        <th>Agent type</th>
+                                        <th>Player type</th>
+                                        <th>Thresholds</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {Object.keys(props.experiment.result.policies).map((seed, index1) => {
+                                            return (<tr
+                                                key={seed + "-" + index1}>
+                                                <td>{seed}</td>
+                                                <td>{props.experiment.result.policies[seed].id}</td>
+                                                <td>{getAgentTypeStr(props.experiment.result.policies[seed].agent_type)}</td>
+                                                <td>{getPlayerTypeStr(props.experiment.result.policies[seed].player_type)}</td>
+                                                <td>{getThresholds(props.experiment.result.policies[seed].thresholds)}</td>
+                                            </tr>)
+                                        })}
+                                    </tbody>
+                                </Table>
+                            </div>
                         </div>
                     </Collapse>
                 </Card>

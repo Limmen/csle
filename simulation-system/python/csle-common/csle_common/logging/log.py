@@ -51,6 +51,7 @@ class Logger(metaclass=SingletonType):
         logger.addHandler(handler)
         self.logger = logger
         self._log_path = log_path
+        sys.excepthook = handle_exception
 
     def get_logger(self) -> logging.Logger:
         """
@@ -62,4 +63,10 @@ class Logger(metaclass=SingletonType):
             os.makedirs(self._log_path)
         return self.logger
 
+
+def handle_exception(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    Logger.__call__().get_logger().error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
 

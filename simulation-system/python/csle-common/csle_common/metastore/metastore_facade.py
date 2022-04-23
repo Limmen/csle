@@ -163,7 +163,9 @@ class MetastoreFacade:
         """
         emulation_statistics_json_str = json.dumps(emulation_statistics_record[2], indent=4, sort_keys=True)
         emulation_statistics: EmulationStatistics = EmulationStatistics.from_dict(
-            json.loads(emulation_statistics_json_str))
+            json.loads(emulation_statistics_json_str,
+                       object_hook=lambda d: {int(k.split(".", 1)[0]) if k.split(".", 1)[0].lstrip('-').isdigit()
+                                              else k: v for k, v in d.items()}))
         emulation_statistics.id = emulation_statistics_record[0]
         return emulation_statistics
 
@@ -1258,7 +1260,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                policy_json_str = json.dumps(ppo_policy.to_dict(), indent=4, sort_keys=True)
+                policy_json_str = json.dumps(ppo_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.PPO_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, ppo_policy.simulation_name))

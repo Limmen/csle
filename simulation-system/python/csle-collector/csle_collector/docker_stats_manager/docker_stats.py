@@ -242,10 +242,10 @@ class DockerStats:
         :return: the deltas and the labels
         """
         deltas = [
-            float(float(round(stats_prime.cpu_percent - self.cpu_percent, 1))),
+            int(round(stats_prime.cpu_percent - self.cpu_percent)),
             int(int(stats_prime.mem_current - self.mem_current)),
             int(int(stats_prime.mem_total - self.mem_total)),
-            float(float(round(stats_prime.mem_percent - self.mem_percent, 1))),
+            int(round(stats_prime.mem_percent - self.mem_percent)),
             int(int(stats_prime.blk_read - self.blk_read)),
             int(int(stats_prime.blk_write - self.blk_write)),
             int(int(stats_prime.net_rx - self.net_rx)),
@@ -265,7 +265,7 @@ class DockerStats:
         :return: the values and the labels
         """
         values = [
-            round(self.cpu_percent,1), int(self.mem_current),
+            int(round(self.cpu_percent)), int(self.mem_current),
             int(self.mem_total),
             int(self.mem_percent),
             int(self.blk_read), int(self.blk_write),

@@ -8,6 +8,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.simulation_config.players_config import PlayersConfig
 from csle_common.dao.simulation_config.player_config import PlayerConfig
+from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
@@ -29,6 +30,7 @@ from csle_common.dao.system_identification.emulation_statistics import Emulation
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.training.random_policy import RandomPolicy
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
@@ -77,7 +79,8 @@ def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0
         reward_function_config=reward_function_config,
         transition_tensor_config=transition_operator_config,
         observation_function_config=observation_function_config,
-        initial_state_distribution_config=initial_state_distribution_config)
+        initial_state_distribution_config=initial_state_distribution_config,
+        defender_action_space_config=joint_action_space_config.action_spaces[0])
     env_parameters_config = default_env_parameters_config()
     descr="A MDP based on the optimal stopping formulation of intrusion prevention from " \
           "(Hammar and Stadler 2021, https://arxiv.org/abs/2111.00289)."
@@ -378,7 +381,8 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
                          reward_function_config: RewardFunctionConfig,
                          transition_tensor_config: TransitionOperatorConfig,
                          observation_function_config: ObservationFunctionConfig,
-                         initial_state_distribution_config: InitialStateDistributionConfig) -> SimulationEnvInputConfig:
+                         initial_state_distribution_config: InitialStateDistributionConfig,
+                         defender_action_space_config: ActionSpaceConfig) -> SimulationEnvInputConfig:
     """
     Gets the input configuration to the openai gym environment
 
@@ -404,10 +408,12 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         O=np.array(list(defender_observation_space_config.observation_id_to_observation_vector.keys())),
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
-        S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq= 10000)
+        S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq= 100000)
     config = StoppingGameAttackerMdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        defender_strategy_name=stopping_game_constants.STATIC_DEFENDER_STRATEGIES.RANDOM,
+        defender_strategy=RandomPolicy(
+            actions=defender_action_space_config.actions,
+            player_type=PlayerType.DEFENDER, stage_policy_tensor=None),
         env_name="csle-stopping-game-mdp-attacker-v1")
     return config
 

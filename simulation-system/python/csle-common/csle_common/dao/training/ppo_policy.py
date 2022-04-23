@@ -9,6 +9,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.action import Action
+from csle_common.dao.training.experiment_config import ExperimentConfig
 
 
 class PPOPolicy(Policy):
@@ -17,7 +18,7 @@ class PPOPolicy(Policy):
     """
 
     def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states : List[State],
-                 actions: List[Action]):
+                 actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
 
@@ -26,6 +27,8 @@ class PPOPolicy(Policy):
         :param save_path: the path to save the model to
         :param states: list of states (required for computing stage policies)
         :param actions: list of actions
+        :param experiment_config: the experiment configuration for training the policy
+        :param avg_R: the average reward of the policy when evaluated in the simulation
         """
         super(PPOPolicy, self).__init__(agent_type=AgentType.PPO, player_type=player_type)
         self.model = model
@@ -36,6 +39,8 @@ class PPOPolicy(Policy):
             self.model = PPO.load(path = self.save_path)
         self.states = states
         self.actions = actions
+        self.experiment_config = experiment_config
+        self.avg_R = avg_R
 
     def action(self, o: List[float]) -> Union[int, List[int], np.ndarray]:
         """
@@ -61,6 +66,9 @@ class PPOPolicy(Policy):
         d["states"] = list(map(lambda x: x.to_dict(), self.states))
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
+        d["experiment_config"] = self.experiment_config.to_dict()
+        d["agent_type"] = self.agent_type
+        d["avg_R"] = self.avg_R
         return d
 
     @staticmethod
@@ -73,7 +81,8 @@ class PPOPolicy(Policy):
         """
         obj = PPOPolicy(model=None, simulation_name=d["simulation_name"], save_path=d["save_path"],
                         states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
-                        actions=list(map(lambda x: Action.from_dict(x), d["actions"])))
+                        actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
+                        experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
         obj.id = d["id"]
         return obj
 
@@ -109,15 +118,6 @@ class PPOPolicy(Policy):
         :return: the conditional ation distribution
         """
         obs = np.array([obs])
-        # latent_pi, latent_vf, latent_sde = self._get_latent(obs)
-        # Evaluate the values for the given observations
-        # values = self.value_net(latent_vf)
-        # distribution = self._get_action_dist_from_latent(latent_pi, latent_sde=latent_sde)
-
-        dist = []
-        # for a in self.actions:
-        #     dist.append()
-
         actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
         action = actions[0]
         if action == 1:
@@ -131,5 +131,6 @@ class PPOPolicy(Policy):
         :return: a string representation of the object
         """
         return f"model: {self.model}, id: {self.id}, simulation_name: {self.simulation_name}, " \
-               f"save path: {self.save_path}, states: {self.states}"
+               f"save path: {self.save_path}, states: {self.states}, experiment_config: {self.experiment_config}," \
+               f"avg_R: {self.avg_R}"
 

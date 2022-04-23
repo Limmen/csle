@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.hparam import HParam
@@ -21,13 +21,15 @@ class ExperimentConfig:
         self.player_idx = player_idx
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "ExperimentConfig":
+    def from_dict(d: Dict[str, Any]) -> "Optional[ExperimentConfig]":
         """
         Converts a dict representation to an instance
 
         :param d: the dict to convert
         :return: the created instance
         """
+        if d is None:
+            return None
         h_d = {}
         for k,v in d["hparams"].items():
             h_d[k] = HParam.from_dict(v)
