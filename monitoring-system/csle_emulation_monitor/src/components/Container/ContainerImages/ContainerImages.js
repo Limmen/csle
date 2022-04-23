@@ -10,7 +10,7 @@ import Docker from './docker.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import debounce from 'lodash.debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 const ContainerImages = () => {
     const [images, setImages] = useState([]);
@@ -138,7 +138,12 @@ const ContainerImages = () => {
         setSearchString(searchVal)
     }
 
-    const searchHandler = useCallback(debounce(searchChange, 350), []);
+    const searchHandler = useDebouncedCallback(
+        (event) => {
+            searchChange(event)
+        },
+        350
+    );
 
     return (
         <div className="Monitoring">

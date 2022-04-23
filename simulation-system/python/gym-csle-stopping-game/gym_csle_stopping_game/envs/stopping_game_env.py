@@ -140,7 +140,7 @@ class StoppingGameEnv(BaseEnv):
         :return: initial observation
         """
         self.state.reset()
-        if len(self.trace .attacker_rewards) > 0:
+        if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
         if len(self.traces) > 1 and len(self.traces) % self.config.checkpoint_traces_freq == 0:
             self.__checkpoint_traces()

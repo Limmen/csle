@@ -11,7 +11,7 @@ import SystemIdentificationJob from "./SystemIdentificationJob/SystemIdentificat
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import debounce from 'lodash.debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 const Jobs = () => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
@@ -189,8 +189,12 @@ const Jobs = () => {
         setShowOnlyRunningSystemIdJobs(!showOnlyRunningSystemIdJobs)
     }
 
-
-    const searchTrainingJobHandler = useCallback(debounce(searchTrainingJobChange, 350), []);
+    const searchTrainingJobHandler = useDebouncedCallback(
+        (event) => {
+            searchTrainingJobChange(event)
+        },
+        350
+    );
 
     const systemIdentificationJobSearchFilter = (job, searchVal) => {
         return (searchVal === "" ||
@@ -210,7 +214,12 @@ const Jobs = () => {
         setSystemIdJobsSearchString(searchVal)
     }
 
-    const searchSystemIdJobHandler = useCallback(debounce(searchSystemIdJobChange, 350), []);
+    const searchSystemIdJobHandler = useDebouncedCallback(
+        (event) => {
+            searchSystemIdJobChange(event)
+        },
+        350
+    );
 
     const removeSystemIdJobRequest = useCallback((sys_id_job_id) => {
         fetch(

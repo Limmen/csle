@@ -12,7 +12,7 @@ class SystemIdentificationJobConfig:
     def __init__(self, emulation_env_name: str, num_collected_steps : int,
                  progress_percentage: float, attacker_sequence: List[EmulationAttackerAction], pid: int,
                  repeat_times: int, emulation_statistic_id: int, num_sequences_completed : int,
-                 traces: List[EmulationTrace],
+                 traces: List[EmulationTrace], save_emulation_traces_every: int, num_cached_traces: int,
                  defender_sequence: List[EmulationDefenderAction], descr: str = ""):
         """
         Initializes the DTO
@@ -27,6 +27,8 @@ class SystemIdentificationJobConfig:
         :param traces: list of collected emulation traces
         :param descr: description of the job
         :param emulation_statistic_id: the id of the emulation statistic
+        :param save_emulation_traces_every: the frequency to save emulation traces to the metastore
+        :param num_cached_traces: the number of emulation traces to keep with the job metadata
         """
         self.emulation_env_name = emulation_env_name
         self.progress_percentage = round(progress_percentage,3)
@@ -42,6 +44,8 @@ class SystemIdentificationJobConfig:
         self.emulation_statistic_id = emulation_statistic_id
         self.num_sequences_completed = num_sequences_completed
         self.traces = traces
+        self.save_emulation_traces_every = save_emulation_traces_every
+        self.num_cached_traces = num_cached_traces
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -62,6 +66,8 @@ class SystemIdentificationJobConfig:
         d["emulation_statistic_id"] = self.emulation_statistic_id
         d["traces"] = list(map(lambda x: x.to_dict(), self.traces))
         d["num_sequences_completed"] = self.num_sequences_completed
+        d["save_emulation_traces_every"] = self.save_emulation_traces_every
+        d["num_cached_traces"] = self.num_cached_traces
         return d
 
     @staticmethod
@@ -79,7 +85,8 @@ class SystemIdentificationJobConfig:
             defender_sequence=list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_sequence"])),
             descr=d["descr"], repeat_times=d["repeat_times"], emulation_statistic_id=d["emulation_statistic_id"],
             traces=list(map(lambda x: EmulationTrace.from_dict(x), d["traces"])),
-            num_sequences_completed = d["num_sequences_completed"]
+            num_sequences_completed = d["num_sequences_completed"],
+            save_emulation_traces_every = d["save_emulation_traces_every"], num_cached_traces = d["num_cached_traces"]
         )
         obj.id = d["id"]
         obj.running = d["running"]
@@ -96,4 +103,6 @@ class SystemIdentificationJobConfig:
                f"running:{self.running}, descr: {self.descr}, repeat_times: {self.repeat_times}," \
                f"emulation_statistic_id: {self.emulation_statistic_id}, " \
                f"num_sequences_completed: {self.num_sequences_completed}, " \
-               f"traces: {list(map(lambda x: str(x), self.traces))}"
+               f"traces: {list(map(lambda x: str(x), self.traces))}, " \
+               f"save_emulation_traces_every: {self.save_emulation_traces_every}, " \
+               f"num_cached_traces: {self.num_cached_traces}"

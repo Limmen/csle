@@ -1,5 +1,6 @@
 from typing import Dict, Any, List
 import numpy as np
+from scipy.special import rel_entr
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
@@ -40,6 +41,7 @@ class EmulationStatistics:
         self.initial_stds = {}
         self.initial_mins = {}
         self.initial_maxs = {}
+        self.conditionals_kl_divergences = {}
 
     @staticmethod
     def initialize_counters(d: Dict[str, Dict[int,int]], labels: List[str]) -> Dict[str, Dict[int,int]]:
@@ -201,13 +203,41 @@ class EmulationStatistics:
                 self.initial_mins[metric] = round(float(np.min(observations)), 2)
                 self.initial_maxs[metric] = round(float(np.max(observations)), 2)
 
+        for condition1 in list(self.conditionals_counts.keys()):
+            self.conditionals_kl_divergences[condition1] = {}
+            for condition2 in list(self.conditionals_counts.keys()):
+                self.conditionals_kl_divergences[condition1][condition2] = {}
+                for metric in self.conditionals_counts[condition1].keys():
+                    if len(list(self.conditionals_probs[condition1][metric].keys())) > 0 and \
+                        len(list(self.conditionals_probs[condition2][metric].keys())) > 0:
+                        normalized_p_1 = []
+                        normalized_p_2 = []
+                        for val in set(list(self.conditionals_probs[condition1][metric].keys()) +
+                            list(self.conditionals_probs[condition1][metric].keys())):
+                            if val in self.conditionals_probs[condition1][metric]:
+                                normalized_p_1.append(self.conditionals_probs[condition1][metric][val])
+                            else:
+                                normalized_p_1.append(0.0)
+                            if val in self.conditionals_probs[condition2][metric]:
+                                normalized_p_2.append(self.conditionals_probs[condition2][metric][val])
+                            else:
+                                normalized_p_2.append(0.0)
+                        print(f"cond1:{condition1}, cond2:{condition2}, "
+                              f"normalized p_1:{normalized_p_1}, normalized p_2:{normalized_p_2}, "
+                              f"kl divergence: {sum(rel_entr(normalized_p_1, normalized_p_2))}")
+                        self.conditionals_kl_divergences[condition1][condition2][metric] = \
+                            sum(rel_entr(normalized_p_1, normalized_p_2))
+                    else:
+                        self.conditionals_kl_divergences[condition1][condition2][metric] = -1
+
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
         return f"conditionals:{self.conditionals_counts}, initial distributions: {self.initial_distributions_counts}" \
                f"emulation_name: {self.emulation_name}, description: {self.descr}, means: {self.means}, " \
-               f"maxs: {self.maxs}, mins: {self.mins}, stds: {self.stds}"
+               f"maxs: {self.maxs}, mins: {self.mins}, stds: {self.stds}, " \
+               f"conditionals_kl_divergences: {self.conditionals_kl_divergences}"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationStatistics":
@@ -245,6 +275,7 @@ class EmulationStatistics:
             obj.initial_mins = d["initial_mins"]
         if "initial_maxs" in d:
             obj.initial_maxs = d["initial_maxs"]
+        obj.conditionals_kl_divergences = d["conditionals_kl_divergences"]
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -267,4 +298,5 @@ class EmulationStatistics:
         d["initial_stds"] = self.initial_stds
         d["initial_maxs"] = self.initial_maxs
         d["initial_mins"] = self.initial_mins
+        d["conditionals_kl_divergences"] = self.conditionals_kl_divergences
         return d

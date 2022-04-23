@@ -11,7 +11,7 @@ import ConfigSpace from './ConfigSpace.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import debounce from 'lodash.debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 const Emulations = () => {
     const [emulations, setEmulations] = useState([]);
@@ -35,7 +35,6 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setEmulations(response);
                 setFilteredEmulations(response);
                 setLoading(false)
@@ -79,17 +78,17 @@ const Emulations = () => {
         setShowInfoModal(true)
     }
 
-    const searchFilter = (emulation, searchVal) => {
+    const searchFilter = (em, searchVal) => {
         return (searchVal === "" ||
-            emulation.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            emulation.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            emulation.descr.toLowerCase().indexOf(searchVal.toString()) !== -1)
+            em.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            em.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            em.descr.toLowerCase().indexOf(searchVal.toString()) !== -1)
     }
 
     const searchChange = (event) => {
         var searchVal = event.target.value
-        const filteredEmulations = emulations.filter(emulation => {
-            return searchFilter(emulation, searchVal)
+        const filteredEmulations = emulations.filter(em => {
+            return searchFilter(em, searchVal)
         });
         setFilteredEmulations(filteredEmulations)
         setSearchString(searchVal)
@@ -110,7 +109,12 @@ const Emulations = () => {
         setShowOnlyRunningEmulations(!showOnlyRunningEmulations)
     }
 
-    const searchHandler = useCallback(debounce(searchChange, 350), []);
+    const searchHandler = useDebouncedCallback(
+        (event) => {
+            searchChange(event)
+        },
+        350
+    );
 
     const EmulationAccordions = (props) => {
         if (props.loading) {

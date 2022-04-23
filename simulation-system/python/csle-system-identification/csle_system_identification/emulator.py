@@ -23,13 +23,14 @@ class Emulator:
     """
 
     @staticmethod
-    def run_action_sequences(emulation_env_config: EmulationEnvConfig,
-                             attacker_sequence: List[EmulationAttackerAction],
-                             defender_sequence: List[EmulationDefenderAction],
-                             repeat_times:int = 1, sleep_time : int = 1, save_dir: str = None,
-                             emulation_statistics: EmulationStatistics = None, descr: str = "",
-                             save: bool = True,
-                             system_identification_job: Optional[SystemIdentificationJobConfig] = None) -> None:
+    def run_action_sequences(
+            emulation_env_config: EmulationEnvConfig, attacker_sequence: List[EmulationAttackerAction],
+            defender_sequence: List[EmulationDefenderAction],
+            repeat_times:int = 1, sleep_time : int = 1, save_dir: str = None,
+            emulation_statistics: EmulationStatistics = None, descr: str = "", save: bool = True,
+            system_identification_job: Optional[SystemIdentificationJobConfig] = None,
+            save_emulation_traces_every : int = 10,
+            emulation_traces_to_save_with_system_identification_job : int = 3) -> None:
         """
         Runs an attacker and defender sequence in the emulation <repeat_times> times
 
@@ -43,6 +44,8 @@ class Emulator:
         :param descr: descr of the execution
         :param save: boolean parameter indicating whether traces and statistics should be saved or not
         :param system_identification_job: the system identification job configuration
+        :param save_emulation_traces_every: how frequently to save emulation traces
+        :param emulation_traces_to_save_with_system_identification_job: num traces to save with the job
         :return: None
         """
         logger = Logger.__call__().get_logger()
@@ -69,7 +72,8 @@ class Emulator:
                 emulation_env_name=emulation_env_config.name, num_collected_steps=0, progress_percentage=0.0,
                 attacker_sequence=attacker_sequence, defender_sequence=defender_sequence,
                 pid=pid, descr=descr, repeat_times=repeat_times, emulation_statistic_id=statistics_id, traces=[],
-                num_sequences_completed=0)
+                num_sequences_completed=0, save_emulation_traces_every=save_emulation_traces_every,
+                num_cached_traces=emulation_traces_to_save_with_system_identification_job)
             job_id = MetastoreFacade.save_system_identification_job(
                 system_identification_job=system_identification_job)
             system_identification_job.id = job_id
@@ -112,6 +116,8 @@ class Emulator:
                 system_identification_job.progress_percentage = (round(collected_steps/total_steps, 2))
                 system_identification_job.num_sequences_completed = i
                 system_identification_job.traces = emulation_traces + [emulation_trace]
+                if len(system_identification_job.traces) > system_identification_job.num_cached_traces:
+                    system_identification_job.traces = system_identification_job.traces[1:]
                 logger.info(f"job updated, steps collected: {system_identification_job.num_collected_steps}, "
                             f"progress: {system_identification_job.progress_percentage}, "
                             f"sequences completed: {i}/{repeat_times}")
@@ -120,7 +126,7 @@ class Emulator:
                                                                  id=system_identification_job.id)
                 MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
 
-            if save:
+            if save and i % save_emulation_traces_every == 0:
                 MetastoreFacade.save_emulation_trace(emulation_trace)
             emulation_traces.append(emulation_trace)
 

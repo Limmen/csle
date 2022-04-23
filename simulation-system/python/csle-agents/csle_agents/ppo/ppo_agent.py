@@ -116,7 +116,7 @@ class PPOAgent(BaseAgent):
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value, callback=cb)
             exp_result=cb.exp_result
             ts = time.time()
-            save_path = f"{constants.LOGGING.DEFAULT_LOG_DIR}/ppo_policy_seed_{seed}_{ts}.zip"
+            save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
             model.save(save_path)
             policy = PPOPolicy(
                 model=model, simulation_name=self.simulation_env_config.name, save_path=save_path,

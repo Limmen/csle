@@ -12,7 +12,7 @@ import PPOPolicy from "./PPOPolicy/PPOPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import debounce from 'lodash.debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 const Policies = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -230,7 +230,12 @@ const Policies = () => {
         setTSPSAPoliciesSearchString(searchVal)
     }
 
-    const searchTSPSAPoliciesHandler = useCallback(debounce(searchTSPSAPolicyChange, 350), []);
+    const searchTSPSAPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchTSPSAPolicyChange(event)
+        },
+        350
+    );
 
     const searchPPOPoliciesFilter = (ppoPolicy, searchVal) => {
         return (searchVal === "" ||
@@ -247,7 +252,12 @@ const Policies = () => {
         setPpoPoliciesSearchString(searchVal)
     }
 
-    const searchPPOPoliciesHandler = useCallback(debounce(searchPPOPolicyChange, 350), []);
+    const searchPPOPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchPPOPolicyChange(event)
+        },
+        350
+    );
 
     return (
         <div className="policyExamination">

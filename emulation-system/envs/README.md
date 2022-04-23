@@ -50,3 +50,15 @@ This folder contains emulation environments.
   ```bash
   make apply_config
    ```
+
+## Author & Maintainer
+
+Kim Hammar <kimham@kth.se>
+
+## Copyright and license
+
+[LICENSE](../LICENSE.md)
+
+Creative Commons
+
+(C) 2020-2022, Kim Hammar

@@ -12,7 +12,7 @@ import './Traces.css';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import debounce from 'lodash.debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 const Traces = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -160,7 +160,13 @@ const Traces = () => {
         setFilteredEmulationTraces(filteredEmTraces)
         setEmulationTracesSearchString(searchVal)
     }
-    const searchEmulationTracesHandler = useCallback(debounce(searchEmulationTracesChange, 350), []);
+
+    const searchEmulationTracesHandler = useDebouncedCallback(
+        (event) => {
+            searchEmulationTracesChange(event)
+        },
+        350
+    );
 
     const searchSimulationTracesFilter = (simulationTrace, searchVal) => {
         return (searchVal === "" || simulationTrace.id.toString().toLowerCase().indexOf(
@@ -177,7 +183,13 @@ const Traces = () => {
         setFilteredSimulationTraces(filteredSimTraces)
         setSimulationTracesSearchString(searchVal)
     }
-    const searchSimulationTracesHandler = useCallback(debounce(searchSimulationTracesChange, 350), []);
+
+    const searchSimulationTracesHandler = useDebouncedCallback(
+        (event) => {
+            searchSimulationTracesChange(event)
+        },
+        350
+    );
 
     const InfoModal = (props) => {
         return (

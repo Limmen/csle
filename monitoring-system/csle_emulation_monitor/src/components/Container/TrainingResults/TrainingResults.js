@@ -11,7 +11,7 @@ import TrainingEnv from './RL_training_env.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import debounce from 'lodash.debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 const TrainingResults = () => {
     const [experiments, setExperiments] = useState([]);
@@ -107,7 +107,12 @@ const TrainingResults = () => {
         setSearchString(searchVal)
     }
 
-    const searchHandler = useCallback(debounce(searchChange, 350), []);
+    const searchHandler = useDebouncedCallback(
+        (event) => {
+            searchChange(event)
+        },
+        350
+    );
 
     const InfoModal = (props) => {
         return (

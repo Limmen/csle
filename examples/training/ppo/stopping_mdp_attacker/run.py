@@ -56,7 +56,7 @@ if __name__ == '__main__':
                                  descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                  descr="the batch size for evaluation"),
-            agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
+            agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
                                                             descr="how frequently to save the model")
         },
         player_type=PlayerType.ATTACKER, player_idx=1

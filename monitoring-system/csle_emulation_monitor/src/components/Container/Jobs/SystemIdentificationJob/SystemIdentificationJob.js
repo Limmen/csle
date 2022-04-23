@@ -250,6 +250,14 @@ const SystemIdentificationJob = (props) => {
                                     <td>Dynamics model ID</td>
                                     <td>{props.job.emulation_statistic_id}</td>
                                 </tr>
+                                <tr>
+                                    <td>Period between saving emulation traces:</td>
+                                    <td>{props.job.save_emulation_traces_every}</td>
+                                </tr>
+                                <tr>
+                                    <td>Number of traces stored with the job:</td>
+                                    <td>{props.job.num_cached_traces}</td>
+                                </tr>
                                 </tbody>
                             </Table>
                         </div>
@@ -356,7 +364,7 @@ const SystemIdentificationJob = (props) => {
                             aria-expanded={tracesOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Emulation traces </h5>
+                            <h5 className="semiTitle"> Last {props.job.num_cached_traces} Emulation traces </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={tracesOpen}>

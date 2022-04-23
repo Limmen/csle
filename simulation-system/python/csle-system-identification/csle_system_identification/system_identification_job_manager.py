@@ -23,13 +23,13 @@ class SystemIdentificationJobManager:
         assert emulation_env_config is not None
         assert ContainerManager.is_emulation_running(emulation_env_config=emulation_env_config) is True
         em_statistic = MetastoreFacade.get_emulation_statistic(id=job_config.emulation_statistic_id)
-        Emulator.run_action_sequences(emulation_env_config=emulation_env_config,
-                                      attacker_sequence=job_config.attacker_sequence,
-                                      defender_sequence=job_config.defender_sequence,
-                                      repeat_times=job_config.repeat_times,
-                                      sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds,
-                                      descr=job_config.descr, emulation_statistics=em_statistic,
-                                      system_identification_job=job_config)
+        Emulator.run_action_sequences(
+            emulation_env_config=emulation_env_config, attacker_sequence=job_config.attacker_sequence,
+            defender_sequence=job_config.defender_sequence, repeat_times=job_config.repeat_times,
+            sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds,
+            descr=job_config.descr, emulation_statistics=em_statistic, system_identification_job=job_config,
+            save_emulation_traces_every=job_config.save_emulation_traces_every,
+            emulation_traces_to_save_with_system_identification_job=job_config.num_cached_traces)
 
     @staticmethod
     def start_system_identification_job_in_background(system_identification_job: SystemIdentificationJobConfig) \

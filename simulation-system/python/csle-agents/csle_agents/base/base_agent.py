@@ -1,11 +1,11 @@
 from typing import List, Union
 from abc import ABC, abstractmethod
 import os
+import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
-
 
 
 class BaseAgent(ABC):
@@ -25,6 +25,10 @@ class BaseAgent(ABC):
         self.simulation_env_config = simulation_env_config
         self.emulation_env_config = emulation_env_config
         self.experiment_config = experiment_config
+        ts = time.time()
+        if self.experiment_config.output_dir[-1]== "/":
+            self.experiment_config.output_dir = self.experiment_config.output_dir[0:-1]
+        self.experiment_config.output_dir = self.experiment_config.output_dir + f"_{ts}/"
         if not os.path.exists(self.experiment_config.output_dir):
             os.makedirs(self.experiment_config.output_dir)
 
