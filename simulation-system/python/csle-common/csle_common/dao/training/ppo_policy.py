@@ -10,6 +10,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.logging.log import Logger
 
 
 class PPOPolicy(Policy):
@@ -36,7 +37,12 @@ class PPOPolicy(Policy):
         self.simulation_name = simulation_name
         self.save_path = save_path
         if self.model is None:
-            self.model = PPO.load(path = self.save_path)
+            try:
+                self.model = PPO.load(path = self.save_path)
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"There was an exception loading the model from path: {self.save_path}, "
+                    f"exception: {str(e)}, {repr(e)}")
         self.states = states
         self.actions = actions
         self.experiment_config = experiment_config
@@ -62,7 +68,10 @@ class PPOPolicy(Policy):
         d["save_path"] = self.save_path
         if self.model is not None:
             d["policy_kwargs"] = self.model.policy_kwargs
-        self.model.save(path = self.save_path)
+            self.model.save(path = self.save_path)
+        else:
+            d["policy_kwargs"] = {}
+            d["policy_kwargs"]["net_arch"] = []
         d["states"] = list(map(lambda x: x.to_dict(), self.states))
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))

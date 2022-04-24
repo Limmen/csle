@@ -365,7 +365,13 @@ const DynamicsModels = () => {
     const ConditionalChartsOrSpinner = (props) => {
         if (!props.loading && props.conditionals.length === 0) {
             return (
-                <span></span>
+                <p className="modelDescription"></p>
+            )
+        }
+        if (!props.loading && props.selectedConditionals !== null && props.selectedConditionals !== undefined &&
+            props.selectedConditionals.length === 0) {
+            return (
+                <p className="modelDescription">Select a conditional distribution from the dropdown list.</p>
             )
         }
         if (props.loading || props.selectedConditionals === null || props.selectedConditionals.length === 0

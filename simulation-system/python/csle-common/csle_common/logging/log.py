@@ -63,6 +63,12 @@ class Logger(metaclass=SingletonType):
             os.makedirs(self._log_path)
         return self.logger
 
+    def get_log_file_path(self) -> str:
+        """
+        :return: the path where the log file is stored
+        """
+        return self._log_path
+
 
 def handle_exception(exc_type, exc_value, exc_traceback):
     if issubclass(exc_type, KeyboardInterrupt):

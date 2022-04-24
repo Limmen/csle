@@ -73,7 +73,8 @@ class Emulator:
                 attacker_sequence=attacker_sequence, defender_sequence=defender_sequence,
                 pid=pid, descr=descr, repeat_times=repeat_times, emulation_statistic_id=statistics_id, traces=[],
                 num_sequences_completed=0, save_emulation_traces_every=save_emulation_traces_every,
-                num_cached_traces=emulation_traces_to_save_with_system_identification_job)
+                num_cached_traces=emulation_traces_to_save_with_system_identification_job,
+                log_file_path=Logger.__call__().get_log_file_path())
             job_id = MetastoreFacade.save_system_identification_job(
                 system_identification_job=system_identification_job)
             system_identification_job.id = job_id
@@ -83,6 +84,7 @@ class Emulator:
             system_identification_job.progress_percentage = 0.0
             system_identification_job.num_sequences_completed = 0
             system_identification_job.traces=[]
+            system_identification_job.log_file_path=Logger.__call__().get_log_file_path()
             MetastoreFacade.update_system_identification_job(system_identification_job=system_identification_job,
                                                              id=system_identification_job.id)
 

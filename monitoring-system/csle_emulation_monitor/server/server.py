@@ -1,5 +1,6 @@
 import base64
 import time
+import os
 from flask import Flask, jsonify, request
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -465,6 +466,19 @@ def emulationsimulationtraces():
     f = open('one_tau.json')
     d = json.load(f)
     response = jsonify(d["trajectories"])
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+@app.route('/file', methods=['POST'])
+def read_file():
+    path = json.loads(request.data)["path"]
+    data = ""
+    if os.path.exists(path):
+        with open(path, 'r') as fp:
+            data = fp.read()
+    data_dict = {"logs": data}
+    response = jsonify(data_dict)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

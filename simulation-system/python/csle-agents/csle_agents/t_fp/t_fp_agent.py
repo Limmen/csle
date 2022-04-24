@@ -60,6 +60,8 @@ class TFPAgent(BaseAgent):
         # Initialize result metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
+        descr = f"Training of policies with the T-SPSA algorithm using " \
+                f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
@@ -74,7 +76,8 @@ class TFPAgent(BaseAgent):
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 experiment_result=exp_result, progress_percentage=0, pid=pid,
                 emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
-                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES)
+                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
@@ -116,11 +119,9 @@ class TFPAgent(BaseAgent):
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
-        descr = f"Training of policies with the T-SPSA algorithm using " \
-                f"simulation:{self.simulation_env_config.name}"
         exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
                                             emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr)
+                                            descr=descr, log_file_path=self.training_job.log_file_path)
         traces = env.get_traces()
         if len(traces) > 0:
             MetastoreFacade.save_simulation_trace(traces[-1])

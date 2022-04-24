@@ -43,6 +43,8 @@ class PPOAgent(BaseAgent):
         # Setup experiment metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
+        descr = f"Training of policies with PPO using " \
+                f"simulation:{self.simulation_env_config.name}"
 
         # Setup training job
         if self.training_job is None:
@@ -50,7 +52,8 @@ class PPOAgent(BaseAgent):
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
                 emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
-                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES)
+                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
@@ -66,11 +69,9 @@ class PPOAgent(BaseAgent):
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
-        descr = f"Training of policies with PPO using " \
-                f"simulation:{self.simulation_env_config.name}"
         self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
                                             emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr)
+                                            descr=descr, log_file_path=self.training_job.log_file_path)
         exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id
 
@@ -276,13 +277,10 @@ class PPOTrainingCallback(BaseCallback):
         # Eval model
         if self.iter % self.eval_every == 0:
             ts = time.time()
-            save_path = self.save_dir + f"ppo_model{self.iter}_{ts}.zip"
             policy = PPOPolicy(
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
                 states=self.states, player_type=self.player_type, actions=self.actions,
                 experiment_config=self.experiment_config, avg_R=-1)
-            self.model.save(policy.save_path)
-            os.chmod(policy.save_path, 0o777)
             o = self.training_env.reset()
             max_horizon = 200
             avg_rewards = []

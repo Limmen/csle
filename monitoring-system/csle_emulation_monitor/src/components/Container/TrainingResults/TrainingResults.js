@@ -35,7 +35,6 @@ const TrainingResults = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setExperiments(response);
                 setFilteredExperiments(response)
                 setLoading(false)

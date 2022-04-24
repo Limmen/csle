@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import './TrainingJob.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import MetricPlot from "../../TrainingResults/Experiment/MetricPlot/MetricPlot";
 import Collapse from 'react-bootstrap/Collapse'
+import Spinner from 'react-bootstrap/Spinner'
 
 const TrainingJob = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
@@ -15,15 +16,40 @@ const TrainingJob = (props) => {
     const [metricTablesOpen, setMetricTablesOpen] = useState(false);
     const [metricPlotsOpen, setMetricPlotsOpen] = useState(false);
     const [simulationTracesOpen, setSimulationTracesOpen] = useState(false);
+    const [logsOpen, setLogsOpen] = useState(false);
+    const [loadingLogs, setLoadingLogs] = useState(false);
+    const [logs, setLogs] = useState(null);
+
+    const ip = "localhost"
+    // const ip = "172.31.212.92"
+
+
+    const fetchLogs = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/file',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({path: props.job.log_file_path})
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setLoadingLogs(false)
+                setLogs(parseLogs(response))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
 
     const getAgentTypeStr = (agentType) => {
-        if(agentType === 0) {
+        if (agentType === 0) {
             return "T-SPSA"
         }
-        if(agentType === 1) {
+        if (agentType === 1) {
             return "PPO"
-        }
-        else {
+        } else {
             return "Unknown"
         }
     }
@@ -77,6 +103,64 @@ const TrainingJob = (props) => {
                 "Stopped"
             )
         }
+    }
+
+    const parseLogs = (logs) => {
+        var lines = logs.logs.split("\n")
+        var data = lines.map((line, index) => {
+            var parts = line.split(/,(.*)/)
+            var date = parts[0]
+            var content = parts[1]
+            return {
+                date: date,
+                content: content
+            }
+        })
+        return data
+    }
+
+    const getLogs = () => {
+        if (logsOpen) {
+            setLogsOpen(false)
+        } else {
+            setLogsOpen(true)
+            setLoadingLogs(true)
+            fetchLogs()
+        }
+    }
+
+    const SpinnerOrLogs = (props) => {
+        if (props.loadingLogs || props.logs === null || props.logs === undefined) {
+            return (<Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+            />)
+        } else {
+            return (
+                <div className="table-responsive">
+                    <Table striped bordered hover>
+                        <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Log line</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {props.logs.map((logLine, index) => {
+                            return <tr key={logLine.date + "-" + index}>
+                                <td>{logLine.date}</td>
+                                <td>{logLine.content}</td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </Table>
+                </div>
+            )
+        }
+
     }
 
     const startOrStopButton = () => {
@@ -179,6 +263,10 @@ const TrainingJob = (props) => {
                                         <td>{props.job.id}</td>
                                     </tr>
                                     <tr>
+                                        <td>Description</td>
+                                        <td>{props.job.descr}</td>
+                                    </tr>
+                                    <tr>
                                         <td>PID</td>
                                         <td>{props.job.pid}</td>
                                     </tr>
@@ -209,6 +297,10 @@ const TrainingJob = (props) => {
                                     <tr>
                                         <td>Number of saved simulation traces</td>
                                         <td>{props.job.num_cached_traces}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Log file path</td>
+                                        <td>{props.job.log_file_path}</td>
                                     </tr>
                                     </tbody>
                                 </Table>
@@ -396,6 +488,24 @@ const TrainingJob = (props) => {
                                     </div>
                                 )
                             })}
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={getLogs}
+                            aria-controls="logsOpenBody"
+                            aria-expanded={logsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Logs: {props.job.log_file_path} </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={logsOpen}>
+                        <div id="logsOpenBody" className="cardBodyHidden">
+                            <SpinnerOrLogs loadingLogs={loadingLogs} logs={logs}/>
                         </div>
                     </Collapse>
                 </Card>

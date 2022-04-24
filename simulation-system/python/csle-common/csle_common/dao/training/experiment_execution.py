@@ -9,7 +9,7 @@ class ExperimentExecution:
     """
 
     def __init__(self, config: ExperimentConfig, result: ExperimentResult, timestamp: float, emulation_name :str,
-                 simulation_name : str, descr: str):
+                 simulation_name : str, descr: str, log_file_path: str):
         """
         Initializes the DTO
 
@@ -27,6 +27,7 @@ class ExperimentExecution:
         self.simulation_name = simulation_name
         self.id = -1
         self.descr = descr
+        self.log_file_path = log_file_path
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ExperimentExecution":
@@ -40,7 +41,7 @@ class ExperimentExecution:
             config=ExperimentConfig.from_dict(d["config"]),
             result=ExperimentResult.from_dict(d["result"]),
             timestamp=d["timestamp"], simulation_name=d["simulation_name"], emulation_name=d["emulation_name"],
-            descr=d["descr"]
+            descr=d["descr"], log_file_path=d["log_file_path"]
         )
         obj.id = d["id"]
         return obj
@@ -57,6 +58,7 @@ class ExperimentExecution:
         d["emulation_name"] = self.emulation_name
         d["id"] = self.id
         d["descr"] = self.descr
+        d["log_file_path"] = self.log_file_path
         return d
 
     def __str__(self):
@@ -65,4 +67,4 @@ class ExperimentExecution:
         """
         return f"config: {self.config}, result: {self.result}, timestamp: {self.timestamp}, " \
                f"simulation_name: {self.simulation_name}, emulation_name: {self.emulation_name}, id: {self.id}," \
-               f"descr: {self.descr}"
+               f"descr: {self.descr}, log_file_path: {self.log_file_path}"

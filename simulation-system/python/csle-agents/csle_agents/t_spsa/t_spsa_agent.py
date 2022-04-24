@@ -56,32 +56,22 @@ class TSPSAAgent(BaseAgent):
         # Initialize metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
+        descr = f"Training of policies with the T-SPSA algorithm using " \
+                f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
 
-        # Initialize execution result
-        ts = time.time()
-        emulation_name = None
-        if self.emulation_env_config is not None:
-            emulation_name = self.emulation_env_config.name
-        simulation_name = self.simulation_env_config.name
-        descr = f"Training of policies with the T-SPSA algorithm using " \
-                f"simulation:{self.simulation_env_config.name}"
-        self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
-                                            emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr)
-        exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
-        self.exp_execution.id = exp_execution_id
-
+        # Initialize training job
         if self.training_job is None:
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
                 emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
-                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES)
+                num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
@@ -89,6 +79,19 @@ class TSPSAAgent(BaseAgent):
             self.training_job.progress_percentage = 0
             self.training_job.experiment_result = exp_result
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
+
+        # Initialize execution result
+        ts = time.time()
+        emulation_name = None
+        if self.emulation_env_config is not None:
+            emulation_name = self.emulation_env_config.name
+        simulation_name = self.simulation_env_config.name
+        self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
+                                            emulation_name=emulation_name, simulation_name=simulation_name,
+                                            descr=descr, log_file_path=self.training_job.log_file_path)
+        exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
+        self.exp_execution.id = exp_execution_id
+
         config = self.simulation_env_config.simulation_env_input_config
         if self.env is None:
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)

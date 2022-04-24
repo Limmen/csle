@@ -8,7 +8,6 @@ from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvSta
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
-import csle_system_identification.constants.constants as system_id_constants
 
 
 class EmulationStatistics:
@@ -110,12 +109,20 @@ class EmulationStatistics:
         :param a2: the attacker action
         :return: None
         """
+
+        # Intrusion vs No Intrusion Conditionals
         if a2.id == EmulationAttackerActionId.CONTINUE:
             self.update_counters(d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL],
                                  s=s, s_prime=s_prime)
         else:
             self.update_counters(d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL],
                                  s=s, s_prime=s_prime)
+
+        # Action conditionals
+        if f"A:{a2.name}_D:{a1.name}" not in self.conditionals_counts:
+            self.conditionals_counts[f"A:{a2.name}_D:{a1.name}"] = \
+                EmulationStatistics.initialize_counters(d={}, labels=collector_constants.LOG_SINK.ALL_DELTA_LABELS)
+        self.update_counters(d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}"], s=s, s_prime=s_prime)
 
     def update_initial_statistics(self, s: EmulationEnvState) -> None:
         """
@@ -183,7 +190,6 @@ class EmulationStatistics:
                     self.stds[condition][metric] = round(float(np.std(observations)), 2)
                     self.mins[condition][metric] = round(float(np.min(observations)), 2)
                     self.maxs[condition][metric] = round(float(np.max(observations)), 2)
-
 
         for metric in self.initial_distributions_counts.keys():
             self.initial_distributions_probs[metric] = {}

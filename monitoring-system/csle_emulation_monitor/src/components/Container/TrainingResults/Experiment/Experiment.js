@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import './Experiment.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
@@ -9,6 +9,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import MetricPlot from "./MetricPlot/MetricPlot";
 import Collapse from 'react-bootstrap/Collapse'
+import Spinner from 'react-bootstrap/Spinner'
 
 const Experiment = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
@@ -17,6 +18,32 @@ const Experiment = (props) => {
     const [metricTablesOpen, setMetricTablesOpen] = useState(false);
     const [metricPlotsOpen, setMetricPlotsOpen] = useState(false);
     const [policiesOpen, setPoliciesOpen] = useState(false);
+    const [logsOpen, setLogsOpen] = useState(false);
+    const [loadingLogs, setLoadingLogs] = useState(false);
+    const [logs, setLogs] = useState(null);
+
+    const ip = "localhost"
+    // const ip = "172.31.212.92"
+
+
+    const fetchLogs = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/file',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({path: props.experiment.log_file_path})
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setLoadingLogs(false)
+                setLogs(parseLogs(response))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
 
     const getDateStr = (ts) => {
         var date = new Date(ts * 1000);
@@ -66,6 +93,64 @@ const Experiment = (props) => {
         } else {
             return thresholds.join(", ")
         }
+    }
+
+    const parseLogs = (logs) => {
+        var lines = logs.logs.split("\n")
+        var data = lines.map((line, index) => {
+            var parts = line.split(/,(.*)/)
+            var date = parts[0]
+            var content = parts[1]
+            return {
+                date: date,
+                content: content
+            }
+        })
+        return data
+    }
+
+    const getLogs = () => {
+        if (logsOpen) {
+            setLogsOpen(false)
+        } else {
+            setLogsOpen(true)
+            setLoadingLogs(true)
+            fetchLogs()
+        }
+    }
+
+    const SpinnerOrLogs = (props) => {
+        if (props.loadingLogs || props.logs === null || props.logs === undefined) {
+            return (<Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+            />)
+        } else {
+            return (
+                <div className="table-responsive">
+                    <Table striped bordered hover>
+                        <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Log line</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {props.logs.map((logLine, index) => {
+                            return <tr key={logLine.date + "-" + index}>
+                                <td>{logLine.date}</td>
+                                <td>{logLine.content}</td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </Table>
+                </div>
+            )
+        }
+
     }
 
 
@@ -135,6 +220,10 @@ const Experiment = (props) => {
                                     <tr>
                                         <td>Timestamp</td>
                                         <td>{getDateStr(props.experiment.timestamp)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Log file path</td>
+                                        <td>{props.experiment.log_file_path}</td>
                                     </tr>
                                     <tr>
                                         <td>Configuration</td>
@@ -363,6 +452,24 @@ const Experiment = (props) => {
                                     </tbody>
                                 </Table>
                             </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={getLogs}
+                            aria-controls="logsOpenBody"
+                            aria-expanded={logsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Logs: {props.experiment.log_file_path} </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={logsOpen}>
+                        <div id="logsOpenBody" className="cardBodyHidden">
+                            <SpinnerOrLogs loadingLogs={loadingLogs} logs={logs}/>
                         </div>
                     </Collapse>
                 </Card>
