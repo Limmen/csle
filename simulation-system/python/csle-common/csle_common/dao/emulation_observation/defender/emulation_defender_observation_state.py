@@ -44,12 +44,15 @@ class EmulationDefenderObservationState:
         self.client_population_metrics = client_population_metrics
         if self.client_population_metrics is None:
             self.client_population_metrics = ClientPopulationMetrics()
+        self.avg_client_population_metrics = self.client_population_metrics.copy()
         self.docker_stats = docker_stats
         if self.docker_stats is None:
             self.docker_stats = DockerStats()
+        self.avg_docker_stats = self.docker_stats.copy()
         self.ids_alert_counters = ids_alert_counters
         if self.ids_alert_counters is None:
             self.ids_alert_counters = AlertCounters()
+        self.avg_ids_alert_counters = self.ids_alert_counters.copy()
         self.attacker_actions = attacker_actions
         if self.attacker_actions is None:
             self.attacker_actions = []
@@ -59,6 +62,7 @@ class EmulationDefenderObservationState:
         self.aggregated_host_metrics = aggregated_host_metrics
         if aggregated_host_metrics is None:
             self.aggregated_host_metrics = HostMetrics()
+        self.avg_aggregated_host_metrics = self.aggregated_host_metrics.copy()
         self.docker_stats_consumer_thread = None
         self.client_population_consumer_thread = None
         self.ids_log_consumer_thread = None
@@ -128,6 +132,10 @@ class EmulationDefenderObservationState:
         obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
         obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"]))
         obj.log_sink_config = LogSinkConfig.from_dict(d["log_sink_config"])
+        obj.avg_aggregated_host_metrics = HostMetrics.from_dict(d["avg_aggregated_host_metrics"])
+        obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
+        obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
+        obj.avg_ids_alert_counters = AlertCounters.from_dict(d["avg_ids_alert_counters"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -144,6 +152,10 @@ class EmulationDefenderObservationState:
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
         d["aggregated_host_metrics"] = self.aggregated_host_metrics.to_dict()
+        d["avg_aggregated_host_metrics"] = self.avg_aggregated_host_metrics.to_dict()
+        d["avg_client_population_metrics"] = self.avg_client_population_metrics.to_dict()
+        d["avg_docker_stats"] = self.avg_docker_stats.to_dict()
+        d["avg_ids_alert_counters"] = self.avg_ids_alert_counters.to_dict()
         return d
 
     def sort_machines(self) -> None:
@@ -180,6 +192,27 @@ class EmulationDefenderObservationState:
         for m in self.machines:
             m.cleanup()
 
+    def reset_metric_lists(self) -> None:
+        """
+        Resets the metric lists
+
+        :return: None
+        """
+        self.ids_log_consumer_thread.ids_alert_counters_list = []
+        self.docker_stats_consumer_thread.docker_stats_list = []
+        self.client_population_consumer_thread.client_population_metrics_list = []
+        self.aggregated_host_metrics_thread.host_metrics_list = []
+
+    def average_metric_lists(self):
+        """
+        :return: computes the averages of the metric lists
+        """
+        self.avg_ids_alert_counters = self.ids_log_consumer_thread.get_aggregated_ids_alert_counters()
+        self.avg_docker_stats = self.docker_stats_consumer_thread.get_average_docker_stats()
+        self.avg_aggregated_host_metrics = self.aggregated_host_metrics_thread.get_average_aggregated_host_metrics()
+        self.avg_client_population_metrics = \
+            self.client_population_consumer_thread.get_average_client_population_metrics()
+
     def get_action_ips(self, a : EmulationDefenderAction, emulation_env_config: EmulationEnvConfig) -> List[str]:
         """
         Gets the ips of the node that a defender action is targeted for
@@ -204,6 +237,10 @@ class EmulationDefenderObservationState:
             ids_alert_counters=self.ids_alert_counters.copy(), attacker_actions=self.attacker_actions.copy(),
             defender_actions=self.defender_actions.copy(), aggregated_host_metrics=self.aggregated_host_metrics.copy())
         c.actions_tried = self.actions_tried.copy()
+        c.avg_ids_alert_counters = self.avg_ids_alert_counters.copy()
+        c.avg_docker_stats = self.avg_docker_stats.copy()
+        c.avg_aggregated_host_metrics = self.avg_aggregated_host_metrics.copy()
+        c.avg_client_population_metrics = self.avg_client_population_metrics.copy()
 
         for m in self.machines:
             c.machines.append(m.copy())
@@ -218,5 +255,9 @@ class EmulationDefenderObservationState:
                f"ids_alert_counters: {self.ids_alert_counters}," \
                f"aggregated_host_metrics: {self.aggregated_host_metrics}" \
                f"attacker_actions: {list(map(lambda x: str(x), self.attacker_actions))}," \
-               f"defender_actions: {list(map(lambda x: str(x), self.defender_actions))}\n" \
+               f"defender_actions: {list(map(lambda x: str(x), self.defender_actions))}\n," \
+               f"avg_ids_alert_counters: {self.avg_ids_alert_counters}," \
+               f"avg_docker_stats: {self.avg_docker_stats}," \
+               f"avg_aggregated_host_metrics: {self.avg_aggregated_host_metrics}," \
+               f"avg_client_population_metrics: {self.avg_client_population_metrics}" \
                + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])

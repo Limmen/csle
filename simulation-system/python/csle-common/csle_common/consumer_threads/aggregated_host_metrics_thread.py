@@ -23,6 +23,7 @@ class AggregatedHostMetricsThread(threading.Thread):
         self.machines = machines
         self.running =True
         self.host_metrics = host_metrics
+        self.host_metrics_list = []
         self.sleep_time = sleep_time
 
     def run(self) -> None:
@@ -52,3 +53,39 @@ class AggregatedHostMetricsThread(threading.Thread):
             self.host_metrics.num_login_events = total_num_login_events
             self.host_metrics.num_processes = total_num_processes
             self.host_metrics.num_users = total_num_users
+            self.host_metrics_list.append(self.host_metrics.copy())
+
+    def get_average_aggregated_host_metrics(self) -> HostMetrics:
+        """
+        :return: average of the list of aggregated host metrics
+        """
+        if len(self.host_metrics_list) == 0:
+            return self.host_metrics.copy()
+        if len(self.host_metrics_list) == 1:
+            return self.host_metrics_list[0].copy()
+        avg_host_metrics = HostMetrics()
+        for i in range(0, len(self.host_metrics_list)):
+            avg_host_metrics.num_logged_in_users = avg_host_metrics.num_logged_in_users \
+                                                   + self.host_metrics_list[i].num_logged_in_users
+            avg_host_metrics.num_failed_login_attempts = avg_host_metrics.num_failed_login_attempts \
+                                                   + self.host_metrics_list[i].num_failed_login_attempts
+            avg_host_metrics.num_open_connections = avg_host_metrics.num_open_connections \
+                                                   + self.host_metrics_list[i].num_open_connections
+            avg_host_metrics.num_login_events = avg_host_metrics.num_login_events \
+                                                   + self.host_metrics_list[i].num_login_events
+            avg_host_metrics.num_processes = avg_host_metrics.num_processes \
+                                                   + self.host_metrics_list[i].num_processes
+            avg_host_metrics.num_users = avg_host_metrics.num_users \
+                                                   + self.host_metrics_list[i].num_users
+
+        avg_host_metrics.num_logged_in_users = int(round(avg_host_metrics.num_logged_in_users/
+                                                         len(self.host_metrics_list)))
+        avg_host_metrics.num_failed_login_attempts = int(round(avg_host_metrics.num_failed_login_attempts/
+                                                               len(self.host_metrics_list)))
+        avg_host_metrics.num_open_connections = int(round(avg_host_metrics.num_open_connections/
+                                                          len(self.host_metrics_list)))
+        avg_host_metrics.num_login_events = int(round(avg_host_metrics.num_login_events/len(self.host_metrics_list)))
+        avg_host_metrics.num_processes = int(round(avg_host_metrics.num_processes/len(self.host_metrics_list)))
+        avg_host_metrics.num_users = int(round(avg_host_metrics.num_users/len(self.host_metrics_list)))
+        return avg_host_metrics
+

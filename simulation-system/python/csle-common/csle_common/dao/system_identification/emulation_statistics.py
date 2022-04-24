@@ -66,15 +66,15 @@ class EmulationStatistics:
         :param s_prime: the new state
         :return: None
         """
-        alert_deltas, alert_labels = s.defender_obs_state.ids_alert_counters.get_deltas(
-            s_prime.defender_obs_state.ids_alert_counters)
+        alert_deltas, alert_labels = s.defender_obs_state.avg_ids_alert_counters.get_deltas(
+            s_prime.defender_obs_state.avg_ids_alert_counters)
         for i in range(len(alert_deltas)):
             if alert_deltas[i] in d[alert_labels[i]]:
                 d[alert_labels[i]][alert_deltas[i]] += 1
             else:
                 d[alert_labels[i]][alert_deltas[i]] = 1
-        docker_stats_deltas, docker_stats_labels = s.defender_obs_state.docker_stats.get_deltas(
-            stats_prime=s_prime.defender_obs_state.docker_stats)
+        docker_stats_deltas, docker_stats_labels = s.defender_obs_state.avg_docker_stats.get_deltas(
+            stats_prime=s_prime.defender_obs_state.avg_docker_stats)
         for i in range(len(docker_stats_deltas)):
             if docker_stats_deltas[i] in d[docker_stats_labels[i]]:
                 d[docker_stats_labels[i]][docker_stats_deltas[i]] += 1
@@ -82,16 +82,16 @@ class EmulationStatistics:
                 d[docker_stats_labels[i]][docker_stats_deltas[i]] = 1
 
         client_population_metrics_deltas, client_population_metrics_labels = \
-            s.defender_obs_state.client_population_metrics.get_deltas(
-            stats_prime=s_prime.defender_obs_state.client_population_metrics)
+            s.defender_obs_state.avg_client_population_metrics.get_deltas(
+            stats_prime=s_prime.defender_obs_state.avg_client_population_metrics)
         for i in range(len(client_population_metrics_deltas)):
             if client_population_metrics_deltas[i] in d[client_population_metrics_labels[i]]:
                 d[client_population_metrics_labels[i]][client_population_metrics_deltas[i]] += 1
             else:
                 d[client_population_metrics_labels[i]][client_population_metrics_deltas[i]] = 1
         aggregated_host_metrics_deltas, aggregated_host_metrics_labels = \
-            s.defender_obs_state.aggregated_host_metrics.get_deltas(
-                stats_prime=s_prime.defender_obs_state.aggregated_host_metrics)
+            s.defender_obs_state.avg_aggregated_host_metrics.get_deltas(
+                stats_prime=s_prime.defender_obs_state.avg_aggregated_host_metrics)
         for i in range(len(aggregated_host_metrics_deltas)):
             if aggregated_host_metrics_deltas[i] in d[aggregated_host_metrics_labels[i]]:
                 d[aggregated_host_metrics_labels[i]][aggregated_host_metrics_deltas[i]] += 1
@@ -118,11 +118,14 @@ class EmulationStatistics:
             self.update_counters(d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL],
                                  s=s, s_prime=s_prime)
 
+        logged_in_ips = list(map(lambda x: "_".join(x.ips), filter(
+            lambda x: x.logged_in and x.tools_installed and x.backdoor_installed and x.root,
+            s.attacker_obs_state.machines)))
         # Action conditionals
-        if f"A:{a2.name}_D:{a1.name}" not in self.conditionals_counts:
-            self.conditionals_counts[f"A:{a2.name}_D:{a1.name}"] = \
+        if f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}" not in self.conditionals_counts:
+            self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"] = \
                 EmulationStatistics.initialize_counters(d={}, labels=collector_constants.LOG_SINK.ALL_DELTA_LABELS)
-        self.update_counters(d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}"], s=s, s_prime=s_prime)
+        self.update_counters(d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"], s=s, s_prime=s_prime)
 
     def update_initial_statistics(self, s: EmulationEnvState) -> None:
         """

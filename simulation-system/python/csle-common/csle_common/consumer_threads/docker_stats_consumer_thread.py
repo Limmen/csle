@@ -26,6 +26,7 @@ class DockerStatsConsumerThread(threading.Thread):
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.docker_stats = docker_stats
+        self.docker_stats_list = []
         self.auto_offset_reset = auto_offset_reset
         self.ts = time.time()
         self.kafka_conf = {
@@ -52,4 +53,36 @@ class DockerStatsConsumerThread(threading.Thread):
                         raise KafkaException(msg.error())
                 else:
                     self.docker_stats.update_with_kafka_record(record=msg.value().decode())
+                    self.docker_stats_list.append(self.docker_stats.copy())
         self.consumer.close()
+
+    def get_average_docker_stats(self) -> DockerStats:
+        """
+        :return: the average of the list of docker stats
+        """
+        if len(self.docker_stats_list) == 0:
+            return self.docker_stats.copy()
+        if len(self.docker_stats_list) == 1:
+            return self.docker_stats_list[0].copy()
+        avg_docker_stats = DockerStats()
+        for i in range(len(self.docker_stats_list)):
+            avg_docker_stats.pids = avg_docker_stats.pids + self.docker_stats_list[i].pids
+            avg_docker_stats.cpu_percent = avg_docker_stats.cpu_percent + self.docker_stats_list[i].cpu_percent
+            avg_docker_stats.mem_current = avg_docker_stats.mem_current + self.docker_stats_list[i].mem_current
+            avg_docker_stats.mem_total = avg_docker_stats.mem_total + self.docker_stats_list[i].mem_total
+            avg_docker_stats.mem_percent = avg_docker_stats.mem_percent + self.docker_stats_list[i].mem_percent
+            avg_docker_stats.blk_read = avg_docker_stats.blk_read + self.docker_stats_list[i].blk_read
+            avg_docker_stats.blk_write = avg_docker_stats.blk_write + self.docker_stats_list[i].blk_write
+            avg_docker_stats.net_rx = avg_docker_stats.net_rx + self.docker_stats_list[i].net_rx
+            avg_docker_stats.net_tx = avg_docker_stats.pids + self.docker_stats_list[i].net_tx
+
+        avg_docker_stats.pids = int(round(avg_docker_stats.pids/len(self.docker_stats_list)))
+        avg_docker_stats.cpu_percent = int(round(avg_docker_stats.cpu_percent/len(self.docker_stats_list)))
+        avg_docker_stats.mem_current = int(round(avg_docker_stats.mem_current/len(self.docker_stats_list)))
+        avg_docker_stats.mem_total = int(round(avg_docker_stats.mem_total/len(self.docker_stats_list)))
+        avg_docker_stats.mem_percent = int(round(avg_docker_stats.mem_percent/len(self.docker_stats_list)))
+        avg_docker_stats.blk_read = int(round(avg_docker_stats.blk_read/len(self.docker_stats_list)))
+        avg_docker_stats.blk_write = int(round(avg_docker_stats.blk_write/len(self.docker_stats_list)))
+        avg_docker_stats.net_rx = int(round(avg_docker_stats.net_rx/len(self.docker_stats_list)))
+        avg_docker_stats.net_tx = int(round(avg_docker_stats.net_tx/len(self.docker_stats_list)))
+        return avg_docker_stats

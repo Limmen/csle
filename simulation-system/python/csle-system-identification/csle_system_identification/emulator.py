@@ -100,17 +100,27 @@ class Emulator:
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
                                    initial_defender_observation_state=s.defender_obs_state,
                                    emulation_name=emulation_env_config.name)
+            s.defender_obs_state.reset_metric_lists()
             time.sleep(sleep_time)
+            s.defender_obs_state.average_metric_lists()
             emulation_statistics.update_initial_statistics(s=s)
             for t in range(T):
                 old_state = s.copy()
                 a1 = defender_sequence[t]
                 a2 = attacker_sequence[t]
                 logger.info(f"t:{t}, a1: {a1}, a2: {a2}")
+                s.defender_obs_state.reset_metric_lists()
                 emulation_trace, s = Emulator.run_actions(
                     emulation_env_config=emulation_env_config,  attacker_action=a2, defender_action=a1,
                     sleep_time=sleep_time, trace=emulation_trace, s=s)
+                print(s.defender_obs_state.ids_log_consumer_thread.ids_alert_counters_list)
+                s.defender_obs_state.average_metric_lists()
+                if len(s.defender_obs_state.ids_log_consumer_thread.ids_alert_counters_list) > 1:
+                    print(f"first: {s.defender_obs_state.ids_log_consumer_thread.ids_alert_counters_list[0].alerts_weighted_by_priority},"
+                          f"second: {s.defender_obs_state.ids_log_consumer_thread.ids_alert_counters_list[1].alerts_weighted_by_priority},"
+                          f"avg:{s.defender_obs_state.avg_ids_alert_counters.alerts_weighted_by_priority}")
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
+
 
                 total_steps = T*repeat_times
                 collected_steps = (i)*T + (t+1)

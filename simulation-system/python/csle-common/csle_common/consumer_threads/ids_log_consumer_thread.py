@@ -26,6 +26,7 @@ class IdsLogConsumerThread(threading.Thread):
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.ids_alert_counters = ids_alert_counters
+        self.ids_alert_counters_list = []
         self.ts = time.time()
         self.kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_server_ip}:{self.kafka_port}",
@@ -51,4 +52,18 @@ class IdsLogConsumerThread(threading.Thread):
                         raise KafkaException(msg.error())
                 else:
                     self.ids_alert_counters.update_with_kafka_record(record=msg.value().decode())
+                    self.ids_alert_counters_list.append(self.ids_alert_counters.copy())
         self.consumer.close()
+
+    def get_aggregated_ids_alert_counters(self) -> AlertCounters:
+        """
+        :return: aggregated alert counters from the list
+        """
+        if len(self.ids_alert_counters_list) == 0:
+            return self.ids_alert_counters.copy()
+        if len(self.ids_alert_counters_list) == 1:
+            return self.ids_alert_counters_list[0].copy()
+        alert_counters = self.ids_alert_counters_list[0].copy()
+        for j in range(1, len(self.ids_alert_counters_list)):
+            alert_counters.add(self.ids_alert_counters_list[j].copy())
+        return alert_counters

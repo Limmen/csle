@@ -24,6 +24,23 @@ class AlertCounters:
         self.ip = None
         self.ts = None
 
+    def add(self, alert_counters: "AlertCounters") -> None:
+        """
+        Adds another alert counters object to this one
+
+        :param alert_counters: the counters to add
+        :return: None
+        """
+        self.severe_alerts = self.severe_alerts + alert_counters.severe_alerts
+        self.warning_alerts = self.warning_alerts + alert_counters.warning_alerts
+        self.total_alerts = self.total_alerts + alert_counters.total_alerts
+        self.alerts_weighted_by_priority = self.alerts_weighted_by_priority + alert_counters.alerts_weighted_by_priority
+        for idx in range(len(self.priority_alerts)):
+            self.priority_alerts[idx] = self.priority_alerts[idx] + alert_counters.priority_alerts[idx]
+        for idx in range(len(self.class_alerts)):
+            self.class_alerts[idx] = self.class_alerts[idx] + alert_counters.class_alerts[idx]
+
+
     def count(self, alerts: List[FastLogAlert]) -> None:
         """
         Counts the list of alerts
