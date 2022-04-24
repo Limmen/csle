@@ -179,9 +179,9 @@ const Emulation = (props) => {
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStopEmulationTooltip()}
+                        overlay={renderStopEmulationTooltip}
                     >
-                        <Button variant="outline-dark" className="startButton"
+                        <Button variant="warning" className="startButton"
                                 onClick={() => startorStopEmulation(emulation)}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -194,7 +194,7 @@ const Emulation = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderStartEmulationTooltip}
                     >
-                        <Button variant="outline-dark" className="startButton"
+                        <Button variant="success" className="startButton"
                                 onClick={() => startorStopEmulation(emulation)}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -223,7 +223,7 @@ const Emulation = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveEmulationTooltip}
                     >
-                        <Button variant="outline-dark" className="removeButton"
+                        <Button variant="danger" className="removeButton"
                                 onClick={() => props.removeEmulation(emulation)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>

@@ -165,7 +165,7 @@ const SystemIdentificationJob = (props) => {
                 delay={{show: 0, hide: 0}}
                 overlay={renderStopSystemIdentificationJobTooltip}
             >
-                <Button variant="outline-dark" className="startButton"
+                <Button variant="warning" className="startButton"
                         onClick={() => props.stopSystemIdentificationJob(props.job)}>
                     <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                 </Button>
@@ -176,7 +176,7 @@ const SystemIdentificationJob = (props) => {
                 delay={{show: 0, hide: 0}}
                 overlay={renderStartSystemIdentificationJobTooltip}
             >
-                <Button variant="outline-dark" className="startButton"
+                <Button variant="success" className="startButton"
                         onClick={() => props.startSystemIdentificationJob(props.job)}>
                     <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                 </Button>
@@ -273,7 +273,7 @@ const SystemIdentificationJob = (props) => {
                             delay={{show: 0, hide: 0}}
                             overlay={renderRemoveSystemIdentificationJobTooltip}
                         >
-                            <Button variant="outline-dark" className="removeButton"
+                            <Button variant="danger" className="removeButton"
                                     onClick={() => props.removeSystemIdentificationJob(props.job)}>
                                 <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                             </Button>

@@ -62,7 +62,7 @@ const PPOPolicy = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemovePPOPolicy}
                     >
-                        <Button variant="outline-dark" className="removeButton"
+                        <Button variant="danger" className="removeButton"
                                 onClick={() => props.removePPOPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>

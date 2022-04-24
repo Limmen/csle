@@ -113,6 +113,40 @@ const Traces = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeAllEmulationTracesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/emulationtraces/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchEmulationTraces()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAllSimulationTracesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/simulationtraces/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSimulationTraces()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removeEmulationTrace = (emulationTrace) => {
         setLoadingEmulationTraces(true)
         removeEmulationTraceRequest(emulationTrace.id)
@@ -123,6 +157,16 @@ const Traces = () => {
         fetchEmulationTraces()
     }
 
+    const removeAllEmulationTraces = () => {
+        setLoadingEmulationTraces(true)
+        removeAllEmulationTracesRequest()
+    }
+
+    const removeAllSimulationTraces = () => {
+        setLoadingSimulationTraces(true)
+        removeAllSimulationTracesRequest()
+    }
+
     const refreshSimulationTraces = () => {
         setLoadingSimulationTraces(true)
         fetchSimulationTraces()
@@ -131,6 +175,18 @@ const Traces = () => {
     const renderRefreshEmulationTracesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload emulation traces from the backend
+        </Tooltip>
+    );
+
+    const renderRemoveAllEmulationTracesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all emulation traces
+        </Tooltip>
+    );
+
+    const renderRemoveAllSimulationTracesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all simulation traces
         </Tooltip>
     );
 
@@ -294,6 +350,15 @@ const Traces = () => {
                         </OverlayTrigger>
                         <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllEmulationTracesTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllEmulationTraces}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">
@@ -346,6 +411,16 @@ const Traces = () => {
                             </Button>
                         </OverlayTrigger>
                         <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllSimulationTracesTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllSimulationTraces}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">

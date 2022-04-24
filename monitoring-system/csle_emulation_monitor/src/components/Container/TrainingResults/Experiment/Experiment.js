@@ -172,7 +172,7 @@ const Experiment = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveExperimentTooltip}
                     >
-                        <Button variant="outline-dark" className="removeButton"
+                        <Button variant="danger" className="removeButton"
                                 onClick={() => props.removeExperiment(props.experiment)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>

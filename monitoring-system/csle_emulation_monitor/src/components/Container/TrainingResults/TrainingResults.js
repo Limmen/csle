@@ -64,6 +64,23 @@ const TrainingResults = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeAllExperimentsRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/experimentsdata/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchExperiments()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removeExperiment = (experiment) => {
         setLoading(true)
         removeExperimentRequest(experiment.id)
@@ -78,9 +95,20 @@ const TrainingResults = () => {
         setShowInfoModal(true)
     }
 
+    const removeAllExperiments = () => {
+        setLoading(true)
+        removeAllExperimentsRequest()
+    }
+
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload training runs from the backend
+        </Tooltip>
+    );
+
+    const renderRemoveAllExperimentsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all training runs
         </Tooltip>
     );
 
@@ -193,6 +221,16 @@ const TrainingResults = () => {
                         </OverlayTrigger>
 
                         <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllExperimentsTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllExperiments}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">

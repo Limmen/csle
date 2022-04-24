@@ -265,11 +265,11 @@ class PPOTrainingCallback(BaseCallback):
         """
         Logger.__call__().get_logger().info(f"Training iteration: {self.iter}, seed:{self.seed}, "
                                             f"progress: {round(100*round(self.num_timesteps/self.max_steps,2),2)}%")
+        ts = time.time()
+        save_path = self.save_dir + f"/ppo_model{self.iter}_{ts}.zip"
 
         # Save model
         if self.iter % self.save_every == 0 and self.iter > 0:
-            ts = time.time()
-            save_path = self.save_dir + f"/ppo_model{self.iter}_{ts}.zip"
             Logger.__call__().get_logger().info(f"Saving model to path: {save_path}")
             self.model.save(save_path)
             os.chmod(save_path, 0o777)

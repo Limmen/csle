@@ -236,20 +236,62 @@ const DynamicsModels = () => {
                 </Spinner>)
         } else {
             return (
-                <div className="conditionalDist inline-block">
-                    <div className="conditionalDist inline-block conditionalLabel">
-                        Model:
+                <div className="inline-block">
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                            <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveModelTooltip}
+                    >
+                        <Button variant="danger" className="removeButton"
+                                onClick={() => removeModel(selectedDynamicsModel.value)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Model:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "400px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedDynamicsModel}
+                                defaultValue={props.selectedDynamicsModel}
+                                options={props.dynamicsModels}
+                                onChange={updateDynamicsModel}
+                                placeholder="Select model"
+                            />
+                        </div>
                     </div>
-                    <div className="conditionalDist inline-block" style={{width: "400px"}}>
-                        <Select
-                            style={{display: 'inline-block'}}
-                            value={props.selectedDynamicsModel}
-                            defaultValue={props.selectedDynamicsModel}
-                            options={props.dynamicsModels}
-                            onChange={updateDynamicsModel}
-                            placeholder="Select model"
-                        />
-                    </div>
+
+                    <SelectConditionalDistributionDropdownOrSpinner conditionals={conditionals}
+                                                                    selectedConditionals={selectedConditionals}
+                                                                    loading={loading}/>
+                    <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
+                                                               selectedMetric={selectedMetric}
+                                                               loading={loading}/>
                 </div>
             )
         }
@@ -614,50 +656,10 @@ const DynamicsModels = () => {
         <div className="dynamicsModels">
 
             <h5 className="text-center inline-block emulationsHeader">
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRefreshTooltip}
-                >
-                    <Button variant="button" onClick={refresh}>
-                        <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-
-                <OverlayTrigger
-                    placement="right"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderInfoTooltip}
-                >
-                    <Button variant="button" onClick={() => setShowInfoModal(true)}>
-                        <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-
-                <OverlayTrigger
-                    className="removeButton"
-                    placement="top"
-                    delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveModelTooltip}
-                >
-                    <Button variant="outline-dark" className="removeButton"
-                            onClick={() => removeModel(selectedDynamicsModel.value)}>
-                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                    </Button>
-                </OverlayTrigger>
-
-                <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
                 <SelectDynamicsModelDropdownOrSpinner dynamicsModels={dynamicsModels}
                                                       selectedDynamicsModel={selectedDynamicsModel}
                                                       loading={loading}
                 />
-                <SelectConditionalDistributionDropdownOrSpinner conditionals={conditionals}
-                                                                selectedConditionals={selectedConditionals}
-                                                                loading={loading}/>
-                <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
-                                                           selectedMetric={selectedMetric}
-                                                           loading={loading}/>
             </h5>
             <ModelDescriptionOrSpinner dynamicsModels={dynamicsModels}
                                        selectedDynamicsModel={selectedDynamicsModel}

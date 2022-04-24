@@ -92,7 +92,7 @@ const Simulation = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveSimulationTooltip}
                     >
-                        <Button variant="outline-dark" className="removeButton"
+                        <Button variant="danger" className="removeButton"
                                 onClick={() => props.removeSimulation(props.simulation)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>

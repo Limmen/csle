@@ -41,6 +41,23 @@ const Simulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeAllSimulationsRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/simulationsdata/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSimulations()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     useEffect(() => {
         setLoading(true)
         fetchSimulations();
@@ -81,9 +98,20 @@ const Simulations = () => {
         </Tooltip>
     );
 
+    const renderRemoveAllSimulationsTooltop = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all simulations.
+        </Tooltip>
+    );
+
     const refresh = () => {
         setLoading(true)
         fetchSimulations()
+    }
+
+    const removeAllSimulations = () => {
+        setLoading(true)
+        removeAllSimulationsRequest()
     }
 
     const searchFilter = (simulation, searchVal) => {
@@ -163,8 +191,8 @@ const Simulations = () => {
     return (
         <div className="Simulations">
             <div className="row">
-                <div className="col-sm-4"></div>
-                <div className="col-sm-2">
+                <div className="col-sm-3"></div>
+                <div className="col-sm-3">
                     <h3> Simulations
 
                         <OverlayTrigger
@@ -178,7 +206,7 @@ const Simulations = () => {
                         </OverlayTrigger>
 
                         <OverlayTrigger
-                            placement="right"
+                            placement="top"
                             delay={{show: 0, hide: 0}}
                             overlay={renderInfoTooltip}
                         >
@@ -187,6 +215,16 @@ const Simulations = () => {
                             </Button>
                         </OverlayTrigger>
                         <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllSimulationsTooltop}
+                        >
+                            <Button variant="danger" onClick={removeAllSimulations}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">

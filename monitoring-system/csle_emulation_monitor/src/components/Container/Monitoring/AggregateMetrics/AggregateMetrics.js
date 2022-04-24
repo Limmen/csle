@@ -11,6 +11,10 @@ import ConnectionsChart from "../ConnectionsChart/ConnectionsChart";
 import PidsChart from "../PidsChart/PidsChart";
 
 const AggregateMetrics = React.memo((props) => {
+    if(!props.loading && (props.idsMetrics === null || props.aggregatedHostMetrics === null
+        || props.aggregatedDockerStats === null || props.clientMetrics === null)) {
+        return (<></>)
+    }
     if (props.loading || props.idsMetrics === null || props.aggregatedDockerStats === null ||
             props.aggregatedHostMetrics === null || props.clientMetrics === null) {
             return (

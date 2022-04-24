@@ -171,7 +171,7 @@ const TrainingJob = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderStopTrainingJobTooltip}
                 >
-                    <Button variant="outline-dark" className="startButton"
+                    <Button variant="warning" className="startButton"
                             onClick={() => props.stopTrainingJob(props.job)}>
                         <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                     </Button>
@@ -184,7 +184,7 @@ const TrainingJob = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTrainingJobTooltip}
                 >
-                    <Button variant="outline-dark" className="startButton"
+                    <Button variant="success" className="startButton"
                             onClick={() => props.startTrainingJob(props.job)}>
                         <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                     </Button>
@@ -229,7 +229,7 @@ const TrainingJob = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveTrainingJobTooltip}
                     >
-                        <Button variant="outline-dark" className="removeButton"
+                        <Button variant="danger" className="removeButton"
                                 onClick={() => props.removeTrainingJob(props.job)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>

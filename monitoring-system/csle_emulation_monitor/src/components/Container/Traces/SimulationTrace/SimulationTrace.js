@@ -31,7 +31,7 @@ const SimulationTrace = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveSimulationTraceTooltip}
                     >
-                        <Button variant="outline-dark" className="removeButton"
+                        <Button variant="danger" className="removeButton"
                                 onClick={() => props.removeSimulationTrace(props.simulationTrace)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>

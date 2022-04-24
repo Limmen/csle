@@ -158,7 +158,7 @@ const Monitoring = () => {
     }
 
     const onChangeWindowLength = (windowLenSelection) => {
-        if(windowLenSelection.value !== windowLength) {
+        if (windowLenSelection.value !== windowLength) {
             setWindowLength(windowLenSelection)
             setLoading(true)
             fetchMonitoringData(windowLength.value, selectedEmulation)
@@ -166,7 +166,7 @@ const Monitoring = () => {
     }
 
     const updateEmulation = (emulation) => {
-        if(selectedEmulation === null || selectedEmulation === undefined ||
+        if (selectedEmulation === null || selectedEmulation === undefined ||
             emulation.value.name !== selectedEmulation.value.name) {
             setSelectedEmulation(emulation)
             const containerOptions = emulation.value.containers_config.containers.map((c, index) => {
@@ -319,7 +319,7 @@ const Monitoring = () => {
                     }
                 })
                 setRunningEmulations(emulationOptions)
-                if (rEmulations.length >= 0) {
+                if (rEmulations.length > 0) {
                     if (selectedEmulation === null) {
                         setSelectedEmulation(emulationOptions[0])
                     }
@@ -331,9 +331,9 @@ const Monitoring = () => {
                     })
                     setContainerOptions(containerOptions)
                     setSelectedContainer(containerOptions[0])
-                    setLoading(false)
                     fetchMonitoringData(windowLength.value, emulationOptions[0])
                 }
+                setLoading(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -469,49 +469,77 @@ const Monitoring = () => {
     }
 
     const SelectEmulationDropdownOrSpinner = (props) => {
+        if (!props.loading && props.runningEmulations.length === 0) {
+            return (
+                <h5 className="inline-block">
+                    No running emulations to monitor
+                </h5>)
+        }
         if (props.loading || props.selectedEmulation === null || props.runningEmulations.length === 0) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>
                 </Spinner>)
         } else {
-            return (
-                <div className="conditionalDist inline-block selectEmulation">
-                    <div className="conditionalDist inline-block" style={{width: "400px"}}>
-                        <Select
-                            style={{display: 'inline-block'}}
-                            value={props.selectedEmulation}
-                            defaultValue={props.selectedDynamicsModel}
-                            options={props.runningEmulations}
-                            onChange={updateEmulation}
-                            placeholder="Select a running emulation"
-                        />
-                    </div>
-                    <div className="conditionalDist inline-block windowLengthDropdown">
-                        Time-series window length:
-                    </div>
-                    <div className="conditionalDist inline-block windowLengthDropdown" style={{width: "250px"}}>
-                        <Select
-                            style={{display: 'inline-block'}}
-                            value={props.windowLength}
-                            defaultValue={props.windowLength}
-                            options={windowLengthOptions}
-                            onChange={onChangeWindowLength}
-                            placeholder="Select a window length"
-                        />
-                    </div>
-                    <div className="conditionalDist inline-block windowLengthDropdown">
-                        Evolution speed:
-                    </div>
-                    <div className="conditionalDist inline-block windowLengthDropdown" style={{width: "250px"}}>
-                        <Select
-                            style={{display: 'inline-block'}}
-                            value={props.animationDuration}
-                            defaultValue={props.animationDuration}
-                            options={evolutionSpeedOptions}
-                            onChange={animationDurationUpdate}
-                            placeholder="Set the evolution speed"
-                        />
+            return (<div>
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip()}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                            <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    Aggregated Metrics for Emulation:
+                    <div className="conditionalDist inline-block selectEmulation">
+                        <div className="conditionalDist inline-block" style={{width: "400px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedEmulation}
+                                defaultValue={props.selectedDynamicsModel}
+                                options={props.runningEmulations}
+                                onChange={updateEmulation}
+                                placeholder="Select a running emulation"
+                            />
+                        </div>
+                        <div className="conditionalDist inline-block windowLengthDropdown">
+                            Time-series window length:
+                        </div>
+                        <div className="conditionalDist inline-block windowLengthDropdown" style={{width: "250px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.windowLength}
+                                defaultValue={props.windowLength}
+                                options={windowLengthOptions}
+                                onChange={onChangeWindowLength}
+                                placeholder="Select a window length"
+                            />
+                        </div>
+                        <div className="conditionalDist inline-block windowLengthDropdown">
+                            Evolution speed:
+                        </div>
+                        <div className="conditionalDist inline-block windowLengthDropdown" style={{width: "250px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.animationDuration}
+                                defaultValue={props.animationDuration}
+                                options={evolutionSpeedOptions}
+                                onChange={animationDurationUpdate}
+                                placeholder="Set the evolution speed"
+                            />
+                        </div>
                     </div>
                 </div>
             )
@@ -519,6 +547,9 @@ const Monitoring = () => {
     }
 
     const SelectHostDropdownOrSpinner = (props) => {
+        if (!props.loading && props.selectedEmulation === null) {
+            return (<></>)
+        }
         if (props.loading || props.selectedEmulation === null || props.selectedContainer === null) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
@@ -526,16 +557,19 @@ const Monitoring = () => {
                 </Spinner>)
         } else {
             return (
-                <div className="conditionalDist inline-block selectEmulation">
-                    <div className="conditionalDist inline-block" style={{width: "500px"}}>
-                        <Select
-                            style={{display: 'inline-block', width: "1000px"}}
-                            value={props.selectedContainer}
-                            defaultValue={props.selectedContainer}
-                            options={props.containerOptions}
-                            onChange={updateHost}
-                            placeholder="Select a container from the emulation"
-                        />
+                <div>
+                    Metrics for Container:
+                    <div className="conditionalDist inline-block selectEmulation">
+                        <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                            <Select
+                                style={{display: 'inline-block', width: "1000px"}}
+                                value={props.selectedContainer}
+                                defaultValue={props.selectedContainer}
+                                options={props.containerOptions}
+                                onChange={updateHost}
+                                placeholder="Select a container from the emulation"
+                            />
+                        </div>
                     </div>
                 </div>
             )
@@ -563,7 +597,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStartTooltip()}>
-                        <Button variant="outline-dark" className="startButton"
+                        <Button variant="success" className="startButton"
                                 onClick={() => startOrStopGrafana()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -576,7 +610,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="outline-dark" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm"
                                 onClick={() => startOrStopGrafana()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -594,7 +628,7 @@ const Monitoring = () => {
                     placement="right"
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTooltip()}>
-                        <Button variant="outline-dark" className="startButton"
+                        <Button variant="success" className="startButton"
                                 onClick={() => startOrStopPrometheus()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -607,7 +641,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="outline-dark" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm"
                                 onClick={() => startOrStopPrometheus()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -625,7 +659,7 @@ const Monitoring = () => {
                     placement="right"
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTooltip()}>
-                        <Button variant="outline-dark" className="startButton btn-sm"
+                        <Button variant="success" className="startButton btn-sm"
                                 onClick={() => startOrStopNodeExporter()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -638,7 +672,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="outline-dark" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm"
                                 onClick={() => startOrStopNodeExporter()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -656,7 +690,7 @@ const Monitoring = () => {
                     placement="right"
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTooltip()}>
-                        <Button variant="outline-dark" className="startButton btn-sm"
+                        <Button variant="success" className="startButton btn-sm"
                                 onClick={() => startOrStopcAdvisor()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -669,7 +703,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="outline-dark" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm"
                                 onClick={() => startOrStopcAdvisor()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -686,49 +720,28 @@ const Monitoring = () => {
 
                     <div className="col-sm-12">
                         <h5 className="text-center inline-block monitoringHeader">
-                            <OverlayTrigger
-                                placement="right"
-                                delay={{show: 0, hide: 0}}
-                                overlay={renderRefreshTooltip()}
-                            >
-                                <Button variant="button" onClick={refresh}>
-                                    <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                                </Button>
-                            </OverlayTrigger>
-                            <OverlayTrigger
-                                placement="right"
-                                delay={{show: 0, hide: 0}}
-                                overlay={renderInfoTooltip}
-                            >
-                                <Button variant="button" onClick={() => setShowInfoModal(true)}>
-                                    <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                                </Button>
-                            </OverlayTrigger>
-                            <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
-                            Aggregated Metrics for Emulation:
-                        <SelectEmulationDropdownOrSpinner className="selectEmulation" loading={loading}
-                                                          selectedEmulation={selectedEmulation}
-                                                          runningEmulations={runningEmulations}
-                                                          windowLength={windowLength}
-                                                          animationDuration={animationDuration}
-                        />
+                            <SelectEmulationDropdownOrSpinner className="selectEmulation" loading={loading}
+                                                              selectedEmulation={selectedEmulation}
+                                                              runningEmulations={runningEmulations}
+                                                              windowLength={windowLength}
+                                                              animationDuration={animationDuration}
+                            />
 
                         </h5>
                     </div>
                 </div>
                 <hr/>
                 <AggregateMetrics key={animationDuration.value}
-                    loading={loading}
-                    animation={animation} animationDuration={animationDuration.value}
-                    animationDurationFactor={animationDurationFactor}
-                    clientMetrics={getClientMetrics()} idsMetrics={getIdsMetrics()}
-                    aggregatedHostMetrics={getAggregatedHostMetrics()}
-                    aggregatedDockerStats={getAggregatedDockerStats()}
+                                  loading={loading}
+                                  animation={animation} animationDuration={animationDuration.value}
+                                  animationDurationFactor={animationDurationFactor}
+                                  clientMetrics={getClientMetrics()} idsMetrics={getIdsMetrics()}
+                                  aggregatedHostMetrics={getAggregatedHostMetrics()}
+                                  aggregatedDockerStats={getAggregatedDockerStats()}
                 />
                 <div className="row hostMetricsDropdownRow">
                     <div className="col-sm-12">
-                        <h5 className="text-center inline-block monitoringHeader"> Metrics for Container:
+                        <h5 className="text-center inline-block monitoringHeader">
                             <SelectHostDropdownOrSpinner loading={loading}
                                                          selectedEmulation={selectedEmulation}
                                                          selectedContainer={selectedContainer}

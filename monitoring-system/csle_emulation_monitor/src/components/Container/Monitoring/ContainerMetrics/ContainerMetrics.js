@@ -9,6 +9,9 @@ import LoginsChart from "../LoginsChart/LoginsChart";
 import ConnectionsChart from "../ConnectionsChart/ConnectionsChart";
 
 const ContainerMetrics = React.memo((props) => {
+    if(!props.loading && (props.dockerMetrics === null || props.hostMetrics === null)) {
+        return (<></>)
+    }
     if (props.loading || props.dockerMetrics === null || props.hostMetrics === null) {
         return (
             <Spinner animation="border" role="status" className="aggregatedMetricsSpinner">

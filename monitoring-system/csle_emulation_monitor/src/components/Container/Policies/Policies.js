@@ -89,6 +89,23 @@ const Policies = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeAllPpoPoliciesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/ppopolicies/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchPPOPolicies()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removePPOPolicy = (ppoPolicy) => {
         setLoadingPPOPolicies(true)
         removePpoPoliciesRequest(ppoPolicy.id)
@@ -111,9 +128,37 @@ const Policies = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeTSPSAPolicy = (ppoPolicy) => {
+
+    const removeAllTSPSAPoliciesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/tspsapolicies/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTSPSAPolicies()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeTSPSAPolicy = (tspsaPolicy) => {
         setLoadingSpsaPolicies(true)
-        removeTSPSAPoliciesRequest(ppoPolicy.id)
+        removeTSPSAPoliciesRequest(tspsaPolicy.id)
+    }
+
+    const removeAllTSPSAPolicies = () => {
+        setLoadingSpsaPolicies(true)
+        removeAllTSPSAPoliciesRequest()
+    }
+
+    const removeAllPPOPolicies = () => {
+        setLoadingPPOPolicies(true)
+        removeAllPpoPoliciesRequest()
     }
 
     const refreshTSPSAPolicies = () => {
@@ -129,6 +174,18 @@ const Policies = () => {
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             More information about learned policies.
+        </Tooltip>
+    );
+
+    const renderRemoveAllTSPSAPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all T-SPSA policies.
+        </Tooltip>
+    );
+
+    const renderRemoveAllPPOPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all PPO policies.
         </Tooltip>
     );
 
@@ -287,6 +344,16 @@ const Policies = () => {
                             </Button>
                         </OverlayTrigger>
                         <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllTSPSAPoliciesTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllTSPSAPolicies}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">
@@ -335,6 +402,16 @@ const Policies = () => {
                             </Button>
                         </OverlayTrigger>
                         <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllPPOPoliciesTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllPPOPolicies}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">

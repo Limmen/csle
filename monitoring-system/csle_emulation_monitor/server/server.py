@@ -182,6 +182,15 @@ def remove_simulation(simulation_name: str):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/simulationsdata/remove', methods=['POST'])
+def remove_all_simulations():
+    all_simulations = MetastoreFacade.list_simulations()
+    for simulation in all_simulations:
+        SimulationEnvManager.uninstall_simulation(simulation)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/emulationsdata', methods=['GET'])
 def emulations():
     all_emulations = MetastoreFacade.list_emulations()
@@ -263,6 +272,19 @@ def remove_emulation(emulation_name: str):
     return response
 
 
+@app.route('/emulationsdata/remove', methods=['POST'])
+def remove_all_emulation():
+    emulations = MetastoreFacade.list_emulations()
+    rc_emulations = ContainerManager.list_running_emulations()
+    for emulation in emulations:
+        if emulation.name in rc_emulations:
+            EmulationEnvManager.clean_emulation(emulation)
+        EmulationEnvManager.uninstall_emulation(config=emulation)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 @app.route('/emulationtraces', methods=['GET'])
 def emulation_traces():
     emulation_trcs = MetastoreFacade.list_emulation_traces()
@@ -271,11 +293,19 @@ def emulation_traces():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-
 @app.route('/emulationtraces/remove/<emulation_trace_id>', methods=['POST'])
 def remove_emulation_trace(emulation_trace_id: int):
     trace = MetastoreFacade.get_emulation_trace(id=emulation_trace_id)
     if trace is not None:
+        MetastoreFacade.remove_emulation_trace(trace)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/emulationtraces/remove', methods=['POST'])
+def remove_all_emulation_traces():
+    traces = MetastoreFacade.list_emulation_traces()
+    for trace in traces:
         MetastoreFacade.remove_emulation_trace(trace)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -293,6 +323,15 @@ def simulation_traces():
 def remove_simulation_trace(simulation_trace_id: int):
     trace = MetastoreFacade.get_simulation_trace(id=simulation_trace_id)
     if trace is not None:
+        MetastoreFacade.remove_simulation_trace(trace)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/simulationtraces/remove', methods=['POST'])
+def remove_all_simulation_traces():
+    traces = MetastoreFacade.list_simulation_traces()
+    for trace in traces:
         MetastoreFacade.remove_simulation_trace(trace)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -333,6 +372,15 @@ def remove_experiment(experiment_id: int):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/experimentsdata/remove', methods=['POST'])
+def remove_all_experiments():
+    experiments = MetastoreFacade.list_experiment_executions()
+    for exp in experiments:
+        MetastoreFacade.remove_experiment_execution(experiment_execution=exp)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/tspsapolicies', methods=['GET'])
 def policies():
     t_spsa_policies = MetastoreFacade.list_t_spsa_policies()
@@ -345,6 +393,15 @@ def policies():
 def remove_t_spsa_policy(t_spsa_policy_id: int):
     policy = MetastoreFacade.get_t_spsa_policy(id=t_spsa_policy_id)
     if policy is not None:
+        MetastoreFacade.remove_t_spsa_policy(t_spsa_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/tspsapolicies/remove', methods=['POST'])
+def remove_all_t_spsa_policies():
+    policies = MetastoreFacade.list_t_spsa_policies()
+    for policy in policies:
         MetastoreFacade.remove_t_spsa_policy(t_spsa_policy=policy)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -367,6 +424,14 @@ def remove_ppo_policy(ppo_policy_id: int):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/ppopolicies/remove', methods=['POST'])
+def remove_all_ppo_policies():
+    policies = MetastoreFacade.list_ppo_policies()
+    for policy in policies:
+        MetastoreFacade.remove_ppo_policy(ppo_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 @app.route('/trainingjobs', methods=['GET'])
 def trainingjobs():
@@ -413,6 +478,17 @@ def remove_trainingjob(job_id: int):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/trainingjobs/remove', methods=['POST'])
+def remove_all_trainingjobs():
+    jobs = MetastoreFacade.list_training_jobs()
+    for job in jobs:
+        MonitorToolsController.stop_pid(job.pid)
+        MetastoreFacade.remove_training_job(training_job=job)
+    time.sleep(2)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/systemidentificationjobs', methods=['GET'])
 def systemidentificationjobs():
     system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
@@ -443,6 +519,17 @@ def remove_system_id_job(job_id: int):
         MonitorToolsController.stop_pid(job.pid)
         MetastoreFacade.remove_system_identification_job(system_identification_job=job)
         time.sleep(2)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/systemidentificationjobs/remove', methods=['POST'])
+def remove_all_systemid_jobs():
+    jobs = MetastoreFacade.list_system_identification_jobs()
+    for job in jobs:
+        MonitorToolsController.stop_pid(job.pid)
+        MetastoreFacade.remove_system_identification_job(system_identification_job=job)
+    time.sleep(2)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response

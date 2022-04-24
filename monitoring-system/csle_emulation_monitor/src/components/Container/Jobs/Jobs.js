@@ -92,9 +92,31 @@ const Jobs = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeAllTrainingJobsRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/trainingjobs/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTrainingJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removeTrainingJob = (job) => {
         setTrainingJobsLoading(true)
         removeTrainingJobRequest(job.id)
+    }
+
+    const removeAllTrainingJobs = () => {
+        setTrainingJobsLoading(true)
+        removeAllTrainingJobsRequest()
     }
 
     const stopTrainingJobRequest = useCallback((training_job_id) => {
@@ -238,9 +260,31 @@ const Jobs = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeAllSystemIdJobsRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSystemIdentificationJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removeSystemIdentificationJob = (job) => {
         setSystemIdentificationJobsLoading(true)
         removeSystemIdJobRequest(job.id)
+    }
+
+    const removeAllSystemIdentificationJobs = (job) => {
+        setSystemIdentificationJobsLoading(true)
+        removeAllSystemIdJobsRequest()
     }
 
     const stopSystemIdentificationJobRequest = useCallback((sys_id_job_id) => {
@@ -300,6 +344,18 @@ const Jobs = () => {
     const renderTrainingJobsInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             More information about the training jobs
+        </Tooltip>
+    );
+
+    const renderRemoveAllTrainingJobsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all training jobs.
+        </Tooltip>
+    );
+
+    const renderRemoveAllSystemIdentificationJobsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all system identification jobs.
         </Tooltip>
     );
 
@@ -446,6 +502,16 @@ const Jobs = () => {
                         </OverlayTrigger>
                         <TrainingJobsInfoModal show={showTrainingJobsInfoModal}
                                                onHide={() => setShowTrainingJobsInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllTrainingJobsTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllTrainingJobs}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">
@@ -509,6 +575,16 @@ const Jobs = () => {
                         </OverlayTrigger>
                         <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
                                                            onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllSystemIdentificationJobsTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllSystemIdentificationJobs}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
                     </h3>
                 </div>
                 <div className="col-sm-4">
