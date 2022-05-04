@@ -7,6 +7,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
 
+
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
@@ -39,7 +40,10 @@ if __name__ == '__main__':
             agents_constants.T_SPSA.THETA1: HParam(value=[-4,-4,-4], name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                       descr="how frequently to save the model")
+                                                       descr="how frequently to save the model"),
+            agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
+                value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
+                descr="confidence interval")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
@@ -48,4 +52,4 @@ if __name__ == '__main__':
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_tspsa_policy(t_spsa_policy=policy)
+        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)

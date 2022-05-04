@@ -3,7 +3,6 @@ import time
 import gym
 import os
 import numpy as np
-import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -62,7 +61,6 @@ class PPOAgent(BaseAgent):
             self.training_job.experiment_result = exp_result
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
-
         # Setup experiment execution
         ts = time.time()
         emulation_name = None
@@ -75,13 +73,18 @@ class PPOAgent(BaseAgent):
         exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id
 
+        # Setup gym environment
         config = self.simulation_env_config.simulation_env_input_config
         orig_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         env = Monitor(orig_env)
+
+        # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
             ExperimentUtil.set_seed(seed)
+
+            # Callback for logging training metrics
             cb = PPOTrainingCallback(
                 eval_every=self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value,
                 eval_batch_size=self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value,
@@ -96,6 +99,8 @@ class PPOAgent(BaseAgent):
                 save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution,
                 env=orig_env, experiment_config=self.experiment_config
             )
+
+            # Create PPO Agent
             policy_kwargs = dict(
                 net_arch=[self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value
                           ]*self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value)
@@ -114,8 +119,13 @@ class PPOAgent(BaseAgent):
                 max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
                 target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value,
             )
+            orig_env.set_model(model)
+
+            # Train
             model.learn(total_timesteps=self.experiment_config.hparams[
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value, callback=cb)
+
+            # Save policy
             exp_result=cb.exp_result
             ts = time.time()
             save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
@@ -129,7 +139,7 @@ class PPOAgent(BaseAgent):
                 avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD][-1])
             exp_result.policies[seed] = policy
 
-            # Save policy
+            # Save policy metadata
             MetastoreFacade.save_ppo_policy(ppo_policy=policy)
             os.chmod(save_path, 0o777)
 
@@ -142,7 +152,6 @@ class PPOAgent(BaseAgent):
         exp_result.std_metrics = {}
         for metric in exp_result.all_metrics[self.experiment_config.random_seeds[0]].keys():
             running_avg = 100
-            confidence=0.95
             value_vectors = []
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
@@ -153,8 +162,10 @@ class PPOAgent(BaseAgent):
                 seed_values = []
                 for seed_idx in range(len(self.experiment_config.random_seeds)):
                     seed_values.append(value_vectors[seed_idx][i])
-                avg_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
-                std_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[1])
+                avg_metrics.append(ExperimentUtil.mean_confidence_interval(
+                    data=seed_values,  confidence=agents_constants.COMMON.CONFIDENCE_INTERVAL)[0])
+                std_metrics.append(ExperimentUtil.mean_confidence_interval(
+                    data=seed_values, confidence=agents_constants.COMMON.CONFIDENCE_INTERVAL)[1])
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
@@ -251,6 +262,8 @@ class PPOTrainingCallback(BaseCallback):
 
         :return: (bool) If the callback returns False, training is aborted early.
         """
+        if self.player_type == PlayerType.ATTACKER:
+            self.env.set_model(self.model)
         return True
 
     def _on_training_end(self) -> None:
@@ -276,7 +289,7 @@ class PPOTrainingCallback(BaseCallback):
 
         # Eval model
         if self.iter % self.eval_every == 0:
-            ts = time.time()
+            self.env.set_model(self.model)
             policy = PPOPolicy(
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
                 states=self.states, player_type=self.player_type, actions=self.actions,
@@ -289,10 +302,7 @@ class PPOTrainingCallback(BaseCallback):
                 t = 0
                 cumulative_reward = 0
                 while not done and t <= max_horizon:
-                    if self.player_type == PlayerType.ATTACKER:
-                        a = policy.stage_policy(o=o)
-                    else:
-                        a = policy.action(o=o)
+                    a = policy.action(o=o)
                     o, r, done, info = self.training_env.step(a)
                     cumulative_reward +=r
                     t+= 1

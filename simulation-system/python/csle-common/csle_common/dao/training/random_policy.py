@@ -15,7 +15,7 @@ class RandomPolicy(Policy):
     def __init__(self, player_type: PlayerType, actions: List[Action],
                  stage_policy_tensor: Optional[List[List[float]]]) -> None:
         """
-        Intializes the policy
+        Initializes the policy
 
         :param actions: list of actions
         :param player_type: the player type

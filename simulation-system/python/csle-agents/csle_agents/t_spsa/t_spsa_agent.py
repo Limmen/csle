@@ -13,7 +13,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
-from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_agents.base.base_agent import BaseAgent
@@ -110,7 +110,6 @@ class TSPSAAgent(BaseAgent):
         exp_result.std_metrics = {}
         for metric in exp_result.all_metrics[self.experiment_config.random_seeds[0]].keys():
             running_avg = 100
-            confidence = 0.95
             value_vectors = []
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
@@ -121,8 +120,10 @@ class TSPSAAgent(BaseAgent):
                 seed_values = []
                 for seed_idx in range(len(self.experiment_config.random_seeds)):
                     seed_values.append(value_vectors[seed_idx][i])
-                avg_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[0])
-                std_metrics.append(ExperimentUtil.mean_confidence_interval(data=seed_values, confidence=confidence)[1])
+                avg_metrics.append(ExperimentUtil.mean_confidence_interval(
+                    data=seed_values, confidence=agents_constants.COMMON.CONFIDENCE_INTERVAL)[0])
+                std_metrics.append(ExperimentUtil.mean_confidence_interval(
+                    data=seed_values, confidence=agents_constants.COMMON.CONFIDENCE_INTERVAL)[1])
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
@@ -162,12 +163,13 @@ class TSPSAAgent(BaseAgent):
             theta = TSPSAAgent.initial_theta(L=L)
 
         # Initial eval
-        policy = TSPSAPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
-                             states=self.simulation_env_config.state_space_config.states,
-                             player_type=self.experiment_config.player_type, L=L,
-                             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+        policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
+                                              states=self.simulation_env_config.state_space_config.states,
+                                              player_type=self.experiment_config.player_type, L=L,
+                                              actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                  self.experiment_config.player_idx].actions,
-                             experiment_config=self.experiment_config, avg_R=-1)
+                                              experiment_config=self.experiment_config, avg_R=-1,
+                                              agent_type=AgentType.T_SPSA)
         avg_metrics = self.eval_theta(policy=policy)
         J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         policy.avg_R=J
@@ -200,12 +202,13 @@ class TSPSAAgent(BaseAgent):
                 theta[l] = max(theta[l], theta[l + 1])
 
             # Evaluate new theta
-            policy = TSPSAPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
-                                 states=self.simulation_env_config.state_space_config.states,
-                                 player_type=self.experiment_config.player_type, L=L,
-                                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                     self.experiment_config.player_idx].actions,
-                                 experiment_config=self.experiment_config, avg_R=-1)
+            policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
+                                                  states=self.simulation_env_config.state_space_config.states,
+                                                  player_type=self.experiment_config.player_type, L=L,
+                                                  actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                                                      self.experiment_config.player_idx].actions,
+                                                  experiment_config=self.experiment_config, avg_R=-1,
+                                                  agent_type=AgentType.T_SPSA)
             avg_metrics = self.eval_theta(policy=policy)
             J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
             policy.avg_R = J
@@ -237,18 +240,19 @@ class TSPSAAgent(BaseAgent):
                 MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                             id=self.exp_execution.id)
 
-        policy = TSPSAPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
-                             states=self.simulation_env_config.state_space_config.states,
-                             player_type=self.experiment_config.player_type, L=L,
-                             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                 self.experiment_config.player_idx].actions,
-                             experiment_config=self.experiment_config, avg_R=J)
+        policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
+                                              states=self.simulation_env_config.state_space_config.states,
+                                              player_type=self.experiment_config.player_type, L=L,
+                                              actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                                                  self.experiment_config.player_idx].actions,
+                                              experiment_config=self.experiment_config, avg_R=J,
+                                              agent_type=AgentType.T_SPSA)
         exp_result.policies[seed] = policy
         # Save policy
-        MetastoreFacade.save_tspsa_policy(t_spsa_policy=policy)
+        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def eval_theta(self, policy: TSPSAPolicy) -> Dict[str, Union[float, int]]:
+    def eval_theta(self, policy: MultiThresholdStoppingPolicy) -> Dict[str, Union[float, int]]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
@@ -379,18 +383,20 @@ class TSPSAAgent(BaseAgent):
         tb = [t - ck * dk for t, dk in zip(theta, deltak)]
 
         # Calculate g_k(theta_k)
-        avg_metrics = self.eval_theta(TSPSAPolicy(
+        avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
             theta=ta, simulation_name=self.simulation_env_config.name,
             player_type=self.experiment_config.player_type,
             states=self.simulation_env_config.state_space_config.states, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1))
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.T_SPSA))
         J_a = round(avg_metrics[agents_constants.T_SPSA.R], 3)
-        avg_metrics = self.eval_theta(TSPSAPolicy(
+        avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
             theta=tb, simulation_name=self.simulation_env_config.name,
             player_type=self.experiment_config.player_type,states=self.simulation_env_config.state_space_config.states,
             L=L, actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1))
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.T_SPSA))
         J_b = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         gk = [(J_a - J_b) / (2 * ck * dk) for dk in deltak]
 

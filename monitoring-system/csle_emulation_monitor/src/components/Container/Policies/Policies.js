@@ -6,7 +6,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Spinner from 'react-bootstrap/Spinner';
 import Accordion from 'react-bootstrap/Accordion';
 import Tooltip from 'react-bootstrap/Tooltip';
-import TSPSAPolicy from "./TSPSAPolicy/TSPSAPolicy";
+import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
 import PPOPolicy from "./PPOPolicy/PPOPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -16,20 +16,20 @@ import { useDebouncedCallback } from 'use-debounce';
 
 const Policies = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [tspsaPolicies, setTSPSAPolicies] = useState([]);
-    const [filteredTspsaPolicies, setFilteredTSPSAPolicies] = useState([]);
-    const [tSPSAPoliciesSearchString, setTSPSAPoliciesSearchString] = useState("");
+    const [multiThresholdPolicies, setMultiThresholdPolicies] = useState([]);
+    const [filteredMultiThresholdPolicies, setFilteredMultiThresholdPolicies] = useState([]);
+    const [multiThresholdPoliciesSearchString, setMultiThresholdPoliciesSearchString] = useState("");
     const [ppoPolicies, setPPOPolicies] = useState([]);
     const [filteredPPOPolicies, setFilteredPPOPolicies] = useState([]);
     const [ppoPoliciesSearchString, setPpoPoliciesSearchString] = useState("");
-    const [loadingspsaPolicies, setLoadingSpsaPolicies] = useState(true);
+    const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
     const [loadingPPOPoliies, setLoadingPPOPolicies] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-    const fetchTSPSAPolicies = useCallback(() => {
+    const fetchMultiThresholdPolicies = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/tspsapolicies',
+            `http://` + ip + ':7777/multithresholdpolicies',
             {
                 method: "GET",
                 headers: new Headers({
@@ -39,9 +39,9 @@ const Policies = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setTSPSAPolicies(response);
-                setFilteredTSPSAPolicies(response)
-                setLoadingSpsaPolicies(false)
+                setMultiThresholdPolicies(response);
+                setFilteredMultiThresholdPolicies(response)
+                setLoadingMultiThresholdPolicies(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -66,11 +66,11 @@ const Policies = () => {
     }, []);
 
     useEffect(() => {
-        setLoadingSpsaPolicies(true)
-        fetchTSPSAPolicies()
+        setLoadingMultiThresholdPolicies(true)
+        fetchMultiThresholdPolicies()
         setLoadingPPOPolicies(true)
         fetchPPOPolicies()
-    }, [fetchTSPSAPolicies, fetchPPOPolicies]);
+    }, [fetchMultiThresholdPolicies, fetchPPOPolicies]);
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
@@ -111,9 +111,9 @@ const Policies = () => {
         removePpoPoliciesRequest(ppoPolicy.id)
     }
 
-    const removeTSPSAPoliciesRequest = useCallback((t_spsa_policy_id) => {
+    const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/tspsapolicies/remove/' + t_spsa_policy_id,
+            `http://` + ip + ':7777/multithresholdpolicies/remove/' + multi_threshold_policy_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -123,15 +123,15 @@ const Policies = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTSPSAPolicies()
+                fetchMultiThresholdPolicies()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
 
-    const removeAllTSPSAPoliciesRequest = useCallback(() => {
+    const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/tspsapolicies/remove',
+            `http://` + ip + ':7777/multithresholdpolicies/remove',
             {
                 method: "POST",
                 headers: new Headers({
@@ -141,19 +141,19 @@ const Policies = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTSPSAPolicies()
+                fetchMultiThresholdPolicies()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeTSPSAPolicy = (tspsaPolicy) => {
-        setLoadingSpsaPolicies(true)
-        removeTSPSAPoliciesRequest(tspsaPolicy.id)
+    const removeMultiThresholdPolicy = (multiThresholdPolicy) => {
+        setLoadingMultiThresholdPolicies(true)
+        removeMultiThresholdPoliciesRequest(multiThresholdPolicy.id)
     }
 
-    const removeAllTSPSAPolicies = () => {
-        setLoadingSpsaPolicies(true)
-        removeAllTSPSAPoliciesRequest()
+    const removeAllMultiThresholdPolicies = () => {
+        setLoadingMultiThresholdPolicies(true)
+        removeAllMultiThresholdPoliciesRequest()
     }
 
     const removeAllPPOPolicies = () => {
@@ -161,9 +161,9 @@ const Policies = () => {
         removeAllPpoPoliciesRequest()
     }
 
-    const refreshTSPSAPolicies = () => {
-        setLoadingSpsaPolicies(true)
-        fetchTSPSAPolicies()
+    const refreshMultiThresholdPolicies = () => {
+        setLoadingMultiThresholdPolicies(true)
+        fetchMultiThresholdPolicies()
     }
 
     const refreshPPOPolicies = () => {
@@ -177,9 +177,9 @@ const Policies = () => {
         </Tooltip>
     );
 
-    const renderRemoveAllTSPSAPoliciesTooltip = (props) => (
+    const renderRemoveAllMultiThresholdPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all T-SPSA policies.
+            Remove all multi-threshold policies.
         </Tooltip>
     );
 
@@ -189,9 +189,9 @@ const Policies = () => {
         </Tooltip>
     );
 
-    const renderTSPSARefreshTooltip = (props) => (
+    const renderMultiThresholdPoliciesRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload T-SPSA policies from the backend
+            Reload multi-threshold policies from the backend
         </Tooltip>
     );
 
@@ -233,7 +233,7 @@ const Policies = () => {
 
     const wrapper = createRef();
 
-    const TSPSAPoliciesAccordions = (props) => {
+    const MultiThresholdPoliciesAccordions = (props) => {
         if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
@@ -243,8 +243,8 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.policies.map((policy, index) =>
-                        <TSPSAPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}
-                                     removeTSPSAPolicy={removeTSPSAPolicy}
+                        <MultiThresholdPolicy policy={policy} wrapper={wrapper} key={policy.id + "-" + index}
+                                              removeMultiThresholdPolicy={removeMultiThresholdPolicy}
                         />
                     )}
                 </Accordion>
@@ -271,25 +271,25 @@ const Policies = () => {
         }
     }
 
-    const searchTSPSAPoliciesFilter = (tSpsaPolicy, searchVal) => {
+    const searchMultiThresholdPoliciesFilter = (multiThresholdPolicy, searchVal) => {
         return (searchVal === "" ||
-            tSpsaPolicy.id.toString().indexOf(searchVal.toLowerCase()) !== -1 ||
-            tSpsaPolicy.simulation_name.indexOf(searchVal.toLowerCase()) !== -1
+            multiThresholdPolicy.id.toString().indexOf(searchVal.toLowerCase()) !== -1 ||
+            multiThresholdPolicy.simulation_name.indexOf(searchVal.toLowerCase()) !== -1
         )
     }
 
-    const searchTSPSAPolicyChange = (event) => {
+    const searchMultiThresholdPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPolicies = tspsaPolicies.filter(policy => {
-            return searchTSPSAPoliciesFilter(policy, searchVal)
+        const fPolicies = multiThresholdPolicies.filter(policy => {
+            return searchMultiThresholdPoliciesFilter(policy, searchVal)
         });
-        setFilteredTSPSAPolicies(fPolicies)
-        setTSPSAPoliciesSearchString(searchVal)
+        setFilteredMultiThresholdPolicies(fPolicies)
+        setMultiThresholdPoliciesSearchString(searchVal)
     }
 
-    const searchTSPSAPoliciesHandler = useDebouncedCallback(
+    const searchMultiThresholdPoliciesHandler = useDebouncedCallback(
         (event) => {
-            searchTSPSAPolicyChange(event)
+            searchMultiThresholdPolicyChange(event)
         },
         350
     );
@@ -322,14 +322,14 @@ const Policies = () => {
                 <div className="col-sm-3">
                 </div>
                 <div className="col-sm-3">
-                    <h3> T-SPSA policies
+                    <h3> Multi-threshold policies
 
                         <OverlayTrigger
                             placement="top"
                             delay={{show: 0, hide: 0}}
-                            overlay={renderTSPSARefreshTooltip}
+                            overlay={renderMultiThresholdPoliciesRefreshTooltip}
                         >
-                            <Button variant="button" onClick={refreshTSPSAPolicies}>
+                            <Button variant="button" onClick={refreshMultiThresholdPolicies}>
                                 <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
@@ -348,9 +348,9 @@ const Policies = () => {
                         <OverlayTrigger
                             placement="top"
                             delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveAllTSPSAPoliciesTooltip}
+                            overlay={renderRemoveAllMultiThresholdPoliciesTooltip}
                         >
-                            <Button variant="danger" onClick={removeAllTSPSAPolicies}>
+                            <Button variant="danger" onClick={removeAllMultiThresholdPolicies}>
                                 <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
@@ -368,14 +368,14 @@ const Policies = () => {
                                 placeholder="Search"
                                 aria-label="tSpsaPoliciesSearchLabel"
                                 aria-describedby="tSpsaPoliciesSearchField"
-                                onChange={searchTSPSAPoliciesHandler}
+                                onChange={searchMultiThresholdPoliciesHandler}
                             />
                         </InputGroup>
                     </Form>
                 </div>
                 <div className="col-sm-2"></div>
             </div>
-            <TSPSAPoliciesAccordions loading={loadingspsaPolicies} policies={filteredTspsaPolicies}/>
+            <MultiThresholdPoliciesAccordions loading={loadingMultiThresholdPolicies} policies={filteredMultiThresholdPolicies}/>
             <div className="row ppoPolicies">
                 <div className="col-sm-3">
                 </div>

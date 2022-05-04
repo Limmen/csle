@@ -1346,7 +1346,7 @@ class METADATA_STORE:
     EXPERIMENT_EXECUTIONS_TABLE = "experiment_executions"
     TRAINING_JOBS_TABLE = "training_jobs"
     SYSTEM_IDENTIFICATION_JOBS_TABLE = "system_identification_jobs"
-    T_SPSA_POLICIES_TABLE = "t_spsa_policies"
+    MULTI_THRESHOLD_STOPPING_POLICIES_TABLE = "multi_threshold_stopping_policies"
     PPO_POLICIES_TABLE = "ppo_policies"
 
 

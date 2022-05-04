@@ -15,7 +15,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_agents.base.base_agent import BaseAgent
 from csle_agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
@@ -135,10 +135,10 @@ class TFPAgent(BaseAgent):
         pi_2 = np.zeros((2, self.experiment_config.hparams[agents_constants.T_SPSA.L])).tolist()
         pi_1 = np.zeros((self.experiment_config.hparams[agents_constants.T_SPSA.L],)).tolist()
         initial_attacker_thresholds = [
-            list(map(lambda x: round(TSPSAPolicy.sigmoid(x),3),
+            list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3),
                      self.attacker_experiment_config.hparams[agents_constants.T_SPSA.THETA1].value))]
         initial_defender_thresholds = [
-            list(map(lambda x: round(TSPSAPolicy.sigmoid(x),3),
+            list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3),
                      self.defender_experiment_config.hparams[agents_constants.T_SPSA.THETA1].value))]
         pi_2 = TFPAgent.empirical_strategy_attacker(
             attacker_thresholds=initial_attacker_thresholds,
@@ -200,7 +200,7 @@ class TFPAgent(BaseAgent):
                            simulation_env_config=self.defender_simulation_env_config,
                            experiment_config=self.defender_experiment_config)
         experiment_execution = agent.train()
-        policy :TSPSAPolicy = experiment_execution.result.policies[seed]
+        policy :MultiThresholdStoppingPolicy = experiment_execution.result.policies[seed]
         thresholds = policy.thresholds()
         val = experiment_execution.result.avg_metrics[agents_constants.COMMON.AVERAGE_REWARD]
         return thresholds, val
@@ -215,7 +215,7 @@ class TFPAgent(BaseAgent):
                            simulation_env_config=self.attacker_simulation_env_config,
                            experiment_config=self.attacker_experiment_config)
         experiment_execution = agent.train()
-        policy :TSPSAPolicy = experiment_execution.result.policies[seed]
+        policy :MultiThresholdStoppingPolicy = experiment_execution.result.policies[seed]
         thresholds = policy.thresholds()
         val = experiment_execution.result.avg_metrics[agents_constants.COMMON.AVERAGE_REWARD]
         return thresholds, val

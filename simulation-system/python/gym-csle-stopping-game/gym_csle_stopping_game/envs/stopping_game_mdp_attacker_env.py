@@ -1,9 +1,12 @@
-from typing import Tuple, List
+from typing import Tuple, List, Union
 import gym
 import numpy as np
+import torch
+import math
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
 class StoppingGameMdpAttackerEnv(BaseEnv):
@@ -35,19 +38,31 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         }
 
         self.latest_defender_obs = None
+        self.latest_attacker_obs = None
+        self.model = None
 
         # Reset
         self.reset()
         super().__init__()
 
-    def step(self, pi2 : List[List[float]]) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, pi2 : Union[List[List[float]], int, float, np.int64, np.float]) \
+            -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
         :param pi2: attacker stage policy
         :return: (obs, reward, done, info)
         """
-        pi2 = np.array(pi2)
+        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float:
+            a2 = pi2
+            pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+        else:
+            pi2 = np.array(pi2)
+            if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
+                or not pi2.shape[1] == len(self.config.stopping_game_config.A1)) and self.model is not None:
+                pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+            a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+
         assert pi2.shape[0] == len(self.config.stopping_game_config.S)
         assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
 
@@ -55,8 +70,9 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         a1 = self.static_defender_strategy.action(o=self.latest_defender_obs)
 
         # Step the game
-        o, r, d, info = self.stopping_game_env.step((a1, pi2))
+        o, r, d, info = self.stopping_game_env.step((a1, (pi2, a2)))
         self.latest_defender_obs = o[0]
+        self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
 
         return attacker_obs, r[1], d, info
@@ -69,8 +85,53 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         """
         o = self.stopping_game_env.reset()
         self.latest_defender_obs = o[0]
+        self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
         return attacker_obs
+
+    def set_model(self, model) -> None:
+        """
+        Sets the model. Useful when using RL frameworks where the stage policy is not easy to extract
+
+        :param model: the model
+        :return: None
+        """
+        self.model = model
+
+    def calculate_stage_policy(self, o: List) -> np.ndarray:
+        """
+        Calculates the stage policy of a given model and observation
+
+        :param o: the observation
+        :return: the stage policy
+        """
+        b1 = o[1]
+        l = int(o[0])
+        stage_policy = []
+        for s in self.config.stopping_game_config.S:
+            if s != 2:
+                o = [l, b1, s]
+                stage_policy.append(self._get_attacker_dist(obs=o))
+            else:
+                stage_policy.append([0.5, 0.5])
+        stage_policy = np.array(stage_policy)
+        return stage_policy
+
+    def _get_attacker_dist(self, obs: List) -> List:
+        """
+        Utility function for getting the attacker's action distribution based on a given observation
+
+        :param obs: the given observation
+        :return:  the action distribution
+        """
+        obs = np.array([obs])
+        actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
+        action = actions[0]
+        if action == 1:
+            stop_prob = math.exp(log_prob)
+        else:
+            stop_prob = 1-math.exp(log_prob)
+        return [1-stop_prob, stop_prob]
 
     def render(self, mode: str = 'human'):
         """

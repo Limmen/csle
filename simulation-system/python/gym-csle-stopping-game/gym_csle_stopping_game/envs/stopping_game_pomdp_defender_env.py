@@ -10,6 +10,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
 class StoppingGamePomdpDefenderEnv(BaseEnv):
@@ -55,10 +56,11 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :return: (obs, reward, done, info)
         """
         # Get defender action from static strategy
-        pi2 = self.static_attacker_strategy.stage_policy(self.latest_attacker_obs)
+        pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
+        a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
 
         # Step the game
-        o, r, d, info = self.stopping_game_env.step((a1, pi2))
+        o, r, d, info = self.stopping_game_env.step((a1, (pi2, a2)))
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
 

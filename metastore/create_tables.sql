@@ -97,14 +97,14 @@ CREATE TABLE IF NOT EXISTS simulation_images (
 GRANT ALL ON simulation_images TO csle;
 GRANT USAGE, SELECT ON SEQUENCE simulation_images_id_seq TO csle;
 
--- Create table that stores the t_spsa_policies --
-CREATE TABLE IF NOT EXISTS t_spsa_policies (
+-- Create table that stores the multi_threshold_stopping_policies --
+CREATE TABLE IF NOT EXISTS multi_threshold_stopping_policies (
     id serial PRIMARY KEY,
     policy json NOT NULL,
     simulation_name TEXT references simulations(name)
 );
-GRANT ALL ON t_spsa_policies TO csle;
-GRANT USAGE, SELECT ON SEQUENCE t_spsa_policies_id_seq TO csle;
+GRANT ALL ON multi_threshold_stopping_policies TO csle;
+GRANT USAGE, SELECT ON SEQUENCE multi_threshold_stopping_policies_id_seq TO csle;
 
 -- Create table that stores training jobs --
 CREATE TABLE IF NOT EXISTS training_jobs (

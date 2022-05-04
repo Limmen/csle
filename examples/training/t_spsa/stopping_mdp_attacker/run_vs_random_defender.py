@@ -42,7 +42,10 @@ if __name__ == '__main__':
             agents_constants.T_SPSA.THETA1: HParam(value=[-4]*(3*2), name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                       descr="how frequently to save the model")
+                                                       descr="how frequently to save the model"),
+            agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
+                value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
+                descr="confidence interval")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
@@ -51,4 +54,4 @@ if __name__ == '__main__':
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_tspsa_policy(t_spsa_policy=policy)
+        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)

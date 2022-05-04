@@ -3,7 +3,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.random_policy import RandomPolicy
-from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
 
 
@@ -39,7 +39,7 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         """
         defender_strategy = None
         try:
-            defender_strategy = TSPSAPolicy.from_dict(d["defender_strategy"])
+            defender_strategy = MultiThresholdStoppingPolicy.from_dict(d["defender_strategy"])
         except:
             try:
                 defender_strategy = RandomPolicy.from_dict(d["defender_strategy"])

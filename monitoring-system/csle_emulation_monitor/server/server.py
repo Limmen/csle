@@ -381,28 +381,28 @@ def remove_all_experiments():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/tspsapolicies', methods=['GET'])
+@app.route('/multithresholdpolicies', methods=['GET'])
 def policies():
-    t_spsa_policies = MetastoreFacade.list_t_spsa_policies()
-    t_spsa_policies_dicts = list(map(lambda x: x.to_dict(), t_spsa_policies))
-    response = jsonify(t_spsa_policies_dicts)
+    multi_threshold_stopping_policies = MetastoreFacade.list_multi_threshold_stopping_policies()
+    multi_threshold_stopping_policies_dicts = list(map(lambda x: x.to_dict(), multi_threshold_stopping_policies))
+    response = jsonify(multi_threshold_stopping_policies_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/tspsapolicies/remove/<t_spsa_policy_id>', methods=['POST'])
-def remove_t_spsa_policy(t_spsa_policy_id: int):
-    policy = MetastoreFacade.get_t_spsa_policy(id=t_spsa_policy_id)
+@app.route('/multithresholdpolicies/remove/<multi_threshold_stopping_policy_id>', methods=['POST'])
+def remove_multi_threshold_policy(multi_threshold_stopping_policy_id: int):
+    policy = MetastoreFacade.get_multi_threshold_stopping_policy(id=multi_threshold_stopping_policy_id)
     if policy is not None:
-        MetastoreFacade.remove_t_spsa_policy(t_spsa_policy=policy)
+        MetastoreFacade.remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/tspsapolicies/remove', methods=['POST'])
-def remove_all_t_spsa_policies():
-    policies = MetastoreFacade.list_t_spsa_policies()
+@app.route('/multithresholdpolicies/remove', methods=['POST'])
+def remove_all_multi_threshold_policies():
+    policies = MetastoreFacade.list_multi_threshold_stopping_policies()
     for policy in policies:
-        MetastoreFacade.remove_t_spsa_policy(t_spsa_policy=policy)
+        MetastoreFacade.remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response

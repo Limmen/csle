@@ -247,7 +247,7 @@ const SystemIdentificationJob = (props) => {
                 <Accordion.Toggle as={Button} variant="link" eventKey={props.job.id} className="mgHeader">
                 <span
                     className="subnetTitle">ID: {props.job.id}, Emulation: {props.job.emulation_env_name}</span>
-                    Progress: {props.job.progress_percentage}%
+                    Progress: {Math.round(100 * props.job.progress_percentage * 100) / 100}%
                     Status: {getStatusText()}
                     <span className="greenCircle">
 

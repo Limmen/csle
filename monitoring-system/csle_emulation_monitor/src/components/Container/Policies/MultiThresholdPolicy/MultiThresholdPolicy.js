@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './TSPSAPolicy.css';
+import './MultiThresholdPolicy.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -8,15 +8,15 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
 
-const TSPSAPolicy = (props) => {
+const MultiThresholdPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [thresholdsOpen, setThresholdsOpen] = useState(false);
     const [actionsOpen, setActionsOpen] = useState(false);
     const [hParamsOpen, setHParamsOpen] = useState(false);
 
-    const renderRemoveTSPSAPolicy = (props) => (
+    const renderRemovePolicy = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove T-SPSA policy
+            Remove policy
         </Tooltip>
     );
 
@@ -60,10 +60,10 @@ const TSPSAPolicy = (props) => {
                         className="removeButton"
                         placement="left"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveTSPSAPolicy}
+                        overlay={renderRemovePolicy}
                     >
                         <Button variant="danger" className="removeButton"
-                                onClick={() => props.removeTSPSAPolicy(props.policy)}>
+                                onClick={() => props.removeMultiThresholdPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -234,6 +234,6 @@ const TSPSAPolicy = (props) => {
     </Card>)
 }
 
-TSPSAPolicy.propTypes = {};
-TSPSAPolicy.defaultProps = {};
-export default TSPSAPolicy;
+MultiThresholdPolicy.propTypes = {};
+MultiThresholdPolicy.defaultProps = {};
+export default MultiThresholdPolicy;

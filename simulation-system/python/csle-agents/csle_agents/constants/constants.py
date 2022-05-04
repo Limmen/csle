@@ -22,6 +22,7 @@ class COMMON:
     GAMMA = "gamma"
     EXPLOITABILITY = "exploitability"
     NUM_CACHED_SIMULATION_TRACES = 3
+    CONFIDENCE_INTERVAL = "confidence_interval"
 
 
 class PPO:

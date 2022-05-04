@@ -10,13 +10,14 @@ from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
 
 
-class TSPSAPolicy(Policy):
+class MultiThresholdStoppingPolicy(Policy):
     """
-    A multi-threshold policy learned with T-SPSA
+    A multi-threshold stopping policy
     """
 
     def __init__(self, theta, simulation_name: str, L: int, states : List[State], player_type: PlayerType,
-                 actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float):
+                 actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float,
+                 agent_type: AgentType):
         """
         Initializes the policy
 
@@ -28,8 +29,9 @@ class TSPSAPolicy(Policy):
         :param actions: list of actions
         :param experiment_config: the experiment configuration used for training the policy
         :param avg_R: the average reward of the policy when evaluated in the simulation
+        :param agent_type: the agent type
         """
-        super(TSPSAPolicy, self).__init__(agent_type=AgentType.T_SPSA, player_type=player_type)
+        super(MultiThresholdStoppingPolicy, self).__init__(agent_type=agent_type, player_type=player_type)
         self.theta = theta
         self.id = -1
         self.simulation_name = simulation_name
@@ -62,10 +64,10 @@ class TSPSAPolicy(Policy):
         b1 = o[1]
         l = int(o[0])
         theta_val = self.theta[s*self.L + l-1]
-        threshold = TSPSAPolicy.sigmoid(theta_val)
+        threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
         a = 0
         if b1 >= threshold:
-            a, _ = TSPSAPolicy.smooth_threshold_action_selection(threshold=threshold, b1=b1)
+            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(threshold=threshold, b1=b1)
         return a
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -77,11 +79,11 @@ class TSPSAPolicy(Policy):
         """
         b1 = o[1]
         l = int(o[0])
-        threshold = TSPSAPolicy.sigmoid(self.theta[l-1])
+        threshold = MultiThresholdStoppingPolicy.sigmoid(self.theta[l - 1])
         if not self.player_type == PlayerType.ATTACKER:
             stage_policy = []
             for _ in self.states:
-                stopping_probability = TSPSAPolicy.stopping_probability(b1=b1, threshold=threshold)
+                stopping_probability = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold)
                 stage_policy.append([1-stopping_probability, stopping_probability])
             return stage_policy
         else:
@@ -89,8 +91,8 @@ class TSPSAPolicy(Policy):
             for s in self.states:
                 if s.state_type != StateType.TERMINAL:
                     theta_val = self.theta[s.id*self.L + l-1]
-                    threshold = TSPSAPolicy.sigmoid(theta_val)
-                    stopping_probability = TSPSAPolicy.stopping_probability(b1=b1, threshold=threshold)
+                    threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
+                    stopping_probability = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold)
                     stage_policy.append([1-stopping_probability, stopping_probability])
                 else:
                     stage_policy.append([0.5, 0.5])
@@ -105,10 +107,10 @@ class TSPSAPolicy(Policy):
         """
         b1 = o[1]
         l = int(o[0])
-        threshold = TSPSAPolicy.sigmoid(self.theta[l-1])
+        threshold = MultiThresholdStoppingPolicy.sigmoid(self.theta[l - 1])
         a = 0
         if b1 >= threshold:
-            a, _ = TSPSAPolicy.smooth_threshold_action_selection(threshold=threshold, b1=b1)
+            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(threshold=threshold, b1=b1)
         return a
 
     @staticmethod
@@ -116,10 +118,20 @@ class TSPSAPolicy(Policy):
         """
         The sigmoid function
 
-        :param x:
+        :param x: the input
         :return: sigmoid(x)
         """
         return 1/(1 + math.exp(-x))
+
+    @staticmethod
+    def inverse_sigmoid(y) -> float:
+        """
+        The inverse sigmoid function
+
+        :param y: sigmoid(x)
+        :return: sigmoid(x)^(-1)
+        """
+        return math.log(y/(1-y), math.e)
 
     @staticmethod
     def smooth_threshold_action_selection(threshold: float, b1: float) -> Tuple[int, float]:
@@ -130,7 +142,7 @@ class TSPSAPolicy(Policy):
         :param b1: the belief
         :return: the selected action and the probability
         """
-        prob = TSPSAPolicy.stopping_probability(b1=b1, threshold=threshold)
+        prob = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold)
         if random.uniform(0,1) >= prob:
             return 0, 1-prob
         else:
@@ -172,17 +184,19 @@ class TSPSAPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "TSPSAPolicy":
+    def from_dict(d: Dict) -> "MultiThresholdStoppingPolicy":
         """
         Converst a dict representation of the object to an instance
 
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = TSPSAPolicy(theta=d["theta"], simulation_name=d["simulation_name"], L=d["L"],
-                          states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
-                          actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
-                          experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
+        obj = MultiThresholdStoppingPolicy(
+            theta=d["theta"], simulation_name=d["simulation_name"], L=d["L"],
+            states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
+            actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
+            experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"],
+            agent_type=d["agent_type"])
         obj.id = d["id"]
         return obj
 
@@ -190,7 +204,7 @@ class TSPSAPolicy(Policy):
         """
         :return: the thresholds
         """
-        return list(map(lambda x: round(TSPSAPolicy.sigmoid(x),3), self.theta))
+        return list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3), self.theta))
 
     def __str__(self) -> str:
         """

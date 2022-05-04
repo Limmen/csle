@@ -55,7 +55,7 @@ class StoppingGameEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, action_profile : Tuple[int, np.ndarray]) \
+    def step(self, action_profile : Tuple[int, Tuple[np.ndarray, int]]) \
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         """
         Takes a step in the environment by executing the given action
@@ -65,14 +65,14 @@ class StoppingGameEnv(BaseEnv):
         """
 
         # Setup initial values
-        a1, pi2 = action_profile
+        a1, a2_profile = action_profile
+        pi2, a2 = a2_profile
         assert pi2.shape[0] == len(self.config.S)
         assert pi2.shape[1] == len(self.config.A1)
         done = False
         info = {}
 
         # Compute r, s', b',o'
-        a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.state.s)
         r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
         self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
                                                           T=self.config.T,

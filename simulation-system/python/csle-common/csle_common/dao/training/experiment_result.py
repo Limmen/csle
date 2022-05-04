@@ -1,6 +1,6 @@
 from typing import Any, Dict, Union, List
 from csle_common.dao.training.policy import Policy
-from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
 
 
@@ -35,7 +35,7 @@ class ExperimentResult:
         d2 = {}
         for k,v in d["policies"].items():
             try:
-                d2[k] = TSPSAPolicy.from_dict(v)
+                d2[k] = MultiThresholdStoppingPolicy.from_dict(v)
             except:
                 pass
             try:

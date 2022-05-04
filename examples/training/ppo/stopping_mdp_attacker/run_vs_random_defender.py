@@ -4,15 +4,16 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
+from csle_common.dao.training.random_policy import RandomPolicy
 from csle_agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
+    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-mdp-attacker-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
-        title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
+        title="PPO test", random_seeds=[399, 98912], agent_type=AgentType.PPO,
         log_every=1,
         hparams={
             agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
@@ -24,14 +25,15 @@ if __name__ == '__main__':
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
                 value=4096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
                 descr="number of steps in the environment for doing rollouts between policy updates"),
-            agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
-                                                       descr="batch size for updates"),
-            agents_constants.COMMON.LEARNING_RATE: HParam(value=0.0001,
-                                                          name=agents_constants.COMMON.LEARNING_RATE,
-                                                          descr="learning rate for updating the policy"),
-            agents_constants.COMMON.DEVICE: HParam(value="cuda:1",
-                                                   name=agents_constants.COMMON.DEVICE,
-                                                   descr="the device to train on (cpu or cuda:x)"),
+            agents_constants.COMMON.BATCH_SIZE: HParam(
+                value=64, name=agents_constants.COMMON.BATCH_SIZE, descr="batch size for updates"),
+            agents_constants.COMMON.LEARNING_RATE: HParam(
+                value=0.0001, name=agents_constants.COMMON.LEARNING_RATE,
+                descr="learning rate for updating the policy"),
+            agents_constants.COMMON.DEVICE: HParam(
+                value="cuda:1",
+                name=agents_constants.COMMON.DEVICE,
+                descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
             agents_constants.PPO.GAE_LAMBDA: HParam(
@@ -42,31 +44,33 @@ if __name__ == '__main__':
                 value=None, name=agents_constants.PPO.CLIP_RANGE_VF,
                 descr="the clip range for PPO-update of the value network"),
             agents_constants.PPO.ENT_COEF: HParam(
-                value=0.0, name=agents_constants.PPO.ENT_COEF,
-                descr="the entropy coefficient for exploration"),
+                value=0.0, name=agents_constants.PPO.ENT_COEF, descr="the entropy coefficient for exploration"),
             agents_constants.PPO.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
                                                  descr="the coefficient of the value network for the loss"),
             agents_constants.PPO.MAX_GRAD_NORM: HParam(
-                value=0.5, name=agents_constants.PPO.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
-            agents_constants.PPO.TARGET_KL: HParam(value=None,
-                                                   name=agents_constants.PPO.TARGET_KL,
+                value=0.5, name=agents_constants.PPO.MAX_GRAD_NORM,
+                descr="the maximum allows gradient norm"),
+            agents_constants.PPO.TARGET_KL: HParam(value=None, name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(150000),  name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(1000000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
                                  descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
-                                                            descr="the batch size for evaluation"),
+                                 descr="the batch size for evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
-                                                       descr="how frequently to save the model"),
+                                                            descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval")
         },
-        player_type=PlayerType.DEFENDER, player_idx=0
+        player_type=PlayerType.ATTACKER, player_idx=1
     )
-    # simulation_env_config.simulation_env_input_config
+    simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
+        actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+        player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
+
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     experiment_execution = agent.train()

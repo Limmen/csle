@@ -10,7 +10,7 @@ from csle_common.dao.emulation_config.emulation_simulation_trace import Emulatio
 from csle_common.logging.log import Logger
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
-from csle_common.dao.training.t_spsa_policy import TSPSAPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 from csle_common.util.np_encoder import NpEncoder
@@ -842,99 +842,106 @@ class MetastoreFacade:
                                                      f"with id {experiment_execution.id} deleted successfully")
 
     @staticmethod
-    def list_t_spsa_policies() -> List[TSPSAPolicy]:
+    def list_multi_threshold_stopping_policies() -> List[MultiThresholdStoppingPolicy]:
         """
-        :return: A list of T_SPSA policies in the metastore
+        :return: A list of Multi-threshold stopping policies in the metastore
         """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.T_SPSA_POLICIES_TABLE}")
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_tspsa_policy_record_to_dto(x), records))
+                records = list(map(lambda x: MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(x), records))
                 return records
 
 
     @staticmethod
-    def _convert_tspsa_policy_record_to_dto(tspsa_policy_record) -> TSPSAPolicy:
+    def _convert_multi_threshold_stopping_policy_record_to_dto(multi_threshold_stopping_policy_record) \
+            -> MultiThresholdStoppingPolicy:
         """
-        Converts a T-SPSA record fetched from the metastore into a DTO
+        Converts a Multi-threshold stopping policy record fetched from the metastore into a DTO
 
-        :param tspsa_policy_record: the record to convert
+        :param multi_threshold_stopping_policy_record: the record to convert
         :return: the DTO representing the record
         """
-        t_spsa_policy_json = json.dumps(tspsa_policy_record[1], indent=4, sort_keys=True)
-        t_spsa_policy: TSPSAPolicy = TSPSAPolicy.from_dict(json.loads(t_spsa_policy_json))
-        t_spsa_policy.id = tspsa_policy_record[0]
-        return t_spsa_policy
+        multi_threshold_stopping_policy_json = json.dumps(multi_threshold_stopping_policy_record[1], indent=4, sort_keys=True)
+        multi_threshold_stopping_policy: MultiThresholdStoppingPolicy = MultiThresholdStoppingPolicy.from_dict(
+            json.loads(multi_threshold_stopping_policy_json))
+        multi_threshold_stopping_policy.id = multi_threshold_stopping_policy_record[0]
+        return multi_threshold_stopping_policy
 
 
     @staticmethod
-    def get_t_spsa_policy(id: int) -> Union[None, TSPSAPolicy]:
+    def get_multi_threshold_stopping_policy(id: int) -> Union[None, MultiThresholdStoppingPolicy]:
         """
-        Function for fetching a T-SPSA policy with a given id from the metastore
+        Function for fetching a mult-threshold policy with a given id from the metastore
 
-        :param id: the id of the t_spsa policy
-        :return: The T-SPSA policy or None if it could not be found
+        :param id: the id of the multi-threshold policy
+        :return: The mult-threshold policy or None if it could not be found
         """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.T_SPSA_POLICIES_TABLE} WHERE id = %s", (id,))
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
+                            f"WHERE id = %s", (id,))
                 record = cur.fetchone()
                 if record is not None:
-                    record = MetastoreFacade._convert_tspsa_policy_record_to_dto(tspsa_policy_record=record)
+                    record = MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(
+                        multi_threshold_stopping_policy_record=record)
                 return record
 
 
     @staticmethod
-    def remove_t_spsa_policy(t_spsa_policy: TSPSAPolicy) -> None:
+    def remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) -> None:
         """
-        Removes a T-SPSA policy from the metastore
+        Removes a multi-threshold stopping policy from the metastore
 
-        :param t_spsa_policy: the policy to remove
+        :param multi_threshold_stopping_policy: the policy to remove
         :return: None
         """
-        Logger.__call__().get_logger().debug(f"Removing T-SPSA policy with "
-                                             f"id:{t_spsa_policy.id} from the metastore")
+        Logger.__call__().get_logger().debug(f"Removing Multi-threshold stopping policy with "
+                                             f"id:{multi_threshold_stopping_policy.id} from the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"DELETE FROM {constants.METADATA_STORE.T_SPSA_POLICIES_TABLE} WHERE id = %s",
-                            (t_spsa_policy.id,))
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
+                            f"WHERE id = %s",
+                            (multi_threshold_stopping_policy.id,))
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"T-SPSA policy "
-                                                     f"with id {t_spsa_policy.id} deleted successfully")
+                Logger.__call__().get_logger().debug(f"Multi-threshold stopping policy "
+                                                     f"with id {multi_threshold_stopping_policy.id} deleted successfully")
 
     @staticmethod
-    def save_tspsa_policy(t_spsa_policy: TSPSAPolicy) -> Union[Any, int]:
+    def save_multi_threshold_stopping_policy(multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) \
+            -> Union[Any, int]:
         """
-        Saves a T-SPSA policy to the metastore
+        Saves a multi-threshold stopping policy to the metastore
 
-        :param t_spsa_policy: the policy to save
+        :param multi_threshold_stopping_policy: the policy to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Installing TSPSA policy in the metastore")
+        Logger.__call__().get_logger().debug(f"Installing a multi-threshold stopping policy in the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                policy_json_str = json.dumps(t_spsa_policy.to_dict(), indent=4, sort_keys=True)
-                cur.execute(f"INSERT INTO {constants.METADATA_STORE.T_SPSA_POLICIES_TABLE} "
+                policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, t_spsa_policy.simulation_name))
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str,
+                                                              multi_threshold_stopping_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"T-SPSA policy saved successfully")
+                Logger.__call__().get_logger().debug(f"Multi-threshold policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
     def _convert_training_job_record_to_dto(training_job_record) -> TrainingJobConfig:
         """
-        Converts a T-SPSA record fetched from the metastore into a DTO
+        Converts a training job record fetched from the metastore into a DTO
 
         :param training_job_record: the record to convert
         :return: the DTO representing the record
@@ -1005,7 +1012,7 @@ class MetastoreFacade:
     def _convert_system_identification_job_record_to_dto(system_identification_job_record) -> \
             SystemIdentificationJobConfig:
         """
-        Converts a T-SPSA record fetched from the metastore into a DTO
+        Converts a system identification job record fetched from the metastore into a DTO
 
         :param system_identification_job_record: the record to convert
         :return: the DTO representing the record

@@ -34,7 +34,6 @@ from csle_common.dao.training.random_policy import RandomPolicy
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
-import gym_csle_stopping_game.constants.constants as stopping_game_constants
 
 
 def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 20,

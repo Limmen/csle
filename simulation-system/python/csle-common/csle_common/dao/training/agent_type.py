@@ -12,3 +12,4 @@ class AgentType(IntEnum):
     REINFORCE=4
     NFSP=5
     RANDOM=6
+    NONE=7
