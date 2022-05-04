@@ -43,7 +43,10 @@ if __name__ == '__main__':
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                descr="confidence interval")
+                descr="confidence interval"),
+            agents_constants.COMMON.MAX_ENV_STEPS: HParam(
+                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

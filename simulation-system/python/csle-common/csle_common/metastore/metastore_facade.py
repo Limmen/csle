@@ -250,7 +250,7 @@ class MetastoreFacade:
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
-                    config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
+                    config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATIONS_TABLE} "
                                 f"(name, emulation_statistic_id, config) "
                                 f"VALUES (%s, %s, %s) RETURNING id", (config.name, config.emulation_statistic_id,
@@ -294,7 +294,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(emulation_trace.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} (emulation_name, trace) "
                             f"VALUES (%s, %s) RETURNING id", (emulation_trace.emulation_name, config_json_str))
                 id_of_new_row = cur.fetchone()[0]

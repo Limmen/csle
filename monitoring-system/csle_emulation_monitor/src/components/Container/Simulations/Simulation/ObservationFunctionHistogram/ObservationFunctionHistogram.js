@@ -18,7 +18,7 @@ const ObservationFunctionHistogram = React.memo((props) => {
         const margin = {
             top: 10,
             right: 30,
-            left: 15,
+            left: 60,
             bottom: 25
         }
         if (props.data !== undefined) {
@@ -45,7 +45,7 @@ const ObservationFunctionHistogram = React.memo((props) => {
                             <Label value={props.componentObs + " o"} offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
                         <YAxis type="number" tick={{transform: 'translate(-10,3)'}}>
-                            <Label angle={270} value="Probability" offset={0} position="insideLeft"
+                            <Label angle={270} value="Probability" offset={-40} position="insideLeft"
                                    className="largeFont"
                                    dy={50}/>
                         </YAxis>

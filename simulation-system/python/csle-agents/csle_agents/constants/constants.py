@@ -7,6 +7,7 @@ class COMMON:
     """
     Common string constants among all agents
     """
+    NUM_CACHED_SIMULATION_TRACES = 3
     AVERAGE_REWARD = "average_reward"
     DEFENDER_AVERAGE_REWARD = "defender_average_reward"
     ATTACKER_AVERAGE_REWARD = "attacker_average_reward"
@@ -21,8 +22,8 @@ class COMMON:
     DEVICE = "device"
     GAMMA = "gamma"
     EXPLOITABILITY = "exploitability"
-    NUM_CACHED_SIMULATION_TRACES = 3
     CONFIDENCE_INTERVAL = "confidence_interval"
+    MAX_ENV_STEPS = "max_env_steps"
 
 
 class PPO:
@@ -64,3 +65,5 @@ class T_FP:
     N_2 = "N_2"
     DEFENDER_THRESHOLDS = "defender_thresholds"
     ATTACKER_THRESHOLDS = "attacker_thresholds"
+    THETA1_ATTACKER = "theta1_attacker"
+    THETA1_DEFENDER = "theta1_defender"

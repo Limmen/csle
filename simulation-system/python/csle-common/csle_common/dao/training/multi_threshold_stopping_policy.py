@@ -65,9 +65,14 @@ class MultiThresholdStoppingPolicy(Policy):
         l = int(o[0])
         theta_val = self.theta[s*self.L + l-1]
         threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
-        a = 0
-        if b1 >= threshold:
-            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(threshold=threshold, b1=b1)
+        if s == 0:
+            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
+                threshold=threshold, b1=b1, threshold_action=0, alternative_action=1)
+        elif s == 1:
+            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
+                threshold=threshold, b1=b1, threshold_action=1, alternative_action=0)
+        else:
+            raise ValueError(f"Invalid state: {s}, valid states are: 0 and 1")
         return a
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -92,8 +97,14 @@ class MultiThresholdStoppingPolicy(Policy):
                 if s.state_type != StateType.TERMINAL:
                     theta_val = self.theta[s.id*self.L + l-1]
                     threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
-                    stopping_probability = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold)
-                    stage_policy.append([1-stopping_probability, stopping_probability])
+                    threshold_action_probability = MultiThresholdStoppingPolicy.stopping_probability(
+                        b1=b1, threshold=threshold)
+                    if s.id == 1:
+                        stage_policy.append([1-threshold_action_probability, threshold_action_probability])
+                    elif s.id == 0:
+                        stage_policy.append([threshold_action_probability, 1-threshold_action_probability])
+                    else:
+                        raise ValueError(f"Invalid state: {s.id}, valid states are: 0 and 1")
                 else:
                     stage_policy.append([0.5, 0.5])
             return stage_policy
@@ -110,7 +121,8 @@ class MultiThresholdStoppingPolicy(Policy):
         threshold = MultiThresholdStoppingPolicy.sigmoid(self.theta[l - 1])
         a = 0
         if b1 >= threshold:
-            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(threshold=threshold, b1=b1)
+            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
+                threshold=threshold, b1=b1, threshold_action=1, alternative_action=0)
         return a
 
     @staticmethod
@@ -134,19 +146,22 @@ class MultiThresholdStoppingPolicy(Policy):
         return math.log(y/(1-y), math.e)
 
     @staticmethod
-    def smooth_threshold_action_selection(threshold: float, b1: float) -> Tuple[int, float]:
+    def smooth_threshold_action_selection(threshold: float, b1: float, threshold_action: int = 1,
+                                          alternative_action: int = 1) -> Tuple[int, float]:
         """
         Selects the next action according to a smooth threshold function on the belief
 
         :param threshold: the threshold
         :param b1: the belief
+        :param threshold_action: the action to select if the threshold is exceeded
+        :param alternative_action: the alternative action to select if the threshold is not exceeded
         :return: the selected action and the probability
         """
         prob = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold)
         if random.uniform(0,1) >= prob:
-            return 0, 1-prob
+            return alternative_action, 1-prob
         else:
-            return 1, prob
+            return threshold_action, prob
 
     @staticmethod
     def stopping_probability(b1, threshold) -> float:
@@ -154,11 +169,14 @@ class MultiThresholdStoppingPolicy(Policy):
         Returns the probability of stopping given a belief and a threshold
 
         :param b1: the belief
-        :param threshold: the threhsold
+        :param threshold: the threshold
         :return: the stopping probability
         """
         if (threshold*(1-b1)) > 0 and (b1*(1-threshold))/(threshold*(1-b1)) > 0:
-            return math.pow(1 + math.pow(((b1*(1-threshold))/(threshold*(1-b1))), -20), -1)
+            try:
+                return math.pow(1 + math.pow(((b1*(1-threshold))/(threshold*(1-b1))), -20), -1)
+            except:
+                return 0
         else:
             return 0
 

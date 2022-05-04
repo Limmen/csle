@@ -2,10 +2,9 @@
 
 This folder contains simulation environments.
 
-- Version: **001** [./001](001):
-  - *Stopping game* [level_1](001/stopping_game): A two-player zero-sum one-sided partially observed stochastic game based on the optimal stopping formulation
-  - *Stopping MDP from the attacker's perspective* [level_1](001/stopping_mdp_attacker): A fully observed optimal stopping problem from the attacker's perspective
-  - *Stopping POMDP from the defender's perspective* [level_1](001/stopping_pomdp_defender): A partially observed optimal stopping problem from the defender's perspective
+- *Stopping game* [env](stopping_game): A two-player zero-sum one-sided partially observed stochastic game based on the optimal stopping formulation
+- *Stopping MDP from the attacker's perspective* [env](stopping_mdp_attacker): A fully observed optimal stopping problem from the attacker's perspective
+- *Stopping POMDP from the defender's perspective* [env](stopping_pomdp_defender): A partially observed optimal stopping problem from the defender's perspective
 
 ## Useful commands:
 

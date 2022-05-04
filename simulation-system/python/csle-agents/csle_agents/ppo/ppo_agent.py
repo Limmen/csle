@@ -163,9 +163,11 @@ class PPOAgent(BaseAgent):
                 for seed_idx in range(len(self.experiment_config.random_seeds)):
                     seed_values.append(value_vectors[seed_idx][i])
                 avg_metrics.append(ExperimentUtil.mean_confidence_interval(
-                    data=seed_values,  confidence=agents_constants.COMMON.CONFIDENCE_INTERVAL)[0])
+                    data=seed_values,
+                    confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0])
                 std_metrics.append(ExperimentUtil.mean_confidence_interval(
-                    data=seed_values, confidence=agents_constants.COMMON.CONFIDENCE_INTERVAL)[1])
+                    data=seed_values,
+                    confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1])
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
@@ -295,7 +297,7 @@ class PPOTrainingCallback(BaseCallback):
                 states=self.states, player_type=self.player_type, actions=self.actions,
                 experiment_config=self.experiment_config, avg_R=-1)
             o = self.training_env.reset()
-            max_horizon = 200
+            max_horizon = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
             avg_rewards = []
             for i in range(self.eval_batch_size):
                 done = False

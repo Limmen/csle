@@ -4,7 +4,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -63,13 +63,22 @@ if __name__ == '__main__':
                                                             descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                descr="confidence interval")
+                descr="confidence interval"),
+            agents_constants.COMMON.MAX_ENV_STEPS: HParam(
+                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
-    simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
+    simulation_env_config.simulation_env_input_config.defender_strategy = MultiThresholdStoppingPolicy(
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
-        player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
+        simulation_name=simulation_env_config.name,
+        L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
+        states = simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
+        experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
+        theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.99),
+               MultiThresholdStoppingPolicy.inverse_sigmoid(0.95),
+               MultiThresholdStoppingPolicy.inverse_sigmoid(0.9)])
 
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)

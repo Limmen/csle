@@ -10,7 +10,7 @@ import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-mdp-attacker-001")
+    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-mdp-attacker-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912], agent_type=AgentType.PPO,
@@ -63,7 +63,10 @@ if __name__ == '__main__':
                                                             descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                descr="confidence interval")
+                descr="confidence interval"),
+            agents_constants.COMMON.MAX_ENV_STEPS: HParam(
+                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

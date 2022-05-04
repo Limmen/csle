@@ -5,6 +5,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.t_spsa.t_spsa_agent import TSPSAAgent
+from csle_common.dao.training.random_policy import RandomPolicy
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
@@ -45,10 +46,16 @@ if __name__ == '__main__':
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                descr="confidence interval")
+                descr="confidence interval"),
+            agents_constants.COMMON.MAX_ENV_STEPS: HParam(
+                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
+    simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
+        actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+        player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     experiment_execution = agent.train()

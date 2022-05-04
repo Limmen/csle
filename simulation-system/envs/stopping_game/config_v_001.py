@@ -8,7 +8,6 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.simulation_config.players_config import PlayersConfig
 from csle_common.dao.simulation_config.player_config import PlayerConfig
-from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_space_config import StateSpaceConfig
 from csle_common.dao.simulation_config.joint_action_space_config import JointActionSpaceConfig
@@ -30,15 +29,14 @@ from csle_common.dao.system_identification.emulation_statistics import Emulation
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.dao.training.random_policy import RandomPolicy
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
-from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 
 
 def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 20,
                    min_warning_alerts :int = 0, max_warning_alerts :int = 20, min_login_attempts :int = 0,
-                   max_login_attempts :int = 10, emulation_statistic_id : Union[int, None] = None) -> SimulationEnvConfig:
+                   max_login_attempts :int = 10, emulation_statistic_id : Union[int, None] = None) \
+        -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
 
@@ -78,11 +76,11 @@ def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0
         reward_function_config=reward_function_config,
         transition_tensor_config=transition_operator_config,
         observation_function_config=observation_function_config,
-        initial_state_distribution_config=initial_state_distribution_config,
-        defender_action_space_config=joint_action_space_config.action_spaces[0])
+        initial_state_distribution_config=initial_state_distribution_config)
     env_parameters_config = default_env_parameters_config()
-    descr="A MDP based on the optimal stopping formulation of intrusion prevention from " \
-          "(Hammar and Stadler 2021, https://arxiv.org/abs/2111.00289)."
+    descr="A two-player zero-sum one-sided partially observed stochastic game. " \
+          "The game is based on the optimal stopping formulation of intrusion prevention from " \
+          "(Hammar and Stadler 2021, https://arxiv.org/abs/2111.00289)"
     simulation_env_config = SimulationEnvConfig(
         name=name, version=version, descr=descr,
         players_config=players_config, state_space_config=state_space_config,
@@ -92,7 +90,7 @@ def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
         emulation_statistic_id=emulation_statistic_id, time_step_type=TimeStepType.DISCRETE,
-        gym_env_name="csle-stopping-game-mdp-attacker-v1", env_parameters_config=env_parameters_config,
+        gym_env_name="csle-stopping-game-v1", env_parameters_config=env_parameters_config,
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
     return simulation_env_config
@@ -132,6 +130,8 @@ def default_players_config() -> PlayersConfig:
     :return: the default players configuration of the simulation
     """
     player_configs = [
+        PlayerConfig(name="defender", id=1, descr="The defender which tries to detect, prevent, "
+                                                  "and interrupt intrusions for the infrastructure"),
         PlayerConfig(name="attacker", id=2, descr="The attacker which tries to intrude on the infrastructure")
     ]
     players_config = PlayersConfig(
@@ -260,7 +260,8 @@ def default_joint_observation_space_config(
         for i in range(min_severe_alerts, max_severe_alerts):
             for j in range(min_warning_alerts, max_warning_alerts):
                 for k in range(min_login_attempts, max_login_attempts):
-                    id = (i*(len(range(min_warning_alerts,max_warning_alerts))*len(range(min_login_attempts,max_login_attempts)))
+                    id = (i*(len(range(min_warning_alerts,max_warning_alerts))*len(range(
+                        min_login_attempts,max_login_attempts)))
                     +j*len(range(min_login_attempts, max_login_attempts)) + k)
                     defender_observations.append(Observation(
                         id=id, val=id,
@@ -275,6 +276,17 @@ def default_joint_observation_space_config(
     }
 
     observation_spaces = [
+        ObservationSpaceConfig(
+            observations=defender_observations,
+            observation_type=ValueType.INTEGER,
+            player_id=1,
+            descr="The observation space of the defender. The defender observes three metrics from the infrastructure: "
+                  "the number of severe IDS alerts, the number of warning IDS alerts, the number of login attempts",
+            observation_id_to_observation_id_vector= observation_id_to_observation_id_vector,
+            observation_component_name_to_index = observation_component_name_to_index,
+            component_observations=component_observations,
+            observation_id_to_observation_vector=observation_id_to_observation_vector
+        ),
         ObservationSpaceConfig(
             observations=defender_observations,
             observation_type=ValueType.INTEGER,
@@ -298,9 +310,10 @@ def default_reward_function_config() -> RewardFunctionConfig:
     :return: the default reward function configuration
     """
     reward_function_config = RewardFunctionConfig(
-        reward_tensor=list(-StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
+        reward_tensor=list(StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
     )
     return reward_function_config
+
 
 def default_transition_operator_config() -> TransitionOperatorConfig:
     """
@@ -380,8 +393,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
                          reward_function_config: RewardFunctionConfig,
                          transition_tensor_config: TransitionOperatorConfig,
                          observation_function_config: ObservationFunctionConfig,
-                         initial_state_distribution_config: InitialStateDistributionConfig,
-                         defender_action_space_config: ActionSpaceConfig) -> SimulationEnvInputConfig:
+                         initial_state_distribution_config: InitialStateDistributionConfig) -> SimulationEnvInputConfig:
     """
     Gets the input configuration to the openai gym environment
 
@@ -398,7 +410,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     R_SLA = 1
     R_ST = 5
 
-    stopping_game_config = StoppingGameConfig(
+    config = StoppingGameConfig(
         A1 = StoppingGameUtil.attacker_actions(), A2= StoppingGameUtil.defender_actions(), L=L, R_INT=R_INT,
         R_COST=R_COST,
         R_SLA=R_SLA, R_ST =R_ST,b1=np.array(initial_state_distribution_config.initial_state_distribution),
@@ -408,12 +420,6 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
         S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq= 100000)
-    config = StoppingGameAttackerMdpConfig(
-        stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        defender_strategy=RandomPolicy(
-            actions=defender_action_space_config.actions,
-            player_type=PlayerType.DEFENDER, stage_policy_tensor=None),
-        env_name="csle-stopping-game-mdp-attacker-v1")
     return config
 
 
@@ -424,10 +430,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    if not os.path.exists(ExperimentUtil.default_simulation_config_path()):
-        config = default_config(name="csle-stopping-mdp-attacker-001", version="0.0.1")
-        ExperimentUtil.write_simulation_config_file(config, ExperimentUtil.default_simulation_config_path())
-    config = ExperimentUtil.read_simulation_env_config(ExperimentUtil.default_simulation_config_path())
+    config = default_config(name="csle-stopping-game-001", version="0.0.1")
 
     if args.install:
         SimulationEnvManager.install_simulation(config=config)

@@ -34,7 +34,6 @@ from csle_common.dao.training.random_policy import RandomPolicy
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
-import gym_csle_stopping_game.constants.constants as stopping_game_constants
 
 
 def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 10,
@@ -434,11 +433,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    if not os.path.exists(ExperimentUtil.default_simulation_config_path()):
-        config = default_config(name="csle-stopping-pomdp-defender-001", version="0.0.1")
-        ExperimentUtil.write_simulation_config_file(config, ExperimentUtil.default_simulation_config_path())
-    config = ExperimentUtil.read_simulation_env_config(ExperimentUtil.default_simulation_config_path())
-
+    config = default_config(name="csle-stopping-pomdp-defender-001", version="0.0.1")
     if args.install:
         SimulationEnvManager.install_simulation(config=config)
         img_path = ExperimentUtil.default_simulation_picture_path()

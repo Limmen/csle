@@ -90,12 +90,16 @@ class StoppingGameEnv(BaseEnv):
         # Update stops remaining
         self.state.l = self.state.l-a1
 
+        # Update time-step
+        self.state.t += 1
+
         # Populate info dict
         info["l"] = self.state.l
         info["s"] = self.state.s
         info["a1"] = a1
         info["a2"] = a2
         info["o"] = o
+        info["t"] = self.state.t
 
         # Get observations
         attacker_obs = self.state.attacker_observation()

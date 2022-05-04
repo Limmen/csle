@@ -18,7 +18,7 @@ class StoppingGameUtil:
         """
         :return: the initial belief
         """
-        return np.array([1, 0, 0])
+        return np.array([0.99, 0.01, 0])
 
     @staticmethod
     def state_space():
