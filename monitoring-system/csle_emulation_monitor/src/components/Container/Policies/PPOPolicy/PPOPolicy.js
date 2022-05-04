@@ -21,6 +21,9 @@ const PPOPolicy = (props) => {
         if(agentType === 1) {
             return "PPO"
         }
+        if(agentType === 2) {
+            return "T-FP"
+        }
         else {
             return "Unknown"
         }

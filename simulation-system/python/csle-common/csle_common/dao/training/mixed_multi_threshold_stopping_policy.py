@@ -7,6 +7,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.simulation_config.state_type import StateType
 
 
 class MixedMultiThresholdStoppingPolicy(Policy):
@@ -17,7 +18,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
     def __init__(self, Theta: Union[List[List[List[float]]], List[List[List[List[float]]]]],
                  simulation_name: str, L: int, states : List[State], player_type: PlayerType,
                  actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float,
-                 agent_type: AgentType):
+                 agent_type: AgentType, opponent_strategy: Optional["MixedMultiThresholdStoppingPolicy"] = None):
         """
         Initializes the policy
 
@@ -30,6 +31,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         :param experiment_config: the experiment configuration used for training the policy
         :param avg_R: the average reward of the policy when evaluated in the simulation
         :param agent_type: the agent type
+        :param opponent_strategy: the opponent's strategy
         """
         super(MixedMultiThresholdStoppingPolicy, self).__init__(agent_type=agent_type, player_type=player_type)
         self.Theta = Theta
@@ -40,6 +42,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         self.actions = actions
         self.experiment_config = experiment_config
         self.avg_R = avg_R
+        self.opponent_strategy = opponent_strategy
 
     def action(self, o: List[float]) -> int:
         """
@@ -52,8 +55,9 @@ class MixedMultiThresholdStoppingPolicy(Policy):
             a, _ = self._defender_action(o=o)
             return a
         else:
-            _, p = self._defender_action(o=o)
-            self._attacker_action(o=o, defender_stop_probability=p)
+            defender_stop_probability = self.opponent_strategy._defender_action(o=o)
+            a, _ = self._attacker_action(o=o, defender_stop_probability=defender_stop_probability)
+            return a
 
     def _attacker_action(self, o, defender_stop_probability) -> int:
         """
@@ -67,20 +71,24 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         b1 = o[1]
         l = int(o[0])
 
-        thresholds = self.Theta[s][l][0]
-        counts = self.Theta[s][l][1]
+        thresholds = self.Theta[s][l-1][0]
+        counts = self.Theta[s][l-1][1]
 
-        mixture_weights = np.array(counts) / sum(self.Theta[s][l][1])
-        random_threshold = np.random.choice(thresholds, p=mixture_weights)
+        mixture_weights = np.array(counts) / sum(self.Theta[s][l-1][1])
+        prob = 0
+        for i in range(len(thresholds)):
+            if defender_stop_probability >= thresholds[i]:
+                prob += mixture_weights[i]
+        # random_threshold = np.random.choice(thresholds, p=mixture_weights)
         if s == 1:
             a = 0
-            if defender_stop_probability >= random_threshold:
+            if random.uniform(0,1) < prob:
                 a = 1
         else:
             a = 1
-            if defender_stop_probability >= random_threshold:
+            if random.uniform(0,1) < prob:
                 a = 0
-        return a
+        return a, prob
 
     def _defender_action(self, o) -> Tuple[int, float]:
         """
@@ -92,9 +100,9 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         b1 = o[1]
         l = int(o[0])
 
-        thresholds = self.Theta[l][0]
-        counts = self.Theta[l][1]
-        mixture_weights = np.array(counts) / sum(self.Theta[l][1])
+        thresholds = self.Theta[l-1][0]
+        counts = self.Theta[l-1][1]
+        mixture_weights = np.array(counts) / sum(self.Theta[l-1][1])
         stop_probability = 0
         for i, thresh in enumerate(thresholds):
             if b1 >= thresh:
@@ -193,8 +201,32 @@ class MixedMultiThresholdStoppingPolicy(Policy):
                         self.Theta[l][0].append(defender_theta[l])
                         self.Theta[l][1].append(1)
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
-        raise NotImplementedError("stage policy is not implemented for mixed self-play policies")
+    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) \
+            -> List[List[float]]:
+        b1 = o[1]
+        l = int(o[0])
+        if not self.player_type == PlayerType.ATTACKER:
+            stage_policy = []
+            for _ in self.states:
+                _, stopping_probability = self._defender_action(o=o)
+                stage_policy.append([1-stopping_probability, stopping_probability])
+            return stage_policy
+        else:
+            stage_policy = []
+            _, defender_stop_probability = self.opponent_strategy._defender_action(o=o)
+            for s in self.states:
+                if s.state_type != StateType.TERMINAL:
+                    o = [l,b1,s.id]
+                    a, action_prob = self._attacker_action(o=o, defender_stop_probability=defender_stop_probability)
+                    if a == 1:
+                        stage_policy.append([1-action_prob, action_prob])
+                    elif a == 0:
+                        stage_policy.append([action_prob, 1-action_prob])
+                    else:
+                        raise ValueError(f"Invalid state: {s.id}, valid states are: 0 and 1")
+                else:
+                    stage_policy.append([0.5, 0.5])
+            return stage_policy
 
     def __str__(self) -> str:
         """

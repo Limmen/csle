@@ -49,7 +49,9 @@ const TrainingJob = (props) => {
         }
         if (agentType === 1) {
             return "PPO"
-        } else {
+        } if (agentType === 2) {
+            return "T-FP"
+        }  else {
             return "Unknown"
         }
     }
@@ -73,7 +75,9 @@ const TrainingJob = (props) => {
     );
 
     const getSeedReward = (experiment_result, seed) => {
-        if (experiment_result.all_metrics[seed].average_reward.length > 0) {
+        if (experiment_result.all_metrics[seed].average_reward !== null &&
+            experiment_result.all_metrics[seed].average_reward !== undefined &&
+            experiment_result.all_metrics[seed].average_reward.length > 0) {
             var len = experiment_result.all_metrics[seed].average_reward.length
             return experiment_result.all_metrics[seed].average_reward[len - 1]
         } else {

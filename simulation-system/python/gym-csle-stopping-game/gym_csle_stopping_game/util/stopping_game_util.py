@@ -1,3 +1,4 @@
+import sys
 from typing import List, Dict, Tuple
 import numpy as np
 from scipy.stats import betabinom
@@ -18,7 +19,7 @@ class StoppingGameUtil:
         """
         :return: the initial belief
         """
-        return np.array([0.99, 0.01, 0])
+        return np.array([0.5, 0.5, 0])
 
     @staticmethod
     def state_space():
@@ -368,7 +369,6 @@ class StoppingGameUtil:
                 for s_prime_1 in config.S:
                     prob_1 = config.Z[a1][a2][s_prime_1][o]
                     norm += b[s] * prob_1 * config.T[l][a1][a2][s][s_prime_1] * pi2[s][a2]
-
         if norm == 0:
             return 0
         temp = 0
@@ -376,7 +376,6 @@ class StoppingGameUtil:
         for s in config.S:
             for a2 in config.A2:
                 temp += config.Z[a1][a2][s_prime][o] * config.T[l][a1][a2][s][s_prime] * b[s] * pi2[s][a2]
-
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, l:{l}, o:{o}, pi2:{pi2}")

@@ -55,7 +55,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :param a1: defender action
         :return: (obs, reward, done, info)
         """
-        # Get defender action from static strategy
+        # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
 
