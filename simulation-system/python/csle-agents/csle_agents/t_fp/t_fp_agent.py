@@ -232,7 +232,15 @@ class TFPAgent(BaseAgent):
                 training_job.progress_percentage = progress
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
-    def evaluate_defender_policy(self, defender_thresholds, attacker_strategy):
+    def evaluate_defender_policy(self, defender_thresholds: List[float],
+                                 attacker_strategy: MixedMultiThresholdStoppingPolicy) -> float:
+        """
+        Monte-Carlo evaluation of the game value of a given defender policy against the average attacker strategy
+
+        :param defender_thresholds: the defender strategy to evaluate
+        :param attacker_strategy: the average attacker strategy
+        :return: the approximate game value
+        """
         defender_policy = MultiThresholdStoppingPolicy(
             theta=defender_thresholds, simulation_name=self.simulation_env_config.name,
             states=self.simulation_env_config.state_space_config.states,
@@ -248,15 +256,27 @@ class TFPAgent(BaseAgent):
             done = False
             o = env.reset()
             J = 0
-            while not done:
+            t = 1
+            while not done and t <= self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value:
                 a = defender_policy.action(o=o)
                 o, r, done, info = env.step(a)
                 J+=r
+                t+=1
             Js.append(J)
         avg_J = np.mean(Js)
         return avg_J
 
-    def evaluate_attacker_policy(self, attacker_thresholds, defender_strategy, attacker_strategy):
+    def evaluate_attacker_policy(self, attacker_thresholds: List[List[float]],
+                                 defender_strategy: MixedMultiThresholdStoppingPolicy,
+                                 attacker_strategy: MixedMultiThresholdStoppingPolicy) -> float:
+        """
+        Monte-Carlo evaluation of the game value of a given attacker policy against the average defender strategy
+
+        :param defender_thresholds: the defender strategy to evaluate
+        :param defender_strategy: the average defender strategy
+        :param attacker_strategy: the average attacker strategy
+        :return: the approximate game value
+        """
         theta = [item for sublist in attacker_thresholds for item in sublist]
         attacker_policy = MultiThresholdStoppingPolicy(
             theta=theta, simulation_name=self.simulation_env_config.name,
@@ -274,11 +294,13 @@ class TFPAgent(BaseAgent):
             done = False
             o = env.reset()
             J = 0
-            while not done:
+            t=1
+            while not done and t <= self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value:
                 attacker_policy.opponent_strategy = env.static_defender_strategy
                 a = attacker_policy.action(o=o)
                 o, r, done, info = env.step(a)
                 J+=-r
+                t+=1
             Js.append(J)
         avg_J = np.mean(Js)
         return avg_J
