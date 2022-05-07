@@ -74,15 +74,28 @@ const TrainingJob = (props) => {
         </Tooltip>
     );
 
-    const getSeedReward = (experiment_result, seed) => {
-        if (experiment_result.all_metrics[seed].average_reward !== null &&
-            experiment_result.all_metrics[seed].average_reward !== undefined &&
-            experiment_result.all_metrics[seed].average_reward.length > 0) {
-            var len = experiment_result.all_metrics[seed].average_reward.length
-            return experiment_result.all_metrics[seed].average_reward[len - 1]
-        } else {
-            return -1
+    const getSeedReward = (experiment_result, seed, agentType) => {
+        if(agentType === 0 || agentType === 1){
+            if (experiment_result.all_metrics[seed].average_reward !== null &&
+                experiment_result.all_metrics[seed].average_reward !== undefined &&
+                experiment_result.all_metrics[seed].average_reward.length > 0) {
+                var len = experiment_result.all_metrics[seed].average_reward.length
+                return experiment_result.all_metrics[seed].average_reward[len - 1]
+            } else {
+                return -1
+            }
         }
+        if (agentType === 2) {
+            if (experiment_result.all_metrics[seed].exploitability !== null &&
+                experiment_result.all_metrics[seed].exploitability !== undefined &&
+                experiment_result.all_metrics[seed].exploitability.length > 0) {
+                var len = experiment_result.all_metrics[seed].exploitability.length
+                return experiment_result.all_metrics[seed].exploitability[len - 1]
+            } else {
+                return -1
+            }
+        }
+        return -1
     }
 
     const getGreenOrRedCircle = () => {
@@ -107,6 +120,16 @@ const TrainingJob = (props) => {
                 "Stopped"
             )
         }
+    }
+
+    const getSeedRewardLabel = (agentType) => {
+        if(agentType === 0 || agentType === 1) {
+            return "(Seed, Avg_R):"
+        }
+        if (agentType === 2) {
+            return "(Seed, Exp):"
+        }
+        return ":"
     }
 
     const parseLogs = (logs) => {
@@ -213,10 +236,14 @@ const TrainingJob = (props) => {
                     {getGreenOrRedCircle()}
                 </svg></span>
                 <span
-                    className="subnetTitle">(Seed Avg_R):</span>
+                    className="subnetTitle">{getSeedRewardLabel(props.job.experiment_config.agent_type)}</span>
                 {Object.keys(props.job.experiment_result.all_metrics).map((seed, index) => {
                     return <span key={seed + "-" + index} className="trainingJobSeedR">
-                        ({seed} {Math.round(100 * getSeedReward(props.job.experiment_result, seed)) / 100})
+                        ({seed}, <span className="seedRVal">
+                        {Math.round(100 *
+                            getSeedReward(props.job.experiment_result,
+                                seed, props.job.experiment_config.agent_type)) / 100})
+                        </span>
                     </span>
                 })}
             </Accordion.Toggle>

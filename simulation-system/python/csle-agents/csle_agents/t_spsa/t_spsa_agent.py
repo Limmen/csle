@@ -30,7 +30,7 @@ class TSPSAAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
-                 training_job: Optional[TrainingJobConfig] = None):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
         Initializes the TSPSA agent
 
@@ -39,12 +39,14 @@ class TSPSAAgent(BaseAgent):
         :param experiment_config: the experiment config
         :param env: (optional) the gym environment to use for simulation
         :param training_job: (optional) a training job configuration
+        :param save_to_metastore: boolean flag that can be set to avoid saving results and progress to the metastore
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.T_SPSA
         self.env = env
         self.training_job = training_job
+        self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
@@ -57,12 +59,14 @@ class TSPSAAgent(BaseAgent):
         # Initialize metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_REWARD)
         descr = f"Training of policies with the T-SPSA algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_REWARD] = []
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
 
         # Initialize training job
@@ -73,13 +77,15 @@ class TSPSAAgent(BaseAgent):
                 emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
-            training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
-            self.training_job.id = training_job_id
+            if self.save_to_metastore:
+                training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
+                self.training_job.id = training_job_id
         else:
             self.training_job.pid = pid
             self.training_job.progress_percentage = 0
             self.training_job.experiment_result = exp_result
-            MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
+            if self.save_to_metastore:
+                MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
         # Initialize execution result
         ts = time.time()
@@ -90,8 +96,9 @@ class TSPSAAgent(BaseAgent):
         self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
                                             emulation_name=emulation_name, simulation_name=simulation_name,
                                             descr=descr, log_file_path=self.training_job.log_file_path)
-        exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
-        self.exp_execution.id = exp_execution_id
+        if self.save_to_metastore:
+            exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
+            self.exp_execution.id = exp_execution_id
 
         config = self.simulation_env_config.simulation_env_input_config
         if self.env is None:
@@ -100,17 +107,16 @@ class TSPSAAgent(BaseAgent):
             ExperimentUtil.set_seed(seed)
             exp_result = self.spsa(exp_result=exp_result, seed=seed, training_job=self.training_job,
                                    random_seeds=self.experiment_config.random_seeds)
-            self.training_job = MetastoreFacade.get_training_job_config(id=training_job_id)
 
             # Save latest trace
-            MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
+            if self.save_to_metastore:
+                MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
             self.env.reset_traces()
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
         exp_result.std_metrics = {}
         for metric in exp_result.all_metrics[self.experiment_config.random_seeds[0]].keys():
-            running_avg = 100
             value_vectors = []
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
@@ -141,13 +147,14 @@ class TSPSAAgent(BaseAgent):
                 exp_result.std_metrics[metric] = std_metrics
 
         traces = self.env.get_traces()
-        if len(traces) > 0:
+        if len(traces) > 0 and self.save_to_metastore:
             MetastoreFacade.save_simulation_trace(traces[-1])
         ts = time.time()
         self.exp_execution.timestamp = ts
         self.exp_execution.result = exp_result
-        MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
-                                                    id=self.exp_execution.id)
+        if self.save_to_metastore:
+            MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
+                                                        id=self.exp_execution.id)
         return self.exp_execution
 
     def hparam_names(self) -> List[str]:
@@ -156,7 +163,9 @@ class TSPSAAgent(BaseAgent):
         """
         return [agents_constants.T_SPSA.a, agents_constants.T_SPSA.c, agents_constants.T_SPSA.LAMBDA,
                 agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
-                agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE]
+                agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
+                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
+                agents_constants.COMMON.RUNNING_AVG]
 
     def spsa(self, exp_result: ExperimentResult, seed: int,
              training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
@@ -191,25 +200,29 @@ class TSPSAAgent(BaseAgent):
         J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         policy.avg_R=J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
+        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_REWARD].append(J)
         exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
 
-        # Iterations
+        # Hyperparameters
         N = self.experiment_config.hparams[agents_constants.T_SPSA.N].value
         a = self.experiment_config.hparams[agents_constants.T_SPSA.a].value
         c = self.experiment_config.hparams[agents_constants.T_SPSA.c].value
         A = self.experiment_config.hparams[agents_constants.T_SPSA.A].value
         lamb = self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA].value
         epsilon = self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON].value
-        Logger.__call__().get_logger().info(f"[T-SPSA] i: {0}, J:{J}, "
-                                            f"thresholds:{policy.thresholds()}")
+        gradient_batch_size = self.experiment_config.hparams[agents_constants.T_SPSA.GRADIENT_BATCH_SIZE].value
+
+        Logger.__call__().get_logger().info(
+            f"[T-SPSA] i: {0}, J:{J}, "
+            f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value}:{J}, "
+            f"thresholds:{policy.thresholds()}")
         for i in range(N):
             # Step sizes and perturbation size
             ak = self.standard_ak(a=a, A=A, epsilon=epsilon, k=i)
             ck = self.standard_ck(c=c, lamb=lamb, k=i)
-            deltak = self.standard_deltak(dimension=len(theta), k=i)
 
             # Get estimated gradient
-            gk = self.estimate_gk(theta=theta, deltak=deltak, ck=ck, L=L)
+            gk = self.batch_gradient(theta=theta, ck=ck, L=L, k=i, gradient_batch_size=gradient_batch_size)
 
             # Adjust theta using SA
             theta = [t + ak * gkk for t, gkk in zip(theta, gk)]
@@ -237,9 +250,13 @@ class TSPSAAgent(BaseAgent):
                 policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
             J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
             policy.avg_R = J
+            running_avg_J = ExperimentUtil.running_average(
+                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD],
+                self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value)
 
             # Record metrics
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_REWARD].append(running_avg_J)
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
                 TSPSAAgent.round_vec(policy.thresholds()))
@@ -254,16 +271,18 @@ class TSPSAAgent(BaseAgent):
                 training_job.simulation_traces.append(self.env.get_traces()[-1])
                 if len(training_job.simulation_traces) > training_job.num_cached_traces:
                     training_job.simulation_traces = training_job.simulation_traces[1:]
-                MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
+                if self.save_to_metastore:
+                    MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
                 # Update execution
                 ts = time.time()
                 self.exp_execution.timestamp = ts
                 self.exp_execution.result = exp_result
-                MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
-                                                            id=self.exp_execution.id)
+                if self.save_to_metastore:
+                    MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
+                                                                id=self.exp_execution.id)
 
-                Logger.__call__().get_logger().info(f"[T-SPSA] i: {i}, J:{J}, "
+                Logger.__call__().get_logger().info(f"[T-SPSA] i: {i}, J:{J}, J_avg_50:{running_avg_J}, "
                                                     f"sigmoid(theta):{policy.thresholds()}, "
                                                     f"progress: {round(progress*100,2)}%")
 
@@ -276,7 +295,8 @@ class TSPSAAgent(BaseAgent):
                                               agent_type=AgentType.T_SPSA)
         exp_result.policies[seed] = policy
         # Save policy
-        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        if self.save_to_metastore:
+            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
     def eval_theta(self, policy: MultiThresholdStoppingPolicy, max_steps: int = 200) -> Dict[str, Union[float, int]]:
@@ -393,6 +413,26 @@ class TSPSAAgent(BaseAgent):
         theta_1 = np.array(theta_1)
         return theta_1
 
+    def batch_gradient(self, theta: List[float], ck: float, L: int, k: int,
+                       gradient_batch_size: int = 1):
+        """
+        Computes a batch of gradients and returns the average
+
+        :param theta: the current parameter vector
+        :param k: the current training iteration
+        :param ck: the perturbation step size
+        :param L: the total number of stops for the defender
+        :param gradient_batch_size: the number of gradients to include in the batch
+        :return: the average of the batch of gradients
+        """
+        gradients = []
+        for i in range(gradient_batch_size):
+            deltak_i = self.standard_deltak(dimension=len(theta), k=k)
+            gk_i = self.estimate_gk(theta=theta, deltak=deltak_i, ck=ck, L=L)
+            gradients.append(gk_i)
+        batch_gk = (np.matrix(gradients).sum(axis=0)*(1/gradient_batch_size)).tolist()[0]
+        return batch_gk
+
     def estimate_gk(self, theta: List[float], deltak: List[float], ck: float, L: int):
         """
         Estimate the gradient at iteration k of the T-SPSA algorithm
@@ -400,7 +440,6 @@ class TSPSAAgent(BaseAgent):
         :param theta: the current parameter vector
         :param deltak: the perturbation direction vector
         :param ck: the perturbation step size
-        :param env: the env for evaluation
         :param L: the total number of stops for the defender
         :return: the estimated gradient
         """

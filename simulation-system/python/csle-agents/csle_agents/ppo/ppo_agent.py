@@ -119,7 +119,8 @@ class PPOAgent(BaseAgent):
                 max_grad_norm=self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM].value,
                 target_kl=self.experiment_config.hparams[agents_constants.PPO.TARGET_KL].value,
             )
-            orig_env.set_model(model)
+            if self.experiment_config.player_type == PlayerType.ATTACKER:
+                orig_env.set_model(model)
 
             # Train
             model.learn(total_timesteps=self.experiment_config.hparams[
@@ -291,7 +292,8 @@ class PPOTrainingCallback(BaseCallback):
 
         # Eval model
         if self.iter % self.eval_every == 0:
-            self.env.set_model(self.model)
+            if self.player_type == PlayerType.ATTACKER:
+                self.env.set_model(self.model)
             policy = PPOPolicy(
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
                 states=self.states, player_type=self.player_type, actions=self.actions,

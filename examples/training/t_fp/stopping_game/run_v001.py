@@ -15,19 +15,19 @@ if __name__ == '__main__':
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tfp_test",
         title="T-FP training attacker and defender through self-play to approximate a Nash equilibrium",
         random_seeds=[399, 98912], agent_type=AgentType.T_FP,
-        log_every=1,
+        log_every=1, br_log_every=10,
         hparams={
             agents_constants.T_SPSA.N: HParam(
-                value=100, name=agents_constants.T_SPSA.N,
+                value=150, name=agents_constants.T_SPSA.N,
                 descr="the number of training iterations to learn best response with T-SPSA"),
             agents_constants.T_SPSA.c: HParam(
                 value=10, name=agents_constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA for best-response learning"),
             agents_constants.T_SPSA.a: HParam(
-                value=1, name=agents_constants.T_SPSA.a,
+                value=0.16, name=agents_constants.T_SPSA.a,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA for best-response learning"),
             agents_constants.T_SPSA.A: HParam(
-                value=50, name=agents_constants.T_SPSA.A,
+                value=100, name=agents_constants.T_SPSA.A,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA for best-response learning"),
             agents_constants.T_SPSA.LAMBDA: HParam(
                 value=0.602, name=agents_constants.T_SPSA.LAMBDA,
@@ -50,7 +50,13 @@ if __name__ == '__main__':
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=50, name=agents_constants.COMMON.MAX_ENV_STEPS,
-                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
+            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
+                value=4, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
+                descr="the batch size of the gradient estimator"),
+            agents_constants.COMMON.RUNNING_AVG: HParam(
+                value=30, name=agents_constants.COMMON.RUNNING_AVG,
+                descr="the number of samples to include when computing the running avg"),
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

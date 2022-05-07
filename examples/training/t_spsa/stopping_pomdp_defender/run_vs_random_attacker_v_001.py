@@ -15,7 +15,7 @@ if __name__ == '__main__':
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
         random_seeds=[399, 98912,999,555],
         agent_type=AgentType.T_SPSA,
-        log_every=10,
+        log_every=1,
         hparams={
             agents_constants.T_SPSA.N: HParam(value=200, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
@@ -46,7 +46,13 @@ if __name__ == '__main__':
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
-                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
+            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
+                value=10, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
+                descr="the batch size of the gradient estimator"),
+            agents_constants.COMMON.RUNNING_AVG: HParam(
+                value=100, name=agents_constants.COMMON.RUNNING_AVG,
+                descr="the number of samples to include when computing the running avg")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

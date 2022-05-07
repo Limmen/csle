@@ -9,6 +9,7 @@ class COMMON:
     """
     NUM_CACHED_SIMULATION_TRACES = 3
     AVERAGE_REWARD = "average_reward"
+    RUNNING_AVERAGE_REWARD = "running_average_reward"
     DEFENDER_AVERAGE_REWARD = "defender_average_reward"
     ATTACKER_AVERAGE_REWARD = "attacker_average_reward"
     EVAL_EVERY = "eval_every"
@@ -22,8 +23,10 @@ class COMMON:
     DEVICE = "device"
     GAMMA = "gamma"
     EXPLOITABILITY = "exploitability"
+    RUNNING_AVERAGE_EXPLOITABILITY = "running_average_exploitability"
     CONFIDENCE_INTERVAL = "confidence_interval"
     MAX_ENV_STEPS = "max_env_steps"
+    RUNNING_AVG = "running_avg"
 
 
 class PPO:
@@ -56,6 +59,7 @@ class T_SPSA:
     THETAS = "thetas"
     THRESHOLDS = "thresholds"
     R = "R"
+    GRADIENT_BATCH_SIZE = "gradient_batch_size"
 
 
 class T_FP:

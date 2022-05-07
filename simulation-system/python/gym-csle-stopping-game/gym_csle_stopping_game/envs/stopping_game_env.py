@@ -146,10 +146,6 @@ class StoppingGameEnv(BaseEnv):
         self.state.reset()
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
-        if len(self.traces) > 1 and len(self.traces) % self.config.checkpoint_traces_freq == 0:
-            Logger.__call__().get_logger().info(
-                f"Checkpointing traces, len:{len(self.traces)}, frequency: {self.config.checkpoint_traces_freq}")
-            self.__checkpoint_traces()
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()

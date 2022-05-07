@@ -49,7 +49,13 @@ if __name__ == '__main__':
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
-                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
+            agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
+                value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
+                descr="the batch size of the gradient estimator"),
+            agents_constants.COMMON.RUNNING_AVG: HParam(
+                value=100, name=agents_constants.COMMON.RUNNING_AVG,
+                descr="the number of samples to include when computing the running avg")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

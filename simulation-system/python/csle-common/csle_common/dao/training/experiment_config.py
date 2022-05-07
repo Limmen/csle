@@ -10,7 +10,21 @@ class ExperimentConfig:
     """
 
     def __init__(self, output_dir:str, title: str, random_seeds: List[int], agent_type: AgentType,
-                 hparams: Dict[str, HParam], log_every: int, player_type: PlayerType, player_idx: int):
+                 hparams: Dict[str, HParam], log_every: int, player_type: PlayerType, player_idx: int,
+                 br_log_every: int = 10):
+        """
+        Initializes the DTO
+
+        :param output_dir: the directory to save logs etc of the experiment
+        :param title: the title of the experiment
+        :param random_seeds: the random seeds to use in the experiment
+        :param agent_type: the type of agent for the experiment
+        :param hparams: the hyperparameters
+        :param log_every: frequency of logging
+        :param player_type: the type of player (e.g. defender or attacker)
+        :param player_idx: the player index
+        :param br_log_every: frequency of logging when training best response strategies (for game-theoretic algorithms)
+        """
         self.output_dir = output_dir
         self.title = title
         self.random_seeds = random_seeds
@@ -19,6 +33,7 @@ class ExperimentConfig:
         self.log_every = log_every
         self.player_type = player_type
         self.player_idx = player_idx
+        self.br_log_every = br_log_every
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "Optional[ExperimentConfig]":
@@ -36,7 +51,7 @@ class ExperimentConfig:
         obj = ExperimentConfig(
             output_dir=d["output_dir"], title=d["title"], random_seeds=d["random_seeds"],
             agent_type=d["agent_type"], hparams=h_d, log_every=d["log_every"], player_type=d["player_type"],
-            player_idx=d["player_idx"]
+            player_idx=d["player_idx"], br_log_every=d["br_log_every"]
         )
         return obj
 
@@ -56,6 +71,7 @@ class ExperimentConfig:
         d["log_every"] = self.log_every
         d["player_type"] = self.player_type
         d["player_idx"] = self.player_idx
+        d["br_log_every"] = self.br_log_every
         return d
 
     def __str__(self) -> str:
@@ -64,4 +80,4 @@ class ExperimentConfig:
         """
         return f"output_dir:{self.output_dir}, title:{self.title}, random_seeds:{self.random_seeds}, " \
                f"agent_type: {self.agent_type}, hparams: {self.hparams}, log_every: {self.log_every}, " \
-               f"player_type: {self.player_type}, player_idx: {self.player_idx}"
+               f"player_type: {self.player_type}, player_idx: {self.player_idx}, br_log_every: {self.br_log_every}"
