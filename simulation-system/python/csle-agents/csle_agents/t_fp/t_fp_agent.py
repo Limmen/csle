@@ -188,7 +188,8 @@ class TFPAgent(BaseAgent):
             defender_thresholds, defender_val = self.defender_best_response(
                 seed=br_seed, attacker_strategy=attacker_policy)
 
-            attacker_val = self.evaluate_attacker_policy(attacker_thresholds=attacker_thresholds, defender_strategy=defender_policy)
+            attacker_val = self.evaluate_attacker_policy(attacker_thresholds=attacker_thresholds, defender_strategy=defender_policy,
+                                                         attacker_strategy=attacker_policy)
             defender_val = self.evaluate_defender_policy(defender_thresholds=defender_thresholds, attacker_strategy=attacker_policy)
 
             # Update empirical strategies
@@ -255,7 +256,7 @@ class TFPAgent(BaseAgent):
         avg_J = np.mean(Js)
         return avg_J
 
-    def evaluate_attacker_policy(self, attacker_thresholds, defender_strategy):
+    def evaluate_attacker_policy(self, attacker_thresholds, defender_strategy, attacker_strategy):
         theta = [item for sublist in attacker_thresholds for item in sublist]
         attacker_policy = MultiThresholdStoppingPolicy(
             theta=theta, simulation_name=self.simulation_env_config.name,
@@ -267,6 +268,7 @@ class TFPAgent(BaseAgent):
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env = gym.make(self.attacker_simulation_env_config.gym_env_name,
                        config=self.attacker_simulation_env_config.simulation_env_input_config)
+        env.set_model(attacker_strategy)
         Js = []
         for j in range(500):
             done = False
@@ -322,7 +324,7 @@ class TFPAgent(BaseAgent):
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env = gym.make(self.attacker_simulation_env_config.gym_env_name,
                  config=self.attacker_simulation_env_config.simulation_env_input_config)
-        # env.set_model(attacker_strategy)
+        env.set_model(attacker_strategy)
         agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
                            simulation_env_config=self.attacker_simulation_env_config,
                            experiment_config=self.attacker_experiment_config,

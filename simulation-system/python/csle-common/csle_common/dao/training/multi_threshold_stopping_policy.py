@@ -73,6 +73,9 @@ class MultiThresholdStoppingPolicy(Policy):
         else:
             defender_stopping_prob = 1-prob
         # defender_stopping_prob = b1
+
+
+        # defender_stopping_prob = b1
         # def_stop_prob = 0
         # defender_stopping_prob = 0
         # b1 = defender_stopping_prob
@@ -106,12 +109,15 @@ class MultiThresholdStoppingPolicy(Policy):
             return stage_policy
         else:
             stage_policy = []
+            a1, defender_stopping_probability = self.opponent_strategy._defender_action(o=o)
+            if a1 == 0:
+                defender_stopping_probability = 1-defender_stopping_probability
             for s in self.states:
                 if s.state_type != StateType.TERMINAL:
                     theta_val = self.theta[s.id*self.L + l-1]
                     threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
                     threshold_action_probability = MultiThresholdStoppingPolicy.stopping_probability(
-                        b1=b1, threshold=threshold, k=-20)
+                        b1=defender_stopping_probability, threshold=threshold, k=-20)
                     if s.id == 1:
                         stage_policy.append([1-threshold_action_probability, threshold_action_probability])
                     elif s.id == 0:

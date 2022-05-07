@@ -54,26 +54,26 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :param pi2: attacker stage policy
         :return: (obs, reward, done, info)
         """
-        # if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float:
-        #     a2 = pi2
-        #     pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs, a2=a2)
-        # else:
-        #     if self.model is not None:
-        #         pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-        #         a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
-        #     else:
-        #         pi2 = np.array(pi2)
-        #         if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
-        #             or not pi2.shape[1] == len(self.config.stopping_game_config.A1)) and self.model is not None:
-        #             pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-        #         a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float:
+            a2 = pi2
+            pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs, a2=a2)
+        else:
+            if self.model is not None:
+                pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+                a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+            else:
+                pi2 = np.array(pi2)
+                if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
+                    or not pi2.shape[1] == len(self.config.stopping_game_config.A1)) and self.model is not None:
+                    pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+                a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
 
-        a2 = pi2
-        pi2 = np.array([
-            [0.5,0.5],
-            [0.5,0.5],
-            [0.5,0.5]
-        ])
+        # a2 = pi2
+        # pi2 = np.array([
+        #     [0.5,0.5],
+        #     [0.5,0.5],
+        #     [0.5,0.5]
+        # ])
         assert pi2.shape[0] == len(self.config.stopping_game_config.S)
         assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
 

@@ -76,19 +76,22 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         thresholds = self.Theta[s][l-1][0]
         counts = self.Theta[s][l-1][1]
 
-        sum_thresholds = 0
-        for i in range(len(thresholds)):
-            sum_thresholds = sum_thresholds + thresholds[i]*counts[i]
-        avg_threshold = sum_thresholds/sum(counts)
-        prob = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=avg_threshold, k=-20)
-
-
-        # mixture_weights = np.array(counts) / sum(self.Theta[s][l-1][1])
-        # prob = 0
+        # sum_thresholds = 0
         # for i in range(len(thresholds)):
-        #     if defender_stop_probability >= thresholds[i]:
-        #         prob += mixture_weights[i]*MultiThresholdStoppingPolicy.stopping_probability(
-        #             b1=defender_stop_probability, threshold=thresholds[i],k=-20)
+        #     sum_thresholds = sum_thresholds + thresholds[i]*counts[i]
+        # avg_threshold = sum_thresholds/sum(counts)
+        # prob = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=avg_threshold, k=-20)
+        # prob = MultiThresholdStoppingPolicy.stopping_probability(b1=defender_stop_probability,
+        #                                                          threshold=avg_threshold, k=-20)
+
+        mixture_weights = np.array(counts) / sum(self.Theta[s][l-1][1])
+        prob = 0
+        for i in range(len(thresholds)):
+            if defender_stop_probability >= thresholds[i]:
+                prob += mixture_weights[i]*MultiThresholdStoppingPolicy.stopping_probability(
+                    b1=defender_stop_probability, threshold=thresholds[i],k=-20)
+                # prob += mixture_weights[i]*MultiThresholdStoppingPolicy.stopping_probability(
+                #     b1=b1, threshold=thresholds[i],k=-20)
 
 
         if s == 1:
@@ -234,7 +237,9 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         if not self.player_type == PlayerType.ATTACKER:
             stage_policy = []
             for _ in self.states:
-                _, stopping_probability = self._defender_action(o=o)
+                a1, stopping_probability = self._defender_action(o=o)
+                if a1 == 0:
+                    stopping_probability = 1 - stopping_probability
                 stage_policy.append([1-stopping_probability, stopping_probability])
             return stage_policy
         else:
