@@ -19,7 +19,7 @@ class StoppingGameUtil:
         """
         :return: the initial belief
         """
-        return np.array([0.5, 0.5, 0])
+        return np.array([1, 0, 0])
 
     @staticmethod
     def state_space():
@@ -71,9 +71,9 @@ class StoppingGameUtil:
                 # Defender stops
                 [
                     # Attacker continues
-                    [R_COST / L, R_ST / l, 0],
+                    [R_COST / l, R_ST /l, 0],
                     # Attacker stops
-                    [R_COST / L, R_SLA, 0]
+                    [R_COST / l, R_SLA, 0]
                 ]
             ]
             R_l.append(R)
@@ -94,13 +94,13 @@ class StoppingGameUtil:
                     [
                         # Attacker continues
                         [
-                            [1 - p, 0, p],  # No intrusion
-                            [0, 1 - p, p],  # Intrusion
+                            [1, 0, 0],  # No intrusion
+                            [0, 1 - 1/(2*l), 1/(2*l)],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ],
                         # Attacker stops
                         [
-                            [0, 1 - p, p],  # No intrusion
+                            [0, 1, 0],  # No intrusion
                             [0, 0, 1],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ]
@@ -128,13 +128,13 @@ class StoppingGameUtil:
                     [
                         # Attacker continues
                         [
-                            [1 - p, 0, p],  # No intrusion
-                            [0, 1 - p, p],  # Intrusion
+                            [1, 0, 0],  # No intrusion
+                            [0, 1 - 1/(2*l), 1/(2*l)],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ],
                         # Attacker stops
                         [
-                            [0, 1 - p, p],  # No intrusion
+                            [0, 1, 0],  # No intrusion
                             [0, 0, 1],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ]
@@ -144,13 +144,13 @@ class StoppingGameUtil:
                     [
                         # Attacker continues
                         [
-                            [1 - p, 0, p],  # No intrusion
-                            [0, 1 - p, p],  # Intrusion
+                            [1, 0, 0],  # No intrusion
+                            [0, 1 - 1/(2*l), 1/(2*l)],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ],
                         # Attacker stops
                         [
-                            [0, 1 - p, p],  # No Intrusion
+                            [0, 1, 0],  # No Intrusion
                             [0, 0, 1],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ]

@@ -27,6 +27,12 @@ class COMMON:
     CONFIDENCE_INTERVAL = "confidence_interval"
     MAX_ENV_STEPS = "max_env_steps"
     RUNNING_AVG = "running_avg"
+    L = "L"
+    STOPPING_ENVS = [
+        "csle-stopping-game-v1",
+        "csle-stopping-game-mdp-attacker-v1",
+        "csle-stopping-game-pomdp-defender-v1"
+    ]
 
 
 class PPO:

@@ -212,10 +212,10 @@ class TSPSAAgent(BaseAgent):
         epsilon = self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON].value
         gradient_batch_size = self.experiment_config.hparams[agents_constants.T_SPSA.GRADIENT_BATCH_SIZE].value
 
-        Logger.__call__().get_logger().info(
-            f"[T-SPSA] i: {0}, J:{J}, "
-            f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value}:{J}, "
-            f"thresholds:{policy.thresholds()}")
+        # Logger.__call__().get_logger().info(
+        #     f"[T-SPSA] i: {0}, J:{J}, "
+        #     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value}:{J}, "
+        #     f"thresholds:{policy.thresholds()}")
         for i in range(N):
             # Step sizes and perturbation size
             ak = self.standard_ak(a=a, A=A, epsilon=epsilon, k=i)
@@ -282,9 +282,11 @@ class TSPSAAgent(BaseAgent):
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
 
-                Logger.__call__().get_logger().info(f"[T-SPSA] i: {i}, J:{J}, J_avg_50:{running_avg_J}, "
-                                                    f"sigmoid(theta):{policy.thresholds()}, "
-                                                    f"progress: {round(progress*100,2)}%")
+                Logger.__call__().get_logger().info(
+                    f"[T-SPSA] i: {i}, J:{J}, "
+                    f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value}:"
+                    f"{running_avg_J}, "
+                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%")
 
         policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
                                               states=self.simulation_env_config.state_space_config.states,
@@ -320,7 +322,9 @@ class TSPSAAgent(BaseAgent):
             while not done and t <= max_steps:
                 Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
                 if self.experiment_config.player_type == PlayerType.ATTACKER:
-                    a = policy.stage_policy(o=o)
+                    policy.opponent_strategy = self.env.static_defender_strategy
+                    a = policy.action(o=o)
+                    # a = policy.stage_policy(o=o)
                 else:
                     a = policy.action(o=o)
                 o, r, done, info = self.env.step(a)

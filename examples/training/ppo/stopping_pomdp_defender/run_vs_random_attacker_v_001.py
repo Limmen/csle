@@ -69,6 +69,8 @@ if __name__ == '__main__':
             agents_constants.COMMON.RUNNING_AVG: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVG,
                 descr="the number of samples to include when computing the running avg"),
+            agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
+                                              descr="the number of stop actions")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

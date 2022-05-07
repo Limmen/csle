@@ -7,6 +7,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
@@ -31,7 +32,7 @@ if __name__ == '__main__':
                 value=0.0001, name=agents_constants.COMMON.LEARNING_RATE,
                 descr="learning rate for updating the policy"),
             agents_constants.COMMON.DEVICE: HParam(
-                value="cuda:1",
+                value="cpu",
                 name=agents_constants.COMMON.DEVICE,
                 descr="the device to train on (cpu or cuda:x)"),
             agents_constants.COMMON.GAMMA: HParam(
@@ -55,9 +56,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(1000000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
-            agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
+            agents_constants.COMMON.EVAL_EVERY: HParam(value=5, name=agents_constants.COMMON.EVAL_EVERY,
                                  descr="training iterations between evaluations"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                  descr="the batch size for evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
                                                             descr="how frequently to save the model"),
@@ -66,7 +67,9 @@ if __name__ == '__main__':
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
-                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
+            agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
+                                              descr="the number of stop actions")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
@@ -79,6 +82,8 @@ if __name__ == '__main__':
         theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.99),
                MultiThresholdStoppingPolicy.inverse_sigmoid(0.95),
                MultiThresholdStoppingPolicy.inverse_sigmoid(0.9)])
+    simulation_env_config.simulation_env_input_config.R = list(StoppingGameUtil.reward_tensor(
+        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
 
     agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)

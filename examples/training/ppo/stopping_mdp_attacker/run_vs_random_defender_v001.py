@@ -66,7 +66,9 @@ if __name__ == '__main__':
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
-                descr="maximum number of steps in the environment (for envs with infinite horizon generally)")
+                descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
+            agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
+                                              descr="the number of stop actions")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

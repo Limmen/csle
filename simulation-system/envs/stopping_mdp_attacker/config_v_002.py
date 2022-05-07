@@ -264,9 +264,10 @@ def default_reward_function_config() -> RewardFunctionConfig:
     :return: the default reward function configuration
     """
     reward_function_config = RewardFunctionConfig(
-        reward_tensor=list(-StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
+        reward_tensor=list(StoppingGameUtil.reward_tensor(R_INT=-1, R_COST=-2, R_SLA=0, R_ST=10, L=3))
     )
     return reward_function_config
+
 
 def default_transition_operator_config() -> TransitionOperatorConfig:
     """

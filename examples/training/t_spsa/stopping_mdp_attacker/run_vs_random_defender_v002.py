@@ -1,4 +1,3 @@
-import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -16,11 +15,11 @@ if __name__ == '__main__':
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test",
         title="T-SPSA training attacker to learn 2L thresholds",
-        random_seeds=[521399, 98912], agent_type=AgentType.T_SPSA,
+        random_seeds=[399, 98912], agent_type=AgentType.T_SPSA,
         log_every=1,
         hparams={
             agents_constants.T_SPSA.N: HParam(
-                value=500, name=agents_constants.T_SPSA.N,
+                value=200, name=agents_constants.T_SPSA.N,
                 descr="the number of training iterations"),
             agents_constants.T_SPSA.c: HParam(
                 value=10, name=agents_constants.T_SPSA.c,
@@ -39,7 +38,7 @@ if __name__ == '__main__':
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             agents_constants.T_SPSA.L: HParam(value=3, name=agents_constants.T_SPSA.L,
                                               descr="the number of stop actions"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=20,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
@@ -48,10 +47,10 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
-                value=2, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
+                value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 descr="the batch size of the gradient estimator"),
             agents_constants.COMMON.RUNNING_AVG: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVG,
@@ -59,18 +58,8 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
-    simulation_env_config.simulation_env_input_config.defender_strategy = MultiThresholdStoppingPolicy(
-        actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
-        simulation_name=simulation_env_config.name,
-        L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
-        states = simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
-        experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
-        theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.99),
-               MultiThresholdStoppingPolicy.inverse_sigmoid(0.95),
-               MultiThresholdStoppingPolicy.inverse_sigmoid(0.9)])
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=3))
-    simulation_env_config.simulation_env_input_config.stopping_game_config.b1 = np.array([0.5,0.5,0])
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     experiment_execution = agent.train()

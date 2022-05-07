@@ -24,3 +24,12 @@ class BaseEnv(gym.Env, ABC):
         :return: None
         """
         pass
+
+    @abstractmethod
+    def manual_play(self) -> None:
+        """
+        An interactive loop for manual play of the environment
+
+        :return: None
+        """
+        pass

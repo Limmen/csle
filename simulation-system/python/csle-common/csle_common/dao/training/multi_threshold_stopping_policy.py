@@ -17,7 +17,7 @@ class MultiThresholdStoppingPolicy(Policy):
 
     def __init__(self, theta, simulation_name: str, L: int, states : List[State], player_type: PlayerType,
                  actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float,
-                 agent_type: AgentType):
+                 agent_type: AgentType, opponent_strategy: Optional["MultiThresholdStoppingPolicy"] = None):
         """
         Initializes the policy
 
@@ -30,6 +30,7 @@ class MultiThresholdStoppingPolicy(Policy):
         :param experiment_config: the experiment configuration used for training the policy
         :param avg_R: the average reward of the policy when evaluated in the simulation
         :param agent_type: the agent type
+        :param opponent_strategy: optionally an opponent strategy
         """
         super(MultiThresholdStoppingPolicy, self).__init__(agent_type=agent_type, player_type=player_type)
         self.theta = theta
@@ -40,6 +41,7 @@ class MultiThresholdStoppingPolicy(Policy):
         self.actions = actions
         self.experiment_config = experiment_config
         self.avg_R = avg_R
+        self.opponent_strategy = opponent_strategy
 
     def action(self, o: List[float]) -> int:
         """
@@ -49,9 +51,10 @@ class MultiThresholdStoppingPolicy(Policy):
         :return: the selected action
         """
         if not self.player_type == PlayerType.ATTACKER:
-            return self._defender_action(o=o)
+            a, _ = self._defender_action(o=o)
+            return a
         else:
-            self._attacker_action(o=o)
+            return self._attacker_action(o=o)
 
     def _attacker_action(self, o) -> int:
         """
@@ -63,16 +66,26 @@ class MultiThresholdStoppingPolicy(Policy):
         s = o[2]
         b1 = o[1]
         l = int(o[0])
-        theta_val = self.theta[s*self.L + l-1]
+        theta_val = self.theta[int(s*self.L + l-1)]
+        a1, prob = self._defender_action(o=o)
+        if a1 == 1:
+            defender_stopping_prob = prob
+        else:
+            defender_stopping_prob = 1-prob
+        # defender_stopping_prob = b1
+        # def_stop_prob = 0
+        # defender_stopping_prob = 0
+        # b1 = defender_stopping_prob
         threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
         if s == 0:
             a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
-                threshold=threshold, b1=b1, threshold_action=0, alternative_action=1)
+                threshold=threshold, b1=defender_stopping_prob, threshold_action=0, alternative_action=1, k=-20)
         elif s == 1:
             a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
-                threshold=threshold, b1=b1, threshold_action=1, alternative_action=0)
+                threshold=threshold, b1=defender_stopping_prob, threshold_action=1, alternative_action=0, k=-20)
         else:
             raise ValueError(f"Invalid state: {s}, valid states are: 0 and 1")
+        # print(f"a2:{a}, s: {s}, thresh:{threshold}, prob: {defender_stopping_prob}")
         return a
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -88,7 +101,7 @@ class MultiThresholdStoppingPolicy(Policy):
         if not self.player_type == PlayerType.ATTACKER:
             stage_policy = []
             for _ in self.states:
-                stopping_probability = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold)
+                stopping_probability = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold, k=-20)
                 stage_policy.append([1-stopping_probability, stopping_probability])
             return stage_policy
         else:
@@ -98,7 +111,7 @@ class MultiThresholdStoppingPolicy(Policy):
                     theta_val = self.theta[s.id*self.L + l-1]
                     threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
                     threshold_action_probability = MultiThresholdStoppingPolicy.stopping_probability(
-                        b1=b1, threshold=threshold)
+                        b1=b1, threshold=threshold, k=-20)
                     if s.id == 1:
                         stage_policy.append([1-threshold_action_probability, threshold_action_probability])
                     elif s.id == 0:
@@ -109,7 +122,7 @@ class MultiThresholdStoppingPolicy(Policy):
                     stage_policy.append([0.5, 0.5])
             return stage_policy
 
-    def _defender_action(self, o) -> int:
+    def _defender_action(self, o) -> Tuple[int, float]:
         """
         Multi-threshold stopping policy of the defender
 
@@ -119,11 +132,12 @@ class MultiThresholdStoppingPolicy(Policy):
         b1 = o[1]
         l = int(o[0])
         threshold = MultiThresholdStoppingPolicy.sigmoid(self.theta[l - 1])
-        a = 0
-        if b1 >= threshold:
-            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
-                threshold=threshold, b1=b1, threshold_action=1, alternative_action=0)
-        return a
+        # a = 0
+        # prob = 1
+        # if b1 >= threshold:
+        a, prob = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
+            threshold=threshold, b1=b1, threshold_action=1, alternative_action=0)
+        return a, prob
 
     @staticmethod
     def sigmoid(x) -> float:
@@ -147,7 +161,7 @@ class MultiThresholdStoppingPolicy(Policy):
 
     @staticmethod
     def smooth_threshold_action_selection(threshold: float, b1: float, threshold_action: int = 1,
-                                          alternative_action: int = 1) -> Tuple[int, float]:
+                                          alternative_action: int = 1, k=-20) -> Tuple[int, float]:
         """
         Selects the next action according to a smooth threshold function on the belief
 
@@ -157,14 +171,14 @@ class MultiThresholdStoppingPolicy(Policy):
         :param alternative_action: the alternative action to select if the threshold is not exceeded
         :return: the selected action and the probability
         """
-        prob = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold)
+        prob = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=threshold, k=k)
         if random.uniform(0,1) >= prob:
             return alternative_action, 1-prob
         else:
             return threshold_action, prob
 
     @staticmethod
-    def stopping_probability(b1, threshold) -> float:
+    def stopping_probability(b1, threshold, k=-20) -> float:
         """
         Returns the probability of stopping given a belief and a threshold
 
@@ -172,9 +186,13 @@ class MultiThresholdStoppingPolicy(Policy):
         :param threshold: the threshold
         :return: the stopping probability
         """
+        if (1-round(b1,2)) == 0:
+            return 1
+        if round(b1,2) == 0:
+            return 0
         if (threshold*(1-b1)) > 0 and (b1*(1-threshold))/(threshold*(1-b1)) > 0:
             try:
-                return math.pow(1 + math.pow(((b1*(1-threshold))/(threshold*(1-b1))), -20), -1)
+                return math.pow(1 + math.pow(((b1*(1-threshold))/(threshold*(1-b1))), k), -1)
             except:
                 return 0
         else:

@@ -105,6 +105,9 @@ class StoppingGameEnv(BaseEnv):
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
 
+        # Populate info
+        info = self._info(info)
+
         # Log trace
         self.trace.defender_rewards.append(r)
         self.trace.attacker_rewards.append(-r)
@@ -117,12 +120,9 @@ class StoppingGameEnv(BaseEnv):
         if not done:
             self.trace.attacker_observations.append(attacker_obs)
             self.trace.defender_observations.append(defender_obs)
-        else:
-            info = self._final_info(info)
-
         return (defender_obs, attacker_obs), (r,-r), done, info
 
-    def _final_info(self, info) -> Dict[str, Union[float, int]]:
+    def _info(self, info) -> Dict[str, Union[float, int]]:
         """
         Adds the cumulative reward and episode length to the info dict
         :param info: the info dict to update
@@ -283,3 +283,45 @@ class StoppingGameEnv(BaseEnv):
         SimulationTrace.save_traces(traces_save_dir=constants.LOGGING.DEFAULT_LOG_DIR,
                                     traces=self.traces, traces_file=f"taus{ts}.json")
 
+    def manual_play(self) -> None:
+        """
+        An interactive loop to test the environment manually
+
+        :return: None
+        """
+        done = False
+        while True:
+            raw_input = input("> ")
+            raw_input = raw_input.strip()
+            if raw_input == "help":
+                print("Enter an action id to execute the action, "
+                      "press R to reset,"
+                      "press S to print the state, press A to print the actions, "
+                      "press D to check if done"
+                      "press H to print the history of actions")
+            elif raw_input == "A":
+                print(f"Attacker space: {self.action_space}")
+            elif raw_input == "S":
+                print(self.state)
+            elif raw_input == "D":
+                print(done)
+            elif raw_input == "H":
+                print(self.trace)
+            elif raw_input == "R":
+                print("Resetting the state")
+                self.reset()
+            else:
+                action_profile = raw_input
+                parts = action_profile.split(",")
+                a1 = int(parts[0])
+                a2 = int(parts[1])
+                stage_policy = []
+                for s in self.config.S:
+                    if s != 2:
+                        dist = [0,0]
+                        dist[a2] = 1
+                        stage_policy.append(dist)
+                    else:
+                        stage_policy.append([0.5, 0.5])
+                stage_policy = np.array(stage_policy)
+                _, _, done, _ = self.step(action_profile=(a1,(stage_policy,a2)))

@@ -1,3 +1,4 @@
+import random
 from typing import Union, List, Dict, Tuple, Callable, Optional
 import time
 import gym
@@ -158,26 +159,22 @@ class TFPAgent(BaseAgent):
             agent_type=AgentType.T_FP, opponent_strategy=defender_policy)
 
         # Update average policies with initial thresholds
-        if agents_constants.T_SPSA.THETA1 in self.attacker_experiment_config.hparams:
-            theta_full = self.attacker_experiment_config.hparams[agents_constants.T_SPSA.THETA1].value
-        else:
-            theta_full = TSPSAAgent.initial_theta(
-                L=2*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
-        initial_attacker_thresholds = [
-            [list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3),
-                     theta_full[0:self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value])),
-            list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3),
-                     theta_full[self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value:]))
-             ]
-        ]
+        # initial_attacker_thresholds = [
+        #     [[0]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+        #      [0]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+        #      ]*10
+        # ]
+        initial_attacker_thresholds = []
+        initial_defender_thresholds = []
+        for i in range(10):
+            initial_attacker_thresholds.append(
+                [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+                 [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+                 ]
+            )
+            initial_defender_thresholds.append(
+                [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
 
-        if agents_constants.T_SPSA.THETA1 in self.defender_experiment_config.hparams:
-            theta = self.defender_experiment_config.hparams[agents_constants.T_SPSA.THETA1].value
-        else:
-            theta = TSPSAAgent.initial_theta(
-                L=2*self.defender_experiment_config.hparams[agents_constants.T_SPSA.L].value)
-
-        initial_defender_thresholds = [list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3), theta))]
         attacker_policy.update_Theta(new_thresholds=initial_attacker_thresholds)
         defender_policy.update_Theta(new_thresholds=initial_defender_thresholds)
         attacker_policy.opponent_strategy = defender_policy
@@ -185,10 +182,14 @@ class TFPAgent(BaseAgent):
         for i in range(self.experiment_config.hparams[agents_constants.T_FP.N_2].value):
 
             # Compute best responses
+            br_seed = np.random.randint(0, 100)
             attacker_thresholds, attacker_val = self.attacker_best_response(
-                seed=seed, defender_strategy=defender_policy)
+                seed=br_seed, defender_strategy=defender_policy, attacker_strategy=attacker_policy)
             defender_thresholds, defender_val = self.defender_best_response(
-                seed=seed, attacker_strategy=attacker_policy)
+                seed=br_seed, attacker_strategy=attacker_policy)
+
+            attacker_val = self.evaluate_attacker_policy(attacker_thresholds=attacker_thresholds, defender_strategy=defender_policy)
+            defender_val = self.evaluate_defender_policy(defender_thresholds=defender_thresholds, attacker_strategy=attacker_policy)
 
             # Update empirical strategies
             if attacker_val > -defender_val:
@@ -230,6 +231,56 @@ class TFPAgent(BaseAgent):
                 training_job.progress_percentage = progress
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
+    def evaluate_defender_policy(self, defender_thresholds, attacker_strategy):
+        defender_policy = MultiThresholdStoppingPolicy(
+            theta=defender_thresholds, simulation_name=self.simulation_env_config.name,
+            states=self.simulation_env_config.state_space_config.states,
+            player_type=PlayerType.DEFENDER, L=self.defender_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            actions=self.defender_simulation_env_config.joint_action_space_config.action_spaces[
+                self.defender_experiment_config.player_idx].actions, experiment_config=self.defender_experiment_config,
+            avg_R=-1, agent_type=AgentType.NONE)
+        self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
+        env = gym.make(self.defender_simulation_env_config.gym_env_name,
+                       config=self.defender_simulation_env_config.simulation_env_input_config)
+        Js = []
+        for j in range(500):
+            done = False
+            o = env.reset()
+            J = 0
+            while not done:
+                a = defender_policy.action(o=o)
+                o, r, done, info = env.step(a)
+                J+=r
+            Js.append(J)
+        avg_J = np.mean(Js)
+        return avg_J
+
+    def evaluate_attacker_policy(self, attacker_thresholds, defender_strategy):
+        theta = [item for sublist in attacker_thresholds for item in sublist]
+        attacker_policy = MultiThresholdStoppingPolicy(
+            theta=theta, simulation_name=self.simulation_env_config.name,
+            states=self.simulation_env_config.state_space_config.states,
+            player_type=PlayerType.ATTACKER, L=self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            actions=self.attacker_simulation_env_config.joint_action_space_config.action_spaces[
+                self.attacker_experiment_config.player_idx].actions, experiment_config=self.attacker_experiment_config,
+            avg_R=-1, agent_type=AgentType.NONE)
+        self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
+        env = gym.make(self.attacker_simulation_env_config.gym_env_name,
+                       config=self.attacker_simulation_env_config.simulation_env_input_config)
+        Js = []
+        for j in range(500):
+            done = False
+            o = env.reset()
+            J = 0
+            while not done:
+                attacker_policy.opponent_strategy = env.static_defender_strategy
+                a = attacker_policy.action(o=o)
+                o, r, done, info = env.step(a)
+                J+=-r
+            Js.append(J)
+        avg_J = np.mean(Js)
+        return avg_J
+
     def defender_best_response(self, seed: int, attacker_strategy: MixedMultiThresholdStoppingPolicy) \
             -> Tuple[List, float]:
         """
@@ -255,13 +306,15 @@ class TFPAgent(BaseAgent):
         val = experiment_execution.result.avg_metrics[agents_constants.COMMON.RUNNING_AVERAGE_REWARD][-1]
         return thresholds, val
 
-    def attacker_best_response(self, seed: int, defender_strategy: MixedMultiThresholdStoppingPolicy) \
+    def attacker_best_response(self, seed: int, defender_strategy: MixedMultiThresholdStoppingPolicy,
+                               attacker_strategy: MixedMultiThresholdStoppingPolicy) \
             -> Tuple[List, float]:
         """
         Learns a threshold best response strategy for the attacker against a given defender strategy
 
         :param seed: the random seed
         :param defender_strategy: the defender strategy
+        :param attacker_strategy: the attacker strategy
         :return: the learned threshold strategy and its estimated value
         """
         self.attacker_experiment_config.random_seeds = [seed]
@@ -269,6 +322,7 @@ class TFPAgent(BaseAgent):
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env = gym.make(self.attacker_simulation_env_config.gym_env_name,
                  config=self.attacker_simulation_env_config.simulation_env_input_config)
+        # env.set_model(attacker_strategy)
         agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
                            simulation_env_config=self.attacker_simulation_env_config,
                            experiment_config=self.attacker_experiment_config,

@@ -17,6 +17,7 @@ from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.player_type import PlayerType
+from csle_common.dao.simulation_config.state_type import StateType
 from csle_agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 from stable_baselines3 import PPO
@@ -97,7 +98,9 @@ class PPOAgent(BaseAgent):
                                          self.experiment_config.player_idx].actions,
                 save_every=self.experiment_config.hparams[agents_constants.COMMON.SAVE_EVERY].value,
                 save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution,
-                env=orig_env, experiment_config=self.experiment_config
+                env=orig_env, experiment_config=self.experiment_config,
+                L=self.experiment_config.hparams[agents_constants.COMMON.L].value,
+                gym_env_name = self.simulation_env_config.gym_env_name
             )
 
             # Create PPO Agent
@@ -201,7 +204,8 @@ class PPOTrainingCallback(BaseCallback):
                  max_steps: int, simulation_name: str,
                  states: List[State], actions: List[Action], player_type: PlayerType,
                  env: gym.Env, experiment_config: ExperimentConfig, verbose=0,
-                 eval_every: int = 100, eval_batch_size: int = 10, save_every: int = 10, save_dir: str = ""):
+                 eval_every: int = 100, eval_batch_size: int = 10, save_every: int = 10, save_dir: str = "",
+                 L: int = 3, gym_env_name: str = ""):
         """
         Initializes the callback
 
@@ -222,6 +226,8 @@ class PPOTrainingCallback(BaseCallback):
         :param save_dir: the path to checkpoint models
         :param env: the training environment
         :param experiment_config: the experiment configuration
+        :param L: num stops if a stopping environment
+        :param gym_env_name: name of gym env
         """
         super(PPOTrainingCallback, self).__init__(verbose)
         self.states = states
@@ -241,6 +247,8 @@ class PPOTrainingCallback(BaseCallback):
         self.save_dir = save_dir
         self.env = env
         self.experiment_config = experiment_config
+        self.L = L
+        self.gym_env_name = gym_env_name
 
     def _on_training_start(self) -> None:
         """
@@ -274,6 +282,28 @@ class PPOTrainingCallback(BaseCallback):
         This event is triggered before exiting the `learn()` method.
         """
         pass
+
+    def get_stopping_dist(self, policy: PPOPolicy) -> List[List[List[float]]]:
+        """
+        Calculates the stopping distribution of a given policy
+
+        :param policy: the policy to compute the distribution of
+        :return: the distribution, a SxLxB tensor
+        """
+        belief_space = np.linspace(0, 1, num=100)
+        stopping_dist = []
+        for s in self.states:
+            if s.state_type != StateType.TERMINAL:
+                s_dist = []
+                for l in range(self.L):
+                    l_dist = []
+                    for b in belief_space:
+                        o = [l, b, s.id]
+                        a_dist = policy._get_attacker_dist(obs=o)
+                        l_dist.append(round(a_dist[1],2))
+                    s_dist.append(l_dist)
+                stopping_dist.append(s_dist)
+        return stopping_dist
 
     def _on_rollout_end(self) -> None:
         """
@@ -315,6 +345,14 @@ class PPOTrainingCallback(BaseCallback):
             avg_R = np.mean(avg_rewards)
             policy.avg_R = avg_R
             Logger.__call__().get_logger().info(f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}")
+            if self.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
+                stopping_dist = self.get_stopping_dist(policy=policy)
+                for s in self.states:
+                    if s.state_type != StateType.TERMINAL:
+                        for l in range(self.L):
+                            Logger.__call__().get_logger().info(f"pi(S|b:idx,s:{s.id},l:{l}): {stopping_dist[s.id][l]}")
+
+
             self.exp_result.all_metrics[self.seed]["average_reward"].append(round(avg_R, 3))
             self.training_env.reset()
 

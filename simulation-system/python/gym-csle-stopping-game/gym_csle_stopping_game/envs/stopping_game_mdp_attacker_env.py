@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import math
 from csle_common.dao.simulation_config.base_env import BaseEnv
+from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
@@ -53,16 +54,26 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :param pi2: attacker stage policy
         :return: (obs, reward, done, info)
         """
-        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float:
-            a2 = pi2
-            pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-        else:
-            pi2 = np.array(pi2)
-            if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
-                or not pi2.shape[1] == len(self.config.stopping_game_config.A1)) and self.model is not None:
-                pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-            a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+        # if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float:
+        #     a2 = pi2
+        #     pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs, a2=a2)
+        # else:
+        #     if self.model is not None:
+        #         pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+        #         a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+        #     else:
+        #         pi2 = np.array(pi2)
+        #         if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
+        #             or not pi2.shape[1] == len(self.config.stopping_game_config.A1)) and self.model is not None:
+        #             pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+        #         a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
 
+        a2 = pi2
+        pi2 = np.array([
+            [0.5,0.5],
+            [0.5,0.5],
+            [0.5,0.5]
+        ])
         assert pi2.shape[0] == len(self.config.stopping_game_config.S)
         assert pi2.shape[1] == len(self.config.stopping_game_config.A1)
 
@@ -98,24 +109,48 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         """
         self.model = model
 
-    def calculate_stage_policy(self, o: List) -> np.ndarray:
+    def calculate_stage_policy(self, o: List, a2: int = 0) -> np.ndarray:
         """
         Calculates the stage policy of a given model and observation
 
         :param o: the observation
         :return: the stage policy
         """
-        b1 = o[1]
-        l = int(o[0])
-        stage_policy = []
-        for s in self.config.stopping_game_config.S:
-            if s != 2:
-                o = [l, b1, s]
-                stage_policy.append(self._get_attacker_dist(obs=o))
-            else:
-                stage_policy.append([0.5, 0.5])
-        stage_policy = np.array(stage_policy)
-        return stage_policy
+        # return np.array([
+        #     [0.5,0.5],
+        #     [0.5,0.5],
+        #     [0.5,0.5]
+        # ])
+        if self.model is None:
+            # return np.array([
+            #     [0.5,0.5],
+            #     [0.5,0.5],
+            #     [0.5,0.5]
+            # ])
+            stage_policy = []
+            for s in self.config.stopping_game_config.S:
+                if s != 2:
+                    dist = [0,0]
+                    dist[a2] = 1
+                    stage_policy.append(dist)
+                else:
+                    stage_policy.append([0.5, 0.5])
+            return np.array(stage_policy)
+        if isinstance(self.model, MixedMultiThresholdStoppingPolicy):
+            stage_policy = np.array(self.model.stage_policy(o=o))
+            return stage_policy
+        else:
+            b1 = o[1]
+            l = int(o[0])
+            stage_policy = []
+            for s in self.config.stopping_game_config.S:
+                if s != 2:
+                    o = [l, b1, s]
+                    stage_policy.append(self._get_attacker_dist(obs=o))
+                else:
+                    stage_policy.append([0.5, 0.5])
+            stage_policy = np.array(stage_policy)
+            return stage_policy
 
     def _get_attacker_dist(self, obs: List) -> List:
         """
@@ -186,3 +221,35 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         if self.viewer:
             self.viewer.close()
             self.viewer = None
+
+    def manual_play(self) -> None:
+        """
+        An interactive loop to test the environment manually
+
+        :return: None
+        """
+        done = False
+        while True:
+            raw_input = input("> ")
+            raw_input = raw_input.strip()
+            if raw_input == "help":
+                print("Enter an action id to execute the action, "
+                      "press R to reset,"
+                      "press S to print the state, press A to print the actions, "
+                      "press D to check if done"
+                      "press H to print the history of actions")
+            elif raw_input == "A":
+                print(f"Action space: {self.action_space}")
+            elif raw_input == "S":
+                print(self.stopping_game_env.state)
+            elif raw_input == "D":
+                print(done)
+            elif raw_input == "H":
+                print(self.stopping_game_env.trace)
+            elif raw_input == "R":
+                print("Resetting the state")
+                self.reset()
+            else:
+                action_idx = int(raw_input)
+                _, _, done, _ = self.step(pi2=action_idx)
+

@@ -6,6 +6,7 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
 if __name__ == '__main__':
@@ -58,6 +59,8 @@ if __name__ == '__main__':
     )
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
+    simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
+        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

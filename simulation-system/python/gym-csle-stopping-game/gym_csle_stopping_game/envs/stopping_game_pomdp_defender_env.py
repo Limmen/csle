@@ -58,6 +58,12 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+        pi2 = np.array([
+            [0.5,0.5],
+            [0.5,0.5],
+            [0.5,0.5]
+        ])
+        # print(f"state:{self.stopping_game_env.state}, a1:{a1}, a2:{a2}, pi2: {pi2}, {self.static_attacker_strategy.opponent_strategy}")
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, (pi2, a2)))
@@ -141,3 +147,34 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         if self.viewer:
             self.viewer.close()
             self.viewer = None
+
+    def manual_play(self) -> None:
+        """
+        An interactive loop to test the environment manually
+
+        :return: None
+        """
+        done = False
+        while True:
+            raw_input = input("> ")
+            raw_input = raw_input.strip()
+            if raw_input == "help":
+                print("Enter an action id to execute the action, "
+                      "press R to reset,"
+                      "press S to print the state, press A to print the actions, "
+                      "press D to check if done"
+                      "press H to print the history of actions")
+            elif raw_input == "A":
+                print(f"Action space: {self.action_space}")
+            elif raw_input == "S":
+                print(self.stopping_game_env.state)
+            elif raw_input == "D":
+                print(done)
+            elif raw_input == "H":
+                print(self.stopping_game_env.trace)
+            elif raw_input == "R":
+                print("Resetting the state")
+                self.reset()
+            else:
+                action_idx = int(raw_input)
+                _, _, done, _ = self.step(pi2=action_idx)
