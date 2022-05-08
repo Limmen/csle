@@ -372,7 +372,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-stopping-mdp-attacker-002", version="0.0.3")
+    config = default_config(name="csle-stopping-mdp-attacker-003", version="0.0.3")
 
     if args.install:
         SimulationEnvManager.install_simulation(config=config)
