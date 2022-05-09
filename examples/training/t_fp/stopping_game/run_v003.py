@@ -147,7 +147,7 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=50, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
                 value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,

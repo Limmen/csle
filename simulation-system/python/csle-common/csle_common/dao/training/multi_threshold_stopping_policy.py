@@ -67,7 +67,7 @@ class MultiThresholdStoppingPolicy(Policy):
         b1 = o[1]
         l = int(o[0])
         theta_val = self.theta[int(s*self.L + l-1)]
-        a1, prob = self._defender_action(o=o)
+        a1, prob = self.opponent_strategy._defender_action(o=o)
         if a1 == 1:
             defender_stopping_prob = prob
         else:

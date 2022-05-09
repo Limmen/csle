@@ -8,6 +8,7 @@ from csle_common.dao.training.mixed_multi_threshold_stopping_policy import Mixed
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+import csle_agents.constants.constants as agent_constants
 
 
 class StoppingGameMdpAttackerEnv(BaseEnv):
@@ -85,6 +86,8 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
+
+        info[agent_constants.T_SPSA.R] = -info[agent_constants.T_SPSA.R]
 
         return attacker_obs, r[1], d, info
 

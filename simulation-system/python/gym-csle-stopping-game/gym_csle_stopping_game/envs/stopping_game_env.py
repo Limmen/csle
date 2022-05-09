@@ -105,9 +105,6 @@ class StoppingGameEnv(BaseEnv):
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
 
-        # Populate info
-        info = self._info(info)
-
         # Log trace
         self.trace.defender_rewards.append(r)
         self.trace.attacker_rewards.append(-r)
@@ -120,6 +117,10 @@ class StoppingGameEnv(BaseEnv):
         if not done:
             self.trace.attacker_observations.append(attacker_obs)
             self.trace.defender_observations.append(defender_obs)
+
+        # Populate info
+        info = self._info(info)
+
         return (defender_obs, attacker_obs), (r,-r), done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:

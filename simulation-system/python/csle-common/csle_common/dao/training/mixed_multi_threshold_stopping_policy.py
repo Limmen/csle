@@ -114,29 +114,29 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         Multi-threshold stopping policy of the defender
 
         :param o: the input observation
-        :return: the selected action (int)
+        :return: the selected action (int), and the probability of selecting that action
         """
         b1 = o[1]
         l = int(o[0])
         thresholds = self.Theta[l-1][0]
         counts = self.Theta[l-1][1]
 
-        sum_thresholds = 0
-        for i in range(len(thresholds)):
-            sum_thresholds = sum_thresholds + thresholds[i]*counts[i]
-        avg_threshold = sum_thresholds/sum(counts)
-        stop_probability = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=avg_threshold, k=-20)
+        # sum_thresholds = 0
+        # for i in range(len(thresholds)):
+        #     sum_thresholds = sum_thresholds + thresholds[i]*counts[i]
+        # avg_threshold = sum_thresholds/sum(counts)
+        # stop_probability = MultiThresholdStoppingPolicy.stopping_probability(b1=b1, threshold=avg_threshold, k=-20)
 
-        # mixture_weights = np.array(counts) / sum(self.Theta[l-1][1])
-        # stop_probability = 0
-        # for i, thresh in enumerate(thresholds):
-        #     if b1 >= thresh:
-        #         stop_probability += mixture_weights[i]*MultiThresholdStoppingPolicy.stopping_probability(
-        #             b1=b1, threshold=thresh, k=-20)
-        # stop_probability = round(stop_probability, 3)
+        mixture_weights = np.array(counts) / sum(self.Theta[l-1][1])
+        stop_probability = 0
+        for i, thresh in enumerate(thresholds):
+            if b1 >= thresh:
+                stop_probability += mixture_weights[i]*MultiThresholdStoppingPolicy.stopping_probability(
+                    b1=b1, threshold=thresh, k=-20)
+        stop_probability = round(stop_probability, 3)
 
         if random.uniform(0,1) >= stop_probability:
-            return 0, stop_probability
+            return 0, 1-stop_probability
         else:
             return 1, stop_probability
 

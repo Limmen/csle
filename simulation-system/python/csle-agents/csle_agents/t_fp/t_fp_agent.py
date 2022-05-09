@@ -167,18 +167,20 @@ class TFPAgent(BaseAgent):
         initial_attacker_thresholds = []
         initial_defender_thresholds = []
         initial_attacker_thresholds.append(
-            [[1]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            [[0]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
              [1]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
              ]
         )
-        for i in range(1):
-            # initial_attacker_thresholds.append(
-            #     [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
-            #      [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
-            #      ]
-            # )
-            initial_defender_thresholds.append(
-                [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
+        initial_defender_thresholds.append(
+            [0]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
+        # for i in range(1):
+        #     initial_attacker_thresholds.append(
+        #         [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+        #          [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+        #          ]
+        #     )
+        #     initial_defender_thresholds.append(
+        #         [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
 
         attacker_policy.update_Theta(new_thresholds=initial_attacker_thresholds)
         defender_policy.update_Theta(new_thresholds=initial_defender_thresholds)
@@ -309,7 +311,7 @@ class TFPAgent(BaseAgent):
                 attacker_policy.opponent_strategy = env.static_defender_strategy
                 a = attacker_policy.action(o=o)
                 o, r, done, info = env.step(a)
-                J+=-r
+                J+=r
                 t+=1
             Js.append(J)
         avg_J = np.mean(Js)

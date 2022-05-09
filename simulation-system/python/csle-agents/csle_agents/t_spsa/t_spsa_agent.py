@@ -346,7 +346,6 @@ class TSPSAAgent(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            # print(f"ep len:{t}, max steps: {max_steps}")
             metrics = TSPSAAgent.update_metrics(metrics=metrics, info=info)
             metrics[agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD].append(discounted_R)
         avg_metrics = TSPSAAgent.compute_avg_metrics(metrics=metrics)
