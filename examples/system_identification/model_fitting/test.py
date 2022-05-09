@@ -12,6 +12,38 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as tick
 
+def reformat_large_tick_values(tick_val, pos):
+    """
+    Turns large tick values (in the billions, millions and thousands) such as 4500 into 4.5K and also appropriately turns 4000 into 4K (no zero after the decimal).
+    """
+    if tick_val >= 1000000000:
+        val = round(tick_val / 1000000000, 1)
+        new_tick_format = '{:}B'.format(val)
+    elif tick_val >= 1000000:
+        val = round(tick_val / 1000000, 1)
+        new_tick_format = '{:}M'.format(val)
+    elif tick_val >= 1000:
+        val = round(tick_val / 1000, 1)
+        new_tick_format = '{:}K'.format(val)
+    elif tick_val < 1000:
+        new_tick_format = round(tick_val, 1)
+    else:
+        new_tick_format = tick_val
+
+    # make new_tick_format into a string value
+    new_tick_format = str(new_tick_format)
+
+    # code below will keep 4.5M as is but change values such as 4.0M to 4M since that zero after the decimal isn't needed
+    index_of_decimal = new_tick_format.find(".")
+
+    if index_of_decimal != -1:
+        value_after_decimal = new_tick_format[index_of_decimal + 1]
+        if value_after_decimal == "0":
+            # remove the 0 after the decimal point since it's not needed
+            new_tick_format = new_tick_format[0:index_of_decimal] + new_tick_format[index_of_decimal + 2:]
+
+    return new_tick_format
+
 
 def plot(X_intrusion, X_no_intrusion, gmm_intrusion, gmm_no_intrusion):
 
@@ -27,7 +59,7 @@ def plot(X_intrusion, X_no_intrusion, gmm_intrusion, gmm_no_intrusion):
     labelsize = 7
     sample_step = 1
     markersize = 2.25
-    file_name = "ids_distribution"
+    file_name = 'ids_distribution'
     bottom = 0.125
 
     X_intrusion.sort()
@@ -89,7 +121,7 @@ def plot(X_intrusion, X_no_intrusion, gmm_intrusion, gmm_no_intrusion):
     ax[0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     #ax[0].set_ylim(-120, 170)
     # ax[0].set_xlim(0, 600)
-    ax[0].set_title(r"\# Probability Distribution of IDS Alerts weighted by priority $\Delta x_t$", fontsize=fontsize)
+    ax[0].set_title(r"Probability distribution of \# IPS alerts weighted by priority $\Delta x_t$", fontsize=fontsize)
     ax[0].set_xticks([])
     ax[0].set_yticks([])
     ax[0].set_xlim(0, 9000)
@@ -132,6 +164,7 @@ def plot(X_intrusion, X_no_intrusion, gmm_intrusion, gmm_no_intrusion):
     ax[1].tick_params(axis='both', which='major', labelsize=labelsize, length=2.2, width=0.6)
     ax[1].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     ax[1].set_yticks([])
+    # ax[1].xaxis.set_major_formatter(plt.FuncFormatter(reformat_large_tick_values))
     # ax[1].set_xlim(0, 300)
     # ax[1].set_title(r"\# Warning IDS Alerts $\Delta y$", fontsize=fontsize)
     alpha = 0.3
@@ -178,10 +211,10 @@ if __name__ == '__main__':
         for j in range(count):
             X_no_intrusion.append(val)
 
-    for i in range(2000, 3000):
-        if random.uniform(0,1) < 1/(min((abs(2500-i)/100)+1,20)):
-            print(f"i:{i}, prob:{1/(min((abs((2500-i)/100))+1,20))}")
-            for j in range(random.randint(0, 2)):
+    for i in range(3000, 5000):
+        if random.uniform(0,1) < 1/(min((abs(4000-i)/100)+1,18)):
+            print(f"i:{i}, prob:{1/(min((abs((4000-i)/100))+1,18))}")
+            for j in range(random.randint(0, 1)):
                 X_no_intrusion.append(i)
     X_no_intrusion_2 = []
     for x in X_no_intrusion:

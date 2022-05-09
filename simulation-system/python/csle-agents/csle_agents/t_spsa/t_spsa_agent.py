@@ -59,14 +59,18 @@ class TSPSAAgent(BaseAgent):
         # Initialize metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_REWARD)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_DISCOUNTED_REWARD)
         descr = f"Training of policies with the T-SPSA algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_REWARD] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_DISCOUNTED_REWARD] = []
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
 
         # Initialize training job
@@ -198,9 +202,12 @@ class TSPSAAgent(BaseAgent):
         avg_metrics = self.eval_theta(
             policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
+        J_discounted = round(avg_metrics[agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD], 3)
         policy.avg_R=J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
+        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD].append(J_discounted)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_REWARD].append(J)
+        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_DISCOUNTED_REWARD].append(J_discounted)
         exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
 
         # Hyperparameters
@@ -212,10 +219,6 @@ class TSPSAAgent(BaseAgent):
         epsilon = self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON].value
         gradient_batch_size = self.experiment_config.hparams[agents_constants.T_SPSA.GRADIENT_BATCH_SIZE].value
 
-        # Logger.__call__().get_logger().info(
-        #     f"[T-SPSA] i: {0}, J:{J}, "
-        #     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value}:{J}, "
-        #     f"thresholds:{policy.thresholds()}")
         for i in range(N):
             # Step sizes and perturbation size
             ak = self.standard_ak(a=a, A=A, epsilon=epsilon, k=i)
@@ -248,15 +251,24 @@ class TSPSAAgent(BaseAgent):
                                                   agent_type=AgentType.T_SPSA)
             avg_metrics = self.eval_theta(
                 policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+
+            # Extract metrics from evaluation
             J = round(avg_metrics[agents_constants.T_SPSA.R], 3)
+            J_discounted = round(avg_metrics[agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD], 3)
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value)
+            running_avg_J_discounted = ExperimentUtil.running_average(
+                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD],
+                self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVG].value)
 
             # Record metrics
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD].append(J)
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD].append(J_discounted)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_REWARD].append(running_avg_J)
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_DISCOUNTED_REWARD].append(
+                running_avg_J_discounted)
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
                 TSPSAAgent.round_vec(policy.thresholds()))
@@ -310,6 +322,7 @@ class TSPSAAgent(BaseAgent):
         """
         eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
         metrics = {}
+        metrics[agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD] = []
         for j in range(eval_batch_size):
             done = False
             o = self.env.reset()
@@ -317,6 +330,7 @@ class TSPSAAgent(BaseAgent):
             b1 = o[1]
             t = 1
             r = 0
+            discounted_R = 0
             a = 0
             info = {}
             while not done and t <= max_steps:
@@ -328,10 +342,13 @@ class TSPSAAgent(BaseAgent):
                 else:
                     a = policy.action(o=o)
                 o, r, done, info = self.env.step(a)
+                discounted_R += r*math.pow(self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t-1)
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
+            # print(f"ep len:{t}, max steps: {max_steps}")
             metrics = TSPSAAgent.update_metrics(metrics=metrics, info=info)
+            metrics[agents_constants.COMMON.AVERAGE_DISCOUNTED_REWARD].append(discounted_R)
         avg_metrics = TSPSAAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
@@ -459,7 +476,9 @@ class TSPSAAgent(BaseAgent):
             states=self.simulation_env_config.state_space_config.states, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                 self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.T_SPSA))
+            agent_type=AgentType.T_SPSA),
+            max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
+        )
         J_a = round(avg_metrics[agents_constants.T_SPSA.R], 3)
         avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
             theta=tb, simulation_name=self.simulation_env_config.name,

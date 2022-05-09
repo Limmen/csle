@@ -166,12 +166,17 @@ class TFPAgent(BaseAgent):
         # ]
         initial_attacker_thresholds = []
         initial_defender_thresholds = []
-        for i in range(10):
-            initial_attacker_thresholds.append(
-                [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
-                 [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
-                 ]
-            )
+        initial_attacker_thresholds.append(
+            [[1]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+             [1]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+             ]
+        )
+        for i in range(1):
+            # initial_attacker_thresholds.append(
+            #     [[round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value,
+            #      [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value
+            #      ]
+            # )
             initial_defender_thresholds.append(
                 [round(random.uniform(0,1),2)]*self.attacker_experiment_config.hparams[agents_constants.T_SPSA.L].value)
 
@@ -192,17 +197,22 @@ class TFPAgent(BaseAgent):
                                                          attacker_strategy=attacker_policy)
             defender_val = self.evaluate_defender_policy(defender_thresholds=defender_thresholds, attacker_strategy=attacker_policy)
 
-            # Update empirical strategies
-            if attacker_val > -defender_val:
-                attacker_policy.update_Theta(new_thresholds=[attacker_thresholds])
-                val_attacker_exp= attacker_val
-            else:
-                val_attacker_exp = -defender_val
-            if defender_val > -attacker_val:
-                defender_policy.update_Theta(new_thresholds=[defender_thresholds])
-                val_defender_exp=defender_val
-            else:
-                val_defender_exp = -attacker_val
+            attacker_policy.update_Theta(new_thresholds=[attacker_thresholds])
+            defender_policy.update_Theta(new_thresholds=[defender_thresholds])
+            val_attacker_exp = attacker_val
+            val_defender_exp = defender_val
+
+            # # Update empirical strategies
+            # if attacker_val > -defender_val:
+            #     attacker_policy.update_Theta(new_thresholds=[attacker_thresholds])
+            #     val_attacker_exp= attacker_val
+            # else:
+            #     val_attacker_exp = -defender_val
+            # if defender_val > -attacker_val:
+            #     defender_policy.update_Theta(new_thresholds=[defender_thresholds])
+            #     val_defender_exp=defender_val
+            # else:
+            #     val_defender_exp = -attacker_val
 
             attacker_policy.opponent_strategy = defender_policy
 
@@ -252,7 +262,7 @@ class TFPAgent(BaseAgent):
         env = gym.make(self.defender_simulation_env_config.gym_env_name,
                        config=self.defender_simulation_env_config.simulation_env_input_config)
         Js = []
-        for j in range(500):
+        for j in range(300):
             done = False
             o = env.reset()
             J = 0
@@ -290,7 +300,7 @@ class TFPAgent(BaseAgent):
                        config=self.attacker_simulation_env_config.simulation_env_input_config)
         env.set_model(attacker_strategy)
         Js = []
-        for j in range(500):
+        for j in range(300):
             done = False
             o = env.reset()
             J = 0
@@ -410,7 +420,9 @@ class TFPAgent(BaseAgent):
                     agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
                         agents_constants.T_SPSA.GRADIENT_BATCH_SIZE],
                     agents_constants.COMMON.RUNNING_AVG: self.experiment_config.hparams[
-                        agents_constants.COMMON.RUNNING_AVG]
+                        agents_constants.COMMON.RUNNING_AVG],
+                    agents_constants.COMMON.GAMMA: self.experiment_config.hparams[
+                        agents_constants.COMMON.GAMMA]
                 }
         if agents_constants.T_FP.THETA1_DEFENDER in self.experiment_config.hparams:
             hparams[agents_constants.T_SPSA.THETA1] = self.experiment_config.hparams[agents_constants.T_FP.THETA1_DEFENDER]
@@ -444,7 +456,9 @@ class TFPAgent(BaseAgent):
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: self.experiment_config.hparams[
                 agents_constants.T_SPSA.GRADIENT_BATCH_SIZE],
             agents_constants.COMMON.RUNNING_AVG: self.experiment_config.hparams[
-                agents_constants.COMMON.RUNNING_AVG]
+                agents_constants.COMMON.RUNNING_AVG],
+            agents_constants.COMMON.GAMMA: self.experiment_config.hparams[
+                agents_constants.COMMON.GAMMA]
         }
         if agents_constants.T_FP.THETA1_ATTACKER in self.experiment_config.hparams:
             hparams[agents_constants.T_SPSA.THETA1] = self.experiment_config.hparams[agents_constants.T_FP.THETA1_ATTACKER]

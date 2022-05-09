@@ -9,9 +9,13 @@ class COMMON:
     """
     NUM_CACHED_SIMULATION_TRACES = 3
     AVERAGE_REWARD = "average_reward"
+    AVERAGE_DISCOUNTED_REWARD = "average_discounted_reward"
     RUNNING_AVERAGE_REWARD = "running_average_reward"
+    RUNNING_AVERAGE_DISCOUNTED_REWARD = "running_average_discounted_reward"
     DEFENDER_AVERAGE_REWARD = "defender_average_reward"
+    DEFENDER_AVERAGE_DISCOUNTED_REWARD = "defender_average_discounted_reward"
     ATTACKER_AVERAGE_REWARD = "attacker_average_reward"
+    ATTACKER_AVERAGE_DISCOUNTED_REWARD = "attacker_average_discounted_reward"
     EVAL_EVERY = "eval_every"
     SAVE_EVERY = "save_every"
     EVAL_BATCH_SIZE = "eval_batch_size"
