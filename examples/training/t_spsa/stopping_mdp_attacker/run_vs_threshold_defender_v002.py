@@ -54,8 +54,8 @@ if __name__ == '__main__':
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
                 value=2, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 descr="the batch size of the gradient estimator"),
-            agents_constants.COMMON.RUNNING_AVG: HParam(
-                value=100, name=agents_constants.COMMON.RUNNING_AVG,
+            agents_constants.COMMON.RUNNING_AVERAGE: HParam(
+                value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,

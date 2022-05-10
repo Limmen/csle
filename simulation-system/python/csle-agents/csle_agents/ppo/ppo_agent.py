@@ -42,7 +42,7 @@ class PPOAgent(BaseAgent):
 
         # Setup experiment metrics
         exp_result = ExperimentResult()
-        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_REWARD)
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
         descr = f"Training of policies with PPO using " \
                 f"simulation:{self.simulation_env_config.name}"
 
@@ -82,7 +82,7 @@ class PPOAgent(BaseAgent):
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             ExperimentUtil.set_seed(seed)
 
             # Callback for logging training metrics
@@ -140,7 +140,7 @@ class PPOAgent(BaseAgent):
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type,
                 experiment_config=self.experiment_config,
-                avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_REWARD][-1])
+                avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1])
             exp_result.policies[seed] = policy
 
             # Save policy metadata

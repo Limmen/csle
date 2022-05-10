@@ -13,7 +13,7 @@ class ExperimentResult:
         """
         Initializes the DTO
         """
-        self.all_metrics : Dict[int, Dict[str, List[Union[int, float]]]]= {}
+        self.all_metrics : Dict[int, Dict[str, Any]]= {}
         self.policies: Dict[int, Policy] = {}
         self.plot_metrics = []
         self.avg_metrics = {}

@@ -1,6 +1,7 @@
 from typing import List, Dict, Tuple, Union, Optional
 import random
 import numpy as np
+import csle_agents.constants.constants as agent_constants
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.simulation_config.state import State
@@ -62,15 +63,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
             a, _ = self._attacker_action(o=o, defender_stop_probability=defender_stop_probability)
             return a
 
-    def _attacker_action(self, o, defender_stop_probability) -> Tuple[int, float]:
+    def _attacker_action(self, o: List, defender_stop_probability: float) -> Tuple[int, float]:
         """
         Multi-threshold stopping policy of the attacker
 
         :param o: the input observation
         :param defender_stop_probability: the defender's stopping probability
-        :return: the selected action (int)
+        :return: the selected action (int) and the probability of selecting that action
         """
-        s = o[2]
+        s = int(o[2])
         b1 = o[1]
         l = int(o[0])
         thresholds = self.Theta[s][l-1][0]
@@ -90,9 +91,6 @@ class MixedMultiThresholdStoppingPolicy(Policy):
             if defender_stop_probability >= thresholds[i]:
                 prob += mixture_weights[i]*MultiThresholdStoppingPolicy.stopping_probability(
                     b1=defender_stop_probability, threshold=thresholds[i],k=-20)
-                # prob += mixture_weights[i]*MultiThresholdStoppingPolicy.stopping_probability(
-                #     b1=b1, threshold=thresholds[i],k=-20)
-
 
         if s == 1:
             a = 0
@@ -227,11 +225,15 @@ class MixedMultiThresholdStoppingPolicy(Policy):
                     else:
                         self.Theta[l][0].append(defender_theta[l])
                         self.Theta[l][1].append(1)
-        # for l in range(self.L):
-        #     self.Theta[l] = [[new_thresholds[0][l]], [1]]
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) \
             -> List[List[float]]:
+        """
+        Returns the stage policy for a given observation
+
+        :param o: the observation to return the stage policy for
+        :return: the stage policy
+        """
         b1 = o[1]
         l = int(o[0])
         if not self.player_type == PlayerType.ATTACKER:
@@ -265,6 +267,39 @@ class MixedMultiThresholdStoppingPolicy(Policy):
                 else:
                     stage_policy.append([0.5, 0.5])
             return stage_policy
+
+    def stop_distributions(self) -> Dict[str, Dict[str, List[float]]]:
+        """
+        :return: the stop distributions and their names
+        """
+        distributions = {}
+        if self.player_type == PlayerType.DEFENDER:
+            belief_space = np.linspace(0, 1, num=100)
+            for l in range(1,self.L+1):
+                stop_dist = []
+                for b in belief_space:
+                    a1, prob = self._defender_action(o=[l,b])
+                    if a1 ==1:
+                        stop_dist.append(round(prob,3))
+                    else:
+                        stop_dist.append(round(1-prob,3))
+                distributions[agent_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = stop_dist
+        else:
+            defender_stop_space = np.linspace(0, 1, num=100)
+            for s in self.states:
+                if s.state_type != StateType.TERMINAL:
+                    for l in range(1,self.L+1):
+                        stop_dist = []
+                        for pi_1_S in defender_stop_space:
+                            a2, prob = self._attacker_action(o=[l, pi_1_S, s.id], defender_stop_probability=pi_1_S)
+                            if a2 ==1:
+                                stop_dist.append(round(prob,3))
+                            else:
+                                stop_dist.append(round(1-prob,3))
+                            distributions[agent_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER + f"_l={l}_s={s.id}"] \
+                                = stop_dist
+
+        return distributions
 
     def __str__(self) -> str:
         """

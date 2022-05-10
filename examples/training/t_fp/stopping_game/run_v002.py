@@ -56,9 +56,12 @@ if __name__ == '__main__':
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
                 value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 descr="the batch size of the gradient estimator"),
-            agents_constants.COMMON.RUNNING_AVG: HParam(
-                value=40, name=agents_constants.COMMON.RUNNING_AVG,
+            agents_constants.COMMON.RUNNING_AVERAGE: HParam(
+                value=40, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
+            agents_constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS: HParam(
+                value=300, name=agents_constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS,
+                descr="number of iterations to evaluate best response strategies when calculating exploitability")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

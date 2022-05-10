@@ -8,14 +8,12 @@ class COMMON:
     Common string constants among all agents
     """
     NUM_CACHED_SIMULATION_TRACES = 3
-    AVERAGE_REWARD = "average_reward"
-    AVERAGE_DISCOUNTED_REWARD = "average_discounted_reward"
-    RUNNING_AVERAGE_REWARD = "running_average_reward"
-    RUNNING_AVERAGE_DISCOUNTED_REWARD = "running_average_discounted_reward"
-    DEFENDER_AVERAGE_REWARD = "defender_average_reward"
-    DEFENDER_AVERAGE_DISCOUNTED_REWARD = "defender_average_discounted_reward"
-    ATTACKER_AVERAGE_REWARD = "attacker_average_reward"
-    ATTACKER_AVERAGE_DISCOUNTED_REWARD = "attacker_average_discounted_reward"
+    AVERAGE_RETURN = "average_return"
+    RUNNING_AVERAGE_RETURN = "running_average_return"
+    AVERAGE_DEFENDER_RETURN = "average_defender_return"
+    RUNNING_AVERAGE_DEFENDER_RETURN = "running_average_defender_return"
+    AVERAGE_ATTACKER_RETURN = "average_attacker_return"
+    RUNNING_AVERAGE_ATTACKER_RETURN = "running_average_attacker_return"
     EVAL_EVERY = "eval_every"
     SAVE_EVERY = "save_every"
     EVAL_BATCH_SIZE = "eval_batch_size"
@@ -30,13 +28,16 @@ class COMMON:
     RUNNING_AVERAGE_EXPLOITABILITY = "running_average_exploitability"
     CONFIDENCE_INTERVAL = "confidence_interval"
     MAX_ENV_STEPS = "max_env_steps"
-    RUNNING_AVG = "running_avg"
+    RUNNING_AVERAGE = "running_average"
     L = "L"
     STOPPING_ENVS = [
         "csle-stopping-game-v1",
         "csle-stopping-game-mdp-attacker-v1",
         "csle-stopping-game-pomdp-defender-v1"
     ]
+    RUNNING_AVERAGE_INTRUSION_LENGTH = "running_average_intrusion_length"
+    RUNNING_AVERAGE_INTRUSION_START = "running_average_intrusion_start"
+    RUNNING_AVERAGE_TIME_HORIZON = "running_average_time_horizon"
 
 
 class PPO:
@@ -68,8 +69,9 @@ class T_SPSA:
     THETA1 = "theta1"
     THETAS = "thetas"
     THRESHOLDS = "thresholds"
-    R = "R"
     GRADIENT_BATCH_SIZE = "gradient_batch_size"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
 
 
 class T_FP:
@@ -81,3 +83,9 @@ class T_FP:
     ATTACKER_THRESHOLDS = "attacker_thresholds"
     THETA1_ATTACKER = "theta1_attacker"
     THETA1_DEFENDER = "theta1_defender"
+    BEST_RESPONSE_EVALUATION_ITERATIONS = "best_response_evaluation_iterations"
+    EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS = "equilibrium_strategies_evaluation_iterations"
+    AVERAGE_BEST_RESPONSE_DEFENDER_RETURN = "average_best_response_defender_return"
+    RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN = "running_average_best_response_defender_return"
+    AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "average_best_response_attacker_return"
+    RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "running_average_best_response_attacker_return"

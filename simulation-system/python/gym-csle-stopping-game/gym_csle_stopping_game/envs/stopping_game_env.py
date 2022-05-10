@@ -1,6 +1,7 @@
 from typing import Tuple, Dict, Union, List
 import numpy as np
 import time
+import math
 import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -21,6 +22,7 @@ from csle_system_identification.emulator import Emulator
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
+import gym_csle_stopping_game.constants.constants as env_constants
 
 
 class StoppingGameEnv(BaseEnv):
@@ -94,12 +96,12 @@ class StoppingGameEnv(BaseEnv):
         self.state.t += 1
 
         # Populate info dict
-        info["l"] = self.state.l
-        info["s"] = self.state.s
-        info["a1"] = a1
-        info["a2"] = a2
-        info["o"] = o
-        info["t"] = self.state.t
+        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
+        info[env_constants.ENV_METRICS.STATE] = self.state.s
+        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
+        info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
+        info[env_constants.ENV_METRICS.OBSERVATION] = o
+        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
 
         # Get observations
         attacker_obs = self.state.attacker_observation()
@@ -129,13 +131,53 @@ class StoppingGameEnv(BaseEnv):
         :param info: the info dict to update
         :return: the updated info dict
         """
-        info["R"] = sum(self.trace.defender_rewards)
-        info["T"] = len(self.trace.defender_actions)
+        R = 0
+        for i in range(len(self.trace.defender_rewards)):
+            R+= self.trace.defender_rewards[i]*math.pow(self.config.gamma, i)
+        info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
+        info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
         stop = self.config.L
+        for i in range(1, self.config.L+1):
+            info[f"{env_constants.ENV_METRICS.STOP}_{i}"] = len(self.trace.states)
         for i in range(len(self.trace.defender_actions)):
             if self.trace.defender_actions[i] == 1:
-                info[f"stop_{stop}"] = i
+                info[f"{env_constants.ENV_METRICS.STOP}_{stop}"] = i
                 stop -= 1
+        intrusion_start = len(self.trace.defender_actions)
+        for i in range(len(self.trace.attacker_actions)):
+            if self.trace.attacker_actions[i] == 1:
+                intrusion_start = i
+                break
+        intrusion_end = len(self.trace.attacker_actions)
+        info[env_constants.ENV_METRICS.INTRUSION_START] = intrusion_start
+        info[env_constants.ENV_METRICS.INTRUSION_END] = intrusion_end
+        info[env_constants.ENV_METRICS.INTRUSION_LENGTH] = intrusion_end - intrusion_start
+        upper_bound_return = 0
+        defender_baseline_stop_on_first_alert_return = 0
+        upper_bound_stops_remaining = self.config.L
+        defender_baseline_stop_on_first_alert_stops_remaining =self.config.L
+        for i in range(len(self.trace.states)):
+            if defender_baseline_stop_on_first_alert_stops_remaining > 0:
+                if self.trace.infrastructure_metrics[i] > 0:
+                    defender_baseline_stop_on_first_alert_return += self.config.R[
+                        int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][1][
+                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+                    defender_baseline_stop_on_first_alert_stops_remaining -= 1
+                else:
+                    defender_baseline_stop_on_first_alert_return += self.config.R[
+                        int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][0][
+                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+            if upper_bound_stops_remaining > 0:
+                if self.trace.states[i] == 0:
+                    upper_bound_return += self.config.R[int(upper_bound_stops_remaining) - 1][0][
+                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+                else:
+                    upper_bound_return += self.config.R[int(upper_bound_stops_remaining) - 1][1][
+                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+                    upper_bound_stops_remaining -= 1
+        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
+        info[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = \
+            defender_baseline_stop_on_first_alert_return
         return info
 
     def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:

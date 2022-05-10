@@ -1,6 +1,8 @@
 from typing import List, Dict, Tuple, Union, Optional
 import math
 import random
+import numpy as np
+import csle_agents.constants.constants as agent_constants
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.simulation_config.state import State
@@ -54,42 +56,38 @@ class MultiThresholdStoppingPolicy(Policy):
             a, _ = self._defender_action(o=o)
             return a
         else:
-            return self._attacker_action(o=o)
+            a, _ = self._attacker_action(o=o)
+            return a
 
-    def _attacker_action(self, o) -> int:
+    def _attacker_action(self, o, defender_stopping_prob: Optional[float] = None) -> Tuple[int, float]:
         """
         Multi-threshold stopping policy of the attacker
 
         :param o: the input observation
-        :return: the selected action (int)
+        :param defender_stopping_prob: the defender's stop probability (optional)
+        :return: the selected action (int) and its probability
         """
         s = o[2]
         b1 = o[1]
         l = int(o[0])
         theta_val = self.theta[int(s*self.L + l-1)]
-        a1, prob = self.opponent_strategy._defender_action(o=o)
-        if a1 == 1:
-            defender_stopping_prob = prob
-        else:
-            defender_stopping_prob = 1-prob
-        # defender_stopping_prob = b1
+        if defender_stopping_prob is None:
+            a1, prob = self.opponent_strategy._defender_action(o=o)
+            if a1 == 1:
+                defender_stopping_prob = prob
+            else:
+                defender_stopping_prob = 1-prob
 
-
-        # defender_stopping_prob = b1
-        # def_stop_prob = 0
-        # defender_stopping_prob = 0
-        # b1 = defender_stopping_prob
         threshold = MultiThresholdStoppingPolicy.sigmoid(theta_val)
         if s == 0:
-            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
+            a, attacker_action_prob = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
                 threshold=threshold, b1=defender_stopping_prob, threshold_action=0, alternative_action=1, k=-20)
         elif s == 1:
-            a, _ = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
+            a, attacker_action_prob = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
                 threshold=threshold, b1=defender_stopping_prob, threshold_action=1, alternative_action=0, k=-20)
         else:
             raise ValueError(f"Invalid state: {s}, valid states are: 0 and 1")
-        # print(f"a2:{a}, s: {s}, thresh:{threshold}, prob: {defender_stopping_prob}")
-        return a
+        return a, attacker_action_prob
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
         """
@@ -133,14 +131,11 @@ class MultiThresholdStoppingPolicy(Policy):
         Multi-threshold stopping policy of the defender
 
         :param o: the input observation
-        :return: the selected action (int)
+        :return: the selected action (int) and its probability
         """
         b1 = o[1]
         l = int(o[0])
         threshold = MultiThresholdStoppingPolicy.sigmoid(self.theta[l - 1])
-        # a = 0
-        # prob = 1
-        # if b1 >= threshold:
         a, prob = MultiThresholdStoppingPolicy.smooth_threshold_action_selection(
             threshold=threshold, b1=b1, threshold_action=1, alternative_action=0)
         return a, prob
@@ -247,6 +242,39 @@ class MultiThresholdStoppingPolicy(Policy):
         :return: the thresholds
         """
         return list(map(lambda x: round(MultiThresholdStoppingPolicy.sigmoid(x), 3), self.theta))
+
+    def stop_distributions(self) -> Dict[str, Dict[str, List[float]]]:
+        """
+        :return: the stop distributions and their names
+        """
+        distributions = {}
+        if self.player_type == PlayerType.DEFENDER:
+            belief_space = np.linspace(0, 1, num=100)
+            for l in range(1,self.L+1):
+                stop_dist = []
+                for b in belief_space:
+                    a1, prob = self._defender_action(o=[l,b])
+                    if a1 ==1:
+                        stop_dist.append(round(prob, 3))
+                    else:
+                        stop_dist.append(round(1-prob,3))
+                distributions[agent_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = stop_dist
+        else:
+            defender_stop_space = np.linspace(0, 1, num=100)
+            for s in self.states:
+                if s.state_type != StateType.TERMINAL:
+                    for l in range(1,self.L+1):
+                        stop_dist = []
+                        for pi_1_S in defender_stop_space:
+                            a2, prob = self._attacker_action(o=[l, pi_1_S, s.id], defender_stopping_prob=pi_1_S)
+                            if a2 ==1:
+                                stop_dist.append(round(prob,3))
+                            else:
+                                stop_dist.append(round(1-prob,3))
+                            distributions[agent_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER + f"_l={l}_s={s.id}"] \
+                                = stop_dist
+
+        return distributions
 
     def __str__(self) -> str:
         """

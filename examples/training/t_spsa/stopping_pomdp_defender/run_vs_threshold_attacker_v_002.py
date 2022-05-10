@@ -50,38 +50,42 @@ if __name__ == '__main__':
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
                 value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 descr="the batch size of the gradient estimator"),
-            agents_constants.COMMON.RUNNING_AVG: HParam(
-                value=100, name=agents_constants.COMMON.RUNNING_AVG,
-                descr="the number of samples to include when computing the running avg")
+            agents_constants.COMMON.RUNNING_AVERAGE: HParam(
+                value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
+                descr="the number of samples to include when computing the running avg"),
+            agents_constants.COMMON.GAMMA: HParam(
+                value=0.99, name=agents_constants.COMMON.GAMMA,
+                descr="the discount factor gamma"),
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    simulation_env_config.simulation_env_input_config.attacker_strategy = MultiThresholdStoppingPolicy(
-        actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
-        simulation_name=simulation_env_config.name,
-        L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
-        states=simulation_env_config.state_space_config.states, player_type=PlayerType.ATTACKER,
-        experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
-        theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.2),
-               MultiThresholdStoppingPolicy.inverse_sigmoid(0.3),
-               MultiThresholdStoppingPolicy.inverse_sigmoid(0.4),
-               MultiThresholdStoppingPolicy.inverse_sigmoid(0.85),
-                MultiThresholdStoppingPolicy.inverse_sigmoid(0.9),
-                MultiThresholdStoppingPolicy.inverse_sigmoid(0.95)],
-        opponent_strategy=MultiThresholdStoppingPolicy(
-            actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
-            simulation_name=simulation_env_config.name,
-            L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
-            states = simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
-            experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
-            theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.99),
-                   MultiThresholdStoppingPolicy.inverse_sigmoid(0.95),
-                   MultiThresholdStoppingPolicy.inverse_sigmoid(0.9)])
-               )
+    # simulation_env_config.simulation_env_input_config.attacker_strategy = MultiThresholdStoppingPolicy(
+    #     actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
+    #     simulation_name=simulation_env_config.name,
+    #     L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
+    #     states=simulation_env_config.state_space_config.states, player_type=PlayerType.ATTACKER,
+    #     experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
+    #     theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.2),
+    #            MultiThresholdStoppingPolicy.inverse_sigmoid(0.3),
+    #            MultiThresholdStoppingPolicy.inverse_sigmoid(0.4),
+    #            MultiThresholdStoppingPolicy.inverse_sigmoid(0.85),
+    #             MultiThresholdStoppingPolicy.inverse_sigmoid(0.9),
+    #             MultiThresholdStoppingPolicy.inverse_sigmoid(0.95)],
+    #     opponent_strategy=MultiThresholdStoppingPolicy(
+    #         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+    #         simulation_name=simulation_env_config.name,
+    #         L=simulation_env_config.simulation_env_input_config.stopping_game_config.L,
+    #         states = simulation_env_config.state_space_config.states, player_type=PlayerType.DEFENDER,
+    #         experiment_config=experiment_config, avg_R=-1, agent_type=AgentType.NONE,
+    #         theta=[MultiThresholdStoppingPolicy.inverse_sigmoid(0.99),
+    #                MultiThresholdStoppingPolicy.inverse_sigmoid(0.95),
+    #                MultiThresholdStoppingPolicy.inverse_sigmoid(0.9)])
+    #            )
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=10, L=3))
+        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=20, L=3))
+    simulation_env_config.simulation_env_input_config.stopping_game_config.gamma = 0.99
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

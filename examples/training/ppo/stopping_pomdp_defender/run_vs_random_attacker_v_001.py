@@ -66,8 +66,8 @@ if __name__ == '__main__':
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
-            agents_constants.COMMON.RUNNING_AVG: HParam(
-                value=100, name=agents_constants.COMMON.RUNNING_AVG,
+            agents_constants.COMMON.RUNNING_AVERAGE: HParam(
+                value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
                                               descr="the number of stop actions")
