@@ -112,7 +112,7 @@ def plot(X_intrusion, X_no_intrusion, gmm_intrusion, gmm_no_intrusion):
 
     # ax[0].grid('on')
     #ax[0].set_xlabel(r"\# training episodes", fontsize=labelsize)
-    ax[0].set_ylabel(r"$\hat{f}_{X}(\Delta x_t|0)$", fontsize=labelsize)
+    ax[0].set_ylabel(r"$\hat{f}_{O}(o_t|0)$", fontsize=labelsize)
     xlab = ax[0].xaxis.get_label()
     ylab = ax[0].yaxis.get_label()
     xlab.set_size(labelsize)
@@ -121,7 +121,7 @@ def plot(X_intrusion, X_no_intrusion, gmm_intrusion, gmm_no_intrusion):
     ax[0].tick_params(axis='both', which='minor', labelsize=labelsize, length=2.2, width=0.6)
     #ax[0].set_ylim(-120, 170)
     # ax[0].set_xlim(0, 600)
-    ax[0].set_title(r"Probability distribution of \# IPS alerts weighted by priority $\Delta x_t$", fontsize=fontsize)
+    ax[0].set_title(r"Probability distribution of \# IPS alerts weighted by priority $o_t$", fontsize=fontsize)
     ax[0].set_xticks([])
     ax[0].set_yticks([])
     ax[0].set_xlim(0, 9000)
@@ -156,7 +156,7 @@ def plot(X_intrusion, X_no_intrusion, gmm_intrusion, gmm_no_intrusion):
 
     # ax[1].grid('on')
     # ax[0].set_xlabel(r"\# training episodes", fontsize=labelsize)
-    ax[1].set_ylabel(r"$\hat{f}_{X}(\Delta x_t|1)$", fontsize=labelsize)
+    ax[1].set_ylabel(r"$\hat{f}_{O}(o_t|1)$", fontsize=labelsize)
     xlab = ax[1].xaxis.get_label()
     ylab = ax[1].yaxis.get_label()
     xlab.set_size(labelsize)
