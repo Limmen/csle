@@ -45,17 +45,15 @@ class ClientThread(threading.Thread):
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             (output, err) = p.communicate()
             p_status = p.wait()
+            time.sleep(self.time_step_len_seconds)
             time_lapsed = time.time() - start
             if time_lapsed >= self.service_time:
                 done = True
             else:
-                time.sleep(self.time_step_len_seconds)
-                time_lapsed = time.time() - start
-                if time_lapsed < self.service_time:
-                    if cmd_index < len(self.commands)-1:
-                        cmd_index += 1
-                    else:
-                        cmd_index = 0
+                if cmd_index < len(self.commands)-1:
+                    cmd_index += 1
+                else:
+                    cmd_index = 0
 
 
 class ArrivalThread(threading.Thread):
@@ -99,10 +97,10 @@ class ArrivalThread(threading.Thread):
                     new_client_threads.append(ct)
             self.client_threads = new_client_threads
             self.t += 1
-            new_clients = poisson.rvs(self.lamb*self.time_step_len_seconds, size=1)[0]
+            new_clients = poisson.rvs(self.lamb, size=1)[0]
             for nc in range(new_clients):
                 commands = random.sample(self.commands, self.num_commands)
-                service_time = expon.rvs(scale=self.time_step_len_seconds/(self.mu), loc=0, size=1)[0]
+                service_time = expon.rvs(scale=(self.mu*self.time_step_len_seconds), loc=0, size=1)[0]
                 thread = ClientThread(service_time=service_time, commands=commands,
                                       time_step_len_seconds=self.time_step_len_seconds)
                 thread.start()
@@ -289,6 +287,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         logging.info(f"Starting producer, time-step:{request.time_step_len_seconds}")
 
         clients_time_step_len_seconds = 0
+        time.sleep(5)
 
         if self.producer_thread is not None:
             self.producer_thread.stopped = True

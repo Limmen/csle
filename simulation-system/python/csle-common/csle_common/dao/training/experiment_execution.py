@@ -68,3 +68,25 @@ class ExperimentExecution:
         return f"config: {self.config}, result: {self.result}, timestamp: {self.timestamp}, " \
                f"simulation_name: {self.simulation_name}, emulation_name: {self.emulation_name}, id: {self.id}," \
                f"descr: {self.descr}, log_file_path: {self.log_file_path}"
+
+    def to_json_str(self) -> str:
+        """
+        Converts the DTO into a json string
+
+        :return: the json string representation of the DTO
+        """
+        import json
+        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
+        return json_str
+
+    def to_json_file(self, json_file_path: str) -> None:
+        """
+        Saves the DTO to a json file
+
+        :param json_file_path: the json file path to save  the DTO to
+        :return: None
+        """
+        import io
+        json_str = self.to_json_str()
+        with io.open(json_file_path, 'w', encoding='utf-8') as f:
+            f.write(json_str)

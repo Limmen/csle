@@ -5,6 +5,7 @@ To see options, run:
 `csle --help`
 """
 from typing import List, Tuple, Union
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 import click
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
@@ -54,7 +55,9 @@ def attacker_shell(s: "EmulationEnvState") -> None:
 
 
 def attacker_shell_complete(ctx, param, incomplete):
-    return ["emulation"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    return emulations
 
 @click.command("attacker", help="emulation-name")
 @click.argument('emulation', default="", type=str, shell_complete=attacker_shell_complete)
@@ -93,7 +96,9 @@ def list_csle_gym_envs() -> None:
 
 
 def emulation_shell_complete(ctx, param, incomplete):
-    return ["emulation", "--host", "--stats", "--kafka", "--clients"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    return emulations + ["emulation", "--host", "--stats", "--kafka", "--clients"]
 
 @click.option('--host', is_flag=True, help='Check the status of the Host managers')
 @click.option('--stats', is_flag=True, help='Check the status of the stats manager')
@@ -174,7 +179,9 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
 def start_traffic_shell_complete(ctx, param, incomplete):
-    return ["emulation", "--mu", "--lamb", "--t", "--nc"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    return emulations + ["--mu", "--lamb", "--t", "--nc"]
 
 @click.option('--nc', default=None, type=int)
 @click.option('--t', default=None, type=int)
@@ -213,7 +220,9 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
 
 
 def stop_traffic_shell_complete(ctx, param, incomplete):
-    return ["emulation"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    return emulations
 
 @click.argument('emulation', default="", shell_complete=stop_traffic_shell_complete)
 @click.command("stop_traffic", help="emulation-name")
@@ -260,7 +269,12 @@ def materialize(emulation: str, path: str) -> None:
 
 
 def shell_shell_complete(ctx, param, incomplete):
-    return ["<container_name>"]
+    from csle_common.controllers.container_manager import ContainerManager
+    running_containers = ContainerManager.list_all_running_containers()
+    stopped_containers = ContainerManager.list_all_stopped_containers()
+    containers = running_containers + stopped_containers
+    containers = list(map(lambda x: x[0], containers))
+    return containers
 
 @click.argument('container', default="", shell_complete=shell_shell_complete)
 @click.command("shell", help="container-name")
@@ -460,8 +474,16 @@ def materialize_emulation(emulation_env_config: "EmulationEnvConfig", path: str)
 
 
 def stop_shell_complete(ctx, param, incomplete):
-    return ["prometheus", "node_exporter", "cadvisor", "grafana", "monitor", "<container-name>", "emulation-name",
-            "statsmanager", "all"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    running_emulations, stopped_emulations = separate_running_and_stopped_emulations(
+        emulations=MetastoreFacade.list_emulations())
+    emulations = running_emulations
+    running_containers = ContainerManager.list_all_running_containers()
+    containers = running_containers
+    containers = list(map(lambda x: x[0], containers))
+    return ["prometheus", "node_exporter", "cadvisor", "grafana", "monitor",
+            "statsmanager", "all"] + emulations + containers
 
 
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
@@ -507,10 +529,6 @@ def stop(entity: str) -> None:
                 click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
-def stop_shell_complete(ctx, param, incomplete):
-    return ["<port>"]
-
-
 @click.argument('port', default=50051, type=int, shell_complete=stop_shell_complete)
 @click.command("statsmanager", help="port")
 def statsmanager(port: int) -> None:
@@ -526,7 +544,10 @@ def statsmanager(port: int) -> None:
 
 
 def trainingjob_shell_complete(ctx, param, incomplete):
-    return ["<training_job_id>"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    training_jobs = MetastoreFacade.list_training_jobs()
+    training_jobs_ids = list(map(lambda x: x.id, training_jobs))
+    return training_jobs_ids
 
 
 @click.argument('id', default=None, type=int, shell_complete=trainingjob_shell_complete)
@@ -546,7 +567,10 @@ def trainingjob(id: int) -> None:
 
 
 def systemidentificationjob_shell_complete(ctx, param, incomplete):
-    return ["<systemidentification_job_id>"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    sys_id_jobs = MetastoreFacade.list_system_identification_jobs()
+    sys_id_jobs_ids = list(map(lambda x: x.id, sys_id_jobs))
+    return sys_id_jobs_ids
 
 @click.argument('id', default=None, type=int, shell_complete=systemidentificationjob_shell_complete)
 @click.command("systemidentificationjob", help="id")
@@ -581,9 +605,20 @@ def start_docker_stats_manager() -> None:
 
 
 def start_shell_complete(ctx, param, incomplete):
-    return ["prometheus", "node_exporter", "grafana", "cadvisor", "monitor", "container-name",
-            "emulation-name", "all",
-            "statsmanager", "training_job", "system_id_job", "monitor", "--id", "--no_traffic"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    running_emulations, stopped_emulations = separate_running_and_stopped_emulations(
+        emulations=MetastoreFacade.list_emulations())
+    emulations = stopped_emulations
+    stopped_containers = ContainerManager.list_all_stopped_containers()
+    containers = stopped_containers
+    containers = list(map(lambda x: x[0], containers))
+    image_names=ContainerManager.list_all_images()
+    image_names = list(map(lambda x: x[0], image_names))
+    return ["prometheus", "node_exporter", "grafana", "cadvisor", "monitor",
+            "all",
+            "statsmanager", "training_job", "system_id_job", "monitor", "--id", "--no_traffic"] + emulations + \
+           containers + image_names
 
 
 @click.option('--id', default=None, type=int)
@@ -663,7 +698,17 @@ def run_image(image: str, name: str) -> bool:
 
 
 def rm_shell_complete(ctx, param, incomplete):
-    return ["network-name", "container-name", "image-name", "networks", "images", "containers"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    running_containers = ContainerManager.list_all_running_containers()
+    stopped_containers = ContainerManager.list_all_stopped_containers()
+    containers = running_containers + stopped_containers
+    containers = list(map(lambda x: x[0], containers))
+    image_names=ContainerManager.list_all_images()
+    image_names = list(map(lambda x: x[0], image_names))
+    return ["network-name", "container-name", "image-name", "networks", "images", "containers"] + emulations + \
+           containers + image_names
 
 
 @click.argument('entity', default="", shell_complete=rm_shell_complete)
@@ -688,8 +733,15 @@ def rm(entity : str) -> None:
 
 
 def clean_shell_complete(ctx, param, incomplete):
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    running_containers = ContainerManager.list_all_running_containers()
+    stopped_containers = ContainerManager.list_all_stopped_containers()
+    containers = running_containers + stopped_containers
+    containers = list(map(lambda x: x[0], containers))
     return ["all", "containers", "emulations", "emulation_traces", "simulation_traces", "emulation_statistics",
-            "name"]
+            "name"] + emulations + containers
 
 
 @click.argument('entity', default="", shell_complete=clean_shell_complete)
@@ -727,7 +779,14 @@ def clean(entity : str) -> None:
 
 
 def install_shell_complete(ctx, param, incomplete):
-    return ["emulations", "simulations", "<emulation_name>", "<simulation_name>", "derived_images", "base_images", "all"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
+    image_names=ContainerManager.list_all_images()
+    image_names = list(map(lambda x: x[0], image_names))
+    return ["emulations", "simulations", "derived_images",
+            "base_images", "metastore", "all"] + emulations + image_names + simulations
 
 
 @click.argument('entity', default="", shell_complete=install_shell_complete)
@@ -775,7 +834,14 @@ def install(entity : str) -> None:
 
 
 def uninstall_shell_complete(ctx, param, incomplete):
-    return ["emulations", "simulations", "<emulation_name>", "<simulation_name>", "derived_images", "base_images", "all"]
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
+    image_names=ContainerManager.list_all_images()
+    image_names = list(map(lambda x: x[0], image_names))
+    return ["emulations", "simulations", "derived_images", "base_images",
+            "metastore", "all"] + emulations + image_names + simulations
 
 
 @click.argument('entity', default="", shell_complete=uninstall_shell_complete)
@@ -825,12 +891,24 @@ def uninstall(entity : str) -> None:
 
 
 def ls_shell_complete(ctx, param, incomplete):
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
+    running_containers = ContainerManager.list_all_running_containers()
+    stopped_containers = ContainerManager.list_all_stopped_containers()
+    containers = running_containers + stopped_containers
+    containers = list(map(lambda x: x[0], containers))
+    image_names=ContainerManager.list_all_images()
+    image_names = list(map(lambda x: x[0], image_names))
+    active_networks_names = ContainerManager.list_all_networks()
     return ["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-            "cadvisor", "monitor", "statsmanager", "--all", "--running", "--stopped"]
+            "cadvisor", "monitor", "statsmanager", "--all", "--running", "--stopped"] + emulations + containers \
+           + image_names + active_networks_names + simulations
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
-                    "| cadvisor | statsmanager | monitor")
+                    "| cadvisor | statsmanager | monitor | simulations")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -877,6 +955,8 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
         list_monitor()
     elif entity == "statsmanager":
         list_statsmanager()
+    elif entity == "simulations":
+        list_simulations()
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -900,7 +980,11 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
                         if img is not None:
                             print_img(img=img)
                         else:
-                            click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
+                            simulation_env_config = MetastoreFacade.get_simulation(name=entity)
+                            if simulation_env_config is not None:
+                                print_simulation_config(simulation_config=simulation_env_config)
+                            else:
+                                click.secho(f"entity: {entity} is not recognized", fg="red", bold=True)
 
 
 def print_running_container(container) -> None:
@@ -964,6 +1048,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_all_containers()
     list_images()
     list_emulations(all=all, stopped=stopped, running=running)
+    list_simulations()
     list_csle_gym_envs()
     click.secho("CSLE Monitoring System:", fg="magenta", bold=True)
     list_prometheus()
@@ -1107,6 +1192,19 @@ def list_emulations(all: bool = False, stopped: bool = False, running: bool = Tr
         for em in stopped_emulations:
             click.secho(em + f" {click.style('[stopped]', fg='red')}", bold=False)
 
+
+def list_simulations() -> None:
+    """
+    Lists simulations
+
+    :return: None
+    """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+
+    click.secho("CSLE simulations:", fg="magenta", bold=True)
+    simulations = MetastoreFacade.list_simulations()
+    for sim in simulations:
+        click.secho(sim.name)
 
 def list_networks() -> None:
     """
@@ -1361,6 +1459,25 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
     click.secho(f"{emulation_env_config.log_sink_config.resources.container_name}: "
                 f"CPUs:{emulation_env_config.log_sink_config.resources.num_cpus}, "
                 f"memory: {emulation_env_config.log_sink_config.resources.available_memory_gb}GB", bold=False)
+
+
+def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:
+    """
+    Prints the configuration of a given emulation
+
+    :param emulation_env_config: the configuration to print
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+
+    click.secho(f"Simulation name: {simulation_config.name}", fg="yellow", bold=True)
+    click.secho(f"Description:", fg="yellow", bold=True)
+    click.secho(simulation_config.descr)
+    click.secho(f"Gym env name: {simulation_config.gym_env_name}", fg="yellow", bold=True)
+    click.secho(f"Num players: {len(simulation_config.players_config.player_configs)}", fg="yellow", bold=True)
+    click.secho(f"Num states: {len(simulation_config.state_space_config.states)}", fg="yellow", bold=True)
+    click.secho(f"Num observations: {len(simulation_config.observation_function_config.observation_tensor)}",
+                fg="yellow", bold=True)
 
 
 # Adds the commands to the group

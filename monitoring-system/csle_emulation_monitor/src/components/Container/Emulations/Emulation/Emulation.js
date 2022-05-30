@@ -81,6 +81,16 @@ const Emulation = (props) => {
         return ips
     }
 
+    const getArrivalProcessStr = (process) => {
+        if (process === 0) {
+            return "Poisson"
+        }
+        if (process === 1) {
+            return "Sinus modulated Poisson"
+        }
+        return "unknown"
+    }
+
     const getRootStr = (root) => {
         if (root) {
             return "Yes"
@@ -612,14 +622,16 @@ const Emulation = (props) => {
                                     <th>Arrival process</th>
                                     <th>λ</th>
                                     <th>μ</th>
+                                    <th>t</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr key={emulation.traffic_config.client_population_config.ip}>
                                     <td>{emulation.traffic_config.client_population_config.ip}</td>
-                                    <td>{emulation.traffic_config.client_population_config.client_population_process_type}</td>
+                                    <td>{getArrivalProcessStr(emulation.traffic_config.client_population_config.client_process_type)}</td>
                                     <td>{emulation.traffic_config.client_population_config.lamb}</td>
                                     <td>{emulation.traffic_config.client_population_config.mu}</td>
+                                    <td>{emulation.traffic_config.client_population_config.client_time_step_len_seconds}s</td>
                                 </tr>
                                 </tbody>
                             </Table>
