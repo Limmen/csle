@@ -53,8 +53,11 @@ def attacker_shell(s: "EmulationEnvState") -> None:
             #     print("There was an error parsing the input, please enter an integer representing an attacker action")
 
 
-@click.argument('emulation', default="", type=str)
+def attacker_shell_complete(ctx, param, incomplete):
+    return ["emulation"]
+
 @click.command("attacker", help="emulation-name")
+@click.argument('emulation', default="", type=str, shell_complete=attacker_shell_complete)
 def attacker(emulation : str) -> None:
     """
     Opens an attacker shell in the given emulation
@@ -88,12 +91,16 @@ def list_csle_gym_envs() -> None:
         if constants.CSLE.NAME in env.id:
             click.secho(f"{env.id}", bold=False)
 
+
+def emulation_shell_complete(ctx, param, incomplete):
+    return ["emulation", "--host", "--stats", "--kafka", "--clients"]
+
 @click.option('--host', is_flag=True, help='Check the status of the Host managers')
 @click.option('--stats', is_flag=True, help='Check the status of the stats manager')
 @click.option('--kafka', is_flag=True, help='Check the status of the Kafka manager')
 @click.option('--ids', is_flag=True, help='Check the status of the IDS manager')
 @click.option('--clients', is_flag=True, help='Check the number of active clients of the emulation')
-@click.argument('emulation', default="", type=str)
+@click.argument('emulation', default="", type=str, shell_complete=emulation_shell_complete)
 @click.command("em", help="emulation-name")
 def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host: bool) -> None:
     """
@@ -166,12 +173,14 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
+def start_traffic_shell_complete(ctx, param, incomplete):
+    return ["emulation", "--mu", "--lamb", "--t", "--nc"]
 
 @click.option('--nc', default=None, type=int)
 @click.option('--t', default=None, type=int)
 @click.option('--lamb', default=None, type=int)
 @click.option('--mu', default=None, type=float)
-@click.argument('emulation', default="", type=str)
+@click.argument('emulation', default="", type=str, shell_complete=start_traffic_shell_complete)
 @click.command("start_traffic", help="emulation-name")
 def start_traffic(emulation : str, mu: float, lamb: float, t: int,
                   nc: int) -> None:
@@ -203,7 +212,10 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
 
-@click.argument('emulation', default="")
+def stop_traffic_shell_complete(ctx, param, incomplete):
+    return ["emulation"]
+
+@click.argument('emulation', default="", shell_complete=stop_traffic_shell_complete)
 @click.command("stop_traffic", help="emulation-name")
 def stop_traffic(emulation : str) -> None:
     """
@@ -221,9 +233,11 @@ def stop_traffic(emulation : str) -> None:
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
+def materialize_shell_complete(ctx, param, incomplete):
+    return ["<emulation> <path>"]
 
 @click.argument('path', default="")
-@click.argument('emulation', default="")
+@click.argument('emulation', default="", shell_complete=materialize_shell_complete)
 @click.command("materialize", help="emulation path")
 def materialize(emulation: str, path: str) -> None:
     """
@@ -245,7 +259,10 @@ def materialize(emulation: str, path: str) -> None:
             click.secho(f"No path specified", fg="red", bold=True)
 
 
-@click.argument('container', default="")
+def shell_shell_complete(ctx, param, incomplete):
+    return ["<container_name>"]
+
+@click.argument('container', default="", shell_complete=shell_shell_complete)
 @click.command("shell", help="container-name")
 def shell(container: str) -> None:
     """
@@ -268,6 +285,9 @@ def shell(container: str) -> None:
     else:
         click.secho(f"Container: {container} not found among running containers", fg="red", bold=False)
 
+def gen_shell_complete(ctx, param, incomplete):
+    return ["<name> <num_envs> <min_users> <max_users> <min_flags> <max_flags> <min_nodes> <max_flags> <min_flags> "
+            "<max_users> <min_users> <num_envs> <name> <gen>"]
 
 @click.argument('max_mem', default=4, type=int)
 @click.argument('min_mem', default=4, type=int)
@@ -280,7 +300,7 @@ def shell(container: str) -> None:
 @click.argument('max_users', default=5, type=int)
 @click.argument('min_users', default=1, type=int)
 @click.argument('num_envs', default=1, type=int)
-@click.argument('name', default="", type=str)
+@click.argument('name', default="", type=str, shell_complete=gen_shell_complete)
 @click.command("gen", help="name min_users max_users min_flags max_flags min_nodes max_nodes")
 def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int, max_flags: int, min_nodes: int,
         max_nodes: int, min_cpus: int, max_cpus: int, min_mem: int, max_mem: int) -> None:
@@ -439,9 +459,14 @@ def materialize_emulation(emulation_env_config: "EmulationEnvConfig", path: str)
     EmulationEnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
-@click.argument('entity', default="")
-@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana container-name | emulation-name | "
-                    "statsmanager | all")
+def stop_shell_complete(ctx, param, incomplete):
+    return ["prometheus", "node_exporter", "cadvisor", "grafana", "monitor", "<container-name>", "emulation-name",
+            "statsmanager", "all"]
+
+
+@click.argument('entity', default="", shell_complete=stop_shell_complete)
+@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | monitor | container-name | "
+                            "emulation-name | statsmanager | all")
 def stop(entity: str) -> None:
     """
     Stops an entity
@@ -465,6 +490,8 @@ def stop(entity: str) -> None:
         MonitorToolsController.stop_cadvisor()
     elif entity == "grafana":
         MonitorToolsController.stop_grafana()
+    elif entity == "monitor":
+        MonitorToolsController.stop_monitor()
     elif entity == "statsmanager":
         MonitorToolsController.stop_docker_stats_manager()
     else:
@@ -480,7 +507,11 @@ def stop(entity: str) -> None:
                 click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
-@click.argument('port', default=50051, type=int)
+def stop_shell_complete(ctx, param, incomplete):
+    return ["<port>"]
+
+
+@click.argument('port', default=50051, type=int, shell_complete=stop_shell_complete)
 @click.command("statsmanager", help="port")
 def statsmanager(port: int) -> None:
     """
@@ -493,7 +524,12 @@ def statsmanager(port: int) -> None:
 
     docker_stats_manager.serve(port=port)
 
-@click.argument('id', default=None, type=int)
+
+def trainingjob_shell_complete(ctx, param, incomplete):
+    return ["<training_job_id>"]
+
+
+@click.argument('id', default=None, type=int, shell_complete=trainingjob_shell_complete)
 @click.command("trainingjob", help="id")
 def trainingjob(id: int) -> None:
     """
@@ -509,7 +545,10 @@ def trainingjob(id: int) -> None:
     TrainingJobManager.run_training_job(job_config=training_job)
 
 
-@click.argument('id', default=None, type=int)
+def systemidentificationjob_shell_complete(ctx, param, incomplete):
+    return ["<systemidentification_job_id>"]
+
+@click.argument('id', default=None, type=int, shell_complete=systemidentificationjob_shell_complete)
 @click.command("systemidentificationjob", help="id")
 def systemidentificationjob(id: int) -> None:
     """
@@ -541,12 +580,19 @@ def start_docker_stats_manager() -> None:
         click.secho(f"Docker stats manager is already running on port:{port}", bold=False)
 
 
+def start_shell_complete(ctx, param, incomplete):
+    return ["prometheus", "node_exporter", "grafana", "cadvisor", "monitor", "container-name",
+            "emulation-name", "all",
+            "statsmanager", "training_job", "system_id_job", "monitor", "--id", "--no_traffic"]
+
+
 @click.option('--id', default=None, type=int)
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.argument('name', default="", type=str)
-@click.argument('entity', default="", type=str)
-@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | container-name | "
-                    "emulation-name | all | statsmanager | training_job | system_id_job")
+@click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
+@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | monitor | "
+                             "container-name | emulation-name | all | statsmanager | training_job "
+                             "| system_id_job")
 def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
     """
     Starts a container or all containers
@@ -582,6 +628,8 @@ def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
         system_id_job = MetastoreFacade.get_system_identification_job_config(id=id)
         SystemIdentificationJobManager.start_system_identification_job_in_background(
             system_identification_job=system_id_job)
+    elif entity == "monitor":
+        MonitorToolsController.start_monitor()
     else:
         container_started = ContainerManager.start_container(name=entity)
         if not container_started:
@@ -614,7 +662,11 @@ def run_image(image: str, name: str) -> bool:
         return False
 
 
-@click.argument('entity', default="")
+def rm_shell_complete(ctx, param, incomplete):
+    return ["network-name", "container-name", "image-name", "networks", "images", "containers"]
+
+
+@click.argument('entity', default="", shell_complete=rm_shell_complete)
 @click.command("rm", help="network-name | container-name | image-name | networks | images | containers")
 def rm(entity : str) -> None:
     """
@@ -634,9 +686,15 @@ def rm(entity : str) -> None:
     else:
         rm_name(name=entity)
 
-@click.argument('entity', default="")
-@click.command("clean", help="all | containers | emulations | emulation_traces | simulation_traces | emulation_statistics "
-                    "| name")
+
+def clean_shell_complete(ctx, param, incomplete):
+    return ["all", "containers", "emulations", "emulation_traces", "simulation_traces", "emulation_statistics",
+            "name"]
+
+
+@click.argument('entity', default="", shell_complete=clean_shell_complete)
+@click.command("clean", help="all | containers | emulations | emulation_traces | simulation_traces "
+                             "| emulation_statistics | name")
 def clean(entity : str) -> None:
     """
     Removes a container, a network, an image, all networks, all images, all containers, all traces, or all statistics
@@ -667,13 +725,17 @@ def clean(entity : str) -> None:
     else:
         clean_name(name=entity)
 
+def ls_shell_complete(ctx, param, incomplete):
+    return ["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
+            "cadvisor", "monitor", "statsmanager", "--all", "--running", "--stopped"]
 
-@click.argument('entity', default='all', type=str)
+
+@click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
+                    "| cadvisor | statsmanager | monitor")
+@click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-@click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
-                    "| cadvisor | statsmanager ")
 def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
@@ -712,6 +774,8 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
         list_cadvisor()
     elif entity == "grafana":
         list_grafana()
+    elif entity == "monitor":
+        list_monitor()
     elif entity == "statsmanager":
         list_statsmanager()
     else:
@@ -808,6 +872,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_cadvisor()
     list_grafana()
     list_statsmanager()
+    list_monitor()
 
 
 def list_statsmanager() -> None:
@@ -856,6 +921,22 @@ def list_grafana() -> None:
                                          f"port:{constants.COMMANDS.GRAFANA_PORT}", bold=False)
     else:
         click.secho("Grafana status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+
+
+def list_monitor() -> None:
+    """
+    List status of monitor
+
+    :return: None
+    """
+    import csle_common.constants.constants as constants
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+
+    if MonitorToolsController.is_monitor_running():
+        click.secho("Monitor status: " + f" {click.style('[running]', fg='green')} "
+                                         f"port:{constants.COMMANDS.MONITOR_PORT}", bold=False)
+    else:
+        click.secho("Monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_cadvisor() -> None:

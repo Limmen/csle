@@ -61,6 +61,25 @@ class MonitorToolsController:
         return constants.COMMANDS.SEARCH_NODE_EXPORTER in output and str(pid) in output
 
     @staticmethod
+    def is_monitor_running() -> bool:
+        """
+        Checks if the monitor ui is running on the host
+
+        :return: True if it is running, false otherwise
+        """
+        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.MONITOR_PID_FILE)
+        if pid == -1:
+            return False
+        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
+              constants.COMMANDS.SPACE_DELIM \
+              + constants.COMMANDS.GREP \
+              + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SEARCH_MONITOR
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        output = str(output)
+        return constants.COMMANDS.SEARCH_MONITOR in output and str(pid) in output
+
+    @staticmethod
     def start_node_exporter() -> bool:
         """
         Starts the node exporter
@@ -70,6 +89,26 @@ class MonitorToolsController:
         if MonitorToolsController.is_node_exporter_running():
             return False
         cmd = constants.COMMANDS.START_NODE_EXPORTER
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+        return True
+
+
+    @staticmethod
+    def start_monitor() -> bool:
+        """
+        Starts the node exporter
+
+        :return: True if it was started, False otherwise
+        """
+        if MonitorToolsController.is_monitor_running():
+            return False
+        cmd = constants.COMMANDS.START_MONITOR
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+        pid = p.pid + 1
+
+        cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.MONITOR_PID_FILE)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
@@ -84,6 +123,21 @@ class MonitorToolsController:
         if not MonitorToolsController.is_node_exporter_running():
             return False
         pid = MonitorToolsController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
+        cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+        return True
+
+    @staticmethod
+    def stop_monitor() -> bool:
+        """
+        Stops the monitoring system
+
+        :return: True if it was stopped, False otherwise
+        """
+        if not MonitorToolsController.is_monitor_running():
+            return False
+        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.MONITOR_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()

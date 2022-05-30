@@ -786,8 +786,10 @@ class COMMANDS:
                        f"--storage.tsdb.retention.time=5d & > {PROMETHEUS_LOG_FILE} " \
                        f"&& echo $! > {PROMETHEUS_PID_FILE}"
     SEARCH_NODE_EXPORTER = "node_exporter"
+    SEARCH_MONITOR = "server.py"
     NODE_EXPORTER_PORT = 9100
     GRAFANA_PORT = 3000
+    MONITOR_PORT = 7777
     START_GRAFANA = f"docker run -d -p {GRAFANA_PORT}:{GRAFANA_PORT} --name grafana grafana/grafana"
     CADVISOR_PORT=8080
     START_CADVISOR = "docker run  -dt --volume=/:/rootfs:ro   --volume=/var/run:/var/run:ro   " \
@@ -796,9 +798,14 @@ class COMMANDS:
                      f"--publish={CADVISOR_PORT}:{CADVISOR_PORT}  --name=cadvisor  " \
                      "google/cadvisor:latest"
     NODE_EXPORTER_PID_FILE = "/var/log/csle/node_exporter.pid"
+    MONITOR_PID_FILE = "/var/log/csle/monitor.pid"
     NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
     START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
+    START_MONITOR = "nohup python $CSLE_HOME/monitoring-system/csle_emulation_monitor" \
+                    "/server/server.py &"
+    GET_LATEST_PID = "$!"
+    SAVE_PID = "echo {} > {}"
     KILL_PROCESS = "kill -9 {}"
     START_TRAINING_JOB = "nohup csle trainingjob {} &"
     START_SYSTEM_IDENTIFICATION_JOB = "nohup csle systemidentificationjob {} &"
