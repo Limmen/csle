@@ -3,7 +3,7 @@ FROM csle/sql_injection_base:0.0.1
 USER root
 
 # Add start script
-ADD sql_injection_1/docker/start.sh /start.sh
+ADD start.sh /start.sh
 RUN chmod 777 /start.sh
 
 # Override base image's entrypoint

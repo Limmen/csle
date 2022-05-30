@@ -550,7 +550,7 @@ def emulationsimulationtraces():
     # emulation_simulation_traces = MetastoreFacade.list_emulation_simulation_traces()
     # emulation_simulation_traces_dicts = list(map(lambda x: x.to_dict(), emulation_simulation_traces))
     # response = jsonify(emulation_simulation_traces_dicts)
-    f = open('one_tau.json')
+    f = open('/var/log/csle/one_tau.json')
     d = json.load(f)
     response = jsonify(d["trajectories"])
     response.headers.add("Access-Control-Allow-Origin", "*")
