@@ -69,13 +69,13 @@ csle rm <container-name> | <network-name> | <image-name> | <emulation-name> all
 - Install emulations, simulations, or Docker images
 
 ```bash
-csle install emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | all
+csle install emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | metastore | all
 ```
 
 - Uninstall emulations, simulations, or Docker images
 
 ```bash
-csle uninstall emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | all
+csle uninstall emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | metastore | all
 ```
 
 

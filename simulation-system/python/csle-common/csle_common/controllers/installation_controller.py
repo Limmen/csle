@@ -342,3 +342,45 @@ class InstallationController:
                 except:
                     pass
                 sys.stdout.flush()
+
+
+    @staticmethod
+    def uninstall_metastore() -> None:
+        """
+        Uninstalls the metastore
+
+        :return: None
+        """
+        cmd = "cd $CSLE_HOME/metastore/ && make clean"
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        while True:
+            out = p.stdout.read(1)
+            if p.poll() != None:
+                break
+            if out != '':
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
+                sys.stdout.flush()
+
+
+    @staticmethod
+    def install_metastore() -> None:
+        """
+        Installs the metastore
+
+        :return: None
+        """
+        cmd = "cd $CSLE_HOME/metastore/ && make build"
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        while True:
+            out = p.stdout.read(1)
+            if p.poll() != None:
+                break
+            if out != '':
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
+                sys.stdout.flush()

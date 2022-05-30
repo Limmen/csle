@@ -732,7 +732,7 @@ def install_shell_complete(ctx, param, incomplete):
 
 @click.argument('entity', default="", shell_complete=install_shell_complete)
 @click.command("install", help="emulations | simulations | <emulation_name> | <simulation_name> | derived_images | "
-                               "base_images | all")
+                               "base_images | metastore | all")
 def install(entity : str) -> None:
     """
     Installs emulations and simulations in the metastore and creates Docker images
@@ -754,6 +754,9 @@ def install(entity : str) -> None:
     elif entity == "base_images":
         click.secho(f"Installing base Docker images", bold=False)
         InstallationController.install_base_images()
+    elif entity == "metastore":
+        click.secho(f"Installing metastore", bold=False)
+        InstallationController.install_metastore()
     elif entity == "all":
         click.secho(f"Installing base Docker images", bold=False)
         InstallationController.install_base_images()
@@ -777,7 +780,7 @@ def uninstall_shell_complete(ctx, param, incomplete):
 
 @click.argument('entity', default="", shell_complete=uninstall_shell_complete)
 @click.command("uninstall", help="emulations | simulations | <emulation_name> | <simulation_name> | derived_images | "
-                               "base_images | all")
+                               "base_images | metastore | all")
 def uninstall(entity : str) -> None:
     """
     Uninstall emulations and simulations from the metastore and removes Docker images
@@ -799,6 +802,9 @@ def uninstall(entity : str) -> None:
     elif entity == "base_images":
         click.secho(f"Uninstalling base Docker images", bold=False)
         InstallationController.uninstall_base_images()
+    elif entity == "metastore":
+        click.secho(f"Uninstalling metastore", bold=False)
+        InstallationController.uninstall_metastore()
     elif entity == "all":
         click.secho(f"Uninstalling simulations in the metastore", bold=False)
         InstallationController.uninstall_all_simulations()
@@ -808,6 +814,8 @@ def uninstall(entity : str) -> None:
         InstallationController.uninstall_derived_images()
         click.secho(f"Uninstalling base Docker images", bold=False)
         InstallationController.uninstall_base_images()
+        click.secho(f"Uninstalling metastore", bold=False)
+        InstallationController.uninstall_metastore()
     else:
         click.secho(f"Uninstalling {entity}", bold=False)
         InstallationController.uninstall_emulation(emulation_name=entity)

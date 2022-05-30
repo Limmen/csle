@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS system_identification_jobs (
 GRANT ALL ON system_identification_jobs TO csle;
 GRANT USAGE, SELECT ON SEQUENCE system_identification_jobs_id_seq TO csle;
 
--- Create table that stores the t_spsa_policies --
+-- Create table that stores the ppo_policies --
 CREATE TABLE IF NOT EXISTS ppo_policies (
     id serial PRIMARY KEY,
     policy json NOT NULL,
@@ -133,3 +133,6 @@ CREATE TABLE IF NOT EXISTS ppo_policies (
 );
 GRANT ALL ON ppo_policies TO csle;
 GRANT USAGE, SELECT ON SEQUENCE ppo_policies_id_seq TO csle;
+
+
+
