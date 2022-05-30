@@ -2,6 +2,7 @@ import subprocess
 import docker
 import os
 import csle_common.constants.constants as constants
+import sys
 
 
 class MonitorToolsController:
@@ -103,6 +104,20 @@ class MonitorToolsController:
         """
         if MonitorToolsController.is_monitor_running():
             return False
+
+        cmd = constants.COMMANDS.BUILD_MONITOR
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        while True:
+            out = p.stdout.read(1)
+            if p.poll() != None:
+                break
+            if out != '':
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
+                sys.stdout.flush()
+
         cmd = constants.COMMANDS.START_MONITOR
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()

@@ -21,7 +21,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
 
@@ -41,7 +44,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -60,7 +66,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
 
@@ -78,7 +87,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -95,7 +107,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -113,7 +128,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
 
@@ -132,7 +150,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -149,7 +170,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -166,7 +190,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
 
@@ -185,7 +212,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -202,7 +232,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
 
@@ -221,7 +254,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -238,7 +274,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
 
@@ -257,7 +296,10 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
 
     @staticmethod
@@ -274,9 +316,11 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def uninstall_base_image(image_name: str) -> None:
@@ -293,5 +337,8 @@ class InstallationController:
             if p.poll() != None:
                 break
             if out != '':
-                sys.stdout.write(out.decode("utf-8"))
+                try:
+                    sys.stdout.write(out.decode("utf-8"))
+                except:
+                    pass
                 sys.stdout.flush()
