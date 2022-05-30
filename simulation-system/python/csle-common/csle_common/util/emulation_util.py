@@ -2,6 +2,7 @@ from typing import Tuple, List, Union
 import time
 import os
 import paramiko
+import psutil
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -435,8 +436,13 @@ class EmulationUtil:
         :return: True if it is running otherwise false.
         """
         try:
-            os.kill(pid, 0)
-        except OSError:
+            return psutil.Process(pid).is_running()
+        except:
             return False
-        else:
-            return True
+        # try:
+        #     os.kill(pid, 0)
+        #
+        # except OSError:
+        #     return False
+        # else:
+        #     return True

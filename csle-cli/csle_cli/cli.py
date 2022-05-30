@@ -87,7 +87,6 @@ def list_csle_gym_envs() -> None:
     """
     import gym
     import csle_common.constants.constants as constants
-    import gym_csle_stopping_game.envs.stopping_game_env
 
     click.secho(f"Registered OpenAI gym environments:", fg="magenta", bold=True)
     for env in gym.envs.registry.all():
@@ -568,7 +567,7 @@ def trainingjob(id: int) -> None:
 
 def systemidentificationjob_shell_complete(ctx, param, incomplete):
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    sys_id_jobs = MetastoreFacade.list_data_collection_jobs()
+    sys_id_jobs = MetastoreFacade.list_system_identification_jobs()
     sys_id_jobs_ids = list(map(lambda x: x.id, sys_id_jobs))
     return sys_id_jobs_ids
 
@@ -582,7 +581,7 @@ def systemidentificationjob(id: int) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_system_identification.data_collection_job_manager import DataCollectionJobManager
+    from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 
     sys_id_job = MetastoreFacade.get_data_collection_job_config(id=id)
     DataCollectionJobManager.run_data_collection_job(job_config=sys_id_job)
@@ -642,7 +641,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
     from csle_common.controllers.container_manager import ContainerManager
     from csle_common.controllers.monitor_tools_controller import MonitorToolsController
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
-    from csle_system_identification.data_collection_job_manager import DataCollectionJobManager
+    from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 
     if entity == "all":
         ContainerManager.start_all_stopped_containers()
@@ -1468,7 +1467,6 @@ def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:
     :param emulation_env_config: the configuration to print
     :return: None
     """
-    import csle_common.constants.constants as constants
 
     click.secho(f"Simulation name: {simulation_config.name}", fg="yellow", bold=True)
     click.secho(f"Description:", fg="yellow", bold=True)

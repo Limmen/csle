@@ -13,6 +13,8 @@ from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
+from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
+from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.util.np_encoder import NpEncoder
 from csle_common.dao.training.ppo_policy import PPOPolicy
 
@@ -1275,3 +1277,239 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"PPO policy saved successfully")
                 return id_of_new_row
+
+    @staticmethod
+    def _convert_system_identification_job_record_to_dto(system_identification_job_record) -> \
+            SystemIdentificationJobConfig:
+        """
+        Converts a system identification job record fetched from the metastore into a DTO
+
+        :param system_identification_job_record: the record to convert
+        :return: the DTO representing the record
+        """
+        system_identification_job_config_json = json.dumps(system_identification_job_record[1], indent=4,
+                                                     sort_keys=True)
+        system_identification_job_config: SystemIdentificationJobConfig = \
+            SystemIdentificationJobConfig.from_dict(json.loads(system_identification_job_config_json))
+        system_identification_job_config.id = system_identification_job_record[0]
+        return system_identification_job_config
+
+    @staticmethod
+    def list_system_identification_jobs() -> List[SystemIdentificationJobConfig]:
+        """
+        :return: A list of system identification jobs in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def get_system_identification_job_config(id: int) -> Union[None, SystemIdentificationJobConfig]:
+        """
+        Function for fetching a system identification job config with a given id from the metastore
+
+        :param id: the id of the system identification job config
+        :return: The system identification job config or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_system_identification_job_record_to_dto(
+                        system_identification_job_record=record)
+                return record
+
+    @staticmethod
+    def save_system_identification_job(system_identification_job: SystemIdentificationJobConfig) -> Union[Any, int]:
+        """
+        Saves a system_identification job to the metastore
+
+        :param system_identification_job: the system identification job to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a system identification job in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
+                                                      sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+                            f"(config, emulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (system_identification_job_json,
+                                                              system_identification_job.emulation_env_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"System identification job saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_system_identification_job(system_identification_job: SystemIdentificationJobConfig, id: int) -> None:
+        """
+        Updates a system identification job in the metastore
+
+        :param system_identification_job: the system identification job to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating system identification job with id: {id} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(system_identification_job.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"System identification job with id: {id} updated successfully")
+
+    @staticmethod
+    def remove_system_identification_job(system_identification_job: SystemIdentificationJobConfig) -> None:
+        """
+        Removes a system identification job from the metastore
+
+        :param system_identification_job: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing system identification job with "
+                                             f"id:{system_identification_job.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s",
+                            (system_identification_job.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"System identification job with "
+                                                     f"id {system_identification_job.id} deleted successfully")
+
+    @staticmethod
+    def _convert_gaussian_mixture_system_model_record_to_dto(gaussian_mixture_system_model_record) -> \
+            GaussianMixtureSystemModel:
+        """
+        Converts a gaussian mixture system model job record fetched from the metastore into a DTO
+
+        :param gaussian_mixture_system_model_record: the record to convert
+        :return: the DTO representing the record
+        """
+        gaussian_mixture_system_model_config_json = json.dumps(gaussian_mixture_system_model_record[1], indent=4,
+                                                           sort_keys=True)
+        gaussian_mixture_system_model_config: GaussianMixtureSystemModel = \
+            GaussianMixtureSystemModel.from_dict(json.loads(gaussian_mixture_system_model_config_json))
+        gaussian_mixture_system_model_config.id = gaussian_mixture_system_model_record[0]
+        return gaussian_mixture_system_model_config
+
+    @staticmethod
+    def list_gaussian_mixture_system_models() -> List[GaussianMixtureSystemModel]:
+        """
+        :return: A list of gaussian mixture system model jobs in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def get_gaussian_mixture_system_model_config(id: int) -> Union[None, GaussianMixtureSystemModel]:
+        """
+        Function for fetching a gaussian mixture system model job config with a given id from the metastore
+
+        :param id: the id of the gaussian mixture system model job config
+        :return: The gaussian mixture system model job config or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(
+                        gaussian_mixture_system_model_record=record)
+                return record
+
+    @staticmethod
+    def save_gaussian_mixture_system_model(gaussian_mixture_system_model: GaussianMixtureSystemModel) -> Union[Any, int]:
+        """
+        Saves a gaussian mixture system model to the metastore
+
+        :param gaussian_mixture_system_model: the gaussian mixture system model job to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a gaussian mixture system model job in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                gaussian_mixture_system_model_json = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4,
+                                                            sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
+                            f"(config, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s) RETURNING id", (gaussian_mixture_system_model_json,
+                                                              gaussian_mixture_system_model.emulation_env_name,
+                                                              gaussian_mixture_system_model.emulation_statistic_id))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Gaussian mixture model saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_gaussian_mixture_system_model(gaussian_mixture_system_model: GaussianMixtureSystemModel, id: int) -> None:
+        """
+        Updates a gaussian mixture system model job in the metastore
+
+        :param gaussian_mixture_system_model: the gaussian mixture system model job to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating gaussian mixture system model job with id: {id} in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Gaussian mixture system model with id: {id} updated successfully")
+
+    @staticmethod
+    def remove_gaussian_mixture_system_model(gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
+        """
+        Removes a gaussian mixture system model job from the metastore
+
+        :param gaussian_mixture_system_model: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing gaussian mixture system model job with "
+                                             f"id:{gaussian_mixture_system_model.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} WHERE id = %s",
+                            (gaussian_mixture_system_model.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Gaussian mixture system model with "
+                                                     f"id {gaussian_mixture_system_model.id} deleted successfully")

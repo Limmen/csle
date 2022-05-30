@@ -1,0 +1,115 @@
+from typing import List, Dict, Any
+from sklearn.mixture import GaussianMixture
+
+
+class GaussianMixtureConditional:
+    """
+    A DTO representing a Gaussian Mixture Conditional Distribution
+    """
+
+    def __init__(self, conditional_name: str, metric_name: str, num_mixture_components: int,
+                 dim: int, mixtures_means: List[List[float]],
+                 mixtures_covariance_matrix: List[List[List[float]]], mixture_weights: List[float]) -> None:
+        """
+        Initializes the DTO
+
+        :param conditional_name: the name of the conditional
+        :param num_mixture_components: the number of mixture components
+        :param dim: the dimension of the distribution, i.e. if it is multivariate
+        :param mixtures_means: the means of the mixtures
+        :param mixtures_covariance_matrix: the covariance matrices of the mixtures
+        :param mixture_weights: the mixture weights
+        """
+        self.conditional_name = conditional_name
+        self.dim = dim
+        self.num_mixture_components = num_mixture_components
+        self.mixtures_means = mixtures_means
+        self.mixtures_covariance_matrix = mixtures_covariance_matrix
+        self.mixture_weights = mixture_weights
+        self.metric_name = metric_name
+
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "GaussianMixtureConditional":
+        """
+        Converts a dict representation of the DTO into an instance
+
+        :param d: the dict to convert
+        :return: the converted instance
+        """
+        return GaussianMixtureConditional(
+            conditional_name=d["conditional_name"],
+            num_mixture_components=d["num_mixture_components"],
+            dim=d["dim"], mixtures_means=d["mixtures_means"],
+            mixtures_covariance_matrix=d["mixtures_covariance_matrix"],
+            mixture_weights=d["mixture_weights"], metric_name=d["metric_name"]
+        )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["conditional_name"] = self.conditional_name
+        d["dim"] = self.dim
+        d["num_mixture_components"] = self.num_mixture_components
+        d["mixture_means"] = self.mixtures_means
+        d["mixtures_covariance_matrix"] = self.mixtures_covariance_matrix
+        d["mixture_weights"] = self.mixture_weights
+        d["metric_name"] = self.metric_name
+        return d
+
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the DTO
+        """
+        return f"conditional_name:{self.conditional_name}, num_mixture_components: {self.num_mixture_components}, " \
+               f"dim: {self.dim}, mixtures_means: {self.mixtures_means}, " \
+               f"mixtures_covariance_matrix: {self.mixtures_covariance_matrix}, mixture_weights: {self.mixture_weights}," \
+               f"metric_name: {self.metric_name}"
+
+
+    def to_json_str(self) -> str:
+        """
+        Converts the DTO into a json string
+
+        :return: the json string representation of the DTO
+        """
+        import json
+        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
+        return json_str
+
+    def to_json_file(self, json_file_path: str) -> None:
+        """
+        Saves the DTO to a json file
+
+        :param json_file_path: the json file path to save  the DTO to
+        :return: None
+        """
+        import io
+        json_str = self.to_json_str()
+        with io.open(json_file_path, 'w', encoding='utf-8') as f:
+            f.write(json_str)
+
+
+    @staticmethod
+    def from_sklearn_gaussian_mixture(gmm: GaussianMixture, conditional_name: str, metric_name: str,
+                                      num_components: int,
+                                      dim: int = 1) -> "GaussianMixtureConditional":
+        """
+        Creates the DTO from a Gaussian mixture fittred with sklearn
+
+        :param gmm: the sklearn model
+        :param conditional_name: the name of the conditional
+        :param metric_name: the metric name
+        :param num_components: the number of components of the mixture
+        :param dim: the dimension of the mixture
+        :return: a GaussianMixtureConditional instance
+        """
+        mixture_weights = gmm.weights_
+        means = gmm.means_
+        covariances = gmm.covariances_
+        return GaussianMixtureConditional(
+            conditional_name=conditional_name, metric_name=metric_name, num_mixture_components=num_components,
+            mixtures_means=means, mixtures_covariance_matrix=covariances, mixture_weights=mixture_weights, dim=dim
+        )

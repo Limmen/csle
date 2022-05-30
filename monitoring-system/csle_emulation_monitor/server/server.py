@@ -11,7 +11,7 @@ from csle_common.controllers.monitor_tools_controller import MonitorToolsControl
 from csle_common.controllers.simulation_env_manager import SimulationEnvManager
 from csle_common.util.emulation_util import EmulationUtil
 from csle_agents.job_controllers.training_job_manager import TrainingJobManager
-from csle_system_identification.data_collection_job_manager import DataCollectionJobManager
+from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 import json
 from waitress import serve
 
@@ -491,7 +491,7 @@ def remove_all_trainingjobs():
 
 @app.route('/datacollectionjobs', methods=['GET'])
 def datacollectionjobs():
-    data_collection_jobs = MetastoreFacade.list_data_collection_jobs()
+    data_collection_jobs = MetastoreFacade.list_system_identification_jobs()
     alive_jobs = []
     for job in data_collection_jobs:
         if EmulationUtil.check_pid(job.pid):
@@ -525,7 +525,7 @@ def remove_data_collection_job(job_id: int):
 
 @app.route('/datacollectionjobs/remove', methods=['POST'])
 def remove_all_data_collection_jobs():
-    jobs = MetastoreFacade.list_data_collection_jobs()
+    jobs = MetastoreFacade.list_system_identification_jobs()
     for job in jobs:
         MonitorToolsController.stop_pid(job.pid)
         MetastoreFacade.remove_data_collection_job(data_collection_job=job)
