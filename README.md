@@ -113,7 +113,10 @@ export CSLE_HOME=/path/to/csle/
 
 To set CSLE_HOME permanently, add the following line to the .bashrc: `export CSLE_HOME=/path/to/csle/`
 
-Logs of CSLE will be stored in `/var/log/csle`, create this directory and set the permissions so that the user used for
+PID files of CSLE will be stored in `/var/log/csle`, create this directory and set the permissions so that the user used for
+running commands can read and write to this directory.
+
+Logs of CSLE will be stored in `/tmp/csle`, create this directory and set the permissions so that the user used for
 running commands can read and write to this directory.
 
 2. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
@@ -374,9 +377,9 @@ For documentation, see the README.md files inside each sub-directory,
 - **Metastore** ([metastore](./metastore)).
 - **General Documentation** ([docs](./docs)).
 
-## Video tutorial
+## Video tutorials
 
-TODO
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/18P7MjPKNDg/0.jpg)](http://www.youtube.com/watch?v=18P7MjPKNDg "A System for Interactive Examination of Learned Security Policies - Hammar & Stadler")
 
 ## Author & Maintainer
 

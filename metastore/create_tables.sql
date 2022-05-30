@@ -134,5 +134,11 @@ CREATE TABLE IF NOT EXISTS ppo_policies (
 GRANT ALL ON ppo_policies TO csle;
 GRANT USAGE, SELECT ON SEQUENCE ppo_policies_id_seq TO csle;
 
-
-
+-- Create table that stores the system_models --
+CREATE TABLE IF NOT EXISTS system_models (
+    id serial PRIMARY KEY,
+    emulation_name TEXT references emulations(name) ON DELETE CASCADE,
+    system_model json NOT NULL
+    );
+GRANT ALL ON system_models TO csle;
+GRANT USAGE, SELECT ON SEQUENCE system_models_id_seq TO csle;
