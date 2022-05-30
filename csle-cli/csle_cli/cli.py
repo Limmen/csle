@@ -725,6 +725,97 @@ def clean(entity : str) -> None:
     else:
         clean_name(name=entity)
 
+
+def install_shell_complete(ctx, param, incomplete):
+    return ["emulations", "simulations", "<emulation_name>", "<simulation_name>", "derived_images", "base_images", "all"]
+
+
+@click.argument('entity', default="", shell_complete=install_shell_complete)
+@click.command("install", help="emulations | simulations | <emulation_name> | <simulation_name> | derived_images | "
+                               "base_images | all")
+def install(entity : str) -> None:
+    """
+    Installs emulations and simulations in the metastore and creates Docker images
+
+    :param entity: entity to install
+    :return: None
+    """
+    from csle_common.controllers.installation_controller import InstallationController
+
+    if entity == "emulations":
+        click.secho(f"Installing emulations in the metastore", bold=False)
+        InstallationController.install_all_emulations()
+    elif entity == "simulations":
+        click.secho(f"Installing simulations in the metastore", bold=False)
+        InstallationController.install_all_simulations()
+    elif entity == "derived_images":
+        click.secho(f"Installing derived Docker images", bold=False)
+        InstallationController.install_derived_images()
+    elif entity == "base_images":
+        click.secho(f"Installing base Docker images", bold=False)
+        InstallationController.install_base_images()
+    elif entity == "all":
+        click.secho(f"Installing base Docker images", bold=False)
+        InstallationController.install_base_images()
+        click.secho(f"Installing derived Docker images", bold=False)
+        InstallationController.install_derived_images()
+        click.secho(f"Installing emulations in the metastore", bold=False)
+        InstallationController.install_all_emulations()
+        click.secho(f"Installing simulations in the metastore", bold=False)
+        InstallationController.install_all_simulations()
+    else:
+        click.secho(f"Installing {entity}", bold=False)
+        InstallationController.install_emulation(emulation_name=entity)
+        InstallationController.install_simulation(simulation_name=entity)
+        InstallationController.install_derived_image(image_name=entity)
+        InstallationController.install_base_image(image_name=entity)
+
+
+def uninstall_shell_complete(ctx, param, incomplete):
+    return ["emulations", "simulations", "<emulation_name>", "<simulation_name>", "derived_images", "base_images", "all"]
+
+
+@click.argument('entity', default="", shell_complete=uninstall_shell_complete)
+@click.command("uninstall", help="emulations | simulations | <emulation_name> | <simulation_name> | derived_images | "
+                               "base_images | all")
+def uninstall(entity : str) -> None:
+    """
+    Uninstall emulations and simulations from the metastore and removes Docker images
+
+    :param entity: the entity to uninstall
+    :return: None
+    """
+    from csle_common.controllers.installation_controller import InstallationController
+
+    if entity == "emulations":
+        click.secho(f"Uninstalling emulations in the metastore", bold=False)
+        InstallationController.uninstall_all_emulations()
+    elif entity == "simulations":
+        click.secho(f"Uninstalling simulations in the metastore", bold=False)
+        InstallationController.uninstall_all_simulations()
+    elif entity == "derived_images":
+        click.secho(f"Uninstalling derived Docker images", bold=False)
+        InstallationController.uninstall_derived_images()
+    elif entity == "base_images":
+        click.secho(f"Uninstalling base Docker images", bold=False)
+        InstallationController.uninstall_base_images()
+    elif entity == "all":
+        click.secho(f"Uninstalling simulations in the metastore", bold=False)
+        InstallationController.uninstall_all_simulations()
+        click.secho(f"Uninstalling emulations in the metastore", bold=False)
+        InstallationController.uninstall_all_emulations()
+        click.secho(f"Uninstalling derived Docker images", bold=False)
+        InstallationController.uninstall_derived_images()
+        click.secho(f"Uninstalling base Docker images", bold=False)
+        InstallationController.uninstall_base_images()
+    else:
+        click.secho(f"Uninstalling {entity}", bold=False)
+        InstallationController.uninstall_emulation(emulation_name=entity)
+        InstallationController.uninstall_simulation(simulation_name=entity)
+        InstallationController.uninstall_derived_image(image_name=entity)
+        InstallationController.uninstall_base_image(image_name=entity)
+
+
 def ls_shell_complete(ctx, param, incomplete):
     return ["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
             "cadvisor", "monitor", "statsmanager", "--all", "--running", "--stopped"]
@@ -1280,6 +1371,8 @@ commands.add_command(em)
 commands.add_command(attacker)
 commands.add_command(trainingjob)
 commands.add_command(systemidentificationjob)
+commands.add_command(install)
+commands.add_command(uninstall)
 
 
 # # Script entrypoint

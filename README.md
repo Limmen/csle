@@ -352,6 +352,18 @@ csle shell <container-name>
 csle rm <container-name> | <network-name> | <image-name> | <emulation-name> all
 ```
 
+- Install emulations, simulations, or Docker images
+
+```bash
+csle install emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | all
+```
+
+- Uninstall emulations, simulations, or Docker images
+
+```bash
+csle uninstall emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | all
+```
+
 ## Documentation
 
 For documentation, see the README.md files inside each sub-directory,
@@ -432,17 +444,18 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 }
 ```
 
-- **Intrusion Prevention through Optimal Stopping (Preprint: https://arxiv.org/abs/2111.00289)**
+- **Intrusion Prevention through Optimal Stopping (IEEE: https://ieeexplore.ieee.org/document/9779345, Preprint: https://arxiv.org/abs/2111.00289)**
 
 ```bash
-@misc{hammar2021intrusion,
-      title={Intrusion Prevention through Optimal Stopping},
-      author={Kim Hammar and Rolf Stadler},
-      year={2021},
-      eprint={2111.00289},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
+@ARTICLE{9779345,
+  author={Hammar, Kim and Stadler, Rolf},
+  journal={IEEE Transactions on Network and Service Management}, 
+  title={Intrusion Prevention through Optimal Stopping}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={1-1},
+  doi={10.1109/TNSM.2022.3176781}}
 ```
 
 - **A System for Interactive Examination of Learned Security Policies (
