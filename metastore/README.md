@@ -51,3 +51,8 @@ sudo service postgresql stop
 sudo service postgresql start
 sudo service postgresql restart
 ```
+Logs:
+
+```
+tail /var/log/postgresql/postgresql-12-main.log 
+```
