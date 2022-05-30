@@ -6,32 +6,8 @@ To see options, run:
 """
 from typing import List, Tuple, Union
 import click
-import os
-import gym
-import readline # for history in shells
-from csle_common.controllers.container_manager import ContainerManager
-from csle_common.controllers.traffic_manager import TrafficManager
-from csle_common.controllers.ids_manager import IDSManager
-from csle_common.controllers.log_sink_manager import LogSinkManager
-from csle_common.controllers.host_manager import HostManager
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.controllers.emulation_env_manager import EmulationEnvManager
-from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
-from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
-from csle_common.dao.emulation_config.container_network import ContainerNetwork
-from csle_common.util.experiment_util import ExperimentUtil
-import csle_common.constants.constants as constants
-from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-from csle_common.controllers.monitor_tools_controller import MonitorToolsController
-import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
-from csle_attacker.attacker import Attacker
-import gym_csle_stopping_game.envs.stopping_game_env  # for registering the gym environments
-from csle_agents.job_controllers.training_job_manager import TrainingJobManager
-from csle_system_identification.system_identification_job_manager import SystemIdentificationJobManager
 
-
-@click.group()
+@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
 def commands() -> None:
     """
     CSLE CLI Tool
@@ -39,13 +15,14 @@ def commands() -> None:
     pass
 
 
-def attacker_shell(s: EmulationEnvState) -> None:
+def attacker_shell(s: "EmulationEnvState") -> None:
     """
     An interactive shell for executing attacker actions in an emulation environment
 
     :param s: the state of the emulation
     :return: None
     """
+    from csle_attacker.attacker import Attacker
     done = False
     while True:
         raw_input = input("> ")
@@ -77,7 +54,7 @@ def attacker_shell(s: EmulationEnvState) -> None:
 
 
 @click.argument('emulation', default="", type=str)
-@click.command(help="emulation-name")
+@click.command("attacker", help="emulation-name")
 def attacker(emulation : str) -> None:
     """
     Opens an attacker shell in the given emulation
@@ -85,6 +62,9 @@ def attacker(emulation : str) -> None:
     :param emulation: the emulation name
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
@@ -99,6 +79,10 @@ def list_csle_gym_envs() -> None:
 
     :return: None
     """
+    import gym
+    import csle_common.constants.constants as constants
+    import gym_csle_stopping_game.envs.stopping_game_env
+
     click.secho(f"Registered OpenAI gym environments:", fg="magenta", bold=True)
     for env in gym.envs.registry.all():
         if constants.CSLE.NAME in env.id:
@@ -110,7 +94,7 @@ def list_csle_gym_envs() -> None:
 @click.option('--ids', is_flag=True, help='Check the status of the IDS manager')
 @click.option('--clients', is_flag=True, help='Check the number of active clients of the emulation')
 @click.argument('emulation', default="", type=str)
-@click.command(help="emulation-name")
+@click.command("em", help="emulation-name")
 def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host: bool) -> None:
     """
     Extracts status information of a given emulation
@@ -123,6 +107,13 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
     :param host: if true, print information about the hostmanagers
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.traffic_manager import TrafficManager
+    from csle_common.controllers.ids_manager import IDSManager
+    from csle_common.controllers.log_sink_manager import LogSinkManager
+    from csle_common.controllers.host_manager import HostManager
+
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
         if clients:
@@ -181,7 +172,7 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
 @click.option('--lamb', default=None, type=int)
 @click.option('--mu', default=None, type=float)
 @click.argument('emulation', default="", type=str)
-@click.command(help="emulation-name")
+@click.command("start_traffic", help="emulation-name")
 def start_traffic(emulation : str, mu: float, lamb: float, t: int,
                   nc: int) -> None:
     """
@@ -194,6 +185,9 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
     :param nc: number of commands per client
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
         if mu is not None:
@@ -210,7 +204,7 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
 
 
 @click.argument('emulation', default="")
-@click.command(help="emulation-name")
+@click.command("stop_traffic", help="emulation-name")
 def stop_traffic(emulation : str) -> None:
     """
     Stops the traffic and client population on a given emulation
@@ -218,6 +212,9 @@ def stop_traffic(emulation : str) -> None:
     :param emulation: the emulation to start the traffic of
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is not None:
         EmulationEnvManager.stop_custom_traffic(emulation_env_config=emulation_env_config)
@@ -227,7 +224,7 @@ def stop_traffic(emulation : str) -> None:
 
 @click.argument('path', default="")
 @click.argument('emulation', default="")
-@click.command(help="emulation path")
+@click.command("materialize", help="emulation path")
 def materialize(emulation: str, path: str) -> None:
     """
     Materializes the configuraiton of a given emulation to a given path
@@ -236,6 +233,8 @@ def materialize(emulation: str, path: str) -> None:
     :param path: the path to materialize the emulation's configuration
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+
     emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
     if emulation_env_config is None:
         click.secho(f"Emulation: {emulation} not found", fg="red", bold=True)
@@ -247,7 +246,7 @@ def materialize(emulation: str, path: str) -> None:
 
 
 @click.argument('container', default="")
-@click.command(help="container-name")
+@click.command("shell", help="container-name")
 def shell(container: str) -> None:
     """
     Command for opening a shell inside a running container
@@ -255,6 +254,8 @@ def shell(container: str) -> None:
     :param container: the name of the container
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     running_containers= ContainerManager.list_all_running_containers()
     container_found = False
     for rc in running_containers:
@@ -280,9 +281,15 @@ def shell(container: str) -> None:
 @click.argument('min_users', default=1, type=int)
 @click.argument('num_envs', default=1, type=int)
 @click.argument('name', default="", type=str)
-@click.command(help="name min_users max_users min_flags max_flags min_nodes max_nodes")
+@click.command("gen", help="name min_users max_users min_flags max_flags min_nodes max_nodes")
 def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int, max_flags: int, min_nodes: int,
         max_nodes: int, min_cpus: int, max_cpus: int, min_mem: int, max_mem: int) -> None:
+
+    from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
+    from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
+    from csle_common.util.experiment_util import ExperimentUtil
+    import csle_common.constants.constants as constants
+
     if name == "":
         click.secho(f"Please specify a name of the emulation to generate", fg="red", bold=False)
         return
@@ -311,7 +318,7 @@ def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int
         print_emulation_config(emulation_env_config=em)
 
 
-def run_emulation(emulation_env_config: EmulationEnvConfig, no_traffic: bool) -> None:
+def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool) -> None:
     """
     Runs an emulation with the given config
 
@@ -319,18 +326,22 @@ def run_emulation(emulation_env_config: EmulationEnvConfig, no_traffic: bool) ->
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :return: None
     """
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
     EmulationEnvManager.run_containers(emulation_env_config=emulation_env_config)
     EmulationEnvManager.apply_emulation_env_config(emulation_env_config=emulation_env_config, no_traffic=no_traffic)
 
 
-def separate_running_and_stopped_emulations(emulations : List[EmulationEnvConfig]) -> Tuple[List[str], List[str]]:
+def separate_running_and_stopped_emulations(emulations : List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
     """
     Partitions the set of emulations into a set of running emulations and a set of stopped emulations
 
     :param emulations: the list of emulations
     :return: running_emulations, stopped_emulations
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     rc_emulations = ContainerManager.list_running_emulations()
     stopped_emulations = []
     running_emulations = []
@@ -342,13 +353,16 @@ def separate_running_and_stopped_emulations(emulations : List[EmulationEnvConfig
     return running_emulations, stopped_emulations
 
 
-def stop_emulation(emulation_env_config: EmulationEnvConfig) -> None:
+def stop_emulation(emulation_env_config: "EmulationEnvConfig") -> None:
     """
     Stops the emulation with the given configuration
 
     :param emulation_env_config: the configuration of the emulation to stop
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
     click.secho(f"Stopping emulation {emulation_env_config.name}", bold=False)
     EmulationEnvManager.stop_containers(emulation_env_config=emulation_env_config)
     ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
@@ -361,6 +375,9 @@ def clean_emulation_statistics() -> None:
 
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    import csle_common.constants.constants as constants
+
     click.secho(f"Deleting all emulation statistics from the metastore", bold=False)
     MetastoreFacade.delete_all(constants.METADATA_STORE.EMULATION_STATISTICS_TABLE)
 
@@ -371,6 +388,9 @@ def clean_emulation_traces() -> None:
 
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    import csle_common.constants.constants as constants
+
     click.secho(f"Deleting all emulation traces from the metastore", bold=False)
     MetastoreFacade.delete_all(constants.METADATA_STORE.EMULATION_TRACES_TABLE)
 
@@ -381,22 +401,27 @@ def clean_simulation_traces() -> None:
 
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    import csle_common.constants.constants as constants
+
     click.secho(f"Deleting all simulation traces from the metastore", bold=False)
     MetastoreFacade.delete_all(constants.METADATA_STORE.SIMULATION_TRACES_TABLE)
 
 
-def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
+def clean_emulation(emulation_env_config: "EmulationEnvConfig") -> None:
     """
     Cleans the emulation with the given configuration
 
     :param emulation_env_config: the configuration of the emulation
     :return: None
     """
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
     EmulationEnvManager.clean_emulation(emulation_env_config=emulation_env_config)
 
 
-def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -> None:
+def materialize_emulation(emulation_env_config: "EmulationEnvConfig", path: str) -> None:
     """
     Materializes the emulation with the given config to a given path
 
@@ -404,6 +429,10 @@ def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -
     :param path: the path to materialize the emulation to
     :return: None
     """
+    from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
+    import csle_common.constants.constants as constants
+    import os
+
     path = os.path.join(os.getcwd(), path + constants.COMMANDS.SLASH_DELIM)
     click.secho(f"Materialize emulation {emulation_env_config.name} to path:{path}{emulation_env_config.name}",
                 bold=False)
@@ -411,7 +440,7 @@ def materialize_emulation(emulation_env_config: EmulationEnvConfig, path: str) -
 
 
 @click.argument('entity', default="")
-@click.command(help="prometheus | node_exporter | cadvisor | grafana container-name | emulation-name | "
+@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana container-name | emulation-name | "
                     "statsmanager | all")
 def stop(entity: str) -> None:
     """
@@ -420,6 +449,10 @@ def stop(entity: str) -> None:
     :param entity: the name of the container to stop or "all"
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+
     if entity == "all":
         ContainerManager.stop_all_running_containers()
         for emulation in MetastoreFacade.list_emulations():
@@ -448,7 +481,7 @@ def stop(entity: str) -> None:
 
 
 @click.argument('port', default=50051, type=int)
-@click.command(help="port")
+@click.command("statsmanager", help="port")
 def statsmanager(port: int) -> None:
     """
     Starts the statsmanager locally
@@ -456,10 +489,12 @@ def statsmanager(port: int) -> None:
     :param port: the port that the statsmanager will listen to
     :return: None
     """
+    import csle_collector.docker_stats_manager.docker_stats_manager as docker_stats_manager
+
     docker_stats_manager.serve(port=port)
 
 @click.argument('id', default=None, type=int)
-@click.command(help="id")
+@click.command("trainingjob", help="id")
 def trainingjob(id: int) -> None:
     """
     Starts a training job with the given id
@@ -467,12 +502,15 @@ def trainingjob(id: int) -> None:
     :param id: the id of the training job to start
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_agents.job_controllers.training_job_manager import TrainingJobManager
+
     training_job = MetastoreFacade.get_training_job_config(id=id)
     TrainingJobManager.run_training_job(job_config=training_job)
 
 
 @click.argument('id', default=None, type=int)
-@click.command(help="id")
+@click.command("systemidentificationjob", help="id")
 def systemidentificationjob(id: int) -> None:
     """
     Starts a system identification job with the given id
@@ -480,6 +518,9 @@ def systemidentificationjob(id: int) -> None:
     :param id: the id of the training job to start
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_system_identification.system_identification_job_manager import SystemIdentificationJobManager
+
     sys_id_job = MetastoreFacade.get_system_identification_job_config(id=id)
     SystemIdentificationJobManager.run_system_identification_job(job_config=sys_id_job)
 
@@ -490,6 +531,8 @@ def start_docker_stats_manager() -> None:
 
     :return: None
     """
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+
     port = 50051
     started = MonitorToolsController.start_docker_stats_manager(port=port)
     if started:
@@ -502,7 +545,7 @@ def start_docker_stats_manager() -> None:
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str)
-@click.command(help="prometheus | node_exporter | grafana | cadvisor | container-name | "
+@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | container-name | "
                     "emulation-name | all | statsmanager | training_job | system_id_job")
 def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
     """
@@ -514,6 +557,12 @@ def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
     :param id: (optional) an id parameter to identify the entity to start
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_agents.job_controllers.training_job_manager import TrainingJobManager
+    from csle_system_identification.system_identification_job_manager import SystemIdentificationJobManager
+
     if entity == "all":
         ContainerManager.start_all_stopped_containers()
     elif entity == "statsmanager":
@@ -556,6 +605,8 @@ def run_image(image: str, name: str) -> bool:
     :param name: the name that the container will be assigned
     :return: True if it was started successfully, False otherwise
     """
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
     try:
         EmulationEnvManager.run_container(image=image, name=name)
         return True
@@ -564,7 +615,7 @@ def run_image(image: str, name: str) -> bool:
 
 
 @click.argument('entity', default="")
-@click.command(help="network-name | container-name | image-name | networks | images | containers")
+@click.command("rm", help="network-name | container-name | image-name | networks | images | containers")
 def rm(entity : str) -> None:
     """
     Removes a container, a network, an image, all networks, all images, or all containers
@@ -572,6 +623,8 @@ def rm(entity : str) -> None:
     :param entity: the container(s), network(s), or images(s) to remove
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     if entity == "containers":
         ContainerManager.rm_all_stopped_containers()
     elif entity == "images":
@@ -582,7 +635,7 @@ def rm(entity : str) -> None:
         rm_name(name=entity)
 
 @click.argument('entity', default="")
-@click.command(help="all | containers | emulations | emulation_traces | simulation_traces | emulation_statistics "
+@click.command("clean", help="all | containers | emulations | emulation_traces | simulation_traces | emulation_statistics "
                     "| name")
 def clean(entity : str) -> None:
     """
@@ -591,6 +644,9 @@ def clean(entity : str) -> None:
     :param entity: the container(s), network(s), or images(s) to remove
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+
     if entity == "all":
         ContainerManager.stop_all_running_containers()
         ContainerManager.rm_all_stopped_containers()
@@ -616,7 +672,7 @@ def clean(entity : str) -> None:
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-@click.command(help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
+@click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
                     "| cadvisor | statsmanager ")
 def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     """
@@ -628,6 +684,9 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     :param stopped: flag that indicates whether stopped containers/emulations should be listed
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+
     if entity == "all":
         list_all(all=all, running=running, stopped=stopped)
     elif entity == "networks":
@@ -703,7 +762,7 @@ def print_stopped_container(container) -> None:
                 bold=False)
 
 
-def print_network(net: ContainerNetwork, active: bool = False) -> None:
+def print_network(net: "ContainerNetwork", active: bool = False) -> None:
     """
     Utility function for printing a given network
 
@@ -757,6 +816,10 @@ def list_statsmanager() -> None:
 
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+
     if MonitorToolsController.is_statsmanager_running():
         emulations = MetastoreFacade.list_emulations()
         running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
@@ -785,6 +848,9 @@ def list_grafana() -> None:
 
     :return: None
     """
+    import csle_common.constants.constants as constants
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+
     if MonitorToolsController.is_grafana_running():
         click.secho("Grafana status: " + f" {click.style('[running]', fg='green')} "
                                          f"port:{constants.COMMANDS.GRAFANA_PORT}", bold=False)
@@ -798,6 +864,9 @@ def list_cadvisor() -> None:
 
     :return: None
     """
+    import csle_common.constants.constants as constants
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+
     if MonitorToolsController.is_cadvisor_running():
         click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
                                           f"port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
@@ -811,6 +880,9 @@ def list_node_exporter() -> None:
 
     :return: None
     """
+    import csle_common.constants.constants as constants
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+
     if MonitorToolsController.is_node_exporter_running():
         click.secho("Node exporter status: " + f" {click.style('[running]', fg='green')} "
                                                f"port:{constants.COMMANDS.NODE_EXPORTER_PORT}", bold=False)
@@ -824,6 +896,9 @@ def list_prometheus() -> None:
 
     :return: None
     """
+    import csle_common.constants.constants as constants
+    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+
     if MonitorToolsController.is_prometheus_running():
         click.secho("Prometheus status: " + f" {click.style('[running]', fg='green')} "
                                             f"port:{constants.COMMANDS.PROMETHEUS_PORT}", bold=False)
@@ -840,6 +915,8 @@ def list_emulations(all: bool = False, stopped: bool = False, running: bool = Tr
     :param running: boolean flag whether running containers should be listed
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+
     click.secho("CSLE emulations:", fg="magenta", bold=True)
     emulations = MetastoreFacade.list_emulations()
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
@@ -857,6 +934,9 @@ def list_networks() -> None:
 
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+
     click.secho("CSLE networks:", fg="magenta", bold=True)
     active_networks_names = ContainerManager.list_all_networks()
     emulations = MetastoreFacade.list_emulations()
@@ -867,13 +947,16 @@ def list_networks() -> None:
                 print_network(net, active=active)
 
 
-def get_network(name: str) -> Union[None, ContainerNetwork]:
+def get_network(name: str) -> Union[None, "ContainerNetwork"]:
     """
     Utility function for getting a given network
 
     :param name: the name of the network to get
     :return: None if the network was not found and otherwise returns the network
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+
     active_networks_names = ContainerManager.list_all_networks()
     emulations = MetastoreFacade.list_emulations()
     for em in emulations:
@@ -890,6 +973,8 @@ def get_running_container(name: str) -> Union[None, Tuple[str, str, str]]:
     :param name: the name of the container to get
     :return: None if the container was not found and otherwise returns the container
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     running_containers = ContainerManager.list_all_running_containers()
     for c in running_containers:
         if name == c[0]:
@@ -904,6 +989,8 @@ def get_stopped_container(name: str) -> Union[None, Tuple[str, str, str]]:
     :param name: the name of the container to stop
     :return: None if the container was not found and true otherwise
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     stopped_containers = ContainerManager.list_all_stopped_containers()
     for c in stopped_containers:
         if name == c[0]:
@@ -917,6 +1004,8 @@ def list_all_containers() -> None:
 
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     click.secho("CSLE Docker containers:", fg="magenta", bold=True)
     running_containers = ContainerManager.list_all_running_containers()
     stopped_containers = ContainerManager.list_all_stopped_containers()
@@ -934,6 +1023,8 @@ def list_running_containers() -> None:
 
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     click.secho("CSLE running Docker containers:", fg="magenta", bold=True)
     containers = ContainerManager.list_all_running_containers()
     for c in containers:
@@ -946,6 +1037,8 @@ def list_stopped_containers() -> None:
 
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     click.secho("CSLE stopped Docker containers:", fg="magenta", bold=True)
     containers = ContainerManager.list_all_stopped_containers()
     for c in containers:
@@ -958,6 +1051,8 @@ def list_images() -> None:
 
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     click.secho("CSLE Docker images:", fg="magenta", bold=True)
     image_names=ContainerManager.list_all_images()
     for img in image_names:
@@ -970,6 +1065,8 @@ def get_image(name: str) -> Union[None, Tuple[str,str,str,str,str]]:
     :param name: the name of the image to get
     :return: None or the image if it was found
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     image_names=ContainerManager.list_all_images()
     for img in image_names:
         if img == name:
@@ -984,6 +1081,8 @@ def rm_name(name: str) -> None:
     :param name: the name of the image, network, or container to remove
     :return: None
     """
+    from csle_common.controllers.container_manager import ContainerManager
+
     container_removed = ContainerManager.rm_container(name)
     if not container_removed:
         network_removed = ContainerManager.rm_network(name)
@@ -1002,6 +1101,9 @@ def clean_name(name: str) -> None:
     :param name: the name of the container or emulation to clean
     :return: None
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.container_manager import ContainerManager
+
     container_stopped = ContainerManager.stop_container(name=name)
     if container_stopped:
         ContainerManager.rm_container(container_name=name)
@@ -1020,6 +1122,9 @@ def remove_emulation(name: str) -> bool:
     :param name: the name of the emulation to remove
     :return: True if the emulation was removed, false otherwise
     """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
     click.secho(f"Removing emulation {name}", bold=False)
     emulations = MetastoreFacade.list_emulations()
     for emulation in emulations:
@@ -1030,13 +1135,15 @@ def remove_emulation(name: str) -> bool:
     return False
 
 
-def print_emulation_config(emulation_env_config: EmulationEnvConfig) -> None:
+def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
     """
     Prints the configuration of a given emulation
 
     :param emulation_env_config: the configuration to print
     :return: None
     """
+    import csle_common.constants.constants as constants
+
     click.secho(f"Emulation name: {emulation_env_config.name}", fg="yellow", bold=True)
     click.secho(f"Containers:", fg="yellow", bold=True)
     for c in emulation_env_config.containers_config.containers:
@@ -1094,6 +1201,6 @@ commands.add_command(trainingjob)
 commands.add_command(systemidentificationjob)
 
 
-# Script entrypoint
-if __name__ == '__main__':
-    commands()
+# # Script entrypoint
+# if __name__ == '__main__':
+#     commands()

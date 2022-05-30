@@ -1,18 +1,16 @@
 # `csle`: Cyber Security Learning Environment
 
-## A research platform to develop self-learning systems for cyber security using reinforcement learning 
+## A research platform to develop self-learning systems for cyber security using reinforcement learning
 
-`csle` is a platform for evaluating and developing reinforcement learning agents
-for control problems in cyber security. It can be considered as a cyber range
-specifically designed for reinforcement learning agents. Everything from
-network emulation, to simulation and implementation of network commands have been
-co-designed to provide an environment where it is possible to train and evaluate
-reinforcement learning agents on practical problems in cyber security.
+`csle` is a platform for evaluating and developing reinforcement learning agents for control problems in cyber security.
+It can be considered as a cyber range specifically designed for reinforcement learning agents. Everything from network
+emulation, to simulation and implementation of network commands have been co-designed to provide an environment where it
+is possible to train and evaluate reinforcement learning agents on practical problems in cyber security.
 
-The platform can be used to implement different use cases. Each use case consist of an
-emulated infrastructure (used for evaluation), and a MDP/POMDP/Markov Game interface for training agents.
-For example, the platform can be used to study the use case of intrusion prevention and
-train a reinforcement learning agent to prevent network intrusions by attackers in real-time.
+The platform can be used to implement different use cases. Each use case consist of an emulated infrastructure (used for
+evaluation), and a MDP/POMDP/Markov Game interface for training agents. For example, the platform can be used to study
+the use case of intrusion prevention and train a reinforcement learning agent to prevent network intrusions by attackers
+in real-time.
 
 
 <p align="center">
@@ -24,29 +22,25 @@ train a reinforcement learning agent to prevent network intrusions by attackers 
 
 ## Outline
 
- * [What is csle?](#what-is-csle)
- * [Architecture](#architecture)
- * [Features](#features)
- * [Quickstart](#quickstart)
- * [Documentation](#documentation)
- * [Author &amp; Maintainer](#author--maintainer)
- * [Copyright and license](#copyright-and-license)
- * [Disclaimer](#disclaimer)
-
+* [What is csle?](#what-is-csle)
+* [Architecture](#architecture)
+* [Features](#features)
+* [Quickstart](#quickstart)
+* [Documentation](#documentation)
+* [Author &amp; Maintainer](#author--maintainer)
+* [Copyright and license](#copyright-and-license)
+* [Disclaimer](#disclaimer)
 
 ## Architecture
 
-The method used in `csle` for learning and validating policies includes two systems. 
-First, we develop an **emulation system** where key functional components of 
-the target infrastructure are replicated. In this system, we run attack scenarios and defender responses. 
-These runs produce system metrics and logs that we use to estimate empirical distributions 
-of infrastructure metrics, which are needed to simulate MDP/POMDP/Markov Game episodes. 
-Second, we develop a **simulation system** where MDP/POMDP/Markov Game episodes are executed and 
-policies are incrementally learned. 
-Finally, the policies are extracted and evaluated in the emulation system, 
-and can also be implemented in the target infrastructure. 
-In short, the emulation system is used to provide the statistics needed to simulate the MDP/POMDP/Markov Game 
-and to evaluate policies, whereas the simulation system is used to learn policies.
+The method used in `csle` for learning and validating policies includes two systems. First, we develop an **emulation
+system** where key functional components of the target infrastructure are replicated. In this system, we run attack
+scenarios and defender responses. These runs produce system metrics and logs that we use to estimate empirical
+distributions of infrastructure metrics, which are needed to simulate MDP/POMDP/Markov Game episodes. Second, we develop
+a **simulation system** where MDP/POMDP/Markov Game episodes are executed and policies are incrementally learned.
+Finally, the policies are extracted and evaluated in the emulation system, and can also be implemented in the target
+infrastructure. In short, the emulation system is used to provide the statistics needed to simulate the MDP/POMDP/Markov
+Game and to evaluate policies, whereas the simulation system is used to learn policies.
 
 
 <p align="center">
@@ -55,27 +49,27 @@ and to evaluate policies, whereas the simulation system is used to learn policie
 
 ### Emulation System
 
-The emulation system executes on a cluster of machines that runs a virtualization layer provided by 
-Docker containers and virtual links. 
-The system emulates the clients, the attacker, the defender, as well as physical components of the 
-target infrastructure (e.g application servers and gateways). 
-Physical entities are emulated and software functions are executed in Docker containers of the emulation system. 
-The software functions replicate important components of the target infrastructure, 
-such as, web servers, databases, and an IDS.
+The emulation system executes on a cluster of machines that runs a virtualization layer provided by Docker containers
+and virtual links. The system emulates the clients, the attacker, the defender, as well as physical components of the
+target infrastructure (e.g application servers and gateways). Physical entities are emulated and software functions are
+executed in Docker containers of the emulation system. The software functions replicate important components of the
+target infrastructure, such as, web servers, databases, and an IDS.
 
 ### Simulation System
 
-The simulation system implements a MDP/POMDP/Markov Game that can be used to 
-train defender policies using reinforcement learning. It exposes an OpenAI-gym interface.
+The simulation system implements a MDP/POMDP/Markov Game that can be used to train defender policies using reinforcement
+learning. It exposes an OpenAI-gym interface.
 
 ### Monitoring System
 
-The monitoring system allows to track the execution of running emulations and their resource consumptions. It also 
-includes an operations center where emulations can be managed and learned policies can be examines. Specifically, 
-the policy examination component of the monitoring system is a component for interactive examination of  learned security policies. 
-It allows a user to traverse episodes of Markov decision processes in a controlled manner and to track the actions triggered by security policies. Similar to a software
-debugger, a user can continue or or halt an episode at any time step and inspect parameters and probability distributions  
-of interest. The system enables insight into the structure of a given policy and in the behavior of a policy in edge cases.
+The monitoring system allows to track the execution of running emulations and their resource consumptions. It also
+includes an operations center where emulations can be managed and learned policies can be examines. Specifically, the
+policy examination component of the monitoring system is a component for interactive examination of learned security
+policies. It allows a user to traverse episodes of Markov decision processes in a controlled manner and to track the
+actions triggered by security policies. Similar to a software debugger, a user can continue or or halt an episode at any
+time step and inspect parameters and probability distributions  
+of interest. The system enables insight into the structure of a given policy and in the behavior of a policy in edge
+cases.
 
 ## Features
 
@@ -87,22 +81,22 @@ of interest. The system enables insight into the structure of a given policy and
     - [x] 20+ vulnerable containers with exploits
 
 - **Open-AI Gym Environment**
-     - [x] GUI rendering
-     - [x] optimal stopping game
-     - [x] Simulation-mode
-     - [x] Emulation-mode
+    - [x] GUI rendering
+    - [x] optimal stopping game
+    - [x] Simulation-mode
+    - [x] Emulation-mode
 
 - **Learning Process**
-     - [x] Attacker training
-     - [x] Defender training
-     - [x] Self-play
+    - [x] Attacker training
+    - [x] Defender training
+    - [x] Self-play
 
 - **System Identification**
-     - [x] Custom system identifification algorithm to learn model of emulation
-     - [ ] Function approximation
-     
-- **Policy-examination**      
-     - [x] A System for Inspecting Automated Intrusion Prevention Policies     
+    - [x] Custom system identifification algorithm to learn model of emulation
+    - [ ] Function approximation
+
+- **Policy-examination**
+    - [x] A System for Inspecting Automated Intrusion Prevention Policies
 
 ## Installation
 
@@ -111,14 +105,16 @@ Follow the instructions below to install CSLE.
 ### Install from source
 
 1. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
+
 ```bash
 git clone https://github.com/Limmen/clse
 export CSLE_HOME=/path/to/csle/
 ```
+
 To set CSLE_HOME permanently, add the following line to the .bashrc: `export CSLE_HOME=/path/to/csle/`
 
-Logs of CSLE will be stored in `/var/log/csle`, create this directory and set the permissions so that the user 
-used for running commands can read and write to this directory.
+Logs of CSLE will be stored in `/var/log/csle`, create this directory and set the permissions so that the user used for
+running commands can read and write to this directory.
 
 2. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
@@ -132,19 +128,19 @@ used for running commands can read and write to this directory.
       psql> \password postgres # set postgres password
       ```
     - Setup password authentication for user postgres:
-      1. Open file `/etc/postgresql/10/main/pg_hba.conf`
-      2. Change `peer` to `md5` on line: `local all postgres peer`
-      3. Save and close the file
-      4. Restart postgres with the command `sudo service postgresql restart`
+        1. Open file `/etc/postgresql/10/main/pg_hba.conf`
+        2. Change `peer` to `md5` on line: `local all postgres peer`
+        3. Save and close the file
+        4. Restart postgres with the command `sudo service postgresql restart`
     - Create database and tables:
      ```bash
      sudo psql -U postgres -a -f metastore/create_tables.sql
      ```
-     Alternatively:
+   Alternatively:
     ```bash
      cd metastore; make build
      ```
-   - To reset the metastore, run:
+    - To reset the metastore, run:
     ```bash
      cd metastore; make clean
      ```
@@ -161,11 +157,11 @@ used for running commands can read and write to this directory.
            sudo apt install python3.8
           ```
 
-   - Install `csle-collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
-     ```bash
-      cd simulation-system/csle-collector/
-      pip install -e .
-     ```
+    - Install `csle-collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
+      ```bash
+       cd simulation-system/csle-collector/
+       pip install -e .
+      ```
 
     - Install `csle-common` (see ([README](simulation-system/csle-common/README.md)) for more information)
       ```bash
@@ -179,30 +175,40 @@ used for running commands can read and write to this directory.
       pip install -e .
       ```
 
-   - Install `csle-defender` (see ([README](simulation-system/csle-defender/README.md)) for more information)
-     ```bash
-     cd simulation-system/csle-defender/
-     pip install -e .
-     ```
+    - Install `csle-defender` (see ([README](simulation-system/csle-defender/README.md)) for more information)
+      ```bash
+      cd simulation-system/csle-defender/
+      pip install -e .
+      ```
 
-    - Install `gym-csle-stopping-game` (see ([README](simulation-system/gym-csle-stopping-game/README.MD)) for more information)
+    - Install `gym-csle-stopping-game` (see ([README](simulation-system/gym-csle-stopping-game/README.MD)) for more
+      information)
       ```bash
       cd simulation-system/gym-csle-stopping-game/
       pip install -e .
       ```
-    
-4. **Install the CLI tool**
-    - Make the CLI tool executable:
-      ```bash
-      sudo chmod u+x bin/csle
-      ```
-    - Add the CLI tool to the $PATH environment variable (replace `/path/to` with the full path)
-      ```bash
-      export PATH=/path/to/csle/bin/:$PATH
-      ```
-    - To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/bin/:$PATH`
 
-5. **Install the emulation system** 
+4. **Install the CLI tool**
+    - Install the CLI tool and make it executable as a script:
+      ```bash
+      cd csle-cli
+      pip install -e .      
+      ```
+    - Setup auto-completion in BASH
+            - Setup auto-completion by generating the following file:
+            ```bash
+            _CSLE_COMPLETE=bash_source csle > ~/.csle-complete.bash
+            ```
+            - Enable the auto-completion by adding the following line to ~/.bashrc
+            ```bash
+             . ~/.csle-complete.bash
+            ```
+    - Setup auto-completion in Fish:
+    ```
+      _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish 
+    ```
+
+5. **Install the emulation system**
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
       ```bash
       sudo apt-get update
@@ -210,7 +216,8 @@ used for running commands can read and write to this directory.
       sudo groupadd docker
       sudo usermod -aG docker $USER
       ```
-    - Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) (this may take a while, e.g. an hour) 
+    - Install base images (see ([README](emulation-system/base_images/README.MD)) for more information) (this may take a
+      while, e.g. an hour)
       ```bash
       cd emulation-system/base_images
       make build
@@ -225,46 +232,49 @@ used for running commands can read and write to this directory.
       cd emulation-system/envs
       make install
       ```
-    - Alternatively you can install everything at once (assuming you have already installed Docker and the metastore) 
-     by running the commands:
+    - Alternatively you can install everything at once (assuming you have already installed Docker and the metastore)
+      by running the commands:
       ```bash
       cd emulation-system
       make build
       ```   
 
 6. **Install the monitoring system**
-   - To build the webapp used in the monitoring system and in the policy examination system 
-   you need node.js and npm installed, to install node and npm execute:
-      ```bash
-      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # install nvm
-      command -v nvm # Verify nvm installation
-      nvm install node # Install node
-      npm install -g npm # Update npm
-      node -v # Verify version of node
-      npm -v # Verify version of npm
-      ```
-   - Install the monitoring system and associated tools:
+    - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm
+      installed, to install node and npm execute:
+       ```bash
+       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # install nvm
+       command -v nvm # Verify nvm installation
+       nvm install node # Install node
+       npm install -g npm # Update npm
+       node -v # Verify version of node
+       npm -v # Verify version of npm
+       ```
+    - Install the monitoring system and associated tools:
     ```bash
       cd monitoring-system
       chmod u+x install.sh
       ./install.sh
     ```
-   - Add prometheus binary to the path
-     ```bash
-      export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
-      ```
-    To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
-   - Add node_exporter binary to the path
-     ```bash
-      export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH
-      ```
-    To have the binary permanently in $PATH, add the following line to the .bashrc: `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
-   - Run the monitoring system (for more instructions see [README](monitoring system/README.MD)):
+    - Add prometheus binary to the path
+      ```bash
+       export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
+       ```
+   To have the binary permanently in $PATH, add the following line to the
+   .bashrc: `export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
+    - Add node_exporter binary to the path
+      ```bash
+       export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH
+       ```
+   To have the binary permanently in $PATH, add the following line to the
+   .bashrc: `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
+    - Run the monitoring system (for more instructions see [README](monitoring system/README.MD)):
     ```bash
       cd monitoring-system
       chmod u+x run_all.sh
       ./run_all.sh
     ```
+
 ## Uninstall
 
 ```bash
@@ -281,6 +291,7 @@ cd metastore; make clean
 ## Quickstart
 
 To see the available commands, run:
+
 ```bash
 csle --help
 ```
@@ -288,46 +299,55 @@ csle --help
 Examples:
 
 - List available containers, emulations, images, and networks:
+
 ```bash
 csle ls --all
 ```
 
 - List containers only
+
 ```bash
 csle ls containers --all
 ```
 
 - List running containers only
+
 ```bash
 csle ls containers
 ```
 
 - List emulations
+
 ```bash
 csle ls emulations --all
 ```
 
 - List running emulations only
+
 ```bash
 csle ls emulations
 ```
 
 - Inspect a specific emulation/container/image/network
+
 ```bash
 csle ls <name>
 ```
 
 - Start/Stop/Clean a specific emulation/container
+
 ```bash
 csle start| stop | clean <name>
 ```
 
 - Open a shell in a given container
+
 ```bash
 csle shell <container-name>
 ```
 
 - Remove a container, image, network, emulation, or all
+
 ```bash
 csle rm <container-name> | <network-name> | <image-name> | <emulation-name> all
 ```
@@ -360,7 +380,10 @@ Creative Commons
 
 ## Publications
 
-- **Finding Effective Security Strategies through Reinforcement Learning and Self-Play (CNSM 2020) (preprint: https://arxiv.org/abs/2009.08120, proceedings: https://ieeexplore.ieee.org/document/9269092, IFIP Open Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2020/index.html)**
+- **Finding Effective Security Strategies through Reinforcement Learning and Self-Play (CNSM 2020) (
+  preprint: https://arxiv.org/abs/2009.08120, proceedings: https://ieeexplore.ieee.org/document/9269092, IFIP Open
+  Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2020/index.html)**
+
 ```
 @INPROCEEDINGS{Hamm2011:Finding,
 AUTHOR="Kim Hammar and Rolf Stadler",
@@ -390,7 +413,11 @@ evaluations we show that our method is superior to two baseline methods but
 that policy convergence in self-play remains a challenge."
 }
 ```
-- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) (preprint: https://arxiv.org/abs/2106.07160, IEEE Proceedings: https://ieeexplore.ieee.org/document/9615542, IFIP Open Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf)**
+
+- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) (
+  preprint: https://arxiv.org/abs/2106.07160, IEEE Proceedings: https://ieeexplore.ieee.org/document/9615542, IFIP Open
+  Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf)**
+
 ``` bash
 @INPROCEEDINGS{hammar_stadler_cnsm_21,
 AUTHOR="Kim Hammar and Rolf Stadler",
@@ -418,7 +445,8 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 }
 ```
 
-- **A System for Interactive Examination  of Learned Security Policies (Preprint: https://limmen.dev/assets/papers/NOMS22_Demo_Policy_Examination_System_Hammar_Stadler_28_Jan_2022.pdf)**
+- **A System for Interactive Examination of Learned Security Policies (
+  Preprint: https://limmen.dev/assets/papers/NOMS22_Demo_Policy_Examination_System_Hammar_Stadler_28_Jan_2022.pdf)**
 
 ```bash
 @misc{hammar2022policyexamination,
@@ -436,9 +464,9 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 
 ## Disclaimer
 
-All code and software in this repository is for Educational purpose ONLY.
-Do not use it without permission.
-The usual disclaimer applies, especially the fact that me (Kim Hammar) is not liable for any damages caused by direct or indirect use of the information or functionality provided by these programs.
-The author or any Internet provider bears NO responsibility for content or misuse of these programs or any derivatives thereof.
-By using these programs you accept the fact that any damage (dataloss, system crash, system compromise, etc.)
+All code and software in this repository is for Educational purpose ONLY. Do not use it without permission. The usual
+disclaimer applies, especially the fact that me (Kim Hammar) is not liable for any damages caused by direct or indirect
+use of the information or functionality provided by these programs. The author or any Internet provider bears NO
+responsibility for content or misuse of these programs or any derivatives thereof. By using these programs you accept
+the fact that any damage (dataloss, system crash, system compromise, etc.)
 caused by the use of these programs is not Kim Hammar's responsibility.
