@@ -12,7 +12,7 @@ from csle_common.dao.system_identification.emulation_statistics import Emulation
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
+from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.util.np_encoder import NpEncoder
 from csle_common.dao.training.ppo_policy import PPOPolicy
 
@@ -1009,77 +1009,77 @@ class MetastoreFacade:
 
 
     @staticmethod
-    def _convert_system_identification_job_record_to_dto(system_identification_job_record) -> \
-            SystemIdentificationJobConfig:
+    def _convert_data_collection_job_record_to_dto(data_collection_job_record) -> \
+            DataCollectionJobConfig:
         """
-        Converts a system identification job record fetched from the metastore into a DTO
+        Converts a data collection job record fetched from the metastore into a DTO
 
-        :param system_identification_job_record: the record to convert
+        :param data_collection_job_record: the record to convert
         :return: the DTO representing the record
         """
-        system_identification_job_config_json = json.dumps(system_identification_job_record[1], indent=4,
-                                                           sort_keys=True)
-        system_identification_job_config: SystemIdentificationJobConfig = \
-            SystemIdentificationJobConfig.from_dict(json.loads(system_identification_job_config_json))
-        system_identification_job_config.id = system_identification_job_record[0]
-        return system_identification_job_config
+        data_collection_job_config_json = json.dumps(data_collection_job_record[1], indent=4,
+                                                     sort_keys=True)
+        data_collection_job_config: DataCollectionJobConfig = \
+            DataCollectionJobConfig.from_dict(json.loads(data_collection_job_config_json))
+        data_collection_job_config.id = data_collection_job_record[0]
+        return data_collection_job_config
 
     @staticmethod
-    def list_system_identification_jobs() -> List[SystemIdentificationJobConfig]:
+    def list_data_collection_jobs() -> List[DataCollectionJobConfig]:
         """
-        :return: A list of system identification jobs in the metastore
+        :return: A list of data collection jobs in the metastore
         """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
+                records = list(map(lambda x: MetastoreFacade._convert_data_collection_job_record_to_dto(x),
                                    records))
                 return records
 
     @staticmethod
-    def get_system_identification_job_config(id: int) -> Union[None, SystemIdentificationJobConfig]:
+    def get_data_collection_job_config(id: int) -> Union[None, DataCollectionJobConfig]:
         """
-        Function for fetching a system identification job config with a given id from the metastore
+        Function for fetching a data collection job config with a given id from the metastore
 
-        :param id: the id of the system identification job config
-        :return: The system identification job config or None if it could not be found
+        :param id: the id of the data collection job config
+        :return: The data collection job config or None if it could not be found
         """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s", (id,))
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
                 if record is not None:
-                    record = MetastoreFacade._convert_system_identification_job_record_to_dto(
-                        system_identification_job_record=record)
+                    record = MetastoreFacade._convert_data_collection_job_record_to_dto(
+                        data_collection_job_record=record)
                 return record
 
     @staticmethod
-    def save_system_identification_job(system_identification_job: SystemIdentificationJobConfig) -> Union[Any, int]:
+    def save_data_collection_job(data_collection_job: DataCollectionJobConfig) -> Union[Any, int]:
         """
-        Saves a system identification job to the metastore
+        Saves a data collection job to the metastore
 
-        :param system_identification_job: the system identification job to save
+        :param data_collection_job: the data collection job to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Saving a system identification job in the metastore")
+        Logger.__call__().get_logger().debug(f"Saving a data collection job in the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
+                data_collection_job_json = json.dumps(data_collection_job.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
-                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
                             f"(config, emulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (system_identification_job_json,
-                                                              system_identification_job.emulation_env_name))
+                            f"VALUES (%s, %s) RETURNING id", (data_collection_job_json,
+                                                              data_collection_job.emulation_env_name))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"System identification job saved successfully")
+                Logger.__call__().get_logger().debug(f"Data collection job saved successfully")
                 return id_of_new_row
 
     @staticmethod
@@ -1129,27 +1129,27 @@ class MetastoreFacade:
                 Logger.__call__().get_logger().debug(f"Experiment execution with id: {id} updated successfully")
 
     @staticmethod
-    def update_system_identification_job(system_identification_job: SystemIdentificationJobConfig, id: int) -> None:
+    def update_data_collection_job(data_collection_job: DataCollectionJobConfig, id: int) -> None:
         """
-        Updates a system identification job in the metastore
+        Updates a data collection job in the metastore
 
         :param training_job: the training job to save
         :param id: the id of the row to update
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Updating system identification job with id: {id} in the metastore")
+        Logger.__call__().get_logger().debug(f"Updating data collection job with id: {id} in the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(system_identification_job.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(data_collection_job.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"UPDATE "
-                            f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
+                            f"{constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
                             f" SET config=%s "
-                            f"WHERE {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}.id = %s",
+                            f"WHERE {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}.id = %s",
                             (config_json_str, id))
                 conn.commit()
-                Logger.__call__().get_logger().debug(f"System identification job with id: {id} updated successfully")
+                Logger.__call__().get_logger().debug(f"Data collection job with id: {id} updated successfully")
 
     @staticmethod
     def remove_training_job(training_job: TrainingJobConfig) -> None:
@@ -1170,24 +1170,24 @@ class MetastoreFacade:
                 Logger.__call__().get_logger().debug(f"Training job with id {training_job.id} deleted successfully")
 
     @staticmethod
-    def remove_system_identification_job(system_identification_job: SystemIdentificationJobConfig) -> None:
+    def remove_data_collection_job(data_collection_job: DataCollectionJobConfig) -> None:
         """
-        Removes a system identification job from the metastore
+        Removes a data collection job from the metastore
 
         :param config: the config to uninstall
         :return: None
         """
-        Logger.__call__().get_logger().debug(f"Removing system identification job with "
-                                             f"id:{system_identification_job.id} from the metastore")
+        Logger.__call__().get_logger().debug(f"Removing data collection job with "
+                                             f"id:{data_collection_job.id} from the metastore")
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"DELETE FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s",
-                            (system_identification_job.id,))
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} WHERE id = %s",
+                            (data_collection_job.id,))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Training job with "
-                                                     f"id {system_identification_job.id} deleted successfully")
+                                                     f"id {data_collection_job.id} deleted successfully")
 
     @staticmethod
     def list_ppo_policies() -> List[PPOPolicy]:

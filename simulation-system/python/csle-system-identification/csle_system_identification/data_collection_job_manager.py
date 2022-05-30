@@ -1,18 +1,18 @@
 import subprocess
 import csle_common.constants.constants as constants
-from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
+from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.container_manager import ContainerManager
 from csle_system_identification.emulator import Emulator
 
 
-class SystemIdentificationJobManager:
+class DataCollectionJobManager:
     """
-    Class that manages system identification jobs in CSLE
+    Class that manages data collection jobs in CSLE
     """
 
     @staticmethod
-    def run_system_identification_job(job_config: SystemIdentificationJobConfig) -> None:
+    def run_data_collection_job(job_config: DataCollectionJobConfig) -> None:
         """
         Runs a given training job
 
@@ -27,19 +27,19 @@ class SystemIdentificationJobManager:
             emulation_env_config=emulation_env_config, attacker_sequence=job_config.attacker_sequence,
             defender_sequence=job_config.defender_sequence, repeat_times=job_config.repeat_times,
             sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds,
-            descr=job_config.descr, emulation_statistics=em_statistic, system_identification_job=job_config,
+            descr=job_config.descr, emulation_statistics=em_statistic, data_collection_job=job_config,
             save_emulation_traces_every=job_config.save_emulation_traces_every,
-            emulation_traces_to_save_with_system_identification_job=job_config.num_cached_traces)
+            emulation_traces_to_save_with_data_collection_job=job_config.num_cached_traces)
 
     @staticmethod
-    def start_system_identification_job_in_background(system_identification_job: SystemIdentificationJobConfig) \
+    def start_data_collection_job_in_background(data_collection_job: DataCollectionJobConfig) \
             -> None:
         """
         Starts a system identification job with a given configuration in the background
 
-        :param system_identification_job: the job configuration
+        :param data_collection_job: the job configuration
         :return: None
         """
-        cmd = constants.COMMANDS.START_SYSTEM_IDENTIFICATION_JOB.format(system_identification_job.id)
+        cmd = constants.COMMANDS.START_SYSTEM_IDENTIFICATION_JOB.format(data_collection_job.id)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()

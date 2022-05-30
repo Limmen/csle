@@ -142,3 +142,12 @@ CREATE TABLE IF NOT EXISTS system_models (
     );
 GRANT ALL ON system_models TO csle;
 GRANT USAGE, SELECT ON SEQUENCE system_models_id_seq TO csle;
+
+-- Create table that stores system_identification_jobs --
+CREATE TABLE IF NOT EXISTS data_collection_jobs (
+    id serial PRIMARY KEY,
+    config json NOT NULL,
+    emulation_name TEXT references emulations(name)
+    );
+GRANT ALL ON data_collection_jobs TO csle;
+GRANT USAGE, SELECT ON SEQUENCE data_collection_jobs_id_seq TO csle;

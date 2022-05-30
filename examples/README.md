@@ -3,7 +3,7 @@
 This directory contains example scripts for using CSLE. 
 
 - Training: [./training](training): this directory contains example scripts for training policies.
-- System identification: [./system_identification](system_identification): this directory contains example scripts for system identification.
+- System identification: [./system_identification](data_collection): this directory contains example scripts for system identification.
 - Evaluation: [./eval](eval): this directory contains example scripts for evaluating policies.
 
 ## Author & Maintainer

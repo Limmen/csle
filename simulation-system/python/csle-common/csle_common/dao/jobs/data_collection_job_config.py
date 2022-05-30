@@ -4,9 +4,9 @@ from csle_common.dao.emulation_action.defender.emulation_defender_action import 
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 
 
-class SystemIdentificationJobConfig:
+class DataCollectionJobConfig:
     """
-    DTO representing the configuration of a system identification job
+    DTO representing the configuration of a data collection job
     """
 
     def __init__(self, emulation_env_name: str, num_collected_steps : int,
@@ -21,7 +21,7 @@ class SystemIdentificationJobConfig:
         :param emulation_env_name: the emulation environment name
         :param num_collected_steps: number of collected steps in the emulation
         :param num_sequences_completed: number of sequences completed
-        :param progress_percentage: the progress of the system identification in %
+        :param progress_percentage: the progress of the data collection job in %
         :param attacker_sequence: the sequence of actions to emulate the attacker
         :param defender_sequence: the sequence of actions to emulate the defender
         :param repeat_times: the number of times to repeat the sequences
@@ -74,14 +74,14 @@ class SystemIdentificationJobConfig:
         return d
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "SystemIdentificationJobConfig":
+    def from_dict(d: Dict[str, Any]) -> "DataCollectionJobConfig":
         """
         Converts a dict representation of the object to an instance
 
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = SystemIdentificationJobConfig(
+        obj = DataCollectionJobConfig(
             emulation_env_name=d["emulation_env_name"], pid=d["pid"], num_collected_steps=d["num_collected_steps"],
             progress_percentage=d["progress_percentage"],
             attacker_sequence=list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_sequence"])),

@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import './SystemIdentificationJob.css';
+import './DataCollectionJob.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -9,7 +9,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
 
-const SystemIdentificationJob = (props) => {
+const DataCollectionJob = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [attackerActionSequenceOpen, setAttackerActionSequenceOpen] = useState(false);
     const [defenderActionSequenceOpen, setDefenderActionSequenceOpen] = useState(false);
@@ -20,19 +20,19 @@ const SystemIdentificationJob = (props) => {
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-    const renderRemoveSystemIdentificationJobTooltip = (props) => (
+    const renderRemoveDataCollectionJobTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove system identification job
+            Remove data collection job
         </Tooltip>);
 
-    const renderStopSystemIdentificationJobTooltip = (props) => (
+    const renderStopDataCollectionJobTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop system identification job
+            Stop data collection job
         </Tooltip>);
 
-    const renderStartSystemIdentificationJobTooltip = (props) => (
+    const renderStartDataCollectionJobTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start system identification job
+            Start data collection job
         </Tooltip>);
 
     const getStatusText = () => {
@@ -163,10 +163,10 @@ const SystemIdentificationJob = (props) => {
             return (<OverlayTrigger
                 placement="top"
                 delay={{show: 0, hide: 0}}
-                overlay={renderStopSystemIdentificationJobTooltip}
+                overlay={renderStopDataCollectionJobTooltip}
             >
                 <Button variant="warning" className="startButton"
-                        onClick={() => props.stopSystemIdentificationJob(props.job)}>
+                        onClick={() => props.stopDataCollectionJob(props.job)}>
                     <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                 </Button>
             </OverlayTrigger>)
@@ -174,10 +174,10 @@ const SystemIdentificationJob = (props) => {
             return (<OverlayTrigger
                 placement="top"
                 delay={{show: 0, hide: 0}}
-                overlay={renderStartSystemIdentificationJobTooltip}
+                overlay={renderStartDataCollectionJobTooltip}
             >
                 <Button variant="success" className="startButton"
-                        onClick={() => props.startSystemIdentificationJob(props.job)}>
+                        onClick={() => props.startDataCollectionJob(props.job)}>
                     <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                 </Button>
             </OverlayTrigger>)
@@ -271,10 +271,10 @@ const SystemIdentificationJob = (props) => {
                             className="removeButton"
                             placement="top"
                             delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveSystemIdentificationJobTooltip}
+                            overlay={renderRemoveDataCollectionJobTooltip}
                         >
                             <Button variant="danger" className="removeButton"
-                                    onClick={() => props.removeSystemIdentificationJob(props.job)}>
+                                    onClick={() => props.removeDataCollectionJob(props.job)}>
                                 <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
@@ -288,7 +288,7 @@ const SystemIdentificationJob = (props) => {
                                 aria-expanded={generalInfoOpen}
                                 variant="link"
                             >
-                                <h5 className="semiTitle"> General Information about the system identification job</h5>
+                                <h5 className="semiTitle"> General Information about the data collection job</h5>
                             </Button>
                         </Card.Header>
                         <Collapse in={generalInfoOpen}>
@@ -511,7 +511,7 @@ const SystemIdentificationJob = (props) => {
                                                             <th># Logged in users</th>
                                                             <th># Successful logins</th>
                                                             <th># Open TCP connections</th>
-                                                            <th># Users</th>
+                                                            <th># User sessions</th>
                                                             <th># Block read</th>
                                                             <th># Block written</th>
                                                             <th># CPU utilization %</th>
@@ -581,6 +581,6 @@ const SystemIdentificationJob = (props) => {
     )
 }
 
-SystemIdentificationJob.propTypes = {};
-SystemIdentificationJob.defaultProps = {};
-export default SystemIdentificationJob;
+DataCollectionJob.propTypes = {};
+DataCollectionJob.defaultProps = {};
+export default DataCollectionJob;

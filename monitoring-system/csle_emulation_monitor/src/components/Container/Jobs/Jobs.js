@@ -7,7 +7,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Spinner from 'react-bootstrap/Spinner';
 import Accordion from 'react-bootstrap/Accordion';
 import TrainingJob from "./TrainingJob/TrainingJob";
-import SystemIdentificationJob from "./SystemIdentificationJob/SystemIdentificationJob";
+import DataCollectionJob from "./DataCollectionJob/DataCollectionJob";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
@@ -18,14 +18,14 @@ const Jobs = () => {
     const [trainingJobsLoading, setTrainingJobsLoading] = useState(false);
     const [trainingJobs, setTrainingJobs] = useState([]);
     const [filteredTrainingJobs, setFilteredTrainingJobs] = useState([]);
-    const [showSystemIdentificationJobsInfoModal, setShowSystemIdentificationJobsInfoModal] = useState(false);
-    const [systemIdentificationJobsLoading, setSystemIdentificationJobsLoading] = useState(false);
-    const [systemIdentificationJobs, setSystemIdentificationJobs] = useState([]);
+    const [showDataCollectionJobsInfoModal, setShowDataCollectionJobsInfoModal] = useState(false);
+    const [dataCollectionJobsLoading, setDataCollectionJobsLoading] = useState(false);
+    const [dataCollectionJobs, setDataCollectionJobs] = useState([]);
     const [showOnlyRunningTrainingJobs, setShowOnlyRunningTrainingJobs] = useState(false);
-    const [filteredSystemIdentificationJobs, setFilteredSystemIdentificationJobs] = useState([]);
-    const [showOnlyRunningSystemIdJobs, setShowOnlyRunningSystemIdJobs] = useState(false);
+    const [filteredDataCollectionJobs, setFilteredDataCollectionJobs] = useState([]);
+    const [showOnlyRunningDataCollectionJobs, setShowOnlyRunningDataCollectionJobs] = useState(false);
     const [trainingJobsSearchString, setTrainingJobsSearchString] = useState("");
-    const [systemIdJobsSearchString, setSystemIdJobsSearchString] = useState("");
+    const [dataCollectionJobsSearchString, setDataCollectionJobsSearchString] = useState("");
 
     const ip = "localhost"
     // const ip = "172.31.212.92"
@@ -49,9 +49,9 @@ const Jobs = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchSystemIdentificationJobs = useCallback(() => {
+    const fetchDataCollectionJobs = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/systemidentificationjobs',
+            `http://` + ip + ':7777/datacollectionjobs',
             {
                 method: "GET",
                 headers: new Headers({
@@ -61,9 +61,9 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setSystemIdentificationJobs(response);
-                setFilteredSystemIdentificationJobs(response);
-                setSystemIdentificationJobsLoading(false)
+                setDataCollectionJobs(response);
+                setFilteredDataCollectionJobs(response);
+                setDataCollectionJobsLoading(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -71,9 +71,9 @@ const Jobs = () => {
     useEffect(() => {
         setTrainingJobsLoading(true)
         fetchTrainingJobs()
-        setSystemIdentificationJobsLoading(true)
-        fetchSystemIdentificationJobs()
-    }, [fetchTrainingJobs, fetchSystemIdentificationJobs]);
+        setDataCollectionJobsLoading(true)
+        fetchDataCollectionJobs()
+    }, [fetchTrainingJobs, fetchDataCollectionJobs]);
 
     const removeTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
@@ -196,19 +196,19 @@ const Jobs = () => {
         setShowOnlyRunningTrainingJobs(!showOnlyRunningTrainingJobs)
     }
 
-    const runningSystemIdJobsChange = (event) => {
-        if (!showOnlyRunningSystemIdJobs) {
-            const filteredSystemIdJobs = filteredSystemIdentificationJobs.filter(job => {
+    const runningDataCollectionJobsChange = (event) => {
+        if (!showOnlyRunningDataCollectionJobs) {
+            const filteredDataCollectionJobs = filteredDataCollectionJobs.filter(job => {
                 return job.running
             });
-            setFilteredSystemIdentificationJobs(filteredSystemIdJobs)
+            setFilteredDataCollectionJobs(filteredDataCollectionJobs)
         } else {
-            const filteredSystemIdJobs = systemIdentificationJobs.filter(job => {
-                return systemIdentificationJobSearchFilter(job, systemIdJobsSearchString)
+            const filteredDataCollectionJobs = dataCollectionJobs.filter(job => {
+                return dataCollectionJobSearchFilter(job, dataCollectionJobsSearchString)
             });
-            setFilteredSystemIdentificationJobs(filteredSystemIdJobs)
+            setFilteredDataCollectionJobs(filteredDataCollectionJobs)
         }
-        setShowOnlyRunningSystemIdJobs(!showOnlyRunningSystemIdJobs)
+        setShowOnlyRunningDataCollectionJobs(!showOnlyRunningDataCollectionJobs)
     }
 
     const searchTrainingJobHandler = useDebouncedCallback(
@@ -218,7 +218,7 @@ const Jobs = () => {
         350
     );
 
-    const systemIdentificationJobSearchFilter = (job, searchVal) => {
+    const dataCollectionJobSearchFilter = (job, searchVal) => {
         return (searchVal === "" ||
             job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
             job.descr.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
@@ -227,25 +227,25 @@ const Jobs = () => {
         );
     }
 
-    const searchSystemIdJobChange = (event) => {
+    const searchDataCollectionJobChange = (event) => {
         var searchVal = event.target.value
-        const filteredSystemIdJobs = systemIdentificationJobs.filter(job => {
-            return systemIdentificationJobSearchFilter(job, searchVal)
+        const filteredDataCollectionJobs = dataCollectionJobs.filter(job => {
+            return dataCollectionJobSearchFilter(job, searchVal)
         });
-        setFilteredSystemIdentificationJobs(filteredSystemIdJobs)
-        setSystemIdJobsSearchString(searchVal)
+        setFilteredDataCollectionJobs(filteredDataCollectionJobs)
+        setDataCollectionJobsSearchString(searchVal)
     }
 
-    const searchSystemIdJobHandler = useDebouncedCallback(
+    const searchDataCollectionJobHandler = useDebouncedCallback(
         (event) => {
-            searchSystemIdJobChange(event)
+            searchDataCollectionJobChange(event)
         },
         350
     );
 
-    const removeSystemIdJobRequest = useCallback((sys_id_job_id) => {
+    const removeDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            `http://` + ip + ':7777/systemidentificationjobs/remove/' + sys_id_job_id,
+            `http://` + ip + ':7777/datacollectionjobs/remove/' + data_collection_job_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -255,14 +255,14 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSystemIdentificationJobs()
+                fetchDataCollectionJobs()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeAllSystemIdJobsRequest = useCallback(() => {
+    const removeAllDataCollectionJobsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/systemidentificationjobs/remove',
+            `http://` + ip + ':7777/datacollectionjobs/remove',
             {
                 method: "POST",
                 headers: new Headers({
@@ -272,24 +272,24 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSystemIdentificationJobs()
+                fetchDataCollectionJobs()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeSystemIdentificationJob = (job) => {
-        setSystemIdentificationJobsLoading(true)
-        removeSystemIdJobRequest(job.id)
+    const removeDataCollectionJob = (job) => {
+        setDataCollectionJobsLoading(true)
+        removeDataCollectionJobRequest(job.id)
     }
 
-    const removeAllSystemIdentificationJobs = (job) => {
-        setSystemIdentificationJobsLoading(true)
-        removeAllSystemIdJobsRequest()
+    const removeAllDataCollectionJobs = (job) => {
+        setDataCollectionJobsLoading(true)
+        removeAllDataCollectionJobsRequest()
     }
 
-    const stopSystemIdentificationJobRequest = useCallback((sys_id_job_id) => {
+    const stopDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            `http://` + ip + ':7777/systemidentificationjobs/stop/' + sys_id_job_id,
+            `http://` + ip + ':7777/datacollectionjobs/stop/' + data_collection_job_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -299,19 +299,19 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSystemIdentificationJobs()
+                fetchDataCollectionJobs()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const stopSystemIdentificationJob = (job) => {
-        setSystemIdentificationJobsLoading(true)
-        stopSystemIdentificationJobRequest(job.id)
+    const stopDataCollectionJob = (job) => {
+        setDataCollectionJobsLoading(true)
+        stopDataCollectionJobRequest(job.id)
     }
 
-    const startSystemIdentificationJobRequest = useCallback((sys_id_job_id) => {
+    const startDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            `http://` + ip + ':7777/systemidentificationjobs/start/' + sys_id_job_id,
+            `http://` + ip + ':7777/datacollectionjobs/start/' + data_collection_job_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -321,14 +321,14 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSystemIdentificationJobs()
+                fetchDataCollectionJobs()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const startSystemIdentificationJob = (job) => {
-        setSystemIdentificationJobsLoading(true)
-        startSystemIdentificationJobRequest(job.id)
+    const startDataCollectionJob = (job) => {
+        setDataCollectionJobsLoading(true)
+        startDataCollectionJobRequest(job.id)
     }
 
     const refreshTrainingJobs = () => {
@@ -336,9 +336,9 @@ const Jobs = () => {
         fetchTrainingJobs()
     }
 
-    const refreshSystemIdentificationJobs = () => {
-        setSystemIdentificationJobsLoading(true)
-        fetchSystemIdentificationJobs()
+    const refreshDataCollectionJobs = () => {
+        setDataCollectionJobsLoading(true)
+        fetchDataCollectionJobs()
     }
 
     const renderTrainingJobsInfoTooltip = (props) => (
@@ -353,9 +353,9 @@ const Jobs = () => {
         </Tooltip>
     );
 
-    const renderRemoveAllSystemIdentificationJobsTooltip = (props) => (
+    const renderRemoveAllDataCollectionJobsTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all system identification jobs.
+            Remove all data collection jobs.
         </Tooltip>
     );
 
@@ -365,15 +365,15 @@ const Jobs = () => {
         </Tooltip>
     );
 
-    const renderSystemIdentificationJobsInfoTooltip = (props) => (
+    const renderDataCollectionJobsInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about the system identification jobs
+            More information about the data collection jobs
         </Tooltip>
     );
 
-    const renderRefreshSystemIdentificationJobsTooltip = (props) => (
+    const renderRefreshDataCollectionJobsTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload System identification jobs from the backend
+            Reload data collection jobs from the backend
         </Tooltip>
     );
 
@@ -404,7 +404,7 @@ const Jobs = () => {
         );
     }
 
-    const SystemIdentificationJobsInfoModal = (props) => {
+    const DataCollectionJobsInfoModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -414,14 +414,13 @@ const Jobs = () => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        System Identification Jobs
+                        Data Collection Jobs
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>System identification jobs</h4>
+                    <h4>Data Collection jobs</h4>
                     <p className="modalText">
-                        A system identification job represents an ongoing execution of system identification.
-                        The list of system identification jobs enables real-time monitoring of jobs.
+                        A data collection job represents an ongoing execution of data collection.
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
@@ -452,7 +451,7 @@ const Jobs = () => {
         }
     }
 
-    const SystemIdentificationJobsAccordions = (props) => {
+    const DataCollectionJobsAccordions = (props) => {
         if (props.loading) {
             return (
                 <Spinner animation="border" role="status">
@@ -462,10 +461,10 @@ const Jobs = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     {props.jobs.map((job, index) =>
-                        <SystemIdentificationJob job={job} wrapper={wrapper} key={job.id + "-" + index}
-                                                 removeSystemIdentificationJob={removeSystemIdentificationJob}
-                                                 stopSystemIdentificationJob={stopSystemIdentificationJob}
-                                                 startSystemIdentificationJob={startSystemIdentificationJob}
+                        <DataCollectionJob job={job} wrapper={wrapper} key={job.id + "-" + index}
+                                           removeDataCollectionJob={removeDataCollectionJob}
+                                           stopDataCollectionJob={stopDataCollectionJob}
+                                           startDataCollectionJob={startDataCollectionJob}
                         />
                     )}
                 </Accordion>
@@ -548,17 +547,17 @@ const Jobs = () => {
             <TrainingJobsAccordions jobs={filteredTrainingJobs} loading={trainingJobsLoading}/>
 
 
-            <div className="row systemIdentificationJobs">
+            <div className="row dataCollectionJobs">
                 <div className="col-sm-3"></div>
                 <div className="col-sm-3">
-                    <h3> System identification jobs
+                    <h3> Data collection jobs
 
                         <OverlayTrigger
                             placement="top"
                             delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshSystemIdentificationJobsTooltip}
+                            overlay={renderRefreshDataCollectionJobsTooltip}
                         >
-                            <Button variant="button" onClick={refreshSystemIdentificationJobs}>
+                            <Button variant="button" onClick={refreshDataCollectionJobs}>
                                 <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
@@ -566,22 +565,22 @@ const Jobs = () => {
                         <OverlayTrigger
                             placement="top"
                             delay={{show: 0, hide: 0}}
-                            overlay={renderSystemIdentificationJobsInfoTooltip}
+                            overlay={renderDataCollectionJobsInfoTooltip}
                         >
-                            <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)}
+                            <Button variant="button" onClick={() => setShowDataCollectionJobsInfoModal(true)}
                                     className="infoButton2">
                                 <i className="fa fa-info-circle" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
-                        <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
-                                                           onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
+                        <DataCollectionJobsInfoModal show={showDataCollectionJobsInfoModal}
+                                                           onHide={() => setShowDataCollectionJobsInfoModal(false)}/>
 
                         <OverlayTrigger
                             placement="top"
                             delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveAllSystemIdentificationJobsTooltip}
+                            overlay={renderRemoveAllDataCollectionJobsTooltip}
                         >
-                            <Button variant="danger" onClick={removeAllSystemIdentificationJobs}>
+                            <Button variant="danger" onClick={removeAllDataCollectionJobs}>
                                 <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
@@ -590,7 +589,7 @@ const Jobs = () => {
                 <div className="col-sm-4">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
-                            <InputGroup.Text id="systemIdJobInput" className="searchIcon">
+                            <InputGroup.Text id="dataCollectionJobInput" className="searchIcon">
                                 <i className="fa fa-search" aria-hidden="true"/>
                             </InputGroup.Text>
                             <FormControl
@@ -598,8 +597,8 @@ const Jobs = () => {
                                 className="searchBar"
                                 placeholder="Search"
                                 aria-label="Search"
-                                aria-describedby="systemIdJobInput"
-                                onChange={searchSystemIdJobHandler}
+                                aria-describedby="dataCollectionJobInput"
+                                onChange={searchDataCollectionJobHandler}
                             />
                         </InputGroup>
                     </Form>
@@ -609,16 +608,16 @@ const Jobs = () => {
                         <Form.Check
                             inline
                             type="switch"
-                            id="systemIdSwitch"
+                            id="dataCollectionSwitch"
                             label="Show only running jobs"
                             className="runningCheck"
-                            onChange={runningSystemIdJobsChange}
+                            onChange={runningDataCollectionJobsChange}
                         />
                     </Form>
                 </div>
             </div>
-            <SystemIdentificationJobsAccordions jobs={filteredSystemIdentificationJobs}
-                                                loading={systemIdentificationJobsLoading}/>
+            <DataCollectionJobsAccordions jobs={filteredDataCollectionJobs}
+                                                loading={dataCollectionJobsLoading}/>
         </div>
     );
 }

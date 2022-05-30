@@ -291,7 +291,7 @@ const EmulationTrace = (props) => {
                                         <th># Logged in users</th>
                                         <th># Successful logins</th>
                                         <th># Open TCP connections</th>
-                                        <th># Users</th>
+                                        <th># User sessions</th>
                                         <th># Block read</th>
                                         <th># Block written</th>
                                         <th># CPU utilization %</th>

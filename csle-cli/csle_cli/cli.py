@@ -568,7 +568,7 @@ def trainingjob(id: int) -> None:
 
 def systemidentificationjob_shell_complete(ctx, param, incomplete):
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    sys_id_jobs = MetastoreFacade.list_system_identification_jobs()
+    sys_id_jobs = MetastoreFacade.list_data_collection_jobs()
     sys_id_jobs_ids = list(map(lambda x: x.id, sys_id_jobs))
     return sys_id_jobs_ids
 
@@ -582,10 +582,10 @@ def systemidentificationjob(id: int) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_system_identification.system_identification_job_manager import SystemIdentificationJobManager
+    from csle_system_identification.data_collection_job_manager import DataCollectionJobManager
 
-    sys_id_job = MetastoreFacade.get_system_identification_job_config(id=id)
-    SystemIdentificationJobManager.run_system_identification_job(job_config=sys_id_job)
+    sys_id_job = MetastoreFacade.get_data_collection_job_config(id=id)
+    DataCollectionJobManager.run_data_collection_job(job_config=sys_id_job)
 
 
 def start_docker_stats_manager() -> None:
@@ -642,7 +642,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
     from csle_common.controllers.container_manager import ContainerManager
     from csle_common.controllers.monitor_tools_controller import MonitorToolsController
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
-    from csle_system_identification.system_identification_job_manager import SystemIdentificationJobManager
+    from csle_system_identification.data_collection_job_manager import DataCollectionJobManager
 
     if entity == "all":
         ContainerManager.start_all_stopped_containers()
@@ -660,9 +660,9 @@ def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
         training_job = MetastoreFacade.get_training_job_config(id=id)
         TrainingJobManager.start_training_job_in_background(training_job=training_job)
     elif entity == "system_id_job":
-        system_id_job = MetastoreFacade.get_system_identification_job_config(id=id)
-        SystemIdentificationJobManager.start_system_identification_job_in_background(
-            system_identification_job=system_id_job)
+        system_id_job = MetastoreFacade.get_data_collection_job_config(id=id)
+        DataCollectionJobManager.start_data_collection_job_in_background(
+            data_collection_job=system_id_job)
     elif entity == "monitor":
         MonitorToolsController.start_monitor()
     else:
