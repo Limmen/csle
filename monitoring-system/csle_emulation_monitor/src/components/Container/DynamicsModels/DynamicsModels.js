@@ -6,14 +6,14 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import ConditionalHistogramDistribution from "./ConditionalHistogramDistribution/ConditionalHistogramDistribution";
-import './EmulationStatistics.css';
-import DataCollection from './DataCollection.png'
+import './DynamicsModels.css';
+import SystemIdentification from './SystemId.png'
 import Collapse from 'react-bootstrap/Collapse'
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
 
-const EmulationStatistics = () => {
+const DynamicsModels = () => {
     const [emulationStatistics, setEmulationStatistics] = useState([]);
     const [selectedEmulationStatistic, setSelectedEmulationStatistic] = useState(null);
     const [conditionals, setConditionals] = useState([]);
@@ -51,7 +51,7 @@ const EmulationStatistics = () => {
     const refresh = () => {
         setLoading(true)
         resetState()
-        fetchEmulationStatistics()
+        fetchDynamicsModels()
     }
 
     const renderInfoTooltip = (props) => (
@@ -80,14 +80,19 @@ const EmulationStatistics = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Emulation statistics</h4>
+                    <h4>System identification: estimating dynamics models</h4>
                     <p className="modalText">
-                        The emulation statistics are collected by measuring log files and other metrics from
-                        the emulated infrastructure under different system conditions, e.g. intrusion and no intrsion,
-                        high load and low load etc.
+                        System identification (model learning) is the process of
+                        building mathematical models of of dynamical systems from
+                        observed input-output signals. In our case, a model refers
+                        to a Markov decision process or a stochastic game
+                        and model-learning refers to the process of estimating the
+                        transition probabilities (dynamics) of the decision process or game.
+                        To estimate these probabilities, we use measurements from the emulated infrastructures.
+                        After learning the model, we use it to simulate the system.
                     </p>
                     <div className="text-center">
-                        <img src={DataCollection} alt="Data collection from the emulation"/>
+                        <img src={SystemIdentification} alt="Markov chain"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -97,7 +102,7 @@ const EmulationStatistics = () => {
         );
     }
 
-    const updateEmulationStatistic = (dynModel) => {
+    const updateDynamicsModel = (dynModel) => {
         setSelectedEmulationStatistic(dynModel)
         const conditionalOptions = Object.keys(dynModel.value.conditionals_counts).map((conditionalName, index) => {
             return {
@@ -133,19 +138,19 @@ const EmulationStatistics = () => {
         }
     }
 
-    const getNumSamples = (statistic) => {
+    const getNumSamples = (model) => {
         var num_samples = 0
-        for (let i = 0; i < Object.keys(statistic.conditionals_counts).length; i++) {
-            var metric = Object.keys(statistic.conditionals_counts[Object.keys(statistic.conditionals_counts)[i]])[0]
-            for (let j = 0; j < Object.keys(statistic.conditionals_counts[Object.keys(statistic.conditionals_counts)[i]][metric]).length; j++) {
-                var value = Object.keys(statistic.conditionals_counts[Object.keys(statistic.conditionals_counts)[i]][metric])[j]
-                num_samples = num_samples + statistic.conditionals_counts[Object.keys(statistic.conditionals_counts)[i]][metric][value]
+        for (let i = 0; i < Object.keys(model.conditionals_counts).length; i++) {
+            var metric = Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]])[0]
+            for (let j = 0; j < Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric]).length; j++) {
+                var value = Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric])[j]
+                num_samples = num_samples + model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric][value]
             }
         }
         return num_samples
     }
 
-    const fetchEmulationStatistics = useCallback(() => {
+    const fetchDynamicsModels = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/dynamicsmodelsdata',
             {
@@ -157,16 +162,16 @@ const EmulationStatistics = () => {
         )
             .then(res => res.json())
             .then(response => {
-                const statisticsOptions = response.map((stat, index) => {
+                const modelOptions = response.map((model, index) => {
                     return {
-                        value: stat,
-                        label: stat.id + "-" + stat.emulation_name
+                        value: model,
+                        label: model.id + "-" + model.emulation_name
                     }
                 })
-                setEmulationStatistics(statisticsOptions)
+                setEmulationStatistics(modelOptions)
                 setLoading(false)
                 if (response.length > 0) {
-                    setSelectedEmulationStatistic(statisticsOptions[0])
+                    setSelectedEmulationStatistic(modelOptions[0])
                     const conditionalOptions = Object.keys(response[0].conditionals_counts).map((conditionalName, index) => {
                         return {
                             value: conditionalName,
@@ -191,13 +196,13 @@ const EmulationStatistics = () => {
 
     useEffect(() => {
         setLoading(true)
-        fetchEmulationStatistics()
-    }, [fetchEmulationStatistics]);
+        fetchDynamicsModels()
+    }, [fetchDynamicsModels]);
 
 
-    const removeEmulationStatisticRequest = useCallback((statistic_id) => {
+    const removeModelRequest = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/dynamicsmodelsdata/remove/' + statistic_id,
+            `http://` + ip + ':7777/dynamicsmodelsdata/remove/' + model_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -207,21 +212,21 @@ const EmulationStatistics = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchEmulationStatistics()
+                fetchDynamicsModels()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeStatistic = (stat) => {
+    const removeModel = (model) => {
         setLoading(true)
         resetState()
-        removeEmulationStatisticRequest(stat.id)
+        removeModelRequest(model.id)
     }
 
-    const SelectEmulationStatisticDropdownOrSpinner = (props) => {
-        if (!props.loading && props.emulationStatistics.length === 0) {
+    const SelectDynamicsModelDropdownOrSpinner = (props) => {
+        if (!props.loading && props.dynamicsModels.length === 0) {
             return (
-                <span className="emptyText">No statistics are available</span>
+                <span className="emptyText">No models are available</span>
             )
         }
         if (props.loading) {
@@ -259,7 +264,7 @@ const EmulationStatistics = () => {
                         overlay={renderRemoveModelTooltip}
                     >
                         <Button variant="danger" className="removeButton"
-                                onClick={() => removeStatistic(selectedEmulationStatistic.value)}>
+                                onClick={() => removeModel(selectedEmulationStatistic.value)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -274,9 +279,9 @@ const EmulationStatistics = () => {
                                 style={{display: 'inline-block'}}
                                 value={props.selectedDynamicsModel}
                                 defaultValue={props.selectedDynamicsModel}
-                                options={props.emulationStatistics}
-                                onChange={updateEmulationStatistic}
-                                placeholder="Select statistic"
+                                options={props.dynamicsModels}
+                                onChange={updateDynamicsModel}
+                                placeholder="Select model"
                             />
                         </div>
                     </div>
@@ -376,8 +381,8 @@ const EmulationStatistics = () => {
         }
     }
 
-    const StatisticDescriptionOrSpinner = (props) => {
-        if (!props.loading && props.emulationStatistics.length === 0) {
+    const ModelDescriptionOrSpinner = (props) => {
+        if (!props.loading && props.dynamicsModels.length === 0) {
             return (<span> </span>)
         }
         if (props.loading || props.selectedDynamicsModel === null) {
@@ -388,7 +393,7 @@ const EmulationStatistics = () => {
         } else {
             return (
                 <div>
-                    <p className="statisticDescription">
+                    <p className="modelDescription">
                         Model description: {props.selectedDynamicsModel.value.descr}
                         <span className="numSamples">
                         Number of samples: {getNumSamples(props.selectedDynamicsModel.value)}
@@ -402,13 +407,13 @@ const EmulationStatistics = () => {
     const ConditionalChartsOrSpinner = (props) => {
         if (!props.loading && props.conditionals.length === 0) {
             return (
-                <p className="statisticDescription"></p>
+                <p className="modelDescription"></p>
             )
         }
         if (!props.loading && props.selectedConditionals !== null && props.selectedConditionals !== undefined &&
             props.selectedConditionals.length === 0) {
             return (
-                <p className="statisticDescription">Select a conditional distribution from the dropdown list.</p>
+                <p className="modelDescription">Select a conditional distribution from the dropdown list.</p>
             )
         }
         if (props.loading || props.selectedConditionals === null || props.selectedConditionals.length === 0
@@ -648,15 +653,15 @@ const EmulationStatistics = () => {
 
 
     return (
-        <div className="emulationStatistics">
+        <div className="dynamicsModels">
 
             <h5 className="text-center inline-block emulationsHeader">
-                <SelectEmulationStatisticDropdownOrSpinner emulationStatistics={emulationStatistics}
+                <SelectDynamicsModelDropdownOrSpinner dynamicsModels={emulationStatistics}
                                                       selectedDynamicsModel={selectedEmulationStatistic}
                                                       loading={loading}
                 />
             </h5>
-            <StatisticDescriptionOrSpinner emulationStatistics={emulationStatistics}
+            <ModelDescriptionOrSpinner dynamicsModels={emulationStatistics}
                                        selectedDynamicsModel={selectedEmulationStatistic}
                                        loading={loading}/>
 
@@ -665,7 +670,7 @@ const EmulationStatistics = () => {
                                         selectedConditionals={selectedConditionals}
                                         animationDurationFactor={animationDurationFactor}
                                         animationDuration={animationDuration}
-                                        conditionals={conditionals} emulationStatistics={emulationStatistics}
+                                        conditionals={conditionals} dynamicsModels={emulationStatistics}
                                         selectedMetric={selectedMetric}
                                         metrics={metrics}
                                         loading={loading}
@@ -674,6 +679,6 @@ const EmulationStatistics = () => {
         </div>
     );
 }
-EmulationStatistics.propTypes = {};
-EmulationStatistics.defaultProps = {};
-export default EmulationStatistics;
+DynamicsModels.propTypes = {};
+DynamicsModels.defaultProps = {};
+export default DynamicsModels;
