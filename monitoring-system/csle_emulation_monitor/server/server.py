@@ -39,7 +39,11 @@ def monitoringpage():
 def tracespage():
     return app.send_static_file('index.html')
 
-@app.route('/dynamicsmodels', methods=['GET'])
+@app.route('/emulationstatistics', methods=['GET'])
+def statisticspage():
+    return app.send_static_file('index.html')
+
+@app.route('/systemmodels', methods=['GET'])
 def modelspage():
     return app.send_static_file('index.html')
 
@@ -338,20 +342,36 @@ def remove_all_simulation_traces():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/emulationstatisticsdata', methods=['GET'])
+def emulation_statistics():
+    stats = MetastoreFacade.list_emulation_statistics()
+    stats_dicts = list(map(lambda x: x.to_dict(), stats))
+    response = jsonify(stats_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
-@app.route('/dynamicsmodelsdata', methods=['GET'])
-def dynamics_models():
-    models = MetastoreFacade.list_emulation_statistics()
+@app.route('/emulationstatisticsdata/remove/<emulation_statistics_id>', methods=['POST'])
+def remove_emulation_statistic(emulation_statistics_id: int):
+    statistic = MetastoreFacade.get_emulation_statistic(id=emulation_statistics_id)
+    if statistic is not None:
+        MetastoreFacade.remove_emulation_statistic(statistic)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/systemmodelsdata', methods=['GET'])
+def system_models_data():
+    models = MetastoreFacade.list_gaussian_mixture_system_models()
     models_dicts = list(map(lambda x: x.to_dict(), models))
     response = jsonify(models_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/dynamicsmodelsdata/remove/<dynamics_model_id>', methods=['POST'])
-def remove_dynamics_model(dynamics_model_id: int):
-    model = MetastoreFacade.get_emulation_statistic(id=dynamics_model_id)
+@app.route('/systemmodelsdata/remove/<system_model_id>', methods=['POST'])
+def remove_system_model(system_model_id: int):
+    model = MetastoreFacade.get_gaussian_mixture_system_model_config(id=system_model_id)
     if model is not None:
-        MetastoreFacade.remove_emulation_statistic(model)
+        MetastoreFacade.remove_gaussian_mixture_system_model(gaussian_mixture_system_model=model)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response

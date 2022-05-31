@@ -92,9 +92,12 @@ class ExpectationMaximizationAlgorithm(BaseSystemIdentificationAlgorithm):
                         metric_name=metric, sample_space=list(X_set)))
             gaussian_conditional_mixtures.append(gaussian_conditional_metrics_mixtures)
 
+        model_descr = f"Model fitted through Expectation Maximization, " \
+                f"emulation:{self.emulation_env_config.name}, statistic id: {self.emulation_statistics.id}"
         model = GaussianMixtureSystemModel(emulation_env_name=self.emulation_env_config.name,
                                            emulation_statistic_id=self.emulation_statistics.id,
-                                           conditional_metric_distributions=gaussian_conditional_mixtures)
+                                           conditional_metric_distributions=gaussian_conditional_mixtures,
+                                           descr=model_descr)
         self.system_identification_job.system_model = model
         self.system_identification_job.progress_percentage = 100
         MetastoreFacade.update_system_identification_job(system_identification_job=self.system_identification_job,

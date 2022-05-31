@@ -6,36 +6,33 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import ConditionalHistogramDistribution from "./ConditionalHistogramDistribution/ConditionalHistogramDistribution";
-import './DynamicsModels.css';
+import './SystemModels.css';
 import SystemIdentification from './SystemId.png'
 import Collapse from 'react-bootstrap/Collapse'
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
 
-const DynamicsModels = () => {
-    const [emulationStatistics, setEmulationStatistics] = useState([]);
-    const [selectedEmulationStatistic, setSelectedEmulationStatistic] = useState(null);
+const SystemModels = () => {
+    const [systemModels, setSystemModels] = useState([]);
+    const [selectedSystemModel, setSelectedSystemModel] = useState(null);
     const [conditionals, setConditionals] = useState([]);
     const [selectedConditionals, setSelectedConditionals] = useState(null);
     const [metrics, setMetrics] = useState([]);
     const [selectedMetric, setSelectedMetric] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [animationDuration, setAnimationDuration] = useState(5);
+    const [animationDuration, setAnimationDuration] = useState(0);
     const animationDurationFactor = 50000
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [deltaCountsOpen, setDeltaCountsOpen] = useState(false);
-    const [initialCountsOpen, setInitialCountsOpen] = useState(false);
     const [deltaProbsOpen, setDeltaProbsOpen] = useState(false);
-    const [initialProbsOpen, setInitialProbsOpen] = useState(false);
     const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
 
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
     const resetState = () => {
-        setEmulationStatistics([])
-        setSelectedEmulationStatistic(null)
+        setSystemModels([])
+        setSelectedSystemModel(null)
         setConditionals([])
         setSelectedConditionals(null)
         setMetrics([])
@@ -44,25 +41,25 @@ const DynamicsModels = () => {
 
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload statistics from the backend
+            Reload system models from the backend
         </Tooltip>
     );
 
     const refresh = () => {
         setLoading(true)
         resetState()
-        fetchDynamicsModels()
+        fetchSystemModels()
     }
 
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about the statistics
+            More information about the system models
         </Tooltip>
     );
 
     const renderRemoveModelTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove the selected statistics.
+            Remove the selected system model.
         </Tooltip>
     );
 
@@ -80,7 +77,7 @@ const DynamicsModels = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>System identification: estimating dynamics models</h4>
+                    <h4>System identification: estimating system models</h4>
                     <p className="modalText">
                         System identification (model learning) is the process of
                         building mathematical models of of dynamical systems from
@@ -102,25 +99,8 @@ const DynamicsModels = () => {
         );
     }
 
-    const updateDynamicsModel = (dynModel) => {
-        setSelectedEmulationStatistic(dynModel)
-        const conditionalOptions = Object.keys(dynModel.value.conditionals_counts).map((conditionalName, index) => {
-            return {
-                value: conditionalName,
-                label: conditionalName
-            }
-        })
-        setConditionals(conditionalOptions)
-        setSelectedConditionals([conditionalOptions[0]])
-        const metricOptions = Object.keys(dynModel.value.conditionals_counts[
-            Object.keys(dynModel.value.conditionals_counts)[0]]).map((metricName, index) => {
-            return {
-                value: metricName,
-                label: metricName
-            }
-        })
-        setMetrics(metricOptions)
-        setSelectedMetric(metricOptions[0])
+    const updateSystemModel = (dynModel) => {
+        setSelectedSystemModel(dynModel)
     }
     const updateSelectedConditionals = (selected) => {
         setSelectedConditionals(selected)
@@ -128,6 +108,23 @@ const DynamicsModels = () => {
 
     const updateMetric = (metricName) => {
         setSelectedMetric(metricName)
+    }
+
+    const getMetricForSelectedConditional = (conditionalOptions, selectedConds) => {
+        var metrics = []
+        for (let i = 0; i < conditionalOptions.length; i++) {
+            var match = false
+            for (let j = 0; j < selectedConds.length; j++) {
+                if(conditionalOptions[i].label === selectedConds[j].label) {
+                    match = true
+                }
+            }
+            if (match) {
+                metrics.push(conditionalOptions[i].value.metric_name)
+            }
+        }
+        const uniqueMetrics = [...new Set(metrics)];
+        return uniqueMetrics
     }
 
     const getFirstTwoConditionals = () => {
@@ -138,21 +135,9 @@ const DynamicsModels = () => {
         }
     }
 
-    const getNumSamples = (model) => {
-        var num_samples = 0
-        for (let i = 0; i < Object.keys(model.conditionals_counts).length; i++) {
-            var metric = Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]])[0]
-            for (let j = 0; j < Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric]).length; j++) {
-                var value = Object.keys(model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric])[j]
-                num_samples = num_samples + model.conditionals_counts[Object.keys(model.conditionals_counts)[i]][metric][value]
-            }
-        }
-        return num_samples
-    }
-
-    const fetchDynamicsModels = useCallback(() => {
+    const fetchSystemModels = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/dynamicsmodelsdata',
+            `http://` + ip + ':7777/systemmodelsdata',
             {
                 method: "GET",
                 headers: new Headers({
@@ -162,26 +147,31 @@ const DynamicsModels = () => {
         )
             .then(res => res.json())
             .then(response => {
+                console.log(response)
                 const modelOptions = response.map((model, index) => {
                     return {
                         value: model,
-                        label: model.id + "-" + model.emulation_name
+                        label: model.id + "-" + model.emulation_env_name
                     }
                 })
-                setEmulationStatistics(modelOptions)
+                setSystemModels(modelOptions)
                 setLoading(false)
                 if (response.length > 0) {
-                    setSelectedEmulationStatistic(modelOptions[0])
-                    const conditionalOptions = Object.keys(response[0].conditionals_counts).map((conditionalName, index) => {
-                        return {
-                            value: conditionalName,
-                            label: conditionalName
+                    setSelectedSystemModel(modelOptions[0])
+                    var conditionalOptions = []
+                    for (let i = 0; i < modelOptions[0].value.conditional_metric_distributions.length; i++) {
+                        for (let j = 0; j < modelOptions[0].value.conditional_metric_distributions[i].length; j++) {
+                            conditionalOptions.push(
+                                {
+                                    value: modelOptions[0].value.conditional_metric_distributions[i][j],
+                                    label: modelOptions[0].value.conditional_metric_distributions[i][j].conditional_name
+                                }
+                            )
                         }
-                    })
+                    }
                     setConditionals(conditionalOptions)
                     setSelectedConditionals([conditionalOptions[0]])
-                    const metricOptions = Object.keys(response[0].conditionals_counts[Object.keys(
-                        response[0].conditionals_counts)[0]]).map((metricName, index) => {
+                    const metricOptions = getMetricForSelectedConditional(conditionalOptions,[conditionalOptions[0]]).map((metricName, index) => {
                         return {
                             value: metricName,
                             label: metricName
@@ -196,13 +186,13 @@ const DynamicsModels = () => {
 
     useEffect(() => {
         setLoading(true)
-        fetchDynamicsModels()
-    }, [fetchDynamicsModels]);
+        fetchSystemModels()
+    }, [fetchSystemModels]);
 
 
     const removeModelRequest = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/dynamicsmodelsdata/remove/' + model_id,
+            `http://` + ip + ':7777/systemmodelsdata/remove/' + model_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -212,7 +202,7 @@ const DynamicsModels = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchDynamicsModels()
+                fetchSystemModels()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -223,8 +213,8 @@ const DynamicsModels = () => {
         removeModelRequest(model.id)
     }
 
-    const SelectDynamicsModelDropdownOrSpinner = (props) => {
-        if (!props.loading && props.dynamicsModels.length === 0) {
+    const SelectSystemModelDropdownOrSpinner = (props) => {
+        if (!props.loading && props.systemModels.length === 0) {
             return (
                 <span className="emptyText">No models are available</span>
             )
@@ -264,7 +254,7 @@ const DynamicsModels = () => {
                         overlay={renderRemoveModelTooltip}
                     >
                         <Button variant="danger" className="removeButton"
-                                onClick={() => removeModel(selectedEmulationStatistic.value)}>
+                                onClick={() => removeModel(selectedSystemModel.value)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -277,10 +267,10 @@ const DynamicsModels = () => {
                         <div className="conditionalDist inline-block" style={{width: "400px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedDynamicsModel}
-                                defaultValue={props.selectedDynamicsModel}
-                                options={props.dynamicsModels}
-                                onChange={updateDynamicsModel}
+                                value={props.selectedSystemModel}
+                                defaultValue={props.selectedSystemModel}
+                                options={props.systemModels}
+                                onChange={updateSystemModel}
                                 placeholder="Select model"
                             />
                         </div>
@@ -292,6 +282,32 @@ const DynamicsModels = () => {
                     <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
                                                                selectedMetric={selectedMetric}
                                                                loading={loading}/>
+                </div>
+            )
+        }
+    }
+
+    const ModelDescriptionOrSpinner = (props) => {
+        if (!props.loading && props.systemModels.length === 0) {
+            return (<span> </span>)
+        }
+        if (props.loading || props.selectedSystemModel === null) {
+            return (
+                <Spinner animation="border" role="status" className="dropdownSpinner">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <div>
+                    <p className="statisticDescription">
+                        Model description: {props.selectedSystemModel.value.descr}
+                        <span className="numSamples">
+                            Statistic id: {props.selectedSystemModel.value.emulation_statistic_id}
+                    </span>
+                        <span className="numSamples">
+                            Emulation: {props.selectedSystemModel.value.emulation_env_name}
+                    </span>
+                    </p>
                 </div>
             )
         }
@@ -381,39 +397,17 @@ const DynamicsModels = () => {
         }
     }
 
-    const ModelDescriptionOrSpinner = (props) => {
-        if (!props.loading && props.dynamicsModels.length === 0) {
-            return (<span> </span>)
-        }
-        if (props.loading || props.selectedDynamicsModel === null) {
-            return (
-                <Spinner animation="border" role="status" className="dropdownSpinner">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
-        } else {
-            return (
-                <div>
-                    <p className="modelDescription">
-                        Model description: {props.selectedDynamicsModel.value.descr}
-                        <span className="numSamples">
-                        Number of samples: {getNumSamples(props.selectedDynamicsModel.value)}
-                    </span>
-                    </p>
-                </div>
-            )
-        }
-    }
 
     const ConditionalChartsOrSpinner = (props) => {
         if (!props.loading && props.conditionals.length === 0) {
             return (
-                <p className="modelDescription"></p>
+                <p className="statisticDescription"></p>
             )
         }
         if (!props.loading && props.selectedConditionals !== null && props.selectedConditionals !== undefined &&
             props.selectedConditionals.length === 0) {
             return (
-                <p className="modelDescription">Select a conditional distribution from the dropdown list.</p>
+                <p className="statisticDescription">Select a conditional distribution from the dropdown list.</p>
             )
         }
         if (props.loading || props.selectedConditionals === null || props.selectedConditionals.length === 0
@@ -426,63 +420,6 @@ const DynamicsModels = () => {
             return (
                 <div>
                     <div className="row chartsRow">
-                        <Card className="col-sm-12">
-                            <Card.Header>
-                                <Button
-                                    onClick={() => setDeltaCountsOpen(!deltaCountsOpen)}
-                                    aria-controls="deltaCountsBody"
-                                    aria-expanded={deltaCountsOpen}
-                                    variant="link"
-                                >
-                                    <h5 className="cardHeaderDists">Delta value count distributions</h5>
-                                </Button>
-                            </Card.Header>
-                            <Collapse in={deltaCountsOpen}>
-                                <div id="deltaCountsBody" className="cardBodyHidden">
-                                    <div className="col-sm-12 conditionalHisto">
-                                        <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.conditionals_counts}
-                                            selectedConditionals={getFirstTwoConditionals()}
-                                            selectedMetric={props.selectedMetric}
-                                            title1={"Delta counts: " + props.selectedMetric.value}
-                                            title2={"Delta counts: " + props.selectedMetric.value}
-                                            animationDuration={props.animationDuration}
-                                            animationDurationFactor={props.animationDurationFactor}
-                                            yAxisLabel={"Count"}
-                                        />
-                                    </div>
-                                </div>
-                            </Collapse>
-                        </Card>
-
-                        <Card className="col-sm-12">
-                            <Card.Header>
-                                <Button
-                                    onClick={() => setInitialCountsOpen(!initialCountsOpen)}
-                                    aria-controls="initialCountsBody"
-                                    aria-expanded={initialCountsOpen}
-                                    variant="link"
-                                >
-                                    <h5 className="cardHeaderDists">Initial value count distributions</h5>
-                                </Button>
-                            </Card.Header>
-                            <Collapse in={initialCountsOpen}>
-                                <div id="initialCountsBody" className="cardBodyHidden">
-                                    <div className="col-sm-12 conditionalHisto">
-                                        <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.initial_distributions_counts}
-                                            selectedConditionals={[]}
-                                            selectedMetric={props.selectedMetric}
-                                            title1={"Initial counts of::" + props.selectedMetric.value}
-                                            title2={"Initial counts of:" + props.selectedMetric.value}
-                                            animationDuration={props.animationDuration}
-                                            animationDurationFactor={props.animationDurationFactor}
-                                            yAxisLabel={"Count"}
-                                        />
-                                    </div>
-                                </div>
-                            </Collapse>
-                        </Card>
 
                         <Card className="col-sm-12">
                             <Card.Header>
@@ -492,49 +429,18 @@ const DynamicsModels = () => {
                                     aria-expanded={deltaProbsOpen}
                                     variant="link"
                                 >
-                                    <h5 className="cardHeaderDists">Delta value probability distributions</h5>
+                                    <h5 className="cardHeaderDists">Conditional Distributions</h5>
                                 </Button>
                             </Card.Header>
                             <Collapse in={deltaProbsOpen}>
                                 <div id="deltaProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.conditionals_probs}
+                                            data={props.selectedSystemModel.value}
                                             selectedConditionals={getFirstTwoConditionals()}
                                             selectedMetric={props.selectedMetric}
                                             title1={"Delta probabilities: " + props.selectedMetric.value}
                                             title2={"Delta probabilities: " + props.selectedMetric.value}
-                                            animationDuration={props.animationDuration}
-                                            animationDurationFactor={props.animationDurationFactor}
-                                            yAxisLabel={"Probability"}
-                                        />
-                                    </div>
-                                </div>
-                            </Collapse>
-                        </Card>
-
-                        <Card className="col-sm-12">
-                            <Card.Header>
-                                <Button
-                                    onClick={() => setInitialProbsOpen(!initialProbsOpen)}
-                                    aria-controls="initialProbsBody"
-                                    aria-expanded={initialProbsOpen}
-                                    variant="link"
-                                >
-                                    <h5 className="cardHeaderDists">
-                                        Initial value probability distributions
-                                    </h5>
-                                </Button>
-                            </Card.Header>
-                            <Collapse in={initialProbsOpen}>
-                                <div id="initialProbsBody" className="cardBodyHidden">
-                                    <div className="col-sm-12 conditionalHisto">
-                                        <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.initial_distributions_probs}
-                                            selectedConditionals={[]}
-                                            selectedMetric={props.selectedMetric}
-                                            title1={"Initial counts of::" + props.selectedMetric.value}
-                                            title2={"Initial counts of:" + props.selectedMetric.value}
                                             animationDuration={props.animationDuration}
                                             animationDurationFactor={props.animationDurationFactor}
                                             yAxisLabel={"Probability"}
@@ -571,16 +477,8 @@ const DynamicsModels = () => {
                                             {props.selectedConditionals.map((conditional, index) => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
-                                                        <td>{conditional.label} mean</td>
-                                                        <td>{props.selectedDynamicsModel.value.means[conditional.label][props.selectedMetric.label]}</td>
-                                                    </tr>
-                                                )
-                                            })}
-                                            {props.selectedConditionals.map((conditional, index) => {
-                                                return (
-                                                    <tr key={conditional.label + "-" + index}>
-                                                        <td>{conditional.label} standard deviation</td>
-                                                        <td>{props.selectedDynamicsModel.value.stds[conditional.label][props.selectedMetric.label]}</td>
+                                                        <td>Conditional: {conditional.label}, num mixture components</td>
+                                                        <td>{conditional.value.mixture_weights.length}</td>
                                                     </tr>
                                                 )
                                             })}
@@ -588,8 +486,8 @@ const DynamicsModels = () => {
                                             {props.selectedConditionals.map((conditional, index) => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
-                                                        <td>{conditional.label} minimum value</td>
-                                                        <td>{props.selectedDynamicsModel.value.mins[conditional.label][props.selectedMetric.label]}</td>
+                                                        <td>Conditional: {conditional.label}, mixture means</td>
+                                                        <td>{conditional.value.mixture_means.join(", ")}</td>
                                                     </tr>
                                                 )
                                             })}
@@ -597,27 +495,23 @@ const DynamicsModels = () => {
                                             {props.selectedConditionals.map((conditional, index) => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
-                                                        <td>{conditional.label} maximum value</td>
-                                                        <td>{props.selectedDynamicsModel.value.maxs[conditional.label][props.selectedMetric.label]}</td>
+                                                        <td>Conditional: {conditional.label}, mixture weights</td>
+                                                        <td>{conditional.value.mixture_weights.join(", ")}</td>
                                                     </tr>
                                                 )
                                             })}
-                                            <tr>
-                                                <td>Initial value mean</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_means[props.selectedMetric.label]}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Initial value standard deviation</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_stds[props.selectedMetric.label]}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Initial minimum value</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_mins[props.selectedMetric.label]}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Initial maximum value</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_maxs[props.selectedMetric.label]}</td>
-                                            </tr>
+
+                                            {props.selectedConditionals.map((conditional, index) => {
+                                                return (conditional.value.mixtures_covariance_matrix.map((cov_row, index) => {
+                                                    return (
+                                                        <tr key={conditional.label + "-" + index}>
+                                                            <td>Conditional: {conditional.label}, mixture component: {index}, covariance</td>
+                                                            <td>{cov_row.join(", ")}</td>
+                                                        </tr>
+                                                    )
+                                                }))
+                                            })}
+
                                             {conditionalPairs().map((conditionalPair, index) => {
                                                 return (
                                                     <tr key={conditionalPair.conditional_1 + "-" +
@@ -626,15 +520,16 @@ const DynamicsModels = () => {
                                                             "{conditionalPair.conditional_1}" and
                                                             "{conditionalPair.conditional_2}"
                                                         </td>
-                                                        <td>{props.selectedDynamicsModel.value.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
+                                                        <td>{props.selectedSystemModel.value.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
                                                     </tr>
                                                 )
                                             })}
+
                                             <tr>
                                                 <td>Data</td>
                                                 <td>
                                                     <Button variant="link"
-                                                            onClick={() => fileDownload(JSON.stringify(props.selectedDynamicsModel.value), "config.json")}>
+                                                            onClick={() => fileDownload(JSON.stringify(props.selectedSystemModel.value), "data.json")}>
                                                         data.json
                                                     </Button>
                                                 </td>
@@ -653,32 +548,30 @@ const DynamicsModels = () => {
 
 
     return (
-        <div className="dynamicsModels">
-
+        <div className="systemModels">
             <h5 className="text-center inline-block emulationsHeader">
-                <SelectDynamicsModelDropdownOrSpinner dynamicsModels={emulationStatistics}
-                                                      selectedDynamicsModel={selectedEmulationStatistic}
-                                                      loading={loading}
+                <SelectSystemModelDropdownOrSpinner systemModels={systemModels}
+                                                    selectedSystemModel={selectedSystemModel}
+                                                    loading={loading}
                 />
             </h5>
-            <ModelDescriptionOrSpinner dynamicsModels={emulationStatistics}
-                                       selectedDynamicsModel={selectedEmulationStatistic}
-                                       loading={loading}/>
+            <ModelDescriptionOrSpinner systemModels={systemModels}
+                                           selectedSystemModel={selectedSystemModel}
+                                           loading={loading}/>
 
             <ConditionalChartsOrSpinner key={animationDuration}
-                                        selectedDynamicsModel={selectedEmulationStatistic}
+                                        selectedSystemModel={selectedSystemModel}
                                         selectedConditionals={selectedConditionals}
                                         animationDurationFactor={animationDurationFactor}
                                         animationDuration={animationDuration}
-                                        conditionals={conditionals} dynamicsModels={emulationStatistics}
+                                        conditionals={conditionals} systemModels={systemModels}
                                         selectedMetric={selectedMetric}
                                         metrics={metrics}
                                         loading={loading}
             />
-
         </div>
     );
 }
-DynamicsModels.propTypes = {};
-DynamicsModels.defaultProps = {};
-export default DynamicsModels;
+SystemModels.propTypes = {};
+SystemModels.defaultProps = {};
+export default SystemModels;

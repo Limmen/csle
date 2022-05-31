@@ -6,6 +6,7 @@ import Emulations from "./components/Container/Emulations/Emulations";
 import Monitoring from "./components/Container/Monitoring/Monitoring";
 import Traces from "./components/Container/Traces/Traces";
 import EmulationStatistics from "./components/Container/EmulationStatistics/EmulationStatistics";
+import SystemModels from "./components/Container/SystemModels/SystemModels";
 import PolicyExamination from "./components/Container/PolicyExamination/PolicyExamination";
 import ContainerImages from "./components/Container/ContainerImages/ContainerImages";
 import Simulations from "./components/Container/Simulations/Simulations";
@@ -34,7 +35,9 @@ function App() {
                                 </Route>
                                 <Route path="traces" index element={<Traces/>}>
                                 </Route>
-                                <Route path="dynamicsmodels" index element={<EmulationStatistics/>}>
+                                <Route path="emulationstatistics" index element={<EmulationStatistics/>}>
+                                </Route>
+                                <Route path="systemmodels" index element={<SystemModels/>}>
                                 </Route>
                                 <Route path="policyexamination" index element={<PolicyExamination/>}>
                                 </Route>

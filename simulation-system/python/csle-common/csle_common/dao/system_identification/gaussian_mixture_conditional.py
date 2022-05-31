@@ -35,12 +35,19 @@ class GaussianMixtureConditional:
         self.sample_space = sample_space
         self.weighted_mixture_distributions = []
         self.generate_distributions()
+        self.combined_distribution = []
 
     def generate_distributions(self):
+        self.sample_space.sort()
         dists = []
         for weight, mean, covar in zip(self.mixture_weights, self.mixtures_means, self.mixtures_covariance_matrix):
             dists.append(list(weight*norm.pdf(self.sample_space, mean, np.sqrt(covar)).ravel()))
         self.weighted_mixture_distributions = dists
+        combined_dist = np.zeros(len(self.sample_space))
+        for dist in dists:
+            d_arr = np.array(dist)
+            combined_dist = combined_dist + d_arr
+        self.combined_distribution = list(combined_dist)
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "GaussianMixtureConditional":
@@ -72,6 +79,8 @@ class GaussianMixtureConditional:
         d["mixture_weights"] = self.mixture_weights
         d["metric_name"] = self.metric_name
         d["sample_space"] = self.sample_space
+        d["weighted_mixture_distributions"] = self.weighted_mixture_distributions
+        d["combined_distribution"] = self.combined_distribution
         return d
 
     def __str__(self) -> str:
@@ -81,7 +90,8 @@ class GaussianMixtureConditional:
         return f"conditional_name:{self.conditional_name}, num_mixture_components: {self.num_mixture_components}, " \
                f"dim: {self.dim}, mixtures_means: {self.mixtures_means}, " \
                f"mixtures_covariance_matrix: {self.mixtures_covariance_matrix}, mixture_weights: {self.mixture_weights}," \
-               f"metric_name: {self.metric_name}, sample space: {self.sample_space}"
+               f"metric_name: {self.metric_name}, sample space: {self.sample_space}, " \
+               f"combined distribution: {self.combined_distribution}"
 
     def to_json_str(self) -> str:
         """
@@ -104,7 +114,6 @@ class GaussianMixtureConditional:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
-
 
     @staticmethod
     def from_sklearn_gaussian_mixture(gmm: GaussianMixture, conditional_name: str, metric_name: str,

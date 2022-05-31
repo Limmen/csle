@@ -60,7 +60,7 @@ const EmulationStatistics = () => {
         </Tooltip>
     );
 
-    const renderRemoveModelTooltip = (props) => (
+    const renderRemoveStatisticTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Remove the selected statistics.
         </Tooltip>
@@ -97,9 +97,9 @@ const EmulationStatistics = () => {
         );
     }
 
-    const updateEmulationStatistic = (dynModel) => {
-        setSelectedEmulationStatistic(dynModel)
-        const conditionalOptions = Object.keys(dynModel.value.conditionals_counts).map((conditionalName, index) => {
+    const updateEmulationStatistic = (stat) => {
+        setSelectedEmulationStatistic(stat)
+        const conditionalOptions = Object.keys(stat.value.conditionals_counts).map((conditionalName, index) => {
             return {
                 value: conditionalName,
                 label: conditionalName
@@ -107,8 +107,8 @@ const EmulationStatistics = () => {
         })
         setConditionals(conditionalOptions)
         setSelectedConditionals([conditionalOptions[0]])
-        const metricOptions = Object.keys(dynModel.value.conditionals_counts[
-            Object.keys(dynModel.value.conditionals_counts)[0]]).map((metricName, index) => {
+        const metricOptions = Object.keys(stat.value.conditionals_counts[
+            Object.keys(stat.value.conditionals_counts)[0]]).map((metricName, index) => {
             return {
                 value: metricName,
                 label: metricName
@@ -147,7 +147,7 @@ const EmulationStatistics = () => {
 
     const fetchEmulationStatistics = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/dynamicsmodelsdata',
+            `http://` + ip + ':7777/emulationstatisticsdata',
             {
                 method: "GET",
                 headers: new Headers({
@@ -197,7 +197,7 @@ const EmulationStatistics = () => {
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `http://` + ip + ':7777/dynamicsmodelsdata/remove/' + statistic_id,
+            `http://` + ip + ':7777/emulationstatisticsdata/remove/' + statistic_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -256,7 +256,7 @@ const EmulationStatistics = () => {
                         className="removeButton"
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveModelTooltip}
+                        overlay={renderRemoveStatisticTooltip}
                     >
                         <Button variant="danger" className="removeButton"
                                 onClick={() => removeStatistic(selectedEmulationStatistic.value)}>
@@ -267,13 +267,13 @@ const EmulationStatistics = () => {
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Model:
+                            Statistic:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "400px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedDynamicsModel}
-                                defaultValue={props.selectedDynamicsModel}
+                                value={props.selectedEmulationStatistic}
+                                defaultValue={props.selectedEmulationStatistic}
                                 options={props.emulationStatistics}
                                 onChange={updateEmulationStatistic}
                                 placeholder="Select statistic"
@@ -380,7 +380,7 @@ const EmulationStatistics = () => {
         if (!props.loading && props.emulationStatistics.length === 0) {
             return (<span> </span>)
         }
-        if (props.loading || props.selectedDynamicsModel === null) {
+        if (props.loading || props.selectedEmulationStatistic === null) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>
@@ -389,9 +389,9 @@ const EmulationStatistics = () => {
             return (
                 <div>
                     <p className="statisticDescription">
-                        Model description: {props.selectedDynamicsModel.value.descr}
+                        Statistic description: {props.selectedEmulationStatistic.value.descr}
                         <span className="numSamples">
-                        Number of samples: {getNumSamples(props.selectedDynamicsModel.value)}
+                        Number of samples: {getNumSamples(props.selectedEmulationStatistic.value)}
                     </span>
                     </p>
                 </div>
@@ -436,7 +436,7 @@ const EmulationStatistics = () => {
                                 <div id="deltaCountsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.conditionals_counts}
+                                            data={props.selectedEmulationStatistic.value.conditionals_counts}
                                             selectedConditionals={getFirstTwoConditionals()}
                                             selectedMetric={props.selectedMetric}
                                             title1={"Delta counts: " + props.selectedMetric.value}
@@ -465,7 +465,7 @@ const EmulationStatistics = () => {
                                 <div id="initialCountsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.initial_distributions_counts}
+                                            data={props.selectedEmulationStatistic.value.initial_distributions_counts}
                                             selectedConditionals={[]}
                                             selectedMetric={props.selectedMetric}
                                             title1={"Initial counts of::" + props.selectedMetric.value}
@@ -494,7 +494,7 @@ const EmulationStatistics = () => {
                                 <div id="deltaProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.conditionals_probs}
+                                            data={props.selectedEmulationStatistic.value.conditionals_probs}
                                             selectedConditionals={getFirstTwoConditionals()}
                                             selectedMetric={props.selectedMetric}
                                             title1={"Delta probabilities: " + props.selectedMetric.value}
@@ -525,7 +525,7 @@ const EmulationStatistics = () => {
                                 <div id="initialProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
-                                            data={props.selectedDynamicsModel.value.initial_distributions_probs}
+                                            data={props.selectedEmulationStatistic.value.initial_distributions_probs}
                                             selectedConditionals={[]}
                                             selectedMetric={props.selectedMetric}
                                             title1={"Initial counts of::" + props.selectedMetric.value}
@@ -567,7 +567,7 @@ const EmulationStatistics = () => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
                                                         <td>{conditional.label} mean</td>
-                                                        <td>{props.selectedDynamicsModel.value.means[conditional.label][props.selectedMetric.label]}</td>
+                                                        <td>{props.selectedEmulationStatistic.value.means[conditional.label][props.selectedMetric.label]}</td>
                                                     </tr>
                                                 )
                                             })}
@@ -575,7 +575,7 @@ const EmulationStatistics = () => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
                                                         <td>{conditional.label} standard deviation</td>
-                                                        <td>{props.selectedDynamicsModel.value.stds[conditional.label][props.selectedMetric.label]}</td>
+                                                        <td>{props.selectedEmulationStatistic.value.stds[conditional.label][props.selectedMetric.label]}</td>
                                                     </tr>
                                                 )
                                             })}
@@ -584,7 +584,7 @@ const EmulationStatistics = () => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
                                                         <td>{conditional.label} minimum value</td>
-                                                        <td>{props.selectedDynamicsModel.value.mins[conditional.label][props.selectedMetric.label]}</td>
+                                                        <td>{props.selectedEmulationStatistic.value.mins[conditional.label][props.selectedMetric.label]}</td>
                                                     </tr>
                                                 )
                                             })}
@@ -593,25 +593,25 @@ const EmulationStatistics = () => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
                                                         <td>{conditional.label} maximum value</td>
-                                                        <td>{props.selectedDynamicsModel.value.maxs[conditional.label][props.selectedMetric.label]}</td>
+                                                        <td>{props.selectedEmulationStatistic.value.maxs[conditional.label][props.selectedMetric.label]}</td>
                                                     </tr>
                                                 )
                                             })}
                                             <tr>
                                                 <td>Initial value mean</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_means[props.selectedMetric.label]}</td>
+                                                <td>{props.selectedEmulationStatistic.value.initial_means[props.selectedMetric.label]}</td>
                                             </tr>
                                             <tr>
                                                 <td>Initial value standard deviation</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_stds[props.selectedMetric.label]}</td>
+                                                <td>{props.selectedEmulationStatistic.value.initial_stds[props.selectedMetric.label]}</td>
                                             </tr>
                                             <tr>
                                                 <td>Initial minimum value</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_mins[props.selectedMetric.label]}</td>
+                                                <td>{props.selectedEmulationStatistic.value.initial_mins[props.selectedMetric.label]}</td>
                                             </tr>
                                             <tr>
                                                 <td>Initial maximum value</td>
-                                                <td>{props.selectedDynamicsModel.value.initial_maxs[props.selectedMetric.label]}</td>
+                                                <td>{props.selectedEmulationStatistic.value.initial_maxs[props.selectedMetric.label]}</td>
                                             </tr>
                                             {conditionalPairs().map((conditionalPair, index) => {
                                                 return (
@@ -621,7 +621,7 @@ const EmulationStatistics = () => {
                                                             "{conditionalPair.conditional_1}" and
                                                             "{conditionalPair.conditional_2}"
                                                         </td>
-                                                        <td>{props.selectedDynamicsModel.value.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
+                                                        <td>{props.selectedEmulationStatistic.value.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
                                                     </tr>
                                                 )
                                             })}
@@ -629,7 +629,7 @@ const EmulationStatistics = () => {
                                                 <td>Data</td>
                                                 <td>
                                                     <Button variant="link"
-                                                            onClick={() => fileDownload(JSON.stringify(props.selectedDynamicsModel.value), "config.json")}>
+                                                            onClick={() => fileDownload(JSON.stringify(props.selectedEmulationStatistic.value), "config.json")}>
                                                         data.json
                                                     </Button>
                                                 </td>
@@ -652,16 +652,16 @@ const EmulationStatistics = () => {
 
             <h5 className="text-center inline-block emulationsHeader">
                 <SelectEmulationStatisticDropdownOrSpinner emulationStatistics={emulationStatistics}
-                                                      selectedDynamicsModel={selectedEmulationStatistic}
+                                                      selectedEmulationStatistic={selectedEmulationStatistic}
                                                       loading={loading}
                 />
             </h5>
             <StatisticDescriptionOrSpinner emulationStatistics={emulationStatistics}
-                                       selectedDynamicsModel={selectedEmulationStatistic}
+                                       selectedEmulationStatistic={selectedEmulationStatistic}
                                        loading={loading}/>
 
             <ConditionalChartsOrSpinner key={animationDuration}
-                                        selectedDynamicsModel={selectedEmulationStatistic}
+                                        selectedEmulationStatistic={selectedEmulationStatistic}
                                         selectedConditionals={selectedConditionals}
                                         animationDurationFactor={animationDurationFactor}
                                         animationDuration={animationDuration}

@@ -30,9 +30,15 @@ const Header = () => {
         </Tooltip>
     );
 
-    const renderDynamicsModelsTooltip = (props) => (
+    const renderEmulationStatisticsTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            List of dynamics models estimated from emulation data
+            Statistics collected from emulations
+        </Tooltip>
+    );
+
+    const renderSystemModelsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            System models learned from data
         </Tooltip>
     );
 
@@ -126,9 +132,19 @@ const Header = () => {
                             <OverlayTrigger
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
-                                overlay={renderDynamicsModelsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"dynamicsmodels"}>
-                                    Models
+                                overlay={renderEmulationStatisticsTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"emulationstatistics"}>
+                                    Statistics
+                                </NavLink>
+                            </OverlayTrigger>
+                        </li>
+                        <li className="nav-item navtabheader">
+                            <OverlayTrigger
+                                placement="top"
+                                delay={{show: 0, hide: 0}}
+                                overlay={renderSystemModelsTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"systemmodels"}>
+                                    System models
                                 </NavLink>
                             </OverlayTrigger>
                         </li>

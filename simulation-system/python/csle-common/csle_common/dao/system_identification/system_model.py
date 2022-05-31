@@ -7,8 +7,8 @@ class SystemModel(ABC):
     Abstract system model
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, descr: str):
+        self.descr = descr
 
     @abstractmethod
     def to_dict(self)-> Dict[str, Any]:
