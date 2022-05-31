@@ -3,8 +3,6 @@ import time
 import os
 import sys
 import numpy as np
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
-from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
@@ -111,7 +109,7 @@ class Emulator:
             assert  len(full_defender_sequence) == len(full_attacker_sequence)
 
 
-            logger.info(f"Starting execution of static action sequences, iteration :{i}")
+            logger.info(f"Starting execution of static action sequences, iteration :{i}, T: {T}, I_t:{intrusion_start_time}")
             sys.stdout.flush()
             s.reset()
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
@@ -131,10 +129,6 @@ class Emulator:
                     emulation_env_config=emulation_env_config,  attacker_action=a2, defender_action=a1,
                     sleep_time=sleep_time, trace=emulation_trace, s=s)
                 s.defender_obs_state.average_metric_lists()
-                if len(s.defender_obs_state.ids_log_consumer_thread.ids_alert_counters_list) > 1:
-                    print(f"first: {s.defender_obs_state.ids_log_consumer_thread.ids_alert_counters_list[0].alerts_weighted_by_priority},"
-                          f"second: {s.defender_obs_state.ids_log_consumer_thread.ids_alert_counters_list[1].alerts_weighted_by_priority},"
-                          f"avg:{s.defender_obs_state.avg_ids_alert_counters.alerts_weighted_by_priority}")
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
 
 

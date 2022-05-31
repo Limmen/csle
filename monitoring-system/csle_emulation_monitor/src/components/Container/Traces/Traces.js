@@ -9,9 +9,6 @@ import EmulationTrace from "./EmulationTrace/EmulationTrace";
 import SimulationTrace from "./SimulationTrace/SimulationTrace";
 import TraceImg from './TracesLoop.png'
 import './Traces.css';
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
-import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 
@@ -117,6 +114,8 @@ const Traces = () => {
                     setSelectedEmulationTraceId(emulationTracesIds[0])
                     fetchEmulationTrace(emulationTracesIds[0])
                     setLoadingSelectedEmulationTrace(true)
+                } else {
+                    setLoadingSelectedEmulationTrace(false)
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -134,18 +133,20 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                const emulationTracesIds = response.map((id_obj, index) => {
+                const simulationTracesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
                         label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
                     }
                 })
-                setSimulationTracesIds(emulationTracesIds)
+                setSimulationTracesIds(simulationTracesIds)
                 setLoadingSimulationTraces(false)
                 if (simulationTracesIds.length > 0) {
                     setSelectedSimulationTraceId(simulationTracesIds[0])
                     fetchSimulationTrace(simulationTracesIds[0])
                     setLoadingSelectedSimulationTrace(true)
+                } else {
+                    setLoadingSelectedSimulationTrace(false)
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -189,13 +190,14 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSimulationTraces()
+                fetchSimulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
     const removeSimulationTrace = (simulationTrace) => {
         setLoadingSimulationTraces(true)
+        setLoadingSelectedSimulationTrace(true)
         removeSimulationTraceRequest(simulationTrace.id)
     }
 
@@ -211,7 +213,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchEmulationTraces()
+                fetchEmulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -228,7 +230,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchEmulationTraces()
+                fetchEmulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -245,33 +247,38 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSimulationTraces()
+                fetchSimulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
     const removeEmulationTrace = (emulationTrace) => {
         setLoadingEmulationTraces(true)
+        setLoadingSelectedEmulationTrace(true)
         removeEmulationTraceRequest(emulationTrace.id)
     }
 
     const refreshEmulationTraces = () => {
         setLoadingEmulationTraces(true)
+        setLoadingSelectedEmulationTrace(true)
         fetchEmulationTraces()
     }
 
     const removeAllEmulationTraces = () => {
         setLoadingEmulationTraces(true)
+        setLoadingSelectedEmulationTrace(true)
         removeAllEmulationTracesRequest()
     }
 
     const removeAllSimulationTraces = () => {
         setLoadingSimulationTraces(true)
+        setLoadingSelectedSimulationTrace(true)
         removeAllSimulationTracesRequest()
     }
 
     const refreshSimulationTraces = () => {
         setLoadingSimulationTraces(true)
+        setLoadingSelectedSimulationTrace(true)
         fetchSimulationTraces()
     }
 
@@ -593,8 +600,8 @@ const Traces = () => {
     }
 
     const SimulationTraceAccordion = (props) => {
-        if (props.loadingSimulationTraces || props.selectedSimulationTrace === null || props.selectedSimulationTrace === undefined) {
-            if (props.loadingSimulationTraces) {
+        if (props.loadingSelectedSimulationTrace || props.selectedSimulationTrace === null || props.selectedSimulationTrace === undefined) {
+            if (props.loadingSelectedSimulationTrace) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching simulation trace... </span>

@@ -353,7 +353,7 @@ class PPOTrainingCallback(BaseCallback):
                             Logger.__call__().get_logger().info(f"pi(S|b:idx,s:{s.id},l:{l}): {stopping_dist[s.id][l]}")
 
 
-            self.exp_result.all_metrics[self.seed]["average_reward"].append(round(avg_R, 3))
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
             self.training_env.reset()
 
             # Update training job

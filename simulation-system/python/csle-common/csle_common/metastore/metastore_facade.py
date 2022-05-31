@@ -109,7 +109,7 @@ class MetastoreFacade:
         :param simulation_record: the record to convert
         :return: the DTO representing the record
         """
-        simulation_config_json_str = json.dumps(simulation_record[3], indent=4, sort_keys=True)
+        simulation_config_json_str = json.dumps(simulation_record[2], indent=4, sort_keys=True)
         simulation_env_config: SimulationEnvConfig = SimulationEnvConfig.from_dict(
             json.loads(simulation_config_json_str))
         simulation_env_config.id = simulation_record[0]
@@ -254,9 +254,8 @@ class MetastoreFacade:
                 try:
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATIONS_TABLE} "
-                                f"(name, emulation_statistic_id, config) "
-                                f"VALUES (%s, %s, %s) RETURNING id", (config.name, config.emulation_statistic_id,
-                                                                      config_json_str))
+                                f"(name, config) "
+                                f"VALUES (%s, %s) RETURNING id", (config.name, config_json_str))
                     id_of_new_row = cur.fetchone()[0]
                     conn.commit()
                     Logger.__call__().get_logger().debug(f"Simulation {config.name} installed successfully")

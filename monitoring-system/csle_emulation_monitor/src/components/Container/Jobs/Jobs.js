@@ -87,8 +87,6 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log("got sysid jobs")
-                console.log(response)
                 setSystemIdentificationJobs(response);
                 setFilteredSystemIdentificationJobs(response);
                 setSystemIdentificationJobsLoading(false)
@@ -642,9 +640,12 @@ const Jobs = () => {
     const TrainingJobsAccordions = (props) => {
         if (props.loading) {
             return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
+                <h3>
+                    <span className="spinnerLabel"> Fetching training jobs... </span>
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </h3>)
         } else {
             return (
                 <Accordion defaultActiveKey="0">
@@ -661,9 +662,12 @@ const Jobs = () => {
     const SystemIdentificationJobsAccordions = (props) => {
         if (props.loading) {
             return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
+                <h3>
+                    <span className="spinnerLabel"> Fetching system identification jobs... </span>
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </h3>)
         } else {
             return (
                 <Accordion defaultActiveKey="0">
@@ -681,9 +685,13 @@ const Jobs = () => {
     const DataCollectionJobsAccordions = (props) => {
         if (props.loading) {
             return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
+                <h3>
+                    <span className="spinnerLabel"> Fetching data collection jobs... </span>
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </h3>
+            )
         } else {
             return (
                 <Accordion defaultActiveKey="0">

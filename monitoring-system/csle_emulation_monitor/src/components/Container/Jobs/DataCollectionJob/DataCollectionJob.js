@@ -259,7 +259,7 @@ const DataCollectionJob = (props) => {
                     <span className="seqCompleted">
                     Sequences completed: {props.job.num_sequences_completed}/{props.job.repeat_times}</span>
                     <span className="seqCompleted">
-                    Steps per sequence: {props.job.attacker_sequence.length}</span>
+                    Intrusion steps per sequence: {props.job.attacker_sequence.length}</span>
                 </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey={props.job.id}>

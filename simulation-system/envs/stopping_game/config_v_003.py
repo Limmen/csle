@@ -25,7 +25,6 @@ from csle_common.dao.simulation_config.simulation_env_input_config import Simula
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
-from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -34,8 +33,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
 
 def default_config(name: str, version: str = "0.0.3", min_alerts_weighted_by_priority :int = 0,
-                   max_alers_weighted_by_priority :int = 100,
-                   emulation_statistic_id : Union[int, None] = None) -> SimulationEnvConfig:
+                   max_alers_weighted_by_priority :int = 100) -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
 
@@ -45,19 +43,16 @@ def default_config(name: str, version: str = "0.0.3", min_alerts_weighted_by_pri
                                             alerts weighted by priority
     :param max_alers_weighted_by_priority: if using heuristic observation space, this defines the max number of
                                            alerts weighted by priority
-    :param emulation_statistic_id: the emulation statistic id
     :return:the default configuration
     """
-    emulation_statistic = default_emulation_statistic(emulation_statistic_id=emulation_statistic_id)
     players_config = default_players_config()
     state_space_config = default_state_space_config()
     joint_action_space_config = default_joint_action_space_config()
     joint_observation_space_config = default_joint_observation_space_config(
-        emulation_statistic=emulation_statistic, min_alerts_weighted_by_priority=min_alerts_weighted_by_priority,
+        min_alerts_weighted_by_priority=min_alerts_weighted_by_priority,
         max_alerts_weighted_by_priority=max_alers_weighted_by_priority)
     transition_operator_config = default_transition_operator_config()
     observation_function_config = default_observation_function_config(
-        emulation_statistic=emulation_statistic,
         defender_obs_space=joint_observation_space_config.observation_spaces[0],
         joint_action_space=joint_action_space_config, state_space=state_space_config,
         min_alerts_weighted_by_priority=min_alerts_weighted_by_priority,
@@ -82,27 +77,11 @@ def default_config(name: str, version: str = "0.0.3", min_alerts_weighted_by_pri
         transition_operator_config=transition_operator_config,
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
-        emulation_statistic_id=emulation_statistic_id, time_step_type=TimeStepType.DISCRETE,
+        time_step_type=TimeStepType.DISCRETE,
         gym_env_name="csle-stopping-game-v1", env_parameters_config=env_parameters_config,
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
     return simulation_env_config
-
-
-def default_emulation_statistic(emulation_statistic_id: Union[int, None]) -> Union[EmulationStatistics, None]:
-    """
-    :param emulation_statistic_id: the emulation statistic id
-    :return: the default emulation statistic to use for the simulation
-    """
-    if emulation_statistic_id is None:
-        return None
-    emulation_statistic = MetastoreFacade.get_emulation_statistic(id=emulation_statistic_id)
-    if emulation_statistic is None:
-        Logger.__call__().get_logger().warning(f"Emulation statistic with id: "
-                                               f"{emulation_statistic_id} does not exist in the metastore, "
-                                               f"using heuristic statistics")
-    return emulation_statistic
-
 
 def default_env_parameters_config() -> EnvParametersConfig:
     """
@@ -195,12 +174,11 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
 
 
 def default_joint_observation_space_config(
-        emulation_statistic: EmulationStatistics, min_alerts_weighted_by_priority :int = 0,
+        min_alerts_weighted_by_priority :int = 0,
         max_alerts_weighted_by_priority :int = 100) -> JointObservationSpaceConfig:
     """
     Gets the default joint observation space configuration of the simulation
 
-    :param emulation_statistic: the emulation statistic to use for generating the observation space
     :param min_alerts_weighted_by_priority: if using heuristic observation space, this defines the min number of
                                             alerts weighted by priority
     :param max_alerts_weighted_by_priority: if using heuristic observation space, this defines the max number of
@@ -211,35 +189,18 @@ def default_joint_observation_space_config(
     observation_id_to_observation_vector = {}
     defender_observations = []
     component_observations = {}
-    if emulation_statistic is not None:
-        alerts_weighted_by_priority =emulation_statistic.conditionals_counts[
-            constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["alerts_weighted_by_priority"].keys()
-        component_observations["alerts_weighted_by_priority"] = []
-        for i, val in enumerate(alerts_weighted_by_priority):
-            component_observations["alerts_weighted_by_priority"].append(Observation(
-                id=i, val=val, descr=f"{val} IDS alerts weighted by priority"))
+    component_observations["alerts_weighted_by_priority"] = []
+    for val in range(min_alerts_weighted_by_priority, max_alerts_weighted_by_priority):
+        component_observations["alerts_weighted_by_priority"].append(Observation(
+            id=val, val=val, descr=f"{val} IDS alerts weighted by priority"))
 
-        for idx1, i in enumerate(alerts_weighted_by_priority):
-            id = i
-            defender_observations.append(Observation(
-                id=id, val=id,
-                descr=f"{i} IDS alerts weighted by priority"))
-            observation_id_to_observation_vector[id] = [i]
-            observation_id_to_observation_id_vector[id] = [idx1]
-
-    else:
-        component_observations["alerts_weighted_by_priority"] = []
-        for val in range(min_alerts_weighted_by_priority, max_alerts_weighted_by_priority):
-            component_observations["alerts_weighted_by_priority"].append(Observation(
-                id=val, val=val, descr=f"{val} IDS alerts weighted by priority"))
-
-        for i in range(min_alerts_weighted_by_priority, max_alerts_weighted_by_priority):
-            id = i
-            defender_observations.append(Observation(
-                id=id, val=id,
-                descr=f"{i} IDS alerts weighted by priority"))
-            observation_id_to_observation_vector[id] = [i]
-            observation_id_to_observation_id_vector[id] = [i]
+    for i in range(min_alerts_weighted_by_priority, max_alerts_weighted_by_priority):
+        id = i
+        defender_observations.append(Observation(
+            id=id, val=id,
+            descr=f"{i} IDS alerts weighted by priority"))
+        observation_id_to_observation_vector[id] = [i]
+        observation_id_to_observation_id_vector[id] = [i]
 
     observation_component_name_to_index = {"alerts_weighted_by_priority": 0}
 
@@ -283,14 +244,13 @@ def default_transition_operator_config() -> TransitionOperatorConfig:
 
 
 def default_observation_function_config(
-        emulation_statistic: EmulationStatistics, defender_obs_space: ObservationSpaceConfig,
+        defender_obs_space: ObservationSpaceConfig,
         joint_action_space: JointActionSpaceConfig, state_space: StateSpaceConfig,
         min_alerts_weighted_by_priority :int = 0, max_alerts_weighted_by_priority :int = 100) \
         -> ObservationFunctionConfig:
     """
     The default observation function configuration
 
-    :param emulation_statistic: the emulation statistic
     :param min_alerts_weighted_by_priority: if using heuristic observation space, this defines the min number of
                                             alerts weighted by priority
     :param max_alerts_weighted_by_priority: if using heuristic observation space, this defines the max number of
@@ -298,16 +258,10 @@ def default_observation_function_config(
     :return: the default configuration of the observation function
     """
     component_observation_tensors = {}
-    if emulation_statistic is not None:
-        observation_tensor, component_observation_tensors = \
-            list(StoppingGameUtil.observation_tensor_from_emulation_statistics(
-                emulation_statistic=emulation_statistic, observation_space_defender=defender_obs_space,
-                joint_action_space=joint_action_space, state_space=state_space))
-    else:
-        priority_alerts_tensor = StoppingGameUtil.observation_tensor(
-            len(range(min_alerts_weighted_by_priority, max_alerts_weighted_by_priority)) - 1)
-        component_observation_tensors["alerts_weighted_by_priority"] = list(priority_alerts_tensor.tolist())
-        observation_tensor = priority_alerts_tensor
+    priority_alerts_tensor = StoppingGameUtil.observation_tensor(
+        len(range(min_alerts_weighted_by_priority, max_alerts_weighted_by_priority)) - 1)
+    component_observation_tensors["alerts_weighted_by_priority"] = list(priority_alerts_tensor.tolist())
+    observation_tensor = priority_alerts_tensor
     observation_function_config = ObservationFunctionConfig(
         observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors)
     return observation_function_config

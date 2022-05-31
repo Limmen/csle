@@ -72,7 +72,6 @@ GRANT USAGE, SELECT ON SEQUENCE emulation_images_id_seq TO csle;
 CREATE TABLE IF NOT EXISTS simulations (
     id serial PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
-    emulation_statistic_id int references emulation_statistics(id) ON DELETE CASCADE,
     config json NOT NULL
 );
 GRANT ALL ON simulations TO csle;

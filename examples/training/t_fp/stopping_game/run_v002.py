@@ -61,7 +61,13 @@ if __name__ == '__main__':
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS: HParam(
                 value=300, name=agents_constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS,
-                descr="number of iterations to evaluate best response strategies when calculating exploitability")
+                descr="number of iterations to evaluate best response strategies when calculating exploitability"),
+            agents_constants.COMMON.GAMMA: HParam(
+                value=0.99, name=agents_constants.COMMON.GAMMA,
+                descr="the discount factor gamma"),
+            agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS: HParam(
+                value=300, name=agents_constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS,
+                descr="number of iterations to evaluate equilibrium strategies in each iteration")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

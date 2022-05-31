@@ -27,7 +27,7 @@ class SimulationEnvConfig:
                  joint_action_space_config: JointActionSpaceConfig,
                  joint_observation_space_config: JointObservationSpaceConfig, time_step_type: TimeStepType,
                  reward_function_config: RewardFunctionConfig, transition_operator_config: TransitionOperatorConfig,
-                 observation_function_config: ObservationFunctionConfig, emulation_statistic_id: int,
+                 observation_function_config: ObservationFunctionConfig,
                  initial_state_distribution_config : InitialStateDistributionConfig,
                  env_parameters_config: EnvParametersConfig, plot_transition_probabilities : bool = False,
                  plot_observation_function: bool = False, plot_reward_function: bool = False
@@ -66,7 +66,6 @@ class SimulationEnvConfig:
         self.reward_function_config = reward_function_config
         self.transition_operator_config = transition_operator_config
         self.observation_function_config = observation_function_config
-        self.emulation_statistic_id = emulation_statistic_id
         self.initial_state_distribution_config= initial_state_distribution_config
         self.version = version
         self.gym_env_name = gym_env_name
@@ -104,7 +103,6 @@ class SimulationEnvConfig:
             reward_function_config=RewardFunctionConfig.from_dict(d["reward_function_config"]),
             transition_operator_config=TransitionOperatorConfig.from_dict(d["transition_operator_config"]),
             observation_function_config=ObservationFunctionConfig.from_dict(d["observation_function_config"]),
-            emulation_statistic_id=d["emulation_statistic_id"],
             initial_state_distribution_config=InitialStateDistributionConfig.from_dict(
                 d["initial_state_distribution_config"]),
             version=d["version"], gym_env_name=d["gym_env_name"],
@@ -133,7 +131,6 @@ class SimulationEnvConfig:
         d["reward_function_config"] = self.reward_function_config.to_dict()
         d["transition_operator_config"] = self.transition_operator_config.to_dict()
         d["observation_function_config"] = self.observation_function_config.to_dict()
-        d["emulation_statistic_id"] = self.emulation_statistic_id
         d["initial_state_distribution_config"] = self.initial_state_distribution_config.to_dict()
         d["version"] = self.version
         d["gym_env_name"] = self.gym_env_name
@@ -156,8 +153,7 @@ class SimulationEnvConfig:
                f"joint_observation_space_config: {self.joint_observation_space_config}, " \
                f"time_step_type: {self.time_step_type}, reward_function_config: {self.reward_function_config}, " \
                f"transition_operator_config: {self.transition_operator_config}, " \
-               f"observation_function_config: {self.observation_function_config}," \
-               f"emulation_statistic_id: {self.emulation_statistic_id}," \
+               f"observation_function_config: {self.observation_function_config}, " \
                f"initial_state_distribution_config: {self.initial_state_distribution_config}," \
                f"version: {self.version}, gym_env_name: {self.gym_env_name}, id: {self.id}," \
                f"env_parameters_config: {self.env_parameters_config}," \

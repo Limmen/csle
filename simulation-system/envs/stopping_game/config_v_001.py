@@ -25,7 +25,6 @@ from csle_common.dao.simulation_config.simulation_env_input_config import Simula
 from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
-from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -35,7 +34,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
 def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0, max_severe_alerts :int = 20,
                    min_warning_alerts :int = 0, max_warning_alerts :int = 20, min_login_attempts :int = 0,
-                   max_login_attempts :int = 10, emulation_statistic_id : Union[int, None] = None) \
+                   max_login_attempts :int = 10) \
         -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
@@ -48,21 +47,17 @@ def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0
     :param max_warning_alerts: if using heuristic observation space, this defines the max number of warning alerts
     :param min_login_attempts: if using heuristic observation space, this defines the min number of login attempts
     :param max_login_attempts: if using heuristic observation space, this defines the max number of login attempts
-    :param emulation_statistic_id: the emulation statistic id
     :return:the default configuration
     """
-    emulation_statistic = default_emulation_statistic(emulation_statistic_id=emulation_statistic_id)
     players_config = default_players_config()
     state_space_config = default_state_space_config()
     joint_action_space_config = default_joint_action_space_config()
-    joint_observation_space_config = default_joint_observation_space_config(
-        emulation_statistic=emulation_statistic, min_login_attempts=min_login_attempts,
+    joint_observation_space_config = default_joint_observation_space_config(min_login_attempts=min_login_attempts,
         max_login_attempts=max_login_attempts, min_severe_alerts=min_severe_alerts,
         max_severe_alerts=max_severe_alerts, min_warning_alerts=min_warning_alerts,
         max_warning_alerts=max_warning_alerts)
     transition_operator_config = default_transition_operator_config()
     observation_function_config = default_observation_function_config(
-        emulation_statistic=emulation_statistic,
         defender_obs_space=joint_observation_space_config.observation_spaces[0],
         joint_action_space=joint_action_space_config, state_space=state_space_config,
         min_severe_alerts=min_severe_alerts, max_severe_alerts=max_severe_alerts, min_warning_alerts=min_warning_alerts,
@@ -89,27 +84,11 @@ def default_config(name: str, version: str = "0.0.1", min_severe_alerts :int = 0
         transition_operator_config=transition_operator_config,
         observation_function_config=observation_function_config, reward_function_config=reward_function_config,
         initial_state_distribution_config=initial_state_distribution_config, simulation_env_input_config=input_config,
-        emulation_statistic_id=emulation_statistic_id, time_step_type=TimeStepType.DISCRETE,
+        time_step_type=TimeStepType.DISCRETE,
         gym_env_name="csle-stopping-game-v1", env_parameters_config=env_parameters_config,
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
     return simulation_env_config
-
-
-def default_emulation_statistic(emulation_statistic_id: Union[int, None]) -> Union[EmulationStatistics, None]:
-    """
-    :param emulation_statistic_id: the emulation statistic id
-    :return: the default emulation statistic to use for the simulation
-    """
-    if emulation_statistic_id is None:
-        return None
-    emulation_statistic = MetastoreFacade.get_emulation_statistic(id=emulation_statistic_id)
-    if emulation_statistic is None:
-        Logger.__call__().get_logger().warning(f"Emulation statistic with id: "
-                                               f"{emulation_statistic_id} does not exist in the metastore, "
-                                               f"using heuristic statistics")
-    return emulation_statistic
-
 
 def default_env_parameters_config() -> EnvParametersConfig:
     """
@@ -198,13 +177,12 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
 
 
 def default_joint_observation_space_config(
-        emulation_statistic: EmulationStatistics, min_severe_alerts :int = 0, max_severe_alerts :int = 100,
+        min_severe_alerts :int = 0, max_severe_alerts :int = 100,
         min_warning_alerts :int = 0, max_warning_alerts :int = 100, min_login_attempts :int = 0,
         max_login_attempts :int = 100) -> JointObservationSpaceConfig:
     """
     Gets the default joint observation space configuration of the simulation
 
-    :param emulation_statistic: the emulation statistic to use for generating the observation space
     :param min_severe_alerts: if using heuristic observation space, this defines the min number of severe alerts
     :param max_severe_alerts: if using heuristic observation space, this defines the max number of severe alerts
     :param min_warning_alerts: if using heuristic observation space, this defines the min number of warning alerts
@@ -217,57 +195,32 @@ def default_joint_observation_space_config(
     observation_id_to_observation_vector = {}
     defender_observations = []
     component_observations = {}
-    if emulation_statistic is not None:
-        severe_alerts =emulation_statistic.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["severe_alerts"].keys()
-        component_observations["severe_alerts"] = []
-        for i, val in enumerate(severe_alerts):
-            component_observations["severe_alerts"].append(Observation(id=i, val=val, descr=f"{val} severe IDS alerts"))
-        warning_alerts =emulation_statistic.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["warning_alerts"].keys()
-        component_observations["warning_alerts"] = []
-        for i, val in enumerate(warning_alerts):
-            component_observations["warning_alerts"].append(Observation(id=i, val=val, descr=f"{val} warning IDS alerts"))
-        login_attempts =emulation_statistic.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL]["login_attempts"].keys()
-        component_observations["login_attempts"] = []
-        for i,val in enumerate(login_attempts):
-            component_observations["login_attempts"].append(Observation(id=i, val=val, descr=f"{val} login attempts"))
+    component_observations["severe_alerts"] = []
+    for val in range(min_severe_alerts, max_severe_alerts):
+        component_observations["severe_alerts"].append(Observation(id=val, val=val,
+                                                                   descr=f"{val} severe IDS alerts"))
 
-        for idx1, i in enumerate(severe_alerts):
-            for idx2, j in enumerate(warning_alerts):
-                for idx3, k in enumerate(login_attempts):
-                    id = i*len(warning_alerts)*len(login_attempts) + j*len(login_attempts) + k
-                    defender_observations.append(Observation(
-                        id=id, val=id,
-                        descr=f"{i} severe IDS alerts, {j} warning ids alerts, f{k} login attempts"))
-                    observation_id_to_observation_vector[id] = [i, j, k]
-                    observation_id_to_observation_id_vector[id] = [idx1, idx2, idx3]
+    component_observations["warning_alerts"] = []
+    for val in range(min_warning_alerts, max_warning_alerts):
+        component_observations["warning_alerts"].append(Observation(id=val, val=val,
+                                                                    descr=f"{val} warning IDS alerts"))
 
-    else:
-        component_observations["severe_alerts"] = []
-        for val in range(min_severe_alerts, max_severe_alerts):
-            component_observations["severe_alerts"].append(Observation(id=val, val=val,
-                                                                       descr=f"{val} severe IDS alerts"))
+    component_observations["login_attempts"] = []
+    for val in range(min_login_attempts, max_login_attempts):
+        component_observations["login_attempts"].append(Observation(id=val, val=val,
+                                                                    descr=f"{val} login attempts"))
 
-        component_observations["warning_alerts"] = []
-        for val in range(min_warning_alerts, max_warning_alerts):
-            component_observations["warning_alerts"].append(Observation(id=val, val=val,
-                                                                        descr=f"{val} warning IDS alerts"))
-
-        component_observations["login_attempts"] = []
-        for val in range(min_login_attempts, max_login_attempts):
-            component_observations["login_attempts"].append(Observation(id=val, val=val,
-                                                                        descr=f"{val} login attempts"))
-
-        for i in range(min_severe_alerts, max_severe_alerts):
-            for j in range(min_warning_alerts, max_warning_alerts):
-                for k in range(min_login_attempts, max_login_attempts):
-                    id = (i*(len(range(min_warning_alerts,max_warning_alerts))*len(range(
-                        min_login_attempts,max_login_attempts)))
-                    +j*len(range(min_login_attempts, max_login_attempts)) + k)
-                    defender_observations.append(Observation(
-                        id=id, val=id,
-                        descr=f"{i} severe IDS alerts, {j} warning ids alerts, f{k} login attempts"))
-                    observation_id_to_observation_vector[id] = [i, j, k]
-                    observation_id_to_observation_id_vector[id] = [i, j, k]
+    for i in range(min_severe_alerts, max_severe_alerts):
+        for j in range(min_warning_alerts, max_warning_alerts):
+            for k in range(min_login_attempts, max_login_attempts):
+                id = (i*(len(range(min_warning_alerts,max_warning_alerts))*len(range(
+                    min_login_attempts,max_login_attempts)))
+                +j*len(range(min_login_attempts, max_login_attempts)) + k)
+                defender_observations.append(Observation(
+                    id=id, val=id,
+                    descr=f"{i} severe IDS alerts, {j} warning ids alerts, f{k} login attempts"))
+                observation_id_to_observation_vector[id] = [i, j, k]
+                observation_id_to_observation_id_vector[id] = [i, j, k]
 
     observation_component_name_to_index = {
         "severe_alerts": 0,
@@ -326,7 +279,7 @@ def default_transition_operator_config() -> TransitionOperatorConfig:
 
 
 def default_observation_function_config(
-        emulation_statistic: EmulationStatistics, defender_obs_space: ObservationSpaceConfig,
+        defender_obs_space: ObservationSpaceConfig,
         joint_action_space: JointActionSpaceConfig, state_space: StateSpaceConfig,
         min_severe_alerts :int = 0, max_severe_alerts :int = 100, min_warning_alerts :int = 0,
         max_warning_alerts :int = 100, min_login_attempts :int = 0,
@@ -334,7 +287,6 @@ def default_observation_function_config(
     """
     The default observation function configuration
 
-    :param emulation_statistic: the emulation statistic
     :param min_severe_alerts: if using heuristic observation space, this defines the min number of severe alerts
     :param max_severe_alerts: if using heuristic observation space, this defines the max number of severe alerts
     :param min_warning_alerts: if using heuristic observation space, this defines the min number of warning alerts
@@ -344,35 +296,29 @@ def default_observation_function_config(
     :return: the default configuration of the observation function
     """
     component_observation_tensors = {}
-    if emulation_statistic is not None:
-        observation_tensor, component_observation_tensors = \
-            list(StoppingGameUtil.observation_tensor_from_emulation_statistics(
-            emulation_statistic=emulation_statistic, observation_space_defender=defender_obs_space,
-            joint_action_space=joint_action_space, state_space=state_space))
-    else:
-        severe_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_severe_alerts, max_severe_alerts))-1)
-        warning_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_warning_alerts, max_warning_alerts))-1)
-        login_attempts_tensor = StoppingGameUtil.observation_tensor(len(range(min_login_attempts, max_login_attempts))-1)
-        component_observation_tensors["severe_alerts"] = list(severe_alerts_tensor.tolist())
-        component_observation_tensors["warning_alerts"] = list(warning_alerts_tensor.tolist())
-        component_observation_tensors["login_attempts"] = list(login_attempts_tensor.tolist())
-        observation_tensor = []
-        for a1 in range(len(joint_action_space.action_spaces[0].actions)):
-            a1_a2_s_o_dist = []
-            for a2 in range(len(joint_action_space.action_spaces[1].actions)):
-                a2_s_o_dist = []
-                for s in range(len(state_space.states)):
-                    s_o_dist = []
-                    for o in range(len(defender_obs_space.observations)):
-                        obs_vector = defender_obs_space.observation_id_to_observation_vector[o]
-                        p = severe_alerts_tensor[a1][a2][s][obs_vector[0]]*\
-                            warning_alerts_tensor[a1][a2][s][obs_vector[1]]*\
-                            login_attempts_tensor[a1][a2][s][obs_vector[2]]
-                        s_o_dist.append(p)
-                    assert round(sum(s_o_dist),2) == 1.0
-                    a2_s_o_dist.append(s_o_dist)
-                a1_a2_s_o_dist.append(a2_s_o_dist)
-            observation_tensor.append(a1_a2_s_o_dist)
+    severe_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_severe_alerts, max_severe_alerts))-1)
+    warning_alerts_tensor = StoppingGameUtil.observation_tensor(len(range(min_warning_alerts, max_warning_alerts))-1)
+    login_attempts_tensor = StoppingGameUtil.observation_tensor(len(range(min_login_attempts, max_login_attempts))-1)
+    component_observation_tensors["severe_alerts"] = list(severe_alerts_tensor.tolist())
+    component_observation_tensors["warning_alerts"] = list(warning_alerts_tensor.tolist())
+    component_observation_tensors["login_attempts"] = list(login_attempts_tensor.tolist())
+    observation_tensor = []
+    for a1 in range(len(joint_action_space.action_spaces[0].actions)):
+        a1_a2_s_o_dist = []
+        for a2 in range(len(joint_action_space.action_spaces[1].actions)):
+            a2_s_o_dist = []
+            for s in range(len(state_space.states)):
+                s_o_dist = []
+                for o in range(len(defender_obs_space.observations)):
+                    obs_vector = defender_obs_space.observation_id_to_observation_vector[o]
+                    p = severe_alerts_tensor[a1][a2][s][obs_vector[0]]*\
+                        warning_alerts_tensor[a1][a2][s][obs_vector[1]]*\
+                        login_attempts_tensor[a1][a2][s][obs_vector[2]]
+                    s_o_dist.append(p)
+                assert round(sum(s_o_dist),2) == 1.0
+                a2_s_o_dist.append(s_o_dist)
+            a1_a2_s_o_dist.append(a2_s_o_dist)
+        observation_tensor.append(a1_a2_s_o_dist)
     observation_function_config = ObservationFunctionConfig(
         observation_tensor=observation_tensor, component_observation_tensors=component_observation_tensors
     )
