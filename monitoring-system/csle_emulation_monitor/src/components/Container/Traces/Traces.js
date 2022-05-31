@@ -8,6 +8,9 @@ import Modal from 'react-bootstrap/Modal'
 import EmulationTrace from "./EmulationTrace/EmulationTrace";
 import SimulationTrace from "./SimulationTrace/SimulationTrace";
 import TraceImg from './TracesLoop.png'
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form'
 import './Traces.css';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
@@ -26,8 +29,8 @@ const Traces = () => {
     const [loadingSelectedEmulationTrace, setLoadingSelectedEmulationTrace] = useState(true);
     const [loadingSelectedSimulationTrace, setLoadingSelectedSimulationTrace] = useState(true);
     const [loadingSimulationTraces, setLoadingSimulationTraces] = useState(true);
-    const [filteredEmulationTraces, setFilteredEmulationTraces] = useState([]);
-    const [filteredSimulationTraces, setFilteredSimulationTraces] = useState([]);
+    const [filteredEmulationTracesIds, setFilteredEmulationTracesIds] = useState([]);
+    const [filteredSimulationTracesIds, setFilteredSimulationTracesIds] = useState([]);
     const [emulationTracesSearchString, setEmulationTracesSearchString] = useState([]);
     const [simulationTracesSearchString, setSimulationTracesSearchString] = useState([]);
     const ip = "localhost"
@@ -47,7 +50,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setFilteredEmulationTraces(response)
+                setFilteredEmulationTracesIds(response)
                 setEmulationTraces(response)
                 setLoadingEmulationTraces(false)
             })
@@ -109,6 +112,7 @@ const Traces = () => {
                     }
                 })
                 setEmulationTracesIds(emulationTracesIds)
+                setFilteredEmulationTracesIds(emulationTracesIds)
                 setLoadingEmulationTraces(false)
                 if (emulationTracesIds.length > 0) {
                     setSelectedEmulationTraceId(emulationTracesIds[0])
@@ -140,6 +144,7 @@ const Traces = () => {
                     }
                 })
                 setSimulationTracesIds(simulationTracesIds)
+                setFilteredSimulationTracesIds(simulationTracesIds)
                 setLoadingSimulationTraces(false)
                 if (simulationTracesIds.length > 0) {
                     setSelectedSimulationTraceId(simulationTracesIds[0])
@@ -164,7 +169,7 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setFilteredSimulationTraces(response)
+                setFilteredSimulationTracesIds(response)
                 setSimulationTraces(response)
                 setLoadingSimulationTraces(false)
             })
@@ -312,19 +317,32 @@ const Traces = () => {
         </Tooltip>
     );
 
-    const searchEmulationTracesFilter = (emulationTrace, searchVal) => {
-        return (searchVal === "" || emulationTrace.id.toString().toLowerCase().indexOf(
-            searchVal.toLowerCase()) !== -1 || emulationTrace.emulation_name.toLowerCase().indexOf(
-            searchVal.toLowerCase()) !== -1)
+    const searchEmulationTracesFilter = (emulationTraceIdLabel, searchVal) => {
+        return (searchVal === "" || emulationTraceIdLabel.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchEmulationTracesChange = (event) => {
         var searchVal = event.target.value
-        const filteredEmTraces = emulationTraces.filter(emulationTrace => {
-            return searchEmulationTracesFilter(emulationTrace, searchVal)
+        const filteredEmTracesIds = emulationTracesIds.filter(emulationTraceId => {
+            return searchEmulationTracesFilter(emulationTraceId.label, searchVal)
         });
-        setFilteredEmulationTraces(filteredEmTraces)
+        setFilteredEmulationTracesIds(filteredEmTracesIds)
         setEmulationTracesSearchString(searchVal)
+        var selectedEmulationTraceRemoved = false
+        if(!loadingSelectedEmulationTrace && filteredEmTracesIds.length > 0){
+            for (let i = 0; i < filteredEmTracesIds.length; i++) {
+                if(selectedEmulationTrace !== null && selectedEmulationTrace !== undefined &&
+                    selectedEmulationTrace.id === filteredEmTracesIds[i].value) {
+                    selectedEmulationTraceRemoved = true
+                }
+            }
+            if(!selectedEmulationTraceRemoved) {
+                console.log("time to fetch " + filteredEmTracesIds[0].value)
+                setSelectedEmulationTraceId(filteredEmTracesIds[0])
+                fetchEmulationTrace(filteredEmTracesIds[0])
+                setLoadingSelectedEmulationTrace(true)
+            }
+        }
     }
 
     const searchEmulationTracesHandler = useDebouncedCallback(
@@ -346,7 +364,7 @@ const Traces = () => {
         const filteredSimTraces = simulationTraces.filter(simulationTrace => {
             return searchSimulationTracesFilter(simulationTrace, searchVal)
         });
-        setFilteredSimulationTraces(filteredSimTraces)
+        setFilteredSimulationTracesIds(filteredSimTraces)
         setSimulationTracesSearchString(searchVal)
     }
 
@@ -387,7 +405,7 @@ const Traces = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Emulation trace:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "800px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedEmulationTraceId}
@@ -452,7 +470,7 @@ const Traces = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Simulation trace:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "800px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedSimulationTraceId}
@@ -630,35 +648,60 @@ const Traces = () => {
     return (
         <div className="Traces">
             <div className="row emulationTracesHeader">
-                <div className="col-sm-1">
-
-                </div>
-                <div className="col-sm-10">
+                <div className="col-sm-8">
                     <h4 className="text-center inline-block emulationsHeader">
 
                         <SelectEmulationTraceOrSpinner loadingEmulationTraces={loadingEmulationTraces}
-                                                       emulationTracesIds={emulationTracesIds}
+                                                       emulationTracesIds={filteredEmulationTracesIds}
                                                        selectedEmulationTraceId={selectedEmulationTraceId}
                         />
                     </h4>
                 </div>
-                <div className="col-sm-1">
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="emulationTracesInput" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="emulationTracesInput"
+                                onChange={searchEmulationTracesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
                 </div>
             </div>
             <EmulationTraceAccordion selectedEmulationTrace={selectedEmulationTrace}
                                      loadingSelectedEmulationTrace={loadingSelectedEmulationTrace}
             />
             <div className="row simulationTracesHeader">
-                <div className="col-sm-1">
-                </div>
-                <div className="col-sm-10">
+                <div className="col-sm-8">
                     <h3 className="text-center inline-block">
                         <SelectSimulationTraceOrSpinner loadingSimulationTraces={loadingSimulationTraces}
                                                         simulationTracesIds={simulationTracesIds}
                                                         selectedSimulationTraceId={selectedSimulationTraceId}/>
                     </h3>
                 </div>
-                <div className="col-sm-1">
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="simulationTracesInput" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="simulationTracesInput"
+                                onChange={searchSimulationTracesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
                 </div>
             </div>
             <SimulationTraceAccordion selectedSimulationTrace={selectedSimulationTrace}
