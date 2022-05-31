@@ -331,7 +331,7 @@ const DataCollectionJob = (props) => {
                                             <td>{props.job.num_collected_steps}/{getMaxSteps()}</td>
                                         </tr>
                                         <tr>
-                                            <td>Dynamics model ID</td>
+                                            <td>Emulation statistic ID</td>
                                             <td>{props.job.emulation_statistic_id}</td>
                                         </tr>
                                         <tr>

@@ -464,11 +464,22 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 ```
 
 - **A System for Interactive Examination of Learned Security Policies (
-  Preprint: https://limmen.dev/assets/papers/NOMS22_Demo_Policy_Examination_System_Hammar_Stadler_28_Jan_2022.pdf)**
+  Preprint: https://arxiv.org/abs/2204.01126)**
 
 ```bash
 @misc{hammar2022policyexamination,
       title={A System for Interactive Examination  of Learned Security Policies},
+      author={Kim Hammar and Rolf Stadler},
+      year={2022}
+}
+```
+
+- **Learning Security Strategies through Game Play and Optimal Stopping (
+  Preprint: https://arxiv.org/abs/2205.14694)**
+
+```bash
+@misc{hammar2022policyexamination,
+      title={Learning Security Strategies through Game Play and Optimal Stopping},
       author={Kim Hammar and Rolf Stadler},
       year={2022}
 }

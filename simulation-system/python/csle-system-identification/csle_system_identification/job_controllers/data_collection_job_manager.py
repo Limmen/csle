@@ -14,7 +14,7 @@ class DataCollectionJobManager:
     @staticmethod
     def run_data_collection_job(job_config: DataCollectionJobConfig) -> None:
         """
-        Runs a given training job
+        Runs a given data collection job
 
         :param job_config: the configuration of the job
         :return: None

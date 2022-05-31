@@ -6,14 +6,14 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Select from 'react-select'
 import ConditionalHistogramDistribution from "./ConditionalHistogramDistribution/ConditionalHistogramDistribution";
-import './DynamicsModels.css';
+import './EmulationStatistics.css';
 import SystemIdentification from './SystemId.png'
 import Collapse from 'react-bootstrap/Collapse'
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
 
-const DynamicsModels = () => {
+const EmulationStatistics = () => {
     const [dynamicsModels, setDynamicsModels] = useState([]);
     const [selectedDynamicsModel, setSelectedDynamicsModel] = useState(null);
     const [conditionals, setConditionals] = useState([]);
@@ -679,6 +679,6 @@ const DynamicsModels = () => {
         </div>
     );
 }
-DynamicsModels.propTypes = {};
-DynamicsModels.defaultProps = {};
-export default DynamicsModels;
+EmulationStatistics.propTypes = {};
+EmulationStatistics.defaultProps = {};
+export default EmulationStatistics;

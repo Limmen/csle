@@ -20,7 +20,7 @@ class GaussianMixtureSystemModel(SystemModel):
         :param conditional_metric_distributions: the list of conditional distributions
         """
         super(SystemModel, self).__init__()
-        self.conditional_distributions = conditional_metric_distributions
+        self.conditional_metric_distributions = conditional_metric_distributions
         self.emulation_env_name = emulation_env_name
         self.emulation_statistic_id = emulation_statistic_id
 
@@ -35,7 +35,8 @@ class GaussianMixtureSystemModel(SystemModel):
         """
         return GaussianMixtureSystemModel(
             conditional_metric_distributions=list(map(
-                lambda x: GaussianMixtureConditional.from_dict(x), d["conditional_distributions"])),
+                lambda x: list(map(lambda y: GaussianMixtureConditional.from_dict(y), x)),
+                d["conditional_metric_distributions"])),
             emulation_env_name=d["emulation_env_name"], emulation_statistic_id=d["emulation_statistic_id"]
         )
 
@@ -44,7 +45,8 @@ class GaussianMixtureSystemModel(SystemModel):
         :return: a dict representation of the DTO
         """
         d = {}
-        d["conditional_distributions"] = list(map(lambda x: x.to_dict(), self.conditional_distributions))
+        d["conditional_metric_distributions"] = list(map(lambda x: list(map(lambda y: y.to_dict(), x)),
+                                                  self.conditional_metric_distributions))
         d["emulation_env_name"] = self.emulation_env_name
         d["emulation_statistic_id"] = self.emulation_statistic_id
         return d
@@ -53,7 +55,7 @@ class GaussianMixtureSystemModel(SystemModel):
         """
         :return: a string representation of the DTO
         """
-        return f"conditional_distributions: {self.conditional_distributions}, " \
+        return f"conditional_distributions: {self.conditional_metric_distributions}, " \
                f"emulation_env_name: {self.emulation_env_name}, emulation_statistic_id: {self.emulation_statistic_id}"
 
     def to_json_str(self) -> str:

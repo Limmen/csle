@@ -157,8 +157,8 @@ GRANT USAGE, SELECT ON SEQUENCE data_collection_jobs_id_seq TO csle;
 CREATE TABLE IF NOT EXISTS gaussian_mixture_system_models (
     id serial PRIMARY KEY,
     model json NOT NULL,
-    emulation_name TEXT references emulations(name)
-    emulation_statistic_id int references emulation_statistics(id),
+    emulation_name TEXT references emulations(name),
+    emulation_statistic_id int references emulation_statistics(id)
     );
 GRANT ALL ON gaussian_mixture_system_models TO csle;
 GRANT USAGE, SELECT ON SEQUENCE gaussian_mixture_system_models_id_seq TO csle;

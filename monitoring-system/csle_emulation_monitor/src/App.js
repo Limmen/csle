@@ -5,7 +5,7 @@ import NotFound from "./components/Container/NotFound/NotFound";
 import Emulations from "./components/Container/Emulations/Emulations";
 import Monitoring from "./components/Container/Monitoring/Monitoring";
 import Traces from "./components/Container/Traces/Traces";
-import DynamicsModels from "./components/Container/DynamicsModels/DynamicsModels";
+import EmulationStatistics from "./components/Container/EmulationStatistics/EmulationStatistics";
 import PolicyExamination from "./components/Container/PolicyExamination/PolicyExamination";
 import ContainerImages from "./components/Container/ContainerImages/ContainerImages";
 import Simulations from "./components/Container/Simulations/Simulations";
@@ -34,7 +34,7 @@ function App() {
                                 </Route>
                                 <Route path="traces" index element={<Traces/>}>
                                 </Route>
-                                <Route path="dynamicsmodels" index element={<DynamicsModels/>}>
+                                <Route path="dynamicsmodels" index element={<EmulationStatistics/>}>
                                 </Route>
                                 <Route path="policyexamination" index element={<PolicyExamination/>}>
                                 </Route>

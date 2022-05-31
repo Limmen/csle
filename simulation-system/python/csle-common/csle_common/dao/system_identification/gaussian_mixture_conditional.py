@@ -1,5 +1,8 @@
 from typing import List, Dict, Any
 from sklearn.mixture import GaussianMixture
+from scipy.stats import multivariate_normal
+from scipy.stats import norm
+import numpy as np
 
 
 class GaussianMixtureConditional:
@@ -9,7 +12,8 @@ class GaussianMixtureConditional:
 
     def __init__(self, conditional_name: str, metric_name: str, num_mixture_components: int,
                  dim: int, mixtures_means: List[List[float]],
-                 mixtures_covariance_matrix: List[List[List[float]]], mixture_weights: List[float]) -> None:
+                 mixtures_covariance_matrix: List[List[List[float]]], mixture_weights: List[float],
+                 sample_space: List[int]) -> None:
         """
         Initializes the DTO
 
@@ -19,6 +23,7 @@ class GaussianMixtureConditional:
         :param mixtures_means: the means of the mixtures
         :param mixtures_covariance_matrix: the covariance matrices of the mixtures
         :param mixture_weights: the mixture weights
+        :param sample_space: the sampĺe space
         """
         self.conditional_name = conditional_name
         self.dim = dim
@@ -27,7 +32,15 @@ class GaussianMixtureConditional:
         self.mixtures_covariance_matrix = mixtures_covariance_matrix
         self.mixture_weights = mixture_weights
         self.metric_name = metric_name
+        self.sample_space = sample_space
+        self.weighted_mixture_distributions = []
+        self.generate_distributions()
 
+    def generate_distributions(self):
+        dists = []
+        for weight, mean, covar in zip(self.mixture_weights, self.mixtures_means, self.mixtures_covariance_matrix):
+            dists.append(list(weight*norm.pdf(self.sample_space, mean, np.sqrt(covar)).ravel()))
+        self.weighted_mixture_distributions = dists
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "GaussianMixtureConditional":
@@ -40,9 +53,10 @@ class GaussianMixtureConditional:
         return GaussianMixtureConditional(
             conditional_name=d["conditional_name"],
             num_mixture_components=d["num_mixture_components"],
-            dim=d["dim"], mixtures_means=d["mixtures_means"],
+            dim=d["dim"], mixtures_means=d["mixture_means"],
             mixtures_covariance_matrix=d["mixtures_covariance_matrix"],
-            mixture_weights=d["mixture_weights"], metric_name=d["metric_name"]
+            mixture_weights=d["mixture_weights"], metric_name=d["metric_name"],
+            sample_space=d["sample_space"]
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -57,6 +71,7 @@ class GaussianMixtureConditional:
         d["mixtures_covariance_matrix"] = self.mixtures_covariance_matrix
         d["mixture_weights"] = self.mixture_weights
         d["metric_name"] = self.metric_name
+        d["sample_space"] = self.sample_space
         return d
 
     def __str__(self) -> str:
@@ -66,8 +81,7 @@ class GaussianMixtureConditional:
         return f"conditional_name:{self.conditional_name}, num_mixture_components: {self.num_mixture_components}, " \
                f"dim: {self.dim}, mixtures_means: {self.mixtures_means}, " \
                f"mixtures_covariance_matrix: {self.mixtures_covariance_matrix}, mixture_weights: {self.mixture_weights}," \
-               f"metric_name: {self.metric_name}"
-
+               f"metric_name: {self.metric_name}, sample space: {self.sample_space}"
 
     def to_json_str(self) -> str:
         """
@@ -94,22 +108,24 @@ class GaussianMixtureConditional:
 
     @staticmethod
     def from_sklearn_gaussian_mixture(gmm: GaussianMixture, conditional_name: str, metric_name: str,
-                                      num_components: int,
+                                      num_components: int, sample_space: List[int],
                                       dim: int = 1) -> "GaussianMixtureConditional":
         """
-        Creates the DTO from a Gaussian mixture fittred with sklearn
+        Creates the DTO from a Gaussian mixture fitted with sklearn
 
         :param gmm: the sklearn model
         :param conditional_name: the name of the conditional
         :param metric_name: the metric name
         :param num_components: the number of components of the mixture
         :param dim: the dimension of the mixture
+        :param sample_space: the sample space
         :return: a GaussianMixtureConditional instance
         """
-        mixture_weights = gmm.weights_
-        means = gmm.means_
-        covariances = gmm.covariances_
+        mixture_weights = list(gmm.weights_)
+        means = list(gmm.means_.tolist())
+        covariances = list(gmm.covariances_.tolist())
         return GaussianMixtureConditional(
             conditional_name=conditional_name, metric_name=metric_name, num_mixture_components=num_components,
-            mixtures_means=means, mixtures_covariance_matrix=covariances, mixture_weights=mixture_weights, dim=dim
+            mixtures_means=means, mixtures_covariance_matrix=covariances, mixture_weights=mixture_weights, dim=dim,
+            sample_space=sample_space
         )

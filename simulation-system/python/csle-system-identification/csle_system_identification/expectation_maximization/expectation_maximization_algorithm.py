@@ -30,7 +30,7 @@ class ExpectationMaximizationAlgorithm(BaseSystemIdentificationAlgorithm):
         :param system_identification_config: configuration of EM
         :param system_identification_job: system identification job config (optional)
         """
-        super(BaseSystemIdentificationAlgorithm, self).__init__(
+        super(ExpectationMaximizationAlgorithm, self).__init__(
             emulation_env_config=emulation_env_config, emulation_statistics=emulation_statistics,
             system_identification_config=system_identification_config
         )
@@ -50,7 +50,8 @@ class ExpectationMaximizationAlgorithm(BaseSystemIdentificationAlgorithm):
             self.system_identification_job = SystemIdentificationJobConfig(
                 emulation_env_name=self.emulation_env_config.name,
                 emulation_statistics_id=self.emulation_statistics.id, pid=pid, progress_percentage=0,
-                log_file_path=Logger.__call__().get_log_file_path(), descr=descr, system_model=None
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr, system_model=None,
+                system_identification_config=self.system_identification_config
             )
             system_identification_job_id = MetastoreFacade.save_system_identification_job(
                 system_identification_job=self.system_identification_job)
@@ -62,6 +63,8 @@ class ExpectationMaximizationAlgorithm(BaseSystemIdentificationAlgorithm):
             MetastoreFacade.update_system_identification_job(system_identification_job=self.system_identification_job,
                                                              id=self.system_identification_job.id)
 
+
+        # Run the expectation maximization algorithm for each conditional and metric
         conditionals = self.system_identification_config.hparams[
             system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS].value
         metrics = self.system_identification_config.hparams[
@@ -75,21 +78,27 @@ class ExpectationMaximizationAlgorithm(BaseSystemIdentificationAlgorithm):
             gaussian_conditional_metrics_mixtures = []
             for j, metric in enumerate(metrics):
                 X = []
+                X_set = set()
                 counts = self.emulation_statistics.conditionals_counts[conditional][metric]
                 for val,count in counts.items():
                     X.append([val])
+                    X_set.add(val)
                 num_components = self.system_identification_config.hparams[
-                    system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL][i]
+                    system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL].value[i]
                 gmm = GaussianMixture(n_components = num_components).fit(X)
                 gaussian_conditional_metrics_mixtures.append(
                     GaussianMixtureConditional.from_sklearn_gaussian_mixture(
                         gmm=gmm, conditional_name=conditional, num_components=num_components, dim=1,
-                        metric_name=metric))
+                        metric_name=metric, sample_space=list(X_set)))
             gaussian_conditional_mixtures.append(gaussian_conditional_metrics_mixtures)
 
         model = GaussianMixtureSystemModel(emulation_env_name=self.emulation_env_config.name,
                                            emulation_statistic_id=self.emulation_statistics.id,
                                            conditional_metric_distributions=gaussian_conditional_mixtures)
+        self.system_identification_job.system_model = model
+        self.system_identification_job.progress_percentage = 100
+        MetastoreFacade.update_system_identification_job(system_identification_job=self.system_identification_job,
+                                                         id=self.system_identification_job.id)
         Logger.__call__().get_logger().info(f"Execution of the Expectation-Maximization algorithm complete."
                                             f"Emulation env name: {self.emulation_env_config.name}, "
                                             f"emulation_statistic_id: {self.emulation_statistics.id},"

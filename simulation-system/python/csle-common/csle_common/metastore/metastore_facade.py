@@ -1366,7 +1366,8 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                config_json_str = json.dumps(system_identification_job.to_dict(), indent=4, sort_keys=True)
+                config_json_str = json.dumps(system_identification_job.to_dict(), indent=4, sort_keys=True,
+                                             cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
                             f" SET config=%s "
@@ -1462,8 +1463,8 @@ class MetastoreFacade:
                 gaussian_mixture_system_model_json = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
-                            f"(config, emulation_name, emulation_statistic_id) "
-                            f"VALUES (%s, %s) RETURNING id", (gaussian_mixture_system_model_json,
+                            f"(model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (gaussian_mixture_system_model_json,
                                                               gaussian_mixture_system_model.emulation_env_name,
                                                               gaussian_mixture_system_model.emulation_statistic_id))
                 id_of_new_row = cur.fetchone()[0]

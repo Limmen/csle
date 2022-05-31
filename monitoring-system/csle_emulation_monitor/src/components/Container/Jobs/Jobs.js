@@ -8,6 +8,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import Accordion from 'react-bootstrap/Accordion';
 import TrainingJob from "./TrainingJob/TrainingJob";
 import DataCollectionJob from "./DataCollectionJob/DataCollectionJob";
+import SystemIdentificationJob from "./SystemIdentificationJob/SystemIdentificationJob";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
@@ -26,6 +27,12 @@ const Jobs = () => {
     const [showOnlyRunningDataCollectionJobs, setShowOnlyRunningDataCollectionJobs] = useState(false);
     const [trainingJobsSearchString, setTrainingJobsSearchString] = useState("");
     const [dataCollectionJobsSearchString, setDataCollectionJobsSearchString] = useState("");
+    const [showSystemIdentificationJobsInfoModal, setShowSystemIdentificationJobsInfoModal] = useState(false);
+    const [systemIdentificationJobsLoading, setSystemIdentificationJobsLoading] = useState(false);
+    const [systemIdentificationJobs, setSystemIdentificationJobs] = useState([]);
+    const [systemIdentificationJobsSearchString, setSystemIdentificationJobsSearchString] = useState("");
+    const [filteredSystemIdentificationJobs, setFilteredSystemIdentificationJobs] = useState([]);
+    const [showOnlyRunningSystemIdentificationJobs, setShowOnlyRunningSystemIdentificationJobs] = useState(false);
 
     const ip = "localhost"
     // const ip = "172.31.212.92"
@@ -68,11 +75,34 @@ const Jobs = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const fetchSystemIdentificationJobs = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                console.log("got sysid jobs")
+                console.log(response)
+                setSystemIdentificationJobs(response);
+                setFilteredSystemIdentificationJobs(response);
+                setSystemIdentificationJobsLoading(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     useEffect(() => {
         setTrainingJobsLoading(true)
         fetchTrainingJobs()
         setDataCollectionJobsLoading(true)
         fetchDataCollectionJobs()
+        setSystemIdentificationJobsLoading(true)
+        fetchSystemIdentificationJobs()
     }, [fetchTrainingJobs, fetchDataCollectionJobs]);
 
     const removeTrainingJobRequest = useCallback((training_job_id) => {
@@ -119,6 +149,50 @@ const Jobs = () => {
         removeAllTrainingJobsRequest()
     }
 
+    const removeSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/remove/' + system_identification_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTrainingJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAllSystemIdentificationJobsRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSystemIdentificationJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeSystemIdentificationJob = (job) => {
+        setSystemIdentificationJobsLoading(true)
+        removeSystemIdentificationJobRequest(job.id)
+    }
+
+    const removeAllSystemIdentificationJobs = () => {
+        setSystemIdentificationJobsLoading(true)
+        removeAllSystemIdentificationJobsRequest()
+    }
+
     const stopTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
             `http://` + ip + ':7777/trainingjobs/stop/' + training_job_id,
@@ -139,6 +213,28 @@ const Jobs = () => {
     const stopTrainingJob = (job) => {
         setTrainingJobsLoading(true)
         stopTrainingJobRequest(job.id)
+    }
+
+    const stopSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/stop/' + system_identification_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTrainingJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const stopSystemIdentificationJob = (job) => {
+        setSystemIdentificationJobsLoading(true)
+        stopSystemIdentificationJobRequest(job.id)
     }
 
     const startTrainingJobRequest = useCallback((training_job_id) => {
@@ -163,12 +259,42 @@ const Jobs = () => {
         startTrainingJobRequest(job.id)
     }
 
+    const startSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/start/' + system_identification_job_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTrainingJobs()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startSystemIdentificationJob = (job) => {
+        setSystemIdentificationJobsLoading(true)
+        startSystemIdentificationJobRequest(job.id)
+    }
+
     const trainingJobSearchFilter = (job, searchVal) => {
         return (searchVal === "" ||
             job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
             job.simulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
             job.emulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
             job.experiment_config.title.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
+        );
+    }
+
+    const systemIdentificationJobSearchFilter = (job, searchVal) => {
+        return (searchVal === "" ||
+            job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.emulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
+            job.system_identification_config.title.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
         );
     }
 
@@ -179,6 +305,15 @@ const Jobs = () => {
         });
         setFilteredTrainingJobs(filteredTrainingJobs)
         setTrainingJobsSearchString(trainingJobsSearchString)
+    }
+
+    const searchSystemIdentificationJobChange = (event) => {
+        var searchVal = event.target.value
+        const filteredSystemIdentificationJobs = systemIdentificationJobs.filter(job => {
+            return systemIdentificationJobSearchFilter(job, searchVal)
+        });
+        setFilteredSystemIdentificationJobs(filteredSystemIdentificationJobs)
+        setSystemIdentificationJobsSearchString(systemIdentificationJobsSearchString)
     }
 
     const runningTrainingJobsChange = (event) => {
@@ -211,9 +346,31 @@ const Jobs = () => {
         setShowOnlyRunningDataCollectionJobs(!showOnlyRunningDataCollectionJobs)
     }
 
+    const runningSystemIdentificationJobsChange = (event) => {
+        if(!showOnlyRunningSystemIdentificationJobs) {
+            const filteredSystemIdentificationJobs = filteredSystemIdentificationJobs.filter(job => {
+                return job.running
+            });
+            setFilteredSystemIdentificationJobs(filteredSystemIdentificationJobs)
+        } else {
+            const filteredSystemIdentificationJobs = systemIdentificationJobs.filter(job => {
+                return systemIdentificationJobSearchFilter(job, systemIdentificationJobsSearchString)
+            });
+            setFilteredSystemIdentificationJobs(filteredSystemIdentificationJobs)
+        }
+        setShowOnlyRunningSystemIdentificationJobs(!showOnlyRunningSystemIdentificationJobs)
+    }
+
     const searchTrainingJobHandler = useDebouncedCallback(
         (event) => {
             searchTrainingJobChange(event)
+        },
+        350
+    );
+
+    const searchSystemIdentificationJobHandler = useDebouncedCallback(
+        (event) => {
+            searchSystemIdentificationJobChange(event)
         },
         350
     );
@@ -336,6 +493,11 @@ const Jobs = () => {
         fetchTrainingJobs()
     }
 
+    const refreshSystemidentificationJobs = () => {
+        setSystemIdentificationJobsLoading(true)
+        fetchSystemIdentificationJobs()
+    }
+
     const refreshDataCollectionJobs = () => {
         setDataCollectionJobsLoading(true)
         fetchDataCollectionJobs()
@@ -377,6 +539,24 @@ const Jobs = () => {
         </Tooltip>
     );
 
+    const renderSystemIdentificationJobsInfoTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about the system identification jobs
+        </Tooltip>
+    );
+
+    const renderRemoveAllSystemIdentificationJobsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all system identification jobs.
+        </Tooltip>
+    );
+
+    const renderRefreshSystemIdentificationJobsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload system identification jobs from the backend
+        </Tooltip>
+    );
+
     const TrainingJobsInfoModal = (props) => {
         return (
             <Modal
@@ -395,6 +575,33 @@ const Jobs = () => {
                     <p className="modalText">
                         A training job represents an ongoing execution of training policies.
                         The list of training jobs enables real-time monitoring of jobs.
+                    </p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={props.onHide}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const SystemIdentificationJobsInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        System identification jobs
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4>System identification jobs</h4>
+                    <p className="modalText">
+                        A system identification job represents an ongoing process for estimating a system model
+                        for an emulation.
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
@@ -445,6 +652,26 @@ const Jobs = () => {
                         <TrainingJob job={job} wrapper={wrapper} key={job.id + "-" + index}
                                      removeTrainingJob={removeTrainingJob} stopTrainingJob={stopTrainingJob}
                                      startTrainingJob={startTrainingJob}/>
+                    )}
+                </Accordion>
+            )
+        }
+    }
+
+    const SystemIdentificationJobsAccordions = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    {props.jobs.map((job, index) =>
+                        <SystemIdentificationJob job={job} wrapper={wrapper} key={job.id + "-" + index}
+                                                 removeSystemIdentificationJob={removeSystemIdentificationJob}
+                                                 stopSystemIdentificationJob={stopSystemIdentificationJob}
+                                                 startSystemIdentificationJob={startSystemIdentificationJob}/>
                     )}
                 </Accordion>
             )
@@ -547,7 +774,7 @@ const Jobs = () => {
             <TrainingJobsAccordions jobs={filteredTrainingJobs} loading={trainingJobsLoading}/>
 
 
-            <div className="row dataCollectionJobs">
+            <div className="row systemIdentificationJobs">
                 <div className="col-sm-3"></div>
                 <div className="col-sm-3">
                     <h3> Data collection jobs
@@ -618,6 +845,81 @@ const Jobs = () => {
             </div>
             <DataCollectionJobsAccordions jobs={filteredDataCollectionJobs}
                                                 loading={dataCollectionJobsLoading}/>
+
+
+            <div className="row systemIdentificationJobs">
+                <div className="col-sm-3"></div>
+                <div className="col-sm-3">
+                    <h3>
+                        System identification jobs
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshSystemIdentificationJobsTooltip}
+                        >
+                            <Button variant="button" onClick={refreshSystemidentificationJobs}>
+                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderSystemIdentificationJobsInfoTooltip}
+                        >
+                            <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)} className="infoButton2">
+                                <i className="fa fa-info-circle" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
+                                               onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
+
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRemoveAllSystemIdentificationJobsTooltip}
+                        >
+                            <Button variant="danger" onClick={removeAllSystemIdentificationJobs}>
+                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="systemIdentificationJobInput" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="systemIdentificationJobInput"
+                                onChange={searchSystemIdentificationJobHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="systemIdentificationJobSwitch"
+                            label="Show only running jobs"
+                            className="runningCheck"
+                            onChange={runningSystemIdentificationJobsChange}
+                        />
+                    </Form>
+                </div>
+            </div>
+
+            <SystemIdentificationJobsAccordions jobs={filteredSystemIdentificationJobs}
+                                                loading={systemIdentificationJobsLoading}/>
+
         </div>
     );
 }
