@@ -47,21 +47,26 @@ const ConditionalHistogramDistribution = React.memo((props) => {
             left: 60,
             bottom: 25
         }
+        const num_samples = 100
         const conds = getConditionals(props.data, props.selectedConditionals, props.selectedMetric.value)
         if (props.data !== undefined && conds !== undefined && conds !== null && conds.length > 0) {
-            const data = conds[0].sample_space.map((sample, index) => {
-                var data_row = {
-                    "val": sample
-                }
-                for (let i = 0; i < conds.length; i++) {
-                    var prob = 0
-                    for (let j = 0; j < conds[i].weighted_mixture_distributions.length; j++) {
-                        prob = prob + conds[i].weighted_mixture_distributions[j][index]
+            var data = []
+            const p = num_samples/conds[0].sample_space.length
+            for (let k = 0; k < conds[0].sample_space.length; k++) {
+                if(Math.random() < p) {
+                    var data_row = {
+                        "val": conds[0].sample_space[k]
                     }
-                    data_row[conds[i].conditional_name] = prob
+                    for (let i = 0; i < conds.length; i++) {
+                        var prob = 0
+                        for (let j = 0; j < conds[i].weighted_mixture_distributions.length; j++) {
+                            prob = prob + conds[i].weighted_mixture_distributions[j][k]
+                        }
+                        data_row[conds[i].conditional_name] = prob
+                    }
+                    data.push(data_row)
                 }
-                return data_row
-            })
+            }
             var domain = conds[0].sample_space
 
             return (
@@ -75,7 +80,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 margin={margin}
                             >
                                 <text x={1150} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="22">Metric: {conds[0].metric_name}</tspan>
+                                    <tspan fontSize="22">Metric: {conds[0].metric_name} (Downsampled to {num_samples} samples)</tspan>
                                 </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="val" type="number" domain={domain}>

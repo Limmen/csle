@@ -24,6 +24,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
             left: 60,
             bottom: 25
         }
+        const num_samples = 100
         if (props.data !== undefined) {
             var max_val = -99999
             var min_val = 999999
@@ -46,6 +47,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
             var data2 = []
             var data3 = []
             var data4 = []
+            const p = num_samples/keys.length
             for (let i = 0; i < keys.length; i++) {
                 var scatterDataRow1 = {}
                 var scatterDataRow2 = {}
@@ -86,9 +88,11 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                         scatterDataRow1[props.yAxisLabel] = 0
                     }
                 }
-                data2.push(dataRow)
-                data3.push(scatterDataRow1)
-                data4.push(scatterDataRow2)
+                if(Math.random() < p) {
+                    data2.push(dataRow)
+                    data3.push(scatterDataRow1)
+                    data4.push(scatterDataRow2)
+                }
             }
             var domain = [min_val, max_val]
             if (props.selectedConditionals.length === 0){
@@ -112,7 +116,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 margin={margin}
                             >
                                 <text x={1300 / 2} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="22">{props.title2}</tspan>
+                                    <tspan fontSize="22">{props.title2} (downsampled to {num_samples} samples)</tspan>
                                 </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
@@ -153,7 +157,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 margin={margin}
                             >
                                 <text x={1300 / 2} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="22">{props.title1}</tspan>
+                                    <tspan fontSize="22">{props.title1} (downsampled to {num_samples} samples)</tspan>
                                 </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
