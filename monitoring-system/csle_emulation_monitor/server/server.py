@@ -290,6 +290,20 @@ def remove_all_emulation():
     return response
 
 
+@app.route('/emulationtracesids', methods=['GET'])
+def emulation_traces_ids():
+    ids_emulations = MetastoreFacade.list_emulation_traces_ids()
+    response_dicts = []
+    for tup in ids_emulations:
+        response_dicts.append({
+            "id": tup[0],
+            "emulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 @app.route('/emulationtraces', methods=['GET'])
 def emulation_traces():
     emulation_trcs = MetastoreFacade.list_emulation_traces()
@@ -297,6 +311,18 @@ def emulation_traces():
     response = jsonify(traces_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
+
+@app.route('/emulationtraces/get/<emulation_trace_id>', methods=['GET'])
+def get_emulation_trace(emulation_trace_id: int):
+    trace = MetastoreFacade.get_emulation_trace(id=emulation_trace_id)
+    if trace is None:
+        response = jsonify({})
+    else:
+        response = jsonify(trace.to_dict())
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 
 @app.route('/emulationtraces/remove/<emulation_trace_id>', methods=['POST'])
 def remove_emulation_trace(emulation_trace_id: int):
@@ -306,6 +332,7 @@ def remove_emulation_trace(emulation_trace_id: int):
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
 
 @app.route('/emulationtraces/remove', methods=['POST'])
 def remove_all_emulation_traces():
@@ -321,6 +348,29 @@ def simulation_traces():
     simulation_trcs = MetastoreFacade.list_simulation_traces()
     traces_dicts = list(map(lambda x: x.to_dict(), simulation_trcs))
     response = jsonify(traces_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/simulationtracesids', methods=['GET'])
+def simulation_traces_ids():
+    simulation_trcs_ids = MetastoreFacade.list_simulation_traces_ids()
+    response_dicts = []
+    for tup in simulation_trcs_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/simulationtraces/get/<simulation_trace_id>', methods=['GET'])
+def get_simulation_trace(simulation_trace_id: int):
+    trace = MetastoreFacade.get_simulation_trace(id=simulation_trace_id)
+    if trace is None:
+        response = jsonify({})
+    else:
+        response = jsonify(trace.to_dict())
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

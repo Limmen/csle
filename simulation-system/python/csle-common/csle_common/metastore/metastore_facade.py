@@ -387,6 +387,34 @@ class MetastoreFacade:
                 records = list(map(lambda x: MetastoreFacade._convert_emulation_trace_record_to_dto(x), records))
                 return records
 
+
+    @staticmethod
+    def list_emulation_traces_ids() -> List[EmulationTrace]:
+        """
+        :return: A list of emulation traces in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE}")
+                records = cur.fetchall()
+                return records
+
+
+    @staticmethod
+    def list_simulation_traces_ids() -> List[EmulationTrace]:
+        """
+        :return: A list of emulation traces in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,gym_env FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE}")
+                records = cur.fetchall()
+                return records
+
     @staticmethod
     def list_simulation_traces() -> List[SimulationTrace]:
         """
