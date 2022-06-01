@@ -111,12 +111,12 @@ class Emulator:
                 num_wait_steps = np.random.geometric(p=intrusion_continue, size=1)[0]
                 wait_steps = [EmulationAttackerStoppingActions.CONTINUE(index=-1)]*num_wait_steps
                 full_attacker_sequence = full_attacker_sequence + wait_steps
-                full_attacker_sequence = full_attacker_sequence + attacker_sequence[i]
+                full_attacker_sequence = full_attacker_sequence + [attacker_sequence[i]]
                 full_defender_sequence = full_defender_sequence + \
                                          [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * (num_wait_steps+1)
             T = len(full_attacker_sequence)
             assert  len(full_defender_sequence) == len(full_attacker_sequence)
-            logger.info(f"Starting execution of static action sequences, iteration :{i}, T: {T}, I_t:{intrusion_start_time}")
+            logger.info(f"Starting execution of static action sequences, iteration:{i}, T:{T}, I_t:{intrusion_start_time}")
             sys.stdout.flush()
             s.reset()
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,

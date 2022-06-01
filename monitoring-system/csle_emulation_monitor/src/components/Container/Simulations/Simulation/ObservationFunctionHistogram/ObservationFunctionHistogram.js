@@ -21,13 +21,20 @@ const ObservationFunctionHistogram = React.memo((props) => {
             left: 60,
             bottom: 25
         }
+        const num_samples = 100
         if (props.data !== undefined) {
-            const data = props.data.map((prob, index) => {
-                return {
-                    "obs": index,
-                    "prob": prob
+            const p = num_samples/props.data.length
+            var data = []
+            for (let i = 0; i < props.data.length; i++) {
+                if(Math.random() < p) {
+                    data.push(
+                        {
+                            "obs": i,
+                            "prob": props.data[i]
+                        }
+                    )
                 }
-            })
+            }
             var domain = [0, 2]
             return (
                 <ResponsiveContainer width='100%' height={height}>

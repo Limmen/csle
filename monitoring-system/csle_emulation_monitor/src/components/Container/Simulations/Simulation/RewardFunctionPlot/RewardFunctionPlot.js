@@ -21,13 +21,18 @@ const RewardFunctionPlot = React.memo((props) => {
             left: 15,
             bottom: 25
         }
+        const num_samples = 100
         if (props.data !== undefined) {
-            const data = props.data.map((rew, index) => {
-                return {
-                    "state": index,
-                    "rew": rew
+            const p = num_samples/props.data.length
+            var data = []
+            for (let i = 0; i < props.data.length; i++) {
+                if(Math.random() < p) {
+                    data.push({
+                        "state": i,
+                        "rew": props.data[i]
+                    })
                 }
-            })
+            }
             var domain = [props.minState, props.maxState]
             return (
                 <ResponsiveContainer width='100%' height={height}>
