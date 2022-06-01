@@ -11,21 +11,25 @@ import ConfigSpace from './ConfigSpace.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
+import Select from 'react-select'
 import { useDebouncedCallback } from 'use-debounce';
 
 const Emulations = () => {
-    const [emulations, setEmulations] = useState([]);
+    const [emulationIds, setEmulationIds] = useState([]);
+    const [selectedEmulationId, setSelectedEmulationId] = useState(null);
+    const [selectedEmulation, setSelectedEmulation] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingSelectedEmulation, setLoadingSelectedEmulation] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [filteredEmulations, setFilteredEmulations] = useState([]);
+    const [filteredEmulationsIds, setFilteredEmulationsIds] = useState([]);
     const [showOnlyRunningEmulations, setShowOnlyRunningEmulations] = useState(false);
     const [searchString, setSearchString] = useState("");
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-    const fetchEmulations = useCallback(() => {
+    const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationsdata',
+            `http://` + ip + ':7777/emulationsdataids',
             {
                 method: "GET",
                 headers: new Headers({
@@ -35,9 +39,23 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setEmulations(response);
-                setFilteredEmulations(response);
+                const emulationIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", name: " + id_obj.simulation
+                    }
+                })
+                setEmulationIds(emulationIds)
+                setFilteredEmulationsIds(emulationIds)
                 setLoading(false)
+                if (emulationIds.length > 0) {
+                    setSelectedEmulationId(emulationIds[0])
+                    fetchEmulation(emulationIds[0])
+                    setLoadingSelectedEmulation(true)
+                } else {
+                    setLoadingSelectedEmulation(false)
+                    setSelectedEmulation(null)
+                }
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -54,7 +72,25 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchEmulations()
+                fetchEmulationIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchEmulation = useCallback((emulation_id) => {
+        fetch(
+            `http://` + ip + ':7777/emulationsdata/get/' + emulation_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedEmulation(response)
+                setLoadingSelectedEmulation(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -71,7 +107,7 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchEmulations()
+                fetchEmulationIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -83,12 +119,18 @@ const Emulations = () => {
 
     useEffect(() => {
         setLoading(true)
-        fetchEmulations();
-    }, [fetchEmulations]);
+        fetchEmulationIds();
+    }, [fetchEmulationIds]);
+
+    const updateSelectedEmulationId = (selectedId) => {
+        setSelectedEmulationId(selectedId)
+        fetchEmulation(selectedId)
+        setLoadingSelectedEmulation(true)
+    }
 
     const refresh = () => {
         setLoading(true)
-        fetchEmulations()
+        fetchEmulationIds()
     }
 
     const info = () => {
@@ -100,33 +142,45 @@ const Emulations = () => {
         removeAllEmulationsRequest()
     }
 
-    const searchFilter = (em, searchVal) => {
-        return (searchVal === "" ||
-            em.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            em.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            em.descr.toLowerCase().indexOf(searchVal.toString()) !== -1)
+    const searchFilter = (em_id_obj, searchVal) => {
+        return (searchVal === "" || em_id_obj.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchChange = (event) => {
         var searchVal = event.target.value
-        const filteredEmulations = emulations.filter(em => {
+        const filteredEmsIds = emulationIds.filter(em => {
             return searchFilter(em, searchVal)
         });
-        setFilteredEmulations(filteredEmulations)
+        setFilteredEmulationsIds(filteredEmsIds)
         setSearchString(searchVal)
+
+        var selectedEmulationRemoved = false
+        if(!loadingSelectedEmulation && filteredEmsIds.length > 0){
+            for (let i = 0; i < filteredEmsIds.length; i++) {
+                if(selectedEmulation !== null && selectedEmulation !== undefined &&
+                    selectedEmulation.id === filteredEmsIds[i].value) {
+                    selectedEmulationRemoved = true
+                }
+            }
+            if(!selectedEmulationRemoved) {
+                setSelectedEmulationId(filteredEmsIds[0])
+                fetchEmulation(filteredEmsIds[0])
+                setLoadingSelectedEmulation(true)
+            }
+        }
     }
 
     const runningEmulationsChange = (event) => {
         if (!showOnlyRunningEmulations) {
-            const filteredEms = filteredEmulations.filter(emulation => {
+            const filteredEms = filteredEmulationsIds.filter(emulation => {
                 return emulation.running
             });
-            setFilteredEmulations(filteredEms)
+            setFilteredEmulationsIds(filteredEms)
         } else {
-            const filteredEms = emulations.filter(emulation => {
+            const filteredEms = emulationIds.filter(emulation => {
                 return searchFilter(emulation, searchString)
             });
-            setFilteredEmulations(filteredEms)
+            setFilteredEmulationsIds(filteredEms)
         }
         setShowOnlyRunningEmulations(!showOnlyRunningEmulations)
     }
@@ -138,20 +192,94 @@ const Emulations = () => {
         350
     );
 
-    const EmulationAccordions = (props) => {
-        if (props.loading) {
-            return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
+    const EmulationAccordion = (props) => {
+        if (props.loadingSelectedEmulation || props.selectedEmulation === null || props.selectedEmulation === undefined) {
+            if(props.loadingSelectedEmulation) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching emulation... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
         } else {
             return (
                 <Accordion defaultActiveKey="0">
-                    {props.emulations.map((emulation, index) =>
-                        <Emulation emulation={emulation} wrapper={wrapper} key={emulation.name + "-" + index}
-                                   removeEmulation={removeEmulation}/>
-                    )}
+                    <Emulation emulation={props.selectedEmulation}
+                               wrapper={wrapper} key={props.selectedEmulation.name}
+                               removeEmulation={removeEmulation}/>
                 </Accordion>
+            )
+        }
+    }
+
+    const SelectEmulationOrSpinner = (props) => {
+        if (!props.loading && props.emulationIds.length === 0) {
+            return (
+                <span className="emptyText">No emulations are available</span>
+            )
+        }
+        if (props.loading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching emulations... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Emulation:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedEmulationId}
+                                defaultValue={props.selectedEmulationId}
+                                options={props.emulationIds}
+                                onChange={updateSelectedEmulationId}
+                                placeholder="Select emulation"
+                            />
+                        </div>
+                    </div>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={info}>
+                            <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveEmulationsTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllEmulations}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
     }
@@ -215,41 +343,13 @@ const Emulations = () => {
     return (
         <div className="Emulations">
             <div className="row">
-                <div className="col-sm-2">
-                </div>
-                <div className="col-sm-3">
-                    <h3 className="text-center inline-block emulationsHeader">
-                        Emulations
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshTooltip}
-                        >
-                            <Button variant="button" onClick={refresh}>
-                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderInfoTooltip}
-                        >
-                            <Button variant="button" onClick={info}>
-                                <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveEmulationsTooltip}
-                        >
-                            <Button variant="danger" onClick={removeAllEmulations}>
-                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                    </h3>
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectEmulationOrSpinner loading={loading}
+                                                   emulationIds={filteredEmulationsIds}
+                                                   selectedEmulationId={selectedEmulationId}
+                        />
+                    </h4>
                 </div>
                 <div className="col-sm-4">
                     <Form className="searchForm">
@@ -268,20 +368,11 @@ const Emulations = () => {
                         </InputGroup>
                     </Form>
                 </div>
-                <div className="col-sm-3">
-                    <Form>
-                        <Form.Check
-                            inline
-                            type="switch"
-                            id="runningEmulationsSwitch"
-                            label="Show only running emulations"
-                            className="runningCheck"
-                            onChange={runningEmulationsChange}
-                        />
-                    </Form>
+                <div className="col-sm-2">
                 </div>
             </div>
-            <EmulationAccordions loading={loading} emulations={filteredEmulations}/>
+            <EmulationAccordion loadingSelectedEmulation={loadingSelectedEmulation}
+                                selectedEmulation={selectedEmulation}/>
         </div>
     );
 }

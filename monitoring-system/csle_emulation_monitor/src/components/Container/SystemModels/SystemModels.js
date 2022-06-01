@@ -12,26 +12,34 @@ import Collapse from 'react-bootstrap/Collapse'
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
+import {useDebouncedCallback} from 'use-debounce';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
 
 const SystemModels = () => {
-    const [systemModels, setSystemModels] = useState([]);
+    const [systemModelsIds, setSystemModelsIds] = useState([]);
+    const [filteredSystemModelsIds, setFilteredSystemModelsIds] = useState([]);
     const [selectedSystemModel, setSelectedSystemModel] = useState(null);
+    const [selectedSystemModelId, setSelectedSystemModelId] = useState(null);
     const [conditionals, setConditionals] = useState([]);
     const [selectedConditionals, setSelectedConditionals] = useState(null);
     const [metrics, setMetrics] = useState([]);
     const [selectedMetric, setSelectedMetric] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingSelectedSystemModel, setLoadingSelectedSystemModel] = useState(true);
     const [animationDuration, setAnimationDuration] = useState(0);
     const animationDurationFactor = 50000
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [deltaProbsOpen, setDeltaProbsOpen] = useState(false);
     const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
+    const [searchString, setSearchString] = useState("");
 
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
     const resetState = () => {
-        setSystemModels([])
+        setSystemModelsIds([])
         setSelectedSystemModel(null)
         setConditionals([])
         setSelectedConditionals(null)
@@ -48,7 +56,7 @@ const SystemModels = () => {
     const refresh = () => {
         setLoading(true)
         resetState()
-        fetchSystemModels()
+        fetchSystemModelsIds()
     }
 
     const renderInfoTooltip = (props) => (
@@ -99,8 +107,10 @@ const SystemModels = () => {
         );
     }
 
-    const updateSystemModel = (dynModel) => {
-        setSelectedSystemModel(dynModel)
+    const updateSystemModelId = (systemModelId) => {
+        setSelectedSystemModelId(systemModelId)
+        fetchModel(systemModelId)
+        setLoadingSelectedSystemModel(true)
     }
     const updateSelectedConditionals = (selected) => {
         setSelectedConditionals(selected)
@@ -115,7 +125,7 @@ const SystemModels = () => {
         for (let i = 0; i < conditionalOptions.length; i++) {
             var match = false
             for (let j = 0; j < selectedConds.length; j++) {
-                if(conditionalOptions[i].label === selectedConds[j].label) {
+                if (conditionalOptions[i].label === selectedConds[j].label) {
                     match = true
                 }
             }
@@ -135,9 +145,9 @@ const SystemModels = () => {
         }
     }
 
-    const fetchSystemModels = useCallback(() => {
+    const fetchSystemModelsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/systemmodelsdata',
+            `http://` + ip + ':7777/systemmodelsdataids',
             {
                 method: "GET",
                 headers: new Headers({
@@ -147,48 +157,81 @@ const SystemModels = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
-                const modelOptions = response.map((model, index) => {
+                const modelIds = response.map((id_obj, index) => {
                     return {
-                        value: model,
-                        label: model.id + "-" + model.emulation_env_name
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistics_id: " + id_obj.statistics_id
                     }
                 })
-                setSystemModels(modelOptions)
+                setSystemModelsIds(modelIds)
+                setFilteredSystemModelsIds(modelIds)
                 setLoading(false)
-                if (response.length > 0) {
-                    setSelectedSystemModel(modelOptions[0])
-                    var conditionalOptions = []
-                    for (let i = 0; i < modelOptions[0].value.conditional_metric_distributions.length; i++) {
-                        for (let j = 0; j < modelOptions[0].value.conditional_metric_distributions[i].length; j++) {
-                            conditionalOptions.push(
-                                {
-                                    value: modelOptions[0].value.conditional_metric_distributions[i][j],
-                                    label: modelOptions[0].value.conditional_metric_distributions[i][j].conditional_name
-                                }
-                            )
-                        }
-                    }
-                    setConditionals(conditionalOptions)
-                    setSelectedConditionals([conditionalOptions[0]])
-                    const metricOptions = getMetricForSelectedConditional(conditionalOptions,[conditionalOptions[0]]).map((metricName, index) => {
-                        return {
-                            value: metricName,
-                            label: metricName
-                        }
-                    })
-                    setMetrics(metricOptions)
-                    setSelectedMetric(metricOptions[0])
+                if (modelIds.length > 0) {
+                    setSelectedSystemModelId(modelIds[0])
+                    fetchModel(modelIds[0])
+                    setLoadingSelectedSystemModel(true)
+                } else {
+                    setLoadingSelectedSystemModel(false)
+                    setSelectedSystemModel(null)
                 }
+                // const modelOptions = response.map((model, index) => {
+                //     return {
+                //         value: model,
+                //         label: model.id + "-" + model.emulation_env_name
+                //     }
+                // })
+                // setSystemModelsIds(modelOptions)
+                // setLoading(false)
+                // if (response.length > 0) {
+                //     setSelectedSystemModel(modelOptions[0])
+                //     var conditionalOptions = []
+                //     for (let i = 0; i < modelOptions[0].value.conditional_metric_distributions.length; i++) {
+                //         for (let j = 0; j < modelOptions[0].value.conditional_metric_distributions[i].length; j++) {
+                //             conditionalOptions.push(
+                //                 {
+                //                     value: modelOptions[0].value.conditional_metric_distributions[i][j],
+                //                     label: modelOptions[0].value.conditional_metric_distributions[i][j].conditional_name
+                //                 }
+                //             )
+                //         }
+                //     }
+                //     setConditionals(conditionalOptions)
+                //     setSelectedConditionals([conditionalOptions[0]])
+                //     const metricOptions = getMetricForSelectedConditional(conditionalOptions, [conditionalOptions[0]]).map((metricName, index) => {
+                //         return {
+                //             value: metricName,
+                //             label: metricName
+                //         }
+                //     })
+                //     setMetrics(metricOptions)
+                //     setSelectedMetric(metricOptions[0])
+                // }
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
     useEffect(() => {
         setLoading(true)
-        fetchSystemModels()
-    }, [fetchSystemModels]);
+        fetchSystemModelsIds()
+    }, [fetchSystemModelsIds]);
 
+    const fetchModel = useCallback((model_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemmodelsdata/get/' + model_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedSystemModel(response)
+                setLoadingSelectedSystemModel(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
 
     const removeModelRequest = useCallback((model_id) => {
         fetch(
@@ -202,7 +245,7 @@ const SystemModels = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSystemModels()
+                fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -213,6 +256,41 @@ const SystemModels = () => {
         removeModelRequest(model.id)
     }
 
+    const searchFilter = (modelIdObj, searchVal) => {
+        return (searchVal === "" || modelIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchChange = (event) => {
+        var searchVal = event.target.value
+        const filteredMIds = systemModelsIds.filter(model_id_obj => {
+            return searchFilter(model_id_obj, searchVal)
+        });
+        setFilteredSystemModelsIds(filteredMIds)
+        setSearchString(searchVal)
+
+        var selectedModelRemoved = false
+        if(!loadingSelectedSystemModel && filteredMIds.length > 0){
+            for (let i = 0; i < filteredMIds.length; i++) {
+                if(selectedSystemModel !== null && selectedSystemModel !== undefined &&
+                    selectedSystemModel.id === filteredMIds[i].value) {
+                    selectedModelRemoved = true
+                }
+            }
+            if(!selectedModelRemoved) {
+                setSelectedSystemModelId(filteredMIds[0])
+                fetchModel(filteredMIds[0])
+                setLoadingSelectedSystemModel(true)
+            }
+        }
+    }
+
+    const searchHandler = useDebouncedCallback(
+        (event) => {
+            searchChange(event)
+        },
+        350
+    );
+
     const SelectSystemModelDropdownOrSpinner = (props) => {
         if (!props.loading && props.systemModels.length === 0) {
             return (
@@ -221,9 +299,12 @@ const SystemModels = () => {
         }
         if (props.loading) {
             return (
-                <Spinner animation="border" role="status" className="dropdownSpinner">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
+                <div>
+                    <span className="spinnerLabel"> Fetching system models... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
         } else {
             return (
                 <div className="inline-block">
@@ -264,28 +345,28 @@ const SystemModels = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Model:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "400px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedSystemModel}
-                                defaultValue={props.selectedSystemModel}
-                                options={props.systemModels}
-                                onChange={updateSystemModel}
+                                value={props.selectedSystemModelId}
+                                defaultValue={props.selectedSystemModelId}
+                                options={props.systemModelsIds}
+                                onChange={updateSystemModelId}
                                 placeholder="Select model"
                             />
                         </div>
                     </div>
-
-                    <SelectConditionalDistributionDropdownOrSpinner conditionals={conditionals}
-                                                                    selectedConditionals={selectedConditionals}
-                                                                    loading={loading}/>
-                    <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
-                                                               selectedMetric={selectedMetric}
-                                                               loading={loading}/>
                 </div>
             )
         }
     }
+
+    // <SelectConditionalDistributionDropdownOrSpinner conditionals={conditionals}
+    //                                                 selectedConditionals={selectedConditionals}
+    //                                                 loading={loading}/>
+    // <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
+    //                                            selectedMetric={selectedMetric}
+    //                                            loading={loading}/>
 
     const ModelDescriptionOrSpinner = (props) => {
         if (!props.loading && props.systemModels.length === 0) {
@@ -477,7 +558,8 @@ const SystemModels = () => {
                                             {props.selectedConditionals.map((conditional, index) => {
                                                 return (
                                                     <tr key={conditional.label + "-" + index}>
-                                                        <td>Conditional: {conditional.label}, num mixture components</td>
+                                                        <td>Conditional: {conditional.label}, num mixture components
+                                                        </td>
                                                         <td>{conditional.value.mixture_weights.length}</td>
                                                     </tr>
                                                 )
@@ -505,7 +587,9 @@ const SystemModels = () => {
                                                 return (conditional.value.mixtures_covariance_matrix.map((cov_row, index) => {
                                                     return (
                                                         <tr key={conditional.label + "-" + index}>
-                                                            <td>Conditional: {conditional.label}, mixture component: {index}, covariance</td>
+                                                            <td>Conditional: {conditional.label}, mixture
+                                                                component: {index}, covariance
+                                                            </td>
                                                             <td>{cov_row.join(", ")}</td>
                                                         </tr>
                                                     )
@@ -549,29 +633,54 @@ const SystemModels = () => {
 
     return (
         <div className="systemModels">
-            <h5 className="text-center inline-block emulationsHeader">
-                <SelectSystemModelDropdownOrSpinner systemModels={systemModels}
-                                                    selectedSystemModel={selectedSystemModel}
-                                                    loading={loading}
-                />
-            </h5>
-            <ModelDescriptionOrSpinner systemModels={systemModels}
-                                           selectedSystemModel={selectedSystemModel}
-                                           loading={loading}/>
-
-            <ConditionalChartsOrSpinner key={animationDuration}
-                                        selectedSystemModel={selectedSystemModel}
-                                        selectedConditionals={selectedConditionals}
-                                        animationDurationFactor={animationDurationFactor}
-                                        animationDuration={animationDuration}
-                                        conditionals={conditionals} systemModels={systemModels}
-                                        selectedMetric={selectedMetric}
-                                        metrics={metrics}
-                                        loading={loading}
-            />
+            <div className="row">
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectSystemModelDropdownOrSpinner systemModels={systemModelsIds}
+                                                            selectedSystemModelId={selectedSystemModelId}
+                                                            loading={loading}
+                        />
+                    </h4>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="basic-addon1" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="basic-addon1"
+                                onChange={searchHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
         </div>
     );
 }
+
+// <ModelDescriptionOrSpinner systemModels={systemModels}
+//                            selectedSystemModel={selectedSystemModel}
+//                            loading={loading}/>
+//
+// <ConditionalChartsOrSpinner key={animationDuration}
+//                             selectedSystemModel={selectedSystemModel}
+//                             selectedConditionals={selectedConditionals}
+//                             animationDurationFactor={animationDurationFactor}
+//                             animationDuration={animationDuration}
+//                             conditionals={conditionals} systemModels={systemModels}
+//                             selectedMetric={selectedMetric}
+//                             metrics={metrics}
+//                             loading={loading}
+// />
+
 SystemModels.propTypes = {};
 SystemModels.defaultProps = {};
 export default SystemModels;

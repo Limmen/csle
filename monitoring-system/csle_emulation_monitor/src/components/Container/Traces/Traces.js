@@ -11,8 +11,8 @@ import TraceImg from './TracesLoop.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form'
-import './Traces.css';
 import Select from 'react-select'
+import './Traces.css';
 import {useDebouncedCallback} from 'use-debounce';
 
 const Traces = () => {
@@ -50,7 +50,6 @@ const Traces = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setFilteredEmulationTracesIds(response)
                 setEmulationTraces(response)
                 setLoadingEmulationTraces(false)
             })
@@ -337,7 +336,6 @@ const Traces = () => {
                 }
             }
             if(!selectedEmulationTraceRemoved) {
-                console.log("time to fetch " + filteredEmTracesIds[0].value)
                 setSelectedEmulationTraceId(filteredEmTracesIds[0])
                 fetchEmulationTrace(filteredEmTracesIds[0])
                 setLoadingSelectedEmulationTrace(true)
@@ -352,20 +350,32 @@ const Traces = () => {
         350
     );
 
-    const searchSimulationTracesFilter = (simulationTrace, searchVal) => {
-        return (searchVal === "" || simulationTrace.id.toString().toLowerCase().indexOf(
-                searchVal.toLowerCase()) !== -1 ||
-            simulationTrace.simulation_env.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
-        )
+    const searchSimulationTracesFilter = (simulationTraceIdObj, searchVal) => {
+        return (searchVal === "" || simulationTraceIdObj.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchSimulationTracesChange = (event) => {
         var searchVal = event.target.value
-        const filteredSimTraces = simulationTraces.filter(simulationTrace => {
-            return searchSimulationTracesFilter(simulationTrace, searchVal)
+        const filteredSimTracesIds = simulationTracesIds.filter(simTraceId => {
+            return searchSimulationTracesFilter(simTraceId, searchVal)
         });
-        setFilteredSimulationTracesIds(filteredSimTraces)
+        setFilteredSimulationTracesIds(filteredSimTracesIds)
         setSimulationTracesSearchString(searchVal)
+
+        var selectedSimulationTraceRemoved = false
+        if(!loadingSelectedSimulationTrace && filteredSimTracesIds.length > 0){
+            for (let i = 0; i < filteredSimTracesIds.length; i++) {
+                if(selectedSimulationTrace !== null && selectedSimulationTrace !== undefined &&
+                    selectedSimulationTrace.id === filteredSimTracesIds[i].value) {
+                    selectedSimulationTraceRemoved = true
+                }
+            }
+            if(!selectedSimulationTraceRemoved) {
+                setSelectedSimulationTraceId(filteredSimTracesIds[0])
+                fetchSimulationTrace(filteredSimTracesIds[0])
+                setLoadingSelectedSimulationTrace(true)
+            }
+        }
     }
 
     const searchSimulationTracesHandler = useDebouncedCallback(
@@ -648,7 +658,7 @@ const Traces = () => {
     return (
         <div className="Traces">
             <div className="row emulationTracesHeader">
-                <div className="col-sm-8">
+                <div className="col-sm-6">
                     <h4 className="text-center inline-block emulationsHeader">
 
                         <SelectEmulationTraceOrSpinner loadingEmulationTraces={loadingEmulationTraces}
@@ -674,17 +684,19 @@ const Traces = () => {
                         </InputGroup>
                     </Form>
                 </div>
+                <div className="col-sm-2">
+                </div>
             </div>
             <EmulationTraceAccordion selectedEmulationTrace={selectedEmulationTrace}
                                      loadingSelectedEmulationTrace={loadingSelectedEmulationTrace}
             />
             <div className="row simulationTracesHeader">
                 <div className="col-sm-8">
-                    <h3 className="text-center inline-block">
+                    <h4 className="text-center inline-block">
                         <SelectSimulationTraceOrSpinner loadingSimulationTraces={loadingSimulationTraces}
-                                                        simulationTracesIds={simulationTracesIds}
+                                                        simulationTracesIds={filteredSimulationTracesIds}
                                                         selectedSimulationTraceId={selectedSimulationTraceId}/>
-                    </h3>
+                    </h4>
                 </div>
                 <div className="col-sm-4">
                     <Form className="searchForm">

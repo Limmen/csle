@@ -12,26 +12,39 @@ import SystemIdentificationJob from "./SystemIdentificationJob/SystemIdentificat
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
+import Select from 'react-select'
 import { useDebouncedCallback } from 'use-debounce';
 
 const Jobs = () => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
     const [trainingJobsLoading, setTrainingJobsLoading] = useState(false);
     const [trainingJobs, setTrainingJobs] = useState([]);
-    const [filteredTrainingJobs, setFilteredTrainingJobs] = useState([]);
+    const [trainingJobsIds, setTrainingJobsIds] = useState([]);
+    const [selectedTrainingJobId, setSelectedTrainingJobId] = useState(null);
+    const [selectedTrainingJob, setSelectedTrainingJob] = useState(null);
+    const [loadingSelectedTrainingJob, setLoadingSelectedTrainingJob] = useState(true);
+    const [filteredTrainingJobsIds, setFilteredTrainingJobsIds] = useState([]);
     const [showDataCollectionJobsInfoModal, setShowDataCollectionJobsInfoModal] = useState(false);
     const [dataCollectionJobsLoading, setDataCollectionJobsLoading] = useState(false);
     const [dataCollectionJobs, setDataCollectionJobs] = useState([]);
+    const [dataCollectionJobsIds, setDataCollectionJobsIds] = useState([]);
+    const [selectedDataCollectionJobId, setSelectedDataCollectionJobId] = useState(null);
+    const [selectedDataCollectionJob, setSelectedDataCollectionJob] = useState(null);
+    const [loadingSelectedDataCollectionJob, setLoadingSelectedDataCollectionJob] = useState(true);
     const [showOnlyRunningTrainingJobs, setShowOnlyRunningTrainingJobs] = useState(false);
-    const [filteredDataCollectionJobs, setFilteredDataCollectionJobs] = useState([]);
+    const [filteredDataCollectionJobsIds, setFilteredDataCollectionJobsIds] = useState([]);
     const [showOnlyRunningDataCollectionJobs, setShowOnlyRunningDataCollectionJobs] = useState(false);
     const [trainingJobsSearchString, setTrainingJobsSearchString] = useState("");
     const [dataCollectionJobsSearchString, setDataCollectionJobsSearchString] = useState("");
     const [showSystemIdentificationJobsInfoModal, setShowSystemIdentificationJobsInfoModal] = useState(false);
     const [systemIdentificationJobsLoading, setSystemIdentificationJobsLoading] = useState(false);
     const [systemIdentificationJobs, setSystemIdentificationJobs] = useState([]);
+    const [systemIdentificationJobsIds, setSystemIdentificationJobsIds] = useState([]);
+    const [selectedSystemIdentificationJobId, setSelectedSystemIdentificationJobId] = useState(null);
+    const [selectedSystemIdentificationJob, setSelectedSystemIdentificationJob] = useState(null);
+    const [loadingSelectedSystemIdentificationJob, setLoadingSelectedSystemIdentificationJob] = useState(true);
     const [systemIdentificationJobsSearchString, setSystemIdentificationJobsSearchString] = useState("");
-    const [filteredSystemIdentificationJobs, setFilteredSystemIdentificationJobs] = useState([]);
+    const [filteredSystemIdentificationJobsIds, setFilteredSystemIdentificationJobsIds] = useState([]);
     const [showOnlyRunningSystemIdentificationJobs, setShowOnlyRunningSystemIdentificationJobs] = useState(false);
 
     const ip = "localhost"
@@ -50,8 +63,41 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 setTrainingJobs(response);
-                setFilteredTrainingJobs(response);
+                setFilteredTrainingJobsIds(response);
                 setTrainingJobsLoading(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchTrainingJobsIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/trainingjobsids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const trainingJobsIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation
+                    }
+                })
+                setTrainingJobsIds(trainingJobsIds)
+                setFilteredTrainingJobsIds(trainingJobsIds)
+                setTrainingJobsLoading(false)
+                if (trainingJobsIds.length > 0) {
+                    setSelectedTrainingJobId(trainingJobsIds[0])
+                    fetchTrainingJob(trainingJobsIds[0])
+                    setLoadingSelectedTrainingJob(true)
+                } else {
+                    setLoadingSelectedTrainingJob(false)
+                    setSelectedTrainingJob(null)
+                }
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -69,8 +115,41 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 setDataCollectionJobs(response);
-                setFilteredDataCollectionJobs(response);
+                setFilteredDataCollectionJobsIds(response);
                 setDataCollectionJobsLoading(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchDataCollectionJobIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/datacollectionjobsids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const dataCollectionJobIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                    }
+                })
+                setDataCollectionJobsIds(dataCollectionJobIds)
+                setFilteredDataCollectionJobsIds(dataCollectionJobIds)
+                setDataCollectionJobsLoading(false)
+                if (dataCollectionJobIds.length > 0) {
+                    setSelectedDataCollectionJobId(dataCollectionJobIds[0])
+                    fetchDataCollectionJob(dataCollectionJobIds[0])
+                    setLoadingSelectedDataCollectionJob(true)
+                } else {
+                    setLoadingSelectedDataCollectionJob(false)
+                    setSelectedDataCollectionJob(null)
+                }
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -88,20 +167,53 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 setSystemIdentificationJobs(response);
-                setFilteredSystemIdentificationJobs(response);
+                setFilteredSystemIdentificationJobsIds(response);
                 setSystemIdentificationJobsLoading(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchSystemIdentificationJobsIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobsids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const systemIdentificationJobsIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                    }
+                })
+                setSystemIdentificationJobsIds(systemIdentificationJobsIds)
+                setFilteredSystemIdentificationJobsIds(systemIdentificationJobsIds)
+                setSystemIdentificationJobsLoading(false)
+                if (systemIdentificationJobsIds.length > 0) {
+                    setSelectedSystemIdentificationJobId(systemIdentificationJobsIds[0])
+                    fetchSystemIdentificationJob(systemIdentificationJobsIds[0])
+                    setLoadingSelectedSystemIdentificationJob(true)
+                } else {
+                    setLoadingSelectedSystemIdentificationJob(false)
+                    setSelectedSystemIdentificationJob(null)
+                }
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
     useEffect(() => {
         setTrainingJobsLoading(true)
-        fetchTrainingJobs()
+        fetchTrainingJobsIds()
         setDataCollectionJobsLoading(true)
-        fetchDataCollectionJobs()
+        fetchDataCollectionJobIds()
         setSystemIdentificationJobsLoading(true)
-        fetchSystemIdentificationJobs()
-    }, [fetchTrainingJobs, fetchDataCollectionJobs]);
+        fetchSystemIdentificationJobsIds()
+    }, [fetchTrainingJobsIds, fetchDataCollectionJobIds, fetchSystemIdentificationJobsIds]);
 
     const removeTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
@@ -115,7 +227,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTrainingJobs()
+                setTrainingJobsLoading(true)
+                fetchTrainingJobsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -132,7 +245,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTrainingJobs()
+                setTrainingJobsLoading(true)
+                fetchTrainingJobsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -159,7 +273,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTrainingJobs()
+                setSystemIdentificationJobsLoading(true)
+                fetchSystemIdentificationJobsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -176,7 +291,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSystemIdentificationJobs()
+                setSystemIdentificationJobsLoading(true)
+                fetchSystemIdentificationJobsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -203,7 +319,26 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTrainingJobs()
+                setTrainingJobsLoading(true)
+                fetchTrainingJobsIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchTrainingJob = useCallback((training_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/trainingjobs/get/' + training_job_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedTrainingJob(response)
+                setLoadingSelectedTrainingJob(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -225,7 +360,26 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTrainingJobs()
+                setSystemIdentificationJobsLoading(true)
+                fetchSystemIdentificationJobsIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchSystemIdentificationJob = useCallback((system_identification_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/systemidentificationjobs/get/' + system_identification_job_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedSystemIdentificationJob(response)
+                setLoadingSelectedSystemIdentificationJob(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -247,7 +401,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTrainingJobs()
+                setTrainingJobsLoading()
+                fetchTrainingJobsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -269,7 +424,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchTrainingJobs()
+                setSystemIdentificationJobsLoading(true)
+                fetchSystemIdentificationJobsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -279,52 +435,73 @@ const Jobs = () => {
         startSystemIdentificationJobRequest(job.id)
     }
 
-    const trainingJobSearchFilter = (job, searchVal) => {
-        return (searchVal === "" ||
-            job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.simulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.emulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.experiment_config.title.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
-        );
+    const trainingJobSearchFilter = (job_id_obj, searchVal) => {
+        return (searchVal === "" || job_id_obj.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1);
     }
 
-    const systemIdentificationJobSearchFilter = (job, searchVal) => {
-        return (searchVal === "" ||
-            job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.emulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.system_identification_config.title.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
-        );
+    const systemIdentificationJobSearchFilter = (job_id_obj, searchVal) => {
+        return (searchVal === "" || job_id_obj.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1);
     }
 
     const searchTrainingJobChange = (event) => {
         var searchVal = event.target.value
-        const filteredTrainingJobs = trainingJobs.filter(job => {
+        const filteredTJobIds = trainingJobsIds.filter(job => {
             return trainingJobSearchFilter(job, searchVal)
         });
-        setFilteredTrainingJobs(filteredTrainingJobs)
+        setFilteredTrainingJobsIds(filteredTJobIds)
         setTrainingJobsSearchString(trainingJobsSearchString)
+
+        var selectedTrainingJobRemoved = false
+        if(!loadingSelectedTrainingJob && filteredTJobIds.length > 0){
+            for (let i = 0; i < filteredTJobIds.length; i++) {
+                if(selectedTrainingJob !== null && selectedTrainingJob !== undefined &&
+                    selectedTrainingJob.id === filteredTJobIds[i].value) {
+                    selectedTrainingJobRemoved = true
+                }
+            }
+            if(!selectedTrainingJobRemoved) {
+                setSelectedTrainingJobId(filteredTJobIds[0])
+                fetchTrainingJob(filteredTJobIds[0])
+                setLoadingSelectedTrainingJob(true)
+            }
+        }
     }
 
     const searchSystemIdentificationJobChange = (event) => {
         var searchVal = event.target.value
-        const filteredSystemIdentificationJobs = systemIdentificationJobs.filter(job => {
+        const filteredSIJobsIds = systemIdentificationJobsIds.filter(job => {
             return systemIdentificationJobSearchFilter(job, searchVal)
         });
-        setFilteredSystemIdentificationJobs(filteredSystemIdentificationJobs)
+        setFilteredSystemIdentificationJobsIds(filteredSIJobsIds)
         setSystemIdentificationJobsSearchString(systemIdentificationJobsSearchString)
+
+        var selectedSystemIdentificationJobRemoved = false
+        if(!loadingSelectedSystemIdentificationJob && filteredSIJobsIds.length > 0){
+            for (let i = 0; i < filteredSIJobsIds.length; i++) {
+                if(selectedSystemIdentificationJob !== null && selectedSystemIdentificationJob !== undefined &&
+                    selectedSystemIdentificationJob.id === filteredSIJobsIds[i].value) {
+                    selectedSystemIdentificationJobRemoved = true
+                }
+            }
+            if(!selectedSystemIdentificationJobRemoved) {
+                setSelectedSystemIdentificationJobId(filteredSIJobsIds[0])
+                fetchSystemIdentificationJob(filteredSIJobsIds[0])
+                setLoadingSelectedSystemIdentificationJob(true)
+            }
+        }
     }
 
     const runningTrainingJobsChange = (event) => {
         if(!showOnlyRunningTrainingJobs) {
-            const filteredTrainJobs = filteredTrainingJobs.filter(job => {
+            const filteredTrainJobs = filteredTrainingJobsIds.filter(job => {
                 return job.running
             });
-            setFilteredTrainingJobs(filteredTrainJobs)
+            setFilteredTrainingJobsIds(filteredTrainJobs)
         } else {
             const filteredTrainJobs = trainingJobs.filter(job => {
                 return trainingJobSearchFilter(job, trainingJobsSearchString)
             });
-            setFilteredTrainingJobs(filteredTrainJobs)
+            setFilteredTrainingJobsIds(filteredTrainJobs)
         }
         setShowOnlyRunningTrainingJobs(!showOnlyRunningTrainingJobs)
     }
@@ -334,12 +511,12 @@ const Jobs = () => {
             const filteredDataCollectionJobs = filteredDataCollectionJobs.filter(job => {
                 return job.running
             });
-            setFilteredDataCollectionJobs(filteredDataCollectionJobs)
+            setFilteredDataCollectionJobsIds(filteredDataCollectionJobs)
         } else {
             const filteredDataCollectionJobs = dataCollectionJobs.filter(job => {
                 return dataCollectionJobSearchFilter(job, dataCollectionJobsSearchString)
             });
-            setFilteredDataCollectionJobs(filteredDataCollectionJobs)
+            setFilteredDataCollectionJobsIds(filteredDataCollectionJobs)
         }
         setShowOnlyRunningDataCollectionJobs(!showOnlyRunningDataCollectionJobs)
     }
@@ -349,12 +526,12 @@ const Jobs = () => {
             const filteredSystemIdentificationJobs = filteredSystemIdentificationJobs.filter(job => {
                 return job.running
             });
-            setFilteredSystemIdentificationJobs(filteredSystemIdentificationJobs)
+            setFilteredSystemIdentificationJobsIds(filteredSystemIdentificationJobs)
         } else {
             const filteredSystemIdentificationJobs = systemIdentificationJobs.filter(job => {
                 return systemIdentificationJobSearchFilter(job, systemIdentificationJobsSearchString)
             });
-            setFilteredSystemIdentificationJobs(filteredSystemIdentificationJobs)
+            setFilteredSystemIdentificationJobsIds(filteredSystemIdentificationJobs)
         }
         setShowOnlyRunningSystemIdentificationJobs(!showOnlyRunningSystemIdentificationJobs)
     }
@@ -373,22 +550,32 @@ const Jobs = () => {
         350
     );
 
-    const dataCollectionJobSearchFilter = (job, searchVal) => {
-        return (searchVal === "" ||
-            job.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.descr.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.emulation_env_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            job.pid.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1
-        );
+    const dataCollectionJobSearchFilter = (job_id, searchVal) => {
+        return (searchVal === "" || job_id.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1);
     }
 
     const searchDataCollectionJobChange = (event) => {
         var searchVal = event.target.value
-        const filteredDataCollectionJobs = dataCollectionJobs.filter(job => {
-            return dataCollectionJobSearchFilter(job, searchVal)
+        const filteredDCJobsIds = dataCollectionJobsIds.filter(job_id => {
+            return dataCollectionJobSearchFilter(job_id, searchVal)
         });
-        setFilteredDataCollectionJobs(filteredDataCollectionJobs)
+        setFilteredDataCollectionJobsIds(filteredDCJobsIds)
         setDataCollectionJobsSearchString(searchVal)
+
+        var selectedDataCollectionJobRemoved = false
+        if(!loadingSelectedDataCollectionJob && filteredDCJobsIds.length > 0){
+            for (let i = 0; i < filteredDCJobsIds.length; i++) {
+                if(selectedDataCollectionJob !== null && selectedDataCollectionJob !== undefined &&
+                    selectedDataCollectionJob.id === filteredDCJobsIds[i].value) {
+                    selectedDataCollectionJobRemoved = true
+                }
+            }
+            if(!selectedDataCollectionJobRemoved) {
+                setSelectedDataCollectionJobId(filteredDCJobsIds[0])
+                fetchDataCollectionJob(filteredDCJobsIds[0])
+                setLoadingSelectedDataCollectionJob(true)
+            }
+        }
     }
 
     const searchDataCollectionJobHandler = useDebouncedCallback(
@@ -410,7 +597,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchDataCollectionJobs()
+                setDataCollectionJobsLoading(true)
+                fetchDataCollectionJobIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -427,7 +615,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchDataCollectionJobs()
+                setDataCollectionJobsLoading()
+                fetchDataCollectionJobIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -454,7 +643,26 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchDataCollectionJobs()
+                setDataCollectionJobsLoading()
+                fetchDataCollectionJobIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchDataCollectionJob = useCallback((data_collection_job_id) => {
+        fetch(
+            `http://` + ip + ':7777/datacollectionjobs/get/' + data_collection_job_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedDataCollectionJob(response)
+                setLoadingSelectedDataCollectionJob(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -476,7 +684,8 @@ const Jobs = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchDataCollectionJobs()
+                setDataCollectionJobsLoading(true)
+                fetchDataCollectionJobIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -488,17 +697,17 @@ const Jobs = () => {
 
     const refreshTrainingJobs = () => {
         setTrainingJobsLoading(true)
-        fetchTrainingJobs()
+        fetchTrainingJobsIds()
     }
 
     const refreshSystemidentificationJobs = () => {
         setSystemIdentificationJobsLoading(true)
-        fetchSystemIdentificationJobs()
+        fetchSystemIdentificationJobsIds()
     }
 
     const refreshDataCollectionJobs = () => {
         setDataCollectionJobsLoading(true)
-        fetchDataCollectionJobs()
+        fetchDataCollectionJobIds()
     }
 
     const renderTrainingJobsInfoTooltip = (props) => (
@@ -554,6 +763,231 @@ const Jobs = () => {
             Reload system identification jobs from the backend
         </Tooltip>
     );
+
+    const updateSelectedTrainingJobId = (selectedId) => {
+        setSelectedTrainingJobId(selectedId)
+        fetchTrainingJob(selectedId)
+        setLoadingSelectedTrainingJob(true)
+    }
+
+    const updateSelectedDataCollectionJobId = (selectedId) => {
+        setSelectedDataCollectionJobId(selectedId)
+        fetchDataCollectionJob(selectedId)
+        setLoadingSelectedDataCollectionJob(true)
+    }
+
+    const updateSelectedSystemIdentificationJob = (selectedId) => {
+        setSelectedSystemIdentificationJobId(selectedId)
+        fetchSystemIdentificationJob(selectedId)
+        setLoadingSelectedSystemIdentificationJob(true)
+    }
+
+    const SelectTrainingJobOrSpinner = (props) => {
+        if (!props.trainingJobsLoading && props.trainingJobsIds.length === 0) {
+            return (
+                <span className="emptyText">No training jobs are available</span>
+            )
+        }
+        if (props.trainingJobsLoading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching training jobs... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Training job:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedTrainingJobId}
+                                defaultValue={props.selectedTrainingJobId}
+                                options={props.trainingJobsIds}
+                                onChange={updateSelectedTrainingJobId}
+                                placeholder="Select job"
+                            />
+                        </div>
+                    </div>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTrainingJobsTooltip}
+                    >
+                        <Button variant="button" onClick={refreshTrainingJobs}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderTrainingJobsInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowTrainingJobsInfoModal(true)} className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <TrainingJobsInfoModal show={showTrainingJobsInfoModal}
+                                           onHide={() => setShowTrainingJobsInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllTrainingJobsTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllTrainingJobs}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
+
+    const SelectDataCollectionJobOrSpinner = (props) => {
+        if (!props.dataCollectionJobsLoading && props.dataCollectionJobsIds.length === 0) {
+            return (
+                <span className="emptyText">No data collection jobs are available</span>
+            )
+        }
+        if (props.dataCollectionJobsLoading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching data collection jobs... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Data collection job:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedDataCollectionJobId}
+                                defaultValue={props.selectedDataCollectionJobId}
+                                options={props.dataCollectionJobsIds}
+                                onChange={updateSelectedDataCollectionJobId}
+                                placeholder="Select job"
+                            />
+                        </div>
+                    </div>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshDataCollectionJobsTooltip}
+                    >
+                        <Button variant="button" onClick={refreshDataCollectionJobs}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderDataCollectionJobsInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowDataCollectionJobsInfoModal(true)}
+                                className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <DataCollectionJobsInfoModal show={showDataCollectionJobsInfoModal}
+                                                 onHide={() => setShowDataCollectionJobsInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllDataCollectionJobsTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllDataCollectionJobs}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
+    const SelectSystemIdentificationJobOrSpinner = (props) => {
+        if (!props.systemIdentificationJobsLoading && props.systemIdentificationJobsIds.length === 0) {
+            return (
+                <span className="emptyText">No system identification jobs are available</span>
+            )
+        }
+        if (props.systemIdentificationJobsLoading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching system identification jobs... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            System identification job:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedSystemIdentificationJobId}
+                                defaultValue={props.selectedSystemIdentificationJobId}
+                                options={props.systemIdentificationJobsIds}
+                                onChange={updateSelectedSystemIdentificationJob}
+                                placeholder="Select job"
+                            />
+                        </div>
+                    </div>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshSystemIdentificationJobsTooltip}
+                    >
+                        <Button variant="button" onClick={refreshSystemidentificationJobs}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderSystemIdentificationJobsInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)} className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
+                                                       onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllSystemIdentificationJobsTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllSystemIdentificationJobs}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
 
     const TrainingJobsInfoModal = (props) => {
         return (
@@ -637,71 +1071,86 @@ const Jobs = () => {
 
     const wrapper = createRef();
 
-    const TrainingJobsAccordions = (props) => {
-        if (props.loading) {
-            return (
-                <h3>
-                    <span className="spinnerLabel"> Fetching training jobs... </span>
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden"></span>
-                    </Spinner>
-                </h3>)
+    const TrainingJobAccordion = (props) => {
+        if (props.loadingSelectedTrainingJob || props.selectedTrainingJob === null || props.selectedTrainingJob === undefined) {
+            if(props.loadingSelectedTrainingJob) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching selected training job... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
         } else {
             return (
                 <Accordion defaultActiveKey="0">
-                    {props.jobs.map((job, index) =>
-                        <TrainingJob job={job} wrapper={wrapper} key={job.id + "-" + index}
-                                     removeTrainingJob={removeTrainingJob} stopTrainingJob={stopTrainingJob}
-                                     startTrainingJob={startTrainingJob}/>
-                    )}
+                    <TrainingJob job={props.selectedTrainingJob} wrapper={wrapper} key={props.selectedTrainingJob.id}
+                                 removeTrainingJob={removeTrainingJob} stopTrainingJob={stopTrainingJob}
+                                 startTrainingJob={startTrainingJob}/>
                 </Accordion>
             )
         }
     }
 
-    const SystemIdentificationJobsAccordions = (props) => {
-        if (props.loading) {
-            return (
-                <h3>
-                    <span className="spinnerLabel"> Fetching system identification jobs... </span>
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden"></span>
-                    </Spinner>
-                </h3>)
+    const SystemIdentificationJobAccordion = (props) => {
+        if (props.loadingSelectedSystemIdentificationJob || props.selectedSystemIdentificationJob === null
+            || props.selectedSystemIdentificationJob === undefined) {
+            if(props.loadingSelectedSystemIdentificationJob) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching selected system identification job... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
         } else {
             return (
                 <Accordion defaultActiveKey="0">
-                    {props.jobs.map((job, index) =>
-                        <SystemIdentificationJob job={job} wrapper={wrapper} key={job.id + "-" + index}
-                                                 removeSystemIdentificationJob={removeSystemIdentificationJob}
-                                                 stopSystemIdentificationJob={stopSystemIdentificationJob}
-                                                 startSystemIdentificationJob={startSystemIdentificationJob}/>
-                    )}
+                    <SystemIdentificationJob job={props.selectedSystemIdentificationJob} wrapper={wrapper}
+                                             key={props.selectedSystemIdentificationJob.id}
+                                             removeSystemIdentificationJob={removeSystemIdentificationJob}
+                                             stopSystemIdentificationJob={stopSystemIdentificationJob}
+                                             startSystemIdentificationJob={startSystemIdentificationJob}/>
                 </Accordion>
             )
         }
     }
 
-    const DataCollectionJobsAccordions = (props) => {
-        if (props.loading) {
-            return (
-                <h3>
-                    <span className="spinnerLabel"> Fetching data collection jobs... </span>
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden"></span>
-                    </Spinner>
-                </h3>
-            )
+    const DataCollectionJobAccordion = (props) => {
+        if (props.loadingSelectedDataCollectionJob || props.selectedDataCollectionJob === null ||
+            props.selectedDataCollectionJob === undefined) {
+            if(props.loadingSelectedDataCollectionJob) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching selected data collection job... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>
+                )
+            } else {
+                return (
+                    <p></p>
+                )
+            }
         } else {
             return (
                 <Accordion defaultActiveKey="0">
-                    {props.jobs.map((job, index) =>
-                        <DataCollectionJob job={job} wrapper={wrapper} key={job.id + "-" + index}
-                                           removeDataCollectionJob={removeDataCollectionJob}
-                                           stopDataCollectionJob={stopDataCollectionJob}
-                                           startDataCollectionJob={startDataCollectionJob}
-                        />
-                    )}
+                    <DataCollectionJob job={props.selectedDataCollectionJob} wrapper={wrapper} key={props.selectedDataCollectionJob.id}
+                                       removeDataCollectionJob={removeDataCollectionJob}
+                                       stopDataCollectionJob={stopDataCollectionJob}
+                                       startDataCollectionJob={startDataCollectionJob}
+                    />
                 </Accordion>
             )
         }
@@ -710,43 +1159,13 @@ const Jobs = () => {
     return (
         <div className="policyExamination">
             <div className="row">
-                <div className="col-sm-4"></div>
-                <div className="col-sm-2">
-                    <h3>
-                        Training jobs
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshTrainingJobsTooltip}
-                        >
-                            <Button variant="button" onClick={refreshTrainingJobs}>
-                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderTrainingJobsInfoTooltip}
-                        >
-                            <Button variant="button" onClick={() => setShowTrainingJobsInfoModal(true)} className="infoButton2">
-                                <i className="fa fa-info-circle" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                        <TrainingJobsInfoModal show={showTrainingJobsInfoModal}
-                                               onHide={() => setShowTrainingJobsInfoModal(false)}/>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveAllTrainingJobsTooltip}
-                        >
-                            <Button variant="danger" onClick={removeAllTrainingJobs}>
-                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                    </h3>
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectTrainingJobOrSpinner trainingJobsLoading={trainingJobsLoading}
+                                                   trainingJobsIds={filteredTrainingJobsIds}
+                                                   selectedTrainingJobId={selectedTrainingJobId}
+                        />
+                    </h4>
                 </div>
                 <div className="col-sm-4">
                     <Form className="searchForm">
@@ -766,60 +1185,21 @@ const Jobs = () => {
                     </Form>
                 </div>
                 <div className="col-sm-2">
-                    <Form>
-                        <Form.Check
-                            inline
-                            type="switch"
-                            id="trainingSwitch"
-                            label="Show only running jobs"
-                            className="runningCheck"
-                            onChange={runningTrainingJobsChange}
-                        />
-                    </Form>
                 </div>
             </div>
 
-            <TrainingJobsAccordions jobs={filteredTrainingJobs} loading={trainingJobsLoading}/>
+            <TrainingJobAccordion loadingSelectedTrainingJob={loadingSelectedTrainingJob}
+                                    selectedTrainingJob={selectedTrainingJob}/>
 
 
             <div className="row systemIdentificationJobs">
-                <div className="col-sm-3"></div>
-                <div className="col-sm-3">
-                    <h3> Data collection jobs
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshDataCollectionJobsTooltip}
-                        >
-                            <Button variant="button" onClick={refreshDataCollectionJobs}>
-                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderDataCollectionJobsInfoTooltip}
-                        >
-                            <Button variant="button" onClick={() => setShowDataCollectionJobsInfoModal(true)}
-                                    className="infoButton2">
-                                <i className="fa fa-info-circle" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                        <DataCollectionJobsInfoModal show={showDataCollectionJobsInfoModal}
-                                                           onHide={() => setShowDataCollectionJobsInfoModal(false)}/>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveAllDataCollectionJobsTooltip}
-                        >
-                            <Button variant="danger" onClick={removeAllDataCollectionJobs}>
-                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                    </h3>
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectDataCollectionJobOrSpinner dataCollectionJobsLoading={dataCollectionJobsLoading}
+                                                          dataCollectionJobsIds={filteredDataCollectionJobsIds}
+                                                          selectedDataCollectionJobId={selectedDataCollectionJobId}
+                        />
+                    </h4>
                 </div>
                 <div className="col-sm-4">
                     <Form className="searchForm">
@@ -839,60 +1219,20 @@ const Jobs = () => {
                     </Form>
                 </div>
                 <div className="col-sm-2">
-                    <Form>
-                        <Form.Check
-                            inline
-                            type="switch"
-                            id="dataCollectionSwitch"
-                            label="Show only running jobs"
-                            className="runningCheck"
-                            onChange={runningDataCollectionJobsChange}
-                        />
-                    </Form>
                 </div>
             </div>
-            <DataCollectionJobsAccordions jobs={filteredDataCollectionJobs}
-                                                loading={dataCollectionJobsLoading}/>
+            <DataCollectionJobAccordion selectedDataCollectionJob={selectedDataCollectionJob}
+                                        loadingSelectedDataCollectionJob={loadingSelectedDataCollectionJob}/>
 
 
             <div className="row systemIdentificationJobs">
-                <div className="col-sm-3"></div>
-                <div className="col-sm-3">
-                    <h3>
-                        System identification jobs
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshSystemIdentificationJobsTooltip}
-                        >
-                            <Button variant="button" onClick={refreshSystemidentificationJobs}>
-                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderSystemIdentificationJobsInfoTooltip}
-                        >
-                            <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)} className="infoButton2">
-                                <i className="fa fa-info-circle" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                        <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
-                                               onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveAllSystemIdentificationJobsTooltip}
-                        >
-                            <Button variant="danger" onClick={removeAllSystemIdentificationJobs}>
-                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                    </h3>
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectSystemIdentificationJobOrSpinner systemIdentificationJobsLoading={systemIdentificationJobsLoading}
+                                                                systemIdentificationJobsIds={filteredSystemIdentificationJobsIds}
+                                                                selectedSystemIdentificationJobId={selectedSystemIdentificationJobId}
+                        />
+                    </h4>
                 </div>
                 <div className="col-sm-4">
                     <Form className="searchForm">
@@ -912,21 +1252,10 @@ const Jobs = () => {
                     </Form>
                 </div>
                 <div className="col-sm-2">
-                    <Form>
-                        <Form.Check
-                            inline
-                            type="switch"
-                            id="systemIdentificationJobSwitch"
-                            label="Show only running jobs"
-                            className="runningCheck"
-                            onChange={runningSystemIdentificationJobsChange}
-                        />
-                    </Form>
                 </div>
             </div>
-
-            <SystemIdentificationJobsAccordions jobs={filteredSystemIdentificationJobs}
-                                                loading={systemIdentificationJobsLoading}/>
+            <SystemIdentificationJobAccordion selectedSystemIdentificationJob={selectedSystemIdentificationJob}
+                                              loadingSelectedSystemIdentificationJob={loadingSelectedSystemIdentificationJob}/>
 
         </div>
     );

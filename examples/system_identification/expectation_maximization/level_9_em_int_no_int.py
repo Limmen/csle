@@ -9,7 +9,7 @@ import csle_system_identification.constants.constants as system_identification_c
 
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     emulation_statistic = MetastoreFacade.get_emulation_statistic(id=3)
     system_identifcation_config = SystemIdentificationConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}em_level9_test",

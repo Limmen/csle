@@ -8,8 +8,8 @@ from csle_agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-001")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,

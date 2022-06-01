@@ -75,7 +75,7 @@ def run() -> None:
 
     :return: None
     """
-    emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     assert emulation_env_config is not None
     assert ContainerManager.is_emulation_running(emulation_env_config=emulation_env_config) is True
     # attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)

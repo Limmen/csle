@@ -11,13 +11,17 @@ import TrainingEnv from './RL_training_env.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
+import Select from 'react-select'
 import { useDebouncedCallback } from 'use-debounce';
 
 const TrainingResults = () => {
-    const [experiments, setExperiments] = useState([]);
+    const [experimentsIds, setExperimentsIds] = useState([]);
+    const [selectedExperimentId, setSelectedExperimentId] = useState(null);
+    const [selectedExperiment, setSelectedExperiment] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingSelectedExperiment, setLoadingSelectedExperiment] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [filteredExperiments, setFilteredExperiments] = useState([]);
+    const [filteredExperimentsIds, setFilteredExperimentsIds] = useState([]);
     const [searchString, setSearchString] = useState("");
 
     const ip = "localhost"
@@ -25,7 +29,7 @@ const TrainingResults = () => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/experimentsdata',
+            `http://` + ip + ':7777/experimentsdataids',
             {
                 method: "GET",
                 headers: new Headers({
@@ -35,9 +39,23 @@ const TrainingResults = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setExperiments(response);
-                setFilteredExperiments(response)
+                const experimentIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation
+                    }
+                })
+                setExperimentsIds(experimentIds)
+                setFilteredExperimentsIds(experimentIds)
                 setLoading(false)
+                if (experimentIds.length > 0) {
+                    setSelectedExperimentId(experimentIds[0])
+                    fetchExperiment(experimentIds[0])
+                    setLoadingSelectedExperiment(true)
+                } else {
+                    setLoadingSelectedExperiment(false)
+                    setSelectedExperiment(null)
+                }
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -46,6 +64,24 @@ const TrainingResults = () => {
         setLoading(true)
         fetchExperiments()
     }, [fetchExperiments]);
+
+    const fetchExperiment = useCallback((experiment_id) => {
+        fetch(
+            `http://` + ip + ':7777/experimentsdata/get/' + experiment_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedExperiment(response)
+                setLoadingSelectedExperiment(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
@@ -100,6 +136,80 @@ const TrainingResults = () => {
         removeAllExperimentsRequest()
     }
 
+    const updateSelectedExperimentId = (selectedId) => {
+        setSelectedExperimentId(selectedId)
+        fetchExperiment(selectedId)
+        setLoadingSelectedExperiment(true)
+    }
+
+    const SelectExperimentOrSpinner = (props) => {
+        if (!props.loading && props.experimentIds.length === 0) {
+            return (
+                <span className="emptyText">No training runs are available</span>
+            )
+        }
+        if (props.loading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching training runs... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Training run:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedExperimentId}
+                                defaultValue={props.selectedExperimentId}
+                                options={props.experimentIds}
+                                onChange={updateSelectedExperimentId}
+                                placeholder="Select training run"
+                            />
+                        </div>
+                    </div>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={info}>
+                            <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllExperimentsTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllExperiments}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload training runs from the backend
@@ -118,20 +228,32 @@ const TrainingResults = () => {
         </Tooltip>
     );
 
-    const searchFilter = (experiment, searchVal) => {
-        return (searchVal === "" ||
-            experiment.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            experiment.descr.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            experiment.simulation_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    const searchFilter = (experimentId, searchVal) => {
+        return (searchVal === "" || experimentId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchChange = (event) => {
         var searchVal = event.target.value
-        const fExp = experiments.filter(exp => {
+        const fExpIds = experimentsIds.filter(exp => {
             return searchFilter(exp, searchVal)
         });
-        setFilteredExperiments(fExp)
+        setFilteredExperimentsIds(fExpIds)
         setSearchString(searchVal)
+
+        var selectedExperimentRemoved = false
+        if(!loadingSelectedExperiment && fExpIds.length > 0){
+            for (let i = 0; i < fExpIds.length; i++) {
+                if(selectedExperiment !== null && selectedExperiment !== undefined &&
+                    selectedExperiment.id === fExpIds[i].value) {
+                    selectedExperimentRemoved = true
+                }
+            }
+            if(!selectedExperimentRemoved) {
+                setSelectedExperimentId(fExpIds[0])
+                fetchExperiment(fExpIds[0])
+                setLoadingSelectedExperiment(true)
+            }
+        }
     }
 
     const searchHandler = useDebouncedCallback(
@@ -173,20 +295,25 @@ const TrainingResults = () => {
 
     const wrapper = createRef();
 
-    const TrainingRunAccordions = (props) => {
-        if (props.loading) {
-            return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
+    const TrainingRunAccordion = (props) => {
+        if (props.loadingSelectedExperiment || props.selectedExperiment === null || props.selectedExperiment === undefined) {
+            if(props.loadingSelectedExperiment) {
+                return (
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden"></span>
+                    </Spinner>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
         } else {
             return (
                 <Accordion defaultActiveKey="0">
-                    {props.experiments.map((experiment, index) =>
-                        <Experiment experiment={experiment} wrapper={wrapper} key={experiment.id + "-" + index}
-                                    removeExperiment={removeExperiment}
-                        />
-                    )}
+                    <Experiment experiment={props.selectedExperiment} wrapper={wrapper}
+                                key={props.selectedExperiment.id}
+                                removeExperiment={removeExperiment}
+                    />
                 </Accordion>
             )
         }
@@ -195,43 +322,13 @@ const TrainingResults = () => {
     return (
         <div className="TrainingResults">
             <div className="row">
-                <div className="col-sm-3">
-                </div>
-                <div className="col-sm-3">
-                    <h3 className="text-center inline-block experimentsHeader"> Training runs
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshTooltip}
-                        >
-                            <Button variant="button" onClick={refresh}>
-                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderInfoTooltip}
-                        >
-                            <Button variant="button" onClick={info}>
-                                <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-
-                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveAllExperimentsTooltip}
-                        >
-                            <Button variant="danger" onClick={removeAllExperiments}>
-                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                    </h3>
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectExperimentOrSpinner loading={loading}
+                                                   experimentIds={filteredExperimentsIds}
+                                                   selectedExperimentId={selectedExperimentId}
+                        />
+                    </h4>
                 </div>
                 <div className="col-sm-4">
                     <Form className="searchForm">
@@ -250,9 +347,11 @@ const TrainingResults = () => {
                         </InputGroup>
                     </Form>
                 </div>
-                <div className="col-sm-2"></div>
+                <div className="col-sm-2">
+                </div>
             </div>
-            <TrainingRunAccordions loading={loading} experiments={filteredExperiments}/>
+            <TrainingRunAccordion loadingSelectedExperiment={loadingSelectedExperiment}
+                                  selectedExperiment={selectedExperiment}/>
         </div>
     );
 }

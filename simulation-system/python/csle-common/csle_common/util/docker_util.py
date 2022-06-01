@@ -73,7 +73,7 @@ class DockerUtil:
             subnet_mask = subnet_prefix + constants.COMMANDS.SLASH_DELIM + str(em_containers[0].ip_prefix_len)
 
             config = None
-            em_record = MetastoreFacade.get_emulation(name=em)
+            em_record = MetastoreFacade.get_emulation_by_name(name=em)
             if em_record is not None:
                 config = em_record
 

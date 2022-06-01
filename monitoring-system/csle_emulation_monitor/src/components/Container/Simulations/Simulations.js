@@ -11,14 +11,20 @@ import Simulation from "./Simulation/Simulation";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
-import { useDebouncedCallback } from 'use-debounce';
+import Select from 'react-select'
+import {useDebouncedCallback} from 'use-debounce';
 
 const Simulations = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [simulations, setSimulations] = useState([]);
+    const [simulationIds, setSimulationIds] = useState([]);
+    const [selectedSimulation, setSelectedSimulation] = useState([]);
+    const [selectedSimulationId, setSelectedSimulationId] = useState([]);
     const [filteredSimulations, setFilteredSimulations] = useState([]);
+    const [filteredSimulationIds, setFilteredSimulationsIds] = useState([]);
     const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState(true);
+    const [loadingSelectedSimulation, setLoadingSelectedSimulation] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -41,6 +47,58 @@ const Simulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const fetchSimulationsIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/simulationsdataids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const simulationIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", name: " + id_obj.simulation
+                    }
+                })
+                setSimulationIds(simulationIds)
+                setFilteredSimulationsIds(simulationIds)
+                setLoading(false)
+                if (simulationIds.length > 0) {
+                    setSelectedSimulationId(simulationIds[0])
+                    fetchSimulation(simulationIds[0])
+                    setLoadingSelectedSimulation(true)
+                } else {
+                    setLoadingSelectedSimulation(false)
+                    setSelectedSimulation(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+
+    const fetchSimulation = useCallback((simulation_id) => {
+        fetch(
+            `http://` + ip + ':7777/simulationsdata/get/' + simulation_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedSimulation(response)
+                setLoadingSelectedSimulation(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/simulationsdata/remove',
@@ -59,8 +117,8 @@ const Simulations = () => {
     }, []);
 
     useEffect(() => {
-        setLoading(true)
-        fetchSimulations();
+        setLoading(true);
+        fetchSimulationsIds();
     }, [fetchSimulations]);
 
 
@@ -114,20 +172,32 @@ const Simulations = () => {
         removeAllSimulationsRequest()
     }
 
-    const searchFilter = (simulation, searchVal) => {
-        return (searchVal === "" ||
-            simulation.id.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            simulation.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1 ||
-            simulation.descr.toLowerCase().indexOf(searchVal.toString()) !== -1)
+    const searchFilter = (simIdObj, searchVal) => {
+        return (searchVal === "" || simIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchChange = (event) => {
         var searchVal = event.target.value
-        const filteredSims = simulations.filter(simulation => {
-            return searchFilter(simulation, searchVal)
+        const filteredSimsIds = simulationIds.filter(simulation_id_obj => {
+            return searchFilter(simulation_id_obj, searchVal)
         });
-        setFilteredSimulations(filteredSims)
+        setFilteredSimulationsIds(filteredSimsIds)
         setSearchString(searchVal)
+
+        var selectedSimulationRemoved = false
+        if(!loadingSelectedSimulation && filteredSimsIds.length > 0){
+            for (let i = 0; i < filteredSimsIds.length; i++) {
+                if(selectedSimulation !== null && selectedSimulation !== undefined &&
+                    selectedSimulation.id === filteredSimsIds[i].value) {
+                    selectedSimulationRemoved = true
+                }
+            }
+            if(!selectedSimulationRemoved) {
+                setSelectedSimulationId(filteredSimsIds[0])
+                fetchSimulation(filteredSimsIds[0])
+                setLoadingSelectedSimulation(true)
+            }
+        }
     }
 
     const searchHandler = useDebouncedCallback(
@@ -186,46 +256,120 @@ const Simulations = () => {
         }
     }
 
+    const SimulationAccordion = (props) => {
+        if (props.loadingSelectedSimulation || props.selectedSimulation === null || props.selectedSimulation === undefined) {
+            if (props.loadingSelectedSimulation) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching simulation... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    <Simulation simulation={props.selectedSimulation} wrapper={wrapper}
+                                key={props.selectedSimulation.name}
+                                removeSimulation={removeSimulation}
+                    />
+                </Accordion>
+            )
+        }
+    }
+
+    const updateSelectedSimulationId = (selectedId) => {
+        setSelectedSimulationId(selectedId)
+        fetchSimulation(selectedId)
+        setLoadingSelectedSimulation(true)
+    }
+
+    const SelectSimulationOrSpinner = (props) => {
+        if (!props.loading && props.simulationIds.length === 0) {
+            return (
+                <span className="emptyText">No simulations are available</span>
+            )
+        }
+        if (props.loading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching simulations... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Simulation:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedSimulationId}
+                                defaultValue={props.selectedSimulationId}
+                                options={props.simulationIds}
+                                onChange={updateSelectedSimulationId}
+                                placeholder="Select simulation"
+                            />
+                        </div>
+                    </div>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                            <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllSimulationsTooltop}
+                    >
+                        <Button variant="danger" onClick={removeAllSimulations}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                </div>
+            )
+        }
+    }
+
     const wrapper = createRef();
 
     return (
         <div className="Simulations">
             <div className="row">
-                <div className="col-sm-3"></div>
-                <div className="col-sm-3">
-                    <h3> Simulations
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshTooltip}
-                        >
-                            <Button variant="button" onClick={refresh}>
-                                <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderInfoTooltip}
-                        >
-                            <Button variant="button" onClick={() => setShowInfoModal(true)}>
-                                <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                        <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
-                        <OverlayTrigger
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveAllSimulationsTooltop}
-                        >
-                            <Button variant="danger" onClick={removeAllSimulations}>
-                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                    </h3>
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                    <SelectSimulationOrSpinner loading={loading}
+                                               simulationIds={filteredSimulationIds}
+                                               selectedSimulationId={selectedSimulationId}
+                    />
+                    </h4>
                 </div>
                 <div className="col-sm-4">
                     <Form className="searchForm">
@@ -247,7 +391,8 @@ const Simulations = () => {
                 <div className="col-sm-2">
                 </div>
             </div>
-            <SimulationAccordions loading={loading} simulations={filteredSimulations}/>
+            <SimulationAccordion loadingSelectedSimulation={loadingSelectedSimulation}
+                                 selectedSimulation={selectedSimulation}/>
         </div>
     );
 }

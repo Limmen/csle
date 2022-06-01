@@ -71,7 +71,7 @@ def attacker(emulation : str) -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 
-    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     if emulation_env_config is not None:
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         attacker_shell(s=s)
@@ -125,7 +125,7 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
     from csle_common.controllers.log_sink_manager import LogSinkManager
     from csle_common.controllers.host_manager import HostManager
 
-    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     if emulation_env_config is not None:
         if clients:
             clients_dto = TrafficManager.get_num_active_clients(emulation_env_config=emulation_env_config)
@@ -203,7 +203,7 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
-    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     if emulation_env_config is not None:
         if mu is not None:
             emulation_env_config.traffic_config.client_population_config.mu = mu
@@ -235,7 +235,7 @@ def stop_traffic(emulation : str) -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
-    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     if emulation_env_config is not None:
         EmulationEnvManager.stop_custom_traffic(emulation_env_config=emulation_env_config)
     else:
@@ -257,7 +257,7 @@ def materialize(emulation: str, path: str) -> None:
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
 
-    emulation_env_config = MetastoreFacade.get_emulation(name=emulation)
+    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     if emulation_env_config is None:
         click.secho(f"Emulation: {emulation} not found", fg="red", bold=True)
     else:
@@ -518,7 +518,7 @@ def stop(entity: str) -> None:
     else:
         container_stopped = ContainerManager.stop_container(name=entity)
         if not container_stopped:
-            emulation = MetastoreFacade.get_emulation(name=entity)
+            emulation = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation is not None:
                  stop_emulation(emulation)
                  emulation_stopped = True
@@ -667,7 +667,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
     else:
         container_started = ContainerManager.start_container(name=entity)
         if not container_started:
-            emulation_env_config = MetastoreFacade.get_emulation(name=entity)
+            emulation_env_config = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation_env_config is not None:
                 run_emulation(emulation_env_config, no_traffic=no_traffic)
                 emulation_started = True
@@ -965,7 +965,7 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
             if container is not None:
                 print_stopped_container(container=container)
             else:
-                emulation_env_config = MetastoreFacade.get_emulation(name=entity)
+                emulation_env_config = MetastoreFacade.get_emulation_by_name(name=entity)
                 if emulation_env_config is not None:
                     print_emulation_config(emulation_env_config=emulation_env_config)
                 else:
@@ -979,7 +979,7 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
                         if img is not None:
                             print_img(img=img)
                         else:
-                            simulation_env_config = MetastoreFacade.get_simulation(name=entity)
+                            simulation_env_config = MetastoreFacade.get_simulation_by_name(name=entity)
                             if simulation_env_config is not None:
                                 print_simulation_config(simulation_config=simulation_env_config)
                             else:
@@ -1385,7 +1385,7 @@ def clean_name(name: str) -> None:
     if container_stopped:
         ContainerManager.rm_container(container_name=name)
     else:
-        em = MetastoreFacade.get_emulation(name=name)
+        em = MetastoreFacade.get_emulation_by_name(name=name)
         if em is not None:
             clean_emulation(emulation_env_config=em)
         else:

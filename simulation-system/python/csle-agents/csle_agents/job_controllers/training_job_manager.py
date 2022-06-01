@@ -23,9 +23,9 @@ class TrainingJobManager:
         emulation_env_config = None
         simulation_env_config = None
         if job_config.emulation_env_name is not None:
-            emulation_env_config = MetastoreFacade.get_emulation(name=job_config.emulation_env_name)
+            emulation_env_config = MetastoreFacade.get_emulation_by_name(name=job_config.emulation_env_name)
         if job_config.simulation_env_name is not None:
-            simulation_env_config = MetastoreFacade.get_simulation(name=job_config.simulation_env_name)
+            simulation_env_config = MetastoreFacade.get_simulation_by_name(name=job_config.simulation_env_name)
         if job_config.experiment_config.agent_type == AgentType.T_SPSA:
             agent = TSPSAAgent(emulation_env_config=emulation_env_config,
                                simulation_env_config=simulation_env_config,

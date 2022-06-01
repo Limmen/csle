@@ -177,6 +177,29 @@ def simulations():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/simulationsdataids', methods=['GET'])
+def simulation_ids():
+    simulation_ids = MetastoreFacade.list_simulation_ids()
+    response_dicts = []
+    for tup in simulation_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/simulationsdata/get/<simulation_id>', methods=['GET'])
+def get_simulation(simulation_id: int):
+    simulation = MetastoreFacade.get_simulation(simulation_id)
+    if simulation is None:
+        response = jsonify({})
+    else:
+        response = jsonify(simulation.to_dict())
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/simulationsdata/remove/<simulation_name>', methods=['POST'])
 def remove_simulation(simulation_name: str):
     all_simulations = MetastoreFacade.list_simulations()
@@ -215,11 +238,23 @@ def emulations():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/emulationsdataids', methods=['GET'])
+def emulationids():
+    emulation_ids = MetastoreFacade.list_emulations_ids()
+    response_dicts = []
+    for tup in emulation_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "emulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 @app.route('/monitor/<emulation>/<minutes>', methods=['GET'])
 def monitor_emulation(emulation: str, minutes: int):
     minutes = int(minutes)
-    em = MetastoreFacade.get_emulation(name=emulation)
+    em = MetastoreFacade.get_emulation_by_name(name=emulation)
     if em is None:
         time_series = None
     else:
@@ -231,7 +266,7 @@ def monitor_emulation(emulation: str, minutes: int):
 
 @app.route('/emulationsdata/<emulation_name>', methods=['GET', 'POST'])
 def emulation(emulation_name: str):
-    em = MetastoreFacade.get_emulation(name=emulation_name)
+    em = MetastoreFacade.get_emulation_by_name(name=emulation_name)
     rc_emulations = ContainerManager.list_running_emulations()
     if em is not None:
         if em.name in rc_emulations:
@@ -262,6 +297,22 @@ def emulation(emulation_name: str):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/emulationsdata/get/<emulation_id>', methods=['GET'])
+def emulation_by_id(emulation_id: int):
+    em = MetastoreFacade.get_emulation(id=emulation_id)
+    rc_emulations = ContainerManager.list_running_emulations()
+    if em is not None:
+        if em.name in rc_emulations:
+            em.running = True
+    if em is None:
+        em_dict = {}
+    else:
+        em_name, img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
+        em.image = base64.b64encode(img).decode()
+        em_dict = em.to_dict()
+    response = jsonify(em_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 @app.route('/emulationsdata/remove/<emulation_name>', methods=['POST'])
 def remove_emulation(emulation_name: str):
@@ -400,6 +451,29 @@ def emulation_statistics():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/emulationstatisticsdataids', methods=['GET'])
+def emulation_statistics_ids():
+    stats_ids = MetastoreFacade.list_emulation_statistics_ids()
+    response_dicts = []
+    for tup in stats_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "emulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/emulationstatisticsdata/get/<emulation_statistics_id>', methods=['POST'])
+def get_emulation_statistic(emulation_statistics_id: int):
+    statistic = MetastoreFacade.get_emulation_statistic(id=emulation_statistics_id)
+    if statistic is not None:
+        response = jsonify(statistic.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/emulationstatisticsdata/remove/<emulation_statistics_id>', methods=['POST'])
 def remove_emulation_statistic(emulation_statistics_id: int):
     statistic = MetastoreFacade.get_emulation_statistic(id=emulation_statistics_id)
@@ -417,6 +491,20 @@ def system_models_data():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/systemmodelsdataids', methods=['GET'])
+def system_models_ids():
+    models_ids = MetastoreFacade.list_gaussian_mixture_system_models_ids()
+    response_dicts = []
+    for tup in models_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "emulation": tup[1],
+            "statistic_id": tup[2]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/systemmodelsdata/remove/<system_model_id>', methods=['POST'])
 def remove_system_model(system_model_id: int):
     model = MetastoreFacade.get_gaussian_mixture_system_model_config(id=system_model_id)
@@ -426,11 +514,45 @@ def remove_system_model(system_model_id: int):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/systemmodelsdata/get/<system_model_id>', methods=['GET'])
+def get_system_model(system_model_id: int):
+    model = MetastoreFacade.get_gaussian_mixture_system_model_config(id=system_model_id)
+    if model is not None:
+        response = jsonify(model.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/experimentsdata', methods=['GET'])
 def experiments():
     experiments = MetastoreFacade.list_experiment_executions()
     experiment_dicts = list(map(lambda x: x.to_dict(), experiments))
     response = jsonify(experiment_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/experimentsdataids', methods=['GET'])
+def experiments_ids():
+    experiments_ids = MetastoreFacade.list_experiment_executions_ids()
+    response_dicts = []
+    for tup in experiments_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1],
+            "emulation": tup[2]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/experimentsdata/get/<experiment_id>', methods=['GET'])
+def get_experiment(experiment_id: int):
+    experiment = MetastoreFacade.get_experiment_execution(id=experiment_id)
+    if experiment is not None:
+        response = jsonify(experiment.to_dict())
+    else:
+        response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
@@ -460,6 +582,29 @@ def policies():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/multithresholdpoliciesids', methods=['GET'])
+def multi_threshold_policies_ids():
+    multi_threshold_stopping_policies_ids = MetastoreFacade.list_multi_threshold_stopping_policies_ids()
+    response_dicts = []
+    for tup in multi_threshold_stopping_policies_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/multithresholdpolicies/get/<multi_threshold_stopping_policy_id>', methods=['GET'])
+def get_multi_threshold_policy(multi_threshold_stopping_policy_id: int):
+    policy = MetastoreFacade.get_multi_threshold_stopping_policy(id=multi_threshold_stopping_policy_id)
+    if policy is not None:
+        response = jsonify(policy.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/multithresholdpolicies/remove/<multi_threshold_stopping_policy_id>', methods=['POST'])
 def remove_multi_threshold_policy(multi_threshold_stopping_policy_id: int):
     policy = MetastoreFacade.get_multi_threshold_stopping_policy(id=multi_threshold_stopping_policy_id)
@@ -483,6 +628,29 @@ def ppo_policies():
     ppo_policies = MetastoreFacade.list_ppo_policies()
     ppo_policies_dicts = list(map(lambda x: x.to_dict(), ppo_policies))
     response = jsonify(ppo_policies_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/ppopoliciesids', methods=['GET'])
+def ppo_policies_ids():
+    ppo_policies_ids = MetastoreFacade.list_ppo_policies_ids()
+    response_dicts = []
+    for tup in ppo_policies_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/ppopolicies/get/<ppo_policy_id>', methods=['GET'])
+def get_ppo_policy(ppo_policy_id: int):
+    policy = MetastoreFacade.get_ppo_policy(id=ppo_policy_id)
+    if policy is not None:
+        response = jsonify(policy.to_dict())
+    else:
+        response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
@@ -517,6 +685,31 @@ def trainingjobs():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/trainingjobsids', methods=['GET'])
+def trainingjobsids():
+    training_jobs_ids = MetastoreFacade.list_training_jobs_ids()
+    response_dicts = []
+    for tup in training_jobs_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1],
+            "emulation": tup[2]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/trainingjobs/get/<job_id>', methods=['GET'])
+def get_trainingjob(job_id: int):
+    job = MetastoreFacade.get_training_job_config(id=job_id)
+    if job is not None:
+        if EmulationUtil.check_pid(job.pid):
+            job.running = True
+        response = jsonify(job.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 @app.route('/trainingjobs/stop/<job_id>', methods=['POST'])
 def stop_trainingjob(job_id: int):
@@ -573,6 +766,31 @@ def datacollectionjobs():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/datacollectionjobsids', methods=['GET'])
+def datacollectionjobsids():
+    data_collection_jobs_ids = MetastoreFacade.list_data_collection_jobs_ids()
+    response_dicts = []
+    for tup in data_collection_jobs_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "emulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/datacollectionjobs/get/<job_id>', methods=['GET'])
+def get_data_collection_job(job_id: int):
+    job = MetastoreFacade.get_data_collection_job_config(id=job_id)
+    if job is not None:
+        if EmulationUtil.check_pid(job.pid):
+            job.running = True
+        response = jsonify(job.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/datacollectionjobs/stop/<job_id>', methods=['POST'])
 def stop_data_collection_job(job_id: int):
     job = MetastoreFacade.get_data_collection_job_config(id=job_id)
@@ -625,6 +843,31 @@ def system_identification_jobs():
         alive_jobs.append(job)
     system_identification_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
     response = jsonify(system_identification_jobs_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/systemidentificationjobsids', methods=['GET'])
+def system_identification_jobs_ids():
+    system_identification_jobs_ids = MetastoreFacade.list_system_identification_jobs_ids()
+    response_dicts = []
+    for tup in system_identification_jobs_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "emulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/systemidentificationjobs/get/<job_id>', methods=['GET'])
+def get_system_identification_job(job_id: int):
+    job = MetastoreFacade.get_system_identification_job_config(id=job_id)
+    if job is not None:
+        if EmulationUtil.check_pid(job.pid):
+            job.running = True
+        response = jsonify(job.to_dict())
+    else:
+        response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

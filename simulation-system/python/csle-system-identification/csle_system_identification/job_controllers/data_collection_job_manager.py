@@ -19,7 +19,7 @@ class DataCollectionJobManager:
         :param job_config: the configuration of the job
         :return: None
         """
-        emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
+        emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
         assert emulation_env_config is not None
         assert ContainerManager.is_emulation_running(emulation_env_config=emulation_env_config) is True
         em_statistic = MetastoreFacade.get_emulation_statistic(id=job_config.emulation_statistic_id)

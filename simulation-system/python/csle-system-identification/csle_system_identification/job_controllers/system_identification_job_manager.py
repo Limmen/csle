@@ -22,7 +22,7 @@ class SystemIdentificationJobManager:
         emulation_env_config = None
         emulation_statistic = None
         if job_config.emulation_env_name is not None:
-            emulation_env_config = MetastoreFacade.get_emulation(name=job_config.emulation_env_name)
+            emulation_env_config = MetastoreFacade.get_emulation_by_name(name=job_config.emulation_env_name)
         if job_config.emulation_statistics_id is not None:
             emulation_statistic = MetastoreFacade.get_emulation_statistic(id=job_config.emulation_statistics_id)
         if job_config.system_identification_config.model_type == SystemModelType.GAUSSIAN_MIXTURE:

@@ -11,8 +11,8 @@ from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresh
 
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation("csle-level9-001")
-    simulation_env_config = MetastoreFacade.get_simulation("csle-stopping-pomdp-defender-002")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
         random_seeds=[399, 98912,999,555],

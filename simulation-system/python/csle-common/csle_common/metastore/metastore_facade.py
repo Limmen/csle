@@ -1,4 +1,4 @@
-from typing import List, Union, Any, Tuple
+from typing import List, Union, Any, Tuple, Dict
 import psycopg
 import json
 import csle_common.constants.constants as constants
@@ -39,7 +39,20 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def get_emulation(name: str) -> Union[None, EmulationEnvConfig]:
+    def list_emulations_ids() -> List[Dict]:
+        """
+        :return: A list of emulation ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.EMULATIONS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def get_emulation_by_name(name: str) -> Union[None, EmulationEnvConfig]:
         """
         Function for extracting the metadata of an emulation with a given name
 
@@ -51,6 +64,24 @@ class MetastoreFacade:
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (name,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_emulation_record_to_dto(emulation_record=record)
+                return record
+
+    @staticmethod
+    def get_emulation(id: int) -> Union[None, EmulationEnvConfig]:
+        """
+        Function for extracting the metadata of an emulation with a id
+
+        :param id: the id of the emulation
+        :return: The emulation config or None if the emulation was not found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
                 if record is not None:
                     record = MetastoreFacade._convert_emulation_record_to_dto(emulation_record=record)
@@ -71,7 +102,20 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def get_simulation(name: str) -> Union[None, SimulationEnvConfig]:
+    def list_simulation_ids() -> List[Dict]:
+        """
+        :return: A list of simulation ids and names in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def get_simulation_by_name(name: str) -> Union[None, SimulationEnvConfig]:
         """
         Function for extracting the metadata of a simulation with a given name
 
@@ -83,6 +127,25 @@ class MetastoreFacade:
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE name = %s", (name,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_simulation_record_to_dto(simulation_record=record)
+                return record
+
+
+    @staticmethod
+    def get_simulation(id: int) -> Union[None, SimulationEnvConfig]:
+        """
+        Function for extracting the metadata of a simulation with a given id
+
+        :param id: the id of the simulation
+        :return: The simulation config or None if the simulation was not found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
                 if record is not None:
                     record = MetastoreFacade._convert_simulation_record_to_dto(simulation_record=record)
@@ -373,6 +436,19 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
+    def list_emulation_statistics_ids() -> List[Dict]:
+        """
+        :return: A list of emulation statistics ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
     def list_emulation_traces() -> List[EmulationTrace]:
         """
         :return: A list of emulation traces in the metastore
@@ -402,7 +478,7 @@ class MetastoreFacade:
 
 
     @staticmethod
-    def list_simulation_traces_ids() -> List[EmulationTrace]:
+    def list_simulation_traces_ids() -> List[Dict]:
         """
         :return: A list of emulation traces in the metastore
         """
@@ -805,7 +881,7 @@ class MetastoreFacade:
                 return id_of_new_row
 
     @staticmethod
-    def list_experiment_executions() -> List[EmulationTrace]:
+    def list_experiment_executions() -> List[ExperimentExecution]:
         """
         :return: A list of emulation traces in the metastore
         """
@@ -816,6 +892,19 @@ class MetastoreFacade:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
                 records = list(map(lambda x: MetastoreFacade._convert_experiment_execution_record_to_dto(x), records))
+                return records
+
+    @staticmethod
+    def list_experiment_executions_ids() -> List[Dict]:
+        """
+        :return: A list of experiment execution ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name,emulation_name FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
+                records = cur.fetchall()
                 return records
 
     @staticmethod
@@ -882,6 +971,20 @@ class MetastoreFacade:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
                 records = list(map(lambda x: MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(x), records))
+                return records
+
+
+    @staticmethod
+    def list_multi_threshold_stopping_policies_ids() -> List[Dict]:
+        """
+        :return: A list of Multi-threshold stopping policies ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
+                records = cur.fetchall()
                 return records
 
 
@@ -994,6 +1097,18 @@ class MetastoreFacade:
                 records = list(map(lambda x: MetastoreFacade._convert_training_job_record_to_dto(x), records))
                 return records
 
+    @staticmethod
+    def list_training_jobs_ids() -> List[Dict]:
+        """
+        :return: A list of training job ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name,emulation_name FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
+                records = cur.fetchall()
+                return records
 
     @staticmethod
     def get_training_job_config(id: int) -> Union[None, TrainingJobConfig]:
@@ -1066,6 +1181,19 @@ class MetastoreFacade:
                 records = cur.fetchall()
                 records = list(map(lambda x: MetastoreFacade._convert_data_collection_job_record_to_dto(x),
                                    records))
+                return records
+
+    @staticmethod
+    def list_data_collection_jobs_ids() -> List[Dict]:
+        """
+        :return: A list of data collection job ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
+                records = cur.fetchall()
                 return records
 
     @staticmethod
@@ -1232,6 +1360,20 @@ class MetastoreFacade:
                 records = list(map(lambda x: MetastoreFacade._convert_ppo_policy_record_to_dto(x), records))
                 return records
 
+
+    @staticmethod
+    def list_ppo_policies_ids() -> List[Dict]:
+        """
+        :return: A list of PPO policies ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
+                records = cur.fetchall()
+                return records
+
     @staticmethod
     def _convert_ppo_policy_record_to_dto(ppo_policy_record) -> PPOPolicy:
         """
@@ -1334,6 +1476,19 @@ class MetastoreFacade:
                 records = cur.fetchall()
                 records = list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
                                    records))
+                return records
+
+    @staticmethod
+    def list_system_identification_jobs_ids() -> List[Dict]:
+        """
+        :return: A list of system identification job ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
+                records = cur.fetchall()
                 return records
 
     @staticmethod
@@ -1452,6 +1607,19 @@ class MetastoreFacade:
                 records = cur.fetchall()
                 records = list(map(lambda x: MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(x),
                                    records))
+                return records
+
+    @staticmethod
+    def list_gaussian_mixture_system_models_ids() -> List[Dict]:
+        """
+        :return: A list of gaussian mixture system model ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
                 return records
 
     @staticmethod
