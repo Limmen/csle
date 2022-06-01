@@ -26,3 +26,7 @@ class Policy(ABC):
     @abstractmethod
     def from_dict(d: Dict) -> "Policy":
         pass
+
+    @abstractmethod
+    def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
+        pass

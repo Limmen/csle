@@ -149,7 +149,7 @@ class Emulator:
                     data_collection_job.traces = traces[-data_collection_job.num_cached_traces:]
                 else:
                     data_collection_job.traces = traces
-                logger.info(f"job updated, steps collected: {data_collection_job.num_collected_steps}, "
+                logger.debug(f"job updated, steps collected: {data_collection_job.num_collected_steps}, "
                             f"progress: {data_collection_job.progress_percentage}, "
                             f"sequences completed: {i}/{repeat_times}")
                 sys.stdout.flush()

@@ -13,3 +13,4 @@ class AgentType(IntEnum):
     NFSP=5
     RANDOM=6
     NONE=7
+    VALUE_ITERATION=8

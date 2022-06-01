@@ -1,5 +1,7 @@
 from typing import Union, List, Dict, Any
 
+import numpy as np
+
 
 class HParam:
     """

@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -11,7 +11,7 @@ class TrainingJobConfig:
 
     def __init__(self, simulation_env_name: str, experiment_config: ExperimentConfig,
                  progress_percentage: float, pid: int, experiment_result: ExperimentResult,
-                 emulation_env_name: str, simulation_traces: List[SimulationTrace],
+                 emulation_env_name: Union[str, None], simulation_traces: List[SimulationTrace],
                  num_cached_traces: int, log_file_path: str, descr: str) -> None:
         """
         Initializes the DTO

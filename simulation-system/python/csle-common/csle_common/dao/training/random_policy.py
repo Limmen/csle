@@ -30,10 +30,20 @@ class RandomPolicy(Policy):
         Selects the next action
 
         :param o: the input observation
-        :return: the next action
+        :return: the next action and its probability
         """
         action = random.choice(self.actions)
         return action.id
+
+    def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
+        """
+        Calculates the probability of taking a given action for a given observation
+
+        :param o: the input observation
+        :param a: the action
+        :return: p(a|o)
+        """
+        return 1/len(self.actions)
 
     @staticmethod
     def from_dict(d: Dict) -> "Policy":

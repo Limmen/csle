@@ -89,3 +89,12 @@ class T_FP:
     RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN = "running_average_best_response_defender_return"
     AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "average_best_response_attacker_return"
     RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "running_average_best_response_attacker_return"
+
+
+class VI:
+    THETA = "theta"
+    TRANSITION_TENSOR = "transition_tensor"
+    REWARD_TENSOR = "reward_tensor"
+    NUM_STATES = "num_states"
+    NUM_ACTIONS = "num_actions"
+    DELTA = "delta"
