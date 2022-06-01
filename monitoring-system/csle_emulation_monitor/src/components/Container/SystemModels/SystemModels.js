@@ -246,6 +246,7 @@ const SystemModels = () => {
         setLoading(true)
         resetState()
         removeModelRequest(model.id)
+        setSelectedSystemModel(null)
     }
 
     const searchFilter = (modelIdObj, searchVal) => {

@@ -203,6 +203,7 @@ const Traces = () => {
         setLoadingSimulationTraces(true)
         setLoadingSelectedSimulationTrace(true)
         removeSimulationTraceRequest(simulationTrace.id)
+        setSelectedSimulationTrace(null)
     }
 
     const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
@@ -260,6 +261,7 @@ const Traces = () => {
         setLoadingEmulationTraces(true)
         setLoadingSelectedEmulationTrace(true)
         removeEmulationTraceRequest(emulationTrace.id)
+        setSelectedEmulationTrace(null)
     }
 
     const refreshEmulationTraces = () => {
@@ -272,12 +274,14 @@ const Traces = () => {
         setLoadingEmulationTraces(true)
         setLoadingSelectedEmulationTrace(true)
         removeAllEmulationTracesRequest()
+        setSelectedEmulationTrace(null)
     }
 
     const removeAllSimulationTraces = () => {
         setLoadingSimulationTraces(true)
         setLoadingSelectedSimulationTrace(true)
         removeAllSimulationTracesRequest()
+        setSelectedSimulationTrace(null)
     }
 
     const refreshSimulationTraces = () => {
@@ -691,7 +695,7 @@ const Traces = () => {
                                      loadingSelectedEmulationTrace={loadingSelectedEmulationTrace}
             />
             <div className="row simulationTracesHeader">
-                <div className="col-sm-8">
+                <div className="col-sm-6">
                     <h4 className="text-center inline-block">
                         <SelectSimulationTraceOrSpinner loadingSimulationTraces={loadingSimulationTraces}
                                                         simulationTracesIds={filteredSimulationTracesIds}
@@ -714,6 +718,8 @@ const Traces = () => {
                             />
                         </InputGroup>
                     </Form>
+                </div>
+                <div className="col-sm-2">
                 </div>
             </div>
             <SimulationTraceAccordion selectedSimulationTrace={selectedSimulationTrace}

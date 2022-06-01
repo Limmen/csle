@@ -254,6 +254,7 @@ const Jobs = () => {
     const removeTrainingJob = (job) => {
         setTrainingJobsLoading(true)
         removeTrainingJobRequest(job.id)
+        setSelectedTrainingJobId(null)
     }
 
     const removeAllTrainingJobs = () => {
@@ -300,6 +301,7 @@ const Jobs = () => {
     const removeSystemIdentificationJob = (job) => {
         setSystemIdentificationJobsLoading(true)
         removeSystemIdentificationJobRequest(job.id)
+        setSelectedSystemIdentificationJob(null)
     }
 
     const removeAllSystemIdentificationJobs = () => {
@@ -346,6 +348,7 @@ const Jobs = () => {
     const stopTrainingJob = (job) => {
         setTrainingJobsLoading(true)
         stopTrainingJobRequest(job.id)
+        setSelectedTrainingJob(null)
     }
 
     const stopSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
@@ -387,6 +390,7 @@ const Jobs = () => {
     const stopSystemIdentificationJob = (job) => {
         setSystemIdentificationJobsLoading(true)
         stopSystemIdentificationJobRequest(job.id)
+        setSelectedSystemIdentificationJob(null)
     }
 
     const startTrainingJobRequest = useCallback((training_job_id) => {
@@ -630,6 +634,7 @@ const Jobs = () => {
     const removeDataCollectionJob = (job) => {
         setDataCollectionJobsLoading(true)
         removeDataCollectionJobRequest(job.id)
+        setSelectedDataCollectionJob(null)
     }
 
     const removeAllDataCollectionJobs = (job) => {
@@ -675,6 +680,7 @@ const Jobs = () => {
 
     const stopDataCollectionJob = (job) => {
         setDataCollectionJobsLoading(true)
+        setSelectedDataCollectionJob(null)
         stopDataCollectionJobRequest(job.id)
     }
 

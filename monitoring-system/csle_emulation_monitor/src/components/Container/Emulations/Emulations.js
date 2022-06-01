@@ -115,6 +115,7 @@ const Emulations = () => {
     const removeEmulation = (emulation) => {
         setLoading(true)
         removeEmulationRequest(emulation.name)
+        setSelectedEmulation(null)
     }
 
     useEffect(() => {
@@ -140,6 +141,7 @@ const Emulations = () => {
     const removeAllEmulations = () => {
         setLoading(true)
         removeAllEmulationsRequest()
+        setSelectedEmulation(null)
     }
 
     const searchFilter = (em_id_obj, searchVal) => {

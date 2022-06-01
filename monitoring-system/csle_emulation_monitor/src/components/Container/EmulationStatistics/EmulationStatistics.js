@@ -257,6 +257,7 @@ const EmulationStatistics = () => {
         setLoading(true)
         resetState()
         removeEmulationStatisticRequest(stat.id)
+        setSelectedEmulationStatistic(null)
     }
 
     const searchFilter = (statIdObj, searchVal) => {

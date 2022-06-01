@@ -36,7 +36,7 @@ class Emulator:
             data_collection_job: Optional[DataCollectionJobConfig] = None,
             save_emulation_traces_every : int = 10,
             emulation_traces_to_save_with_data_collection_job : int = 3,
-            intrusion_start_p: float = 0.01) -> None:
+            intrusion_start_p: float = 0.1, intrusion_continue: float = 0.3) -> None:
         """
         Runs an attacker and defender sequence in the emulation <repeat_times> times
 
@@ -52,6 +52,8 @@ class Emulator:
         :param data_collection_job: the system identification job configuration
         :param save_emulation_traces_every: how frequently to save emulation traces
         :param emulation_traces_to_save_with_data_collection_job: num traces to save with the job
+        :param intrusion_start_p: the p parameter for the geometric distribution that determines when an intrusion starts
+        :param intrusion_continue: the p parameter for the geometric distribution that determines when an intrusion continues
         :return: None
         """
         logger = Logger.__call__().get_logger()
@@ -103,12 +105,17 @@ class Emulator:
             intrusion_start_time = np.random.geometric(p=intrusion_start_p, size=1)[0]
             attacker_wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * intrusion_start_time
             defender_wait_seq = [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * intrusion_start_time
-            full_attacker_sequence = attacker_wait_seq + attacker_sequence
-            full_defender_sequence = defender_wait_seq + defender_sequence
+            full_attacker_sequence = attacker_wait_seq
+            full_defender_sequence = defender_wait_seq
+            for i in range(len(attacker_sequence)):
+                num_wait_steps = np.random.geometric(p=intrusion_continue, size=1)[0]
+                wait_steps = [EmulationAttackerStoppingActions.CONTINUE(index=-1)]*num_wait_steps
+                full_attacker_sequence = full_attacker_sequence + wait_steps
+                full_attacker_sequence = full_attacker_sequence + attacker_sequence[i]
+                full_defender_sequence = full_defender_sequence + \
+                                         [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * (num_wait_steps+1)
             T = len(full_attacker_sequence)
             assert  len(full_defender_sequence) == len(full_attacker_sequence)
-
-
             logger.info(f"Starting execution of static action sequences, iteration :{i}, T: {T}, I_t:{intrusion_start_time}")
             sys.stdout.flush()
             s.reset()

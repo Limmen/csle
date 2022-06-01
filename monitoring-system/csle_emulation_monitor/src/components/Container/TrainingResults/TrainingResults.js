@@ -134,6 +134,7 @@ const TrainingResults = () => {
     const removeAllExperiments = () => {
         setLoading(true)
         removeAllExperimentsRequest()
+        setSelectedExperiment(null)
     }
 
     const updateSelectedExperimentId = (selectedId) => {

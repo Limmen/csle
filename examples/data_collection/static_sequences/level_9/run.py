@@ -91,7 +91,8 @@ def run() -> None:
                                   descr="Intrusion data collected against expert attacker",
                                   save_emulation_traces_every=1,
                                   emulation_traces_to_save_with_data_collection_job=1,
-                                  emulation_statistics=em_statistic, intrusion_start_p=0.01)
+                                  emulation_statistics=em_statistic, intrusion_start_p=0.1,
+                                  intrusion_continue=0.3)
 
 
 # Program entrypoint

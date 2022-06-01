@@ -18,8 +18,8 @@ const Simulations = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [simulations, setSimulations] = useState([]);
     const [simulationIds, setSimulationIds] = useState([]);
-    const [selectedSimulation, setSelectedSimulation] = useState([]);
-    const [selectedSimulationId, setSelectedSimulationId] = useState([]);
+    const [selectedSimulation, setSelectedSimulation] = useState(null);
+    const [selectedSimulationId, setSelectedSimulationId] = useState(null);
     const [filteredSimulations, setFilteredSimulations] = useState([]);
     const [filteredSimulationIds, setFilteredSimulationsIds] = useState([]);
     const [searchString, setSearchString] = useState("");
@@ -27,25 +27,6 @@ const Simulations = () => {
     const [loadingSelectedSimulation, setLoadingSelectedSimulation] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
-
-    const fetchSimulations = useCallback(() => {
-        fetch(
-            `http://` + ip + ':7777/simulationsdata',
-            {
-                method: "GET",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => res.json())
-            .then(response => {
-                setSimulations(response);
-                setFilteredSimulations(response);
-                setLoading(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
@@ -111,7 +92,7 @@ const Simulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSimulations()
+                fetchSimulationsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -119,7 +100,7 @@ const Simulations = () => {
     useEffect(() => {
         setLoading(true);
         fetchSimulationsIds();
-    }, [fetchSimulations]);
+    }, [fetchSimulationsIds]);
 
 
     const removeSimulationRequest = useCallback((simulation_name) => {
@@ -134,7 +115,7 @@ const Simulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchSimulations()
+                fetchSimulationsIds()
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -142,6 +123,7 @@ const Simulations = () => {
     const removeSimulation = (simulation) => {
         setLoading(true)
         removeSimulationRequest(simulation.name)
+        setSelectedSimulation(null)
     }
 
     const renderRefreshTooltip = (props) => (
@@ -164,12 +146,13 @@ const Simulations = () => {
 
     const refresh = () => {
         setLoading(true)
-        fetchSimulations()
+        fetchSimulationsIds()
     }
 
     const removeAllSimulations = () => {
         setLoading(true)
         removeAllSimulationsRequest()
+        setSelectedSimulation(null)
     }
 
     const searchFilter = (simIdObj, searchVal) => {
