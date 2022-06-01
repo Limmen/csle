@@ -532,6 +532,8 @@ const Policies = () => {
                 fetchMultiThresholdPolicy(fPoliciesIds[0])
                 setLoadingMultiThresholdPolicy(true)
             }
+        } else {
+            setSelectedMultiThresholdPolicy(null)
         }
     }
 
@@ -567,6 +569,8 @@ const Policies = () => {
                 fetchPpoPolicy(fPoliciesIds[0])
                 setLoadingPpoPolicy(true)
             }
+        } else {
+            setSelectedPpoPolicy(null)
         }
     }
 

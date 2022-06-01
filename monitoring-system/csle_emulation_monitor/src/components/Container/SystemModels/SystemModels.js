@@ -160,7 +160,7 @@ const SystemModels = () => {
                 const modelIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistics_id: " + id_obj.statistics_id
+                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistic_id: " + id_obj.statistic_id
                     }
                 })
                 setSystemModelsIds(modelIds)
@@ -174,38 +174,6 @@ const SystemModels = () => {
                     setLoadingSelectedSystemModel(false)
                     setSelectedSystemModel(null)
                 }
-                // const modelOptions = response.map((model, index) => {
-                //     return {
-                //         value: model,
-                //         label: model.id + "-" + model.emulation_env_name
-                //     }
-                // })
-                // setSystemModelsIds(modelOptions)
-                // setLoading(false)
-                // if (response.length > 0) {
-                //     setSelectedSystemModel(modelOptions[0])
-                //     var conditionalOptions = []
-                //     for (let i = 0; i < modelOptions[0].value.conditional_metric_distributions.length; i++) {
-                //         for (let j = 0; j < modelOptions[0].value.conditional_metric_distributions[i].length; j++) {
-                //             conditionalOptions.push(
-                //                 {
-                //                     value: modelOptions[0].value.conditional_metric_distributions[i][j],
-                //                     label: modelOptions[0].value.conditional_metric_distributions[i][j].conditional_name
-                //                 }
-                //             )
-                //         }
-                //     }
-                //     setConditionals(conditionalOptions)
-                //     setSelectedConditionals([conditionalOptions[0]])
-                //     const metricOptions = getMetricForSelectedConditional(conditionalOptions, [conditionalOptions[0]]).map((metricName, index) => {
-                //         return {
-                //             value: metricName,
-                //             label: metricName
-                //         }
-                //     })
-                //     setMetrics(metricOptions)
-                //     setSelectedMetric(metricOptions[0])
-                // }
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -229,6 +197,30 @@ const SystemModels = () => {
             .then(response => {
                 setSelectedSystemModel(response)
                 setLoadingSelectedSystemModel(false)
+                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
+                    var conditionalOptions = []
+                    for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
+                        for (let j = 0; j < response.conditional_metric_distributions[i].length; j++) {
+                            conditionalOptions.push(
+                                {
+                                    value: response.conditional_metric_distributions[i][j],
+                                    label: response.conditional_metric_distributions[i][j].conditional_name
+                                }
+                            )
+                        }
+                    }
+                    setConditionals(conditionalOptions)
+                    setSelectedConditionals([conditionalOptions[0]])
+                    const metricOptions = getMetricForSelectedConditional(conditionalOptions, [conditionalOptions[0]]).map((metricName, index) => {
+                        return {
+                            value: metricName,
+                            label: metricName
+                        }
+                    })
+                    setMetrics(metricOptions)
+                    setSelectedMetric(metricOptions[0])
+                }
+
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -269,18 +261,20 @@ const SystemModels = () => {
         setSearchString(searchVal)
 
         var selectedModelRemoved = false
-        if(!loadingSelectedSystemModel && filteredMIds.length > 0){
+        if (!loadingSelectedSystemModel && filteredMIds.length > 0) {
             for (let i = 0; i < filteredMIds.length; i++) {
-                if(selectedSystemModel !== null && selectedSystemModel !== undefined &&
+                if (selectedSystemModel !== null && selectedSystemModel !== undefined &&
                     selectedSystemModel.id === filteredMIds[i].value) {
                     selectedModelRemoved = true
                 }
             }
-            if(!selectedModelRemoved) {
+            if (!selectedModelRemoved) {
                 setSelectedSystemModelId(filteredMIds[0])
                 fetchModel(filteredMIds[0])
                 setLoadingSelectedSystemModel(true)
             }
+        } else {
+            setSelectedSystemModel(null)
         }
     }
 
@@ -291,8 +285,51 @@ const SystemModels = () => {
         350
     );
 
+    const SelectedSystemModelView = (props) => {
+        if (props.loadingSelectedSystemModel || props.selectedSystemModel === null || props.selectedSystemModel === undefined) {
+            if (props.loadingSelectedSystemModel) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching system model... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
+            return (
+                <div>
+                    <SelectConditionalDistributionDropdownOrSpinner conditionals={props.conditionals}
+                                                                    selectedConditionals={props.selectedConditionals}
+                                                                    loading={props.loadingSelectedSystemModel}/>
+                    <SelectMetricDistributionDropdownOrSpinner metrics={props.metrics}
+                                                               selectedMetric={props.selectedMetric}
+                                                               loading={props.loadingSelectedSystemModel}/>
+
+                    <ModelDescriptionOrSpinner selectedSystemModel={props.selectedSystemModel}
+                                               loading={props.loadingSelectedSystemModel}/>
+
+                    <ConditionalChartsOrSpinner key={props.animationDuration}
+                                                selectedSystemModel={props.selectedSystemModel}
+                                                selectedConditionals={props.selectedConditionals}
+                                                animationDurationFactor={props.animationDurationFactor}
+                                                animationDuration={props.animationDuration}
+                                                conditionals={props.conditionals}
+                                                selectedMetric={props.selectedMetric}
+                                                metrics={props.metrics}
+                                                loading={props.loadingSelectedSystemModel}
+                    />
+                </div>
+            )
+        }
+    }
+
     const SelectSystemModelDropdownOrSpinner = (props) => {
-        if (!props.loading && props.systemModels.length === 0) {
+        if (!props.loading && props.systemModelsIds.length === 0) {
             return (
                 <span className="emptyText">No models are available</span>
             )
@@ -335,7 +372,7 @@ const SystemModels = () => {
                         overlay={renderRemoveModelTooltip}
                     >
                         <Button variant="danger" className="removeButton"
-                                onClick={() => removeModel(selectedSystemModel.value)}>
+                                onClick={() => removeModel(selectedSystemModel)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -361,17 +398,7 @@ const SystemModels = () => {
         }
     }
 
-    // <SelectConditionalDistributionDropdownOrSpinner conditionals={conditionals}
-    //                                                 selectedConditionals={selectedConditionals}
-    //                                                 loading={loading}/>
-    // <SelectMetricDistributionDropdownOrSpinner metrics={metrics}
-    //                                            selectedMetric={selectedMetric}
-    //                                            loading={loading}/>
-
     const ModelDescriptionOrSpinner = (props) => {
-        if (!props.loading && props.systemModels.length === 0) {
-            return (<span> </span>)
-        }
         if (props.loading || props.selectedSystemModel === null) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
@@ -381,12 +408,12 @@ const SystemModels = () => {
             return (
                 <div>
                     <p className="statisticDescription">
-                        Model description: {props.selectedSystemModel.value.descr}
+                        Model description: {props.selectedSystemModel.descr}
                         <span className="numSamples">
-                            Statistic id: {props.selectedSystemModel.value.emulation_statistic_id}
+                            Statistic id: {props.selectedSystemModel.emulation_statistic_id}
                     </span>
                         <span className="numSamples">
-                            Emulation: {props.selectedSystemModel.value.emulation_env_name}
+                            Emulation: {props.selectedSystemModel.emulation_env_name}
                     </span>
                     </p>
                 </div>
@@ -408,20 +435,22 @@ const SystemModels = () => {
         } else {
             return (
                 <div className="conditionalDist inline-block">
-                    <div className="conditionalDist inline-block conditionalLabel">
-                        Conditionals:
-                    </div>
-                    <div className="conditionalDist inline-block" style={{width: "400px"}}>
-                        <Select
-                            style={{display: 'inline-block'}}
-                            value={props.selectedConditionals}
-                            isMulti={true}
-                            defaultValue={props.selectedConditionals}
-                            options={props.conditionals}
-                            onChange={updateSelectedConditionals}
-                            placeholder="Select conditional distributions"
-                        />
-                    </div>
+                    <h4>
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Conditionals:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "800px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedConditionals}
+                                isMulti={true}
+                                defaultValue={props.selectedConditionals}
+                                options={props.conditionals}
+                                onChange={updateSelectedConditionals}
+                                placeholder="Select conditional distributions"
+                            />
+                        </div>
+                    </h4>
                 </div>
             )
         }
@@ -441,19 +470,21 @@ const SystemModels = () => {
         } else {
             return (
                 <div className="conditionalDist inline-block metricLabel">
-                    <div className="conditionalDist inline-block conditionalLabel">
-                        Metric:
-                    </div>
-                    <div className="conditionalDist inline-block" style={{width: "400px"}}>
-                        <Select
-                            style={{display: 'inline-block'}}
-                            value={props.selectedMetric}
-                            defaultValue={props.selectedMetric}
-                            options={props.metrics}
-                            onChange={updateMetric}
-                            placeholder="Select metric"
-                        />
-                    </div>
+                    <h4>
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Metric:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedMetric}
+                                defaultValue={props.selectedMetric}
+                                options={props.metrics}
+                                onChange={updateMetric}
+                                placeholder="Select metric"
+                            />
+                        </div>
+                    </h4>
                 </div>
             )
         }
@@ -517,7 +548,7 @@ const SystemModels = () => {
                                 <div id="deltaProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <ConditionalHistogramDistribution
-                                            data={props.selectedSystemModel.value}
+                                            data={props.selectedSystemModel}
                                             selectedConditionals={getFirstTwoConditionals()}
                                             selectedMetric={props.selectedMetric}
                                             title1={"Delta probabilities: " + props.selectedMetric.value}
@@ -604,7 +635,7 @@ const SystemModels = () => {
                                                             "{conditionalPair.conditional_1}" and
                                                             "{conditionalPair.conditional_2}"
                                                         </td>
-                                                        <td>{props.selectedSystemModel.value.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
+                                                        <td>{props.selectedSystemModel.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
                                                     </tr>
                                                 )
                                             })}
@@ -613,7 +644,7 @@ const SystemModels = () => {
                                                 <td>Data</td>
                                                 <td>
                                                     <Button variant="link"
-                                                            onClick={() => fileDownload(JSON.stringify(props.selectedSystemModel.value), "data.json")}>
+                                                            onClick={() => fileDownload(JSON.stringify(props.selectedSystemModel), "data.json")}>
                                                         data.json
                                                     </Button>
                                                 </td>
@@ -636,7 +667,7 @@ const SystemModels = () => {
             <div className="row">
                 <div className="col-sm-6">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectSystemModelDropdownOrSpinner systemModels={systemModelsIds}
+                        <SelectSystemModelDropdownOrSpinner systemModelsIds={filteredSystemModelsIds}
                                                             selectedSystemModelId={selectedSystemModelId}
                                                             loading={loading}
                         />
@@ -662,24 +693,19 @@ const SystemModels = () => {
                 <div className="col-sm-2">
                 </div>
             </div>
+            <SelectedSystemModelView loadingSelectedSystemModel={loadingSelectedSystemModel}
+                                     selectedSystemModel={selectedSystemModel}
+                                     conditionals={conditionals}
+                                     selectedConditionals={selectedConditionals}
+                                     metrics={metrics}
+                                     selectedMetric={selectedMetric}
+                                     animationDuration={animationDuration}
+                                     animationDurationFactor={animationDurationFactor}
+
+            />
         </div>
     );
 }
-
-// <ModelDescriptionOrSpinner systemModels={systemModels}
-//                            selectedSystemModel={selectedSystemModel}
-//                            loading={loading}/>
-//
-// <ConditionalChartsOrSpinner key={animationDuration}
-//                             selectedSystemModel={selectedSystemModel}
-//                             selectedConditionals={selectedConditionals}
-//                             animationDurationFactor={animationDurationFactor}
-//                             animationDuration={animationDuration}
-//                             conditionals={conditionals} systemModels={systemModels}
-//                             selectedMetric={selectedMetric}
-//                             metrics={metrics}
-//                             loading={loading}
-// />
 
 SystemModels.propTypes = {};
 SystemModels.defaultProps = {};

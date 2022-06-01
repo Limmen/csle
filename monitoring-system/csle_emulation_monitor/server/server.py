@@ -464,7 +464,7 @@ def emulation_statistics_ids():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/emulationstatisticsdata/get/<emulation_statistics_id>', methods=['POST'])
+@app.route('/emulationstatisticsdata/get/<emulation_statistics_id>', methods=['GET'])
 def get_emulation_statistic(emulation_statistics_id: int):
     statistic = MetastoreFacade.get_emulation_statistic(id=emulation_statistics_id)
     if statistic is not None:

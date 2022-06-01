@@ -167,6 +167,8 @@ const Emulations = () => {
                 fetchEmulation(filteredEmsIds[0])
                 setLoadingSelectedEmulation(true)
             }
+        } else {
+            setSelectedEmulation(null)
         }
     }
 

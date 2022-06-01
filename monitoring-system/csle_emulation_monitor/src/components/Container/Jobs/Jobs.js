@@ -464,6 +464,8 @@ const Jobs = () => {
                 fetchTrainingJob(filteredTJobIds[0])
                 setLoadingSelectedTrainingJob(true)
             }
+        } else {
+            setSelectedTrainingJob(null)
         }
     }
 
@@ -488,6 +490,8 @@ const Jobs = () => {
                 fetchSystemIdentificationJob(filteredSIJobsIds[0])
                 setLoadingSelectedSystemIdentificationJob(true)
             }
+        } else {
+            setSelectedSystemIdentificationJob(null)
         }
     }
 
@@ -575,6 +579,8 @@ const Jobs = () => {
                 fetchDataCollectionJob(filteredDCJobsIds[0])
                 setLoadingSelectedDataCollectionJob(true)
             }
+        } else {
+            setSelectedDataCollectionJob(null)
         }
     }
 

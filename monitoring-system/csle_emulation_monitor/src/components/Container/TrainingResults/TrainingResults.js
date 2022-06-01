@@ -253,6 +253,8 @@ const TrainingResults = () => {
                 fetchExperiment(fExpIds[0])
                 setLoadingSelectedExperiment(true)
             }
+        } else {
+            setSelectedExperiment(null)
         }
     }
 

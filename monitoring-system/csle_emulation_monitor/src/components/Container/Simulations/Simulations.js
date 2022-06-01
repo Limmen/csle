@@ -197,6 +197,8 @@ const Simulations = () => {
                 fetchSimulation(filteredSimsIds[0])
                 setLoadingSelectedSimulation(true)
             }
+        } else {
+            setSelectedSimulation(null)
         }
     }
 
