@@ -1358,6 +1358,7 @@ class METADATA_STORE:
     MULTI_THRESHOLD_STOPPING_POLICIES_TABLE = "multi_threshold_stopping_policies"
     PPO_POLICIES_TABLE = "ppo_policies"
     GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE = "gaussian_mixture_system_models"
+    TABULAR_POLICIES_TABLE = "tabular_policies"
 
 
 class CONTAINER_POOLS:

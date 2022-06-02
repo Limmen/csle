@@ -17,6 +17,7 @@ from csle_common.dao.jobs.system_identification_job_config import SystemIdentifi
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.util.np_encoder import NpEncoder
 from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.training.tabular_policy import TabularPolicy
 
 
 class MetastoreFacade:
@@ -1708,4 +1709,104 @@ class MetastoreFacade:
                             (gaussian_mixture_system_model.id,))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Gaussian mixture system model with "
-                                                     f"id {gaussian_mixture_system_model.id} deleted successfully")
+                                                     f"id {gaussian_mixture_system_model.id} deleted successfully")    
+    @staticmethod
+    def list_tabular_policies() -> List[TabularPolicy]:
+        """
+        :return: A list of Tabular policies in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_tabular_policy_record_to_dto(x), records))
+                return records
+
+
+    @staticmethod
+    def list_tabular_policies_ids() -> List[Dict]:
+        """
+        :return: A list of Tabular policies ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def _convert_tabular_policy_record_to_dto(tabular_policy_record) -> TabularPolicy:
+        """
+        Converts a Tabular policy record fetched from the metastore into a DTO
+
+        :param tabular_policy_record: the record to convert
+        :return: the DTO representing the record
+        """
+        tabular_policy_json = json.dumps(tabular_policy_record[1], indent=4, sort_keys=True)
+        tabular_policy: TabularPolicy = TabularPolicy.from_dict(json.loads(tabular_policy_json))
+        tabular_policy.id = tabular_policy_record[0]
+        return tabular_policy
+
+    @staticmethod
+    def get_tabular_policy(id: int) -> Union[None, TabularPolicy]:
+        """
+        Function for fetching a Tabular policy with a given id from the metastore
+
+        :param id: the id of the Tabular policy
+        :return: The Tabular policy or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_tabular_policy_record_to_dto(tabular_policy_record=record)
+                return record
+
+    @staticmethod
+    def remove_tabular_policy(tabular_policy: TabularPolicy) -> None:
+        """
+        Removes a Tabular policy from the metastore
+
+        :param tabular_policy: the policy to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing tabular policy with "
+                                             f"id:{tabular_policy.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} WHERE id = %s",
+                            (tabular_policy.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Tabular policy "
+                                                     f"with id {tabular_policy.id} deleted successfully")
+
+    @staticmethod
+    def save_tabular_policy(tabular_policy: TabularPolicy) -> Union[Any, int]:
+        """
+        Saves a Tabular policy to the metastore
+
+        :param tabular_policy: the policy to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing Tabular policy in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                policy_json_str = json.dumps(tabular_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} "
+                            f"(policy, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, tabular_policy.simulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Tabular policy saved successfully")
+                return id_of_new_row

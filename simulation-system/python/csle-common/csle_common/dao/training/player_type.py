@@ -5,6 +5,6 @@ class PlayerType(IntEnum):
     """
     Enum representing the different player types in CSLE
     """
-    ATTACKER=0
     DEFENDER=1
-    SELF_PLAY=2
+    ATTACKER=2
+    SELF_PLAY=3

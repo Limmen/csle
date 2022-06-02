@@ -332,7 +332,18 @@ const SystemModels = () => {
     const SelectSystemModelDropdownOrSpinner = (props) => {
         if (!props.loading && props.systemModelsIds.length === 0) {
             return (
-                <span className="emptyText">No models are available</span>
+                <div>
+                    <span className="emptyText">No models are available</span>
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.loading) {

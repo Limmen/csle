@@ -9,6 +9,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
 import PPOPolicy from "./PPOPolicy/PPOPolicy";
+import TabularPolicy from "./TabularPolicy/TabularPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
@@ -29,8 +30,15 @@ const Policies = () => {
     const [loadingPpoPolicy, setLoadingPpoPolicy] = useState(true);
     const [filteredPPOPoliciesIds, setFilteredPPOPoliciesIds] = useState([]);
     const [ppoPoliciesSearchString, setPpoPoliciesSearchString] = useState("");
+    const [tabularPoliciesIds, setTabularPoliciesIds] = useState([]);
+    const [selectedTabularPolicy, setSelectedTabularPolicy] = useState(null);
+    const [selectedTabularPolicyId, setSelectedTabularPolicyId] = useState(null);
+    const [loadingTabularPolicy, setLoadingTabularPolicy] = useState(true);
+    const [filteredTabulaPoliciesIds, setFilteredTabularPoliciesIds] = useState([]);
+    const [tabularPoliciesSearchString, setTabularPoliciesSearchString] = useState("");
     const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
     const [loadingPPOPolicies, setLoadingPPOPolicies] = useState(true);
+    const [loadingTabularPolicies, setLoadingTabularPolicies] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -100,11 +108,46 @@ const Policies = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const fetchTabularPoliciesIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/tabularpoliciesids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const tabularPoliciesIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                    }
+                })
+                setTabularPoliciesIds(tabularPoliciesIds)
+                setFilteredTabularPoliciesIds(tabularPoliciesIds)
+                setLoadingTabularPolicies(false)
+                if (tabularPoliciesIds.length > 0) {
+                    setSelectedTabularPolicyId(tabularPoliciesIds[0])
+                    fetchTabularPolicy(tabularPoliciesIds[0])
+                    setLoadingTabularPolicy(true)
+                } else {
+                    setLoadingTabularPolicy(false)
+                    setSelectedTabularPolicy(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     useEffect(() => {
         setLoadingMultiThresholdPolicies(true)
         fetchMultiThresholdPoliciesIds()
         setLoadingPPOPolicies(true)
         fetchPPOPoliciesIds()
+        setLoadingTabularPolicies(true)
+        fetchTabularPoliciesIds()
     }, [fetchMultiThresholdPoliciesIds, fetchPPOPoliciesIds]);
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
@@ -163,6 +206,65 @@ const Policies = () => {
     const removePPOPolicy = (ppoPolicy) => {
         setLoadingPPOPolicies(true)
         removePpoPoliciesRequest(ppoPolicy.id)
+    }
+
+    //Tab
+    const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/tabularpolicies/remove/' + tabular_policy_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTabularPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchTabularPolicy = useCallback((tabular_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/tabularpolicies/get/' + tabular_policy_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedTabularPolicy(response)
+                setLoadingTabularPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAllTabularPoliciesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/tabularpolicies/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchTabularPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeTabularPolicy = (tabularPolicy) => {
+        setLoadingTabularPolicies(true)
+        removeTabularPoliciesRequest(tabularPolicy.id)
     }
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
@@ -233,6 +335,11 @@ const Policies = () => {
         removeAllPpoPoliciesRequest()
     }
 
+    const removeAllTabularPolicies = () => {
+        setLoadingTabularPolicies(true)
+        removeAllTabularPoliciesRequest()
+    }
+
     const refreshMultiThresholdPolicies = () => {
         setLoadingMultiThresholdPolicies(true)
         fetchMultiThresholdPoliciesIds()
@@ -241,6 +348,11 @@ const Policies = () => {
     const refreshPPOPolicies = () => {
         setLoadingPPOPolicies(true)
         fetchPPOPoliciesIds()
+    }
+
+    const refreshTabularPolicies = () => {
+        setLoadingTabularPolicies(true)
+        fetchTabularPoliciesIds()
     }
 
     const renderInfoTooltip = (props) => (
@@ -261,6 +373,12 @@ const Policies = () => {
         </Tooltip>
     );
 
+    const renderRemoveAllTabularPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all Tabular policies.
+        </Tooltip>
+    );
+
     const renderMultiThresholdPoliciesRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload multi-threshold policies from the backend
@@ -270,6 +388,12 @@ const Policies = () => {
     const renderPPORefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload PPO policies from the backend
+        </Tooltip>
+    );
+
+    const renderTabularRefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload Tabular policies from the backend
         </Tooltip>
     );
 
@@ -315,10 +439,27 @@ const Policies = () => {
         setLoadingPpoPolicy(true)
     }
 
+    const updateSelectedTabularPolicyId = (selectedId) => {
+        setSelectedTabularPolicyId(selectedId)
+        fetchTabularPolicy(selectedId)
+        setLoadingTabularPolicy(true)
+    }
+
     const SelectMultiThresholdPolicyOrSpinner = (props) => {
         if (!props.loadingMultiThresholdPolicies && props.multiThresholdPoliciesIds.length === 0) {
             return (
-                <span className="emptyText">No multi-threshold policies are available</span>
+                <div>
+                    <span className="emptyText">No multi-threshold policies are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderMultiThresholdPoliciesRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshMultiThresholdPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.loadingMultiThresholdPolicies) {
@@ -386,7 +527,18 @@ const Policies = () => {
     const SelectPpoPolicyOrSpinner = (props) => {
         if (!props.loadingPPOPolicies && props.ppoPoliciesIds.length === 0) {
             return (
-                <span className="emptyText">No PPO policies are available</span>
+                <div>
+                    <span className="emptyText">No PPO policies are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderPPORefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshPPOPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.loadingPPOPolicies) {
@@ -452,6 +604,86 @@ const Policies = () => {
     }
 
 
+    const SelectTabularPolicyOrSpinner = (props) => {
+        if (!props.loadingTabularPolicies && props.tabularPoliciesIds.length === 0) {
+            return (
+                <div>
+                    <span className="emptyText">No Tabular policies are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderTabularRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshTabularPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+        if (props.loadingTabularPolicies) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching policies... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Tabular policy:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedTabularPolicyId}
+                                defaultValue={props.selectedTabularPolicyId}
+                                options={props.tabularPoliciesIds}
+                                onChange={updateSelectedTabularPolicyId}
+                                placeholder="Select policy"
+                            />
+                        </div>
+                    </div>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderTabularRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshTabularPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllTabularPoliciesTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllTabularPolicies}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
+
     const wrapper = createRef();
 
     const MultiThresholdPolicyAccordion = (props) => {
@@ -501,6 +733,32 @@ const Policies = () => {
                 <Accordion defaultActiveKey="0">
                     <PPOPolicy policy={selectedPpoPolicy} wrapper={wrapper} key={selectedPpoPolicy.id}
                                removePPOPolicy={removePPOPolicy}
+                    />
+                </Accordion>
+            )
+        }
+    }
+
+    const TabularPolicyAccordion = (props) => {
+        if (props.loadingTabularPolicy || props.selectedTabularPolicy === null || props.selectedTabularPolicy === undefined) {
+            if(props.loadingTabularPolicy) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching policy... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
+                               removeTabularPolicy={removeTabularPolicy}
                     />
                 </Accordion>
             )
@@ -581,6 +839,44 @@ const Policies = () => {
         350
     );
 
+
+    const searchTabularPoliciesFilter = (tabularPolicyId, searchVal) => {
+        return (searchVal === "" || tabularPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchTabularPolicyChange = (event) => {
+        var searchVal = event.target.value
+        const fPoliciesIds = ppoPoliciesIds.filter(policy => {
+            return searchTabularPoliciesFilter(policy, searchVal)
+        });
+        setFilteredTabularPoliciesIds(fPoliciesIds)
+        setTabularPoliciesSearchString(searchVal)
+
+        var selectedPolicyRemoved = false
+        if(!loadingTabularPolicy && fPoliciesIds.length > 0){
+            for (let i = 0; i < fPoliciesIds.length; i++) {
+                if(selectedTabularPolicy !== null && selectedTabularPolicy !== undefined &&
+                    selectedTabularPolicy.id === fPoliciesIds[i].value) {
+                    selectedPolicyRemoved = true
+                }
+            }
+            if(!selectedPolicyRemoved) {
+                setSelectedTabularPolicyId(fPoliciesIds[0])
+                fetchTabularPolicy(fPoliciesIds[0])
+                setLoadingTabularPolicy(true)
+            }
+        } else {
+            setSelectedTabularPolicy(null)
+        }
+    }
+
+    const searchTabularPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchTabularPolicyChange(event)
+        },
+        350
+    );
+
     return (
         <div className="policyExamination">
             <div className="row">
@@ -647,6 +943,40 @@ const Policies = () => {
             </div>
 
             <PPOPolicyAccordion loadingPpoPolicy={loadingPpoPolicy} selectedPpoPolicy={selectedPpoPolicy}/>
+
+
+            <div className="row ppoPolicies simulationTracesHeader">
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectTabularPolicyOrSpinner loadingTabularPolicies={loadingTabularPolicies}
+                                                  tabularPoliciesIds={filteredTabulaPoliciesIds}
+                                                  selectedTabularPolicyId={selectedTabularPolicyId}
+                        />
+                    </h4>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="tabularPoliciesSearchField" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="tabularPoliciesSearchLabel"
+                                aria-describedby="tabularPoliciesSearchField"
+                                onChange={searchTabularPoliciesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
+
+            <TabularPolicyAccordion loadingTabularPolicy={loadingTabularPolicy}
+                                selectedTabularPolicy={selectedTabularPolicy}/>
         </div>
     );
 }

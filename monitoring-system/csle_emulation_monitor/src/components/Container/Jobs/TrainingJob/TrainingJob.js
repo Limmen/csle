@@ -23,7 +23,6 @@ const TrainingJob = (props) => {
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-
     const fetchLogs = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/file',
@@ -44,14 +43,34 @@ const TrainingJob = (props) => {
     }, []);
 
     const getAgentTypeStr = (agentType) => {
-        if (agentType === 0) {
+        if(agentType === 0) {
             return "T-SPSA"
         }
-        if (agentType === 1) {
+        if(agentType === 1) {
             return "PPO"
-        } if (agentType === 2) {
+        }
+        if(agentType === 2) {
             return "T-FP"
-        }  else {
+        }
+        if(agentType === 3) {
+            return "DQN"
+        }
+        if(agentType === 4) {
+            return "REINFORCE"
+        }
+        if(agentType === 5) {
+            return "NFSP"
+        }
+        if(agentType === 6) {
+            return "RANDOM"
+        }
+        if(agentType === 7) {
+            return "NONE"
+        }
+        if(agentType === 8) {
+            return "VALUE ITERATION"
+        }
+        else {
             return "Unknown"
         }
     }

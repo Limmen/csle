@@ -151,7 +151,6 @@ CREATE TABLE IF NOT EXISTS data_collection_jobs (
 GRANT ALL ON data_collection_jobs TO csle;
 GRANT USAGE, SELECT ON SEQUENCE data_collection_jobs_id_seq TO csle;
 
-
 -- Create table that stores the gaussian mixture system models --
 CREATE TABLE IF NOT EXISTS gaussian_mixture_system_models (
     id serial PRIMARY KEY,
@@ -161,3 +160,12 @@ CREATE TABLE IF NOT EXISTS gaussian_mixture_system_models (
     );
 GRANT ALL ON gaussian_mixture_system_models TO csle;
 GRANT USAGE, SELECT ON SEQUENCE gaussian_mixture_system_models_id_seq TO csle;
+
+-- Create table that stores the tabular_policies --
+CREATE TABLE IF NOT EXISTS tabular_policies (
+    id serial PRIMARY KEY,
+    policy json NOT NULL,
+    simulation_name TEXT references simulations(name)
+);
+GRANT ALL ON tabular_policies TO csle;
+GRANT USAGE, SELECT ON SEQUENCE tabular_policies_id_seq TO csle;

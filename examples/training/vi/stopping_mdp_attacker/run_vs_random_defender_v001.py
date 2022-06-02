@@ -55,6 +55,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100,
                                                             name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
+            agents_constants.COMMON.EVAL_EVERY: HParam(value=1,
+                                                            name=agents_constants.COMMON.EVAL_EVERY,
+                                                            descr="how frequently to run evaluation"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -86,5 +89,8 @@ if __name__ == '__main__':
     )
 
     agent = VIAgent(simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
-    agent.train()
+                       experiment_config=experiment_config, save_to_metastore=True)
+    experiment_execution = agent.train()
+    MetastoreFacade.save_experiment_execution(experiment_execution)
+    for policy in experiment_execution.result.policies.values():
+        MetastoreFacade.save_tabular_policy(tabular_policy=policy)

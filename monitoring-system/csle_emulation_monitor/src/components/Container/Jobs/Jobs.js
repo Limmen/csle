@@ -260,6 +260,7 @@ const Jobs = () => {
     const removeAllTrainingJobs = () => {
         setTrainingJobsLoading(true)
         removeAllTrainingJobsRequest()
+        setSelectedTrainingJob(null)
     }
 
     const removeSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
@@ -307,6 +308,7 @@ const Jobs = () => {
     const removeAllSystemIdentificationJobs = () => {
         setSystemIdentificationJobsLoading(true)
         removeAllSystemIdentificationJobsRequest()
+        setSelectedSystemIdentificationJob(null)
     }
 
     const stopTrainingJobRequest = useCallback((training_job_id) => {
@@ -640,6 +642,7 @@ const Jobs = () => {
     const removeAllDataCollectionJobs = (job) => {
         setDataCollectionJobsLoading(true)
         removeAllDataCollectionJobsRequest()
+        setSelectedDataCollectionJob(null)
     }
 
     const stopDataCollectionJobRequest = useCallback((data_collection_job_id) => {
@@ -797,7 +800,18 @@ const Jobs = () => {
     const SelectTrainingJobOrSpinner = (props) => {
         if (!props.trainingJobsLoading && props.trainingJobsIds.length === 0) {
             return (
-                <span className="emptyText">No training jobs are available</span>
+                <div>
+                    <span className="emptyText">No training jobs are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTrainingJobsTooltip}
+                    >
+                        <Button variant="button" onClick={refreshTrainingJobs}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.trainingJobsLoading) {
@@ -867,7 +881,18 @@ const Jobs = () => {
     const SelectDataCollectionJobOrSpinner = (props) => {
         if (!props.dataCollectionJobsLoading && props.dataCollectionJobsIds.length === 0) {
             return (
-                <span className="emptyText">No data collection jobs are available</span>
+                <div>
+                    <span className="emptyText">No data collection jobs are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshDataCollectionJobsTooltip}
+                    >
+                        <Button variant="button" onClick={refreshDataCollectionJobs}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.dataCollectionJobsLoading) {
@@ -936,7 +961,18 @@ const Jobs = () => {
     const SelectSystemIdentificationJobOrSpinner = (props) => {
         if (!props.systemIdentificationJobsLoading && props.systemIdentificationJobsIds.length === 0) {
             return (
-                <span className="emptyText">No system identification jobs are available</span>
+                <div>
+                    <span className="emptyText">No system identification jobs are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshSystemIdentificationJobsTooltip}
+                    >
+                        <Button variant="button" onClick={refreshSystemidentificationJobs}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.systemIdentificationJobsLoading) {

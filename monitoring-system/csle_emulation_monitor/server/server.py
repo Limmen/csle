@@ -672,6 +672,55 @@ def remove_all_ppo_policies():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/tabularpolicies', methods=['GET'])
+def tabular_policies():
+    tabular_policies = MetastoreFacade.list_tabular_policies()
+    tabular_policies_dicts = list(map(lambda x: x.to_dict(), tabular_policies))
+    response = jsonify(tabular_policies_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/tabularpoliciesids', methods=['GET'])
+def tabular_policies_ids():
+    tabular_policies_ids = MetastoreFacade.list_tabular_policies_ids()
+    response_dicts = []
+    for tup in tabular_policies_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/tabularpolicies/get/<tabular_policy_id>', methods=['GET'])
+def get_tabular_policy(tabular_policy_id: int):
+    policy = MetastoreFacade.get_tabular_policy(id=tabular_policy_id)
+    if policy is not None:
+        response = jsonify(policy.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/tabularpolicies/remove/<tabular_policy_id>', methods=['POST'])
+def remove_tabular_policy(tabular_policy_id: int):
+    policy = MetastoreFacade.get_tabular_policy(id=tabular_policy_id)
+    if policy is not None:
+        MetastoreFacade.remove_tabular_policy(tabular_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/tabularpolicies/remove', methods=['POST'])
+def remove_all_tabular_policies():
+    policies = MetastoreFacade.list_tabular_policies()
+    for policy in policies:
+        MetastoreFacade.remove_tabular_policy(tabular_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/trainingjobs', methods=['GET'])
 def trainingjobs():
     training_jobs = MetastoreFacade.list_training_jobs()

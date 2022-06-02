@@ -404,7 +404,18 @@ const Traces = () => {
     const SelectEmulationTraceOrSpinner = (props) => {
         if (!props.loadingEmulationTraces && props.emulationTracesIds.length === 0) {
             return (
-                <span className="emptyText">No emulation traces are available</span>
+                <div>
+                    <span className="emptyText">No emulation traces are available</span>
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshEmulationTracesTooltip}
+                    >
+                        <Button variant="button" onClick={refreshEmulationTraces}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.loadingEmulationTraces) {
@@ -469,13 +480,24 @@ const Traces = () => {
     const SelectSimulationTraceOrSpinner = (props) => {
         if (!props.loadingSimulationTraces && props.simulationTracesIds.length === 0) {
             return (
-                <span className="emptyText">No simulation traces are available</span>
+                <div>
+                    <span className="emptyText">No simulation traces are available</span>
+                </div>
             )
         }
         if (props.loadingSimulationTraces) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshSimulationTracesTooltip}
+                    >
+                        <Button variant="button" onClick={refreshSimulationTraces}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
                 </Spinner>)
         } else {
             return (

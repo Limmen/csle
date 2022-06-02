@@ -73,6 +73,24 @@ const Experiment = (props) => {
         if(agentType === 2) {
             return "T-FP"
         }
+        if(agentType === 3) {
+            return "DQN"
+        }
+        if(agentType === 4) {
+            return "REINFORCE"
+        }
+        if(agentType === 5) {
+            return "NFSP"
+        }
+        if(agentType === 6) {
+            return "RANDOM"
+        }
+        if(agentType === 7) {
+            return "NONE"
+        }
+        if(agentType === 8) {
+            return "VALUE ITERATION"
+        }
         else {
             return "Unknown"
         }
@@ -84,6 +102,9 @@ const Experiment = (props) => {
         }
         if(playerType === 2) {
             return "Attacker"
+        }
+        if(playerType === 3) {
+            return "Self Play"
         }
         else {
             return "Unknown"

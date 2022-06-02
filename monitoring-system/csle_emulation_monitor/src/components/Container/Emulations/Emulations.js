@@ -225,7 +225,18 @@ const Emulations = () => {
     const SelectEmulationOrSpinner = (props) => {
         if (!props.loading && props.emulationIds.length === 0) {
             return (
-                <span className="emptyText">No emulations are available</span>
+                <div>
+                    <span className="emptyText">No emulations are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
             )
         }
         if (props.loading) {
