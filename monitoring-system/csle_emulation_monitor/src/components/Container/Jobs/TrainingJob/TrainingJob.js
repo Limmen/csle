@@ -76,6 +76,9 @@ const TrainingJob = (props) => {
         if(agentType === 10) {
             return "SONDIK's VALUE ITERATION"
         }
+        if(agentType === 11) {
+            return "RANDOM SEARCH"
+        }
         else {
             return "Unknown"
         }

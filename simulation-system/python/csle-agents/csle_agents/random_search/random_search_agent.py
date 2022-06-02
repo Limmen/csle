@@ -22,10 +22,9 @@ from csle_agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class TSPSAAgent(BaseAgent):
+class RandomSearchAgent(BaseAgent):
     """
-    RL Agent implementing the T-SPSA algorithm from
-    (Hammar, Stadler 2021 - Intrusion Prevention through Optimal Stopping))
+    Random Search Agent
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -33,7 +32,7 @@ class TSPSAAgent(BaseAgent):
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
-        Initializes the TSPSA agent
+        Initializes the Random Search Agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -44,14 +43,14 @@ class TSPSAAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.T_SPSA
+        assert experiment_config.agent_type == AgentType.RANDOM_SEARCH
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using T-SPSA
+        Performs the policy training for the given random seeds using random search
 
         :return: the training metrics and the trained policies
         """
@@ -69,25 +68,25 @@ class TSPSAAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+        for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
-        descr = f"Training of policies with the T-SPSA algorithm using " \
+        descr = f"Training of policies with the random search algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
-                    exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+                for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
+                    exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
-                        exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
+                    for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
+                        exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -97,7 +96,7 @@ class TSPSAAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+            for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
@@ -137,7 +136,7 @@ class TSPSAAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.spsa(exp_result=exp_result, seed=seed, training_job=self.training_job,
+            exp_result = self.random_search(exp_result=exp_result, seed=seed, training_job=self.training_job,
                                    random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
@@ -193,16 +192,16 @@ class TSPSAAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.T_SPSA.a, agents_constants.T_SPSA.c, agents_constants.T_SPSA.LAMBDA,
-                agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
-                agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
-                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
+        return [agents_constants.RANDOM_SEARCH.N, agents_constants.RANDOM_SEARCH.DELTA,
+                agents_constants.RANDOM_SEARCH.L, agents_constants.RANDOM_SEARCH.THETA1,
+                agents_constants.COMMON.EVAL_BATCH_SIZE,
+                agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def spsa(self, exp_result: ExperimentResult, seed: int,
+    def random_search(self, exp_result: ExperimentResult, seed: int,
              training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
-        Runs the SPSA algorithm
+        Runs the random search algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
@@ -210,75 +209,68 @@ class TSPSAAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
-        L = self.experiment_config.hparams[agents_constants.T_SPSA.L].value
-        if agents_constants.T_SPSA.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.T_SPSA.THETA1].value
+        L = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value
+        if agents_constants.RANDOM_SEARCH.THETA1 in self.experiment_config.hparams:
+            theta = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = TSPSAAgent.initial_theta(L=L)
+                theta = RandomSearchAgent.initial_theta(L=L)
             else:
-                theta = TSPSAAgent.initial_theta(L=2*L)
+                theta = RandomSearchAgent.initial_theta(L=2 * L)
 
         # Initial eval
         policy = MultiThresholdStoppingPolicy(
-            theta=theta, simulation_name=self.simulation_env_config.name,
+            theta=list(theta), simulation_name=self.simulation_env_config.name,
             states=self.simulation_env_config.state_space_config.states,
             player_type=self.experiment_config.player_type, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                 self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.T_SPSA)
+            agent_type=AgentType.RANDOM_SEARCH)
         avg_metrics = self.eval_theta(
             policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
         policy.avg_R=J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
+        exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(RandomSearchAgent.round_vec(theta))
 
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.T_SPSA.N].value
-        a = self.experiment_config.hparams[agents_constants.T_SPSA.a].value
-        c = self.experiment_config.hparams[agents_constants.T_SPSA.c].value
-        A = self.experiment_config.hparams[agents_constants.T_SPSA.A].value
-        lamb = self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA].value
-        epsilon = self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON].value
-        gradient_batch_size = self.experiment_config.hparams[agents_constants.T_SPSA.GRADIENT_BATCH_SIZE].value
+        N = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.N].value
+        delta = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.DELTA].value
+
+        # Initial eval
+        policy = MultiThresholdStoppingPolicy(
+            theta=list(theta), simulation_name=self.simulation_env_config.name,
+            states=self.simulation_env_config.state_space_config.states,
+            player_type=self.experiment_config.player_type, L=L,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.RANDOM_SEARCH)
+        avg_metrics = self.eval_theta(
+            policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+        J_0 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
         for i in range(N):
-            # Step sizes and perturbation size
-            ak = self.standard_ak(a=a, A=A, epsilon=epsilon, k=i)
-            ck = self.standard_ck(c=c, lamb=lamb, k=i)
 
-            # Get estimated gradient
-            gk = self.batch_gradient(theta=theta, ck=ck, L=L, k=i, gradient_batch_size=gradient_batch_size)
-
-            # Adjust theta using SA
-            theta = [t + ak * gkk for t, gkk in zip(theta, gk)]
-
-            # Constrain (Theorem 1.A, Hammar Stadler 2021)
-            if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(L - 1):
-                    theta[l] = max(theta[l], theta[l + 1])
-            else:
-                if self.experiment_config.player_type == PlayerType.ATTACKER:
-                    for l in range(0, L - 1):
-                        theta[l] = min(theta[l], theta[l + 1])
-                    for l in range(L, 2*L - 1):
-                        theta[l] = max(theta[l], theta[l + 1])
-
-            # Evaluate new theta
-            policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
-                                                  states=self.simulation_env_config.state_space_config.states,
-                                                  player_type=self.experiment_config.player_type, L=L,
-                                                  actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                                      self.experiment_config.player_idx].actions,
-                                                  experiment_config=self.experiment_config, avg_R=-1,
-                                                  agent_type=AgentType.T_SPSA)
+            theta_candidate = self.random_perturbation(delta=delta, theta=theta)
+            candidate_policy = MultiThresholdStoppingPolicy(
+                theta=list(theta_candidate), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions,
+                experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.RANDOM_SEARCH)
             avg_metrics = self.eval_theta(
-                policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+                policy=candidate_policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            if J_candidate > J_0:
+                theta = theta_candidate
+                J_0 = J_candidate
+                policy=candidate_policy
 
             # Log average return
-            J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            J = J_0
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -287,9 +279,9 @@ class TSPSAAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
             # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
-                TSPSAAgent.round_vec(policy.thresholds()))
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(RandomSearchAgent.round_vec(theta))
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THRESHOLDS].append(
+                RandomSearchAgent.round_vec(policy.thresholds()))
 
             # Log stop distribution
             for k,v in policy.stop_distributions().items():
@@ -316,7 +308,7 @@ class TSPSAAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+            for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
                 exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
@@ -354,7 +346,7 @@ class TSPSAAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[T-SPSA] i: {i}, J:{J}, "
+                    f"[RANDOM-SEARCH] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
@@ -362,13 +354,13 @@ class TSPSAAgent(BaseAgent):
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
 
-        policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
+        policy = MultiThresholdStoppingPolicy(theta=list(theta), simulation_name=self.simulation_env_config.name,
                                               states=self.simulation_env_config.state_space_config.states,
                                               player_type=self.experiment_config.player_type, L=L,
                                               actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                                   self.experiment_config.player_idx].actions,
                                               experiment_config=self.experiment_config, avg_R=J,
-                                              agent_type=AgentType.T_SPSA)
+                                              agent_type=AgentType.RANDOM_SEARCH)
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
@@ -404,9 +396,23 @@ class TSPSAAgent(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            metrics = TSPSAAgent.update_metrics(metrics=metrics, info=info)
-        avg_metrics = TSPSAAgent.compute_avg_metrics(metrics=metrics)
+            metrics = RandomSearchAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = RandomSearchAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
+
+    def random_perturbation(self, delta: float, theta: np.ndarray) -> np.ndarray:
+        """
+        Performs a random perturbation to the theta vector
+
+        :param delta: the step size for the perturbation
+        :param theta: the current theta vector
+        :return: the perturbed theta vector
+        """
+        perturbed_theta = []
+        for l in range(len(theta)):
+            Delta = np.random.uniform(-delta, delta)
+            perturbed_theta.append(theta[l] + Delta)
+        return np.array(perturbed_theta)
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
@@ -509,44 +515,6 @@ class TSPSAAgent(BaseAgent):
             gradients.append(gk_i)
         batch_gk = (np.matrix(gradients).sum(axis=0)*(1/gradient_batch_size)).tolist()[0]
         return batch_gk
-
-    def estimate_gk(self, theta: List[float], deltak: List[float], ck: float, L: int):
-        """
-        Estimate the gradient at iteration k of the T-SPSA algorithm
-
-        :param theta: the current parameter vector
-        :param deltak: the perturbation direction vector
-        :param ck: the perturbation step size
-        :param L: the total number of stops for the defender
-        :return: the estimated gradient
-        """
-        # Get the two perturbed values of theta
-        # list comprehensions like this are quite nice
-        ta = [t + ck * dk for t, dk in zip(theta, deltak)]
-        tb = [t - ck * dk for t, dk in zip(theta, deltak)]
-
-        # Calculate g_k(theta_k)
-        avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
-            theta=ta, simulation_name=self.simulation_env_config.name,
-            player_type=self.experiment_config.player_type,
-            states=self.simulation_env_config.state_space_config.states, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.T_SPSA),
-            max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
-        )
-        J_a = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
-            theta=tb, simulation_name=self.simulation_env_config.name,
-            player_type=self.experiment_config.player_type,states=self.simulation_env_config.state_space_config.states,
-            L=L, actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.T_SPSA),
-            max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J_b = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        gk = [(J_a - J_b) / (2 * ck * dk) for dk in deltak]
-
-        return gk
 
     @staticmethod
     def round_vec(vec) -> List[float]:

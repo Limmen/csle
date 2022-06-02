@@ -148,6 +148,9 @@ class SONDIK_VI:
 
 
 class DQN:
+    """
+    String constants related to DQN
+    """
     MLP_POLICY = "MlpPolicy"
     LEARNING_STARTS = "learning_starts"
     EXPLORATION_FRACTION = "exploration_fracion"
@@ -160,3 +163,17 @@ class DQN:
     TARGET_UPDATE_INTERVAL = "target_update_interval"
     BUFFER_SIZE = "buffer_size"
     DQN_BATCH_SIZE = "dqn_batch_size"
+
+
+class RANDOM_SEARCH:
+    """
+    String constants related to random search
+    """
+    L = "L"
+    N = "N"
+    THETA1 = "theta1"
+    THETAS = "thetas"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    DELTA = "delta"

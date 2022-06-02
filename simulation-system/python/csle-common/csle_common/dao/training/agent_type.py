@@ -16,3 +16,4 @@ class AgentType(IntEnum):
     VALUE_ITERATION=8
     HSVI=9
     SONDIK_VALUE_ITERATION=10
+    RANDOM_SEARCH=11

@@ -59,6 +59,17 @@ class MultiThresholdStoppingPolicy(Policy):
             a, _ = self._attacker_action(o=o)
             return a
 
+
+    def probability(self, o: List[float], a: int) -> int:
+        """
+        Probability of a given action
+
+        :param o: the current observation
+        :param a: a given action
+        :return: the probability of a
+        """
+        return self.action(o=o) == a
+
     def _attacker_action(self, o, defender_stopping_prob: Optional[float] = None) -> Tuple[int, float]:
         """
         Multi-threshold stopping policy of the attacker
