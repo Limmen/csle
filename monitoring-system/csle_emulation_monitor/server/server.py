@@ -672,6 +672,55 @@ def remove_all_ppo_policies():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/dqnpolicies', methods=['GET'])
+def dqn_policies():
+    dqn_policies = MetastoreFacade.list_dqn_policies()
+    dqn_policies_dicts = list(map(lambda x: x.to_dict(), dqn_policies))
+    response = jsonify(dqn_policies_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/dqnpoliciesids', methods=['GET'])
+def dqn_policies_ids():
+    dqn_policies_ids = MetastoreFacade.list_dqn_policies_ids()
+    response_dicts = []
+    for tup in dqn_policies_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/dqnpolicies/get/<dqn_policy_id>', methods=['GET'])
+def get_dqn_policy(dqn_policy_id: int):
+    policy = MetastoreFacade.get_dqn_policy(id=dqn_policy_id)
+    if policy is not None:
+        response = jsonify(policy.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/dqnpolicies/remove/<dqn_policy_id>', methods=['POST'])
+def remove_dqn_policy(dqn_policy_id: int):
+    policy = MetastoreFacade.get_dqn_policy(id=dqn_policy_id)
+    if policy is not None:
+        MetastoreFacade.remove_dqn_policy(dqn_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/dqnpolicies/remove', methods=['POST'])
+def remove_all_dqn_policies():
+    policies = MetastoreFacade.list_dqn_policies()
+    for policy in policies:
+        MetastoreFacade.remove_dqn_policy(dqn_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/tabularpolicies', methods=['GET'])
 def tabular_policies():
     tabular_policies = MetastoreFacade.list_tabular_policies()

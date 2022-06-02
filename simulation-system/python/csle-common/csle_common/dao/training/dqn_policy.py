@@ -2,7 +2,7 @@ from typing import List, Dict, Union
 import numpy as np
 import torch
 import math
-from stable_baselines3 import PPO
+from stable_baselines3 import DQN
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -13,9 +13,9 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.logging.log import Logger
 
 
-class PPOPolicy(Policy):
+class DQNPolicy(Policy):
     """
-    A neural network policy learned with PPO
+    A neural network policy learned with DQN
     """
 
     def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states : List[State],
@@ -23,7 +23,7 @@ class PPOPolicy(Policy):
         """
         Initializes the policy
 
-        :param model: the PPO model
+        :param model: the DQN model
         :param simulation_name: the simulation name
         :param save_path: the path to save the model to
         :param states: list of states (required for computing stage policies)
@@ -31,14 +31,14 @@ class PPOPolicy(Policy):
         :param experiment_config: the experiment configuration for training the policy
         :param avg_R: the average reward of the policy when evaluated in the simulation
         """
-        super(PPOPolicy, self).__init__(agent_type=AgentType.PPO, player_type=player_type)
+        super(DQNPolicy, self).__init__(agent_type=AgentType.DQN, player_type=player_type)
         self.model = model
         self.id = -1
         self.simulation_name = simulation_name
         self.save_path = save_path
         if self.model is None:
             try:
-                self.model = PPO.load(path = self.save_path)
+                self.model = DQN.load(path = self.save_path)
             except Exception as e:
                 Logger.__call__().get_logger().warning(
                     f"There was an exception loading the model from path: {self.save_path}, "
@@ -65,10 +65,10 @@ class PPOPolicy(Policy):
         :param o: the current observation
         :return: the selected action
         """
-        actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(o).to(self.model.device))
+        actions = self.model.policy.forward(obs=torch.tensor(o).to(self.model.device))
         action = actions[0]
         if action == a:
-            return math.exp(log_prob)
+            return 1
         else:
             return 0
 
@@ -95,14 +95,14 @@ class PPOPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "PPOPolicy":
+    def from_dict(d: Dict) -> "DQNPolicy":
         """
         Converst a dict representation of the object to an instance
 
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = PPOPolicy(model=None, simulation_name=d["simulation_name"], save_path=d["save_path"],
+        obj = DQNPolicy(model=None, simulation_name=d["simulation_name"], save_path=d["save_path"],
                         states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
                         actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                         experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
@@ -121,32 +121,32 @@ class PPOPolicy(Policy):
         if not self.player_type == PlayerType.ATTACKER:
             stage_policy = []
             for _ in self.states:
-                stage_policy.append(self._get_attacker_dist(obs=o))
+                stage_policy.append(self._get_attacker_stopping_dist(obs=o))
             return stage_policy
         else:
             stage_policy = []
             for s in self.states:
                 if s.state_type != StateType.TERMINAL:
                     o = [l, b1, s.id]
-                    stage_policy.append(self._get_attacker_dist(obs=o))
+                    stage_policy.append(self._get_attacker_stopping_dist(obs=o))
                 else:
                     stage_policy.append([0.5, 0.5])
             return stage_policy
 
-    def _get_attacker_dist(self, obs) -> List[float]:
+    def _get_attacker_stopping_dist(self, obs) -> List[float]:
         """
-        Utility function for getting the action distribution conditioned on a given observation
+        Utility function for getting the stopping action distribution conditioned on a given observation
 
         :param obs: the observation to condition on
         :return: the conditional ation distribution
         """
         obs = np.array([obs])
-        actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
+        actions = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
         action = actions[0]
         if action == 1:
-            stop_prob = math.exp(log_prob)
+            stop_prob = 1
         else:
-            stop_prob = 1-math.exp(log_prob)
+            stop_prob = 0
         return [1-stop_prob, stop_prob]
 
     def __str__(self) -> str:

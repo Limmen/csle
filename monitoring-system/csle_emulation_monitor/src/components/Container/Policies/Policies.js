@@ -9,6 +9,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
 import PPOPolicy from "./PPOPolicy/PPOPolicy";
+import DQNPolicy from "./DQNPolicy/DQNPolicy";
 import TabularPolicy from "./TabularPolicy/TabularPolicy";
 import AlphaVecPolicy from "./AlphaVecPolicy/AlphaVecPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -43,8 +44,15 @@ const Policies = () => {
     const [loadingAlphaVecPolicy, setLoadingAlphaVecPolicy] = useState(true);
     const [filteredAlphaVecPoliciesIds, setFilteredAlphaVecPoliciesIds] = useState([]);
     const [alphaVecPoliciesSearchString, setAlphaVecPoliciesSearchString] = useState("");
+    const [dqnPoliciesIds, setDQNPoliciesIds] = useState([]);
+    const [selectedDQNPolicy, setSelectedDQNPolicy] = useState(null);
+    const [selectedDQNPolicyId, setSelectedDQNPolicyId] = useState(null);
+    const [loadingDQNPolicy, setLoadingDQNPolicy] = useState(true);
+    const [filteredDQNPoliciesIds, setFilteredDQNPoliciesIds] = useState([]);
+    const [dqnPoliciesSearchString, setDQNPoliciesSearchString] = useState("");
     const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
     const [loadingPPOPolicies, setLoadingPPOPolicies] = useState(true);
+    const [loadingDQNPolicies, setLoadingDQNPolicies] = useState(true);
     const [loadingTabularPolicies, setLoadingTabularPolicies] = useState(true);
     const [loadingAlphaVecPolicies, setLoadingAlphaVecPolicies] = useState(true);
     const ip = "localhost"
@@ -111,6 +119,39 @@ const Policies = () => {
                 } else {
                     setLoadingPpoPolicy(false)
                     setSelectedPpoPolicy(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchDQNPoliciesIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/dqnpoliciesids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const dqnPoliciesIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                    }
+                })
+                setDQNPoliciesIds(dqnPoliciesIds)
+                setFilteredDQNPoliciesIds(dqnPoliciesIds)
+                setLoadingDQNPolicies(false)
+                if (dqnPoliciesIds.length > 0) {
+                    setSelectedDQNPolicyId(dqnPoliciesIds[0])
+                    fetchDQNPolicy(dqnPoliciesIds[0])
+                    setLoadingDQNPolicy(true)
+                } else {
+                    setLoadingDQNPolicy(false)
+                    setSelectedDQNPolicy(null)
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -191,7 +232,10 @@ const Policies = () => {
         fetchTabularPoliciesIds()
         setLoadingAlphaVecPolicies(true)
         fetchAlphaVecPoliciesIds()
-    }, [fetchMultiThresholdPoliciesIds, fetchPPOPoliciesIds]);
+        setLoadingDQNPolicies(true)
+        fetchDQNPoliciesIds()
+    }, [fetchMultiThresholdPoliciesIds, fetchPPOPoliciesIds, fetchDQNPoliciesIds, fetchTabularPoliciesIds,
+        fetchAlphaVecPoliciesIds]);
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
@@ -249,6 +293,64 @@ const Policies = () => {
     const removePPOPolicy = (ppoPolicy) => {
         setLoadingPPOPolicies(true)
         removePpoPoliciesRequest(ppoPolicy.id)
+    }
+
+    const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/dqnpolicies/remove/' + dqn_policy_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchDQNPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchDQNPolicy = useCallback((dqn_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/dqnpolicies/get/' + dqn_policy_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedDQNPolicy(response)
+                setLoadingDQNPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAllDQNPoliciesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/dqnpolicies/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchDQNPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeDQNPolicy = (dqnPolicy) => {
+        setLoadingDQNPolicies(true)
+        removeDQNPoliciesRequest(dqnPolicy.id)
     }
 
     const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
@@ -435,6 +537,11 @@ const Policies = () => {
         removeAllPpoPoliciesRequest()
     }
 
+    const removeAllDQNPolicies = () => {
+        setLoadingDQNPolicies(true)
+        removeAllDQNPoliciesRequest()
+    }
+
     const removeAllTabularPolicies = () => {
         setLoadingTabularPolicies(true)
         removeAllTabularPoliciesRequest()
@@ -453,6 +560,11 @@ const Policies = () => {
     const refreshPPOPolicies = () => {
         setLoadingPPOPolicies(true)
         fetchPPOPoliciesIds()
+    }
+
+    const refreshDQNPolicies = () => {
+        setLoadingDQNPolicies(true)
+        fetchDQNPoliciesIds()
     }
 
     const refreshTabularPolicies = () => {
@@ -483,6 +595,12 @@ const Policies = () => {
         </Tooltip>
     );
 
+    const renderRemoveAllDQNPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all DQN policies.
+        </Tooltip>
+    );
+
     const renderRemoveAllTabularPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Remove all Tabular policies.
@@ -504,6 +622,12 @@ const Policies = () => {
     const renderPPORefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload PPO policies from the backend
+        </Tooltip>
+    );
+
+    const renderDQNRefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload DQN policies from the backend
         </Tooltip>
     );
 
@@ -559,6 +683,12 @@ const Policies = () => {
         setSelectedPpoPolicyId(selectedId)
         fetchPpoPolicy(selectedId)
         setLoadingPpoPolicy(true)
+    }
+
+    const updateSelectedDQNPolicyId = (selectedId) => {
+        setSelectedDQNPolicyId(selectedId)
+        fetchDQNPolicy(selectedId)
+        setLoadingDQNPolicy(true)
     }
 
     const updateSelectedTabularPolicyId = (selectedId) => {
@@ -723,6 +853,85 @@ const Policies = () => {
                         overlay={renderRemoveAllPPOPoliciesTooltip}
                     >
                         <Button variant="danger" onClick={removeAllPPOPolicies}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
+    const SelectDQNPolicyOrSpinner = (props) => {
+        if (!props.loadingDQNPolicies && props.dqnPoliciesIds.length === 0) {
+            return (
+                <div>
+                    <span className="emptyText">No DQN policies are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderDQNRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshDQNPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+        if (props.loadingDQNPolicies) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching policies... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            DQN policy:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedDQNPolicyId}
+                                defaultValue={props.selectedDQNPolicyId}
+                                options={props.dqnPoliciesIds}
+                                onChange={updateSelectedDQNPolicyId}
+                                placeholder="Select policy"
+                            />
+                        </div>
+                    </div>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderDQNRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshDQNPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllDQNPoliciesTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllDQNPolicies}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -945,6 +1154,32 @@ const Policies = () => {
         }
     }
 
+    const DQNPolicyAccordion = (props) => {
+        if (props.loadingDQNPolicy || props.selectedDQNPolicy === null || props.selectedDQNPolicy === undefined) {
+            if(props.loadingDQNPolicy) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching policy... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    <DQNPolicy policy={selectedDQNPolicy} wrapper={wrapper} key={selectedDQNPolicy.id}
+                               removeDQNPolicy={removeDQNPolicy}
+                    />
+                </Accordion>
+            )
+        }
+    }
+
     const TabularPolicyAccordion = (props) => {
         if (props.loadingTabularPolicy || props.selectedTabularPolicy === null || props.selectedTabularPolicy === undefined) {
             if(props.loadingTabularPolicy) {
@@ -1039,6 +1274,10 @@ const Policies = () => {
         return (searchVal === "" || ppoPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
+    const searchDQNPoliciesFilter = (dqnPolicyId, searchVal) => {
+        return (searchVal === "" || dqnPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
     const searchPPOPolicyChange = (event) => {
         var searchVal = event.target.value
         const fPoliciesIds = ppoPoliciesIds.filter(policy => {
@@ -1065,9 +1304,42 @@ const Policies = () => {
         }
     }
 
+    const searchDQNPolicyChange = (event) => {
+        var searchVal = event.target.value
+        const fPoliciesIds = dqnPoliciesIds.filter(policy => {
+            return searchDQNPoliciesFilter(policy, searchVal)
+        });
+        setFilteredDQNPoliciesIds(fPoliciesIds)
+        setDQNPoliciesSearchString(searchVal)
+
+        var selectedPolicyRemoved = false
+        if(!loadingDQNPolicy && fPoliciesIds.length > 0){
+            for (let i = 0; i < fPoliciesIds.length; i++) {
+                if(selectedDQNPolicy !== null && selectedDQNPolicy !== undefined &&
+                    selectedDQNPolicy.id === fPoliciesIds[i].value) {
+                    selectedPolicyRemoved = true
+                }
+            }
+            if(!selectedPolicyRemoved) {
+                setSelectedDQNPolicyId(fPoliciesIds[0])
+                fetchDQNPolicy(fPoliciesIds[0])
+                setLoadingDQNPolicy(true)
+            }
+        } else {
+            setSelectedDQNPolicy(null)
+        }
+    }
+
     const searchPPOPoliciesHandler = useDebouncedCallback(
         (event) => {
             searchPPOPolicyChange(event)
+        },
+        350
+    );
+
+    const searchDQNPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchDQNPolicyChange(event)
         },
         350
     );
@@ -1079,7 +1351,7 @@ const Policies = () => {
 
     const searchTabularPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPoliciesIds = ppoPoliciesIds.filter(policy => {
+        const fPoliciesIds = tabularPoliciesIds.filter(policy => {
             return searchTabularPoliciesFilter(policy, searchVal)
         });
         setFilteredTabularPoliciesIds(fPoliciesIds)
@@ -1116,7 +1388,7 @@ const Policies = () => {
 
     const searchAlphaVecPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPoliciesIds = ppoPoliciesIds.filter(policy => {
+        const fPoliciesIds = alphaVecPoliciesIds.filter(policy => {
             return searchAlphaVecPoliciesFilter(policy, searchVal)
         });
         setFilteredAlphaVecPoliciesIds(fPoliciesIds)
@@ -1281,6 +1553,39 @@ const Policies = () => {
 
             <AlphaVecPolicyAccordion loadingAlphaVecPolicy={loadingAlphaVecPolicy}
                                     selectedAlphaVecPolicy={selectedAlphaVecPolicy}/>
+
+
+            <div className="row dqnPolicies simulationTracesHeader">
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectDQNPolicyOrSpinner loadingDQNPolicies={loadingDQNPolicies}
+                                                  dqnPoliciesIds={filteredDQNPoliciesIds}
+                                                  selectedDQNPolicyId={selectedDQNPolicyId}
+                        />
+                    </h4>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="dqnPoliciesSearchField" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="dqnPoliciesSearchLabel"
+                                aria-describedby="dqnPoliciesSearchField"
+                                onChange={searchDQNPoliciesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
+
+            <DQNPolicyAccordion loadingDQNPolicy={loadingDQNPolicy} selectedDQNPolicy={selectedDQNPolicy}/>
         </div>
     );
 }

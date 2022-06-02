@@ -55,6 +55,7 @@ class PPO:
     MLP_POLICY = "MlpPolicy"
 
 
+
 class T_SPSA:
     """
     String constants related to T-SPSA
@@ -144,3 +145,18 @@ class SONDIK_VI:
     PLANNING_HORIZON = "planning_horizon"
     INITIAL_BELIEF_VALUES = "initial_belief_values"
     NUM_ALPHA_VECTORS = "num_alpha_vectors"
+
+
+class DQN:
+    MLP_POLICY = "MlpPolicy"
+    LEARNING_STARTS = "learning_starts"
+    EXPLORATION_FRACTION = "exploration_fracion"
+    EXPLORATION_INITIAL_EPS = "exploration_initial_eps"
+    EXPLORATION_FINAL_EPS = "exploration_final_eps"
+    MAX_GRAD_NORM = "max_grad_norm"
+    TRAIN_FREQ = "train_freq"
+    GRADIENT_STEPS = "gradient_steps"
+    N_EPISODES_ROLLOUT = "n_episodes_rollout"
+    TARGET_UPDATE_INTERVAL = "target_update_interval"
+    BUFFER_SIZE = "buffer_size"
+    DQN_BATCH_SIZE = "dqn_batch_size"

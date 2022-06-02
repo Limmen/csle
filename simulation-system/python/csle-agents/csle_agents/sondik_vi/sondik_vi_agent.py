@@ -322,7 +322,8 @@ class SondikVIAgent(BaseAgent):
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions,
                 states=self.simulation_env_config.state_space_config.states,
-                alpha_vectors=list(map(lambda x: x[1], list(aleph_t))), agent_type=self.experiment_config.agent_type, avg_R=-1,
+                alpha_vectors=list(map(lambda x: x[1], list(aleph_t))), agent_type=self.experiment_config.agent_type,
+                avg_R=average_returns[-1],
                 simulation_name=self.simulation_env_config.name, transition_tensor=P, reward_tensor=R)
             avg_r = self.evaluate_policy(alpha_vec_policy, eval_batch_size=eval_batch_size)
             average_returns.append(avg_r)
