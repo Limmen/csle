@@ -177,3 +177,20 @@ class RANDOM_SEARCH:
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     DELTA = "delta"
+
+
+class DIFFERENTIAL_EVOLUTION:
+    """
+    String constants related to differential evolution
+    """
+    L = "L"
+    N = "N"
+    THETA1 = "theta1"
+    THETAS = "thetas"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    POPULATION_SIZE = "population_size"
+    MUTATE = "mutate"
+    RECOMBINATION = "recombination"
+    BOUNDS = "bounds"

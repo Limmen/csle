@@ -4,7 +4,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.random_search.random_search_agent import RandomSearchAgent
+from csle_agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
@@ -13,20 +13,31 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-001")
     experiment_config = ExperimentConfig(
-        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}random_search_test", title="Random search test",
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}differential_evolution_test",
+        title="Differential evolution test",
         random_seeds=[399, 98912,999,555],
-        agent_type=AgentType.RANDOM_SEARCH,
+        agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            agents_constants.RANDOM_SEARCH.N: HParam(value=50, name=agents_constants.T_SPSA.N,
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=15, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
-            agents_constants.RANDOM_SEARCH.DELTA: HParam(value=0.5, name=agents_constants.RANDOM_SEARCH.DELTA,
-                                                     descr="the step size for random perturbations"),
-            agents_constants.RANDOM_SEARCH.L: HParam(value=3, name="L", descr="the number of stop actions"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=3, name="L", descr="the number of stop actions"),
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            agents_constants.RANDOM_SEARCH.THETA1: HParam(value=[-3,-3,-3], name=agents_constants.RANDOM_SEARCH.THETA1,
+            agents_constants.DIFFERENTIAL_EVOLUTION.THETA1: HParam(value=[-3,-3,-3], name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE: HParam(
+                value=10, name=agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE,
+                descr="population size"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.MUTATE: HParam(
+                value=0.2, name=agents_constants.DIFFERENTIAL_EVOLUTION.MUTATE,
+                descr="mutate step"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION: HParam(
+                value=0.7, name=agents_constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION,
+                descr="number of recombinations"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.BOUNDS: HParam(
+                value=[(0,1) for l in range(3)], name=agents_constants.DIFFERENTIAL_EVOLUTION.BOUNDS,
+                descr="parameter bounds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -41,8 +52,9 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    agent = RandomSearchAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+    agent = DifferentialEvolutionAgent(
+        emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+        experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-1, R_COST=-2, R_SLA=0, R_ST=2, L=3))
     experiment_execution = agent.train()

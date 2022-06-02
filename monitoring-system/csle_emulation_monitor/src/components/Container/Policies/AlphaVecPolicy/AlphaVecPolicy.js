@@ -50,6 +50,9 @@ const AlphaVecPolicy = (props) => {
         if(agentType === 11) {
             return "RANDOM SEARCH"
         }
+        if(agentType === 12) {
+            return "DIFFERENTIAL EVOLUTION"
+        }
         else {
             return "Unknown"
         }
