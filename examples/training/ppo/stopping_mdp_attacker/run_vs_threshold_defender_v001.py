@@ -19,6 +19,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
                 value=64, name=agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER,
                 descr="neurons per hidden layer of the policy network"),
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
+                value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                descr="the nunmber of parallel environments for training"),
             agents_constants.COMMON.NUM_HIDDEN_LAYERS: HParam(
                 value=4, name=agents_constants.COMMON.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),

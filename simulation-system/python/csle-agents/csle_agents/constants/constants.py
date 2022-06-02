@@ -38,6 +38,7 @@ class COMMON:
     RUNNING_AVERAGE_INTRUSION_LENGTH = "running_average_intrusion_length"
     RUNNING_AVERAGE_INTRUSION_START = "running_average_intrusion_start"
     RUNNING_AVERAGE_TIME_HORIZON = "running_average_time_horizon"
+    NUM_PARALLEL_ENVS = "num_parallel_envs"
 
 
 class PPO:
@@ -53,7 +54,6 @@ class PPO:
     MAX_GRAD_NORM = "max_grad_norm"
     TARGET_KL = "target_kl"
     MLP_POLICY = "MlpPolicy"
-
 
 
 class T_SPSA:

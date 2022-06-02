@@ -36,6 +36,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                 value=int(500000),  name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
+                value=100, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                descr="the nunmber of parallel environments for training"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1000, name=agents_constants.COMMON.EVAL_EVERY,
                                  descr="training iterations between evaluations"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=20, name=agents_constants.COMMON.EVAL_BATCH_SIZE,

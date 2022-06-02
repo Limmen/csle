@@ -25,6 +25,9 @@ if __name__ == '__main__':
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
                 value=4096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
                 descr="number of steps in the environment for doing rollouts between policy updates"),
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(value=1,
+                                                              name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                                                              descr="the nunmber of parallel environments for training"),
             agents_constants.COMMON.BATCH_SIZE: HParam(
                 value=64, name=agents_constants.COMMON.BATCH_SIZE, descr="batch size for updates"),
             agents_constants.COMMON.LEARNING_RATE: HParam(

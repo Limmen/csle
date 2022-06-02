@@ -23,6 +23,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.NUM_HIDDEN_LAYERS: HParam(
                 value=4, name=agents_constants.COMMON.NUM_HIDDEN_LAYERS,
                 descr="number of layers of the policy network"),
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
+                value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                descr="the nunmber of parallel environments for training"),
             agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
                 value=4096, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
                 descr="number of steps in the environment for doing rollouts between policy updates"),

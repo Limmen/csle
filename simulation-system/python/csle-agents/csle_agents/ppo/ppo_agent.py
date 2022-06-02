@@ -3,6 +3,11 @@ import time
 import gym
 import os
 import numpy as np
+from stable_baselines3 import PPO
+from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
+from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
+from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.callbacks import BaseCallback
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
@@ -20,9 +25,6 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
-from stable_baselines3 import PPO
-from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.callbacks import BaseCallback
 
 
 class PPOAgent(BaseAgent):
@@ -77,7 +79,10 @@ class PPOAgent(BaseAgent):
         # Setup gym environment
         config = self.simulation_env_config.simulation_env_input_config
         orig_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
-        env = Monitor(orig_env)
+        env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
+                           n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
+                           env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
+        env = VecMonitor(env)
 
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
@@ -175,7 +180,7 @@ class PPOAgent(BaseAgent):
             exp_result.avg_metrics[metric] = avg_metrics
             exp_result.std_metrics[metric] = std_metrics
 
-        traces = env.get_traces()
+        traces = orig_env.get_traces()
         if len(traces) > 0:
             MetastoreFacade.save_simulation_trace(traces[-1])
         return self.exp_execution
@@ -283,28 +288,6 @@ class PPOTrainingCallback(BaseCallback):
         """
         pass
 
-    def get_stopping_dist(self, policy: PPOPolicy) -> List[List[List[float]]]:
-        """
-        Calculates the stopping distribution of a given policy
-
-        :param policy: the policy to compute the distribution of
-        :return: the distribution, a SxLxB tensor
-        """
-        belief_space = np.linspace(0, 1, num=100)
-        stopping_dist = []
-        for s in self.states:
-            if s.state_type != StateType.TERMINAL:
-                s_dist = []
-                for l in range(self.L):
-                    l_dist = []
-                    for b in belief_space:
-                        o = [l, b, s.id]
-                        a_dist = policy._get_attacker_dist(obs=o)
-                        l_dist.append(round(a_dist[1],2))
-                    s_dist.append(l_dist)
-                stopping_dist.append(s_dist)
-        return stopping_dist
-
     def _on_rollout_end(self) -> None:
         """
         This event is triggered before updating the policy.
@@ -328,16 +311,17 @@ class PPOTrainingCallback(BaseCallback):
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
                 states=self.states, player_type=self.player_type, actions=self.actions,
                 experiment_config=self.experiment_config, avg_R=-1)
-            o = self.training_env.reset()
+            o = self.env.reset()
             max_horizon = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
             avg_rewards = []
             for i in range(self.eval_batch_size):
+                o = self.env.reset()
                 done = False
                 t = 0
                 cumulative_reward = 0
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
-                    o, r, done, info = self.training_env.step(a)
+                    o, r, done, info = self.env.step(a)
                     cumulative_reward +=r
                     t+= 1
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
@@ -345,16 +329,9 @@ class PPOTrainingCallback(BaseCallback):
             avg_R = np.mean(avg_rewards)
             policy.avg_R = avg_R
             Logger.__call__().get_logger().info(f"[EVAL] Training iteration: {self.iter}, Average R:{avg_R}")
-            if self.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
-                stopping_dist = self.get_stopping_dist(policy=policy)
-                for s in self.states:
-                    if s.state_type != StateType.TERMINAL:
-                        for l in range(self.L):
-                            Logger.__call__().get_logger().info(f"pi(S|b:idx,s:{s.id},l:{l}): {stopping_dist[s.id][l]}")
-
 
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
-            self.training_env.reset()
+            self.env.reset()
 
             # Update training job
             total_steps_done = len(self.random_seeds)*self.max_steps
@@ -362,7 +339,8 @@ class PPOTrainingCallback(BaseCallback):
             progress = round(steps_done/total_steps_done,2)
             self.training_job.progress_percentage = progress
             self.training_job.experiment_result = self.exp_result
-            self.training_job.simulation_traces.append(self.env.get_traces()[-1])
+            if len(self.env.get_traces()) > 0:
+                self.training_job.simulation_traces.append(self.env.get_traces()[-1])
             if len(self.training_job.simulation_traces) > self.training_job.num_cached_traces:
                 self.training_job.simulation_traces = self.training_job.simulation_traces[1:]
             MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
