@@ -40,6 +40,11 @@ class ObservationSpaceConfig:
                 self.observation_id_to_observation_vector.keys()))
         self.component_observations = component_observations
 
+    def observation_ids(self) -> List[int]:
+        """
+        :return: a list of observation ids
+        """
+        return list(map(lambda x: x.id, self.observations))
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ObservationSpaceConfig":

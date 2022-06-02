@@ -11,19 +11,19 @@ import csle_agents.constants.constants as agents_constants
 
 
 def reduce_T(T, strategy):
-    reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
-    for i in range(T.shape[0]):
+    reduced_T = np.zeros((T.shape[1], T.shape[2], T.shape[3]))
+    for i in range(T.shape[1]):
         for j in range(T.shape[2]):
             for k in range(T.shape[3]):
-                reduced_T[i][j][k] = T[i][0][j][k]*strategy.probability(j, 0) + T[i][1][j][k]*strategy.probability(j, 1)
+                reduced_T[i][j][k] = T[0][i][j][k]*strategy.probability(j, 0) + T[1][i][j][k]*strategy.probability(j, 1)
     return reduced_T
 
 
 def reduce_R(R, strategy):
-    reduced_R = np.zeros((R.shape[0], R.shape[2]))
-    for i in range(R.shape[0]):
+    reduced_R = np.zeros((R.shape[1], R.shape[2]))
+    for i in range(R.shape[1]):
         for j in range(R.shape[2]):
-            reduced_R[i][j] = R[i][0][j]*strategy.probability(i, 0) + R[i][1][j]*strategy.probability(i, 1)
+            reduced_R[i][j] = R[0][i][j]*strategy.probability(i, 0) + R[1][i][j]*strategy.probability(i, 1)
     return reduced_R
 
 
@@ -44,7 +44,10 @@ if __name__ == '__main__':
     num_actions = len(simulation_env_config.joint_action_space_config.action_spaces[1].actions)
 
     T = reduce_T(T, simulation_env_config.simulation_env_input_config.defender_strategy)
-    R = reduce_R(R, simulation_env_config.simulation_env_input_config.defender_strategy)
+    R = -reduce_R(R, simulation_env_config.simulation_env_input_config.defender_strategy)
+
+    print(T)
+    print(R)
 
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}vi_test",

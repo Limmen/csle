@@ -18,6 +18,7 @@ from csle_common.dao.system_identification.gaussian_mixture_system_model import 
 from csle_common.util.np_encoder import NpEncoder
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
+from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
 
 
 class MetastoreFacade:
@@ -1809,4 +1810,105 @@ class MetastoreFacade:
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Tabular policy saved successfully")
+                return id_of_new_row
+            
+    @staticmethod
+    def list_alpha_vec_policies() -> List[AlphaVectorsPolicy]:
+        """
+        :return: A list of AlphaVec policies in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_alpha_vec_policy_record_to_dto(x), records))
+                return records
+
+
+    @staticmethod
+    def list_alpha_vec_policies_ids() -> List[Dict]:
+        """
+        :return: A list of AlphaVec policies ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def _convert_alpha_vec_policy_record_to_dto(alpha_vec_policy_record) -> AlphaVectorsPolicy:
+        """
+        Converts a AlphaVec policy record fetched from the metastore into a DTO
+
+        :param alpha_vec_policy_record: the record to convert
+        :return: the DTO representing the record
+        """
+        alpha_vec_policy_json = json.dumps(alpha_vec_policy_record[1], indent=4, sort_keys=True)
+        alpha_vec_policy: AlphaVectorsPolicy = AlphaVectorsPolicy.from_dict(json.loads(alpha_vec_policy_json))
+        alpha_vec_policy.id = alpha_vec_policy_record[0]
+        return alpha_vec_policy
+
+    @staticmethod
+    def get_alpha_vec_policy(id: int) -> Union[None, AlphaVectorsPolicy]:
+        """
+        Function for fetching a AlphaVec policy with a given id from the metastore
+
+        :param id: the id of the AlphaVec policy
+        :return: The AlphaVec policy or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_alpha_vec_policy_record_to_dto(alpha_vec_policy_record=record)
+                return record
+
+    @staticmethod
+    def remove_alpha_vec_policy(alpha_vec_policy: AlphaVectorsPolicy) -> None:
+        """
+        Removes a AlphaVec policy from the metastore
+
+        :param alpha_vec_policy: the policy to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing alpha_vec policy with "
+                                             f"id:{alpha_vec_policy.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} WHERE id = %s",
+                            (alpha_vec_policy.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"AlphaVec policy "
+                                                     f"with id {alpha_vec_policy.id} deleted successfully")
+
+    @staticmethod
+    def save_alpha_vec_policy(alpha_vec_policy: AlphaVectorsPolicy) -> Union[Any, int]:
+        """
+        Saves a AlphaVec policy to the metastore
+
+        :param alpha_vec_policy: the policy to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing AlphaVec policy in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                policy_json_str = json.dumps(alpha_vec_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} "
+                            f"(policy, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, alpha_vec_policy.simulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"AlphaVec policy saved successfully")
                 return id_of_new_row

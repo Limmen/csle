@@ -721,6 +721,55 @@ def remove_all_tabular_policies():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/alphavecpolicies', methods=['GET'])
+def alpha_vec_policies():
+    alpha_vec_policies = MetastoreFacade.list_alpha_vec_policies()
+    alpha_vec_policies_dicts = list(map(lambda x: x.to_dict(), alpha_vec_policies))
+    response = jsonify(alpha_vec_policies_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/alphavecpoliciesids', methods=['GET'])
+def alpha_vec_policies_ids():
+    alpha_vec_policies_ids = MetastoreFacade.list_alpha_vec_policies_ids()
+    response_dicts = []
+    for tup in alpha_vec_policies_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/alphavecpolicies/get/<alpha_vec_policy_id>', methods=['GET'])
+def get_alpha_vec_policy(alpha_vec_policy_id: int):
+    policy = MetastoreFacade.get_alpha_vec_policy(id=alpha_vec_policy_id)
+    if policy is not None:
+        response = jsonify(policy.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/alphavecpolicies/remove/<alpha_vec_policy_id>', methods=['POST'])
+def remove_alpha_vec_policy(alpha_vec_policy_id: int):
+    policy = MetastoreFacade.get_alpha_vec_policy(id=alpha_vec_policy_id)
+    if policy is not None:
+        MetastoreFacade.remove_alpha_vec_policy(alpha_vec_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/alphavecpolicies/remove', methods=['POST'])
+def remove_all_alpha_vec_policies():
+    policies = MetastoreFacade.list_alpha_vec_policies()
+    for policy in policies:
+        MetastoreFacade.remove_alpha_vec_policy(alpha_vec_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/trainingjobs', methods=['GET'])
 def trainingjobs():
     training_jobs = MetastoreFacade.list_training_jobs()

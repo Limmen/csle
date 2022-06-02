@@ -70,6 +70,12 @@ const TrainingJob = (props) => {
         if(agentType === 8) {
             return "VALUE ITERATION"
         }
+        if(agentType === 9) {
+            return "HSVI"
+        }
+        if(agentType === 10) {
+            return "SONDIK's VALUE ITERATION"
+        }
         else {
             return "Unknown"
         }

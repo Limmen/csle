@@ -30,6 +30,30 @@ const MultiThresholdPolicy = (props) => {
         if(agentType === 2) {
             return "T-FP"
         }
+        if(agentType === 3) {
+            return "DQN"
+        }
+        if(agentType === 4) {
+            return "REINFORCE"
+        }
+        if(agentType === 5) {
+            return "NFSP"
+        }
+        if(agentType === 6) {
+            return "RANDOM"
+        }
+        if(agentType === 7) {
+            return "NONE"
+        }
+        if(agentType === 8) {
+            return "VALUE ITERATION"
+        }
+        if(agentType === 9) {
+            return "HSVI"
+        }
+        if(agentType === 10) {
+            return "SONDIK's VALUE ITERATION"
+        }
         else {
             return "Unknown"
         }

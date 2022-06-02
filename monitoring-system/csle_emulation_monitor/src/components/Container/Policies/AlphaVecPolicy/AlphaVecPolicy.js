@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './TabularPolicy.css';
+import './AlphaVecPolicy.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -8,11 +8,10 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
 
-const TabularPolicy = (props) => {
+const AlphaVecPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [actionsOpen, setActionsOpen] = useState(false);
-    const [policyOpen, setPolicyOpen] = useState(false);
-    const [valueFunOpen, setValueFunOpen] = useState(false);
+    const [alphaVectorsOpen, setAlphaVectorsOpen] = useState(false);
 
     const getAgentTypeStr = (agentType) => {
         if(agentType === 0) {
@@ -68,9 +67,9 @@ const TabularPolicy = (props) => {
         }
     }
 
-    const renderRemoveTabularPolicy = (props) => (
+    const renderRemoveAlphaVecPolicy = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove Tabular policy
+            Remove Alpha-vector policy
         </Tooltip>
     );
 
@@ -98,10 +97,10 @@ const TabularPolicy = (props) => {
                         className="removeButton"
                         placement="left"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveTabularPolicy}
+                        overlay={renderRemoveAlphaVecPolicy}
                     >
                         <Button variant="danger" className="removeButton"
-                                onClick={() => props.removeTabularPolicy(props.policy)}>
+                                onClick={() => props.removeAlphaVecPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -194,33 +193,31 @@ const TabularPolicy = (props) => {
                 <Card>
                     <Card.Header>
                         <Button
-                            onClick={() => setPolicyOpen(!policyOpen)}
-                            aria-controls="policyBody"
-                            aria-expanded={policyOpen}
+                            onClick={() => setAlphaVectorsOpen(!alphaVectorsOpen)}
+                            aria-controls="alphaVectorsBody"
+                            aria-expanded={alphaVectorsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Policy </h5>
+                            <h5 className="semiTitle"> Alpha Vectors </h5>
                         </Button>
                     </Card.Header>
-                    <Collapse in={policyOpen}>
+                    <Collapse in={alphaVectorsOpen}>
                         <div id="actionsBody" className="cardBodyHidden">
                             <div className="table-responsive">
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
-                                        <th>  State</th>
-                                        {props.policy.lookup_table[0].map((action, index) => {
-                                            return (<th key={action + "-" + index}>Action {index}</th>)
-                                        })}
+                                        <th>Vector ID</th>
+                                        <th>Vector Elements</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {props.policy.lookup_table.map((row, index) => {
-                                        return(
-                                        <tr key={row + "-" + index}>
+                                    {props.policy.alpha_vectors.map((vec, index) => {
+                                        return <tr key={vec + "-" + index}>
                                             <td>{index}</td>
-                                            <PolicyRow row={row} idx={index}/>
-                                        </tr>)})}
+                                            <td>{vec}</td>
+                                        </tr>
+                                    })}
                                     </tbody>
                                 </Table>
                             </div>
@@ -228,46 +225,12 @@ const TabularPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
-                    <Card.Header>
-                        <Button
-                            onClick={() => setValueFunOpen(!valueFunOpen)}
-                            aria-controls="valueFunBody"
-                            aria-expanded={valueFunOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle"> Value function </h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={valueFunOpen}>
-                        <div id="actionsBody" className="cardBodyHidden">
-                            <div className="table-responsive">
-                                <Table striped bordered hover>
-                                    <thead>
-                                    <tr>
-                                        <th>State</th>
-                                        <th>Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {props.policy.value_function.map((row, index) => {
-                                        return(
-                                            <tr key={row + "-" + index}>
-                                                <td>{index}</td>
-                                                <td>{row}</td>
-                                            </tr>)})}
-                                    </tbody>
-                                </Table>
-                            </div>
-                        </div>
-                    </Collapse>
-                </Card>
 
             </Card.Body>
         </Accordion.Collapse>
     </Card>)
 }
 
-TabularPolicy.propTypes = {};
-TabularPolicy.defaultProps = {};
-export default TabularPolicy;
+AlphaVecPolicy.propTypes = {};
+AlphaVecPolicy.defaultProps = {};
+export default AlphaVecPolicy;

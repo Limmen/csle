@@ -15,6 +15,13 @@ class StateSpaceConfig:
         """
         self.states = states
 
+
+    def states_ids(self) -> List[int]:
+        """
+        :return: list of state ids
+        """
+        return list(map(lambda x: x.id, self.states))
+
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "StateSpaceConfig":
         """

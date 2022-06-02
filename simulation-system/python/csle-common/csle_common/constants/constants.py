@@ -1359,6 +1359,7 @@ class METADATA_STORE:
     PPO_POLICIES_TABLE = "ppo_policies"
     GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE = "gaussian_mixture_system_models"
     TABULAR_POLICIES_TABLE = "tabular_policies"
+    ALPHA_VEC_POLICIES_TABLE = "alpha_vec_policies"
 
 
 class CONTAINER_POOLS:

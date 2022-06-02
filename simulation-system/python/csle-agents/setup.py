@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(name='csle_agents',
       version='0.0.1',
       install_requires=['csle-common', 'csle-collector', 'csle-attacker', 'csle-defender',
-                        'csle-system-identification', 'gym-csle-stopping-game', 'stable-baselines3'],
+                        'csle-system-identification', 'gym-csle-stopping-game', 'stable-baselines3', 'pulp'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='Reinforcement learning agents for CSLE',

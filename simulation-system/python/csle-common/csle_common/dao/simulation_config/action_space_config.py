@@ -22,6 +22,12 @@ class ActionSpaceConfig:
         self.descr = descr
         self.player_id = player_id
 
+    def actions_ids(self) -> List[int]:
+        """
+        :return: a list of action ids
+        """
+        return list(map(lambda x: x.id, self.actions))
+
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ActionSpaceConfig":
         """

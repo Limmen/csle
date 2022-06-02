@@ -10,6 +10,7 @@ import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
 import PPOPolicy from "./PPOPolicy/PPOPolicy";
 import TabularPolicy from "./TabularPolicy/TabularPolicy";
+import AlphaVecPolicy from "./AlphaVecPolicy/AlphaVecPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
@@ -36,9 +37,16 @@ const Policies = () => {
     const [loadingTabularPolicy, setLoadingTabularPolicy] = useState(true);
     const [filteredTabulaPoliciesIds, setFilteredTabularPoliciesIds] = useState([]);
     const [tabularPoliciesSearchString, setTabularPoliciesSearchString] = useState("");
+    const [alphaVecPoliciesIds, setAlphaVecPoliciesIds] = useState([]);
+    const [selectedAlphaVecPolicy, setSelectedAlphaVecPolicy] = useState(null);
+    const [selectedAlphaVecPolicyId, setSelectedALphaVecPolicyId] = useState(null);
+    const [loadingAlphaVecPolicy, setLoadingAlphaVecPolicy] = useState(true);
+    const [filteredAlphaVecPoliciesIds, setFilteredAlphaVecPoliciesIds] = useState([]);
+    const [alphaVecPoliciesSearchString, setAlphaVecPoliciesSearchString] = useState("");
     const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
     const [loadingPPOPolicies, setLoadingPPOPolicies] = useState(true);
     const [loadingTabularPolicies, setLoadingTabularPolicies] = useState(true);
+    const [loadingAlphaVecPolicies, setLoadingAlphaVecPolicies] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -141,6 +149,39 @@ const Policies = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const fetchAlphaVecPoliciesIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/alphavecpoliciesids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const alphavecPoliciesIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                    }
+                })
+                setAlphaVecPoliciesIds(alphavecPoliciesIds)
+                setFilteredAlphaVecPoliciesIds(alphavecPoliciesIds)
+                setLoadingAlphaVecPolicies(false)
+                if (alphavecPoliciesIds.length > 0) {
+                    setSelectedALphaVecPolicyId(alphavecPoliciesIds[0])
+                    fetchAlphaVecPolicy(alphavecPoliciesIds[0])
+                    setLoadingAlphaVecPolicy(true)
+                } else {
+                    setLoadingAlphaVecPolicy(false)
+                    setSelectedAlphaVecPolicy(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     useEffect(() => {
         setLoadingMultiThresholdPolicies(true)
         fetchMultiThresholdPoliciesIds()
@@ -148,6 +189,8 @@ const Policies = () => {
         fetchPPOPoliciesIds()
         setLoadingTabularPolicies(true)
         fetchTabularPoliciesIds()
+        setLoadingAlphaVecPolicies(true)
+        fetchAlphaVecPoliciesIds()
     }, [fetchMultiThresholdPoliciesIds, fetchPPOPoliciesIds]);
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
@@ -208,7 +251,6 @@ const Policies = () => {
         removePpoPoliciesRequest(ppoPolicy.id)
     }
 
-    //Tab
     const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
         fetch(
             `http://` + ip + ':7777/tabularpolicies/remove/' + tabular_policy_id,
@@ -265,6 +307,64 @@ const Policies = () => {
     const removeTabularPolicy = (tabularPolicy) => {
         setLoadingTabularPolicies(true)
         removeTabularPoliciesRequest(tabularPolicy.id)
+    }
+
+    const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
+        fetch(
+            `http://` + ip + ':7777/alphavecpolicies/remove/' + alpha_vec_policies_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchAlphaVecPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/alphavecpolicies/get/' + alpha_vec_policy_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedAlphaVecPolicy(response)
+                setLoadingAlphaVecPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAllAlphaVecPoliciesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/alphavecpolicies/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchAlphaVecPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAlphaVecPolicy = (tabularPolicy) => {
+        setLoadingAlphaVecPolicies(true)
+        removeAlphaVecPoliciesRequest(tabularPolicy.id)
     }
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
@@ -340,6 +440,11 @@ const Policies = () => {
         removeAllTabularPoliciesRequest()
     }
 
+    const removeAllAlphaVecPolicies = () => {
+        setLoadingAlphaVecPolicies(true)
+        removeAllAlphaVecPoliciesRequest()
+    }
+
     const refreshMultiThresholdPolicies = () => {
         setLoadingMultiThresholdPolicies(true)
         fetchMultiThresholdPoliciesIds()
@@ -353,6 +458,11 @@ const Policies = () => {
     const refreshTabularPolicies = () => {
         setLoadingTabularPolicies(true)
         fetchTabularPoliciesIds()
+    }
+
+    const refreshAlphaVecPolicies = () => {
+        setLoadingAlphaVecPolicies(true)
+        fetchAlphaVecPoliciesIds()
     }
 
     const renderInfoTooltip = (props) => (
@@ -379,6 +489,12 @@ const Policies = () => {
         </Tooltip>
     );
 
+    const renderRemoveAllAlphaVecPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all Alpha-Vector policies.
+        </Tooltip>
+    );
+
     const renderMultiThresholdPoliciesRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload multi-threshold policies from the backend
@@ -394,6 +510,12 @@ const Policies = () => {
     const renderTabularRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload Tabular policies from the backend
+        </Tooltip>
+    );
+
+    const renderAlphaVecRefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload Alpha-Vector policies from the backend
         </Tooltip>
     );
 
@@ -443,6 +565,12 @@ const Policies = () => {
         setSelectedTabularPolicyId(selectedId)
         fetchTabularPolicy(selectedId)
         setLoadingTabularPolicy(true)
+    }
+
+    const updateSelectedAlphaVecPolicyId = (selectedId) => {
+        setSelectedALphaVecPolicyId(selectedId)
+        fetchAlphaVecPolicy(selectedId)
+        setLoadingAlphaVecPolicy(true)
     }
 
     const SelectMultiThresholdPolicyOrSpinner = (props) => {
@@ -603,7 +731,6 @@ const Policies = () => {
         }
     }
 
-
     const SelectTabularPolicyOrSpinner = (props) => {
         if (!props.loadingTabularPolicies && props.tabularPoliciesIds.length === 0) {
             return (
@@ -675,6 +802,85 @@ const Policies = () => {
                         overlay={renderRemoveAllTabularPoliciesTooltip}
                     >
                         <Button variant="danger" onClick={removeAllTabularPolicies}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
+    const SelectAlphaVecPolicyOrSpinner = (props) => {
+        if (!props.loadingAlphaVecPolicies && props.alphaVecPoliciesIds.length === 0) {
+            return (
+                <div>
+                    <span className="emptyText">No alpha-vector policies are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderAlphaVecRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshAlphaVecPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+        if (props.loadingAlphaVecPolicies) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching policies... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Alpha-vector policy:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedAlphaVecPolicyId}
+                                defaultValue={props.selectedAlphaVecPolicyId}
+                                options={props.alphaVecPoliciesIds}
+                                onChange={updateSelectedAlphaVecPolicyId}
+                                placeholder="Select policy"
+                            />
+                        </div>
+                    </div>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderAlphaVecRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshAlphaVecPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllAlphaVecPoliciesTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllAlphaVecPolicies}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -759,6 +965,33 @@ const Policies = () => {
                 <Accordion defaultActiveKey="0">
                     <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
                                removeTabularPolicy={removeTabularPolicy}
+                    />
+                </Accordion>
+            )
+        }
+    }
+
+    const AlphaVecPolicyAccordion = (props) => {
+        if (props.loadingAlphaVecPolicy || props.selectedAlphaVecPolicy === null || props.selectedAlphaVecPolicy === undefined) {
+            if(props.loadingAlphaVecPolicy) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching policy... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    <AlphaVecPolicy policy={selectedAlphaVecPolicy} wrapper={wrapper}
+                                   key={selectedAlphaVecPolicy.id}
+                                   removeAlphaVecPolicy={removeAlphaVecPolicy}
                     />
                 </Accordion>
             )
@@ -877,6 +1110,43 @@ const Policies = () => {
         350
     );
 
+    const searchAlphaVecPoliciesFilter = (alphaVecPolicyId, searchVal) => {
+        return (searchVal === "" || alphaVecPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchAlphaVecPolicyChange = (event) => {
+        var searchVal = event.target.value
+        const fPoliciesIds = ppoPoliciesIds.filter(policy => {
+            return searchAlphaVecPoliciesFilter(policy, searchVal)
+        });
+        setFilteredAlphaVecPoliciesIds(fPoliciesIds)
+        setAlphaVecPoliciesSearchString(searchVal)
+
+        var selectedPolicyRemoved = false
+        if(!loadingAlphaVecPolicy && fPoliciesIds.length > 0){
+            for (let i = 0; i < fPoliciesIds.length; i++) {
+                if(selectedAlphaVecPolicy !== null && selectedAlphaVecPolicy !== undefined &&
+                    selectedAlphaVecPolicy.id === fPoliciesIds[i].value) {
+                    selectedPolicyRemoved = true
+                }
+            }
+            if(!selectedPolicyRemoved) {
+                setSelectedALphaVecPolicyId(fPoliciesIds[0])
+                fetchAlphaVecPolicy(fPoliciesIds[0])
+                setLoadingAlphaVecPolicy(true)
+            }
+        } else {
+            setSelectedAlphaVecPolicy(null)
+        }
+    }
+
+    const searchAlphaVecPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchAlphaVecPolicyChange(event)
+        },
+        350
+    );
+
     return (
         <div className="policyExamination">
             <div className="row">
@@ -977,6 +1247,40 @@ const Policies = () => {
 
             <TabularPolicyAccordion loadingTabularPolicy={loadingTabularPolicy}
                                 selectedTabularPolicy={selectedTabularPolicy}/>
+
+
+            <div className="row ppoPolicies simulationTracesHeader">
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectAlphaVecPolicyOrSpinner loadingAlphaVecPolicies={loadingAlphaVecPolicies}
+                                                      alphaVecPoliciesIds={filteredAlphaVecPoliciesIds}
+                                                      selectedAlphaVecPolicyId={selectedAlphaVecPolicyId}
+                        />
+                    </h4>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="alphaVecPoliciesSearchField" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="alphaVecPoliciesSearchLabel"
+                                aria-describedby="alphaVecPoliciesSearchField"
+                                onChange={searchAlphaVecPoliciesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
+
+            <AlphaVecPolicyAccordion loadingAlphaVecPolicy={loadingAlphaVecPolicy}
+                                    selectedAlphaVecPolicy={selectedAlphaVecPolicy}/>
         </div>
     );
 }

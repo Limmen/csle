@@ -342,7 +342,12 @@ class StoppingGameUtil:
         """
         observation_probs = []
         for o in O:
-            observation_probs.append(Z[0][0][s_prime][o])
+            if len(Z.shape) == 4:
+                observation_probs.append(Z[0][0][s_prime][o])
+            elif len(Z.shape) == 3:
+                observation_probs.append(Z[0][s_prime][o])
+            elif len(Z.shape) == 2:
+                observation_probs.append(Z[s_prime][o])
         o = np.random.choice(np.arange(0, len(O)), p=observation_probs)
         return o
 

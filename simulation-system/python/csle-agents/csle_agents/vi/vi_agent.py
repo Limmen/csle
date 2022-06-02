@@ -56,7 +56,7 @@ class VIAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
         exp_result.plot_metrics.append(agents_constants.VI.DELTA)
 
-        descr = f"Computation of V* with the Value Iteartion algorithm using " \
+        descr = f"Computation of V* with the Value Iteration algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
 
         for seed in self.experiment_config.random_seeds:

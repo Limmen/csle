@@ -92,9 +92,55 @@ class T_FP:
 
 
 class VI:
+    """
+    String constants related to VI
+    """
     THETA = "theta"
     TRANSITION_TENSOR = "transition_tensor"
     REWARD_TENSOR = "reward_tensor"
     NUM_STATES = "num_states"
     NUM_ACTIONS = "num_actions"
     DELTA = "delta"
+
+
+class HSVI:
+    """
+    String constants related to HSVI
+    """
+    WIDTH = "width"
+    WIDTHS = "widths"
+    TRANSITION_TENSOR = "transition_tensor"
+    REWARD_TENSOR = "reward_tensor"
+    OBSERVATION_TENSOR = "observation_tensor"
+    OBSERVATION_SPACE = "observation_space"
+    STATE_SPACE = "state_space"
+    ACTION_SPACE = "action_space"
+    EPSILON = "epsilon"
+    UB_SIZE = "upper_bound_size"
+    UB_SIZES = "upper_bound_sizes"
+    LB_SIZE = "lower_bound_size"
+    LB_SIZES = "lower_bound_sizes"
+    INITIAL_BELIEF = "initial_belief"
+    USE_LP = "use_lp"
+    PRUNE_FREQUENCY = "prune_frequency"
+    SIMULATION_FREQUENCY = "simulation_frequency"
+    SIMULATE_HORIZON = "SIMULATE_HORIZON"
+    NUMBER_OF_SIMULATIONS = "NUMBER_OF_SIMULATIONS"
+    INITIAL_BELIEF_VALUES = "initial_belief_values"
+
+
+class SONDIK_VI:
+    """
+    String constants related to Sondik's VI
+    """
+    TRANSITION_TENSOR = "transition_tensor"
+    REWARD_TENSOR = "reward_tensor"
+    OBSERVATION_TENSOR = "observation_tensor"
+    OBSERVATION_SPACE = "observation_space"
+    STATE_SPACE = "state_space"
+    ACTION_SPACE = "action_space"
+    INITIAL_BELIEF = "initial_belief"
+    USE_PRUNING = "use_pruning"
+    PLANNING_HORIZON = "planning_horizon"
+    INITIAL_BELIEF_VALUES = "initial_belief_values"
+    NUM_ALPHA_VECTORS = "num_alpha_vectors"
