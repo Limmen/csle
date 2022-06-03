@@ -223,3 +223,14 @@ class KIEFER_WOLFOWITZ:
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     INITIAL_ALPHA = "initial_alpha"
     DELTA = "delta"
+
+
+class Q_LEARNING:
+    """
+    String constants related to Q_LEARNING
+    """
+    N = "N"
+    EPSILON = "epsilon"
+    S = "S"
+    A = "A"
+    INITIAL_STATE_VALUES = "initial_state_values"

@@ -12,7 +12,7 @@ class TabularPolicy(Policy):
 
     def __init__(self, player_type: PlayerType, actions: List[Action], lookup_table: List[Any],
                  agent_type: AgentType, simulation_name: str, avg_R: float,
-                 value_function: Optional[List[Any]] = None) -> None:
+                 value_function: Optional[List[Any]] = None, q_table: Optional[List[Any]] = None) -> None:
         """
         Initializes the policy
 
@@ -20,6 +20,7 @@ class TabularPolicy(Policy):
         :param player_type: the player type
         :param lookup_table: the lookup table that defines the policy
         :param value_function: the value function (optional)
+        :param q_table: the Q-value function (optional)
         :param simulation_name: the name of the simulation
         :param avg_R: average reward obtained with the policy
         """
@@ -27,6 +28,7 @@ class TabularPolicy(Policy):
         self.actions = actions
         self.lookup_table = lookup_table
         self.value_function = value_function
+        self.q_table = q_table
         self.simulation_name = simulation_name
         self.id = -1
         self.avg_R = avg_R
@@ -61,7 +63,8 @@ class TabularPolicy(Policy):
         dto = TabularPolicy(actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                             player_type=d["player_type"], agent_type=d["agent_type"],
                             lookup_table=d["lookup_table"], value_function=d["value_function"],
-                            simulation_name=d["simulation_name"], avg_R=d["avg_R"])
+                            simulation_name=d["simulation_name"], avg_R=d["avg_R"],
+                            q_table=d["q_table"])
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -79,6 +82,7 @@ class TabularPolicy(Policy):
         d["simulation_name"] = self.simulation_name
         d["id"] = self.id
         d["avg_R"] = self.avg_R
+        d["q_table"] = self.q_table
         return d
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -97,7 +101,7 @@ class TabularPolicy(Policy):
         return f"agent_type: {self.agent_type}, player_type: {self.player_type}, " \
                f"actions: {list(map(lambda x: str(x), self.actions))}, lookup_table: {self.lookup_table}, " \
                f"value_function: {self.value_function}, simulation_name: {self.simulation_name}, id: {self.id}, " \
-               f"avg_R: {self.avg_R}"
+               f"avg_R: {self.avg_R}, q_table: {self.q_table}"
 
     def to_json_str(self) -> str:
         """

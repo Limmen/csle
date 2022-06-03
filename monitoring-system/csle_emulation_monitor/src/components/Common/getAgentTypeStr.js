@@ -47,6 +47,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 14) {
         return "KIEFER WOLFOWITZ"
     }
+    if(agentType === 15) {
+        return "Q_LEARNING"
+    }
     else {
         return "Unknown"
     }

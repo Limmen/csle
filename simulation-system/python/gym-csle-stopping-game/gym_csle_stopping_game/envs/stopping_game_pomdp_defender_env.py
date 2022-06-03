@@ -25,7 +25,6 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :param config: the environment configuration
         :param attacker_strategy: the strategy of the static attacker
         """
-
         self.config = config
         self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
 

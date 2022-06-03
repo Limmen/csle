@@ -5,51 +5,22 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.agents.vi.vi_agent import VIAgent
+from csle_agents.agents.q_learning.q_learning_agent import QLearningAgent
 from csle_common.dao.training.random_policy import RandomPolicy
 import csle_agents.constants.constants as agents_constants
 
-
-def reduce_T(T, strategy):
-    reduced_T = np.zeros((T.shape[1], T.shape[2], T.shape[3]))
-    for i in range(T.shape[1]):
-        for j in range(T.shape[2]):
-            for k in range(T.shape[3]):
-                reduced_T[i][j][k] = T[0][i][j][k]*strategy.probability(j, 0) + T[1][i][j][k]*strategy.probability(j, 1)
-    return reduced_T
-
-
-def reduce_R(R, strategy):
-    reduced_R = np.zeros((R.shape[1], R.shape[2]))
-    for i in range(R.shape[1]):
-        for j in range(R.shape[2]):
-            reduced_R[i][j] = R[0][i][j]*strategy.probability(i, 0) + R[1][i][j]*strategy.probability(i, 1)
-    return reduced_R
-
-
 if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-001")
-
     simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
         actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
         player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
-
-    T = np.array(simulation_env_config.transition_operator_config.transition_tensor)
-    if len(T.shape) == 5:
-        T = T[0]
-    num_states = len(simulation_env_config.state_space_config.states)
-    R = np.array(simulation_env_config.reward_function_config.reward_tensor)
-    if len(R.shape) == 4:
-        R = R[0]
-    num_actions = len(simulation_env_config.joint_action_space_config.action_spaces[1].actions)
-
-    T = reduce_T(T, simulation_env_config.simulation_env_input_config.defender_strategy)
-    R = -reduce_R(R, simulation_env_config.simulation_env_input_config.defender_strategy)
+    A = simulation_env_config.joint_action_space_config.action_spaces[1].actions_ids()
+    S = simulation_env_config.state_space_config.states_ids()
 
     experiment_config = ExperimentConfig(
-        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}vi_test",
-        title="Value iteration computation",
-        random_seeds=[399], agent_type=AgentType.VALUE_ITERATION,
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}q_learning_test",
+        title="Q-learning",
+        random_seeds=[399], agent_type=AgentType.Q_LEARNING,
         log_every=1,
         hparams={
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100,
@@ -69,26 +40,23 @@ if __name__ == '__main__':
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor"),
-            agents_constants.VI.THETA: HParam(
-                value=0.0001, name=agents_constants.VI.THETA,
-                descr="the stopping theshold for value iteration"),
-            agents_constants.VI.TRANSITION_TENSOR: HParam(
-                value=list(T.tolist()), name=agents_constants.VI.TRANSITION_TENSOR,
-                descr="the transition tensor"),
-            agents_constants.VI.REWARD_TENSOR: HParam(
-                value=list(R.tolist()), name=agents_constants.VI.REWARD_TENSOR,
-                descr="the reward tensor"),
-            agents_constants.VI.NUM_STATES: HParam(
-                value=num_states, name=agents_constants.VI.NUM_STATES,
-                descr="the number of states"),
-            agents_constants.VI.NUM_ACTIONS: HParam(
-                value=num_actions, name=agents_constants.VI.NUM_ACTIONS,
-                descr="the number of actions")
+            agents_constants.Q_LEARNING.S: HParam(
+                value=S, name=agents_constants.Q_LEARNING.S,
+                descr="the state spaec"),
+            agents_constants.Q_LEARNING.A: HParam(
+                value=A, name=agents_constants.Q_LEARNING.A,
+                descr="the action space"),
+            agents_constants.Q_LEARNING.EPSILON: HParam(
+                value=0.05, name=agents_constants.Q_LEARNING.EPSILON,
+                descr="the exploration parameter"),
+            agents_constants.Q_LEARNING.N: HParam(
+                value=200, name=agents_constants.Q_LEARNING.N,
+                descr="the number of iterations")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )
 
-    agent = VIAgent(simulation_env_config=simulation_env_config,
+    agent = QLearningAgent(simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
