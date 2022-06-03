@@ -91,7 +91,6 @@ class T_FP:
     AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "average_best_response_attacker_return"
     RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "running_average_best_response_attacker_return"
 
-
 class VI:
     """
     String constants related to VI
@@ -102,7 +101,6 @@ class VI:
     NUM_STATES = "num_states"
     NUM_ACTIONS = "num_actions"
     DELTA = "delta"
-
 
 class HSVI:
     """
@@ -245,3 +243,15 @@ class SARSA:
     S = "S"
     A = "A"
     INITIAL_STATE_VALUES = "initial_state_values"
+
+
+class PI:
+    """
+    String constants related to PI
+    """
+    TRANSITION_TENSOR = "transition_tensor"
+    REWARD_TENSOR = "reward_tensor"
+    NUM_STATES = "num_states"
+    NUM_ACTIONS = "num_actions"
+    N = "N"
+    INITIAL_POLICY = "initial_policy"

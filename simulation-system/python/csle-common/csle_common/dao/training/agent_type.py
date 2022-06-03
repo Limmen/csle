@@ -22,3 +22,4 @@ class AgentType(IntEnum):
     KIEFER_WOLFOWITZ=14
     Q_LEARNING=15
     SARSA=16
+    POLICY_ITERATION=17

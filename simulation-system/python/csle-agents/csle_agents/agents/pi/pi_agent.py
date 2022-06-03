@@ -18,9 +18,9 @@ from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.tabular_policy import TabularPolicy
 
 
-class VIAgent(BaseAgent):
+class PIAgent(BaseAgent):
     """
-    Value Iteration Agent
+    Policy Iteration Agent
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -36,7 +36,7 @@ class VIAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=None,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.VALUE_ITERATION
+        assert experiment_config.agent_type == AgentType.POLICY_ITERATION
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
         self.env = gym.make(self.simulation_env_config.gym_env_name,
@@ -44,7 +44,7 @@ class VIAgent(BaseAgent):
 
     def train(self) -> ExperimentExecution:
         """
-        Runs the value iteration algorithm to compute V*
+        Runs the policy iteration algorithm to compute V*
 
         :return: the results
         """
@@ -54,9 +54,8 @@ class VIAgent(BaseAgent):
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
-        exp_result.plot_metrics.append(agents_constants.VI.DELTA)
 
-        descr = f"Computation of V* with the Value Iteration algorithm using " \
+        descr = f"Computation of V* with the Policy Iteration algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
 
         for seed in self.experiment_config.random_seeds:
@@ -98,7 +97,7 @@ class VIAgent(BaseAgent):
 
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.value_iteration(exp_result=exp_result, seed=seed)
+            exp_result = self.policy_iteration(exp_result=exp_result, seed=seed)
 
 
         # Calculate average and std metrics
@@ -153,119 +152,168 @@ class VIAgent(BaseAgent):
                 agents_constants.VI.THETA, agents_constants.VI.TRANSITION_TENSOR,
                 agents_constants.VI.REWARD_TENSOR, agents_constants.VI.NUM_STATES, agents_constants.VI.NUM_ACTIONS]
 
-    def value_iteration(self, exp_result: ExperimentResult, seed: int) -> ExperimentResult:
+    def policy_iteration(self, exp_result: ExperimentResult, seed: int) -> ExperimentResult:
         """
-        Runs the value iteration algorithm
+        Runs the policy iteration algorithm
 
         :param exp_result: the experiment result object
         :param seed: the random seed
         :return: the updated experiment result
         """
-        theta = self.experiment_config.hparams[agents_constants.VI.THETA].value
+        N = self.experiment_config.hparams[agents_constants.PI.N].value
         discount_factor = self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value
-        num_states = self.experiment_config.hparams[agents_constants.VI.NUM_STATES].value
-        num_actions = self.experiment_config.hparams[agents_constants.VI.NUM_ACTIONS].value
-        T = self.experiment_config.hparams[agents_constants.VI.TRANSITION_TENSOR].value
-        R = self.experiment_config.hparams[agents_constants.VI.REWARD_TENSOR].value
-        Logger.__call__().get_logger().info(f"Starting the value iteration algorithm, theta:{theta}, "
+        num_states = self.experiment_config.hparams[agents_constants.PI.NUM_STATES].value
+        num_actions = self.experiment_config.hparams[agents_constants.PI.NUM_ACTIONS].value
+        T = self.experiment_config.hparams[agents_constants.PI.TRANSITION_TENSOR].value
+        R = self.experiment_config.hparams[agents_constants.PI.REWARD_TENSOR].value
+        initial_pi = np.array(self.experiment_config.hparams[agents_constants.PI.INITIAL_POLICY].value)
+        Logger.__call__().get_logger().info(f"Starting the policy iteration algorithm, N:{N}, "
                                             f"num_states:{num_states}, discount_factor: {discount_factor}, "
                                             f"num_actions: {num_actions}")
-        V, policy, deltas, avg_returns, running_avg_returns = self.vi(
-            T=np.array(T), num_states=num_states, num_actions=num_actions,
-            R=np.array(R), theta=theta, discount_factor=discount_factor)
-        exp_result.all_metrics[seed][agents_constants.VI.DELTA] = deltas
+        policy, v, avg_returns, running_avg_returns = self.pi(
+            P=np.array(T), num_states=num_states, num_actions=num_actions,
+            R=np.array(R), gamma=discount_factor, N=N, policy=initial_pi)
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = avg_returns
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = running_avg_returns
         tabular_policy = TabularPolicy(player_type=self.experiment_config.player_type,
                                        actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                            self.experiment_config.player_idx].actions,
-                                       agent_type=self.experiment_config.agent_type, value_function=list(V),
+                                       agent_type=self.experiment_config.agent_type, value_function=list(v),
                                        lookup_table=list(policy), simulation_name=self.simulation_env_config.name,
                                        avg_R=avg_returns[-1])
         exp_result.policies[seed] = tabular_policy
         return exp_result
 
-    def one_step_lookahead(self, state, V, num_actions, num_states, T, discount_factor, R) \
-            -> np.ndarray:
+    def transition_probability_under_policy(self, P: np.ndarray, policy: np.ndarray, num_states: int) -> np.ndarray:
         """
-        Performs a one-step lookahead for value iteration
-        :param state: the current state
-        :param V: the current value function
-        :param num_actions: the number of actions
-        :param num_states: the number of states
-        :param T: the transition kernel
-        :param discount_factor: the discount factor
-        :param R: the table with rewards
-        :param next_state_lookahead: the next state lookahead table
-        :return: an array with lookahead values
-        """
-        A = np.zeros(num_actions)
-        for a in range(num_actions):
-            reward = R[a][state]
-            for next_state in range(num_states):
-                prob = T[a][state][next_state]
-                A[a] += prob * (reward + discount_factor * V[next_state])
-        return A
+        Utility function for computing the state transition probabilities under the current policy.
+        Assumes a deterministic policy (probability 1 of selecting an action in a state)
 
-    def vi(self, T: np.ndarray, num_states: int, num_actions: int, R: np.ndarray,
-           theta=0.0001, discount_factor=1.0) -> Tuple[np.ndarray, np.ndarray, List, List, List]:
+        Args:
+            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :policy: the policy (matrix num_states x num_actions)
+            :num_states: the number of states
+
+        Returns:
+               :P_pi: the transition probabilities in the MDP under the given policy (dimensions num_states x num_states)
         """
-        An implementation of the Value Iteration algorithm
-        :param T: the transition kernel T
-        :param num_states: the number of states
-        :param num_actions: the number of actions
-        :param state_to_id: the state-to-id lookup table
-        :param HP: the table with hack probabilities
-        :param R: the table with rewards
-        :param next_state_lookahead: the next-state-lookahead table
-        :param theta: convergence threshold
-        :param discount_factor: the discount factor
-        :return: (greedy policy, value function, deltas, average_returns)
+        P_pi = np.zeros((num_states,num_states))
+        for i in range(0, num_states):
+            action = np.where(policy[i] == 1)[0]
+            P_pi[i] = P[action, i]
+            assert sum(P_pi[i]) == 1 # stochastic
+        return P_pi
+
+    def expected_reward_under_policy(self, P: np.ndarray, R: np.ndarray, policy: np.ndarray, num_states: int,
+                                     num_actions: int) -> np.ndarray:
         """
-        deltas = []
+        Utility function for computing the expected immediate reward for each state
+        in the MDP given a policy.
+
+        Args:
+            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :policy: the policy (matrix num_states x num_actions)
+            :R: the reward function in the MDP (tensor num_actions x num_states x num_states)
+            :num_states: the number of states
+            :num_actions: the number of actions
+
+        Returns:
+               :r: a vector of dimension <num_states> with the expected immediate reward for each state.
+        """
+        r = np.zeros((num_states))
+        for k in range(0, num_states):
+            r[k] = sum(
+                [policy[k][x]*sum([np.dot(P[x][y],[R[x][y]]*num_states)
+                                   for y in range(0, num_states)])for x in range(0, num_actions)])
+        return r
+
+    def policy_evaluation(self, P: np.ndarray, policy: np.ndarray, R: np.ndarray, gamma: float,
+                          num_states: int, num_actions: int) -> np.ndarray:
+        """
+        Implements the policy evaluation step in the policy iteration dynamic programming algorithm.
+        Uses the linear algebra interpretation of policy evaluation, solving it as a linear system.
+
+        Args:
+            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :policy: the policy (matrix num_states x num_actions)
+            :gamma: the discount factor
+            :num_states: the number of states
+            :num_actions: the number of actions
+
+        Returns:
+               :v: the state values, a vector of dimension NUM_STATES
+        """
+        P_pi = self.transition_probability_under_policy(P, policy, num_states=num_states)
+        r_pi = self.expected_reward_under_policy(P, R, policy, num_states=num_states, num_actions=num_actions)
+        I = np.identity(num_states)
+        v = np.dot(np.linalg.inv(I-(np.dot(gamma, P_pi))),r_pi)
+        return v
+
+    def policy_improvement(self, P: np.ndarray, R: np.ndarray, gamma: float, v: np.ndarray,
+                           pi: np.ndarray, num_states: int, num_actions: int) -> np.ndarray:
+        """
+        Implements the policy improvement step in the policy iteration dynamic programming algorithm.
+
+        Args:
+            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :R: the reward function in the MDP (tensor num_actions x num_states x num_states)
+            :gamma: the discount factor
+            :v: the state values (dimension NUM_STATES)
+            :pi: the old policy (matrix num_states x num_actions)
+            :num_states: the number of states
+            :num_actions: the number of actions
+
+        Returns:
+               :pi_prime: a new updated policy (dimensions num_states x num_actions)
+        """
+        pi_prime = np.zeros((num_states,num_actions))
+        for s in range(0, num_states):
+            action_values = np.zeros(num_actions)
+            for a in range(0, num_actions):
+                for s_prime in range(0, num_states):
+                    action_values[a] += P[a][s][s_prime]*(R[a][s] + gamma*v[s_prime])
+            if(max(action_values) == 0.0):
+                pi_prime[s,np.argmax(pi[s])] = 1
+            else:
+                best_action = np.argmax(action_values)
+                pi_prime[s][best_action] = 1
+        return pi_prime
+
+    def pi(self, P: np.ndarray, policy: np.ndarray, N: int, gamma: float,
+                         R: np.ndarray, num_states: int, num_actions: int) \
+            -> Tuple[np.ndarray, np.ndarray, List[float], List[float]]:
+        """
+        The policy iteration algorithm, interleaves policy evaluation and policy improvement for N iterations.
+        Guaranteed to converge to the optimal policy and value function.
+
+        Args:
+            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :policy: the policy (matrix num_states x num_actions)
+            :N: the number of iterations (scalar)
+            :gamma: the discount factor
+            :R: the reward function in the MDP (tensor num_actions x num_states x num_states)
+
+        Returns:
+               a tuple of (v, policy) where v is the state values after N iterations and policy is the policy after N iterations.
+        """
         average_returns = []
         running_average_returns = []
-        V = np.zeros(num_states)
-        iteration = 0
-        while True:
-            # Stopping condition
-            delta = 0
-            # Update each state...
-            for s in range(num_states):
-                # Do a one-step lookahead to find the best action
-                A = self.one_step_lookahead(s, V, num_actions, num_states, T, discount_factor, R)
-                best_action_value = np.max(A)
-                # Calculate delta across all states seen so far
-                delta = max(delta, np.abs(best_action_value - V[s]))
-                # Update the value function. Ref: Sutton book eq. 4.10.
-                V[s] = best_action_value
+        for i in range(0, N):
+            v = self.policy_evaluation(P, policy, R, gamma, num_states=num_states, num_actions=num_actions)
+            policy = self.policy_improvement(P, R, gamma,v, policy, num_states=num_states, num_actions=num_actions)
 
-            deltas.append(delta)
-
-            avg_return = -1
-            if iteration % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
-                policy = self.create_policy_from_value_function(num_states=num_states, num_actions=num_actions, V=V, T=T,
-                                                                discount_factor=discount_factor, R=R)
+            if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 avg_return = self.evaluate_policy(policy=policy, eval_batch_size=self.experiment_config.hparams[
                     agents_constants.COMMON.EVAL_BATCH_SIZE].value)
                 average_returns.append(avg_return)
                 running_avg_J = ExperimentUtil.running_average(average_returns,
-                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+                                                               self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
                 running_average_returns.append(running_avg_J)
 
+            if i % self.experiment_config.log_every == 0 and i > 0:
+                Logger.__call__().get_logger().info(f"[PI] i:{i}, avg_return: {avg_return}")
 
-            if iteration % self.experiment_config.log_every == 0 and iteration > 0:
-                Logger.__call__().get_logger().info(f"[VI] i:{iteration}, delta: {delta}, theta: {theta}, "
-                                                    f"avg_return: {avg_return}")
-            iteration+=1
-
-            # Check if we can stop
-            if delta < theta:
-                break
-
-        policy = self.create_policy_from_value_function(num_states=num_states, num_actions=num_actions, V=V, T=T,
-                                                        discount_factor=discount_factor, R=R)
-        return V, policy, deltas, average_returns, running_average_returns
+        return policy, v, average_returns, running_average_returns
 
     def evaluate_policy(self, policy :np.ndarray, eval_batch_size: int) -> float:
         """
@@ -286,26 +334,3 @@ class VIAgent(BaseAgent):
             returns.append(R)
         avg_return = np.mean(returns)
         return float(avg_return)
-
-    def create_policy_from_value_function(self, num_states: int, num_actions: int, V: np.ndarray, T: np.ndarray,
-                                          discount_factor: float, R: np.ndarray) -> np.ndarray:
-        """
-        Creates a tabular policy from a value function
-
-        :param num_states: the number of states
-        :param num_actions: the number of actions
-        :param V: the value function
-        :param T: the transition operator
-        :param discount_factor: the discount factor
-        :param R: the reward function
-        :return: the tabular policy
-        """
-        # Create a deterministic policy using the optimal value function
-        policy = np.zeros([num_states, num_actions])
-        for s in range(num_states):
-            # One step lookahead to find the best action for this state
-            A = self.one_step_lookahead(s, V, num_actions, num_states, T, discount_factor, R)
-            best_action = np.argmax(A)
-            # Always take the best action
-            policy[s, best_action] = 1.0
-        return policy

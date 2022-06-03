@@ -53,6 +53,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 16) {
         return "SARSA"
     }
+    if(agentType === 17) {
+        return "POLICY ITERATION"
+    }
     else {
         return "Unknown"
     }
