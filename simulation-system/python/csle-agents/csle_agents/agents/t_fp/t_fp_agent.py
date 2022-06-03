@@ -18,8 +18,8 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_common.dao.training.policy import Policy
-from csle_agents.base.base_agent import BaseAgent
-from csle_agents.t_spsa.t_spsa_agent import TSPSAAgent
+from csle_agents.agents.base.base_agent import BaseAgent
+from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
 import gym_csle_stopping_game.constants.constants as env_constants
 

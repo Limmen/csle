@@ -18,13 +18,13 @@ from csle_common.logging.log import Logger
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-from csle_agents.base.base_agent import BaseAgent
+from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class DifferentialEvolutionAgent(BaseAgent):
+class RandomSearchAgent(BaseAgent):
     """
-    Differential evolution agent
+    Random Search Agent
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -32,7 +32,7 @@ class DifferentialEvolutionAgent(BaseAgent):
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
-        Initializes the Differential evolution Agent
+        Initializes the Random Search Agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -43,14 +43,14 @@ class DifferentialEvolutionAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.DIFFERENTIAL_EVOLUTION
+        assert experiment_config.agent_type == AgentType.RANDOM_SEARCH
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using differential evolution
+        Performs the policy training for the given random seeds using random search
 
         :return: the training metrics and the trained policies
         """
@@ -68,25 +68,25 @@ class DifferentialEvolutionAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1,self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value+1):
+        for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
-        descr = f"Training of policies with the differential evolution algorithm using " \
+        descr = f"Training of policies with the random search algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1,self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value+1):
-                    exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+                for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
+                    exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1,self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value+1):
-                        exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.STOP_DISTRIBUTION_ATTACKER
+                    for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
+                        exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -96,7 +96,7 @@ class DifferentialEvolutionAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1,self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value+1):
+            for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
@@ -136,9 +136,8 @@ class DifferentialEvolutionAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.differential_evolution(
-                exp_result=exp_result, seed=seed, training_job=self.training_job,
-                random_seeds=self.experiment_config.random_seeds)
+            exp_result = self.random_search(exp_result=exp_result, seed=seed, training_job=self.training_job,
+                                   random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
             if self.save_to_metastore:
@@ -193,18 +192,16 @@ class DifferentialEvolutionAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.RANDOM_SEARCH.N, agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE,
-                agents_constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION,
-                agents_constants.DIFFERENTIAL_EVOLUTION.MUTATE,
+        return [agents_constants.RANDOM_SEARCH.N, agents_constants.RANDOM_SEARCH.DELTA,
                 agents_constants.RANDOM_SEARCH.L, agents_constants.RANDOM_SEARCH.THETA1,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def differential_evolution(self, exp_result: ExperimentResult, seed: int,
+    def random_search(self, exp_result: ExperimentResult, seed: int,
              training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
-        Runs the differential evolution algorithm
+        Runs the random search algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
@@ -212,14 +209,14 @@ class DifferentialEvolutionAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
-        L = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value
-        if agents_constants.DIFFERENTIAL_EVOLUTION.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.THETA1].value
+        L = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value
+        if agents_constants.RANDOM_SEARCH.THETA1 in self.experiment_config.hparams:
+            theta = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = DifferentialEvolutionAgent.initial_theta(L=L)
+                theta = RandomSearchAgent.initial_theta(L=L)
             else:
-                theta = DifferentialEvolutionAgent.initial_theta(L=2 * L)
+                theta = RandomSearchAgent.initial_theta(L=2 * L)
 
         # Initial eval
         policy = MultiThresholdStoppingPolicy(
@@ -228,139 +225,52 @@ class DifferentialEvolutionAgent(BaseAgent):
             player_type=self.experiment_config.player_type, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                 self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+            agent_type=AgentType.RANDOM_SEARCH)
         avg_metrics = self.eval_theta(
             policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
         policy.avg_R=J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THETAS].append(
-            DifferentialEvolutionAgent.round_vec(theta))
-
-        Logger.__call__().get_logger().info(
-            f"[DIFFERENTIAL-EVOLUTION] i: {0}, J:{J}, "
-            f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-            f"{J}, sigmoid(theta):{policy.thresholds()}, progress: {0}%")
+        exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(RandomSearchAgent.round_vec(theta))
 
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.N].value
-        population_size = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE].value
-        mutate = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.MUTATE].value
-        recombination = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION].value
-        bounds = self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.BOUNDS].value
+        N = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.N].value
+        delta = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.DELTA].value
 
         # Initial eval
-        population = []
-        values = []
-        for i in range(0,population_size):
-            indv = []
-            for j in range(len(bounds)):
-                indv.append(random.uniform(bounds[j][0],bounds[j][1]))
-            population.append(indv)
-
-        gen_sol = population[0]
-
-        candidate_policy = MultiThresholdStoppingPolicy(
-            theta=list(gen_sol), simulation_name=self.simulation_env_config.name,
+        policy = MultiThresholdStoppingPolicy(
+            theta=list(theta), simulation_name=self.simulation_env_config.name,
             states=self.simulation_env_config.state_space_config.states,
             player_type=self.experiment_config.player_type, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions,
-            experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.RANDOM_SEARCH)
         avg_metrics = self.eval_theta(
-            policy=candidate_policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        values.append(J)
+            policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+        J_0 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
-        # cycle through each generation (step #2)
-        for i in range(1,N+1):
-            gen_scores = [] # score keeping
+        for i in range(N):
 
-            # cycle through each individual in the population
-            for j in range(0, population_size):
-
-                #--- MUTATION (step #3.A) ---------------------+
-
-                # select three random vector index positions [0, popsize), not including current vector (j)
-                candidates = list(range(0,population_size))
-                candidates.remove(j)
-                random_index = random.sample(candidates, 3)
-
-                x_1 = population[random_index[0]]
-                x_2 = population[random_index[1]]
-                x_3 = population[random_index[2]]
-                x_t = population[j]     # target individual
-
-                # subtract x3 from x2, and create a new vector (x_diff)
-                x_diff = [x_2_i - x_3_i for x_2_i, x_3_i in zip(x_2, x_3)]
-
-                # multiply x_diff by the mutation factor (F) and add to x_1
-                v_donor = [x_1_i + mutate * x_diff_i for x_1_i, x_diff_i in zip(x_1, x_diff)]
-                # v_donor = self.ensure_bounds(v_donor, bounds)
-
-                #--- RECOMBINATION (step #3.B) ----------------+
-
-                v_trial = []
-                for k in range(len(x_t)):
-                    crossover = random.random()
-                    if crossover <= recombination:
-                        v_trial.append(v_donor[k])
-
-                    else:
-                        v_trial.append(x_t[k])
-                v_trial = np.array(v_trial)
-
-                #--- GREEDY SELECTION (step #3.C) -------------+
-
-                candidate_policy = MultiThresholdStoppingPolicy(
-                    theta=list(v_trial), simulation_name=self.simulation_env_config.name,
-                    states=self.simulation_env_config.state_space_config.states,
-                    player_type=self.experiment_config.player_type, L=L,
-                    actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                        self.experiment_config.player_idx].actions,
-                    experiment_config=self.experiment_config, avg_R=-1,
-                    agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-                avg_metrics = self.eval_theta(
-                    policy=candidate_policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-                score_trial = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-
-                candidate_policy = MultiThresholdStoppingPolicy(
-                    theta=list(x_t), simulation_name=self.simulation_env_config.name,
-                    states=self.simulation_env_config.state_space_config.states,
-                    player_type=self.experiment_config.player_type, L=L,
-                    actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                        self.experiment_config.player_idx].actions,
-                    experiment_config=self.experiment_config, avg_R=-1,
-                    agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-                avg_metrics = self.eval_theta(
-                    policy=candidate_policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-                score_target = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-
-                if score_trial > score_target:
-                    population[j] = v_trial
-                    gen_scores.append(score_trial)
-                else:
-                    gen_scores.append(score_target)
-
-            #--- SCORE KEEPING --------------------------------+
-
-            # gen_avg = sum(gen_scores) / popsize                         # current generation avg. fitness
-            gen_best = max(gen_scores)                                  # fitness of best individual
-            gen_sol = population[gen_scores.index(min(gen_scores))]     # solution of best individual
-            policy = MultiThresholdStoppingPolicy(
-                theta=gen_sol, simulation_name=self.simulation_env_config.name,
+            theta_candidate = self.random_perturbation(delta=delta, theta=theta)
+            candidate_policy = MultiThresholdStoppingPolicy(
+                theta=list(theta_candidate), simulation_name=self.simulation_env_config.name,
                 states=self.simulation_env_config.state_space_config.states,
                 player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                     self.experiment_config.player_idx].actions,
                 experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-            values.append(gen_best)
-            J=gen_best
+                agent_type=AgentType.RANDOM_SEARCH)
+            avg_metrics = self.eval_theta(
+                policy=candidate_policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            if J_candidate > J_0:
+                theta = theta_candidate
+                J_0 = J_candidate
+                policy=candidate_policy
 
             # Log average return
+            J = J_0
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -369,9 +279,9 @@ class DifferentialEvolutionAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
             # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THETAS].append(DifferentialEvolutionAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THRESHOLDS].append(
-                DifferentialEvolutionAgent.round_vec(policy.thresholds()))
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(RandomSearchAgent.round_vec(theta))
+            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THRESHOLDS].append(
+                RandomSearchAgent.round_vec(policy.thresholds()))
 
             # Log stop distribution
             for k,v in policy.stop_distributions().items():
@@ -398,7 +308,7 @@ class DifferentialEvolutionAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1,self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.L].value+1):
+            for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
                 exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
@@ -436,7 +346,7 @@ class DifferentialEvolutionAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[DIFFERENTIAL-EVOLUTION] i: {i}, J:{J}, "
+                    f"[RANDOM-SEARCH] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
@@ -450,7 +360,7 @@ class DifferentialEvolutionAgent(BaseAgent):
                                               actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                                   self.experiment_config.player_idx].actions,
                                               experiment_config=self.experiment_config, avg_R=J,
-                                              agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+                                              agent_type=AgentType.RANDOM_SEARCH)
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
@@ -486,10 +396,23 @@ class DifferentialEvolutionAgent(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            metrics = DifferentialEvolutionAgent.update_metrics(metrics=metrics, info=info)
-        avg_metrics = DifferentialEvolutionAgent.compute_avg_metrics(metrics=metrics)
+            metrics = RandomSearchAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = RandomSearchAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
+    def random_perturbation(self, delta: float, theta: np.ndarray) -> np.ndarray:
+        """
+        Performs a random perturbation to the theta vector
+
+        :param delta: the step size for the perturbation
+        :param theta: the current theta vector
+        :return: the perturbed theta vector
+        """
+        perturbed_theta = []
+        for l in range(len(theta)):
+            Delta = np.random.uniform(-delta, delta)
+            perturbed_theta.append(theta[l] + Delta)
+        return np.array(perturbed_theta)
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
@@ -602,29 +525,3 @@ class DifferentialEvolutionAgent(BaseAgent):
         :return: the rounded vector
         """
         return list(map(lambda x: round(x, 3), vec))
-
-    def ensure_bounds(self, vec, bounds) -> List:
-        """
-        Utility function to ensure parameter bounds
-
-        :param vec: the parameter vector
-        :param bounds: the bounds
-        :return: the bounded vector
-        """
-        vec_new = []
-        # cycle through each variable in vector
-        for i in range(len(vec)):
-
-            # variable exceedes the minimum boundary
-            if vec[i] < bounds[i][0]:
-                vec_new.append(bounds[i][0])
-
-            # variable exceedes the maximum boundary
-            if vec[i] > bounds[i][1]:
-                vec_new.append(bounds[i][1])
-
-            # the variable is fine
-            if bounds[i][0] <= vec[i] <= bounds[i][1]:
-                vec_new.append(vec[i])
-
-        return vec_new

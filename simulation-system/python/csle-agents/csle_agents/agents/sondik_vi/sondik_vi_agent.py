@@ -14,7 +14,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
-from csle_agents.base.base_agent import BaseAgent
+from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 from scipy.optimize import linprog
 from itertools import product

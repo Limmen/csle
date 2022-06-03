@@ -207,3 +207,19 @@ class CROSS_ENTROPY:
     THRESHOLDS = "thresholds"
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+
+
+class KIEFER_WOLFOWITZ:
+    """
+    String constants related to Kiefer-Wolfowitz
+    """
+    N = "N"
+    L = "L"
+    THETA1 = "theta1"
+    THETAS = "thetas"
+    THRESHOLDS = "thresholds"
+    GRADIENT_BATCH_SIZE = "gradient_batch_size"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    INITIAL_ALPHA = "initial_alpha"
+    DELTA = "delta"

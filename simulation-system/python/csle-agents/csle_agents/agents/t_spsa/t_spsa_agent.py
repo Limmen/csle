@@ -5,7 +5,6 @@ import time
 import gym
 import os
 import numpy as np
-from scipy import stats
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -19,13 +18,14 @@ from csle_common.logging.log import Logger
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-from csle_agents.base.base_agent import BaseAgent
+from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class CrossEntropyAgent(BaseAgent):
+class TSPSAAgent(BaseAgent):
     """
-    Cross-Entropy Agent
+    RL Agent implementing the T-SPSA algorithm from
+    (Hammar, Stadler 2021 - Intrusion Prevention through Optimal Stopping))
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -33,7 +33,7 @@ class CrossEntropyAgent(BaseAgent):
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
-        Initializes the Cross-Entropy Agent
+        Initializes the TSPSA agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -44,14 +44,14 @@ class CrossEntropyAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.CROSS_ENTROPY
+        assert experiment_config.agent_type == AgentType.T_SPSA
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using cross-entropy method
+        Performs the policy training for the given random seeds using T-SPSA
 
         :return: the training metrics and the trained policies
         """
@@ -69,25 +69,25 @@ class CrossEntropyAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1,self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value+1):
+        for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
-        descr = f"Training of policies with the cross-entropy algorithm using " \
+        descr = f"Training of policies with the T-SPSA algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.THETAS] = []
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1,self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value+1):
-                    exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
+                for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+                    exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1,self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value+1):
-                        exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.STOP_DISTRIBUTION_ATTACKER
+                    for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+                        exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
@@ -97,7 +97,7 @@ class CrossEntropyAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1,self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value+1):
+            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
@@ -137,7 +137,7 @@ class CrossEntropyAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.cross_entropy(exp_result=exp_result, seed=seed, training_job=self.training_job,
+            exp_result = self.spsa(exp_result=exp_result, seed=seed, training_job=self.training_job,
                                    random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
@@ -193,16 +193,16 @@ class CrossEntropyAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.CROSS_ENTROPY.N,
-                agents_constants.CROSS_ENTROPY.L, agents_constants.CROSS_ENTROPY.THETA1,
-                agents_constants.COMMON.EVAL_BATCH_SIZE,
-                agents_constants.COMMON.CONFIDENCE_INTERVAL,
+        return [agents_constants.T_SPSA.a, agents_constants.T_SPSA.c, agents_constants.T_SPSA.LAMBDA,
+                agents_constants.T_SPSA.A, agents_constants.T_SPSA.EPSILON, agents_constants.T_SPSA.N,
+                agents_constants.T_SPSA.L, agents_constants.T_SPSA.THETA1, agents_constants.COMMON.EVAL_BATCH_SIZE,
+                agents_constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def cross_entropy(self, exp_result: ExperimentResult, seed: int,
+    def spsa(self, exp_result: ExperimentResult, seed: int,
              training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
-        Runs the cross-entropy algorithm
+        Runs the SPSA algorithm
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
@@ -210,91 +210,75 @@ class CrossEntropyAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
-        L = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value
-        if agents_constants.CROSS_ENTROPY.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.THETA1].value
+        L = self.experiment_config.hparams[agents_constants.T_SPSA.L].value
+        if agents_constants.T_SPSA.THETA1 in self.experiment_config.hparams:
+            theta = self.experiment_config.hparams[agents_constants.T_SPSA.THETA1].value
         else:
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = CrossEntropyAgent.initial_theta(L=L)
+                theta = TSPSAAgent.initial_theta(L=L)
             else:
-                theta = CrossEntropyAgent.initial_theta(L=2 * L)
+                theta = TSPSAAgent.initial_theta(L=2*L)
 
         # Initial eval
         policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
+            theta=theta, simulation_name=self.simulation_env_config.name,
             states=self.simulation_env_config.state_space_config.states,
             player_type=self.experiment_config.player_type, L=L,
             actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                 self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.CROSS_ENTROPY)
+            agent_type=AgentType.T_SPSA)
         avg_metrics = self.eval_theta(
             policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
         policy.avg_R=J
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.THETAS].append(CrossEntropyAgent.round_vec(theta))
-
-        Logger.__call__().get_logger().info(
-            f"[CROSS-ENTROPY] i: {0}, J:{J}, "
-            f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-            f"{J}, sigmoid(theta):{policy.thresholds()}, progress: {0}%")
+        exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
 
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.N].value
-        K = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.K].value
-        lamb = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.LAMB].value
-
-        # Initial eval
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.CROSS_ENTROPY)
-        avg_metrics = self.eval_theta(
-            policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-
-        means = []
-        stds = []
-        for l in range(L):
-            means.append(random.uniform(0.1,0.9))
-            stds.append(random.uniform(0.01,0.1))
+        N = self.experiment_config.hparams[agents_constants.T_SPSA.N].value
+        a = self.experiment_config.hparams[agents_constants.T_SPSA.a].value
+        c = self.experiment_config.hparams[agents_constants.T_SPSA.c].value
+        A = self.experiment_config.hparams[agents_constants.T_SPSA.A].value
+        lamb = self.experiment_config.hparams[agents_constants.T_SPSA.LAMBDA].value
+        epsilon = self.experiment_config.hparams[agents_constants.T_SPSA.EPSILON].value
+        gradient_batch_size = self.experiment_config.hparams[agents_constants.T_SPSA.GRADIENT_BATCH_SIZE].value
 
         for i in range(N):
-            theta_samples_and_returns = []
-            norm_dist = stats.multivariate_normal(mean=means, cov=np.diag(stds))
-            for k in range(K):
-                theta_sample = norm_dist.rvs(1)
-                for i in range(len(theta_sample)):
-                    if theta_sample[i] > 1:
-                        theta_sample[i] = 0.99
-                    if theta_sample[i] < 0:
-                        theta_sample[i] = 0.01
-                policy = MultiThresholdStoppingPolicy(
-                    theta=list(theta_sample), simulation_name=self.simulation_env_config.name,
-                    states=self.simulation_env_config.state_space_config.states,
-                    player_type=self.experiment_config.player_type, L=L,
-                    actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                        self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                    agent_type=AgentType.CROSS_ENTROPY)
-                avg_metrics = self.eval_theta(
-                    policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-                J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-                theta_samples_and_returns.append((theta_sample, J))
-            sorted_samples = sorted(theta_samples_and_returns, key=lambda x: x[1], reverse=True)
-            top_k_index = max(1, int(K*lamb))
-            top_k_samples = sorted_samples[0:top_k_index]
-            means = np.mean(np.array(list(map(lambda x: x[0], top_k_samples))), axis=0)
-            stds = np.std(np.array(list(map(lambda x: x[0], top_k_samples))), axis=0)
-            for i in range(len(stds)):
-                if stds[i] <= 0:
-                    stds[i] = 0.01
-            J = top_k_samples[0][1]
+            # Step sizes and perturbation size
+            ak = self.standard_ak(a=a, A=A, epsilon=epsilon, k=i)
+            ck = self.standard_ck(c=c, lamb=lamb, k=i)
+
+            # Get estimated gradient
+            gk = self.batch_gradient(theta=theta, ck=ck, L=L, k=i, gradient_batch_size=gradient_batch_size)
+
+            # Adjust theta using SA
+            theta = [t + ak * gkk for t, gkk in zip(theta, gk)]
+
+            # Constrain (Theorem 1.A, Hammar Stadler 2021)
+            if self.experiment_config.player_type == PlayerType.DEFENDER:
+                for l in range(L - 1):
+                    theta[l] = max(theta[l], theta[l + 1])
+            else:
+                if self.experiment_config.player_type == PlayerType.ATTACKER:
+                    for l in range(0, L - 1):
+                        theta[l] = min(theta[l], theta[l + 1])
+                    for l in range(L, 2*L - 1):
+                        theta[l] = max(theta[l], theta[l + 1])
+
+            # Evaluate new theta
+            policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
+                                                  states=self.simulation_env_config.state_space_config.states,
+                                                  player_type=self.experiment_config.player_type, L=L,
+                                                  actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                                                      self.experiment_config.player_idx].actions,
+                                                  experiment_config=self.experiment_config, avg_R=-1,
+                                                  agent_type=AgentType.T_SPSA)
+            avg_metrics = self.eval_theta(
+                policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
 
             # Log average return
+            J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -303,9 +287,9 @@ class CrossEntropyAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
             # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.THETAS].append(CrossEntropyAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.CROSS_ENTROPY.THRESHOLDS].append(
-                CrossEntropyAgent.round_vec(policy.thresholds()))
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(TSPSAAgent.round_vec(theta))
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
+                TSPSAAgent.round_vec(policy.thresholds()))
 
             # Log stop distribution
             for k,v in policy.stop_distributions().items():
@@ -332,7 +316,7 @@ class CrossEntropyAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1,self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.L].value+1):
+            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
                 exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
@@ -370,7 +354,7 @@ class CrossEntropyAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[CROSS-ENTROPY] i: {i}, J:{J}, "
+                    f"[T-SPSA] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
@@ -378,13 +362,13 @@ class CrossEntropyAgent(BaseAgent):
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
 
-        policy = MultiThresholdStoppingPolicy(theta=list(theta), simulation_name=self.simulation_env_config.name,
+        policy = MultiThresholdStoppingPolicy(theta=theta, simulation_name=self.simulation_env_config.name,
                                               states=self.simulation_env_config.state_space_config.states,
                                               player_type=self.experiment_config.player_type, L=L,
                                               actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                                   self.experiment_config.player_idx].actions,
                                               experiment_config=self.experiment_config, avg_R=J,
-                                              agent_type=AgentType.CROSS_ENTROPY)
+                                              agent_type=AgentType.T_SPSA)
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
@@ -420,23 +404,9 @@ class CrossEntropyAgent(BaseAgent):
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
-            metrics = CrossEntropyAgent.update_metrics(metrics=metrics, info=info)
-        avg_metrics = CrossEntropyAgent.compute_avg_metrics(metrics=metrics)
+            metrics = TSPSAAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = TSPSAAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
-
-    def random_perturbation(self, delta: float, theta: np.ndarray) -> np.ndarray:
-        """
-        Performs a random perturbation to the theta vector
-
-        :param delta: the step size for the perturbation
-        :param theta: the current theta vector
-        :return: the perturbed theta vector
-        """
-        perturbed_theta = []
-        for l in range(len(theta)):
-            Delta = np.random.uniform(-delta, delta)
-            perturbed_theta.append(theta[l] + Delta)
-        return np.array(perturbed_theta)
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
@@ -539,6 +509,44 @@ class CrossEntropyAgent(BaseAgent):
             gradients.append(gk_i)
         batch_gk = (np.matrix(gradients).sum(axis=0)*(1/gradient_batch_size)).tolist()[0]
         return batch_gk
+
+    def estimate_gk(self, theta: List[float], deltak: List[float], ck: float, L: int):
+        """
+        Estimate the gradient at iteration k of the T-SPSA algorithm
+
+        :param theta: the current parameter vector
+        :param deltak: the perturbation direction vector
+        :param ck: the perturbation step size
+        :param L: the total number of stops for the defender
+        :return: the estimated gradient
+        """
+        # Get the two perturbed values of theta
+        # list comprehensions like this are quite nice
+        ta = [t + ck * dk for t, dk in zip(theta, deltak)]
+        tb = [t - ck * dk for t, dk in zip(theta, deltak)]
+
+        # Calculate g_k(theta_k)
+        avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
+            theta=ta, simulation_name=self.simulation_env_config.name,
+            player_type=self.experiment_config.player_type,
+            states=self.simulation_env_config.state_space_config.states, L=L,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.T_SPSA),
+            max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
+        )
+        J_a = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
+            theta=tb, simulation_name=self.simulation_env_config.name,
+            player_type=self.experiment_config.player_type,states=self.simulation_env_config.state_space_config.states,
+            L=L, actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+            agent_type=AgentType.T_SPSA),
+            max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+        J_b = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        gk = [(J_a - J_b) / (2 * ck * dk) for dk in deltak]
+
+        return gk
 
     @staticmethod
     def round_vec(vec) -> List[float]:

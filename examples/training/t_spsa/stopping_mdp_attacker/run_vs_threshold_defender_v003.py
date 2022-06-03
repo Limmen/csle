@@ -5,12 +5,12 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.t_fp.t_fp_agent import TFPAgent
+from csle_agents.agents.t_fp.t_fp_agent import TFPAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from sklearn.mixture import GaussianMixture
 from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
-from csle_agents.t_spsa.t_spsa_agent import TSPSAAgent
+from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 from scipy.stats import norm
 
 def get_obs_tensor():

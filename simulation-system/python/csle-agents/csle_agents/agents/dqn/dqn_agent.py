@@ -22,8 +22,7 @@ from csle_common.dao.training.dqn_policy import DQNPolicy
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.player_type import PlayerType
-from csle_common.dao.simulation_config.state_type import StateType
-from csle_agents.base.base_agent import BaseAgent
+from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
