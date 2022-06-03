@@ -1,9 +1,9 @@
 import math
 from typing import Union, List, Dict, Optional
-import random
 import time
 import gym
 import os
+import torch
 import numpy as np
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -12,19 +12,19 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.agent_type import AgentType
-from csle_common.dao.training.player_type import PlayerType
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
-from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
+from csle_agents.common.fnn_w_softmax import FNNwithSoftmax
 
 
-class RandomSearchAgent(BaseAgent):
+class ReinforceAgent(BaseAgent):
     """
-    Random Search Agent
+    Reinforce Agent
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -32,7 +32,7 @@ class RandomSearchAgent(BaseAgent):
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
-        Initializes the Random Search Agent
+        Initializes the Reinforce Agent
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -43,14 +43,15 @@ class RandomSearchAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.RANDOM_SEARCH
+        assert experiment_config.agent_type == AgentType.REINFORCE
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
+        self.machine_eps = np.finfo(np.float32).eps.item()
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using random search
+        Performs the policy training for the given random seeds using reinforce
 
         :return: the training metrics and the trained policies
         """
@@ -60,6 +61,7 @@ class RandomSearchAgent(BaseAgent):
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.POLICY_LOSSES)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_LENGTH)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_START)
@@ -68,26 +70,14 @@ class RandomSearchAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
-        for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
-            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-            exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
         descr = f"Training of policies with the random search algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THRESHOLDS] = []
-            if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
-                    exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
-            else:
-                for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
-                        exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.STOP_DISTRIBUTION_ATTACKER
-                                                     + f"_l={l}_s={s.id}"] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.POLICY_LOSSES] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH] = []
@@ -96,9 +86,6 @@ class RandomSearchAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
-            for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -136,8 +123,8 @@ class RandomSearchAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.random_search(exp_result=exp_result, seed=seed, training_job=self.training_job,
-                                   random_seeds=self.experiment_config.random_seeds)
+            exp_result = self.reinforce(exp_result=exp_result, seed=seed, training_job=self.training_job,
+                                        random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
             if self.save_to_metastore:
@@ -192,14 +179,15 @@ class RandomSearchAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.RANDOM_SEARCH.N, agents_constants.RANDOM_SEARCH.DELTA,
-                agents_constants.RANDOM_SEARCH.L, agents_constants.RANDOM_SEARCH.THETA1,
-                agents_constants.COMMON.EVAL_BATCH_SIZE,
+        return [agents_constants.REINFORCE.N, agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
-                agents_constants.COMMON.RUNNING_AVERAGE]
+                agents_constants.COMMON.RUNNING_AVERAGE,
+                agents_constants.COMMON.LEARNING_RATE_DECAY_RATE, agents_constants.COMMON.LEARNING_RATE_EXP_DECAY,
+                agents_constants.COMMON.NUM_HIDDEN_LAYERS, agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER,
+                agents_constants.COMMON.ACTIVATION_FUNCTION, agents_constants.COMMON.OPTIMIZER]
 
-    def random_search(self, exp_result: ExperimentResult, seed: int,
-             training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
+    def reinforce(self, exp_result: ExperimentResult, seed: int,
+                  training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
         Runs the random search algorithm
 
@@ -209,83 +197,102 @@ class RandomSearchAgent(BaseAgent):
         :param random_seeds: list of seeds
         :return: the updated experiment result and the trained policy
         """
-        L = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value
-        if agents_constants.RANDOM_SEARCH.THETA1 in self.experiment_config.hparams:
-            theta = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.THETA1].value
-        else:
-            if self.experiment_config.player_type == PlayerType.DEFENDER:
-                theta = RandomSearchAgent.initial_theta(L=L)
-            else:
-                theta = RandomSearchAgent.initial_theta(L=2 * L)
-
-        # Initial eval
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.RANDOM_SEARCH)
-        avg_metrics = self.eval_theta(
-            policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-        policy.avg_R=J
-        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(J)
-        exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(RandomSearchAgent.round_vec(theta))
-
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.N].value
-        delta = self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.DELTA].value
+        N = self.experiment_config.hparams[agents_constants.REINFORCE.N].value
 
-        # Initial eval
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.RANDOM_SEARCH)
-        avg_metrics = self.eval_theta(
-            policy=policy,  max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-        J_0 = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        # Setup policy network
+        policy_network = FNNwithSoftmax(
+            input_dim=self.env.observation_space.shape[0],
+            output_dim=self.env.action_space.n,
+            hidden_dim=self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value,
+            num_hidden_layers=self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value,
+            hidden_activation=self.experiment_config.hparams[agents_constants.COMMON.ACTIVATION_FUNCTION].value
+        )
+
+        # Setup device
+        policy_network.to(torch.device(self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value))
+
+        # Setup optimizer
+        if self.experiment_config.hparams[agents_constants.COMMON.OPTIMIZER].value == agents_constants.COMMON.ADAM:
+            optimizer = torch.optim.Adam(
+                policy_network.parameters(),
+                lr=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value)
+        elif self.experiment_config.hparams[agents_constants.COMMON.OPTIMIZER].value == agents_constants.COMMON.SGD:
+            optimizer = torch.optim.SGD(
+                policy_network.parameters(),
+                lr=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE].value)
+        else:
+            raise ValueError(f"Optimizer: {self.experiment_config.hparams[agents_constants.COMMON.OPTIMIZER].value}"
+                             f" not recognized")
+
+        # Setup LR decay
+        if self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_EXP_DECAY].value:
+            lr_decay = torch.optim.lr_scheduler.ExponentialLR(
+                optimizer=optimizer,
+                gamma=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_DECAY_RATE].value)
 
         for i in range(N):
-
-            theta_candidate = self.random_perturbation(delta=delta, theta=theta)
-            candidate_policy = MultiThresholdStoppingPolicy(
-                theta=list(theta_candidate), simulation_name=self.simulation_env_config.name,
+            rewards_batch = []
+            log_probs_batch = []
+            metrics = {}
+            ts = time.time()
+            save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
+            policy = FNNWithSoftmaxPolicy(
+                policy_network=policy_network, simulation_name=self.simulation_env_config.name,
+                save_path=save_path,
                 states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
                 actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions,
-                experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.RANDOM_SEARCH)
-            avg_metrics = self.eval_theta(
-                policy=candidate_policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
-            J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            if J_candidate > J_0:
-                theta = theta_candidate
-                J_0 = J_candidate
-                policy=candidate_policy
+                    self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type,
+                experiment_config=self.experiment_config,
+                avg_R=-1, input_dim=policy_network.input_dim, output_dim=policy_network.output_dim)
+            policy.save_policy_network()
 
-            # Log average return
-            J = J_0
+            # Run a batch of rollouts
+            for j in range(self.experiment_config.hparams[agents_constants.REINFORCE.GRADIENT_BATCH_SIZE].value):
+                cumulative_reward = 0.0
+                rewards = []
+                log_probs = []
+                done = False
+                o = self.env.reset()
+                while not done:
+                    # get action
+                    action, log_prob = policy.get_action_and_log_prob(state=o)
+
+                    # Take a step in the environment
+                    o_prime, reward, done, info = self.env.step(action)
+
+                    # Update metrics
+                    cumulative_reward += reward
+                    rewards.append(cumulative_reward)
+                    log_probs.append(log_prob)
+
+                    # Move to the next state
+                    o=o_prime
+
+                # Accumulate batch
+                rewards_batch.append(rewards)
+                log_probs_batch.append(log_probs)
+
+                metrics = ReinforceAgent.update_metrics(metrics=metrics, info=info)
+
+            avg_metrics = ReinforceAgent.compute_avg_metrics(metrics=metrics)
+
+            # Perform Batch Policy Gradient updates
+            loss = self.training_step(saved_rewards=rewards_batch, saved_log_probs=log_probs_batch,
+                                      policy_network=policy_network,
+                                      optimizer=optimizer,
+                                      gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value)
+            loss = loss.item()
+
+            # Log metrics
+            J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             policy.avg_R = J
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
+            exp_result.all_metrics[seed][agents_constants.COMMON.POLICY_LOSSES].append(loss)
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
-
-            # Log thresholds
-            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THETAS].append(RandomSearchAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.RANDOM_SEARCH.THRESHOLDS].append(
-                RandomSearchAgent.round_vec(policy.thresholds()))
-
-            # Log stop distribution
-            for k,v in policy.stop_distributions().items():
-                exp_result.all_metrics[seed][k].append(v)
 
             # Log intrusion lengths
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
@@ -308,14 +315,6 @@ class RandomSearchAgent(BaseAgent):
                 ExperimentUtil.running_average(
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1,self.experiment_config.hparams[agents_constants.RANDOM_SEARCH.L].value+1):
-                exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
-                    round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    ExperimentUtil.running_average(
-                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
-                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log baseline returns
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
@@ -346,73 +345,31 @@ class RandomSearchAgent(BaseAgent):
                                                                 id=self.exp_execution.id)
 
                 Logger.__call__().get_logger().info(
-                    f"[RANDOM-SEARCH] i: {i}, J:{J}, "
+                    f"[REINFORCE] i: {i}, J:{J}, "
                     f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
-                    f"stop distributions:{policy.stop_distributions()}")
+                    f"progress: {round(progress*100,2)}%")
 
-        policy = MultiThresholdStoppingPolicy(theta=list(theta), simulation_name=self.simulation_env_config.name,
-                                              states=self.simulation_env_config.state_space_config.states,
-                                              player_type=self.experiment_config.player_type, L=L,
-                                              actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                                  self.experiment_config.player_idx].actions,
-                                              experiment_config=self.experiment_config, avg_R=J,
-                                              agent_type=AgentType.RANDOM_SEARCH)
+        ts = time.time()
+        save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
+        policy = FNNWithSoftmaxPolicy(
+            policy_network=policy_network, simulation_name=self.simulation_env_config.name,
+            save_path=save_path,
+            states=self.simulation_env_config.state_space_config.states,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                self.experiment_config.player_idx].actions, player_type=self.experiment_config.player_type,
+            experiment_config=self.experiment_config,
+            avg_R=exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1],
+            input_dim=policy_network.input_dim, output_dim=policy_network.output_dim)
+        policy.save_policy_network()
+
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
-            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+            MetastoreFacade.save_fnn_w_softmax_policy(fnn_w_softmax_policy=policy)
         return exp_result
-
-    def eval_theta(self, policy: MultiThresholdStoppingPolicy, max_steps: int = 200) -> Dict[str, Union[float, int]]:
-        """
-        Evaluates a given threshold policy by running monte-carlo simulations
-
-        :param policy: the policy to evaluate
-        :return: the average metrics of the evaluation
-        """
-        eval_batch_size = self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value
-        metrics = {}
-        for j in range(eval_batch_size):
-            done = False
-            o = self.env.reset()
-            l = int(o[0])
-            b1 = o[1]
-            t = 1
-            r = 0
-            a = 0
-            info = {}
-            while not done and t <= max_steps:
-                Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
-                if self.experiment_config.player_type == PlayerType.ATTACKER:
-                    policy.opponent_strategy = self.env.static_defender_strategy
-                    a = policy.action(o=o)
-                else:
-                    a = policy.action(o=o)
-                o, r, done, info = self.env.step(a)
-                l = int(o[0])
-                b1 = o[1]
-                t += 1
-            metrics = RandomSearchAgent.update_metrics(metrics=metrics, info=info)
-        avg_metrics = RandomSearchAgent.compute_avg_metrics(metrics=metrics)
-        return avg_metrics
-
-    def random_perturbation(self, delta: float, theta: np.ndarray) -> np.ndarray:
-        """
-        Performs a random perturbation to the theta vector
-
-        :param delta: the step size for the perturbation
-        :param theta: the current theta vector
-        :return: the perturbed theta vector
-        """
-        perturbed_theta = []
-        for l in range(len(theta)):
-            Delta = np.random.uniform(-delta, delta)
-            perturbed_theta.append(theta[l] + Delta)
-        return np.array(perturbed_theta)
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
@@ -446,21 +403,6 @@ class RandomSearchAgent(BaseAgent):
         return avg_metrics
 
     @staticmethod
-    def initial_theta(L: int) -> np.ndarray:
-        """
-        Initializes theta randomly
-
-        :param L: the dimension of theta
-        :return: the initialized theta vector
-        """
-        theta_1 = []
-        for k in range(L):
-            theta_1.append(np.random.uniform(-3, 3))
-        theta_1 = np.array(theta_1)
-        return theta_1
-
-
-    @staticmethod
     def round_vec(vec) -> List[float]:
         """
         Rounds a vector to 3 decimals
@@ -469,3 +411,58 @@ class RandomSearchAgent(BaseAgent):
         :return: the rounded vector
         """
         return list(map(lambda x: round(x, 3), vec))
+
+    def training_step(self, saved_rewards : List[List[float]], saved_log_probs : List[List[torch.Tensor]],
+                      policy_network: FNNwithSoftmax, optimizer: torch.optim.Optimizer, gamma: float) -> torch.Tensor:
+        """
+        Performs a training step of the REINFORCE algorithm
+
+        :param saved_rewards list of rewards encountered in the latest episode trajectory
+        :param saved_log_probs list of log-action probabilities (log p(a|s)) encountered in the latest episode trajectory
+        :param policy_network: the policy network
+        :param optimizer: the optimizer for updating the weights
+        :param gamma: the discount factor
+        :return: loss
+        """
+        policy_loss = []
+        num_batches = len(saved_rewards)
+
+        for batch in range(num_batches):
+            R = 0
+            returns = []
+
+            # Create discounted returns. When episode is finished we can go back and compute the observed cumulative
+            # discounted reward by using the observed rewards
+            for r in saved_rewards[batch][::-1]:
+                R = r + gamma * R
+                returns.insert(0, R)
+            num_rewards = len(returns)
+
+            # convert list to torch tensor
+            returns = torch.tensor(returns)
+
+            # normalize
+            std = returns.std()
+            if num_rewards < 2:
+                std = 0
+            returns = (returns - returns.mean()) / (std + self.machine_eps)
+
+            # Compute PG "loss" which in reality is the expected reward, which we want to maximize with gradient ascent
+            for log_prob, R in zip(saved_log_probs[batch], returns):
+                # negative log prob since we are doing gradient descent (not ascent)
+                policy_loss.append(-log_prob * R)
+
+        # Compute gradient and update models
+        # reset gradients
+        optimizer.zero_grad()
+        # expected loss over the batch
+        policy_loss_total = torch.stack(policy_loss).sum()
+        policy_loss = policy_loss_total/num_batches
+        # perform backprop
+        policy_loss.backward()
+        # maybe clip gradient
+        if self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value:
+            torch.nn.utils.clip_grad_norm_(policy_network.parameters(), 1)
+        # gradient descent step
+        optimizer.step()
+        return policy_loss

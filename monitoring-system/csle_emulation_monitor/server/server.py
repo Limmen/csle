@@ -721,6 +721,55 @@ def remove_all_dqn_policies():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/fnnwsoftmaxpolicies', methods=['GET'])
+def fnn_w_softmax_policies():
+    policies = MetastoreFacade.list_fnn_w_softmax_policies()
+    policies_dicts = list(map(lambda x: x.to_dict(), policies))
+    response = jsonify(policies_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/fnnwsoftmaxpoliciesids', methods=['GET'])
+def fnn_w_softmax_policies_ids():
+    policies_ids = MetastoreFacade.list_fnn_w_softmax_policies_ids()
+    response_dicts = []
+    for tup in policies_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/fnnwsoftmaxpolicies/get/<fnn_w_softmax_policy_id>', methods=['GET'])
+def get_fnn_w_softmax_policy(fnn_w_softmax_policy_id: int):
+    policy = MetastoreFacade.get_fnn_w_softmax_policy(id=fnn_w_softmax_policy_id)
+    if policy is not None:
+        response = jsonify(policy.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/fnnwsoftmaxpolicies/remove/<fnn_w_softmax_policy_id>', methods=['POST'])
+def remove_fnn_w_softmax_policy(fnn_w_softmax_policy_id: int):
+    policy = MetastoreFacade.get_fnn_w_softmax_policy(id=fnn_w_softmax_policy_id)
+    if policy is not None:
+        MetastoreFacade.remove_fnn_w_softmax_policy(fnn_w_softmax_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/fnnwsoftmaxpolicies/remove', methods=['POST'])
+def remove_all_fnn_w_softmax_policies():
+    policies = MetastoreFacade.list_fnn_w_softmax_policies()
+    for policy in policies:
+        MetastoreFacade.remove_fnn_w_softmax_policy(fnn_w_softmax_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/tabularpolicies', methods=['GET'])
 def tabular_policies():
     tabular_policies = MetastoreFacade.list_tabular_policies()

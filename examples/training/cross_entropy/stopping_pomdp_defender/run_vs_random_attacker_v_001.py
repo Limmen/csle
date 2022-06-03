@@ -40,7 +40,10 @@ if __name__ == '__main__':
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
-                descr="the number of samples to include when computing the running avg")
+                descr="the number of samples to include when computing the running avg"),
+            agents_constants.COMMON.GAMMA: HParam(
+                value=0.99, name=agents_constants.COMMON.GAMMA,
+                descr="the discount factor")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

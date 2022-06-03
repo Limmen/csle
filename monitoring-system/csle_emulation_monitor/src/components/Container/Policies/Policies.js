@@ -10,6 +10,7 @@ import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
 import PPOPolicy from "./PPOPolicy/PPOPolicy";
 import DQNPolicy from "./DQNPolicy/DQNPolicy";
+import FnnWSoftmaxPolicy from "./FnnWSoftmaxPolicy/FnnWSoftmaxPolicy";
 import TabularPolicy from "./TabularPolicy/TabularPolicy";
 import AlphaVecPolicy from "./AlphaVecPolicy/AlphaVecPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -50,11 +51,18 @@ const Policies = () => {
     const [loadingDQNPolicy, setLoadingDQNPolicy] = useState(true);
     const [filteredDQNPoliciesIds, setFilteredDQNPoliciesIds] = useState([]);
     const [dqnPoliciesSearchString, setDQNPoliciesSearchString] = useState("");
+    const [fnnWSoftmaxPoliciesIds, setFnnWSoftmaxPoliciesIds] = useState([]);
+    const [selectedFnnWSoftmaxPolicy, setSelectedFnnWSoftmaxPolicy] = useState(null);
+    const [selectedFnnWSoftmaxPolicyId, setSelectedFnnWSoftmaxPolicyId] = useState(null);
+    const [loadingFnnWSoftmaxPolicy, setLoadingFnnWSoftmaxPolicy] = useState(true);
+    const [filteredFnnWSoftmaxPoliciesIds, setFilteredFnnWSoftmaxPoliciesIds] = useState([]);
+    const [fnnWSoftmaxPoliciesSearchString, setFnnWSoftmaxPoliciesSearchString] = useState("");
     const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
     const [loadingPPOPolicies, setLoadingPPOPolicies] = useState(true);
     const [loadingDQNPolicies, setLoadingDQNPolicies] = useState(true);
     const [loadingTabularPolicies, setLoadingTabularPolicies] = useState(true);
     const [loadingAlphaVecPolicies, setLoadingAlphaVecPolicies] = useState(true);
+    const [loadingFnnWSoftmaxPolicies, setLoadingFnnWSoftmaxPolicies] = useState(true);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -223,6 +231,40 @@ const Policies = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/fnnwsoftmaxpoliciesids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const fnnWSoftmaxPoliciesIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                    }
+                })
+                setFnnWSoftmaxPoliciesIds(fnnWSoftmaxPoliciesIds)
+                setFilteredFnnWSoftmaxPoliciesIds(fnnWSoftmaxPoliciesIds)
+                console.log("fetched fnn ids")
+                setLoadingFnnWSoftmaxPolicies(false)
+                if (fnnWSoftmaxPoliciesIds.length > 0) {
+                    setSelectedFnnWSoftmaxPolicyId(fnnWSoftmaxPoliciesIds[0])
+                    fetchFnnWSoftmaxPolicy(fnnWSoftmaxPoliciesIds[0])
+                    setLoadingFnnWSoftmaxPolicy(true)
+                } else {
+                    setLoadingFnnWSoftmaxPolicy(false)
+                    setSelectedFnnWSoftmaxPolicy(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     useEffect(() => {
         setLoadingMultiThresholdPolicies(true)
         fetchMultiThresholdPoliciesIds()
@@ -234,8 +276,10 @@ const Policies = () => {
         fetchAlphaVecPoliciesIds()
         setLoadingDQNPolicies(true)
         fetchDQNPoliciesIds()
+        setLoadingFnnWSoftmaxPolicies(true)
+        fetchFnnWSoftmaxPoliciesIds()
     }, [fetchMultiThresholdPoliciesIds, fetchPPOPoliciesIds, fetchDQNPoliciesIds, fetchTabularPoliciesIds,
-        fetchAlphaVecPoliciesIds]);
+        fetchAlphaVecPoliciesIds, fetchFnnWSoftmaxPoliciesIds]);
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
@@ -293,6 +337,64 @@ const Policies = () => {
     const removePPOPolicy = (ppoPolicy) => {
         setLoadingPPOPolicies(true)
         removePpoPoliciesRequest(ppoPolicy.id)
+    }
+
+    const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/fnnwsoftmaxpolicies/remove/' + fnn_w_softmax_policy_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchFnnWSoftmaxPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/fnnwsoftmaxpolicies/get/' + fnn_w_softmax_policy_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedFnnWSoftmaxPolicy(response)
+                setLoadingFnnWSoftmaxPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/fnnwsoftmaxpolicies/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchFnnWSoftmaxPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeFnnWSoftmaxPolicy = (fnnWSoftmaxPolicy) => {
+        setLoadingFnnWSoftmaxPolicies(true)
+        removeFnnWSoftmaxPoliciesRequest(fnnWSoftmaxPolicy.id)
     }
 
     const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
@@ -537,6 +639,11 @@ const Policies = () => {
         removeAllPpoPoliciesRequest()
     }
 
+    const removeAllFnnWSoftmaxPolicies = () => {
+        setLoadingFnnWSoftmaxPolicies(true)
+        removeAllFnnWSoftmaxPoliciesRequest()
+    }
+
     const removeAllDQNPolicies = () => {
         setLoadingDQNPolicies(true)
         removeAllDQNPoliciesRequest()
@@ -560,6 +667,11 @@ const Policies = () => {
     const refreshPPOPolicies = () => {
         setLoadingPPOPolicies(true)
         fetchPPOPoliciesIds()
+    }
+
+    const refreshFnnWSoftmaxPolicies = () => {
+        setLoadingFnnWSoftmaxPolicies(true)
+        fetchFnnWSoftmaxPoliciesIds()
     }
 
     const refreshDQNPolicies = () => {
@@ -595,6 +707,12 @@ const Policies = () => {
         </Tooltip>
     );
 
+    const renderRemoveAllFnnWSoftmaxPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all Feed-forward neural network with softmax output policies.
+        </Tooltip>
+    );
+
     const renderRemoveAllDQNPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Remove all DQN policies.
@@ -622,6 +740,12 @@ const Policies = () => {
     const renderPPORefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload PPO policies from the backend
+        </Tooltip>
+    );
+
+    const renderFnnWSoftmaxRefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload feed-forward neural network policies with softmax outputs from the backend
         </Tooltip>
     );
 
@@ -683,6 +807,12 @@ const Policies = () => {
         setSelectedPpoPolicyId(selectedId)
         fetchPpoPolicy(selectedId)
         setLoadingPpoPolicy(true)
+    }
+
+    const updateSelectedFnnWSoftmaxPolicyId = (selectedId) => {
+        setSelectedFnnWSoftmaxPolicyId(selectedId)
+        fetchFnnWSoftmaxPolicy(selectedId)
+        setLoadingFnnWSoftmaxPolicy(true)
     }
 
     const updateSelectedDQNPolicyId = (selectedId) => {
@@ -853,6 +983,86 @@ const Policies = () => {
                         overlay={renderRemoveAllPPOPoliciesTooltip}
                     >
                         <Button variant="danger" onClick={removeAllPPOPolicies}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
+
+    const SelectFnnWSoftmaxPolicyOrSpinner = (props) => {
+        if (!props.loadingFnnWSoftmaxPolicies && props.fnnWSoftmaxPoliciesIds.length === 0) {
+            return (
+                <div>
+                    <span className="emptyText">No feed-forward neural network policies are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderFnnWSoftmaxRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshFnnWSoftmaxPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+        if (props.loadingFnnWSoftmaxPolicies) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching policies... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Feed-forward neural network policy:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedFnnWSoftmaxPolicyId}
+                                defaultValue={props.selectedFnnWSoftmaxPolicyId}
+                                options={props.fnnWSoftmaxPoliciesIds}
+                                onChange={updateSelectedFnnWSoftmaxPolicyId}
+                                placeholder="Select policy"
+                            />
+                        </div>
+                    </div>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderFnnWSoftmaxRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshFnnWSoftmaxPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllFnnWSoftmaxPoliciesTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllFnnWSoftmaxPolicies}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1154,6 +1364,33 @@ const Policies = () => {
         }
     }
 
+    const FnnWSoftmaxPolicyAccordion = (props) => {
+        if (props.loadingFnnWSoftmaxPolicy || props.selectedFnnWSoftmaxPolicy === null || props.selectedFnnWSoftmaxPolicy === undefined) {
+            if(props.loadingFnnWSoftmaxPolicy) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching policy... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    <FnnWSoftmaxPolicy policy={props.selectedFnnWSoftmaxPolicy} wrapper={wrapper}
+                               key={props.selectedFnnWSoftmaxPolicy.id}
+                                       removeFnnWSoftmaxPolicy={removeFnnWSoftmaxPolicy}
+                    />
+                </Accordion>
+            )
+        }
+    }
+
     const DQNPolicyAccordion = (props) => {
         if (props.loadingDQNPolicy || props.selectedDQNPolicy === null || props.selectedDQNPolicy === undefined) {
             if(props.loadingDQNPolicy) {
@@ -1274,10 +1511,6 @@ const Policies = () => {
         return (searchVal === "" || ppoPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
-    const searchDQNPoliciesFilter = (dqnPolicyId, searchVal) => {
-        return (searchVal === "" || dqnPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
-    }
-
     const searchPPOPolicyChange = (event) => {
         var searchVal = event.target.value
         const fPoliciesIds = ppoPoliciesIds.filter(policy => {
@@ -1302,6 +1535,56 @@ const Policies = () => {
         } else {
             setSelectedPpoPolicy(null)
         }
+    }
+
+    const searchPPOPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchPPOPolicyChange(event)
+        },
+        350
+    );
+
+    //fnn
+
+    const searchFnnWSoftmaxPoliciesFilter = (fnnWSoftmaxPolicyId, searchVal) => {
+        return (searchVal === "" || fnnWSoftmaxPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchFnnWSoftmaxPolicyChange = (event) => {
+        var searchVal = event.target.value
+        const fPoliciesIds = fnnWSoftmaxPoliciesIds.filter(policy => {
+            return searchPPOPoliciesFilter(policy, searchVal)
+        });
+        setFilteredFnnWSoftmaxPoliciesIds(fPoliciesIds)
+        setFnnWSoftmaxPoliciesSearchString(searchVal)
+
+        var selectedPolicyRemoved = false
+        if(!loadingFnnWSoftmaxPolicy && fPoliciesIds.length > 0){
+            for (let i = 0; i < fPoliciesIds.length; i++) {
+                if(selectedFnnWSoftmaxPolicy !== null && selectedFnnWSoftmaxPolicy !== undefined &&
+                    selectedFnnWSoftmaxPolicy.id === fPoliciesIds[i].value) {
+                    selectedPolicyRemoved = true
+                }
+            }
+            if(!selectedPolicyRemoved) {
+                setSelectedFnnWSoftmaxPolicyId(fPoliciesIds[0])
+                fetchFnnWSoftmaxPolicy(fPoliciesIds[0])
+                setLoadingFnnWSoftmaxPolicy(true)
+            }
+        } else {
+            setSelectedPpoPolicy(null)
+        }
+    }
+
+    const searchFnnWSoftmaxPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchFnnWSoftmaxPolicyChange(event)
+        },
+        350
+    );
+
+    const searchDQNPoliciesFilter = (dqnPolicyId, searchVal) => {
+        return (searchVal === "" || dqnPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchDQNPolicyChange = (event) => {
@@ -1329,13 +1612,6 @@ const Policies = () => {
             setSelectedDQNPolicy(null)
         }
     }
-
-    const searchPPOPoliciesHandler = useDebouncedCallback(
-        (event) => {
-            searchPPOPolicyChange(event)
-        },
-        350
-    );
 
     const searchDQNPoliciesHandler = useDebouncedCallback(
         (event) => {
@@ -1586,6 +1862,40 @@ const Policies = () => {
             </div>
 
             <DQNPolicyAccordion loadingDQNPolicy={loadingDQNPolicy} selectedDQNPolicy={selectedDQNPolicy}/>
+
+            <div className="row fnnWSoftmaxPolicies simulationTracesHeader">
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectFnnWSoftmaxPolicyOrSpinner loadingFnnWSoftmaxPolicies={loadingFnnWSoftmaxPolicies}
+                                                  fnnWSoftmaxPoliciesIds={filteredFnnWSoftmaxPoliciesIds}
+                                                  selectedFnnWSoftmaxPolicyId={selectedFnnWSoftmaxPolicyId}
+                        />
+                    </h4>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="fnnWSoftmaxPoliciesSearchField" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="fnnWSoftmaxPoliciesSearchLabel"
+                                aria-describedby="fnnWSoftmaxPoliciesSearchField"
+                                onChange={searchFnnWSoftmaxPoliciesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
+
+            <FnnWSoftmaxPolicyAccordion loadingFnnWSoftmaxPolicy={loadingFnnWSoftmaxPolicy}
+                                        selectedFnnWSoftmaxPolicy={selectedFnnWSoftmaxPolicy}/>
+
         </div>
     );
 }

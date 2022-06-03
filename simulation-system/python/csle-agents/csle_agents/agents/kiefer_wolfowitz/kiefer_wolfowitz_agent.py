@@ -436,43 +436,6 @@ class KieferWolfowitzAgent(BaseAgent):
         return avg_metrics
 
     @staticmethod
-    def standard_ak(a: int, A: int, epsilon: float, k: int) -> float:
-        """
-        Gets the step size for gradient ascent at iteration k
-
-        :param a: a scalar hyperparameter
-        :param A: a scalar hyperparameter
-        :param epsilon: the epsilon scalar hyperparameter
-        :param k: the iteration index
-        :return: the step size a_k
-        """
-        return a / (k + 1 + A) ** epsilon
-
-    @staticmethod
-    def standard_ck(c: float, lamb: float, k: int) -> float:
-        """
-        Gets the step size of perturbations at iteration k
-
-        :param c: a scalar hyperparameter
-        :param lamb: (lambda) a scalar hyperparameter
-        :param k: the iteration
-        :return: the pertrubation step size
-        """
-        '''Create a generator for values of c_k in the standard form.'''
-        return c / (k + 1) ** lamb
-
-    @staticmethod
-    def standard_deltak(dimension: int, k: int) -> List[float]:
-        """
-        Gets the perturbation direction at iteration k
-
-        :param k: the iteration
-        :param dimension: the dimension of the perturbation vector
-        :return: delta_k the perturbation vector at iteration k
-        """
-        return [random.choice((-1, 1)) for _ in range(dimension)]
-
-    @staticmethod
     def initial_theta(L: int) -> np.ndarray:
         """
         Initializes theta randomly

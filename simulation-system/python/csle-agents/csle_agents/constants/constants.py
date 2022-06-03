@@ -20,11 +20,13 @@ class COMMON:
     NUM_TRAINING_TIMESTEPS = "num_training_timesteps"
     NUM_NEURONS_PER_HIDDEN_LAYER = "num_neurons_per_hidden_layer"
     NUM_HIDDEN_LAYERS = "num_hidden_layers"
+    ACTIVATION_FUNCTION = "activation_function"
     BATCH_SIZE = "batch_size"
     LEARNING_RATE = "learning_rate"
     DEVICE = "device"
     GAMMA = "gamma"
     EXPLOITABILITY = "exploitability"
+    POLICY_LOSSES = "policy_losses"
     RUNNING_AVERAGE_EXPLOITABILITY = "running_average_exploitability"
     CONFIDENCE_INTERVAL = "confidence_interval"
     MAX_ENV_STEPS = "max_env_steps"
@@ -39,6 +41,11 @@ class COMMON:
     RUNNING_AVERAGE_INTRUSION_START = "running_average_intrusion_start"
     RUNNING_AVERAGE_TIME_HORIZON = "running_average_time_horizon"
     NUM_PARALLEL_ENVS = "num_parallel_envs"
+    OPTIMIZER = "optimizer"
+    ADAM = "Adam"
+    SGD = "SGD"
+    LEARNING_RATE_EXP_DECAY = "learning_rate_exp_decay"
+    LEARNING_RATE_DECAY_RATE = "learning_rate_decay_rate"
 
 
 class PPO:
@@ -162,6 +169,7 @@ class DQN:
     BUFFER_SIZE = "buffer_size"
     DQN_BATCH_SIZE = "dqn_batch_size"
 
+
 class RANDOM_SEARCH:
     """
     String constants related to random search
@@ -174,6 +182,7 @@ class RANDOM_SEARCH:
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     DELTA = "delta"
+
 
 class DIFFERENTIAL_EVOLUTION:
     """
@@ -255,3 +264,12 @@ class PI:
     NUM_ACTIONS = "num_actions"
     N = "N"
     INITIAL_POLICY = "initial_policy"
+
+
+class REINFORCE:
+    """
+    String constants related to REINFORCE
+    """
+    N = "N"
+    GRADIENT_BATCH_SIZE = "gradient_batch_size"
+    CLIP_GRADIENT = "clip_gradient"

@@ -20,6 +20,7 @@ from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
 from csle_common.dao.training.dqn_policy import DQNPolicy
+from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
 
 
 class MetastoreFacade:
@@ -2013,4 +2014,105 @@ class MetastoreFacade:
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"DQN policy saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def list_fnn_w_softmax_policies() -> List[FNNWithSoftmaxPolicy]:
+        """
+        :return: A list of FNN with softmax policies in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_fnn_w_softmax_policy_record_to_dto(x), records))
+                return records
+
+
+    @staticmethod
+    def list_fnn_w_softmax_policies_ids() -> List[Dict]:
+        """
+        :return: A list of FNN with softmax policies ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def _convert_fnn_w_softmax_policy_record_to_dto(fnn_w_softmax_policy_record) -> FNNWithSoftmaxPolicy:
+        """
+        Converts a FNN with softmax policy record fetched from the metastore into a DTO
+
+        :param fnn_w_softmax_policy_record: the record to convert
+        :return: the DTO representing the record
+        """
+        fnn_w_softmax_policy_json = json.dumps(fnn_w_softmax_policy_record[1], indent=4, sort_keys=True)
+        fnn_w_softmax_policy: FNNWithSoftmaxPolicy = FNNWithSoftmaxPolicy.from_dict(json.loads(fnn_w_softmax_policy_json))
+        fnn_w_softmax_policy.id = fnn_w_softmax_policy_record[0]
+        return fnn_w_softmax_policy
+
+    @staticmethod
+    def get_fnn_w_softmax_policy(id: int) -> Union[None, FNNWithSoftmaxPolicy]:
+        """
+        Function for fetching a FNN with softmax policy with a given id from the metastore
+
+        :param id: the id of the FNN with softmax policy
+        :return: The FNN with softmax policy or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_fnn_w_softmax_policy_record_to_dto(fnn_w_softmax_policy_record=record)
+                return record
+
+    @staticmethod
+    def remove_fnn_w_softmax_policy(fnn_w_softmax_policy: FNNWithSoftmaxPolicy) -> None:
+        """
+        Removes a FNN with softmax policy from the metastore
+
+        :param fnn_w_softmax_policy: the policy to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing fnn_w_softmax policy with "
+                                             f"id:{fnn_w_softmax_policy.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s",
+                            (fnn_w_softmax_policy.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"FNN with softmax policy "
+                                                     f"with id {fnn_w_softmax_policy.id} deleted successfully")
+
+    @staticmethod
+    def save_fnn_w_softmax_policy(fnn_w_softmax_policy: FNNWithSoftmaxPolicy) -> Union[Any, int]:
+        """
+        Saves a FNN with softmax policy to the metastore
+
+        :param fnn_w_softmax_policy: the policy to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing FNN with softmax policy in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                policy_json_str = json.dumps(fnn_w_softmax_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
+                            f"(policy, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, fnn_w_softmax_policy.simulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"FNN with softmax policy saved successfully")
                 return id_of_new_row

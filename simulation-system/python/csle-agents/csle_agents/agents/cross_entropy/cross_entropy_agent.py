@@ -424,20 +424,6 @@ class CrossEntropyAgent(BaseAgent):
         avg_metrics = CrossEntropyAgent.compute_avg_metrics(metrics=metrics)
         return avg_metrics
 
-    def random_perturbation(self, delta: float, theta: np.ndarray) -> np.ndarray:
-        """
-        Performs a random perturbation to the theta vector
-
-        :param delta: the step size for the perturbation
-        :param theta: the current theta vector
-        :return: the perturbed theta vector
-        """
-        perturbed_theta = []
-        for l in range(len(theta)):
-            Delta = np.random.uniform(-delta, delta)
-            perturbed_theta.append(theta[l] + Delta)
-        return np.array(perturbed_theta)
-
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
             -> Dict[str, List[Union[float, int]]]:
@@ -470,43 +456,6 @@ class CrossEntropyAgent(BaseAgent):
         return avg_metrics
 
     @staticmethod
-    def standard_ak(a: int, A: int, epsilon: float, k: int) -> float:
-        """
-        Gets the step size for gradient ascent at iteration k
-
-        :param a: a scalar hyperparameter
-        :param A: a scalar hyperparameter
-        :param epsilon: the epsilon scalar hyperparameter
-        :param k: the iteration index
-        :return: the step size a_k
-        """
-        return a / (k + 1 + A) ** epsilon
-
-    @staticmethod
-    def standard_ck(c: float, lamb: float, k: int) -> float:
-        """
-        Gets the step size of perturbations at iteration k
-
-        :param c: a scalar hyperparameter
-        :param lamb: (lambda) a scalar hyperparameter
-        :param k: the iteration
-        :return: the pertrubation step size
-        """
-        '''Create a generator for values of c_k in the standard form.'''
-        return c / (k + 1) ** lamb
-
-    @staticmethod
-    def standard_deltak(dimension: int, k: int) -> List[float]:
-        """
-        Gets the perturbation direction at iteration k
-
-        :param k: the iteration
-        :param dimension: the dimension of the perturbation vector
-        :return: delta_k the perturbation vector at iteration k
-        """
-        return [random.choice((-1, 1)) for _ in range(dimension)]
-
-    @staticmethod
     def initial_theta(L: int) -> np.ndarray:
         """
         Initializes theta randomly
@@ -519,26 +468,6 @@ class CrossEntropyAgent(BaseAgent):
             theta_1.append(np.random.uniform(-3, 3))
         theta_1 = np.array(theta_1)
         return theta_1
-
-    def batch_gradient(self, theta: List[float], ck: float, L: int, k: int,
-                       gradient_batch_size: int = 1):
-        """
-        Computes a batch of gradients and returns the average
-
-        :param theta: the current parameter vector
-        :param k: the current training iteration
-        :param ck: the perturbation step size
-        :param L: the total number of stops for the defender
-        :param gradient_batch_size: the number of gradients to include in the batch
-        :return: the average of the batch of gradients
-        """
-        gradients = []
-        for i in range(gradient_batch_size):
-            deltak_i = self.standard_deltak(dimension=len(theta), k=k)
-            gk_i = self.estimate_gk(theta=theta, deltak=deltak_i, ck=ck, L=L)
-            gradients.append(gk_i)
-        batch_gk = (np.matrix(gradients).sum(axis=0)*(1/gradient_batch_size)).tolist()[0]
-        return batch_gk
 
     @staticmethod
     def round_vec(vec) -> List[float]:

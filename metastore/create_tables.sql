@@ -187,3 +187,12 @@ CREATE TABLE IF NOT EXISTS dqn_policies (
 );
 GRANT ALL ON dqn_policies TO csle;
 GRANT USAGE, SELECT ON SEQUENCE dqn_policies_id_seq TO csle;
+
+-- Create table that stores the fnn_w_softmax_policies --
+CREATE TABLE IF NOT EXISTS fnn_w_softmax_policies (
+    id serial PRIMARY KEY,
+    policy json NOT NULL,
+    simulation_name TEXT references simulations(name)
+);
+GRANT ALL ON fnn_w_softmax_policies TO csle;
+GRANT USAGE, SELECT ON SEQUENCE fnn_w_softmax_policies_id_seq TO csle;

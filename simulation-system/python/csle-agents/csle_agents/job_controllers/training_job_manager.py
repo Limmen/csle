@@ -3,8 +3,8 @@ import csle_common.constants.constants as constants
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_agents.t_spsa.t_spsa_agent import TSPSAAgent
-from csle_agents.ppo.ppo_agent import PPOAgent
+from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
+from csle_agents.agents.ppo.ppo_agent import PPOAgent
 
 
 class TrainingJobManager:

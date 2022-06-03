@@ -1361,6 +1361,7 @@ class METADATA_STORE:
     TABULAR_POLICIES_TABLE = "tabular_policies"
     ALPHA_VEC_POLICIES_TABLE = "alpha_vec_policies"
     DQN_POLICIES_TABLE = "dqn_policies"
+    FNN_W_SOFTMAX_POLICIES_TABLE = "fnn_w_softmax_policies"
 
 
 class CONTAINER_POOLS:
