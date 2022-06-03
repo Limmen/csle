@@ -18,16 +18,16 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class QLearningAgent(BaseAgent):
+class SARSAAgent(BaseAgent):
     """
-    Q-learning Agent
+    SARSA Agent
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
-        Initializes the q-learning agent
+        Initializes the SARSA agent
 
         :param simulation_env_config: configuration of the simulation environment
         :param experiment_config: the experiment configuration
@@ -36,7 +36,7 @@ class QLearningAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=None,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.Q_LEARNING
+        assert experiment_config.agent_type == AgentType.SARSA
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
         self.env = gym.make(self.simulation_env_config.gym_env_name,
@@ -44,7 +44,7 @@ class QLearningAgent(BaseAgent):
 
     def train(self) -> ExperimentExecution:
         """
-        Runs the q-learning algorithm to compute Q*
+        Runs the SARSA algorithm to compute Q*
 
         :return: the results
         """
@@ -56,7 +56,7 @@ class QLearningAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
         exp_result.plot_metrics.append(agents_constants.Q_LEARNING.INITIAL_STATE_VALUES)
 
-        descr = f"Computation of V* with the Q-learning algorithm using " \
+        descr = f"Computation of V* with the SARSA algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
 
         for seed in self.experiment_config.random_seeds:
@@ -155,7 +155,7 @@ class QLearningAgent(BaseAgent):
 
     def q_learning(self, exp_result: ExperimentResult, seed: int) -> ExperimentResult:
         """
-        Runs the q-learning algorithm
+        Runs the SARSA algorithm
 
         :param exp_result: the experiment result object
         :param seed: the random seed
@@ -166,7 +166,7 @@ class QLearningAgent(BaseAgent):
         A = self.experiment_config.hparams[agents_constants.Q_LEARNING.A].value
         epsilon = self.experiment_config.hparams[agents_constants.Q_LEARNING.EPSILON].value
         N = self.experiment_config.hparams[agents_constants.Q_LEARNING.N].value
-        Logger.__call__().get_logger().info(f"Starting the q-learning algorithm, N:{N}, "
+        Logger.__call__().get_logger().info(f"Starting the SARSA algorithm, N:{N}, "
                                             f"num_states:{len(S)}, discount_factor: {discount_factor}, "
                                             f"num_actions: {len(A)}, epsilon: {epsilon}")
         avg_returns, running_avg_returns, initial_state_values, q_table, policy = self.train_q_learning(
@@ -218,8 +218,9 @@ class QLearningAgent(BaseAgent):
                 s_prime = int(o[2])
             else:
                 s_prime = o
-            q_table, count_table = self.q_learning_update(q_table=q_table, count_table=count_table,
-                                                          s=s, a=a, r=r, s_prime=s_prime, gamma=gamma)
+            a1 = self.eps_greedy(q_table=q_table, A=A, s=s_prime, epsilon=epsilon)
+            q_table, count_table = self.sarsa_update(q_table=q_table, count_table=count_table,
+                                                     s=s, a=a, r=r, s_prime=s_prime, gamma=gamma, a1=a1)
 
             if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 steps.append(i)
@@ -240,7 +241,7 @@ class QLearningAgent(BaseAgent):
 
             if i % self.experiment_config.log_every == 0 or i == 0:
                 Logger.__call__().get_logger().info(
-                    "[Q-Learning] i:{}, progress:{}, V(s0):{}, J:{}, running_avg_J:{}".format(
+                    "[SARSA] i:{}, progress:{}, V(s0):{}, J:{}, running_avg_J:{}".format(
                         i, prog, state_val, avg_return, running_average_returns))
 
             s = s_prime
@@ -301,10 +302,11 @@ class QLearningAgent(BaseAgent):
         """
         return float(1)/math.pow(n, 2/3)
 
-    def q_learning_update(self, q_table: np.ndarray, count_table: np.ndarray,
-                          s: int, a: int, r: float, s_prime: int, gamma: float) -> Tuple[np.ndarray,np.ndarray]:
+    def sarsa_update(self, q_table: np.ndarray, count_table: np.ndarray,
+                     s: int, a: int, r: float, s_prime: int, gamma: float, a1: int) \
+            -> Tuple[np.ndarray,np.ndarray]:
         """
-        Watkin's Q-learning update
+        Watkin's SARSA update
 
         :param q_table: the Q-table
         :param count_table: the count table (used for determining SA step sizes)
@@ -313,12 +315,13 @@ class QLearningAgent(BaseAgent):
         :param r: the reward
         :param s_prime: the next sampled state
         :param gamma: the discount factor
+        :param a1: the next eaction
         :return: the updated q table and updated count table
         """
         count_table[s][a] = count_table[s_prime][a] + 1
         alpha = self.step_size(count_table[s][a])
         q_table[s][a] = q_table[s][a] + alpha*(
-                (r + gamma*np.max(q_table[s_prime])) - q_table[s][a]
+                (r + gamma*q_table[s_prime][a1]) - q_table[s][a]
         )
         return q_table, count_table
 

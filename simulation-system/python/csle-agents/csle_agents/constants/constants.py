@@ -227,7 +227,18 @@ class KIEFER_WOLFOWITZ:
 
 class Q_LEARNING:
     """
-    String constants related to Q_LEARNING
+    String constants related to Q-learning
+    """
+    N = "N"
+    EPSILON = "epsilon"
+    S = "S"
+    A = "A"
+    INITIAL_STATE_VALUES = "initial_state_values"
+
+
+class SARSA:
+    """
+    String constants related to Sarsa
     """
     N = "N"
     EPSILON = "epsilon"

@@ -21,3 +21,4 @@ class AgentType(IntEnum):
     CROSS_ENTROPY=13
     KIEFER_WOLFOWITZ=14
     Q_LEARNING=15
+    SARSA=16

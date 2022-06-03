@@ -50,6 +50,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 15) {
         return "Q_LEARNING"
     }
+    if(agentType === 16) {
+        return "SARSA"
+    }
     else {
         return "Unknown"
     }
