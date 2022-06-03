@@ -24,3 +24,4 @@ class AgentType(IntEnum):
     SARSA=16
     POLICY_ITERATION=17
     SHAPLEY_ITERATION=18
+    HSVI_OS_POSG=19

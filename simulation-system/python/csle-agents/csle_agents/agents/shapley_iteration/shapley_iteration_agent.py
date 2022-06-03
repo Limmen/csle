@@ -57,8 +57,7 @@ class ShapleyIterationAgent(BaseAgent):
 
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.SHAPLEY_ITERATION.DELTA] = []
 
         # Initialize training job
         if self.training_job is None:

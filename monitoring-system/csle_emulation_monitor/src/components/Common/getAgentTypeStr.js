@@ -59,6 +59,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 18) {
         return "SHAPLEY ITERATION"
     }
+    if(agentType === 19) {
+        return "HSVI for OS-POSGs"
+    }
     else {
         return "Unknown"
     }
