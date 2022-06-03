@@ -56,6 +56,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 17) {
         return "POLICY ITERATION"
     }
+    if(agentType === 18) {
+        return "SHAPLEY ITERATION"
+    }
     else {
         return "Unknown"
     }

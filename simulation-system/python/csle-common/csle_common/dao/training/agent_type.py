@@ -23,3 +23,4 @@ class AgentType(IntEnum):
     Q_LEARNING=15
     SARSA=16
     POLICY_ITERATION=17
+    SHAPLEY_ITERATION=18

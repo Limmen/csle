@@ -273,3 +273,16 @@ class REINFORCE:
     N = "N"
     GRADIENT_BATCH_SIZE = "gradient_batch_size"
     CLIP_GRADIENT = "clip_gradient"
+
+
+class SHAPLEY_ITERATION:
+    """
+    String constants related to Shapley Iteration
+    """
+    N = "N"
+    DELTA = "delta"
+    TRANSITION_TENSOR = "transition_tensor"
+    REWARD_TENSOR = "reward_tensor"
+    STATE_SPACE = "state_space"
+    ACTION_SPACE_PLAYER_1 = "action_space_player_1"
+    ACTION_SPACE_PLAYER_2 = "action_space_player_2"
