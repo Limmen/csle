@@ -82,9 +82,16 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 const trainingJobsIds = response.map((id_obj, index) => {
+                    var lbl = ""
+                    if(id_obj.running){
+                        lbl = "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation + " (running)"
+                    } else {
+                        lbl = "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation
+                    }
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation
+                        label: lbl,
+                        running: id_obj.running
                     }
                 })
                 setTrainingJobsIds(trainingJobsIds)
@@ -134,9 +141,16 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 const dataCollectionJobIds = response.map((id_obj, index) => {
+                    var lbl = ""
+                    if(id_obj.running) {
+                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + " (running)"
+                    } else {
+                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                    }
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        label: lbl,
+                        running: id_obj.running
                     }
                 })
                 setDataCollectionJobsIds(dataCollectionJobIds)
@@ -186,9 +200,16 @@ const Jobs = () => {
             .then(res => res.json())
             .then(response => {
                 const systemIdentificationJobsIds = response.map((id_obj, index) => {
+                    var lbl = ""
+                    if(id_obj.running) {
+                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + " (running)"
+                    } else {
+                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                    }
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        label: lbl,
+                        running: id_obj.running
                     }
                 })
                 setSystemIdentificationJobsIds(systemIdentificationJobsIds)
@@ -502,48 +523,101 @@ const Jobs = () => {
     }
 
     const runningTrainingJobsChange = (event) => {
+        var filteredTJobIds = null
         if(!showOnlyRunningTrainingJobs) {
-            const filteredTrainJobs = filteredTrainingJobsIds.filter(job => {
+            filteredTJobIds = filteredTrainingJobsIds.filter(job => {
                 return job.running
             });
-            setFilteredTrainingJobsIds(filteredTrainJobs)
+            setFilteredTrainingJobsIds(filteredTJobIds)
         } else {
-            const filteredTrainJobs = trainingJobs.filter(job => {
+            filteredTJobIds = trainingJobsIds.filter(job => {
                 return trainingJobSearchFilter(job, trainingJobsSearchString)
             });
-            setFilteredTrainingJobsIds(filteredTrainJobs)
+            setFilteredTrainingJobsIds(filteredTJobIds)
         }
         setShowOnlyRunningTrainingJobs(!showOnlyRunningTrainingJobs)
+
+        var selectedTrainingJobRemoved = false
+        if(!loadingSelectedTrainingJob && filteredTJobIds.length > 0){
+            for (let i = 0; i < filteredTJobIds.length; i++) {
+                if(selectedTrainingJob !== null && selectedTrainingJob !== undefined &&
+                    selectedTrainingJob.id === filteredTJobIds[i].value) {
+                    selectedTrainingJobRemoved = true
+                }
+            }
+            if(!selectedTrainingJobRemoved) {
+                setSelectedTrainingJobId(filteredTJobIds[0])
+                fetchTrainingJob(filteredTJobIds[0])
+                setLoadingSelectedTrainingJob(true)
+            }
+        } else {
+            setSelectedTrainingJob(null)
+        }
     }
 
     const runningDataCollectionJobsChange = (event) => {
+        var filteredDCJobsIds= null
         if (!showOnlyRunningDataCollectionJobs) {
-            const filteredDataCollectionJobs = filteredDataCollectionJobs.filter(job => {
+            filteredDCJobsIds = filteredDataCollectionJobsIds.filter(job => {
                 return job.running
             });
-            setFilteredDataCollectionJobsIds(filteredDataCollectionJobs)
+            setFilteredDataCollectionJobsIds(filteredDCJobsIds)
         } else {
-            const filteredDataCollectionJobs = dataCollectionJobs.filter(job => {
+            filteredDCJobsIds = dataCollectionJobsIds.filter(job => {
                 return dataCollectionJobSearchFilter(job, dataCollectionJobsSearchString)
             });
-            setFilteredDataCollectionJobsIds(filteredDataCollectionJobs)
+            setFilteredDataCollectionJobsIds(filteredDCJobsIds)
         }
         setShowOnlyRunningDataCollectionJobs(!showOnlyRunningDataCollectionJobs)
+
+        var selectedDataCollectionJobRemoved = false
+        if(!loadingSelectedDataCollectionJob && filteredDCJobsIds.length > 0){
+            for (let i = 0; i < filteredDCJobsIds.length; i++) {
+                if(selectedDataCollectionJob !== null && selectedDataCollectionJob !== undefined &&
+                    selectedDataCollectionJob.id === filteredDCJobsIds[i].value) {
+                    selectedDataCollectionJobRemoved = true
+                }
+            }
+            if(!selectedDataCollectionJobRemoved) {
+                setSelectedDataCollectionJobId(filteredDCJobsIds[0])
+                fetchDataCollectionJob(filteredDCJobsIds[0])
+                setLoadingSelectedDataCollectionJob(true)
+            }
+        } else {
+            setSelectedDataCollectionJob(null)
+        }
     }
 
     const runningSystemIdentificationJobsChange = (event) => {
+        var filteredSIJobsIds = null
         if(!showOnlyRunningSystemIdentificationJobs) {
-            const filteredSystemIdentificationJobs = filteredSystemIdentificationJobs.filter(job => {
+            filteredSIJobsIds = filteredSystemIdentificationJobsIds.filter(job => {
                 return job.running
             });
-            setFilteredSystemIdentificationJobsIds(filteredSystemIdentificationJobs)
+            setFilteredSystemIdentificationJobsIds(filteredSIJobsIds)
         } else {
-            const filteredSystemIdentificationJobs = systemIdentificationJobs.filter(job => {
+            filteredSIJobsIds = systemIdentificationJobsIds.filter(job => {
                 return systemIdentificationJobSearchFilter(job, systemIdentificationJobsSearchString)
             });
-            setFilteredSystemIdentificationJobsIds(filteredSystemIdentificationJobs)
+            setFilteredSystemIdentificationJobsIds(filteredSIJobsIds)
         }
         setShowOnlyRunningSystemIdentificationJobs(!showOnlyRunningSystemIdentificationJobs)
+        var selectedSystemIdentificationJobRemoved = false
+        if(!loadingSelectedSystemIdentificationJob && filteredSIJobsIds.length > 0){
+            for (let i = 0; i < filteredSIJobsIds.length; i++) {
+                if(selectedSystemIdentificationJob !== null && selectedSystemIdentificationJob !== undefined &&
+                    selectedSystemIdentificationJob.id === filteredSIJobsIds[i].value) {
+                    selectedSystemIdentificationJobRemoved = true
+                }
+            }
+            if(!selectedSystemIdentificationJobRemoved) {
+                setSelectedSystemIdentificationJobId(filteredSIJobsIds[0])
+                fetchSystemIdentificationJob(filteredSIJobsIds[0])
+                setLoadingSelectedSystemIdentificationJob(true)
+            }
+        } else {
+            setSelectedSystemIdentificationJob(null)
+        }
     }
 
     const searchTrainingJobHandler = useDebouncedCallback(
@@ -1233,6 +1307,16 @@ const Jobs = () => {
                     </Form>
                 </div>
                 <div className="col-sm-2">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="trainingSwitch"
+                            label="Show only running jobs"
+                            className="runningCheck"
+                            onChange={runningTrainingJobsChange}
+                        />
+                    </Form>
                 </div>
             </div>
 
@@ -1267,6 +1351,16 @@ const Jobs = () => {
                     </Form>
                 </div>
                 <div className="col-sm-2">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="systemIdentificationJobSwitch"
+                            label="Show only running jobs"
+                            className="runningCheck"
+                            onChange={runningDataCollectionJobsChange}
+                        />
+                    </Form>
                 </div>
             </div>
             <DataCollectionJobAccordion selectedDataCollectionJob={selectedDataCollectionJob}
@@ -1300,6 +1394,16 @@ const Jobs = () => {
                     </Form>
                 </div>
                 <div className="col-sm-2">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="systemIdentificationJobSwitch"
+                            label="Show only running jobs"
+                            className="runningCheck"
+                            onChange={runningSystemIdentificationJobsChange}
+                        />
+                    </Form>
                 </div>
             </div>
             <SystemIdentificationJobAccordion selectedSystemIdentificationJob={selectedSystemIdentificationJob}

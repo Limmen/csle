@@ -110,7 +110,8 @@ CREATE TABLE IF NOT EXISTS training_jobs (
     id serial PRIMARY KEY,
     config json NOT NULL,
     simulation_name TEXT references simulations(name) ON DELETE CASCADE,
-    emulation_name TEXT references emulations(name) ON DELETE CASCADE
+    emulation_name TEXT references emulations(name) ON DELETE CASCADE,
+    pid int NOT NULL
 );
 GRANT ALL ON training_jobs TO csle;
 GRANT USAGE, SELECT ON SEQUENCE training_jobs_id_seq TO csle;
@@ -119,7 +120,8 @@ GRANT USAGE, SELECT ON SEQUENCE training_jobs_id_seq TO csle;
 CREATE TABLE IF NOT EXISTS system_identification_jobs (
     id serial PRIMARY KEY,
     config json NOT NULL,
-    emulation_name TEXT references emulations(name)
+    emulation_name TEXT references emulations(name),
+    pid int NOT NULL
 );
 GRANT ALL ON system_identification_jobs TO csle;
 GRANT USAGE, SELECT ON SEQUENCE system_identification_jobs_id_seq TO csle;
@@ -146,7 +148,8 @@ GRANT USAGE, SELECT ON SEQUENCE system_models_id_seq TO csle;
 CREATE TABLE IF NOT EXISTS data_collection_jobs (
     id serial PRIMARY KEY,
     config json NOT NULL,
-    emulation_name TEXT references emulations(name)
+    emulation_name TEXT references emulations(name),
+    pid int NOT NULL
     );
 GRANT ALL ON data_collection_jobs TO csle;
 GRANT USAGE, SELECT ON SEQUENCE data_collection_jobs_id_seq TO csle;

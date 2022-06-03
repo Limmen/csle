@@ -241,11 +241,18 @@ def emulations():
 @app.route('/emulationsdataids', methods=['GET'])
 def emulationids():
     emulation_ids = MetastoreFacade.list_emulations_ids()
+    rc_emulations = ContainerManager.list_running_emulations()
     response_dicts = []
+    print(rc_emulations)
     for tup in emulation_ids:
+        print(tup[1])
+        running = False
+        if tup[1] in rc_emulations:
+            running = True
         response_dicts.append({
             "id": tup[0],
-            "emulation": tup[1]
+            "emulation": tup[1],
+            "running": running
         })
     response = jsonify(response_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -889,7 +896,8 @@ def trainingjobsids():
         response_dicts.append({
             "id": tup[0],
             "simulation": tup[1],
-            "emulation": tup[2]
+            "emulation": tup[2],
+            "running": EmulationUtil.check_pid(tup[3])
         })
     response = jsonify(response_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -969,7 +977,8 @@ def datacollectionjobsids():
     for tup in data_collection_jobs_ids:
         response_dicts.append({
             "id": tup[0],
-            "emulation": tup[1]
+            "emulation": tup[1],
+            "running": EmulationUtil.check_pid(tup[2])
         })
     response = jsonify(response_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -1049,7 +1058,8 @@ def system_identification_jobs_ids():
     for tup in system_identification_jobs_ids:
         response_dicts.append({
             "id": tup[0],
-            "emulation": tup[1]
+            "emulation": tup[1],
+            "running": EmulationUtil.check_pid(tup[2])
         })
     response = jsonify(response_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")

@@ -347,7 +347,6 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Simulation {config.name} uninstalled successfully")
 
-
     @staticmethod
     def save_emulation_trace(emulation_trace: EmulationTrace) -> Union[Any, int]:
         """
@@ -1110,7 +1109,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT id,simulation_name,emulation_name FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
+                cur.execute(f"SELECT id,simulation_name,emulation_name,pid FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
                 records = cur.fetchall()
                 return records
 
@@ -1147,9 +1146,9 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
-                            f"(config, simulation_name, emulation_name) "
-                            f"VALUES (%s, %s, %s) RETURNING id", (training_job_str, training_job.simulation_env_name,
-                                                              training_job.emulation_env_name))
+                            f"(config, simulation_name, emulation_name, pid) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id", (training_job_str, training_job.simulation_env_name,
+                                                              training_job.emulation_env_name, training_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Training job saved successfully")
@@ -1196,7 +1195,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
+                cur.execute(f"SELECT id,emulation_name,pid FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
                 records = cur.fetchall()
                 return records
 
@@ -1235,9 +1234,10 @@ class MetastoreFacade:
                 data_collection_job_json = json.dumps(data_collection_job.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
-                            f"(config, emulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (data_collection_job_json,
-                                                              data_collection_job.emulation_env_name))
+                            f"(config, emulation_name, pid) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (data_collection_job_json,
+                                                                  data_collection_job.emulation_env_name,
+                                                                  data_collection_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Data collection job saved successfully")
@@ -1491,7 +1491,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
+                cur.execute(f"SELECT id,emulation_name,pid FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
                 records = cur.fetchall()
                 return records
 
@@ -1530,9 +1530,10 @@ class MetastoreFacade:
                 system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
                                                       sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} "
-                            f"(config, emulation_name) "
-                            f"VALUES (%s, %s) RETURNING id", (system_identification_job_json,
-                                                              system_identification_job.emulation_env_name))
+                            f"(config, emulation_name, pid) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (system_identification_job_json,
+                                                                  system_identification_job.emulation_env_name,
+                                                                  system_identification_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"System identification job saved successfully")

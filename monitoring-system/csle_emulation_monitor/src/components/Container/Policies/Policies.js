@@ -251,7 +251,6 @@ const Policies = () => {
                 })
                 setFnnWSoftmaxPoliciesIds(fnnWSoftmaxPoliciesIds)
                 setFilteredFnnWSoftmaxPoliciesIds(fnnWSoftmaxPoliciesIds)
-                console.log("fetched fnn ids")
                 setLoadingFnnWSoftmaxPolicies(false)
                 if (fnnWSoftmaxPoliciesIds.length > 0) {
                     setSelectedFnnWSoftmaxPolicyId(fnnWSoftmaxPoliciesIds[0])

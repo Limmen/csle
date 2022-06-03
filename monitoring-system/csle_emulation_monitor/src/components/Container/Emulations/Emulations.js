@@ -40,9 +40,16 @@ const Emulations = () => {
             .then(res => res.json())
             .then(response => {
                 const emulationIds = response.map((id_obj, index) => {
+                    var lbl = ""
+                    if(!id_obj.running) {
+                        lbl = "ID: " + id_obj.id + ", name: " + id_obj.emulation
+                    } else {
+                        lbl = "ID: " + id_obj.id + ", name: " + id_obj.emulation + " (running)"
+                    }
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", name: " + id_obj.simulation
+                        running: id_obj.running,
+                        label: lbl
                     }
                 })
                 setEmulationIds(emulationIds)
@@ -175,18 +182,36 @@ const Emulations = () => {
     }
 
     const runningEmulationsChange = (event) => {
+        var filteredEmsIds = null
         if (!showOnlyRunningEmulations) {
-            const filteredEms = filteredEmulationsIds.filter(emulation => {
-                return emulation.running
+            filteredEmsIds = filteredEmulationsIds.filter(emIdObj => {
+                return emIdObj.running
             });
-            setFilteredEmulationsIds(filteredEms)
+            setFilteredEmulationsIds(filteredEmsIds)
         } else {
-            const filteredEms = emulationIds.filter(emulation => {
-                return searchFilter(emulation, searchString)
+            filteredEmsIds = emulationIds.filter(emIdObj => {
+                return searchFilter(emIdObj, searchString)
             });
-            setFilteredEmulationsIds(filteredEms)
+            setFilteredEmulationsIds(filteredEmsIds)
         }
         setShowOnlyRunningEmulations(!showOnlyRunningEmulations)
+
+        var selectedEmulationRemoved = false
+        if(!loadingSelectedEmulation && filteredEmsIds.length > 0){
+            for (let i = 0; i < filteredEmsIds.length; i++) {
+                if(selectedEmulation !== null && selectedEmulation !== undefined &&
+                    selectedEmulation.id === filteredEmsIds[i].value) {
+                    selectedEmulationRemoved = true
+                }
+            }
+            if(!selectedEmulationRemoved) {
+                setSelectedEmulationId(filteredEmsIds[0])
+                fetchEmulation(filteredEmsIds[0])
+                setLoadingSelectedEmulation(true)
+            }
+        } else {
+            setSelectedEmulation(null)
+        }
     }
 
     const searchHandler = useDebouncedCallback(
@@ -384,6 +409,16 @@ const Emulations = () => {
                     </Form>
                 </div>
                 <div className="col-sm-2">
+                    <Form>
+                        <Form.Check
+                            inline
+                            type="switch"
+                            id="runningEmulationsSwitch"
+                            label="Show only running emulations"
+                            className="runningCheck"
+                            onChange={runningEmulationsChange}
+                        />
+                    </Form>
                 </div>
             </div>
             <EmulationAccordion loadingSelectedEmulation={loadingSelectedEmulation}
