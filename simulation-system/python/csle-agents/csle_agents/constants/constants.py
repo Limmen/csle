@@ -164,7 +164,6 @@ class DQN:
     BUFFER_SIZE = "buffer_size"
     DQN_BATCH_SIZE = "dqn_batch_size"
 
-
 class RANDOM_SEARCH:
     """
     String constants related to random search
@@ -177,7 +176,6 @@ class RANDOM_SEARCH:
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     DELTA = "delta"
-
 
 class DIFFERENTIAL_EVOLUTION:
     """
@@ -194,3 +192,18 @@ class DIFFERENTIAL_EVOLUTION:
     MUTATE = "mutate"
     RECOMBINATION = "recombination"
     BOUNDS = "bounds"
+
+
+class CROSS_ENTROPY:
+    """
+    String constants related to the cross-entropy
+    """
+    L = "L"
+    N = "N"
+    K = "K"
+    LAMB = "lamb"
+    THETA1 = "theta1"
+    THETAS = "thetas"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
