@@ -287,6 +287,23 @@ class SHAPLEY_ITERATION:
     ACTION_SPACE_PLAYER_1 = "action_space_player_1"
     ACTION_SPACE_PLAYER_2 = "action_space_player_2"
 
+class HSVI_OS_POSG:
+    """
+    String constants related to the HSVI algorithm for OS-POSGs
+    """
+    N = "N"
+    TRANSITION_TENSOR = "transition_tensor"
+    REWARD_TENSOR = "reward_tensor"
+    STATE_SPACE = "state_space"
+    ACTION_SPACE_PLAYER_1 = "action_space_player_1"
+    ACTION_SPACE_PLAYER_2 = "action_space_player_2"
+    OBSERVATION_SPACE = "observation_space"
+    OBSERVATION_FUNCTION = "observation_function"
+    INITIAL_BELIEF = "initial_belief"
+    PRUNE_FREQUENCY = "prune_frequency"
+    EPSILON = "epsilon"
+    WIDTHS = "widths"
+    EXCESSES = "excesses"
 
 class FICTITIOUS_PLAY:
     """

@@ -69,6 +69,6 @@ if __name__ == '__main__':
     agent = ShapleyIterationAgent(simulation_env_config=simulation_env_config,
                                   experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
-    # MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_tabular_policy(tabular_policy=policy)
+    MetastoreFacade.save_experiment_execution(experiment_execution)
+    for policy in experiment_execution.result.policies.values():
+        MetastoreFacade.save_tabular_policy(tabular_policy=policy)
