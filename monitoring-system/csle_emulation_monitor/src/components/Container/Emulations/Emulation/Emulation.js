@@ -622,6 +622,8 @@ const Emulation = (props) => {
                                     <th>Arrival process</th>
                                     <th>λ</th>
                                     <th>μ</th>
+                                    <th>time-scaling</th>
+                                    <th>period-scaling</th>
                                     <th>t</th>
                                 </tr>
                                 </thead>
@@ -631,6 +633,8 @@ const Emulation = (props) => {
                                     <td>{getArrivalProcessStr(emulation.traffic_config.client_population_config.client_process_type)}</td>
                                     <td>{emulation.traffic_config.client_population_config.lamb}</td>
                                     <td>{emulation.traffic_config.client_population_config.mu}</td>
+                                    <td>{emulation.traffic_config.client_population_config.time_scaling_factor}</td>
+                                    <td>{emulation.traffic_config.client_population_config.period_scaling_factor}</td>
                                     <td>{emulation.traffic_config.client_population_config.client_time_step_len_seconds}s</td>
                                 </tr>
                                 </tbody>

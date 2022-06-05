@@ -4,6 +4,7 @@ import threading
 import time
 import logging
 import random
+import math
 from scipy.stats import poisson
 from scipy.stats import expon
 from concurrent import futures
@@ -62,7 +63,8 @@ class ArrivalThread(threading.Thread):
     """
 
     def __init__(self, commands: List[str], time_step_len_seconds: float = 1, lamb: float = 10, mu: float = 0.1,
-                 num_commands: int = 2):
+                 num_commands: int = 2, sine_modulated: bool = False,
+                 time_scaling_factor : float = 0.01, period_scaling_factor: float = 20):
         """
         Initializes the arrival thread
 
@@ -71,6 +73,7 @@ class ArrivalThread(threading.Thread):
         :param mu: the mu parameter of the service times of the clients
         :param commands: the list of commands that clients can use
         :param num_commands: the number of commands per client
+        :param sine_modulated: boolean flag whether the rate of the arrival process is sine-modulated or not
         """
         threading.Thread.__init__(self)
         self.time_step_len_seconds = time_step_len_seconds
@@ -81,8 +84,21 @@ class ArrivalThread(threading.Thread):
         self.stopped = False
         self.commands = commands
         self.num_commands = num_commands
+        self.sine_modulated = sine_modulated
+        self.time_scaling_factor = time_scaling_factor
+        self.period_scaling_factor = period_scaling_factor
         logging.info(f"Starting arrival thread, lambda:{lamb}, mu:{mu}, num:commands:{num_commands}, "
-                     f"commands:{commands}")
+                     f"commands:{commands}, sine_modulated: {sine_modulated}, "
+                     f"time_scaling_factor: {time_scaling_factor}, period_scaling_factor: {period_scaling_factor}")
+
+    def sine_modulated_poisson_rate(self, t) -> float:
+        """
+        Function that returns the rate of a sine-modulated Poisson process
+
+        :param t: the time-step
+        :return: the rate
+        """
+        return self.lamb + self.period_scaling_factor*math.sin(self.time_scaling_factor*math.pi*t)
 
     def run(self) -> None:
         """
@@ -97,7 +113,11 @@ class ArrivalThread(threading.Thread):
                     new_client_threads.append(ct)
             self.client_threads = new_client_threads
             self.t += 1
-            new_clients = poisson.rvs(self.lamb, size=1)[0]
+            if self.sine_modulated:
+                rate = self.sine_modulated_poisson_rate(self.t)
+                new_clients = poisson.rvs(rate, size=1)[0]
+            else:
+                new_clients = poisson.rvs(self.lamb, size=1)[0]
             for nc in range(new_clients):
                 commands = random.sample(self.commands, self.num_commands)
                 service_time = expon.rvs(scale=(self.mu*self.time_step_len_seconds), loc=0, size=1)[0]
@@ -242,9 +262,11 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :param context: the gRPC context
         :return: a clients DTO with the state of the clients
         """
-        logging.info(f"Starting clients, commands:{request.commands}")
+        logging.info(f"Starting clients, commands:{request.commands}, lamb: {request.lamb}, mu: {request.mu}, "
+                     f"sine_modulated: {request.sine_modulated}, "
+                     f"time_scaling_factor: {request.time_scaling_factor}, "
+                     f"period_scaling_factor: {request.period_scaling_factor}")
 
-        clients_time_step_len_seconds = 0
         producer_time_step_len_seconds = 0
 
         if self.arrival_thread is not None:
@@ -256,7 +278,9 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
 
         arrival_thread = ArrivalThread(commands = request.commands,
                                        time_step_len_seconds=request.time_step_len_seconds,
-                                       lamb=request.lamb, mu=request.mu)
+                                       lamb=request.lamb, mu=request.mu, sine_modulated=request.sine_modulated,
+                                       time_scaling_factor=request.time_scaling_factor,
+                                       period_scaling_factor=request.period_scaling_factor)
         arrival_thread.start()
         self.arrival_thread = arrival_thread
         clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
@@ -371,6 +395,4 @@ def serve(port : int = 50051) -> None:
 # Program entrypoint
 if __name__ == '__main__':
     serve(port=50051)
-
-
 

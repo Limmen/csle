@@ -6,6 +6,7 @@ import csle_collector.client_manager.query_clients
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.util.emulation_util import EmulationUtil
+from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
 from csle_common.logging.log import Logger
 
 
@@ -164,13 +165,21 @@ class TrafficManager:
                 time.sleep(5)
 
             # Start the client population
+            sine_modulated = False
+            if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
+                    ClientPopulationProcessType.SINE_MODULATED_POISSON):
+                sine_modulated = True
             csle_collector.client_manager.query_clients.start_clients(
                 stub=stub, mu=emulation_env_config.traffic_config.client_population_config.mu,
                 lamb=emulation_env_config.traffic_config.client_population_config.lamb,
                 time_step_len_seconds=
                 emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds,
                 commands=commands,
-                num_commands=emulation_env_config.traffic_config.client_population_config.num_commands)
+                num_commands=emulation_env_config.traffic_config.client_population_config.num_commands,
+                sine_modulated=sine_modulated,
+                time_scaling_factor=emulation_env_config.traffic_config.client_population_config.time_scaling_factor,
+                period_scaling_factor=emulation_env_config.traffic_config.client_population_config.period_scaling_factor
+            )
 
             time.sleep(5)
 

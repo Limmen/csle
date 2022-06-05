@@ -29,7 +29,8 @@ def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cli
 
 
 def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
-                  mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int=2):
+                  mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int=2,
+                  sine_modulated: bool = False, time_scaling_factor: float = 0.01, period_scaling_factor: float = 20):
     """
     Starts the client arrival process
 
@@ -38,10 +39,15 @@ def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cl
     :param lamb: the lambda parameter for the Poisson process
     :param time_step_len_seconds: the length of a time-step for simulating the arrival process
     :param num:commands: the number of commands that each client will use
+    :param sine_modulated: whether the arrival process is sine modulated or not
+    :param time_scaling_factor: the time scaling factor for the sine modulated arrival process
+    :param period_scaling_factor: the period scaling factor for the sine modulated arrival process
     :return: a clientsDTO describing the state of the clients
     """
     start_clients_msg = csle_collector.client_manager.client_manager_pb2.StartClientsMsg(
-        mu=mu, lamb=lamb, time_step_len_seconds=time_step_len_seconds, commands=commands, num_commands=num_commands
+        mu=mu, lamb=lamb, time_step_len_seconds=time_step_len_seconds, commands=commands,
+        num_commands=num_commands, sine_modulated=sine_modulated, period_scaling_factor=period_scaling_factor,
+        time_scaling_factor=time_scaling_factor
     )
     clients_dto = stub.startClients(start_clients_msg)
     return clients_dto

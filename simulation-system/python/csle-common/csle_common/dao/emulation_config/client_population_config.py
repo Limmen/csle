@@ -10,7 +10,8 @@ class ClientPopulationConfig:
 
     def __init__(self, ip: str, networks: List[ContainerNetwork], client_process_type: ClientPopulationProcessType,
                  lamb: float, mu: float, client_manager_port: int, num_commands: int = 5,
-                 client_time_step_len_seconds: int = 1):
+                 client_time_step_len_seconds: int = 1, time_scaling_factor : float = 0.01,
+                 period_scaling_factor: float = 20):
         """
         Creates a ClientPopulationConfig DTO Object
 
@@ -20,6 +21,8 @@ class ClientPopulationConfig:
         :param lamb: the lambda parameter of the arrival process
         :param mu: the service-time parameter of the arrivals
         :param client_time_step_len_seconds: time-step length to measure the arrival process
+        :param time_scaling_factor: the time-scaling factor for sine-modulated arrival processes
+        :param period_scaling_factor: the period-scaling factor for sine-modulated arrival processes
         """
         self.networks = networks
         self.ip = ip
@@ -29,7 +32,8 @@ class ClientPopulationConfig:
         self.client_manager_port = client_manager_port
         self.num_commands = num_commands
         self.client_time_step_len_seconds = client_time_step_len_seconds
-
+        self.time_scaling_factor = time_scaling_factor
+        self.period_scaling_factor = period_scaling_factor
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ClientPopulationConfig":
@@ -44,10 +48,10 @@ class ClientPopulationConfig:
             networks=list(map(lambda x: ContainerNetwork.from_dict(x), d["networks"])),
             client_process_type=d["client_process_type"],
             lamb=d["lamb"], mu=d["mu"], client_manager_port=d["client_manager_port"],
-            num_commands=d["num_commands"], client_time_step_len_seconds=d["client_time_step_len_seconds"]
+            num_commands=d["num_commands"], client_time_step_len_seconds=d["client_time_step_len_seconds"],
+            period_scaling_factor = d["period_scaling_factor"], time_scaling_factor=d["time_scaling_factor"]
         )
         return obj
-
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -62,6 +66,8 @@ class ClientPopulationConfig:
         d["num_commands"] = self.num_commands
         d["client_manager_port"] = self.client_manager_port
         d["client_time_step_len_seconds"] = self.client_time_step_len_seconds
+        d["time_scaling_factor"] = self.time_scaling_factor
+        d["period_scaling_factor"] = self.period_scaling_factor
         return d
 
     def __str__(self) -> str:
@@ -71,8 +77,9 @@ class ClientPopulationConfig:
         return f"ip:{self.ip}, client_population_process_type: {self.client_process_type.name}, lamb:{self.lamb}, " \
                f"mu:{self.mu}, self.networks:{list(map(lambda x: str(x), self.networks))}, " \
                f"client_manager_port: {self.client_manager_port}, num_commands:{self.num_commands}, " \
-               f"client_time_step_len_seconds: {self.client_time_step_len_seconds}"
-
+               f"client_time_step_len_seconds: {self.client_time_step_len_seconds}," \
+               f"time_scaling_factor: {self.time_scaling_factor}, " \
+               f"period_scaling_factor: {self.period_scaling_factor}"
 
     def to_json_str(self) -> str:
         """

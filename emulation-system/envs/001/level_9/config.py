@@ -2717,7 +2717,8 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         )],
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb=20, mu=4, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=30)
+        lamb=20, mu=4, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=30,
+        time_scaling_factor= 0.01, period_scaling_factor= 20)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf

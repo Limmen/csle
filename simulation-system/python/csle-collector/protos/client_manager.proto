@@ -19,6 +19,9 @@ message StartClientsMsg {
   int32 time_step_len_seconds = 3;
   repeated string commands = 4;
   int32 num_commands = 5;
+  bool sine_modulated = 6;
+  float time_scaling_factor = 7;
+  float period_scaling_factor = 8;
 }
 
 // Message that the client sends to extract the ClientsDTO

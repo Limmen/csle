@@ -150,6 +150,32 @@ class EmulationTrace:
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
+    @staticmethod
+    def from_json_str(json_str: str) -> "EmulationTrace":
+        """
+        Converts json string into a DTO
+
+        :param json_str: the json string representation
+        :return: the DTO instance
+        """
+        import json
+        dto: EmulationTrace = EmulationTrace.from_dict(json.loads(json_str))
+        return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EmulationTrace":
+        """
+        Reads a json file and converts it into a dto
+
+        :param json_file_path: the json file path to save  the DTO to
+        :return: None
+        """
+        import io
+        with io.open(json_file_path, 'r', encoding='utf-8') as f:
+            json_str = f.read()
+            dto = EmulationTrace.from_json_str(json_str=json_str)
+            return dto
+
 
 class NpEncoder(json.JSONEncoder):
     """

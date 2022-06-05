@@ -10,4 +10,4 @@ class ClientPopulationProcessType(IntEnum):
     Enum representing the different process types for generating client process in an emulation
     """
     POISSON = 0
-    SINUS_MODULATED_POISSON = 1
+    SINE_MODULATED_POISSON = 1

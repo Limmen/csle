@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x63lient_manager.proto\"\x10\n\x0eStopClientsMsg\"r\n\x0fStartClientsMsg\x12\n\n\x02mu\x18\x01 \x01(\x02\x12\x0c\n\x04lamb\x18\x02 \x01(\x02\x12\x1d\n\x15time_step_len_seconds\x18\x03 \x01(\x05\x12\x10\n\x08\x63ommands\x18\x04 \x03(\t\x12\x14\n\x0cnum_commands\x18\x05 \x01(\x05\"\x0f\n\rGetClientsMsg\"K\n\x10StartProducerMsg\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\x05\x12\x1d\n\x15time_step_len_seconds\x18\x03 \x01(\x05\"\x11\n\x0fStopProducerMsg\"\xa8\x01\n\nClientsDTO\x12\x13\n\x0bnum_clients\x18\x01 \x01(\x05\x12\x1d\n\x15\x63lient_process_active\x18\x02 \x01(\x08\x12\x17\n\x0fproducer_active\x18\x03 \x01(\x08\x12%\n\x1d\x63lients_time_step_len_seconds\x18\x04 \x01(\x05\x12&\n\x1eproducer_time_step_len_seconds\x18\x05 \x01(\x05\x32\x80\x02\n\rClientManager\x12+\n\ngetClients\x12\x0e.GetClientsMsg\x1a\x0b.ClientsDTO\"\x00\x12-\n\x0bstopClients\x12\x0f.StopClientsMsg\x1a\x0b.ClientsDTO\"\x00\x12/\n\x0cstartClients\x12\x10.StartClientsMsg\x1a\x0b.ClientsDTO\"\x00\x12\x31\n\rstartProducer\x12\x11.StartProducerMsg\x1a\x0b.ClientsDTO\"\x00\x12/\n\x0cstopProducer\x12\x10.StopProducerMsg\x1a\x0b.ClientsDTO\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x63lient_manager.proto\"\x10\n\x0eStopClientsMsg\"\xc6\x01\n\x0fStartClientsMsg\x12\n\n\x02mu\x18\x01 \x01(\x02\x12\x0c\n\x04lamb\x18\x02 \x01(\x02\x12\x1d\n\x15time_step_len_seconds\x18\x03 \x01(\x05\x12\x10\n\x08\x63ommands\x18\x04 \x03(\t\x12\x14\n\x0cnum_commands\x18\x05 \x01(\x05\x12\x16\n\x0esine_modulated\x18\x06 \x01(\x08\x12\x1b\n\x13time_scaling_factor\x18\x07 \x01(\x02\x12\x1d\n\x15period_scaling_factor\x18\x08 \x01(\x02\"\x0f\n\rGetClientsMsg\"K\n\x10StartProducerMsg\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\x05\x12\x1d\n\x15time_step_len_seconds\x18\x03 \x01(\x05\"\x11\n\x0fStopProducerMsg\"\xa8\x01\n\nClientsDTO\x12\x13\n\x0bnum_clients\x18\x01 \x01(\x05\x12\x1d\n\x15\x63lient_process_active\x18\x02 \x01(\x08\x12\x17\n\x0fproducer_active\x18\x03 \x01(\x08\x12%\n\x1d\x63lients_time_step_len_seconds\x18\x04 \x01(\x05\x12&\n\x1eproducer_time_step_len_seconds\x18\x05 \x01(\x05\x32\x80\x02\n\rClientManager\x12+\n\ngetClients\x12\x0e.GetClientsMsg\x1a\x0b.ClientsDTO\"\x00\x12-\n\x0bstopClients\x12\x0f.StopClientsMsg\x1a\x0b.ClientsDTO\"\x00\x12/\n\x0cstartClients\x12\x10.StartClientsMsg\x1a\x0b.ClientsDTO\"\x00\x12\x31\n\rstartProducer\x12\x11.StartProducerMsg\x1a\x0b.ClientsDTO\"\x00\x12/\n\x0cstopProducer\x12\x10.StopProducerMsg\x1a\x0b.ClientsDTO\"\x00\x62\x06proto3')
 
 
 
@@ -72,16 +72,16 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _STOPCLIENTSMSG._serialized_start=24
   _STOPCLIENTSMSG._serialized_end=40
-  _STARTCLIENTSMSG._serialized_start=42
-  _STARTCLIENTSMSG._serialized_end=156
-  _GETCLIENTSMSG._serialized_start=158
-  _GETCLIENTSMSG._serialized_end=173
-  _STARTPRODUCERMSG._serialized_start=175
-  _STARTPRODUCERMSG._serialized_end=250
-  _STOPPRODUCERMSG._serialized_start=252
-  _STOPPRODUCERMSG._serialized_end=269
-  _CLIENTSDTO._serialized_start=272
-  _CLIENTSDTO._serialized_end=440
-  _CLIENTMANAGER._serialized_start=443
-  _CLIENTMANAGER._serialized_end=699
+  _STARTCLIENTSMSG._serialized_start=43
+  _STARTCLIENTSMSG._serialized_end=241
+  _GETCLIENTSMSG._serialized_start=243
+  _GETCLIENTSMSG._serialized_end=258
+  _STARTPRODUCERMSG._serialized_start=260
+  _STARTPRODUCERMSG._serialized_end=335
+  _STOPPRODUCERMSG._serialized_start=337
+  _STOPPRODUCERMSG._serialized_end=354
+  _CLIENTSDTO._serialized_start=357
+  _CLIENTSDTO._serialized_end=525
+  _CLIENTMANAGER._serialized_start=528
+  _CLIENTMANAGER._serialized_end=784
 # @@protoc_insertion_point(module_scope)
