@@ -22,12 +22,12 @@ import csle_agents.constants.constants as agents_constants
 
 class FictitiousPlayAgent(BaseAgent):
     """
-    Fictitious Play Agent for Zero-Sum Normal-form Games (Brown 1951)
+    Fictitious Play Agent for Normal-form Games (Brown 1951)
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
-                 emulation_env_config: Union[None, EmulationEnvConfig],
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
+                 emulation_env_config: Union[None, EmulationEnvConfig] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
         Initializes the Fictitious play agent
@@ -87,7 +87,7 @@ class FictitiousPlayAgent(BaseAgent):
             self.training_job = TrainingJobConfig(
                 simulation_env_name=self.simulation_env_config.name, experiment_config=self.experiment_config,
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
-                emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
+                emulation_env_name=None, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
             if self.save_to_metastore:
@@ -123,7 +123,8 @@ class FictitiousPlayAgent(BaseAgent):
 
             # Save latest trace
             if self.save_to_metastore:
-                MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
+                if len(self.env.get_traces()) > 0:
+                    MetastoreFacade.save_simulation_trace(self.env.get_traces()[-1])
             self.env.reset_traces()
 
         # Calculate average and std metrics
@@ -209,7 +210,7 @@ class FictitiousPlayAgent(BaseAgent):
         p1_counts_list.append(p1_prior)
         p2_counts_list.append(p2_prior)
         p1_empirical_strategy = p1_prior
-        p2_empirical_strategy = p2_empirical_strategies
+        p2_empirical_strategy = p2_prior
         J = 0
         for i in range(N):
             p1_empirical_strategy = self.compute_empirical_strategy(p1_counts_list[-1])
@@ -236,10 +237,10 @@ class FictitiousPlayAgent(BaseAgent):
             # Log average return
             J = p1_payoff
             # policy.avg_R = J
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
             if i % self.experiment_config.log_every == 0 and i > 0:
@@ -299,7 +300,7 @@ class FictitiousPlayAgent(BaseAgent):
             s.append(counts[i]/counts_sum)
         return s
 
-    def best_response(self, p: List[float], A: np.ndarray, maximize : bool = True) -> Tuple[np.ndarray[int], float]:
+    def best_response(self, p: List[float], A: np.ndarray, maximize : bool = True) -> Tuple[np.ndarray, float]:
         """
         Computes a best response against p
 

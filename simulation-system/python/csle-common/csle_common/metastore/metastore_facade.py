@@ -2128,7 +2128,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
                 records = cur.fetchall()
                 records = list(map(lambda x: MetastoreFacade._convert_vector_policy_record_to_dto(x), records))
                 return records
@@ -2143,7 +2143,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
                 records = cur.fetchall()
                 return records
 
@@ -2172,7 +2172,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s", (id,))
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
                 if record is not None:
                     record = MetastoreFacade._convert_vector_policy_record_to_dto(vector_policy_record=record)
@@ -2192,7 +2192,7 @@ class MetastoreFacade:
                              f"password={constants.METADATA_STORE.PASSWORD} "
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"DELETE FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s",
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} WHERE id = %s",
                             (vector_policy.id,))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"vector policy "
@@ -2212,7 +2212,7 @@ class MetastoreFacade:
                              f"host={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(vector_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
-                cur.execute(f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, vector_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]

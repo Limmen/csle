@@ -3,7 +3,6 @@ import numpy as np
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
-from csle_common.dao.simulation_config.action import Action
 
 
 class VectorPolicy(Policy):
@@ -11,25 +10,20 @@ class VectorPolicy(Policy):
     Object representing a tabular policy
     """
 
-    def __init__(self, player_type: PlayerType, actions: List[Action], policy_vector: List[float],
-                 agent_type: AgentType, simulation_name: str, avg_R: float,
-                 value_function: Optional[List[Any]] = None, q_table: Optional[List[Any]] = None) -> None:
+    def __init__(self, player_type: PlayerType, actions: List[int], policy_vector: List[float],
+                 agent_type: AgentType, simulation_name: str, avg_R: float) -> None:
         """
         Initializes the policy
 
         :param actions: list of actions
         :param player_type: the player type
         :param policy_vector: the policy vector
-        :param value_function: the value function (optional)
-        :param q_table: the Q-value function (optional)
         :param simulation_name: the name of the simulation
         :param avg_R: average reward obtained with the policy
         """
         super(VectorPolicy, self).__init__(agent_type=agent_type, player_type=player_type)
         self.actions = actions
         self.policy_vector = policy_vector
-        self.value_function = value_function
-        self.q_table = q_table
         self.simulation_name = simulation_name
         self.id = -1
         self.avg_R = avg_R
@@ -51,7 +45,7 @@ class VectorPolicy(Policy):
         :param a: the action
         :return: p(a|o)
         """
-        return self.policy_vector[o][a]
+        return self.policy_vector[a]
 
     @staticmethod
     def from_dict(d: Dict) -> "Policy":
@@ -61,11 +55,10 @@ class VectorPolicy(Policy):
         :param d: the dict to convert
         :return: the created instance
         """
-        dto = VectorPolicy(actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
+        dto = VectorPolicy(actions=d["actions"],
                            player_type=d["player_type"], agent_type=d["agent_type"],
-                           policy_vector=d["policy_vector"], value_function=d["value_function"],
-                           simulation_name=d["simulation_name"], avg_R=d["avg_R"],
-                           q_table=d["q_table"])
+                           policy_vector=d["policy_vector"],
+                           simulation_name=d["simulation_name"], avg_R=d["avg_R"])
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -77,16 +70,14 @@ class VectorPolicy(Policy):
         d = {}
         d["agent_type"] = self.agent_type
         d["player_type"] = self.player_type
-        d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
+        d["actions"] = self.actions
         d["policy_vector"] = self.policy_vector
-        d["value_function"] = self.value_function
         d["simulation_name"] = self.simulation_name
         d["id"] = self.id
         d["avg_R"] = self.avg_R
-        d["q_table"] = self.q_table
         return d
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[float]:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 
@@ -101,8 +92,8 @@ class VectorPolicy(Policy):
         """
         return f"agent_type: {self.agent_type}, player_type: {self.player_type}, " \
                f"actions: {list(map(lambda x: str(x), self.actions))}, policy_vector: {self.policy_vector}, " \
-               f"value_function: {self.value_function}, simulation_name: {self.simulation_name}, id: {self.id}, " \
-               f"avg_R: {self.avg_R}, q_table: {self.q_table}"
+               f"simulation_name: {self.simulation_name}, id: {self.id}, " \
+               f"avg_R: {self.avg_R}"
 
     def to_json_str(self) -> str:
         """

@@ -12,6 +12,7 @@ import PPOPolicy from "./PPOPolicy/PPOPolicy";
 import DQNPolicy from "./DQNPolicy/DQNPolicy";
 import FnnWSoftmaxPolicy from "./FnnWSoftmaxPolicy/FnnWSoftmaxPolicy";
 import TabularPolicy from "./TabularPolicy/TabularPolicy";
+import VectorPolicy from "./VectorPolicy/VectorPolicy";
 import AlphaVecPolicy from "./AlphaVecPolicy/AlphaVecPolicy";
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
@@ -57,10 +58,17 @@ const Policies = () => {
     const [loadingFnnWSoftmaxPolicy, setLoadingFnnWSoftmaxPolicy] = useState(true);
     const [filteredFnnWSoftmaxPoliciesIds, setFilteredFnnWSoftmaxPoliciesIds] = useState([]);
     const [fnnWSoftmaxPoliciesSearchString, setFnnWSoftmaxPoliciesSearchString] = useState("");
+    const [vectorPoliciesIds, setVectorPoliciesIds] = useState([]);
+    const [selectedVectorPolicy, setSelectedVectorPolicy] = useState(null);
+    const [selectedVectorPolicyId, setSelectedVectorPolicyId] = useState(null);
+    const [loadingVectorPolicy, setLoadingVectorPolicy] = useState(true);
+    const [filteredVectorPoliciesIds, setFilteredVectorPoliciesIds] = useState([]);
+    const [vectorPoliciesSearchString, setVectorPoliciesSearchString] = useState("");
     const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
     const [loadingPPOPolicies, setLoadingPPOPolicies] = useState(true);
     const [loadingDQNPolicies, setLoadingDQNPolicies] = useState(true);
     const [loadingTabularPolicies, setLoadingTabularPolicies] = useState(true);
+    const [loadingVectorPolicies, setLoadingVectorPolicies] = useState(true);
     const [loadingAlphaVecPolicies, setLoadingAlphaVecPolicies] = useState(true);
     const [loadingFnnWSoftmaxPolicies, setLoadingFnnWSoftmaxPolicies] = useState(true);
     const ip = "localhost"
@@ -198,6 +206,39 @@ const Policies = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const fetchVectorPoliciesIds = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/vectorpoliciesids',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                const vectorPoliciesIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id,
+                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                    }
+                })
+                setVectorPoliciesIds(vectorPoliciesIds)
+                setFilteredVectorPoliciesIds(vectorPoliciesIds)
+                setLoadingVectorPolicies(false)
+                if (vectorPoliciesIds.length > 0) {
+                    setSelectedVectorPolicyId(vectorPoliciesIds[0])
+                    fetchVectorPolicy(vectorPoliciesIds[0])
+                    setLoadingVectorPolicy(true)
+                } else {
+                    setLoadingVectorPolicy(false)
+                    setSelectedVectorPolicy(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/alphavecpoliciesids',
@@ -277,8 +318,10 @@ const Policies = () => {
         fetchDQNPoliciesIds()
         setLoadingFnnWSoftmaxPolicies(true)
         fetchFnnWSoftmaxPoliciesIds()
+        setLoadingVectorPolicies(true)
+        fetchVectorPoliciesIds()
     }, [fetchMultiThresholdPoliciesIds, fetchPPOPoliciesIds, fetchDQNPoliciesIds, fetchTabularPoliciesIds,
-        fetchAlphaVecPoliciesIds, fetchFnnWSoftmaxPoliciesIds]);
+        fetchAlphaVecPoliciesIds, fetchFnnWSoftmaxPoliciesIds, fetchVectorPoliciesIds]);
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
@@ -512,6 +555,65 @@ const Policies = () => {
         removeTabularPoliciesRequest(tabularPolicy.id)
     }
 
+    //vec
+    const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/vectorpolicies/remove/' + vector_policy_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchVectorPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchVectorPolicy = useCallback((vector_policy_id) => {
+        fetch(
+            `http://` + ip + ':7777/vectorpolicies/get/' + vector_policy_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedVectorPolicy(response)
+                setLoadingVectorPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeAllVectorPoliciesRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/vectorpolicies/remove',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchVectorPoliciesIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeVectorPolicy = (vectorPolicy) => {
+        setLoadingVectorPolicies(true)
+        removeVectorPoliciesRequest(vectorPolicy.id)
+    }
+
     const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
             `http://` + ip + ':7777/alphavecpolicies/remove/' + alpha_vec_policies_id,
@@ -565,9 +667,9 @@ const Policies = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeAlphaVecPolicy = (tabularPolicy) => {
+    const removeAlphaVecPolicy = (alphaVecPolicy) => {
         setLoadingAlphaVecPolicies(true)
-        removeAlphaVecPoliciesRequest(tabularPolicy.id)
+        removeAlphaVecPoliciesRequest(alphaVecPolicy.id)
     }
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
@@ -653,6 +755,11 @@ const Policies = () => {
         removeAllTabularPoliciesRequest()
     }
 
+    const removeAllVectorPolicies = () => {
+        setLoadingVectorPolicies(true)
+        removeAllVectorPoliciesRequest()
+    }
+
     const removeAllAlphaVecPolicies = () => {
         setLoadingAlphaVecPolicies(true)
         removeAllAlphaVecPoliciesRequest()
@@ -681,6 +788,11 @@ const Policies = () => {
     const refreshTabularPolicies = () => {
         setLoadingTabularPolicies(true)
         fetchTabularPoliciesIds()
+    }
+
+    const refreshVectorPolicies = () => {
+        setLoadingVectorPolicies(true)
+        fetchVectorPoliciesIds()
     }
 
     const refreshAlphaVecPolicies = () => {
@@ -724,6 +836,12 @@ const Policies = () => {
         </Tooltip>
     );
 
+    const renderRemoveAllVectorPoliciesTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all Vector policies.
+        </Tooltip>
+    );
+
     const renderRemoveAllAlphaVecPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Remove all Alpha-Vector policies.
@@ -757,6 +875,12 @@ const Policies = () => {
     const renderTabularRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload Tabular policies from the backend
+        </Tooltip>
+    );
+
+    const renderVectorRefreshTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload Vector policies from the backend
         </Tooltip>
     );
 
@@ -824,6 +948,12 @@ const Policies = () => {
         setSelectedTabularPolicyId(selectedId)
         fetchTabularPolicy(selectedId)
         setLoadingTabularPolicy(true)
+    }
+
+    const updateSelectedVectorPolicyId = (selectedId) => {
+        setSelectedVectorPolicyId(selectedId)
+        fetchVectorPolicy(selectedId)
+        setLoadingVectorPolicy(true)
     }
 
     const updateSelectedAlphaVecPolicyId = (selectedId) => {
@@ -1228,6 +1358,86 @@ const Policies = () => {
         }
     }
 
+
+    const SelectVectorPolicyOrSpinner = (props) => {
+        if (!props.loadingVectorPolicies && props.vectorPoliciesIds.length === 0) {
+            return (
+                <div>
+                    <span className="emptyText">No Vector policies are available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderVectorRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshVectorPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+        if (props.loadingVectorPolicies) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching policies... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="inline-block">
+                    <div className="conditionalDist inline-block">
+                        <div className="conditionalDist inline-block conditionalLabel">
+                            Vector policy:
+                        </div>
+                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                            <Select
+                                style={{display: 'inline-block'}}
+                                value={props.selectedVectorPolicyId}
+                                defaultValue={props.selectedVectorPolicyId}
+                                options={props.vectorPoliciesIds}
+                                onChange={updateSelectedVectorPolicyId}
+                                placeholder="Select policy"
+                            />
+                        </div>
+                    </div>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderVectorRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refreshVectorPolicies}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderInfoTooltip}
+                    >
+                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                            <i className="fa fa-info-circle" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAllVectorPoliciesTooltip}
+                    >
+                        <Button variant="danger" onClick={removeAllVectorPolicies}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+    }
+
     const SelectAlphaVecPolicyOrSpinner = (props) => {
         if (!props.loadingAlphaVecPolicies && props.alphaVecPoliciesIds.length === 0) {
             return (
@@ -1436,6 +1646,32 @@ const Policies = () => {
                 <Accordion defaultActiveKey="0">
                     <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
                                removeTabularPolicy={removeTabularPolicy}
+                    />
+                </Accordion>
+            )
+        }
+    }
+
+    const VectorPolicyAccordion = (props) => {
+        if (props.loadingVectorPolicy || props.selectedVectorPolicy === null || props.selectedVectorPolicy === undefined) {
+            if(props.loadingVectorPolicy) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching policy... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
+            return (
+                <Accordion defaultActiveKey="0">
+                    <VectorPolicy policy={selectedVectorPolicy} wrapper={wrapper} key={selectedVectorPolicy.id}
+                                   removeVectorPolicy={removeVectorPolicy}
                     />
                 </Accordion>
             )
@@ -1653,6 +1889,43 @@ const Policies = () => {
     const searchTabularPoliciesHandler = useDebouncedCallback(
         (event) => {
             searchTabularPolicyChange(event)
+        },
+        350
+    );
+
+    const searchVectorPoliciesFilter = (vectorPolicyId, searchVal) => {
+        return (searchVal === "" || vectorPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchVectorPolicyChange = (event) => {
+        var searchVal = event.target.value
+        const fPoliciesIds = vectorPoliciesIds.filter(policy => {
+            return searchVectorPoliciesFilter(policy, searchVal)
+        });
+        setFilteredVectorPoliciesIds(fPoliciesIds)
+        setVectorPoliciesSearchString(searchVal)
+
+        var selectedPolicyRemoved = false
+        if(!loadingVectorPolicy && fPoliciesIds.length > 0){
+            for (let i = 0; i < fPoliciesIds.length; i++) {
+                if(selectedVectorPolicy !== null && selectedVectorPolicy !== undefined &&
+                    selectedVectorPolicy.id === fPoliciesIds[i].value) {
+                    selectedPolicyRemoved = true
+                }
+            }
+            if(!selectedPolicyRemoved) {
+                setSelectedVectorPolicyId(fPoliciesIds[0])
+                fetchVectorPolicy(fPoliciesIds[0])
+                setLoadingVectorPolicy(true)
+            }
+        } else {
+            setSelectedVectorPolicy(null)
+        }
+    }
+
+    const searchVectorPoliciesHandler = useDebouncedCallback(
+        (event) => {
+            searchVectorPolicyChange(event)
         },
         350
     );
@@ -1894,6 +2167,40 @@ const Policies = () => {
 
             <FnnWSoftmaxPolicyAccordion loadingFnnWSoftmaxPolicy={loadingFnnWSoftmaxPolicy}
                                         selectedFnnWSoftmaxPolicy={selectedFnnWSoftmaxPolicy}/>
+
+
+            <div className="row ppoPolicies simulationTracesHeader">
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectVectorPolicyOrSpinner loadingVectorPolicies={loadingVectorPolicies}
+                                                      vectorPoliciesIds={filteredVectorPoliciesIds}
+                                                      selectedVectorPolicyId={selectedVectorPolicyId}
+                        />
+                    </h4>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="vectorPoliciesSearchField" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="vectorPoliciesSearchLabel"
+                                aria-describedby="vectorPoliciesSearchField"
+                                onChange={searchVectorPoliciesHandler}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2">
+                </div>
+            </div>
+
+            <VectorPolicyAccordion loadingVectorPolicy={loadingVectorPolicy}
+                                    selectedVectorPolicy={selectedVectorPolicy}/>
 
         </div>
     );

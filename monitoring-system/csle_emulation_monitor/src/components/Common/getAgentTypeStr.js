@@ -62,6 +62,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 19) {
         return "HSVI for OS-POSGs"
     }
+    if(agentType === 20) {
+        return "FICTITIOUS PLAY"
+    }
     else {
         return "Unknown"
     }
