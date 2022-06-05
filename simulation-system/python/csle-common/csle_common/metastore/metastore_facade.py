@@ -21,6 +21,7 @@ from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
 from csle_common.dao.training.dqn_policy import DQNPolicy
 from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
+from csle_common.dao.training.vector_policy import VectorPolicy
 
 
 class MetastoreFacade:
@@ -2116,4 +2117,105 @@ class MetastoreFacade:
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"FNN with softmax policy saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def list_vector_policies() -> List[VectorPolicy]:
+        """
+        :return: A list of vector policies in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_vector_policy_record_to_dto(x), records))
+                return records
+
+
+    @staticmethod
+    def list_vector_policies_ids() -> List[Dict]:
+        """
+        :return: A list of vector policies ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def _convert_vector_policy_record_to_dto(vector_policy_record) -> VectorPolicy:
+        """
+        Converts a vector policy record fetched from the metastore into a DTO
+
+        :param vector_policy_record: the record to convert
+        :return: the DTO representing the record
+        """
+        vector_policy_json = json.dumps(vector_policy_record[1], indent=4, sort_keys=True)
+        vector_policy: VectorPolicy = VectorPolicy.from_dict(json.loads(vector_policy_json))
+        vector_policy.id = vector_policy_record[0]
+        return vector_policy
+
+    @staticmethod
+    def get_vector_policy(id: int) -> Union[None, VectorPolicy]:
+        """
+        Function for fetching a vector policy with a given id from the metastore
+
+        :param id: the id of the vector policy
+        :return: The vector policy or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_vector_policy_record_to_dto(vector_policy_record=record)
+                return record
+
+    @staticmethod
+    def remove_vector_policy(vector_policy: VectorPolicy) -> None:
+        """
+        Removes a vector policy from the metastore
+
+        :param vector_policy: the policy to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing vector policy with "
+                                             f"id:{vector_policy.id} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s",
+                            (vector_policy.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"vector policy "
+                                                     f"with id {vector_policy.id} deleted successfully")
+
+    @staticmethod
+    def save_vector_policy(vector_policy: VectorPolicy) -> Union[Any, int]:
+        """
+        Saves a vector policy to the metastore
+
+        :param vector_policy: the policy to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Installing vector policy in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                policy_json_str = json.dumps(vector_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
+                            f"(policy, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str, vector_policy.simulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"vector policy saved successfully")
                 return id_of_new_row

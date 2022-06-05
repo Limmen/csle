@@ -826,6 +826,55 @@ def remove_all_tabular_policies():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/vectorpolicies', methods=['GET'])
+def vector_policies():
+    vector_policies = MetastoreFacade.list_vector_policies()
+    vector_policies_dicts = list(map(lambda x: x.to_dict(), vector_policies))
+    response = jsonify(vector_policies_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/vectorpoliciesids', methods=['GET'])
+def vector_policies_ids():
+    vector_policies_ids = MetastoreFacade.list_vector_policies_ids()
+    response_dicts = []
+    for tup in vector_policies_ids:
+        response_dicts.append({
+            "id": tup[0],
+            "simulation": tup[1]
+        })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/vectorpolicies/get/<vector_policy_id>', methods=['GET'])
+def get_vector_policy(vector_policy_id: int):
+    policy = MetastoreFacade.get_vector_policy(id=vector_policy_id)
+    if policy is not None:
+        response = jsonify(policy.to_dict())
+    else:
+        response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/vectorpolicies/remove/<vector_policy_id>', methods=['POST'])
+def remove_vector_policy(vector_policy_id: int):
+    policy = MetastoreFacade.get_vector_policy(id=vector_policy_id)
+    if policy is not None:
+        MetastoreFacade.remove_vector_policy(vector_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/vectorpolicies/remove', methods=['POST'])
+def remove_all_vector_policies():
+    policies = MetastoreFacade.list_vector_policies()
+    for policy in policies:
+        MetastoreFacade.remove_vector_policy(vector_policy=policy)
+    response = jsonify({})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/alphavecpolicies', methods=['GET'])
 def alpha_vec_policies():
     alpha_vec_policies = MetastoreFacade.list_alpha_vec_policies()

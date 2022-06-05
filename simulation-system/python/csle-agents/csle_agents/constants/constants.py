@@ -286,3 +286,13 @@ class SHAPLEY_ITERATION:
     STATE_SPACE = "state_space"
     ACTION_SPACE_PLAYER_1 = "action_space_player_1"
     ACTION_SPACE_PLAYER_2 = "action_space_player_2"
+
+
+class FICTITIOUS_PLAY:
+    """
+    String constants related to fictitious play
+    """
+    PAYOFF_MATRIX = "payoff_matrix"
+    N = "N"
+    PLAYER_1_PRIOR = "player_1_prior"
+    PLAYER_2_PRIOR = "player_2_prior"
