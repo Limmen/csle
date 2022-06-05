@@ -65,6 +65,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 20) {
         return "FICTITIOUS PLAY"
     }
+    if(agentType === 21) {
+        return "LINEAR PROGRAMMING FOR NORMAL-FORM GAMES"
+    }
     else {
         return "Unknown"
     }

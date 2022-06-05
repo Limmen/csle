@@ -121,8 +121,9 @@ class HSVIOSPOSGAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
-                                                                 confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
+                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
                     else:
@@ -1124,7 +1125,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         :param R: the reward tensor in the OS-POSG
         :param T: the transition tensor in the OS-POSG
         :param gamma: the discount factor in the OS-POSG
-        :param lp: a boolean flag whether to use LP to compute the upper bound belief
+        :param lp_nf: a boolean flag whether to use LP to compute the upper bound belief
         :param delta: the Lipschitz-delta parameter
         :return: the new point
         """
@@ -1309,7 +1310,7 @@ class HSVIOSPOSGAgent(BaseAgent):
         :param upper_bound: the upper bound
         :param b: the belief point
         :param delta: the delta-parameter for Lipschitz-continuity
-        :param lp: boolean flag that decides whether to use LP to compute the upper bound value or not
+        :param lp_nf: boolean flag that decides whether to use LP to compute the upper bound value or not
         :param S: the set of states
         :return: the upper bound value
         """

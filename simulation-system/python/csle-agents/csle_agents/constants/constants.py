@@ -313,3 +313,12 @@ class FICTITIOUS_PLAY:
     N = "N"
     PLAYER_1_PRIOR = "player_1_prior"
     PLAYER_2_PRIOR = "player_2_prior"
+
+class LP_FOR_NF_GAMES:
+    """
+    String constants related to linear programming for normal-form games
+    """
+    PAYOFF_MATRIX = "payoff_matrix"
+    N = "N"
+    ACTION_SPACE_PLAYER_1 = "action_space_player_1"
+    ACTION_SPACE_PLAYER_2 = "action_space_player_2"

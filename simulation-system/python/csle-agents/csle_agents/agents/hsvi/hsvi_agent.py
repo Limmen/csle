@@ -188,7 +188,7 @@ class HSVIAgent(BaseAgent):
         simulate_horizon = self.experiment_config.hparams[agents_constants.HSVI.SIMULATE_HORIZON].value
         number_of_simulations = self.experiment_config.hparams[agents_constants.HSVI.NUMBER_OF_SIMULATIONS].value
         Logger.__call__().get_logger().info(f"Starting the HSVI algorithm, epsilon:{epsilon}, "
-                                            f"discount_factor: {discount_factor}, lp: {lp}, "
+                                            f"discount_factor: {discount_factor}, lp_nf: {lp}, "
                                             f"prune_frequency: {prune_frequency}, "
                                             f"simulation_frequency: {simulation_frequency}, "
                                             f"number_of_simulations: {number_of_simulations}, "

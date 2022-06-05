@@ -4,6 +4,7 @@ import time
 import gym
 import os
 import numpy as np
+import pulp
 import gym_csle_stopping_game.constants.constants as env_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -20,9 +21,9 @@ from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
 
-class FictitiousPlayAgent(BaseAgent):
+class LinearProgrammingNormalFormGameAgent(BaseAgent):
     """
-    Fictitious Play Agent for Normal-form Games (Brown 1951)
+    Linear programming agent for normal-form games
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -30,7 +31,7 @@ class FictitiousPlayAgent(BaseAgent):
                  emulation_env_config: Union[None, EmulationEnvConfig] = None,
                  training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
         """
-        Initializes the Fictitious play agent
+        Initializes the Linar programming agent for normal-form games
 
         :param simulation_env_config: the simulation env config
         :param emulation_env_config: the emulation env config
@@ -41,14 +42,14 @@ class FictitiousPlayAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
                          experiment_config=experiment_config)
-        assert experiment_config.agent_type == AgentType.FICTITIOUS_PLAY
+        assert experiment_config.agent_type == AgentType.LINEAR_PROGRAMMING_NORMAL_FORM
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
         """
-        Performs the policy training for the given random seeds using fictitious play
+        Performs the policy training for the given random seeds using linear programming
 
         :return: the training metrics and the trained policies
         """
@@ -67,7 +68,7 @@ class FictitiousPlayAgent(BaseAgent):
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
 
-        descr = f"Training of policies with the fictitious play algorithm using " \
+        descr = f"Training of policies with the linear programming for normal-form games algorithm using " \
                 f"simulation:{self.simulation_env_config.name}"
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
@@ -118,8 +119,8 @@ class FictitiousPlayAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.fictitious_play(exp_result=exp_result, seed=seed, training_job=self.training_job,
-                                              random_seeds=self.experiment_config.random_seeds)
+            exp_result = self.linear_programming_normal_form(exp_result=exp_result, seed=seed, training_job=self.training_job,
+                                                             random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
             if self.save_to_metastore:
@@ -175,15 +176,16 @@ class FictitiousPlayAgent(BaseAgent):
         """
         :return: a list with the hyperparameter names
         """
-        return [agents_constants.FICTITIOUS_PLAY.N, agents_constants.FICTITIOUS_PLAY.PAYOFF_MATRIX,
+        return [agents_constants.LP_FOR_NF_GAMES.PAYOFF_MATRIX, agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1,
+                agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2,
                 agents_constants.COMMON.EVAL_BATCH_SIZE,
                 agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE]
 
-    def fictitious_play(self, exp_result: ExperimentResult, seed: int,
-                        training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
+    def linear_programming_normal_form(self, exp_result: ExperimentResult, seed: int,
+                                       training_job: TrainingJobConfig, random_seeds: List[int]) -> ExperimentResult:
         """
-        Runs the fictitious play algorithm
+        Runs the linear programming algorithm for normal-form games
 
         :param exp_result: the experiment result object to store the result
         :param seed: the seed
@@ -192,93 +194,52 @@ class FictitiousPlayAgent(BaseAgent):
         :return: the updated experiment result and the trained policy
         """
         # Hyperparameters
-        N = self.experiment_config.hparams[agents_constants.FICTITIOUS_PLAY.N].value
-        payoff_matrix = np.array(self.experiment_config.hparams[agents_constants.FICTITIOUS_PLAY.PAYOFF_MATRIX].value)
-        p1_prior = self.experiment_config.hparams[agents_constants.FICTITIOUS_PLAY.PLAYER_1_PRIOR].value
-        p2_prior = self.experiment_config.hparams[agents_constants.FICTITIOUS_PLAY.PLAYER_2_PRIOR].value
+        payoff_matrix = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_NF_GAMES.PAYOFF_MATRIX].value)
+        A1 = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1].value)
+        A2 = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2].value)
 
-        p1_empirical_strategies = []
-        p2_empirical_strategies = []
-        p1_best_responses = []
-        p2_best_responses = []
-        p1_payoffs = []
-        p2_payoffs = []
+        maximin_strategy, minimax_strategy, val = self.compute_equilibrium_strategies_in_matrix_game(
+            A=payoff_matrix,A1=A1, A2=A2)
+        # Log average return
+        J = val
+        exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
+        running_avg_J = ExperimentUtil.running_average(
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
+            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+        exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
-        p1_counts_list = []
-        p2_counts_list = []
+        progress = 1
+        training_job.progress_percentage = progress
+        training_job.experiment_result = exp_result
+        if len(self.env.get_traces()) > 0:
+            training_job.simulation_traces.append(self.env.get_traces()[-1])
+        if len(training_job.simulation_traces) > training_job.num_cached_traces:
+            training_job.simulation_traces = training_job.simulation_traces[1:]
+        if self.save_to_metastore:
+            MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
-        p1_counts_list.append(p1_prior)
-        p2_counts_list.append(p2_prior)
-        p1_empirical_strategy = p1_prior
-        p2_empirical_strategy = p2_prior
-        J = 0
-        for i in range(N):
-            p1_empirical_strategy = self.compute_empirical_strategy(p1_counts_list[-1])
-            p2_empirical_strategy = self.compute_empirical_strategy(p2_counts_list[-1])
-            p1_best_response, p1_payoff = self.best_response(p2_empirical_strategy, A=payoff_matrix, maximize=True)
-            p2_best_response, p2_payoff = self.best_response(p1_empirical_strategy, A=payoff_matrix, maximize=False)
+        # Update execution
+        ts = time.time()
+        self.exp_execution.timestamp = ts
+        self.exp_execution.result = exp_result
+        if self.save_to_metastore:
+            MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
+                                                        id=self.exp_execution.id)
 
-            p1_empirical_strategies.append(p1_empirical_strategy)
-            p2_empirical_strategies.append(p2_empirical_strategy)
-            p1_best_responses.append(p1_best_response)
-            p2_best_responses.append(p2_best_response)
-            p1_payoffs.append(p1_payoff)
-            p2_payoffs.append(p2_payoff)
+        Logger.__call__().get_logger().info(
+            f"[Linear programming for normal-form games] J:{J}, "
+            f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
+            f"{running_avg_J}")
 
-            latest_counts_p1 = p1_counts_list[-1].copy()
-            latest_counts_p2 = p2_counts_list[-1].copy()
-
-            latest_counts_p1[p1_best_response] += 1
-            latest_counts_p2[p2_best_response] += 1
-
-            p1_counts_list.append(latest_counts_p1)
-            p2_counts_list.append(latest_counts_p2)
-
-            # Log average return
-            J = p1_payoff
-            # policy.avg_R = J
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
-            running_avg_J = ExperimentUtil.running_average(
-                exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
-                self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
-
-            if i % self.experiment_config.log_every == 0 and i > 0:
-                # Update training job
-                total_iterations = len(random_seeds) * N
-                iterations_done = (random_seeds.index(seed)) * N + i
-                progress = round(iterations_done / total_iterations, 2)
-                training_job.progress_percentage = progress
-                training_job.experiment_result = exp_result
-                if len(self.env.get_traces()) > 0:
-                    training_job.simulation_traces.append(self.env.get_traces()[-1])
-                if len(training_job.simulation_traces) > training_job.num_cached_traces:
-                    training_job.simulation_traces = training_job.simulation_traces[1:]
-                if self.save_to_metastore:
-                    MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
-
-                # Update execution
-                ts = time.time()
-                self.exp_execution.timestamp = ts
-                self.exp_execution.result = exp_result
-                if self.save_to_metastore:
-                    MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
-                                                                id=self.exp_execution.id)
-
-                Logger.__call__().get_logger().info(
-                    f"[FICTITIOUS-PLAY] i: {i}, J:{J}, "
-                    f"J_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-                    f"{running_avg_J}")
-
-        p1_policy = VectorPolicy(policy_vector=p1_empirical_strategy, simulation_name=self.simulation_env_config.name,
+        p1_policy = VectorPolicy(policy_vector=maximin_strategy, simulation_name=self.simulation_env_config.name,
                                  player_type=self.experiment_config.player_type,
-                                 actions=list(range(len(p1_empirical_strategy))),
-                                 avg_R=J, agent_type=AgentType.FICTITIOUS_PLAY)
-        p2_policy = VectorPolicy(policy_vector=p2_empirical_strategy, simulation_name=self.simulation_env_config.name,
+                                 actions=list(range(len(maximin_strategy))),
+                                 avg_R=J, agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
+        p2_policy = VectorPolicy(policy_vector=minimax_strategy, simulation_name=self.simulation_env_config.name,
                                  player_type=self.experiment_config.player_type,
-                                 actions=list(range(len(p2_empirical_strategy))),
+                                 actions=list(range(len(minimax_strategy))),
                                  avg_R=J,
-                                 agent_type=AgentType.FICTITIOUS_PLAY)
+                                 agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
         exp_result.policies[seed] = p1_policy
         exp_result.policies[seed+1] = p2_policy
         # Save policy
@@ -287,36 +248,77 @@ class FictitiousPlayAgent(BaseAgent):
             MetastoreFacade.save_vector_policy(vector_policy=p2_policy)
         return exp_result
 
-    def compute_empirical_strategy(self, counts) -> List[float]:
+    def compute_equilibrium_strategies_in_matrix_game(self, A: np.ndarray, A1: np.ndarray, A2: np.ndarray) \
+            -> Tuple[np.ndarray, np.ndarray, float]:
         """
-        Computes the empirical strategy from a list of counts
+        Computes equilibrium strategies in a matrix game
 
-        :param counts: the list of counts
-        :return: the empirical strategy
+        :param A: the matrix game
+        :param A1: the action set of player 1 (the maximizer)
+        :param A2: the action set of player 2 (the minimizer)
+        :return: the equilibrium strategy profile and the value
         """
-        s = []
-        counts_sum = sum(counts)
-        for i in range(len(counts)):
-            s.append(counts[i]/counts_sum)
-        return s
+        v1, maximin_strategy = self.compute_matrix_game_value(A=A, A1=A1, A2=A2, maximizer=True)
+        v2, minimax_strategy = self.compute_matrix_game_value(A=A, A1=A1, A2=A2, maximizer=False)
+        return maximin_strategy, minimax_strategy, v1
 
-    def best_response(self, p: List[float], A: np.ndarray, maximize : bool = True) -> Tuple[np.ndarray, float]:
+    def compute_matrix_game_value(self, A: np.ndarray, A1: np.ndarray, A2: np.ndarray, maximizer: bool = True) \
+            -> Tuple[any, np.ndarray]:
         """
-        Computes a best response against p
+        Uses LP to compute the value of a a matrix game, also computes the maximin or minimax strategy
 
-        :param p: the opponents strategy vector
-        :param A: the payoff matrix
-        :param maximize: whether it is a maximizer player or minimizer player
-        :return: the best response action and its payoff (value)
+        :param A: the matrix game
+        :param A1: the action set of player 1
+        :param A2: the action set of player 2
+        :param maximizer: boolean flag whether to compute the maximin strategy or minimax strategy
+        :return: (val(A), maximin or minimax strategy)
         """
-        if maximize:
-            payoffs = A.dot(np.array(p))
-            br = np.argmax(payoffs)
-            return br, payoffs[br]
+        if maximizer:
+            problem = pulp.LpProblem("AuxillaryGame", pulp.LpMaximize)
+            Ai = A1
         else:
-            payoffs = np.array(p).transpose().dot(A)
-            br = np.argmin(payoffs)
-            return br, payoffs[br]
+            problem = pulp.LpProblem("AuxillaryGame", pulp.LpMinimize)
+            Ai = A2
+
+        # Decision variables, strategy-weights
+        s = []
+        for ai in Ai:
+            si = pulp.LpVariable("s_" + str(ai), lowBound=0, upBound=1, cat=pulp.LpContinuous)
+            s.append(si)
+
+        # Auxillary decision variable, value of the game v
+        v = pulp.LpVariable("v", lowBound=None, upBound=None, cat=pulp.LpContinuous)
+
+        # The objective function
+        problem += v, "Value of the game"
+
+        # The constraints
+        if maximizer:
+            for j in range(A.shape[1]):
+                sum = 0
+                for i in range(A.shape[0]):
+                    sum += s[i] * A[i][j]
+                problem += sum >= v, "SecurityValueConstraint_" + str(j)
+        else:
+            for i in range(A.shape[0]):
+                sum = 0
+                for j in range(A.shape[1]):
+                    sum += s[j] * A[i][j]
+                problem += sum <= v, "SecurityValueConstraint_" + str(i)
+
+        strategy_weights_sum = 0
+        for si in s:
+            strategy_weights_sum += si
+        problem += strategy_weights_sum == 1, "probabilities sum"
+
+        # Solve
+        problem.solve(pulp.PULP_CBC_CMD(msg=0))
+
+        # Extract solution
+        optimal_strategy = np.array(list(map(lambda x: x.varValue, s)))
+        value = v.varValue
+
+        return value, optimal_strategy
 
     @staticmethod
     def update_metrics(metrics: Dict[str, List[Union[float, int]]], info: Dict[str, Union[float, int]]) \
