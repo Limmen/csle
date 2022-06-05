@@ -85,6 +85,7 @@ class ArrivalThread(threading.Thread):
         self.commands = commands
         self.num_commands = num_commands
         self.sine_modulated = sine_modulated
+        self.rate = self.lamb
         self.time_scaling_factor = time_scaling_factor
         self.period_scaling_factor = period_scaling_factor
         logging.info(f"Starting arrival thread, lambda:{lamb}, mu:{mu}, num:commands:{num_commands}, "
@@ -115,6 +116,7 @@ class ArrivalThread(threading.Thread):
             self.t += 1
             if self.sine_modulated:
                 rate = self.sine_modulated_poisson_rate(self.t)
+                self.rate = rate
                 new_clients = poisson.rvs(rate, size=1)[0]
             else:
                 new_clients = poisson.rvs(self.lamb, size=1)[0]
@@ -168,8 +170,9 @@ class ProducerThread(threading.Thread):
             if self.arrival_thread is not None:
                 ts = time.time()
                 num_clients = len(self.arrival_thread.client_threads)
+                rate = self.arrival_thread.rate
                 self.producer.produce(constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
-                                      f"{ts},{self.ip},{num_clients}")
+                                      f"{ts},{self.ip},{num_clients},{rate}")
                 self.producer.poll(0)
 
 

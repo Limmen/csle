@@ -68,10 +68,12 @@ class ClientPopulationConsumerThread(threading.Thread):
         for i in range(len(self.client_population_metrics_list)):
             avg_client_population_metrics.num_clients = avg_client_population_metrics.num_clients + \
                                                         self.client_population_metrics_list[i].num_clients
+            avg_client_population_metrics.rate = avg_client_population_metrics.rate + \
+                                                        self.client_population_metrics_list[i].rate
 
-        avg = int(round(
-            avg_client_population_metrics.num_clients/len(self.client_population_metrics_list)))
         avg_client_population_metrics.num_clients = int(round(
             avg_client_population_metrics.num_clients/len(self.client_population_metrics_list)))
+        avg_client_population_metrics.rate = float(round(
+            avg_client_population_metrics.rate/len(self.client_population_metrics_list)))
         return avg_client_population_metrics
 

@@ -6,6 +6,7 @@ import CpuAndMemoryUtilizationChart from "../CpuAndMemoryUtilizationChart/CpuAnd
 import NetworkChart from "../NetworkChart/NetworkChart";
 import BlockIOChart from "../BlockIOChart/BlockIOChart";
 import ClientsChart from "../ClientsChart/ClientsChart";
+import ClientsArrivalRateChart from "../ClientsArrivalRateChart/ClientsArrivalRateChart";
 import LoginsChart from "../LoginsChart/LoginsChart";
 import ConnectionsChart from "../ConnectionsChart/ConnectionsChart";
 import PidsChart from "../PidsChart/PidsChart";
@@ -73,6 +74,15 @@ const AggregateMetrics = React.memo((props) => {
                         <ClientsChart stats={props.clientMetrics}
                                       animation={props.animation} animationDuration={props.animationDuration}
                                       animationDurationFactor={props.animationDurationFactor}/>
+                    </div>
+                </div>
+                <div className="row chartsRow">
+                    <div className="col-sm-6">
+                        <ClientsArrivalRateChart stats={props.clientMetrics}
+                                      animation={props.animation} animationDuration={props.animationDuration}
+                                      animationDurationFactor={props.animationDurationFactor}/>
+                    </div>
+                    <div className="col-sm-6">
                     </div>
                 </div>
             </div>
