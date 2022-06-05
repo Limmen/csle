@@ -151,7 +151,7 @@ class LOG_SINK:
     DOCKER_HOST_STATS_TOPIC_NAME = "docker_host_stats"
     ATTACKER_ACTIONS_TOPIC_NAME = "attacker_actions"
     DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
-    CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients"]
+    CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients", "rate"]
     IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
                                 "inappropriate-content", "policy-violation", "shellcode-detect", "successful-admin",
                                 "successful-user", "trojan-activity", "unsuccessful-user", "web-application-attack",
@@ -201,7 +201,7 @@ class LOG_SINK:
     DOCKER_STATS_PERCENT_LABELS = [
         "cpu_percent", "cpu_percent"
     ]
-    CLIENT_POPULATION_METRIC_LABELS = ["num_clients"]
+    CLIENT_POPULATION_METRIC_LABELS = ["num_clients", "rate"]
     ALL_DELTA_LABELS = IDS_ALERTS_LABELS + HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + \
                        DOCKER_STATS_PERCENT_LABELS + CLIENT_POPULATION_METRIC_LABELS
     ALL_INITIAL_LABELS = HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + DOCKER_STATS_PERCENT_LABELS \
