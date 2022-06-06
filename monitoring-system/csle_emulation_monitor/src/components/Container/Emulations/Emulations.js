@@ -250,7 +250,7 @@ const Emulations = () => {
                     <h3 className="executionsTitle">
                         Executions:
                     </h3>
-                    {props.selectedEmulation.executions.map((exec, index) =>
+                    {props.executions.map((exec, index) =>
                         <Accordion defaultActiveKey="0" key={index + exec.ip_first_octet}>
                             <Emulation emulation={exec.emulation_env_config}
                                        wrapper={wrapper} key={exec.emulation_env_config.name + "_" + index}

@@ -10,6 +10,10 @@ import AggregateMetrics from "./AggregateMetrics/AggregateMetrics";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import DataCollection from './MonitoringSetup.png'
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
+import {useDebouncedCallback} from 'use-debounce';
 
 const Monitoring = () => {
     const windowLengthOptions = [
@@ -76,13 +80,16 @@ const Monitoring = () => {
             label: "100%"
         }
     ]
-    const [runningEmulations, setRunningEmulations] = useState([]);
-    const [containerOptions, setContainerOptions] = useState([]);
-    const [selectedEmulation, setSelectedEmulation] = useState(null);
+    const [emulationExecutionIds, setEmulationExecutionIds] = useState([]);
+    const [filteredEmulationExecutionIds, setFilteredEmulationExecutionIds] = useState([]);
+    const [emulationExecutionContainerOptions, setEmulationExecutionContainerOptions] = useState([]);
+    const [selectedEmulationExecutionId, setSelectedEmulationExecutionId] = useState(null);
+    const [selectedEmulationExecution, setSelectedEmulationExecution] = useState(null);
     const [windowLength, setWindowLength] = useState(windowLengthOptions[0]);
     const [selectedContainer, setSelectedContainer] = useState(null);
     const [monitoringData, setMonitoringData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingSelectedEmulationExecution, setLoadingSelectedEmulationExecution] = useState(true);
     const [animationDuration, setAnimationDuration] = useState(evolutionSpeedOptions[0]);
     const [animation, setAnimation] = useState(false);
     const animationDurationFactor = 50000
@@ -92,6 +99,7 @@ const Monitoring = () => {
     const [prometheusStatus, setPrometheusStatus] = useState(null);
     const [nodeExporterStatus, setNodeExporterStatus] = useState(null);
     const [showInfoModal, setShowInfoModal] = useState(false);
+    const [searchString, setSearchString] = useState("");
     // const ip = "172.31.212.92"
 
     const animationDurationUpdate = (selectedObj) => {
@@ -160,26 +168,15 @@ const Monitoring = () => {
     const onChangeWindowLength = (windowLenSelection) => {
         if (windowLenSelection.value !== windowLength) {
             setWindowLength(windowLenSelection)
-            setLoading(true)
-            fetchMonitoringData(windowLength.value, selectedEmulation)
+            setLoadingSelectedEmulationExecution(true)
+            fetchMonitoringData(windowLength.value, selectedEmulationExecution)
         }
     }
 
-    const updateEmulation = (emulation) => {
-        if (selectedEmulation === null || selectedEmulation === undefined ||
-            emulation.value.name !== selectedEmulation.value.name) {
-            setSelectedEmulation(emulation)
-            const containerOptions = emulation.value.containers_config.containers.map((c, index) => {
-                return {
-                    value: c,
-                    label: c.full_name_str
-                }
-            })
-            setContainerOptions(containerOptions)
-            setSelectedContainer(containerOptions[0])
-            setLoading(true)
-            fetchMonitoringData(windowLength.value, emulation)
-        }
+    const updateEmulationExecutionId = (emulationExecutionId) => {
+        setSelectedEmulationExecutionId(emulationExecutionId)
+        fetchSelectedExecution(emulationExecutionId)
+        setLoadingSelectedEmulationExecution(true)
     }
 
     const updateHost = (container) => {
@@ -188,12 +185,34 @@ const Monitoring = () => {
 
     const refresh = () => {
         setLoading(true)
+        setLoadingSelectedEmulationExecution(true)
+        setSelectedEmulationExecution(null)
         fetchGrafanaStatus()
         fetchPrometheusStatus()
         fetchCadvisorStatus()
         fetchNodeExporterStatus()
-        fetchEmulations()
+        fetchEmulationExecutionIds()
     }
+
+    const searchFilter = (executionIdObj, searchVal) => {
+        return (searchVal === "" || executionIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchChange = (event) => {
+        var searchVal = event.target.value
+        const filteredEIds = emulationExecutionIds.filter(executionIdObj => {
+            return searchFilter(executionIdObj, searchVal)
+        });
+        setFilteredEmulationExecutionIds(filteredEIds)
+        setSearchString(searchVal)
+    }
+
+    const searchHandler = useDebouncedCallback(
+        (event) => {
+            searchChange(event)
+        },
+        350
+    );
 
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -299,9 +318,9 @@ const Monitoring = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchEmulations = useCallback(() => {
+    const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationsdata',
+            `http://` + ip + ':7777/emulationsexecutionsids',
             {
                 method: "GET",
                 headers: new Headers({
@@ -311,36 +330,60 @@ const Monitoring = () => {
         )
             .then(res => res.json())
             .then(response => {
-                var rEmulations = response.filter(em => em.running)
-                const emulationOptions = rEmulations.map((em, index) => {
+                const emulationExecutionIds = response.map((id_obj, index) => {
                     return {
-                        value: em,
-                        label: em.name
+                        value: id_obj,
+                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
                     }
                 })
-                setRunningEmulations(emulationOptions)
-                if (rEmulations.length > 0) {
-                    if (selectedEmulation === null) {
-                        setSelectedEmulation(emulationOptions[0])
-                    }
-                    const containerOptions = rEmulations[0].containers_config.containers.map((c, index) => {
+                setEmulationExecutionIds(emulationExecutionIds)
+                setFilteredEmulationExecutionIds(emulationExecutionIds)
+                setLoading(false)
+                if (emulationExecutionIds.length > 0) {
+                    setSelectedEmulationExecutionId(emulationExecutionIds[0])
+                    fetchSelectedExecution(emulationExecutionIds[0])
+                    setLoadingSelectedEmulationExecution(true)
+                } else {
+                    setLoadingSelectedEmulationExecution(false)
+                    setSelectedEmulationExecution(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchSelectedExecution = useCallback((id_obj) => {
+        fetch(
+            `http://` + ip + ':7777/emulationsexecutionsids/get/' + id_obj.value.emulation + '/execution/' + id_obj.value.id,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setSelectedEmulationExecution(response)
+                setLoadingSelectedEmulationExecution(false)
+                if (response !== null && response !== undefined) {
+                    const containerOptions = response.emulation_env_config.containers_config.containers.map((c, index) => {
                         return {
                             value: c,
                             label: c.full_name_str
                         }
                     })
-                    setContainerOptions(containerOptions)
+                    setEmulationExecutionContainerOptions(containerOptions)
                     setSelectedContainer(containerOptions[0])
-                    fetchMonitoringData(windowLength.value, emulationOptions[0])
+                    fetchMonitoringData(windowLength.value, response)
                 }
-                setLoading(false)
+
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-
-    const fetchMonitoringData = useCallback((len, emulation) => fetch(
-        `http://` + ip + ':7777/monitor/' + emulation.value.name + "/" + len,
+    const fetchMonitoringData = useCallback((len, execution) => fetch(
+        (`http://` + ip + ':7777/monitor/' + execution.emulation_env_config.name + "/"
+            + execution.ip_first_octet + "/" + len),
         {
             method: "GET",
             headers: new Headers({
@@ -351,14 +394,14 @@ const Monitoring = () => {
         .then(res => res.json())
         .then(response => {
             setMonitoringData(response)
-            setLoading(false)
+            setLoadingSelectedEmulationExecution(false)
         })
         .catch(error => console.log("error:" + error)), []);
 
 
     useEffect(() => {
         setLoading(true)
-        fetchEmulations();
+        fetchEmulationExecutionIds();
     }, []);
 
 
@@ -468,24 +511,124 @@ const Monitoring = () => {
         startOrStopNodeExporterRequest()
     }
 
-    const SelectEmulationDropdownOrSpinner = (props) => {
-        if (!props.loading && props.runningEmulations.length === 0) {
+    const SelectedExecutionView = (props) => {
+        if (props.loadingSelectedEmulationExecution || props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined) {
+            if (props.loadingSelectedEmulationExecution) {
+                return (
+                    <h3>
+                        <span className="spinnerLabel"> Fetching execution... </span>
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden"></span>
+                        </Spinner>
+                    </h3>)
+            } else {
+                return (
+                    <p></p>
+                )
+            }
+        } else {
             return (
-                <h5 className="inline-block">
-                    No running emulations to monitor
-                </h5>)
+                <div>
+                    <div className="row">
+                        <div className="col-sm-2">
+                            <h4>
+                                Time-series window length:
+                            </h4>
+                        </div>
+                        <div className="col-sm-3" style={{width: "250px"}}>
+                            <h4>
+                                <Select
+                                    style={{display: 'inline-block'}}
+                                    value={props.windowLength}
+                                    defaultValue={props.windowLength}
+                                    options={props.windowLengthOptions}
+                                    onChange={onChangeWindowLength}
+                                    placeholder="Select a window length"
+                                />
+                            </h4>
+                        </div>
+                        <div className="col-sm-2">
+                            <h4>Evolution speed:</h4>
+                        </div>
+                        <div className="col-sm-3" style={{width: "250px"}}>
+                            <h4>
+                                <Select
+                                    style={{display: 'inline-block'}}
+                                    value={props.animationDuration}
+                                    defaultValue={props.animationDuration}
+                                    options={props.evolutionSpeedOptions}
+                                    onChange={animationDurationUpdate}
+                                    placeholder="Set the evolution speed"
+                                />
+                            </h4>
+                        </div>
+                        <div className="col-sm-2">
+                        </div>
+                    </div>
+                    <AggregateMetrics key={props.animationDuration.value}
+                                      loading={props.loadingSelectedEmulationExecution}
+                                      animation={props.animation}
+                                      animationDuration={props.animationDuration.value}
+                                      animationDurationFactor={props.animationDurationFactor}
+                                      clientMetrics={getClientMetrics()} idsMetrics={getIdsMetrics()}
+                                      aggregatedHostMetrics={getAggregatedHostMetrics()}
+                                      aggregatedDockerStats={getAggregatedDockerStats()}
+                    />
+                    <div className="row hostMetricsDropdownRow">
+                        <div className="col-sm-12">
+                            <h5 className="text-center inline-block monitoringHeader">
+                                <SelectHostDropdownOrSpinner
+                                    loading={props.loadingSelectedEmulationExecution}
+                                    selectedEmulation={props.selectedEmulationExecution.emulation_env_config}
+                                    selectedContainer={props.selectedContainer}
+                                    containerOptions={props.emulationExecutionContainerOptions}
+                                />
+                            </h5>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <ContainerMetrics key={'container' + '-' + props.animationDuration.value}
+                                      loading={props.loadingSelectedEmulationExecution}
+                                      hostMetrics={getHostMetrics()}
+                                      dockerMetrics={getDockerMetrics()}
+                                      animation={props.animation} animationDuration={props.animationDuration.value}
+                                      animationDurationFactor={props.animationDurationFactor}/>
+                </div>
+            )
         }
-        if (props.loading || props.selectedEmulation === null || props.runningEmulations.length === 0) {
+    }
+
+    const SelectEmulationExecutionIdDropdownOrSpinner = (props) => {
+        if (!props.loading && props.emulationExecutionIds.length === 0) {
             return (
-                <Spinner animation="border" role="status" className="dropdownSpinner">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
+                <div>
+                    <span className="emptyText">No running executions are available</span>
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>)
+        }
+        if (props.loading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching executions... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
         } else {
             return (<div>
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshTooltip()}
+                        overlay={renderRefreshTooltip}
                     >
                         <Button variant="button" onClick={refresh}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
@@ -502,42 +645,16 @@ const Monitoring = () => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    Aggregated Metrics for Emulation:
+                    Emulation Execution:
                     <div className="conditionalDist inline-block selectEmulation">
-                        <div className="conditionalDist inline-block" style={{width: "400px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "700px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedEmulation}
-                                defaultValue={props.selectedDynamicsModel}
-                                options={props.runningEmulations}
-                                onChange={updateEmulation}
-                                placeholder="Select a running emulation"
-                            />
-                        </div>
-                        <div className="conditionalDist inline-block windowLengthDropdown">
-                            Time-series window length:
-                        </div>
-                        <div className="conditionalDist inline-block windowLengthDropdown" style={{width: "250px"}}>
-                            <Select
-                                style={{display: 'inline-block'}}
-                                value={props.windowLength}
-                                defaultValue={props.windowLength}
-                                options={windowLengthOptions}
-                                onChange={onChangeWindowLength}
-                                placeholder="Select a window length"
-                            />
-                        </div>
-                        <div className="conditionalDist inline-block windowLengthDropdown">
-                            Evolution speed:
-                        </div>
-                        <div className="conditionalDist inline-block windowLengthDropdown" style={{width: "250px"}}>
-                            <Select
-                                style={{display: 'inline-block'}}
-                                value={props.animationDuration}
-                                defaultValue={props.animationDuration}
-                                options={evolutionSpeedOptions}
-                                onChange={animationDurationUpdate}
-                                placeholder="Set the evolution speed"
+                                value={props.selectedEmulationExecutionId}
+                                defaultValue={props.selectedEmulationExecutionId}
+                                options={props.emulationExecutionIds}
+                                onChange={updateEmulationExecutionId}
+                                placeholder="Select an emulation execution"
                             />
                         </div>
                     </div>
@@ -558,19 +675,21 @@ const Monitoring = () => {
         } else {
             return (
                 <div>
-                    Metrics for Container:
-                    <div className="conditionalDist inline-block selectEmulation">
-                        <div className="conditionalDist inline-block" style={{width: "500px"}}>
-                            <Select
-                                style={{display: 'inline-block', width: "1000px"}}
-                                value={props.selectedContainer}
-                                defaultValue={props.selectedContainer}
-                                options={props.containerOptions}
-                                onChange={updateHost}
-                                placeholder="Select a container from the emulation"
-                            />
+                    <h4>
+                        Metrics for Container:
+                        <div className="conditionalDist inline-block selectEmulation">
+                            <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                                <Select
+                                    style={{display: 'inline-block', width: "1000px"}}
+                                    value={props.selectedContainer}
+                                    defaultValue={props.selectedContainer}
+                                    options={props.containerOptions}
+                                    onChange={updateHost}
+                                    placeholder="Select a container from the emulation"
+                                />
+                            </div>
                         </div>
-                    </div>
+                    </h4>
                 </div>
             )
         }
@@ -715,49 +834,47 @@ const Monitoring = () => {
 
     return (
         <div className="container-fluid">
-            <div className="Monitoring container-fluid">
-                <div className="row">
-
-                    <div className="col-sm-12">
-                        <h5 className="text-center inline-block monitoringHeader">
-                            <SelectEmulationDropdownOrSpinner className="selectEmulation" loading={loading}
-                                                              selectedEmulation={selectedEmulation}
-                                                              runningEmulations={runningEmulations}
-                                                              windowLength={windowLength}
-                                                              animationDuration={animationDuration}
-                            />
-
-                        </h5>
-                    </div>
+            <div className="row">
+                <div className="col-sm-6">
+                    <h4 className="text-center inline-block emulationsHeader">
+                        <SelectEmulationExecutionIdDropdownOrSpinner
+                            loading={loading} emulationExecutionIds={filteredEmulationExecutionIds}
+                            selectedEmulationExecutionId={selectedEmulationExecutionId}
+                        />
+                    </h4>
                 </div>
-                <hr/>
-                <AggregateMetrics key={animationDuration.value}
-                                  loading={loading}
-                                  animation={animation} animationDuration={animationDuration.value}
-                                  animationDurationFactor={animationDurationFactor}
-                                  clientMetrics={getClientMetrics()} idsMetrics={getIdsMetrics()}
-                                  aggregatedHostMetrics={getAggregatedHostMetrics()}
-                                  aggregatedDockerStats={getAggregatedDockerStats()}
-                />
-                <div className="row hostMetricsDropdownRow">
-                    <div className="col-sm-12">
-                        <h5 className="text-center inline-block monitoringHeader">
-                            <SelectHostDropdownOrSpinner loading={loading}
-                                                         selectedEmulation={selectedEmulation}
-                                                         selectedContainer={selectedContainer}
-                                                         containerOptions={containerOptions}
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="basic-addon1" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="basic-addon1"
+                                onChange={searchHandler}
                             />
-                        </h5>
-                    </div>
+                        </InputGroup>
+                    </Form>
                 </div>
-                <hr/>
-
-                <ContainerMetrics key={'container' + '-' + animationDuration.value} loading={loading}
-                                  hostMetrics={getHostMetrics()}
-                                  dockerMetrics={getDockerMetrics()}
-                                  animation={animation} animationDuration={animationDuration.value}
-                                  animationDurationFactor={animationDurationFactor}/>
+                <div className="col-sm-2">
+                </div>
             </div>
+            <SelectedExecutionView loadingSelectedEmulationExecution={loadingSelectedEmulationExecution}
+                                   selectedEmulationExecution={selectedEmulationExecution}
+                                   windowLength={windowLength}
+                                   windowLengthOptions={windowLengthOptions}
+                                   animationDuration={animationDuration}
+                                   evolutionSpeedOptions={evolutionSpeedOptions}
+                                   selectedContainer={selectedContainer}
+                                   emulationExecutionContainerOptions={emulationExecutionContainerOptions}
+                                   animationDurationFactor={animationDurationFactor}
+                                   animation={animation}
+
+            />
             <div className="row">
                 <div className="col-sm-12">
                     <GrafanaLink className="grafanaStatus" grafanaStatus={grafanaStatus}/>

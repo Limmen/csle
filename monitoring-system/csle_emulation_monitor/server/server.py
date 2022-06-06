@@ -265,14 +265,41 @@ def emulationids():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/monitor/<emulation>/<minutes>', methods=['GET'])
-def monitor_emulation(emulation: str, minutes: int):
+@app.route('/emulationsexecutionsids', methods=['GET'])
+def emulationexecutionids():
+    ex_ids = MetastoreFacade.list_emulation_execution_ids()
+    rc_emulations = ContainerManager.list_running_emulations()
+    response_dicts = []
+    for tup in ex_ids:
+        if tup[1] in rc_emulations:
+            response_dicts.append({
+                "id": tup[0],
+                "emulation": tup[1],
+                "running": True
+            })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/emulationsexecutionsids/get/<emulation_name>/execution/<execution_id>', methods=['GET'])
+def emulationexecutionid(emulation_name: str, execution_id: int):
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation_name)
+    if execution is None:
+        response = jsonify({})
+    else:
+        response = jsonify(execution.to_dict())
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/monitor/<emulation>/<execution_id>/<minutes>', methods=['GET'])
+def monitor_emulation(emulation: str, execution_id: int, minutes: int):
     minutes = int(minutes)
-    em = MetastoreFacade.get_emulation_by_name(name=emulation)
-    if em is None:
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+    if execution is None:
         time_series = None
     else:
-        time_series = ReadEmulationStatistics.read_all(emulation_env_config=em, time_window_minutes=minutes).to_dict()
+        time_series = ReadEmulationStatistics.read_all(emulation_env_config=execution.emulation_env_config,
+                                                       time_window_minutes=minutes).to_dict()
     response = jsonify(time_series)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response

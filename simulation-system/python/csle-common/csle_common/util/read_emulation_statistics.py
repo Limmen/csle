@@ -57,7 +57,6 @@ class ReadEmulationStatistics:
             collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"attacker_actions_consumer_thread_{start_consume_ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: collector_constants.KAFKA.EARLIEST_OFFSET}
         consumer = Consumer(**kafka_conf)
-        print(f"consume: {datetime.datetime.now() - datetime.timedelta(minutes=time_window_minutes)}")
         start_consume_ts = int(datetime.datetime.timestamp(datetime.datetime.now()
                                                            - datetime.timedelta(minutes=time_window_minutes)))
         start_consume_ts=int(start_consume_ts*1e3) # convert to ms

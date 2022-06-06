@@ -2222,6 +2222,19 @@ class MetastoreFacade:
                 return id_of_new_row
 
     @staticmethod
+    def list_emulation_execution_ids() -> List[EmulationExecution]:
+        """
+        :return: A list of emulation executions in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT ip_first_octet,emulation_name FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
     def list_emulation_executions() -> List[EmulationExecution]:
         """
         :return: A list of emulation executions in the metastore

@@ -31,7 +31,6 @@ const AlertsChart = React.memo((props) => {
                 }
             })
             var domain = [0, Math.max(1, data.length)]
-
             return (
                 <ResponsiveContainer width='100%' height={300}>
                     <LineChart
@@ -81,7 +80,5 @@ const AlertsChart = React.memo((props) => {
 )
 
 AlertsChart.propTypes = {};
-
 AlertsChart.defaultProps = {};
-
 export default AlertsChart;
