@@ -9,7 +9,6 @@ import fileDownload from 'react-file-download'
 import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
-import getDateStr from "../../../Common/getDateStr";
 
 const Emulation = (props) => {
     const [loading, setLoading] = useState(false);
@@ -29,7 +28,6 @@ const Emulation = (props) => {
     const [kafkaTopicsOpen, setKafkaTopicsOpen] = useState(false);
     const [firewallOpen, setFirewallOpen] = useState(false);
     const [staticAttackerSequenceOpen, setStaticAttackerSequenceOpen] = useState(false);
-    const [executionsOpen, setExecutionsOpen] = useState(false);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -110,7 +108,7 @@ const Emulation = (props) => {
             }
         }
         if (emulation.running) {
-            return "running, " + "number of executions: " + emulation.executions.length
+            return "running"
         } else {
             return "stopped"
         }
@@ -143,6 +141,14 @@ const Emulation = (props) => {
         }
     }
 
+    const getId = () => {
+        if(props.execution){
+            return (<span>{props.execution_ip_octet}</span>)
+        } else {
+            return <span>{emulation.id}</span>
+        }
+    }
+
     const renderStartEmulationTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Start emulation
@@ -155,11 +161,57 @@ const Emulation = (props) => {
         </Tooltip>
     );
 
+    const renderRemoveAndCleanExecutionTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Stop and remove execution
+        </Tooltip>
+    );
+
     const renderStopEmulationTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Stop emulation
         </Tooltip>
     );
+
+    const RenderActions = (props) => {
+        if(!props.execution){
+            return (
+                <h5 className="semiTitle">
+                    Actions:
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveEmulationTooltip}
+                    >
+                        <Button variant="danger" className="removeButton"
+                                onClick={() => props.removeEmulation(emulation)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+
+                    <SpinnerOrStatus emulation={emulation}/>
+                </h5>
+                )
+        } else {
+            return (
+                <h5 className="semiTitle">
+                    Actions:
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveAndCleanExecutionTooltip}
+                    >
+                        <Button variant="danger" className="removeButton"
+                                onClick={() => props.removeExecution(emulation, props.execution_ip_octet)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </h5>
+            )
+        }
+    }
 
 
     const SpinnerOrStatus = (props) => {
@@ -204,7 +256,7 @@ const Emulation = (props) => {
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderStartEmulationTooltip}
+                        overlay={renderRemoveAndCleanExecutionTooltip}
                     >
                         <Button variant="success" className="startButton"
                                 onClick={() => startorStopEmulation(emulation)}>
@@ -217,32 +269,20 @@ const Emulation = (props) => {
     };
 
 
-    return (<Card key={emulation.name} ref={props.wrapper}>
+    return (
+        <Card key={emulation.name} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={emulation.name} className="mgHeader">
-                <span className="subnetTitle">ID: {emulation.id}, name: {emulation.name}</span>
+                <span className="subnetTitle">ID: {getId()}, emulation name: {emulation.name}</span>
                 # Containers: {emulation.containers_config.containers.length}, Status: {getStatus(emulation)}
                 {getSpinnerOrCircle(emulation)}
             </Accordion.Toggle>
         </Card.Header>
         <Accordion.Collapse eventKey={emulation.name}>
             <Card.Body>
-                <h5 className="semiTitle">
-                    Actions:
-                    <OverlayTrigger
-                        className="removeButton"
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveEmulationTooltip}
-                    >
-                        <Button variant="danger" className="removeButton"
-                                onClick={() => props.removeEmulation(emulation)}>
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
 
-                    <SpinnerOrStatus emulation={emulation}/>
-                </h5>
+                <RenderActions execution={props.execution} removeEmulation={props.removeEmulation}
+                               removeExecution={props.removeExecution} execution_ip_octet={props.execution_ip_octet}/>
                 <Card>
                     <Card.Header>
                         <Button
@@ -853,42 +893,6 @@ const Emulation = (props) => {
                                     </div>
                                 )
                             )}
-                        </div>
-                    </Collapse>
-                </Card>
-
-                <Card>
-                    <Card.Header>
-                        <Button
-                            onClick={() => setExecutionsOpen(!executionsOpen)}
-                            aria-controls="executionsBody"
-                            aria-expanded={executionsOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle">Executions</h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={executionsOpen}>
-                        <div id="usersBody" className="cardBodyHidden">
-                            <Table striped bordered hover>
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Timestamp</th>
-                                    <th>Description</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {emulation.executions.map((exec, index) => {
-                                    return (
-                                    <tr key={exec.id + "-" + index}>
-                                    <td>{exec.id}</td>
-                                    <td>{getDateStr(exec.timestamp)}</td>
-                                    <td>{exec.descr}</td>
-                                    </tr>
-                                    )})}
-                                </tbody>
-                            </Table>
                         </div>
                     </Collapse>
                 </Card>

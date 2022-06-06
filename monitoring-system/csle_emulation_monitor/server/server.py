@@ -229,12 +229,16 @@ def emulations():
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
         if em.name in rc_emulations:
             em.running = True
+            for exec in executions:
+                exec.emulation_env_config.running = True
         else:
             em.running = False
         for em_name_img in all_images:
             em_name, img = em_name_img
             if em_name == em.name:
                 em.image = base64.b64encode(img).decode()
+                for exec in executions:
+                    exec.emulation_env_config.image = base64.b64encode(img).decode()
         em_dict = em.to_dict()
         em_dict["executions"] = list(map(lambda x: x.to_dict(), executions))
         emulations_dicts.append(em_dict)
@@ -283,19 +287,13 @@ def emulation(emulation_name: str):
             em.running = True
         if request.method == "POST":
             if em.running:
-                EmulationEnvManager.stop_containers(emulation_env_config=em)
-                EmulationEnvManager.rm_containers(emulation_env_config=em)
-                try:
-                    ContainerManager.stop_docker_stats_thread(log_sink_config=em.log_sink_config,
-                                                              containers_config=em.containers_config,
-                                                              emulation_name=em.name)
-                except Exception as e:
-                    pass
-                EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=em)
+                EmulationEnvManager.clean_all_emulation_executions(emulation_env_config=em)
                 em.running = False
             else:
-                EmulationEnvManager.run_containers(emulation_env_config=em)
-                EmulationEnvManager.apply_emulation_env_config(emulation_env_config=em)
+                emulation_execution = EmulationEnvManager.create_execution(emulation_env_config=em)
+                EmulationEnvManager.run_containers(emulation_execution=emulation_execution)
+                EmulationEnvManager.apply_emulation_env_config(emulation_execution=emulation_execution,
+                                                               no_traffic=True)
                 em.running = True
     if em is None:
         em_dict = {}
@@ -313,14 +311,28 @@ def emulation_by_id(emulation_id: int):
     rc_emulations = ContainerManager.list_running_emulations()
     em_dict = {}
     if em is not None:
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
         if em.name in rc_emulations:
             em.running = True
-        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
+            for exec in executions:
+                exec.emulation_env_config.running = True
         em_name, img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
         em.image = base64.b64encode(img).decode()
+        for exec in executions:
+            exec.emulation_env_config.image = base64.b64encode(img).decode()
         em_dict = em.to_dict()
         em_dict["executions"] = list(map(lambda x: x.to_dict(), executions))
     response = jsonify(em_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/emulationsdata/remove/<emulation_name>/execution/<execution_id>', methods=['POST'])
+def remove_emulation_execution(emulation_name: str, execution_id: int):
+    print("remove emulation execution")
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation_name)
+    if execution is not None:
+        MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
+    response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

@@ -12,7 +12,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
-import { useDebouncedCallback } from 'use-debounce';
+import {useDebouncedCallback} from 'use-debounce';
 
 const Emulations = () => {
     const [emulationIds, setEmulationIds] = useState([]);
@@ -41,7 +41,7 @@ const Emulations = () => {
             .then(response => {
                 const emulationIds = response.map((id_obj, index) => {
                     var lbl = ""
-                    if(!id_obj.running) {
+                    if (!id_obj.running) {
                         lbl = "ID: " + id_obj.id + ", name: " + id_obj.emulation
                     } else {
                         lbl = "ID: " + id_obj.id + ", name: " + id_obj.emulation + " (running)"
@@ -84,6 +84,23 @@ const Emulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeEmulationExecutionRequest = useCallback((emulation_name, execution_id) => {
+        fetch(
+            `http://` + ip + ':7777/emulationsdata/remove/' + emulation_name + '/execution/' + execution_id,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchEmulationIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
             `http://` + ip + ':7777/emulationsdata/get/' + emulation_id.value,
@@ -96,7 +113,6 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setSelectedEmulation(response)
                 setLoadingSelectedEmulation(false)
             })
@@ -124,6 +140,11 @@ const Emulations = () => {
         setLoading(true)
         removeEmulationRequest(emulation.name)
         setSelectedEmulation(null)
+    }
+
+    const removeExecution = (emulation, ip_first_octet) => {
+        setLoading(true)
+        removeEmulationExecutionRequest(emulation.name, ip_first_octet)
     }
 
     useEffect(() => {
@@ -165,14 +186,14 @@ const Emulations = () => {
         setSearchString(searchVal)
 
         var selectedEmulationRemoved = false
-        if(!loadingSelectedEmulation && filteredEmsIds.length > 0){
+        if (!loadingSelectedEmulation && filteredEmsIds.length > 0) {
             for (let i = 0; i < filteredEmsIds.length; i++) {
-                if(selectedEmulation !== null && selectedEmulation !== undefined &&
+                if (selectedEmulation !== null && selectedEmulation !== undefined &&
                     selectedEmulation.id === filteredEmsIds[i].value) {
                     selectedEmulationRemoved = true
                 }
             }
-            if(!selectedEmulationRemoved) {
+            if (!selectedEmulationRemoved) {
                 setSelectedEmulationId(filteredEmsIds[0])
                 fetchEmulation(filteredEmsIds[0])
                 setLoadingSelectedEmulation(true)
@@ -198,14 +219,14 @@ const Emulations = () => {
         setShowOnlyRunningEmulations(!showOnlyRunningEmulations)
 
         var selectedEmulationRemoved = false
-        if(!loadingSelectedEmulation && filteredEmsIds.length > 0){
+        if (!loadingSelectedEmulation && filteredEmsIds.length > 0) {
             for (let i = 0; i < filteredEmsIds.length; i++) {
-                if(selectedEmulation !== null && selectedEmulation !== undefined &&
+                if (selectedEmulation !== null && selectedEmulation !== undefined &&
                     selectedEmulation.id === filteredEmsIds[i].value) {
                     selectedEmulationRemoved = true
                 }
             }
-            if(!selectedEmulationRemoved) {
+            if (!selectedEmulationRemoved) {
                 setSelectedEmulationId(filteredEmsIds[0])
                 fetchEmulation(filteredEmsIds[0])
                 setLoadingSelectedEmulation(true)
@@ -222,9 +243,33 @@ const Emulations = () => {
         350
     );
 
+    const GetExecutions = (props) => {
+        if(props.executions.length > 0){
+            return (
+                <div>
+                    <h3 className="executionsTitle">
+                        Executions:
+                    </h3>
+                    {props.selectedEmulation.executions.map((exec, index) =>
+                        <Accordion defaultActiveKey="0" key={index + exec.ip_first_octet}>
+                            <Emulation emulation={exec.emulation_env_config}
+                                       wrapper={wrapper} key={exec.emulation_env_config.name + "_" + index}
+                                       removeEmulation={removeEmulation} execution={true}
+                                       removeExecution={removeExecution}
+                                       execution_ip_octet={exec.ip_first_octet}/>
+                        </Accordion>
+                    )
+                    }
+                </div>
+            )
+        } else {
+            return <span></span>
+        }
+    }
+
     const EmulationAccordion = (props) => {
         if (props.loadingSelectedEmulation || props.selectedEmulation === null || props.selectedEmulation === undefined) {
-            if(props.loadingSelectedEmulation) {
+            if (props.loadingSelectedEmulation) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching emulation... </span>
@@ -239,11 +284,18 @@ const Emulations = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <Emulation emulation={props.selectedEmulation}
-                               wrapper={wrapper} key={props.selectedEmulation.name}
-                               removeEmulation={removeEmulation}/>
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Emulation Configuration:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <Emulation emulation={props.selectedEmulation}
+                                   wrapper={wrapper} key={props.selectedEmulation.name}
+                                   removeEmulation={removeEmulation} execution={false}
+                                   execution_ip_octet={-1} removeExecution={removeExecution}/>
+                    </Accordion>
+                    <GetExecutions executions={props.selectedEmulation.executions}/>
+                </div>
             )
         }
     }
@@ -387,8 +439,8 @@ const Emulations = () => {
                 <div className="col-sm-6">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectEmulationOrSpinner loading={loading}
-                                                   emulationIds={filteredEmulationsIds}
-                                                   selectedEmulationId={selectedEmulationId}
+                                                  emulationIds={filteredEmulationsIds}
+                                                  selectedEmulationId={selectedEmulationId}
                         />
                     </h4>
                 </div>
