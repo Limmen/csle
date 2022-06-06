@@ -25,7 +25,7 @@ const TabularPolicy = (props) => {
     const PolicyRow = (props) => {
         return (
             props.row.map((entry, index) => {
-                return (<td>{entry}</td>)
+                return (<td key={entry + "-" + index} >{entry}</td>)
             })
         )
     }

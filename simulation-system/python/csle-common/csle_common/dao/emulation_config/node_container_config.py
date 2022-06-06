@@ -46,12 +46,15 @@ class NodeContainerConfig:
         :param d:  the dict to convert
         :return: the created instance
         """
+        execution_ip_first_octet = -1
+        if "execution_ip_first_octet" in d:
+            execution_ip_first_octet = d["execution_ip_first_octet"]
         obj = NodeContainerConfig(
             name = d["name"],
             ips_and_networks=list(map(lambda x: (x[0], ContainerNetwork.from_dict(x[1])), d["ips_and_networks"])),
             version=d["version"], level=d["level"],
             restart_policy=d["restart_policy"], suffix=d["suffix"], os=d["os"],
-            execution_ip_first_octet=d["execution_ip_first_octet"]
+            execution_ip_first_octet=execution_ip_first_octet
         )
         return obj
 

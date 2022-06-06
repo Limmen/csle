@@ -355,10 +355,10 @@ def emulation_by_id(emulation_id: int):
 
 @app.route('/emulationsdata/remove/<emulation_name>/execution/<execution_id>', methods=['POST'])
 def remove_emulation_execution(emulation_name: str, execution_id: int):
-    print("remove emulation execution")
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation_name)
     if execution is not None:
-        MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
+        EmulationEnvManager.clean_emulation_execution(emulation_env_config=execution.emulation_env_config,
+                                                      execution_id=execution.ip_first_octet)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response

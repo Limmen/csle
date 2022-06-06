@@ -4,7 +4,7 @@ import json
 import io
 
 if __name__ == '__main__':
-    with io.open("/home/kim/new_traces_xw_5_june.json", 'r', encoding='utf-8') as f:
+    with io.open("/home/kim/new_traces_xw_6_june.json", 'r', encoding='utf-8') as f:
         json_str = f.read()
         dict = json.loads(json_str)
         traces_dicts = dict["emulations"]

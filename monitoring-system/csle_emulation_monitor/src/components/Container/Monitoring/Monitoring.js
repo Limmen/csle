@@ -177,6 +177,7 @@ const Monitoring = () => {
         setSelectedEmulationExecutionId(emulationExecutionId)
         fetchSelectedExecution(emulationExecutionId)
         setLoadingSelectedEmulationExecution(true)
+        setMonitoringData(null)
     }
 
     const updateHost = (container) => {
@@ -835,7 +836,7 @@ const Monitoring = () => {
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectEmulationExecutionIdDropdownOrSpinner
                             loading={loading} emulationExecutionIds={filteredEmulationExecutionIds}
@@ -860,7 +861,7 @@ const Monitoring = () => {
                         </InputGroup>
                     </Form>
                 </div>
-                <div className="col-sm-2">
+                <div className="col-sm-1">
                 </div>
             </div>
             <SelectedExecutionView loadingSelectedEmulationExecution={loadingSelectedEmulationExecution}

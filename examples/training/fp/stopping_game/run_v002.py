@@ -68,5 +68,4 @@ if __name__ == '__main__':
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
-        print("saving vector policy")
         MetastoreFacade.save_vector_policy(vector_policy=policy)

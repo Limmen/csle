@@ -68,7 +68,12 @@ class MultiThresholdStoppingPolicy(Policy):
         :param a: a given action
         :return: the probability of a
         """
-        return self.action(o=o) == a
+        if not self.player_type == PlayerType.ATTACKER:
+            _, prob = self._defender_action(o=o)
+            return prob
+        else:
+            _, prob = self._attacker_action(o=o)
+            return prob
 
     def _attacker_action(self, o, defender_stopping_prob: Optional[float] = None) -> Tuple[int, float]:
         """

@@ -268,6 +268,8 @@ def start_traffic(emulation : str, id: int, mu: float, lamb: float, t: int,
             emulation_env_config.traffic_config.client_population_config.time_scaling_factor = tsf
         if psf is not None:
             emulation_env_config.traffic_config.client_population_config.period_scaling_factor = psf
+        click.secho(f"Starting client population with "
+                    f"config:{emulation_env_config.traffic_config.client_population_config}")
         EmulationEnvManager.start_custom_traffic(emulation_env_config=emulation_env_config)
     else:
         click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)

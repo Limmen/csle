@@ -31,28 +31,9 @@ const Emulation = (props) => {
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-
-    const startOrStopEmulationRequest = useCallback((emulation_name) => {
-        fetch(
-            `http://` + ip + ':7777/emulationsdata/' + emulation_name,
-            {
-                method: "POST",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => res.json())
-            .then(response => {
-                setLoading(false)
-                setEmulation(response)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
-    const startorStopEmulation = (emulation) => {
+    const startorStopEmulationPre = (emulation) => {
         setLoading(true)
-        startOrStopEmulationRequest(emulation.name)
+        props.startOrStopEmulation(emulation.name, emulation.id)
     }
 
     const getSubnetMasks = (emulation) => {
@@ -62,6 +43,11 @@ const Emulation = (props) => {
             subnets.push(networks[i].subnet_mask)
         }
         return subnets.join(", ")
+    }
+
+    const removeExecutionPre = (emulation, ip_first_octet) => {
+        setLoading(true)
+        props.removeExecution(emulation, ip_first_octet)
     }
 
     const getNetworkNames = (emulation) => {
@@ -197,21 +183,39 @@ const Emulation = (props) => {
             return (
                 <h5 className="semiTitle">
                     Actions:
-                    <OverlayTrigger
-                        className="removeButton"
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAndCleanExecutionTooltip}
-                    >
-                        <Button variant="danger" className="removeButton"
-                                onClick={() => props.removeExecution(emulation, props.execution_ip_octet)}>
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <SpinnerOrDeleteButton execution_ip_octet={props.execution_ip_octet}/>
                 </h5>
             )
         }
     }
+
+    const SpinnerOrDeleteButton = (props) => {
+        if (loading) {
+            return (
+                <Spinner
+                    as="span"
+                    animation="grow"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                />
+            )
+        } else {
+            return (
+                <OverlayTrigger
+                    className="removeButton"
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAndCleanExecutionTooltip}
+                >
+                    <Button variant="danger" className="removeButton"
+                            onClick={() => removeExecutionPre(emulation, props.execution_ip_octet)}>
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        }
+    };
 
 
     const SpinnerOrStatus = (props) => {
@@ -246,7 +250,7 @@ const Emulation = (props) => {
                         overlay={renderStopEmulationTooltip}
                     >
                         <Button variant="warning" className="startButton"
-                                onClick={() => startorStopEmulation(emulation)}>
+                                onClick={() => startorStopEmulationPre(emulation)}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -259,7 +263,7 @@ const Emulation = (props) => {
                         overlay={renderRemoveAndCleanExecutionTooltip}
                     >
                         <Button variant="success" className="startButton"
-                                onClick={() => startorStopEmulation(emulation)}>
+                                onClick={() => startorStopEmulationPre(emulation)}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>

@@ -202,14 +202,16 @@ class EmulationEnvManager:
         LogSinkManager.create_topics(emulation_env_config=emulation_env_config)
 
     @staticmethod
-    def start_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
+    def start_custom_traffic(emulation_env_config : EmulationEnvConfig, no_traffic: bool = True) -> None:
         """
         Utility function for starting traffic generators and client population on a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param no_traffic boolean flag whether the internal traffic generators should be skipped.
         :return: None
         """
-        TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
+        if not no_traffic:
+            TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
         TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
 
     @staticmethod
@@ -408,7 +410,7 @@ class EmulationEnvManager:
             ContainerManager.stop_docker_stats_thread(execution=execution)
         except Exception as e:
             pass
-        EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+        EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=execution.emulation_env_config)
         MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
 
     @staticmethod

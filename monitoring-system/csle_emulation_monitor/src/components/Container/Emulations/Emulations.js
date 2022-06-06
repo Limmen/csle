@@ -84,7 +84,7 @@ const Emulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeEmulationExecutionRequest = useCallback((emulation_name, execution_id) => {
+    const removeEmulationExecutionRequest = useCallback((emulation_id, emulation_name, execution_id) => {
         fetch(
             `http://` + ip + ':7777/emulationsdata/remove/' + emulation_name + '/execution/' + execution_id,
             {
@@ -96,7 +96,34 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
-                fetchEmulationIds()
+                setLoadingSelectedEmulation(true)
+                var id_obj={
+                    value: emulation_id,
+                    label: "-"
+                }
+                fetchEmulation(id_obj)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopEmulationRequest = useCallback((emulation_name, emulation_id) => {
+        fetch(
+            `http://` + ip + ':7777/emulationsdata/' + emulation_name,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                setLoadingSelectedEmulation(true)
+                var id_obj={
+                    value: emulation_id,
+                    label: "-"
+                }
+                fetchEmulation(id_obj)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -143,8 +170,11 @@ const Emulations = () => {
     }
 
     const removeExecution = (emulation, ip_first_octet) => {
-        setLoading(true)
-        removeEmulationExecutionRequest(emulation.name, ip_first_octet)
+        removeEmulationExecutionRequest(emulation.id, emulation.name, ip_first_octet)
+    }
+
+    const startOrStopEmulation = (emulation, emulation_id) => {
+        startOrStopEmulationRequest(emulation, emulation_id)
     }
 
     useEffect(() => {
@@ -256,6 +286,7 @@ const Emulations = () => {
                                        wrapper={wrapper} key={exec.emulation_env_config.name + "_" + index}
                                        removeEmulation={removeEmulation} execution={true}
                                        removeExecution={removeExecution}
+                                       startOrStopEmulation={startOrStopEmulation}
                                        execution_ip_octet={exec.ip_first_octet}/>
                         </Accordion>
                     )
@@ -292,7 +323,9 @@ const Emulations = () => {
                         <Emulation emulation={props.selectedEmulation}
                                    wrapper={wrapper} key={props.selectedEmulation.name}
                                    removeEmulation={removeEmulation} execution={false}
-                                   execution_ip_octet={-1} removeExecution={removeExecution}/>
+                                   execution_ip_octet={-1} removeExecution={removeExecution}
+                                   startOrStopEmulation={startOrStopEmulation}
+                        />
                     </Accordion>
                     <GetExecutions executions={props.selectedEmulation.executions}/>
                 </div>

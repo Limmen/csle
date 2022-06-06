@@ -46,6 +46,16 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         self.avg_R = avg_R
         self.opponent_strategy = opponent_strategy
 
+    def probability(self, o: List[float], a: int) -> int:
+        """
+        Probability of a given action
+
+        :param o: the current observation
+        :param a: a given action
+        :return: the probability of a
+        """
+        return self.action(o=o) == a
+
     def action(self, o: List[float]) -> int:
         """
         Multi-threshold stopping policy
