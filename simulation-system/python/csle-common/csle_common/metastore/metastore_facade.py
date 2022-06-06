@@ -22,6 +22,7 @@ from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy
 from csle_common.dao.training.dqn_policy import DQNPolicy
 from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
 from csle_common.dao.training.vector_policy import VectorPolicy
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 
 
 class MetastoreFacade:
@@ -2219,3 +2220,127 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"vector policy saved successfully")
                 return id_of_new_row
+
+    @staticmethod
+    def list_emulation_executions() -> List[EmulationExecution]:
+        """
+        :return: A list of emulation executions in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
+                return records
+
+    @staticmethod
+    def list_emulation_executions_for_a_given_emulation(emulation_name: str) -> List[EmulationExecution]:
+        """
+        :param emulation_name: the name of the emulation
+        :return: A list of emulation executions in the metastore for a given emulation
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
+                            f"WHERE emulation_name = %s", (emulation_name,))
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
+                return records
+
+    @staticmethod
+    def list_emulation_executions_by_id(id: int) -> List[EmulationExecution]:
+        """
+        :param id: the first IP octet of the execution
+        :return: A list of emulation executions in the metastore for a given emulation
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
+                            f"WHERE ip_first_octet = %s", (id,))
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
+                return records
+
+    @staticmethod
+    def _convert_emulation_execution_record_to_dto(emulation_execution_record) -> EmulationExecution:
+        """
+        Converts a emulation execution record fetched from the metastore into a DTO
+
+        :param emulation_execution_record: the record to convert
+        :return: the DTO representing the record
+        """
+        emulation_execution_json = json.dumps(emulation_execution_record[2], indent=4, sort_keys=True)
+        emulation_execution: EmulationExecution = EmulationExecution.from_dict(json.loads(emulation_execution_json))
+        return emulation_execution
+
+    @staticmethod
+    def get_emulation_execution(ip_first_octet: int, emulation_name: str) -> Union[None, EmulationExecution]:
+        """
+        Function for fetching a emulation execution with a given id from the metastore
+
+        :param ip_first_octet: the id of the emulation execution
+        :param emulation_name: the name of the emulation
+        :return: The emulation execution or None if it could not be found
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
+                            f"WHERE ip_first_octet = %s AND emulation_name=%s", (ip_first_octet, emulation_name))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_emulation_execution_record_to_dto(emulation_execution_record=record)
+                return record
+
+    @staticmethod
+    def remove_emulation_execution(emulation_execution: EmulationExecution) -> None:
+        """
+        Removes a emulation execution from the metastore
+
+        :param emulation_execution: the policy to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing emulation execution with "
+                                             f"ip_first_octet:{emulation_execution.ip_first_octet} from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} WHERE ip_first_octet = %s "
+                            f"AND emulation_name = %s",
+                            (emulation_execution.ip_first_octet, emulation_execution.emulation_name))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"emulation execution "
+                                                     f"with ip_first_octet {emulation_execution.ip_first_octet} "
+                                                     f"deleted successfully")
+
+    @staticmethod
+    def save_emulation_execution(emulation_execution: EmulationExecution) -> None:
+        """
+        Saves a emulation execution to the metastore
+
+        :param emulation_execution: the policy to save
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Installing emulation execution in the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                emulation_execution_str = \
+                    json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
+                            f"(ip_first_octet, emulation_name, info) "
+                            f"VALUES (%s, %s, %s)", (emulation_execution.ip_first_octet,
+                                                                  emulation_execution.emulation_name,
+                                                                  emulation_execution_str))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"emulation execution saved successfully")
+                return None

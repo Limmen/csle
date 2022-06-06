@@ -12,6 +12,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
 import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
+import getDateStr from "../../../Common/getDateStr";
 
 const Experiment = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
@@ -46,18 +47,6 @@ const Experiment = (props) => {
             })
             .catch(error => console.log("error:" + error))
     }, []);
-
-    const getDateStr = (ts) => {
-        var date = new Date(ts * 1000);
-        var year = date.getFullYear()
-        var month = date.getMonth()
-        var day = date.getDate()
-        var hours = date.getHours();
-        var minutes = "0" + date.getMinutes();
-        var seconds = "0" + date.getSeconds();
-        var formattedTime = year + "-" + month + "-" + day + " " + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-        return formattedTime
-    }
 
     const renderRemoveExperimentTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

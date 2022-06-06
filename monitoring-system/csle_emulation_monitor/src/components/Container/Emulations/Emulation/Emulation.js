@@ -9,6 +9,7 @@ import fileDownload from 'react-file-download'
 import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
+import getDateStr from "../../../Common/getDateStr";
 
 const Emulation = (props) => {
     const [loading, setLoading] = useState(false);
@@ -28,6 +29,7 @@ const Emulation = (props) => {
     const [kafkaTopicsOpen, setKafkaTopicsOpen] = useState(false);
     const [firewallOpen, setFirewallOpen] = useState(false);
     const [staticAttackerSequenceOpen, setStaticAttackerSequenceOpen] = useState(false);
+    const [executionsOpen, setExecutionsOpen] = useState(false);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -108,7 +110,7 @@ const Emulation = (props) => {
             }
         }
         if (emulation.running) {
-            return "running"
+            return "running, " + "number of executions: " + emulation.executions.length
         } else {
             return "stopped"
         }
@@ -851,6 +853,42 @@ const Emulation = (props) => {
                                     </div>
                                 )
                             )}
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setExecutionsOpen(!executionsOpen)}
+                            aria-controls="executionsBody"
+                            aria-expanded={executionsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">Executions</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={executionsOpen}>
+                        <div id="usersBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Timestamp</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {emulation.executions.map((exec, index) => {
+                                    return (
+                                    <tr key={exec.id + "-" + index}>
+                                    <td>{exec.id}</td>
+                                    <td>{getDateStr(exec.timestamp)}</td>
+                                    <td>{exec.descr}</td>
+                                    </tr>
+                                    )})}
+                                </tbody>
+                            </Table>
                         </div>
                     </Collapse>
                 </Card>

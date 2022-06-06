@@ -39,6 +39,7 @@ from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 
 
 def default_config(name: str, network_id: int = 8, level: int = 8, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -3558,7 +3559,8 @@ if __name__ == '__main__':
     if args.uninstall:
         EmulationEnvManager.uninstall_emulation(config=config)
     if args.run:
-        EmulationEnvManager.run_containers(emulation_env_config=config)
+        emulation_execution = EmulationEnvManager.create_execution(emulation_env_config=config)
+        EmulationEnvManager.run_containers(emulation_env_config=config, emulation_execution=emulation_execution)
     if args.stop:
         EmulationEnvManager.stop_containers(emulation_env_config=config)
     if args.clean:

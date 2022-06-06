@@ -1,5 +1,6 @@
 from typing import Set, List, Dict, Any
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
+from csle_common.util.general_util import GeneralUtil
 
 
 class NodeFirewallConfig:
@@ -114,3 +115,42 @@ class NodeFirewallConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "NodeFirewallConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return NodeFirewallConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "NodeFirewallConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.output_accept = set(list(map(
+            lambda x: GeneralUtil.replace_first_octet_of_ip(
+                ip=x, ip_first_octet=ip_first_octet), list(config.output_accept))))
+        config.input_accept = set(list(map(
+            lambda x: GeneralUtil.replace_first_octet_of_ip(
+                ip=x, ip_first_octet=ip_first_octet), list(config.input_accept))))
+        config.forward_accept = set(list(map(
+            lambda x: GeneralUtil.replace_first_octet_of_ip(
+                ip=x, ip_first_octet=ip_first_octet), list(config.forward_accept))))
+        config.output_drop = set(list(map(
+            lambda x: GeneralUtil.replace_first_octet_of_ip(
+                ip=x, ip_first_octet=ip_first_octet), list(config.output_drop))))
+        config.input_drop = set(list(map(
+            lambda x: GeneralUtil.replace_first_octet_of_ip(
+                ip=x, ip_first_octet=ip_first_octet), list(config.input_drop))))
+        config.forward_drop = set(list(map(
+            lambda x: GeneralUtil.replace_first_octet_of_ip(
+                ip=x, ip_first_octet=ip_first_octet), list(config.forward_drop))))
+        config.routes = set(list(map(
+            lambda x: GeneralUtil.replace_first_octet_of_ip(
+                ip=x, ip_first_octet=ip_first_octet), list(config.routes))))
+        config.ips_gw_default_policy_networks = list(map(lambda x: x.create_execution_config(
+            ip_first_octet=ip_first_octet), config.ips_gw_default_policy_networks))
+        return config

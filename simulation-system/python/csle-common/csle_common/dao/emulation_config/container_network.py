@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from csle_common.util.general_util import GeneralUtil
 
 
 class ContainerNetwork:
@@ -68,3 +69,24 @@ class ContainerNetwork:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "ContainerNetwork":
+        """
+        :return: a copy of the DTO
+        """
+        return ContainerNetwork.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "ContainerNetwork":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.name = config.name + f"_{ip_first_octet}"
+        config.subnet_mask = GeneralUtil.replace_first_octet_of_ip(ip=config.subnet_mask,
+                                                                     ip_first_octet=ip_first_octet)
+        config.subnet_prefix = GeneralUtil.replace_first_octet_of_ip(ip=config.subnet_mask,
+                                                                     ip_first_octet=ip_first_octet)
+        return config

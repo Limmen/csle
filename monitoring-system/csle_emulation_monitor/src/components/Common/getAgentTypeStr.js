@@ -1,5 +1,3 @@
-import getElements from "../Container/PolicyExamination/getElements";
-
 
 const getAgentTypeStr = (agentType) => {
     if(agentType === 0) {

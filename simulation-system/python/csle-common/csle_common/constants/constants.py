@@ -1262,11 +1262,13 @@ class CSLE:
     NAME = "csle"
     LEVEL = "level"
     CSLE_NETWORK_PREFIX = "csle_net_"
-    CSLE_SUBNETMASK_PREFIX = "55."
+    CSLE_SUBNETMASK_PREFIX = "<EXECUTION_ID>."
+    CSLE_FIRST_IP_OCTET_PLACEHOLDER = "<EXECUTION_ID>"
     CSLE_LEVEL_SUBNETMASK_SUFFIX = ".0.0/16"
     CSLE_EDGE_SUBNETMASK_SUFFIX = ".0/24"
     CSLE_EDGE_BITMASK = "255.255.255.0"
     NON_IDS_ROUTER = "router_1"
+    LIST_OF_IP_SUBNETS = list(range(15,171)) + list(range(173,191)) + list(range(193,250))
 
 
 class MANAGEMENT:
@@ -1363,6 +1365,7 @@ class METADATA_STORE:
     DQN_POLICIES_TABLE = "dqn_policies"
     FNN_W_SOFTMAX_POLICIES_TABLE = "fnn_w_softmax_policies"
     VECTOR_POLICIES_TABLE = "vector_policies"
+    EMULATION_EXECUTIONS_TABLE = "emulation_executions"
 
 
 class CONTAINER_POOLS:

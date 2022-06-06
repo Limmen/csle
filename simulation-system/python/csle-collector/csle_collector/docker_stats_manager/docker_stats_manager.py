@@ -23,7 +23,7 @@ class DockerStatsThread(threading.Thread):
 
     def __init__(self, container_names_and_ips: List[
         csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp],
-                 emulation: str, sink_ip: str,
+                 emulation: str, execution_first_ip_octet: int, sink_ip: str,
                  stats_queue_maxsize: int,
                  time_step_len_seconds: int, sink_port: int):
         """
@@ -38,6 +38,7 @@ class DockerStatsThread(threading.Thread):
         threading.Thread.__init__(self)
         self.container_names_and_ips = container_names_and_ips
         self.emulation = emulation
+        self.execution_first_ip_octet = execution_first_ip_octet
         self.client_1 = docker.from_env()
         self.client2 = docker.APIClient(base_url=constants.DOCKER_STATS.UNIX_DOCKER_SOCK_URL)
         self.containers = self.client_1.containers.list()
@@ -59,7 +60,8 @@ class DockerStatsThread(threading.Thread):
                      constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**self.conf)
         self.stopped = False
-        logging.info(f"Producer thread starting, emulation:{self.emulation}, kafka ip: {self.kafka_ip}, "
+        logging.info(f"Producer thread starting, emulation:{self.emulation}, "
+                     f"execution_first_ip_octet: {execution_first_ip_octet}, kafka ip: {self.kafka_ip}, "
                      f"kafka port:{self.port}, time_step_len_seconds: {self.time_step_len_seconds}, "
                      f"container and ips:{self.container_names_and_ips}")
 
@@ -148,7 +150,6 @@ class DockerStatsManagerServicer(
         self.docker_stats_monitor_threads = []
         logging.info(f"Setting up DockerStatsManager")
 
-
     def getDockerStatsMonitorStatus(
             self, request: csle_collector.docker_stats_manager.docker_stats_manager_pb2.GetDockerStatsMonitorStatusMsg,
             context: grpc.ServicerContext) \
@@ -162,16 +163,20 @@ class DockerStatsManagerServicer(
         """
         new_docker_stats_monitor_threads = []
         emulations = []
+        emulation_executions = []
         for dsmt in self.docker_stats_monitor_threads:
             if dsmt.is_alive() and not dsmt.stopped:
                 new_docker_stats_monitor_threads.append(dsmt)
                 emulations.append(dsmt.emulation)
+                emulation_executions.append(dsmt.execution_first_ip_octet)
             else:
                 dsmt.stopped = True
+        emulations = list(set(emulations))
+        emulation_executions = list(set(emulation_executions))
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
         docker_stats_monitor_dto = csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(
             num_monitors = len(self.docker_stats_monitor_threads),
-            emulations=emulations
+            emulations=emulations, emulation_executions= emulation_executions
         )
         return docker_stats_monitor_dto
 
@@ -189,7 +194,7 @@ class DockerStatsManagerServicer(
 
         new_docker_stats_monitor_threads = []
         for dsmt in self.docker_stats_monitor_threads:
-            if dsmt.emulation == request.emulation:
+            if dsmt.emulation == request.emulation and dsmt.execution_first_ip_octet == request.execution_first_ip_octet:
                 dsmt.stopped = True
             else:
                 if dsmt.is_alive() and not dsmt.stopped:
@@ -215,14 +220,15 @@ class DockerStatsManagerServicer(
         # Stop any existing thread with the same name
         new_docker_stats_monitor_threads = []
         for dsmt in self.docker_stats_monitor_threads:
-            if dsmt.emulation == request.emulation:
+            if dsmt.emulation == request.emulation and dsmt.execution_first_ip_octet == request.execution_first_ip_octet:
                 dsmt.stopped = True
             else:
                 if dsmt.is_alive():
                     new_docker_stats_monitor_threads.append(dsmt)
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
 
-        docker_stats_monitor_thread = DockerStatsThread(request.containers, request.emulation, request.sink_ip,
+        docker_stats_monitor_thread = DockerStatsThread(request.containers, request.emulation,
+                                                        request.execution_first_ip_octet, request.sink_ip,
                                                         request.stats_queue_maxsize, request.time_step_len_seconds,
                                                         request.sink_port)
         docker_stats_monitor_thread.start()

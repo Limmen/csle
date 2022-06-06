@@ -208,3 +208,12 @@ CREATE TABLE IF NOT EXISTS vector_policies (
     );
 GRANT ALL ON vector_policies TO csle;
 GRANT USAGE, SELECT ON SEQUENCE vector_policies_id_seq TO csle;
+
+-- Create table that stores emulation executions --
+CREATE TABLE IF NOT EXISTS emulation_executions (
+    ip_first_octet int NOT NULL,
+    emulation_name TEXT references emulations(name) ON DELETE CASCADE,
+    info json NOT NULL,
+    PRIMARY KEY (ip_first_octet, emulation_name)
+);
+GRANT ALL ON emulation_executions TO csle;

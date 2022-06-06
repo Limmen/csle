@@ -224,7 +224,9 @@ def emulations():
     all_emulations = MetastoreFacade.list_emulations()
     all_images = MetastoreFacade.list_emulation_images()
     rc_emulations = ContainerManager.list_running_emulations()
+    emulations_dicts = []
     for em in all_emulations:
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
         if em.name in rc_emulations:
             em.running = True
         else:
@@ -233,7 +235,10 @@ def emulations():
             em_name, img = em_name_img
             if em_name == em.name:
                 em.image = base64.b64encode(img).decode()
-    emulations_dicts = list(map(lambda x: x.to_dict(), all_emulations))
+        em_dict = em.to_dict()
+        em_dict["executions"] = list(map(lambda x: x.to_dict(), executions))
+        emulations_dicts.append(em_dict)
+    # emulations_dicts = list(map(lambda x: x.to_dict(), all_emulations))
     response = jsonify(emulations_dicts)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
@@ -243,9 +248,7 @@ def emulationids():
     emulation_ids = MetastoreFacade.list_emulations_ids()
     rc_emulations = ContainerManager.list_running_emulations()
     response_dicts = []
-    print(rc_emulations)
     for tup in emulation_ids:
-        print(tup[1])
         running = False
         if tup[1] in rc_emulations:
             running = True
@@ -308,15 +311,15 @@ def emulation(emulation_name: str):
 def emulation_by_id(emulation_id: int):
     em = MetastoreFacade.get_emulation(id=emulation_id)
     rc_emulations = ContainerManager.list_running_emulations()
+    em_dict = {}
     if em is not None:
         if em.name in rc_emulations:
             em.running = True
-    if em is None:
-        em_dict = {}
-    else:
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
         em_name, img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
         em.image = base64.b64encode(img).decode()
         em_dict = em.to_dict()
+        em_dict["executions"] = list(map(lambda x: x.to_dict(), executions))
     response = jsonify(em_dict)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
@@ -328,7 +331,7 @@ def remove_emulation(emulation_name: str):
     for emulation in emulations:
         if emulation.name == emulation_name:
             if emulation_name in rc_emulations:
-                EmulationEnvManager.clean_emulation(emulation)
+                EmulationEnvManager.clean_all_emulation_executions(emulation)
             EmulationEnvManager.uninstall_emulation(config=emulation)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -341,7 +344,7 @@ def remove_all_emulation():
     rc_emulations = ContainerManager.list_running_emulations()
     for emulation in emulations:
         if emulation.name in rc_emulations:
-            EmulationEnvManager.clean_emulation(emulation)
+            EmulationEnvManager.clean_all_emulation_executions(emulation)
         EmulationEnvManager.uninstall_emulation(config=emulation)
     response = jsonify({})
     response.headers.add("Access-Control-Allow-Origin", "*")

@@ -96,6 +96,7 @@ const Emulations = () => {
         )
             .then(res => res.json())
             .then(response => {
+                console.log(response)
                 setSelectedEmulation(response)
                 setLoadingSelectedEmulation(false)
             })

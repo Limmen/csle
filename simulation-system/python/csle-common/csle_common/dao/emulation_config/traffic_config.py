@@ -7,7 +7,8 @@ class TrafficConfig:
     """
     A DTO object representing the traffic configuration of an emulation environment
     """
-    def __init__(self, node_traffic_configs : List[NodeTrafficConfig], client_population_config: ClientPopulationConfig):
+    def __init__(self, node_traffic_configs : List[NodeTrafficConfig],
+                 client_population_config: ClientPopulationConfig):
         """
         Initializes the DTO
 
@@ -68,3 +69,23 @@ class TrafficConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "TrafficConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return TrafficConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "TrafficConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.client_population_config = config.client_population_config.create_execution_config(
+            ip_first_octet=ip_first_octet)
+        config.node_traffic_configs = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+                                               config.node_traffic_configs))
+        return config

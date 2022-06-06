@@ -1,6 +1,7 @@
 from typing import List, Union, Dict, Any
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_common.util.general_util import GeneralUtil
 
 
 class ContainersConfig:
@@ -138,3 +139,29 @@ class ContainersConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "ContainersConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return ContainersConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "ContainersConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.containers = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+                              config.containers))
+        config.networks = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+                              config.networks))
+        config.agent_ip = GeneralUtil.replace_first_octet_of_ip(ip=config.agent_ip, ip_first_octet=ip_first_octet)
+        config.router_ip = GeneralUtil.replace_first_octet_of_ip(ip=config.router_ip, ip_first_octet=ip_first_octet)
+        config.vulnerable_nodes = list(map(lambda x: GeneralUtil.replace_first_octet_of_ip(
+            ip=x, ip_first_octet=ip_first_octet), config.vulnerable_nodes))
+        config.agent_reachable_nodes = list(map(lambda x: GeneralUtil.replace_first_octet_of_ip(
+            ip=x, ip_first_octet=ip_first_octet), config.agent_reachable_nodes))
+        return config

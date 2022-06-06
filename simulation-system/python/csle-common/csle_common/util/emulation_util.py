@@ -439,10 +439,3 @@ class EmulationUtil:
             return psutil.Process(pid).is_running()
         except:
             return False
-        # try:
-        #     os.kill(pid, 0)
-        #
-        # except OSError:
-        #     return False
-        # else:
-        #     return True

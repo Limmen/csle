@@ -1,7 +1,7 @@
 from typing import List, Tuple, Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
-
+from csle_common.util.general_util import GeneralUtil
 
 class NodeContainerConfig:
     """
@@ -10,7 +10,7 @@ class NodeContainerConfig:
 
     def __init__(self, name: str, ips_and_networks: List[Tuple[str, ContainerNetwork]],
                  version: str, level: str, restart_policy: str,
-                 suffix: str, os: str):
+                 suffix: str, os: str, execution_ip_first_octet: int = -1):
         """
         Intializes the DTO
 
@@ -21,6 +21,7 @@ class NodeContainerConfig:
         :param restart_policy: the restart policy of the container
         :param suffix: the suffix of the container id
         :param os: the operating system of the container
+        :param execution_ip_first_octet: the first octet in the IP address (depends on the execution)
         """
         self.name = name
         self.ips_and_networks = ips_and_networks
@@ -29,6 +30,7 @@ class NodeContainerConfig:
         self.restart_policy = restart_policy
         self.suffix = suffix
         self.os = os
+        self.execution_ip_first_octet = execution_ip_first_octet
         self.full_name_str = self.get_full_name()
 
     def get_ips(self) -> List[str]:
@@ -48,7 +50,8 @@ class NodeContainerConfig:
             name = d["name"],
             ips_and_networks=list(map(lambda x: (x[0], ContainerNetwork.from_dict(x[1])), d["ips_and_networks"])),
             version=d["version"], level=d["level"],
-            restart_policy=d["restart_policy"], suffix=d["suffix"], os=d["os"]
+            restart_policy=d["restart_policy"], suffix=d["suffix"], os=d["os"],
+            execution_ip_first_octet=d["execution_ip_first_octet"]
         )
         return obj
 
@@ -65,6 +68,7 @@ class NodeContainerConfig:
         d["os"] = self.os
         d["level"] = self.level
         d["full_name_str"] = self.get_full_name()
+        d["execution_ip_first_octet"] = self.execution_ip_first_octet
         return d
 
     def __str__(self) -> str:
@@ -73,7 +77,8 @@ class NodeContainerConfig:
         """
         return f"name{self.name}, ips and networks: {self.ips_and_networks}, version: {self.version}, " \
                f"level:{self.level}, restart_policy: {self.restart_policy}, " \
-               f"suffix:{self.suffix}, os:{self.os}, full_name:{self.full_name_str}"
+               f"suffix:{self.suffix}, os:{self.os}, full_name:{self.full_name_str}, " \
+               f"execution_ip_first_octet: {self.execution_ip_first_octet}"
 
     def reachable(self, reachable_ips: List[str]) -> bool:
         """
@@ -91,7 +96,8 @@ class NodeContainerConfig:
         """
         :return: the full name
         """
-        return f"{constants.CSLE.NAME}-{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}"
+        return f"{constants.CSLE.NAME}-{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}-" \
+               f"{self.execution_ip_first_octet}"
 
     def to_json_str(self) -> str:
         """
@@ -114,3 +120,23 @@ class NodeContainerConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "NodeContainerConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return NodeContainerConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "NodeContainerConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.execution_ip_first_octet = ip_first_octet
+        config.ips_and_networks = list(map(lambda x: (GeneralUtil.replace_first_octet_of_ip(
+            ip=x[0], ip_first_octet=ip_first_octet), x[1].create_execution_config(ip_first_octet=ip_first_octet)),
+                                           config.ips_and_networks))
+        return config

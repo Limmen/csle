@@ -10,6 +10,7 @@ service DockerStatsManager {
 // Message that the client sends to stop the docker stats monitor
 message StopDockerStatsMonitorMsg {
   string emulation = 1;
+  int32 execution_first_ip_octet = 2;
 }
 
 //DTO representing a pair of ip and container name
@@ -21,11 +22,12 @@ message ContainerIp {
 // Message that the client sends to start the docker stats monitor
 message StartDockerStatsMonitorMsg {
   string emulation = 1;
-  string sink_ip = 2;
-  int32 stats_queue_maxsize = 3;
-  int32 time_step_len_seconds = 4;
-  int32 sink_port = 5;
-  repeated ContainerIp containers = 6;
+  int32 execution_first_ip_octet = 2;
+  string sink_ip = 3;
+  int32 stats_queue_maxsize = 4;
+  int32 time_step_len_seconds = 5;
+  int32 sink_port = 6;
+  repeated ContainerIp containers = 7;
 }
 
 // Message that the client sends to extract the status of the docker stats monitor
@@ -35,4 +37,5 @@ message GetDockerStatsMonitorStatusMsg {}
 message DockerStatsMonitorDTO {
   int32 num_monitors = 1;
   repeated string emulations = 2;
+  repeated int32 emulation_executions = 3;
 }

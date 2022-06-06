@@ -275,3 +275,27 @@ class EmulationEnvConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "EmulationEnvConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return EmulationEnvConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int):
+        config = self.copy()
+        config.containers_config = config.containers_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.users_config = config.users_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.flags_config = config.flags_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.vuln_config = config.vuln_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.topology_config = config.topology_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.traffic_config = config.traffic_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.resources_config = config.resources_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.log_sink_config = config.log_sink_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
+        static_attacker_sequences = {}
+        for k,v in config.static_attacker_sequences.items():
+            static_attacker_sequences[k] = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+                                                    config.static_attacker_sequences[k]))
+        config.static_attacker_sequences = static_attacker_sequences
+        return config

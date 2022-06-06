@@ -1,5 +1,6 @@
 from typing import Union, Dict, Any
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_common.util.general_util import GeneralUtil
 
 
 class DefaultNetworkFirewallConfig:
@@ -10,7 +11,7 @@ class DefaultNetworkFirewallConfig:
     def __init__(self, ip: Union[str, None], default_gw: Union[str, None], default_input: str, default_output: str,
                  default_forward: str, network: ContainerNetwork):
         """
-        Initialzies the DTO
+        Initializes the DTO
 
         :param ip: the ip associated to the network
         :param default_gw: the default gateway for the network
@@ -82,3 +83,24 @@ class DefaultNetworkFirewallConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "DefaultNetworkFirewallConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return DefaultNetworkFirewallConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "DefaultNetworkFirewallConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        if config.ip is not None:
+            config.ip = GeneralUtil.replace_first_octet_of_ip(ip=config.ip, ip_first_octet=ip_first_octet)
+        if config.default_gw is not None:
+            config.default_gw = GeneralUtil.replace_first_octet_of_ip(ip=config.default_gw, ip_first_octet=ip_first_octet)
+        config.network = config.network.create_execution_config(ip_first_octet=ip_first_octet)
+        return config

@@ -54,14 +54,23 @@ def attacker_shell(s: "EmulationEnvState") -> None:
             #     print("There was an error parsing the input, please enter an integer representing an attacker action")
 
 
-def attacker_shell_complete(ctx, param, incomplete):
+def attacker_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completions for the attacker command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations
 
-@click.command("attacker", help="emulation-name")
+@click.command("attacker", help="emulation-name id")
+@click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", type=str, shell_complete=attacker_shell_complete)
-def attacker(emulation : str) -> None:
+def attacker(emulation : str, id: int = -1) -> None:
     """
     Opens an attacker shell in the given emulation
 
@@ -71,9 +80,9 @@ def attacker(emulation : str) -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 
-    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
-    if emulation_env_config is not None:
-        s = EmulationEnvState(emulation_env_config=emulation_env_config)
+    emulation_execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
+    if emulation_execution is not None:
+        s = EmulationEnvState(emulation_env_config=emulation_execution.emulation_env_config)
         attacker_shell(s=s)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
@@ -94,7 +103,15 @@ def list_csle_gym_envs() -> None:
             click.secho(f"{env.id}", bold=False)
 
 
-def emulation_shell_complete(ctx, param, incomplete):
+def emulation_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completions for the em command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations + ["emulation", "--host", "--stats", "--kafka", "--clients"]
@@ -104,9 +121,10 @@ def emulation_shell_complete(ctx, param, incomplete):
 @click.option('--kafka', is_flag=True, help='Check the status of the Kafka manager')
 @click.option('--ids', is_flag=True, help='Check the status of the IDS manager')
 @click.option('--clients', is_flag=True, help='Check the number of active clients of the emulation')
+@click.option('--executions', is_flag=True, help='Check the executions')
 @click.argument('emulation', default="", type=str, shell_complete=emulation_shell_complete)
 @click.command("em", help="emulation-name")
-def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host: bool) -> None:
+def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host: bool, executions: bool) -> None:
     """
     Extracts status information of a given emulation
 
@@ -116,6 +134,7 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
     :param kafka: if true, print information about the kafka manager
     :param stats: if true, print information about the statsmanager
     :param host: if true, print information about the hostmanagers
+    :param executions: if true, print information about executions
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -126,85 +145,117 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
     from csle_common.controllers.host_manager import HostManager
 
     emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
+    executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+        emulation_name=emulation_env_config.name)
     if emulation_env_config is not None:
+        click.secho(f"Executions of: {emulation}", fg="magenta", bold=True)
+        for exec in executions:
+            click.secho(f"IP ID: {exec.ip_first_octet}, emulation name: {exec.emulation_name}")
         if clients:
-            clients_dto = TrafficManager.get_num_active_clients(emulation_env_config=emulation_env_config)
-            click.secho(f"Client population status for: {emulation}", fg="magenta", bold=True)
-            click.secho(f"Active clients: {clients_dto.num_clients}", bold=False)
-            if clients_dto.client_process_active:
-                click.secho("Client process " + f" {click.style('[active]', fg='green')}", bold=False)
-            else:
-                click.secho("Client process " + f" {click.style('[inactive]', fg='red')}", bold=False)
-            if clients_dto.producer_active:
-                click.secho("Producer process " + f" {click.style('[active]', fg='green')}", bold=False)
-            else:
-                click.secho("Producer process " + f" {click.style('[inactive]', fg='red')}", bold=False)
-            click.secho(f"Clients time-step length: {clients_dto.clients_time_step_len_seconds} seconds", bold=False)
-            click.secho(f"Producer time-step length: {clients_dto.producer_time_step_len_seconds} seconds", bold=False)
-        if ids:
-            ids_monitors_statuses = IDSManager.get_ids_monitor_thread_status(emulation_env_config=emulation_env_config)
-            for ids_monitor_status in ids_monitors_statuses:
-                click.secho(f"IDS monitor status for: {emulation}", fg="magenta", bold=True)
-                if ids_monitor_status.running:
-                    click.secho("IDS monitor status: " + f" {click.style('[running]', fg='green')}", bold=False)
+            for exec in executions:
+                clients_dto = TrafficManager.get_num_active_clients(emulation_env_config=exec.emulation_env_config)
+                click.secho(f"Client population status for execution {exec.ip_first_octet} of {emulation}",
+                            fg="magenta", bold=True)
+                click.secho(f"Active clients: {clients_dto.num_clients}", bold=False)
+                if clients_dto.client_process_active:
+                    click.secho("Client process " + f" {click.style('[active]', fg='green')}", bold=False)
                 else:
-                    click.secho("IDS monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+                    click.secho("Client process " + f" {click.style('[inactive]', fg='red')}", bold=False)
+                if clients_dto.producer_active:
+                    click.secho("Producer process " + f" {click.style('[active]', fg='green')}", bold=False)
+                else:
+                    click.secho("Producer process " + f" {click.style('[inactive]', fg='red')}", bold=False)
+                click.secho(f"Clients time-step length: {clients_dto.clients_time_step_len_seconds} seconds", bold=False)
+                click.secho(f"Producer time-step length: {clients_dto.producer_time_step_len_seconds} seconds", bold=False)
+        if ids:
+            for exec in executions:
+                ids_monitors_statuses = IDSManager.get_ids_monitor_thread_status(
+                    emulation_env_config=exec.emulation_env_config)
+                for ids_monitor_status in ids_monitors_statuses:
+                    click.secho(f"IDS monitor status for execution {exec.ip_first_octet} of {emulation}",
+                                fg="magenta", bold=True)
+                    if ids_monitor_status.running:
+                        click.secho("IDS monitor status: " + f" {click.style('[running]', fg='green')}", bold=False)
+                    else:
+                        click.secho("IDS monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
         if kafka:
-            kafka_dto = LogSinkManager.get_kafka_status(emulation_env_config=emulation_env_config)
-            click.secho(f"Kafka manager status for: {emulation}", fg="magenta", bold=True)
-            if kafka_dto.running:
-                click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}", bold=False)
-            else:
-                click.secho("Kafka broker status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
-            click.secho(f"Topics:", bold=True)
-            for topic in kafka_dto.topics:
-                click.secho(f"{topic}", bold=False)
+            for exec in executions:
+                kafka_dto = LogSinkManager.get_kafka_status(emulation_env_config=exec.emulation_env_config)
+                click.secho(f"Kafka manager status for execution {exec.ip_first_octet} of {emulation}",
+                            fg="magenta", bold=True)
+                if kafka_dto.running:
+                    click.secho("Kafka broker status: " + f" {click.style('[running]', fg='green')}", bold=False)
+                else:
+                    click.secho("Kafka broker status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+                click.secho(f"Topics:", bold=True)
+                for topic in kafka_dto.topics:
+                    click.secho(f"{topic}", bold=False)
         if stats:
-            stats_manager_dto = ContainerManager.get_docker_stats_manager_status(
-                log_sink_config=emulation_env_config.log_sink_config)
-            click.secho(f"Docker stats manager status for: {emulation}", fg="magenta", bold=True)
-            click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
+            for exec in executions:
+                stats_manager_dto = ContainerManager.get_docker_stats_manager_status(
+                    log_sink_config=exec.emulation_env_config.log_sink_config)
+                click.secho(f"Docker stats manager status for execution {exec.ip_first_octet} of {emulation}",
+                            fg="magenta", bold=True)
+                click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
 
         if host:
-            click.secho(f"Host manager statuses for: {emulation}", fg="magenta", bold=True)
-            host_manager_dtos = HostManager.get_host_monitor_thread_status(emulation_env_config=emulation_env_config)
-            for ip_hmd in host_manager_dtos:
-                hmd, ip = ip_hmd
-                if not hmd.running:
-                    click.secho(f"Host manager on {ip} " + f" {click.style('[stopped]', fg='red')}", bold=False)
-                else:
-                    click.secho(f"Host manager on {ip}: " + f" {click.style('[running]', fg='green')}", bold=False)
+            for exec in executions:
+                click.secho(f"Host manager statuses for execution {exec.ip_first_octet} of {emulation}",
+                            fg="magenta", bold=True)
+                host_manager_dtos = HostManager.get_host_monitor_thread_status(emulation_env_config=exec.
+                                                                               emulation_env_config)
+                for ip_hmd in host_manager_dtos:
+                    hmd, ip = ip_hmd
+                    if not hmd.running:
+                        click.secho(f"Host manager on {ip} " + f" {click.style('[stopped]', fg='red')}", bold=False)
+                    else:
+                        click.secho(f"Host manager on {ip}: " + f" {click.style('[running]', fg='green')}", bold=False)
     else:
         click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
 
-def start_traffic_shell_complete(ctx, param, incomplete):
+
+def start_traffic_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completions for the start traffic command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations + ["--mu", "--lamb", "--t", "--nc"]
 
+@click.option('--psf', default=None, type=float)
+@click.option('--tsf', default=None, type=float)
 @click.option('--nc', default=None, type=int)
 @click.option('--t', default=None, type=int)
 @click.option('--lamb', default=None, type=int)
 @click.option('--mu', default=None, type=float)
+@click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", type=str, shell_complete=start_traffic_shell_complete)
-@click.command("start_traffic", help="emulation-name")
-def start_traffic(emulation : str, mu: float, lamb: float, t: int,
-                  nc: int) -> None:
+@click.command("start_traffic", help="emulation-name execution-id")
+def start_traffic(emulation : str, id: int, mu: float, lamb: float, t: int,
+                  nc: int, tsf: float, psf: float) -> None:
     """
     Starts the traffic and client population on a given emulation
 
     :param emulation: the emulation to start the traffic of
+    :param id: the id of the execution
     :param mu: the mu parameter of the service time of the client arrivals
     :param lamb: the lambda parameter of the client arrival process
     :param t: time-step length to measure the arrival process
     :param nc: number of commands per client
+    :param psf: the period scaling factor for non-stationary Poisson processes
+    :param tsf: the time scaling factor for non-stationary Poisson processes
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
-
-    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
-    if emulation_env_config is not None:
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
+    if execution is not None:
+        emulation_env_config = execution.emulation_env_config
         if mu is not None:
             emulation_env_config.traffic_config.client_population_config.mu = mu
         if lamb is not None:
@@ -213,61 +264,93 @@ def start_traffic(emulation : str, mu: float, lamb: float, t: int,
             emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds = t
         if nc is not None:
             emulation_env_config.traffic_config.client_population_config.num_commands = nc
+        if tsf is not None:
+            emulation_env_config.traffic_config.client_population_config.time_scaling_factor = tsf
+        if psf is not None:
+            emulation_env_config.traffic_config.client_population_config.period_scaling_factor = psf
         EmulationEnvManager.start_custom_traffic(emulation_env_config=emulation_env_config)
     else:
-        click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
+        click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
 
 
-def stop_traffic_shell_complete(ctx, param, incomplete):
+def stop_traffic_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Completion suggestiosn for the traffic command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations
 
+@click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", shell_complete=stop_traffic_shell_complete)
-@click.command("stop_traffic", help="emulation-name")
-def stop_traffic(emulation : str) -> None:
+@click.command("stop_traffic", help="emulation-name execution-id")
+def stop_traffic(emulation : str, id: int) -> None:
     """
     Stops the traffic and client population on a given emulation
 
     :param emulation: the emulation to start the traffic of
+    :param id: the execution id
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
-    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
-    if emulation_env_config is not None:
-        EmulationEnvManager.stop_custom_traffic(emulation_env_config=emulation_env_config)
+    emulation_execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
+    if emulation_execution is not None:
+        EmulationEnvManager.stop_custom_traffic(emulation_env_config=emulation_execution.emulation_env_config)
     else:
-        click.secho(f"name: {emulation} not recognized", fg="red", bold=True)
+        click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
 
 def materialize_shell_complete(ctx, param, incomplete):
+    """
+    Shell completion for the materialize command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     return ["<emulation> <path>"]
 
 @click.argument('path', default="")
+@click.argument('id', default=-1)
 @click.argument('emulation', default="", shell_complete=materialize_shell_complete)
-@click.command("materialize", help="emulation path")
-def materialize(emulation: str, path: str) -> None:
+@click.command("materialize", help="emulation execution-id path")
+def materialize(emulation: str, id: int, path: str) -> None:
     """
     Materializes the configuraiton of a given emulation to a given path
 
     :param emulation: the emulation to materialize
+    :param id: the execution id
     :param path: the path to materialize the emulation's configuration
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
 
-    emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
-    if emulation_env_config is None:
-        click.secho(f"Emulation: {emulation} not found", fg="red", bold=True)
+    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
+    if execution is None:
+        click.secho(f"Execution {id} of emulation: {emulation} not found", fg="red", bold=True)
     else:
         if path != "":
-            materialize_emulation(emulation_env_config, path=path)
+            materialize_emulation(execution.emulation_env_config, path=path)
         else:
             click.secho(f"No path specified", fg="red", bold=True)
 
 
-def shell_shell_complete(ctx, param, incomplete):
+def shell_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Shell completion for the shell command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.controllers.container_manager import ContainerManager
     running_containers = ContainerManager.list_all_running_containers()
     stopped_containers = ContainerManager.list_all_stopped_containers()
@@ -298,7 +381,15 @@ def shell(container: str) -> None:
     else:
         click.secho(f"Container: {container} not found among running containers", fg="red", bold=False)
 
-def gen_shell_complete(ctx, param, incomplete):
+def gen_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Shell completion for the gen command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     return ["<name> <num_envs> <min_users> <max_users> <min_flags> <max_flags> <min_nodes> <max_flags> <min_flags> "
             "<max_users> <min_users> <num_envs> <name> <gen>"]
 
@@ -317,6 +408,23 @@ def gen_shell_complete(ctx, param, incomplete):
 @click.command("gen", help="name min_users max_users min_flags max_flags min_nodes max_nodes")
 def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int, max_flags: int, min_nodes: int,
         max_nodes: int, min_cpus: int, max_cpus: int, min_mem: int, max_mem: int) -> None:
+    """
+    Generates a new random emulation
+
+    :param name: the name of the generated emulation
+    :param num_envs: the number of environments for the generation
+    :param min_users: the minimum number of users for the generation
+    :param max_users: the maximum number of users for the generation
+    :param min_flags: the minimum number of flags for the generation
+    :param max_flags: the maximum number of flags for the generation
+    :param min_nodes: the minimum number of nodes for the generation
+    :param max_nodes: the maximum number of nodes for the generation
+    :param min_cpus: the minimum number of CPUs for the generation
+    :param max_cpus: the maximum number of CPUs for the generation
+    :param min_mem: the minimum memory for the generation
+    :param max_mem: the maximum memory for the generation
+    :return: None
+    """
 
     from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
     from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
@@ -362,8 +470,9 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool) 
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.run_containers(emulation_env_config=emulation_env_config)
-    EmulationEnvManager.apply_emulation_env_config(emulation_env_config=emulation_env_config, no_traffic=no_traffic)
+    emulation_execution = EmulationEnvManager.create_execution(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.run_containers(emulation_execution=emulation_execution)
+    EmulationEnvManager.apply_emulation_env_config(emulation_execution=emulation_execution, no_traffic=no_traffic)
 
 
 def separate_running_and_stopped_emulations(emulations : List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
@@ -386,21 +495,33 @@ def separate_running_and_stopped_emulations(emulations : List["EmulationEnvConfi
     return running_emulations, stopped_emulations
 
 
-def stop_emulation(emulation_env_config: "EmulationEnvConfig") -> None:
+def stop_all_executions_of_emulation(emulation_env_config: "EmulationEnvConfig") -> None:
     """
     Stops the emulation with the given configuration
 
     :param emulation_env_config: the configuration of the emulation to stop
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
-    click.secho(f"Stopping emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.stop_containers(emulation_env_config=emulation_env_config)
-    ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
-                                              containers_config=emulation_env_config.containers_config,
-                                              emulation_name=emulation_env_config.name)
+    click.secho(f"Stopping all executions of emulation {emulation_env_config.name}", bold=False)
+    EmulationEnvManager.stop_all_executions_of_emulation(emulation_env_config=emulation_env_config)
+
+
+def stop_emulation_execution(emulation_env_config: "EmulationEnvConfig", execution_id: int) -> None:
+    """
+    Stops the emulation with the given configuration
+
+    :param emulation_env_config: the configuration of the emulation to stop
+    :param execution_id: id of the execution to stop
+    :return: None
+    """
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
+    click.secho(f"Stopping execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
+    EmulationEnvManager.stop_execution_of_emulation(emulation_env_config=emulation_env_config,
+                                                    execution_id=execution_id)
+
 
 def clean_emulation_statistics() -> None:
     """
@@ -413,6 +534,30 @@ def clean_emulation_statistics() -> None:
 
     click.secho(f"Deleting all emulation statistics from the metastore", bold=False)
     MetastoreFacade.delete_all(constants.METADATA_STORE.EMULATION_STATISTICS_TABLE)
+
+
+def clean_emulation_executions() -> None:
+    """
+    Cleans all emulation executions
+
+    :return: None
+    """
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
+    click.secho(f"Stopping and cleaning all emulation executions", bold=False)
+    EmulationEnvManager.clean_all_executions()
+
+
+def stop_emulation_executions() -> None:
+    """
+    Stops all emulation executions
+
+    :return: None
+    """
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
+    click.secho(f"Stopping all emulation executions", bold=False)
+    EmulationEnvManager.stop_all_executions()
 
 
 def clean_emulation_traces() -> None:
@@ -441,7 +586,7 @@ def clean_simulation_traces() -> None:
     MetastoreFacade.delete_all(constants.METADATA_STORE.SIMULATION_TRACES_TABLE)
 
 
-def clean_emulation(emulation_env_config: "EmulationEnvConfig") -> None:
+def clean_all_emulation_executions(emulation_env_config: "EmulationEnvConfig") -> None:
     """
     Cleans the emulation with the given configuration
 
@@ -451,7 +596,21 @@ def clean_emulation(emulation_env_config: "EmulationEnvConfig") -> None:
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.clean_emulation(emulation_env_config=emulation_env_config)
+    EmulationEnvManager.clean_all_emulation_executions(emulation_env_config=emulation_env_config)
+
+
+def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execution_id: int) -> None:
+    """
+    Cleans an execution of an emulation
+
+    :param execution_id: the id of the execution to clean
+    :param emulation_env_config: the configuration of the emulation
+    :return: None
+    """
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+
+    click.secho(f"Cleaning execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
+    EmulationEnvManager.clean_emulation_execution(emulation_env_config, execution_id)
 
 
 def materialize_emulation(emulation_env_config: "EmulationEnvConfig", path: str) -> None:
@@ -472,7 +631,15 @@ def materialize_emulation(emulation_env_config: "EmulationEnvConfig", path: str)
     EmulationEnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
-def stop_shell_complete(ctx, param, incomplete):
+def stop_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completions for the stop command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(
@@ -482,17 +649,19 @@ def stop_shell_complete(ctx, param, incomplete):
     containers = running_containers
     containers = list(map(lambda x: x[0], containers))
     return ["prometheus", "node_exporter", "cadvisor", "grafana", "monitor",
-            "statsmanager", "all"] + emulations + containers
+            "statsmanager", "all", "emulation_executions"] + emulations + containers
 
 
+@click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
 @click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | monitor | container-name | "
-                            "emulation-name | statsmanager | all")
-def stop(entity: str) -> None:
+                            "emulation-name | statsmanager | emulation_executions | all")
+def stop(entity: str, id: int = -1) -> None:
     """
     Stops an entity
 
     :param entity: the name of the container to stop or "all"
+    :param id: id when stopping a specific emulation execution
     :return: None
     """
     from csle_common.controllers.container_manager import ContainerManager
@@ -502,7 +671,7 @@ def stop(entity: str) -> None:
     if entity == "all":
         ContainerManager.stop_all_running_containers()
         for emulation in MetastoreFacade.list_emulations():
-            stop_emulation(emulation_env_config=emulation)
+            stop_all_executions_of_emulation(emulation_env_config=emulation)
     elif entity == "node_exporter":
         MonitorToolsController.stop_node_exporter()
     elif entity == "prometheus":
@@ -515,13 +684,18 @@ def stop(entity: str) -> None:
         MonitorToolsController.stop_monitor()
     elif entity == "statsmanager":
         MonitorToolsController.stop_docker_stats_manager()
+    elif entity == "emulation_executions":
+        stop_emulation_executions()
     else:
         container_stopped = ContainerManager.stop_container(name=entity)
         if not container_stopped:
             emulation = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation is not None:
-                 stop_emulation(emulation)
-                 emulation_stopped = True
+                if id == -1:
+                    stop_all_executions_of_emulation(emulation)
+                else:
+                    stop_emulation_execution(emulation_env_config=emulation, execution_id=id)
+                emulation_stopped = True
             else:
                 emulation_stopped = False
             if not emulation_stopped:
@@ -542,7 +716,15 @@ def statsmanager(port: int) -> None:
     docker_stats_manager.serve(port=port)
 
 
-def trainingjob_shell_complete(ctx, param, incomplete):
+def trainingjob_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completion for the training job command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     training_jobs = MetastoreFacade.list_training_jobs()
     training_jobs_ids = list(map(lambda x: x.id, training_jobs))
@@ -603,7 +785,16 @@ def start_docker_stats_manager() -> None:
         click.secho(f"Docker stats manager is already running on port:{port}", bold=False)
 
 
-def start_shell_complete(ctx, param, incomplete):
+def start_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completion for the start command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
+
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(
@@ -696,7 +887,15 @@ def run_image(image: str, name: str) -> bool:
         return False
 
 
-def rm_shell_complete(ctx, param, incomplete):
+def rm_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completion for the rm command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
@@ -731,7 +930,15 @@ def rm(entity : str) -> None:
         rm_name(name=entity)
 
 
-def clean_shell_complete(ctx, param, incomplete):
+def clean_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completion for the clean command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
@@ -740,17 +947,18 @@ def clean_shell_complete(ctx, param, incomplete):
     containers = running_containers + stopped_containers
     containers = list(map(lambda x: x[0], containers))
     return ["all", "containers", "emulations", "emulation_traces", "simulation_traces", "emulation_statistics",
-            "name"] + emulations + containers
+            "name", "emulation_executions"] + emulations + containers
 
-
+@click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=clean_shell_complete)
 @click.command("clean", help="all | containers | emulations | emulation_traces | simulation_traces "
-                             "| emulation_statistics | name")
-def clean(entity : str) -> None:
+                             "| emulation_statistics | emulation_executions | name")
+def clean(entity : str, id: int = -1) -> None:
     """
     Removes a container, a network, an image, all networks, all images, all containers, all traces, or all statistics
 
     :param entity: the container(s), network(s), or images(s) to remove
+    :param id: if cleaning a specific emulation execution
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -760,24 +968,34 @@ def clean(entity : str) -> None:
         ContainerManager.stop_all_running_containers()
         ContainerManager.rm_all_stopped_containers()
         for emulation in MetastoreFacade.list_emulations():
-            clean_emulation(emulation_env_config=emulation)
+            clean_all_emulation_executions(emulation_env_config=emulation)
     elif entity == "containers":
         ContainerManager.stop_all_running_containers()
         ContainerManager.rm_all_stopped_containers()
     elif entity == "emulations":
         for emulation in MetastoreFacade.list_emulations():
-            clean_emulation(emulation_env_config=emulation)
+            clean_all_emulation_executions(emulation_env_config=emulation)
     elif entity == "emulation_traces":
         clean_emulation_traces()
     elif entity == "simulation_traces":
         clean_simulation_traces()
     elif entity == "emulation_statistics":
         clean_emulation_statistics()
+    elif entity == "emulation_executions":
+        clean_emulation_executions()
     else:
         clean_name(name=entity)
 
 
-def install_shell_complete(ctx, param, incomplete):
+def install_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completion for the install command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
@@ -832,7 +1050,15 @@ def install(entity : str) -> None:
         InstallationController.install_base_image(image_name=entity)
 
 
-def uninstall_shell_complete(ctx, param, incomplete):
+def uninstall_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Shell completion for the uninstall command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
@@ -889,7 +1115,15 @@ def uninstall(entity : str) -> None:
         InstallationController.uninstall_base_image(image_name=entity)
 
 
-def ls_shell_complete(ctx, param, incomplete):
+def ls_shell_complete(ctx, param, incomplete) -> List[str]:
+    """
+    Command completion for the ls command
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
@@ -907,7 +1141,7 @@ def ls_shell_complete(ctx, param, incomplete):
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
-                    "| cadvisor | statsmanager | monitor | simulations")
+                    "| cadvisor | statsmanager | monitor | simulations | emulation_executions")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -956,6 +1190,8 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
         list_statsmanager()
     elif entity == "simulations":
         list_simulations()
+    elif entity == "emulation_executions":
+        list_emulation_executions()
     else:
         container = get_running_container(name=entity)
         if container is not None:
@@ -1047,6 +1283,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_all_containers()
     list_images()
     list_emulations(all=all, stopped=stopped, running=running)
+    list_emulation_executions()
     list_simulations()
     list_csle_gym_envs()
     click.secho("CSLE Monitoring System:", fg="magenta", bold=True)
@@ -1204,6 +1441,21 @@ def list_simulations() -> None:
     simulations = MetastoreFacade.list_simulations()
     for sim in simulations:
         click.secho(sim.name)
+
+
+def list_emulation_executions() -> None:
+    """
+    Lists emulation executions
+
+    :return: None
+    """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+
+    click.secho("CSLE emulation executions:", fg="magenta", bold=True)
+    executions = MetastoreFacade.list_emulation_executions()
+    for exec in executions:
+        click.secho(f"IP ID: {exec.ip_first_octet}, emulation name: {exec.emulation_name}")
+
 
 def list_networks() -> None:
     """
@@ -1380,6 +1632,7 @@ def clean_name(name: str) -> None:
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
     container_stopped = ContainerManager.stop_container(name=name)
     if container_stopped:
@@ -1387,9 +1640,15 @@ def clean_name(name: str) -> None:
     else:
         em = MetastoreFacade.get_emulation_by_name(name=name)
         if em is not None:
-            clean_emulation(emulation_env_config=em)
+            clean_all_emulation_executions(emulation_env_config=em)
         else:
-            click.secho(f"name: {name} not recognized", fg="red", bold=True)
+            try:
+                executions = MetastoreFacade.list_emulation_executions_by_id(id=int(name))
+                for exec in executions:
+                    EmulationEnvManager.clean_emulation_execution(
+                        emulation_env_config=exec.emulation_env_config, execution_id=exec.ip_first_octet)
+            except:
+                click.secho(f"name: {name} not recognized", fg="red", bold=True)
 
 
 def remove_emulation(name: str) -> bool:
@@ -1406,7 +1665,7 @@ def remove_emulation(name: str) -> bool:
     emulations = MetastoreFacade.list_emulations()
     for emulation in emulations:
         if emulation.name == name:
-            clean_emulation(emulation)
+            clean_all_emulation_executions(emulation)
             EmulationEnvManager.uninstall_emulation(config=emulation)
             return True
     return False

@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_common.util.general_util import GeneralUtil
 
 
 class ClientPopulationConfig:
@@ -74,7 +75,7 @@ class ClientPopulationConfig:
         """
         :return: a string representation of the object
         """
-        return f"ip:{self.ip}, client_population_process_type: {self.client_process_type.name}, lamb:{self.lamb}, " \
+        return f"ip:{self.ip}, client_population_process_type: {self.client_process_type}, lamb:{self.lamb}, " \
                f"mu:{self.mu}, self.networks:{list(map(lambda x: str(x), self.networks))}, " \
                f"client_manager_port: {self.client_manager_port}, num_commands:{self.num_commands}, " \
                f"client_time_step_len_seconds: {self.client_time_step_len_seconds}," \
@@ -102,3 +103,22 @@ class ClientPopulationConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "ClientPopulationConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return ClientPopulationConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "ClientPopulationConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.ip = GeneralUtil.replace_first_octet_of_ip(ip=config.ip, ip_first_octet=ip_first_octet)
+        config.networks = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+                                   config.networks))
+        return config

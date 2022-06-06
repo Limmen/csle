@@ -55,8 +55,11 @@ class ClientPopulationMetrics:
         :param d: the dict representation
         :return: the created instance
         """
+        rate = 0
+        if rate in d:
+            rate = d["rate"]
         obj = ClientPopulationMetrics(
-            ts=d["ts"], ip=d["ip"], num_clients=d["num_clients"], rate=d["rate"]
+            ts=d["ts"], ip=d["ip"], num_clients=d["num_clients"], rate=rate
         )
         return obj
 

@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-
+from csle_common.util.general_util import GeneralUtil
 
 class NodeTrafficConfig:
     """
@@ -66,3 +66,20 @@ class NodeTrafficConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "NodeTrafficConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return NodeTrafficConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "NodeTrafficConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.ip = GeneralUtil.replace_first_octet_of_ip(ip=config.ip, ip_first_octet=ip_first_octet)
+        return config

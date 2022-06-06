@@ -20,6 +20,7 @@ from csle_common.controllers.resource_constraints_manager import ResourceConstra
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 
 
 class EmulationEnvManager:
@@ -28,11 +29,51 @@ class EmulationEnvManager:
     """
 
     @staticmethod
-    def apply_emulation_env_config(emulation_env_config: EmulationEnvConfig, no_traffic: bool = False) -> None:
+    def stop_all_executions_of_emulation(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Stops all executions of a given emulation
+
+        :param emulation_env_config: the emulation for which executions should be stopped
+        :return: None
+        """
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=emulation_env_config.name)
+        for exec in executions:
+            EmulationEnvManager.stop_containers(execution=exec)
+            ContainerManager.stop_docker_stats_thread(execution=exec)
+
+    @staticmethod
+    def stop_execution_of_emulation(emulation_env_config: EmulationEnvConfig, execution_id: int) -> None:
+        """
+        Stops an execution of a given emulation
+
+        :param emulation_env_config: the emulation for which executions should be stopped
+        :param execution_id: the id of the execution to stop
+        :return: None
+        """
+        execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_env_config.name,
+                                                            ip_first_octet=execution_id)
+        EmulationEnvManager.stop_containers(execution=execution)
+        ContainerManager.stop_docker_stats_thread(execution=execution)
+
+    @staticmethod
+    def stop_all_executions() -> None:
+        """
+        Stops all emulation executions
+
+        :return: None
+        """
+        executions = MetastoreFacade.list_emulation_executions()
+        for exec in executions:
+            EmulationEnvManager.stop_containers(execution=exec)
+            ContainerManager.stop_docker_stats_thread(execution=exec)
+
+    @staticmethod
+    def apply_emulation_env_config(emulation_execution: EmulationExecution, no_traffic: bool = False) -> None:
         """
         Applies the emulation env config
 
-        :param emulation_env_config: the config to apply
+        :param emulation_execution: the emulation execution
         :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
         :return: None
         """
@@ -40,6 +81,7 @@ class EmulationEnvManager:
         if no_traffic:
             steps = steps-1
         current_step = 1
+        emulation_env_config = emulation_execution.emulation_env_config
         Logger.__call__().get_logger().info(f"-- Configuring the emulation: {emulation_env_config.name} --")
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
         ContainerManager.create_networks(containers_config=emulation_env_config.containers_config)
@@ -102,10 +144,7 @@ class EmulationEnvManager:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
         MonitorToolsController.start_docker_stats_manager(port=50051)
         time.sleep(10)
-        ContainerManager.start_docker_stats_thread(
-            log_sink_config=emulation_env_config.log_sink_config,
-            containers_config=emulation_env_config.containers_config,
-            emulation_name=emulation_env_config.name)
+        ContainerManager.start_docker_stats_thread(execution=emulation_execution)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
@@ -215,16 +254,37 @@ class EmulationEnvManager:
             ip, net = ip_net
             ContainerManager.remove_network(name=net.name)
 
+    @staticmethod
+    def create_execution(emulation_env_config: EmulationEnvConfig) -> EmulationExecution:
+        """
+        Creates a new emulation execution
+        :param emulation_env_config: the emulation configuration
+        :return: a DTO representing the execution
+        """
+        timestamp = float(time.time())
+        total_subnets = constants.CSLE.LIST_OF_IP_SUBNETS
+        used_subnets = list(map(lambda x: x.ip_first_octet,
+                                MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=emulation_env_config.name)))
+        available_sunets = list(filter(lambda x: x not in used_subnets, total_subnets))
+        ip_first_octet = available_sunets[0]
+        em_config = emulation_env_config.create_execution_config(ip_first_octet=ip_first_octet)
+        emulation_execution = EmulationExecution(emulation_name=emulation_env_config.name,
+                                                 timestamp=timestamp, ip_first_octet=ip_first_octet,
+                                                 emulation_env_config=em_config)
+        MetastoreFacade.save_emulation_execution(emulation_execution=emulation_execution)
+        return emulation_execution
 
     @staticmethod
-    def run_containers(emulation_env_config: EmulationEnvConfig) -> None:
+    def run_containers(emulation_execution: EmulationExecution) -> None:
         """
         Run containers in the emulation env config
 
-        :param emulation_env_config: the config
+        :param emulation_execution: the execution DTO
         :return: None
         """
         path = ExperimentUtil.default_output_dir()
+        emulation_env_config = emulation_execution.emulation_env_config
         for c in emulation_env_config.containers_config.containers:
             ips = c.get_ips()
             container_resources : NodeResourcesConfig = None
@@ -237,7 +297,6 @@ class EmulationEnvManager:
             if container_resources is None:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
                                  f"resources:{emulation_env_config.resources_config}")
-
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
@@ -252,7 +311,7 @@ class EmulationEnvManager:
         c = emulation_env_config.log_sink_config.container
         container_resources : NodeResourcesConfig = emulation_env_config.log_sink_config.resources
 
-        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}"
+        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
               f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -262,7 +321,6 @@ class EmulationEnvManager:
               f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
               f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
         subprocess.call(cmd, shell=True)
-
 
     @staticmethod
     def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1) -> None:
@@ -293,13 +351,14 @@ class EmulationEnvManager:
         subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def stop_containers(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_containers(execution: EmulationExecution) -> None:
         """
         Stop containers in the emulation env config
 
-        :param emulation_env_config: the config
+        :param execution: the execution to stop
         :return: None
         """
+        emulation_env_config = execution.emulation_env_config
         for c in emulation_env_config.containers_config.containers:
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Stopping container:{name}")
@@ -312,40 +371,80 @@ class EmulationEnvManager:
         cmd = f"docker stop {name}"
         subprocess.call(cmd, shell=True)
 
-
     @staticmethod
-    def clean_emulation(emulation_env_config: EmulationEnvConfig) -> None:
+    def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Cleans an emulation
 
         :param emulation_env_config: the config of the emulation to clean
         :return: None
         """
-        EmulationEnvManager.stop_containers(emulation_env_config=emulation_env_config)
-        EmulationEnvManager.rm_containers(emulation_env_config=emulation_env_config)
-        try:
-            ContainerManager.stop_docker_stats_thread(log_sink_config=emulation_env_config.log_sink_config,
-                                                      containers_config=emulation_env_config.containers_config,
-                                                      emulation_name=emulation_env_config.name)
-        except Exception as e:
-            pass
-        EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=emulation_env_config)
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=emulation_env_config.name)
+        for exec in executions:
+            EmulationEnvManager.stop_containers(execution=exec)
+            EmulationEnvManager.rm_containers(execution=exec)
+            try:
+                ContainerManager.stop_docker_stats_thread(execution=exec)
+            except Exception as e:
+                pass
+            EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+            MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
-    def rm_containers(emulation_env_config: EmulationEnvConfig) -> None:
+    def clean_emulation_execution(emulation_env_config: EmulationEnvConfig, execution_id: int) -> None:
         """
-        Remove containers in the emulation env config
+        Cleans an emulation
 
-        :param emulation_env_config: the config
+        :param execution_id: the id of the execution to clean
+        :param emulation_env_config: the config of the emulation to clean
         :return: None
         """
-        for c in emulation_env_config.containers_config.containers:
-            name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}"
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
+                                                            emulation_name=emulation_env_config.name)
+        EmulationEnvManager.stop_containers(execution=execution)
+        EmulationEnvManager.rm_containers(execution=execution)
+        try:
+            ContainerManager.stop_docker_stats_thread(execution=execution)
+        except Exception as e:
+            pass
+        EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+        MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
+
+    @staticmethod
+    def clean_all_executions() -> None:
+        """
+        Cleans an emulation
+
+        :param emulation_env_config: the config of the emulation to clean
+        :return: None
+        """
+        executions = MetastoreFacade.list_emulation_executions()
+        for exec in executions:
+            EmulationEnvManager.stop_containers(execution=exec)
+            EmulationEnvManager.rm_containers(execution=exec)
+            try:
+                ContainerManager.stop_docker_stats_thread(execution=exec)
+            except Exception as e:
+                pass
+            EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+            MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
+
+    @staticmethod
+    def rm_containers(execution: EmulationExecution) -> None:
+        """
+        Remove containers in the emulation env config for a given execution
+        
+        :param execution: the execution to remove
+        :return: None
+        """
+        for c in execution.emulation_env_config.containers_config.containers:
+            name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
-        c = emulation_env_config.log_sink_config.container
+        c = execution.emulation_env_config.log_sink_config.container
         name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Removing container:{name}")
         cmd = f"docker rm {name}"

@@ -16,6 +16,7 @@ from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 
 
 class ContainerManager:
@@ -362,49 +363,47 @@ class ContainerManager:
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
-    def start_docker_stats_thread(log_sink_config: LogSinkConfig, containers_config: ContainersConfig,
-                                  emulation_name: str) -> None:
+    def start_docker_stats_thread(execution: EmulationExecution) -> None:
         """
         Sends a request to the docker stats manager on the docker host for starting a docker stats monitor thread
 
-        :param log_sink_config: configuration of the log sink
-        :param containers_config: configuration of the containers to monitor
-        :param emulation_name: the name of the emulation to monitor
+        :param execution: the emulation execution
         :return: None
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{log_sink_config.default_grpc_port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.default_grpc_port}') as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             container_ip_dtos = []
-            for c in containers_config.containers:
+            for c in execution.emulation_env_config.containers_config.containers:
                 name = c.get_full_name()
                 ip = c.get_ips()[0]
                 container_ip_dtos.append(csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp(
                     ip=ip, container=name))
 
             csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
-                stub=stub, emulation=emulation_name, sink_ip=log_sink_config.container.get_ips()[0],
-                stats_queue_maxsize=1000, time_step_len_seconds=log_sink_config.time_step_len_seconds,
-                sink_port=log_sink_config.kafka_port, containers=container_ip_dtos)
+                stub=stub, emulation=execution.emulation_name,
+                sink_ip=execution.emulation_env_config.log_sink_config.container.get_ips()[0],
+                stats_queue_maxsize=1000,
+                time_step_len_seconds=execution.emulation_env_config.log_sink_config.time_step_len_seconds,
+                sink_port=execution.emulation_env_config.log_sink_config.kafka_port,
+                containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
-    def stop_docker_stats_thread(log_sink_config: LogSinkConfig, containers_config: ContainersConfig,
-                                  emulation_name: str) -> None:
+    def stop_docker_stats_thread(execution: EmulationExecution) -> None:
         """
         Sends a request to the docker stats manager on the docker host for stopping a docker stats monitor thread
 
-        :param log_sink_config: configuration of the log sink
-        :param containers_config: configuration of the containers to monitor
-        :param emulation_name: the name of the emulation to monitor
+        :param execution: the execution of the emulation for which the monitor should be stopped
         :return: None
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{log_sink_config.default_grpc_port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.default_grpc_port}') \
+                as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
-                stub=stub, emulation=emulation_name)
+                stub=stub, emulation=execution.emulation_name, execution_first_ip_octet = execution.ip_first_octet)
 
 
     @staticmethod

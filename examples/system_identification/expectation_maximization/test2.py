@@ -13,5 +13,5 @@ if __name__ == '__main__':
         "emulations" : traces
     }
     traces_str = json.dumps(traces_dict, indent=4, sort_keys=True)
-    with io.open("/home/kim/new_traces_xw_5_june.json", 'w', encoding='utf-8') as f:
+    with io.open("/home/kim/new_traces_xw_6_june.json", 'w', encoding='utf-8') as f:
         f.write(traces_str)

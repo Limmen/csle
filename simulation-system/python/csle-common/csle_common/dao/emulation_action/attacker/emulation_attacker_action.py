@@ -4,7 +4,7 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
-
+from csle_common.util.general_util import GeneralUtil
 
 class EmulationAttackerAction:
     """
@@ -233,4 +233,22 @@ class EmulationAttackerAction:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "EmulationAttackerAction":
+        """
+        :return: a copy of the DTO
+        """
+        return EmulationAttackerAction.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "EmulationAttackerAction":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.ips = list(map(lambda x: GeneralUtil.replace_first_octet_of_ip(ip=x, ip_first_octet=ip_first_octet),
+                              config.ips))
+        return config
 

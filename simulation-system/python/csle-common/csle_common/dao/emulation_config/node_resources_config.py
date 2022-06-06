@@ -1,5 +1,6 @@
 from typing import List, Tuple, Dict, Any
 from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
+from csle_common.util.general_util import GeneralUtil
 
 
 class NodeResourcesConfig:
@@ -88,3 +89,22 @@ class NodeResourcesConfig:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "NodeResourcesConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return NodeResourcesConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "NodeResourcesConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.container_name = config.container_name + f"_{ip_first_octet}"
+        config.ips_and_network_configs = list(map(lambda x: (GeneralUtil.replace_first_octet_of_ip(
+            ip=x[0], ip_first_octet=ip_first_octet), x[1]), config.ips_and_network_configs))
+        return config
