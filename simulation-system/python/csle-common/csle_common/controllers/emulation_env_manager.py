@@ -69,16 +69,20 @@ class EmulationEnvManager:
             ContainerManager.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
-    def apply_emulation_env_config(emulation_execution: EmulationExecution, no_traffic: bool = False) -> None:
+    def apply_emulation_env_config(emulation_execution: EmulationExecution, no_traffic: bool = False,
+                                   no_clients: bool = False) -> None:
         """
         Applies the emulation env config
 
         :param emulation_execution: the emulation execution
         :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
+        :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
         steps = 18
         if no_traffic:
+            steps = steps-1
+        if no_clients:
             steps = steps-1
         current_step = 1
         emulation_env_config = emulation_execution.emulation_env_config
@@ -125,9 +129,10 @@ class EmulationEnvManager:
                                                 f"on internal nodes --")
             TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
-        TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
+        if not no_clients:
+            current_step += 1
+            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
+            TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "

@@ -461,12 +461,13 @@ def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int
         print_emulation_config(emulation_env_config=em)
 
 
-def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool) -> None:
+def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, no_clients: bool) -> None:
     """
     Runs an emulation with the given config
 
     :param emulation_env_config: the config of the emulation to run
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
+    :param no_clients: a boolean parameter that is True if the client_population should be skipped
     :return: None
     """
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
@@ -474,7 +475,8 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool) 
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
     emulation_execution = EmulationEnvManager.create_execution(emulation_env_config=emulation_env_config)
     EmulationEnvManager.run_containers(emulation_execution=emulation_execution)
-    EmulationEnvManager.apply_emulation_env_config(emulation_execution=emulation_execution, no_traffic=no_traffic)
+    EmulationEnvManager.apply_emulation_env_config(emulation_execution=emulation_execution,
+                                                   no_traffic=no_traffic, no_clients=no_clients)
 
 
 def separate_running_and_stopped_emulations(emulations : List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
@@ -814,19 +816,21 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 
 
 @click.option('--id', default=None, type=int)
+@click.option('--no_clients', is_flag=True, help='skip starting the client population')
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | monitor | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job")
-def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
+def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool,) -> None:
     """
     Starts a container or all containers
 
     :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
+    :param no_traffic: a boolean parameter that is True if the client population should be skipped
     :param id: (optional) an id parameter to identify the entity to start
     :return: None
     """
@@ -862,7 +866,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int) -> None:
         if not container_started:
             emulation_env_config = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation_env_config is not None:
-                run_emulation(emulation_env_config, no_traffic=no_traffic)
+                run_emulation(emulation_env_config, no_traffic=no_traffic, no_clients=no_clients)
                 emulation_started = True
             else:
                 emulation_started =False
