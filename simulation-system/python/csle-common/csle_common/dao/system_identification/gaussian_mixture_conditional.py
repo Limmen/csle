@@ -49,6 +49,23 @@ class GaussianMixtureConditional:
             combined_dist = combined_dist + d_arr
         self.combined_distribution = list(combined_dist)
 
+    def generate_distributions_for_samples(self, samples, normalize = False):
+        samples.sort()
+        dists = []
+        for weight, mean, covar in zip(self.mixture_weights, self.mixtures_means, self.mixtures_covariance_matrix):
+            density_dist = list(weight*norm.pdf(samples, mean, np.sqrt(covar)).ravel())
+            dists.append(density_dist)
+        combined_density_dist = np.zeros(len(samples))
+        for density_dist in dists:
+            d_arr = np.array(density_dist)
+            combined_density_dist = combined_density_dist + d_arr
+        combined_density_dist = list(combined_density_dist)
+        if normalize:
+            combined_prob_dist = list(np.array(combined_density_dist)*(1/sum(combined_density_dist)))
+        else:
+            combined_prob_dist = combined_density_dist
+        return combined_prob_dist
+
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "GaussianMixtureConditional":
         """

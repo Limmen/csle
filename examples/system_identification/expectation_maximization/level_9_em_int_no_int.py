@@ -9,8 +9,8 @@ import csle_system_identification.constants.constants as system_identification_c
 
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-001")
-    emulation_statistic = MetastoreFacade.get_emulation_statistic(id=3)
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level11-001")
+    emulation_statistic = MetastoreFacade.get_emulation_statistic(id=31)
     system_identifcation_config = SystemIdentificationConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}em_level9_test",
         title="Expectation-Maximization level 9 test",
@@ -35,4 +35,8 @@ if __name__ == '__main__':
                                                  emulation_statistics=emulation_statistic,
                                                  system_identification_config=system_identifcation_config)
     system_model = algorithm.fit()
+    samples = list(range(0, 15000))
+    for metric_conds in system_model.conditional_metric_distributions:
+        for metric_cond in metric_conds:
+            intrusion_dist = metric_cond.generate_distributions_for_samples(samples=samples)
     MetastoreFacade.save_gaussian_mixture_system_model(gaussian_mixture_system_model=system_model)

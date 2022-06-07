@@ -192,8 +192,7 @@ class SystemIdentificationProcess(threading.Thread):
         """
         Logger.__call__().get_logger().info(f"[DynaSec] starting system identification algorithm")
         self.system_model = self.algorithm.fit()
-        Logger.__call__().get_logger().info(f"[DynaSec] system identification algorithm complete, model: "
-                                            f"{self.system_model}")
+        Logger.__call__().get_logger().info(f"[DynaSec] system identification algorithm complete")
         MetastoreFacade.save_gaussian_mixture_system_model(gaussian_mixture_system_model=self.system_model)
         self.running = False
 
@@ -218,30 +217,49 @@ class PolicyOptimizationProcess(threading.Thread):
         self.emulation_env_config = emulation_env_config
         self.experiment_config = experiment_config
         self.simulation_env_config = simulation_env_config
-        self.simulation_env_config.simulation_env_input_config.Z = np.array(
+        sample_space = self.simulation_env_config.simulation_env_input_config.stopping_game_config.O.tolist()
+        intrusion_dist = np.zeros(len(sample_space))
+        no_intrusion_dist = np.zeros(len(sample_space))
+        terminal_dist = np.zeros(len(sample_space))
+        terminal_dist[-1] = 1
+        for metric_conds in self.system_model.conditional_metric_distributions:
+            for metric_cond in metric_conds:
+                if metric_cond.conditional_name == "intrusion" \
+                        and metric_cond.metric_name == "alerts_weighted_by_priority":
+                    intrusion_dist[0] = sum(metric_cond.generate_distributions_for_samples(
+                        samples=list(range(-len(sample_space), 1))))
+                    intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
+                if metric_cond.conditional_name == "no_intrusion" \
+                        and metric_cond.metric_name == "alerts_weighted_by_priority":
+                    no_intrusion_dist[0] = sum(metric_cond.generate_distributions_for_samples(
+                        samples=list(range(-len(sample_space), 1))))
+                    no_intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
+        intrusion_dist = list(np.array(intrusion_dist)*(1/sum(intrusion_dist)))
+        no_intrusion_dist = list(np.array(no_intrusion_dist)*(1/sum(no_intrusion_dist)))
+        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z = np.array(
             [
                 [
                     [
-                        self.system_model.conditional_metric_distributions["no_intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"]
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
                     ],
                     [
-                        self.system_model.conditional_metric_distributions["no_intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"]
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
                     ],
                 ],
                 [
                     [
-                        self.system_model.conditional_metric_distributions["no_intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"]
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
                     ],
                     [
-                        self.system_model.conditional_metric_distributions["no_intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"],
-                        self.system_model.conditional_metric_distributions["intrusion"]
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
                     ],
                 ]
             ]
@@ -258,6 +276,7 @@ class PolicyOptimizationProcess(threading.Thread):
         :return: None
         """
         self.experiment_execution = self.agent.train()
+
         MetastoreFacade.save_experiment_execution(self.experiment_execution)
         for policy in self.experiment_execution.result.policies.values():
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
@@ -329,8 +348,8 @@ class DynaSecAgent(BaseAgent):
         return ExperimentConfig(
             output_dir=str(self.experiment_config.output_dir),
             title="Learning a policy through T-SPSA",
-            random_seeds=[], agent_type=AgentType.T_SPSA,
-            log_every=self.experiment_config.br_log_every,
+            random_seeds=self.experiment_config.random_seeds, agent_type=AgentType.T_SPSA,
+            log_every=self.experiment_config.log_every,
             hparams=hparams,
             player_type=self.experiment_config.player_type, player_idx=self.experiment_config.player_idx
         )
@@ -467,9 +486,11 @@ class DynaSecAgent(BaseAgent):
                 emulation_name=self.emulation_executions[0].emulation_env_config.name, descr=descr)
             statistics_id = MetastoreFacade.save_emulation_statistic(emulation_statistics=new_emulation_statistics)
             new_emulation_statistics.id = statistics_id
+            evaluation_traces = []
             for data_collector_process in data_collector_processes:
                 data_collector_process.emulation_statistics = new_emulation_statistics
                 data_collector_process.statistics_id = statistics_id
+                evaluation_traces = evaluation_traces + data_collector_process.emulation_traces
                 data_collector_process.emulation_traces = []
 
             sys_id_process = SystemIdentificationProcess(
@@ -494,45 +515,45 @@ class DynaSecAgent(BaseAgent):
             # Record metrics
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.AVERAGE_RETURN])
+                    agents_constants.COMMON.AVERAGE_RETURN][-1])
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN])
+                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.T_SPSA.THETAS])
+                    agents_constants.T_SPSA.THETAS][-1])
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.T_SPSA.THRESHOLDS])
+                    agents_constants.T_SPSA.THRESHOLDS][-1])
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.INTRUSION_LENGTH])
+                    env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH])
+                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH][-1])
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.INTRUSION_START])
+                    env_constants.ENV_METRICS.INTRUSION_START][-1])
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.TIME_HORIZON])
+                    env_constants.ENV_METRICS.TIME_HORIZON][-1])
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON])
+                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
             for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                        env_constants.ENV_METRICS.STOP + f"_{l}"])
+                        env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
                     policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"])
+                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"][-1])
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
+                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1])
             exp_result.all_metrics[seed][
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                 policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN])
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN][-1])
 
             if training_epoch % self.experiment_config.log_every == 0 and training_epoch > 0:
                 # Update training job

@@ -66,6 +66,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 21) {
         return "LINEAR PROGRAMMING FOR NORMAL-FORM GAMES"
     }
+    if(agentType === 22) {
+        return "DynaSec"
+    }
     else {
         return "Unknown"
     }

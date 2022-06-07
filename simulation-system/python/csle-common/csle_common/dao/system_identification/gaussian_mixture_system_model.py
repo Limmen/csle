@@ -55,6 +55,7 @@ class GaussianMixtureSystemModel(SystemModel):
                     if math.isinf(self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
                                       metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name]):
                         self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
+                            metric_distributions_condition_2[0].conditional_name][
                             metric_dist.metric_name]="inf"
 
     @staticmethod

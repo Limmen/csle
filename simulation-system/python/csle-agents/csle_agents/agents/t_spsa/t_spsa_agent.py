@@ -331,7 +331,7 @@ class TSPSAAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                 round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
 
-            if i % self.experiment_config.log_every == 0 and i > 0:
+            if i % self.experiment_config.log_every == 0:
                 # Update training job
                 total_iterations = len(random_seeds) * N
                 iterations_done = (random_seeds.index(seed)) * N + i

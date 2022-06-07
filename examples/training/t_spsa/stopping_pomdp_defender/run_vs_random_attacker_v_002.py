@@ -4,6 +4,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
+from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
@@ -55,10 +56,20 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
+    simulation_env_config.simulation_env_input_config.attacker_strategy = TabularPolicy(
+        player_type=PlayerType.ATTACKER,
+        actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
+        simulation_name=simulation_env_config.name, value_function=None, q_table=None,
+        lookup_table=[
+            [0.8, 0.2],
+            [1, 0],
+            [1,0]
+        ],
+        agent_type=AgentType.RANDOM, avg_R=-1)
     agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=10, L=3))
+        R_INT=-10, R_COST=-10, R_SLA=0, R_ST=20, L=3))
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():

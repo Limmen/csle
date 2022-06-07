@@ -1,4 +1,5 @@
 from typing import List
+import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -15,6 +16,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actio
 from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
     import EmulationDefenderStoppingActions
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 import csle_system_identification.constants.constants as system_identification_constants
@@ -30,7 +32,7 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :return: the list of attacker actions
     """
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT][0:2]
+    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -63,9 +65,9 @@ if __name__ == '__main__':
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor gamma"),
-            agents_constants.T_SPSA.THETA1: HParam(value=[-3]*(3*2), name=agents_constants.T_SPSA.THETA1,
+            agents_constants.T_SPSA.THETA1: HParam(value=[-3]*(3), name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
-            agents_constants.T_SPSA.N: HParam(value=200, name=agents_constants.T_SPSA.N,
+            agents_constants.T_SPSA.N: HParam(value=50, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
             agents_constants.T_SPSA.c: HParam(
                 value=10, name=agents_constants.T_SPSA.c,
@@ -83,7 +85,7 @@ if __name__ == '__main__':
                 value=0.101, name=agents_constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             agents_constants.T_SPSA.L: HParam(value=3, name="L", descr="the number of stop actions"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=25, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -91,7 +93,7 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
                 value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
@@ -112,7 +114,7 @@ if __name__ == '__main__':
                 value=10000, name=agents_constants.DYNASEC.TRAINING_EPOCHS,
                 descr="the number of training epochs of dynasec"),
             agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES: HParam(
-                value=4, name=agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES,
+                value=2, name=agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES,
                 descr="the number of episodes between model updates in dynasec")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
@@ -137,12 +139,23 @@ if __name__ == '__main__':
                 descr="the metrics to estimate")
         }
     )
+    simulation_env_config.simulation_env_input_config.attacker_strategy = TabularPolicy(
+        player_type=PlayerType.ATTACKER,
+        actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
+        simulation_name=simulation_env_config.name, value_function=None, q_table=None,
+        lookup_table=[
+            [0.8, 0.2],
+            [1, 0],
+            [1,0]
+        ],
+        agent_type=AgentType.RANDOM, avg_R=-1)
     attacker_sequence = expert_attacker_sequence(wait_steps=0,
                                                  emulation_env_config=emulation_executions[0].emulation_env_config)
     defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_executions[0].emulation_env_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=-2, R_SLA=0, R_ST=10, L=3))
+        R_INT=-10, R_COST=-10, R_SLA=0, R_ST=20, L=3))
+    simulation_env_config.simulation_env_input_config.stopping_game_config.O = np.array(list(range(0, 15000)))
     agent = DynaSecAgent(emulation_executions=emulation_executions, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config, attacker_sequence=attacker_sequence,
                          defender_sequence=defender_sequence, system_identification_config=system_identifcation_config)
