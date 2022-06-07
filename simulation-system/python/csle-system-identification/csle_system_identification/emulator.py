@@ -73,7 +73,7 @@ class Emulator:
             if emulation_statistics is not None:
                 statistics_id = emulation_statistics.id
 
-        # Setup system identification job
+        # Setup data collection job
         pid = os.getpid()
         if data_collection_job is None:
             data_collection_job = DataCollectionJobConfig(
@@ -137,8 +137,6 @@ class Emulator:
                     sleep_time=sleep_time, trace=emulation_trace, s=s)
                 s.defender_obs_state.average_metric_lists()
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
-
-
                 total_steps = (1/intrusion_start_p)*repeat_times
                 collected_steps += 1
                 data_collection_job.num_collected_steps=collected_steps

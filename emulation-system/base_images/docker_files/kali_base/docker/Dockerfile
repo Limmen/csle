@@ -8,7 +8,7 @@ RUN apt-get -y install apt-utils  \
                        openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 ncat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
-                       snmp postgresql-client smbclient tcpdump netcat-traditional traceroute sysstat iproute2 iperf3
+                       snmp postgresql-client smbclient tcpdump netcat-traditional traceroute sysstat iproute2 iperf3 lsof
 
 #RUN apt-get -y install man-db
 #&& DEBIAN_FRONTEND=noninteractive apt -yqq install kali-linux-headless

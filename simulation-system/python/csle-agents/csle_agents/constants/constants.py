@@ -322,3 +322,14 @@ class LP_FOR_NF_GAMES:
     N = "N"
     ACTION_SPACE_PLAYER_1 = "action_space_player_1"
     ACTION_SPACE_PLAYER_2 = "action_space_player_2"
+
+
+class DYNASEC:
+    """
+    String constants related to the DynaSec algorithm
+    """
+    SLEEP_TIME = "sleep_time"
+    EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB = "emulation_traces_to_save_with_data_collection_job"
+    INTRUSION_START_P = "intrusion_start_p"
+    TRAINING_EPOCHS = "training_epochs"
+    EPISODES_BETWEEN_MODEL_UPDATES = "episodes_between_model_updates"

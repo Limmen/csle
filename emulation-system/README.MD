@@ -54,6 +54,20 @@ sudo update-grub
 ```
 4. The changes take effect when the system is rebooted.
 
+### Setup maximum file descriptors
+If have a large server and pĺan on running several emulations in paralell, it is recommended to to increase 
+the limit on the number of open file descriptors since the Kafka cluster for each emulation will use quite 
+a lot of desciptors. To do this, follow the steps below:
+```
+ulimit -Sn # check the soft limit
+ulimit -Hn # check the hard limit
+sudo emacs -nw /etc/security/limits.conf # open the limits conf file
+
+# (Example) add the lines:
+kim             soft       nofile          102400
+kim             hard       nofile          1024000
+```
+
 ### Install Emulation System
 
 TODO
