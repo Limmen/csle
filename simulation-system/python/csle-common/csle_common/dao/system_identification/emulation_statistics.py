@@ -347,3 +347,10 @@ class EmulationStatistics:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def get_number_of_samples(self) -> int:
+        num_samples = 0
+        for k,v in self.conditionals_counts.items():
+            for k,v in v.items():
+                num_samples += v
+        return num_samples

@@ -121,7 +121,10 @@ if __name__ == '__main__':
                 descr="the number of warmup episodes in dynasec"),
             agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME: HParam(
                 value=1, name=agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME,
-                descr="the sleep time of the emulation monitor (minutes)")
+                descr="the sleep time of the emulation monitor (minutes)"),
+            agents_constants.DYNASEC.REPLAY_WINDOW_SIZE: HParam(
+                value=10, name=agents_constants.DYNASEC.REPLAY_WINDOW_SIZE,
+                descr="the replay window size for DynaSec (unit: episodes)")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

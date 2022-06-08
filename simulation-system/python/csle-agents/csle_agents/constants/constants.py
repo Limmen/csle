@@ -339,3 +339,4 @@ class DYNASEC:
     NUM_CLIENTS = "num_clients"
     EMULATION_MONITOR_SLEEP_TIME = "emulation_monitor_sleep_time"
     STATIC_ATTACKER_TYPE = "static_attacker_type"
+    REPLAY_WINDOW_SIZE = "replay_window_size"
