@@ -18,3 +18,7 @@ class SystemModel(ABC):
     @abstractmethod
     def from_dict(d: Dict[str, Any])-> "SystemModel":
         pass
+
+    @abstractmethod
+    def copy(self)-> "SystemModel":
+        pass

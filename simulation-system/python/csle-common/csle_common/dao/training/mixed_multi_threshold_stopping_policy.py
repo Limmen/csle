@@ -169,7 +169,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "MultiThresholdStoppingPolicy":
+    def from_dict(d: Dict) -> "MixedMultiThresholdStoppingPolicy":
         """
         Converst a dict representation of the object to an instance
 
@@ -341,3 +341,9 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "MixedMultiThresholdStoppingPolicy":
+        """
+        :return: a copy of the DTO
+        """
+        return self.from_dict(self.to_dict())

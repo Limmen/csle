@@ -23,6 +23,8 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_state import StoppingGameState
 import gym_csle_stopping_game.constants.constants as env_constants
+from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 
 
 class StoppingGameEnv(BaseEnv):
@@ -85,6 +87,65 @@ class StoppingGameEnv(BaseEnv):
         else:
             o = StoppingGameUtil.sample_next_observation(Z=self.config.Z,
                                                          O=self.config.O, s_prime=self.state.s)
+            self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
+                                                        config=self.config,
+                                                        l=self.state.l, a2=a2)
+
+        # Update stops remaining
+        self.state.l = self.state.l-a1
+
+        # Update time-step
+        self.state.t += 1
+
+        # Populate info dict
+        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
+        info[env_constants.ENV_METRICS.STATE] = self.state.s
+        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
+        info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
+        info[env_constants.ENV_METRICS.OBSERVATION] = o
+        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
+
+        # Get observations
+        attacker_obs = self.state.attacker_observation()
+        defender_obs = self.state.defender_observation()
+
+        # Log trace
+        self.trace.defender_rewards.append(r)
+        self.trace.attacker_rewards.append(-r)
+        self.trace.attacker_actions.append(a2)
+        self.trace.defender_actions.append(a1)
+        self.trace.infos.append(info)
+        self.trace.states.append(self.state.s)
+        self.trace.beliefs.append(self.state.b[1])
+        self.trace.infrastructure_metrics.append(o)
+        if not done:
+            self.trace.attacker_observations.append(attacker_obs)
+            self.trace.defender_observations.append(defender_obs)
+
+        # Populate info
+        info = self._info(info)
+
+        return (defender_obs, attacker_obs), (r,-r), done, info
+
+    def step_trace(self, trace: EmulationTrace, a1: int, pi2: np.ndarray) \
+            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
+        done = False
+        info = {}
+        a2_emulation_action = trace.attacker_actions[self.state.t-1]
+        a2 = 0
+        if a2_emulation_action.type != EmulationAttackerActionType.CONTINUE:
+            a2 = 1
+
+        # Compute r, s', b',o'
+        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
+        self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
+                                                          T=self.config.T,
+                                                          S=self.config.S, s=self.state.s)
+        o = max(self.config.O)
+        if self.state.s == 2:
+            done = True
+        else:
+            o = trace.defender_observation_states[self.state.t-1].ids_alert_counters.alerts_weighted_by_priority
             self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
                                                         config=self.config,
                                                         l=self.state.l, a2=a2)

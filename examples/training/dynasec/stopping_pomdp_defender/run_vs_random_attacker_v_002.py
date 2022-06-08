@@ -32,7 +32,7 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :return: the list of attacker actions
     """
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT]
+    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT][0:2]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
                 descr="the discount factor gamma"),
             agents_constants.T_SPSA.THETA1: HParam(value=[-3]*(3), name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
-            agents_constants.T_SPSA.N: HParam(value=50, name=agents_constants.T_SPSA.N,
+            agents_constants.T_SPSA.N: HParam(value=10, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
             agents_constants.T_SPSA.c: HParam(
                 value=10, name=agents_constants.T_SPSA.c,
@@ -115,7 +115,13 @@ if __name__ == '__main__':
                 descr="the number of training epochs of dynasec"),
             agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES: HParam(
                 value=2, name=agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES,
-                descr="the number of episodes between model updates in dynasec")
+                descr="the number of episodes between model updates in dynasec"),
+            agents_constants.DYNASEC.WARMUP_EPISODES: HParam(
+                value=2, name=agents_constants.DYNASEC.WARMUP_EPISODES,
+                descr="the number of warmup episodes in dynasec"),
+            agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME: HParam(
+                value=1, name=agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME,
+                descr="the sleep time of the emulation monitor (minutes)")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

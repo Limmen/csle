@@ -179,3 +179,9 @@ class PPOPolicy(Policy):
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
+    def copy(self) -> "PPOPolicy":
+        """
+        :return: a copy of the DTO
+        """
+        return self.from_dict(self.to_dict())
+

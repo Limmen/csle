@@ -30,3 +30,7 @@ class Policy(ABC):
     @abstractmethod
     def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
         pass
+
+    @abstractmethod
+    def copy(self) -> "Policy":
+        pass

@@ -247,3 +247,9 @@ class FNNWithSoftmaxPolicy(Policy):
         """
         path = self.save_path
         torch.save(self.policy_network.state_dict(), path)
+
+    def copy(self) -> "FNNWithSoftmaxPolicy":
+        """
+        :return: a copy of the DTO
+        """
+        return self.from_dict(self.to_dict())

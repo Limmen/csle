@@ -46,7 +46,7 @@ class RandomPolicy(Policy):
         return 1/len(self.actions)
 
     @staticmethod
-    def from_dict(d: Dict) -> "Policy":
+    def from_dict(d: Dict) -> "RandomPolicy":
         """
         Converts a dict representation to an instance
 
@@ -104,3 +104,9 @@ class RandomPolicy(Policy):
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "RandomPolicy":
+        """
+        :return: a copy of the DTO
+        """
+        return self.from_dict(self.to_dict())

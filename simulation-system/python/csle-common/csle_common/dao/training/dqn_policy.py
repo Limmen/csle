@@ -1,7 +1,6 @@
 from typing import List, Dict, Union
 import numpy as np
 import torch
-import math
 from stable_baselines3 import DQN
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
@@ -178,4 +177,10 @@ class DQNPolicy(Policy):
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "DQNPolicy":
+        """
+        :return: a copy of the DTO
+        """
+        return self.from_dict(self.to_dict())
 

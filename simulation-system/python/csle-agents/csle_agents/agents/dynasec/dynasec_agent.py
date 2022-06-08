@@ -1,6 +1,4 @@
-import math
-from typing import Union, List, Dict, Optional
-import random
+from typing import List, Optional, Dict
 import time
 import gym
 import os
@@ -39,6 +37,9 @@ from csle_common.dao.system_identification.gaussian_mixture_system_model import 
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_system_identification.constants.constants as system_identification_constants
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
+from csle_common.dao.training.policy import Policy
+from csle_common.util.read_emulation_statistics import ReadEmulationStatistics
+from csle_common.dao.emulation_config.static_emulation_attacker_type import StaticEmulationAttackerType
 
 
 class DataCollectorProcess(threading.Thread):
@@ -218,52 +219,8 @@ class PolicyOptimizationProcess(threading.Thread):
         self.experiment_config = experiment_config
         self.simulation_env_config = simulation_env_config
         sample_space = self.simulation_env_config.simulation_env_input_config.stopping_game_config.O.tolist()
-        intrusion_dist = np.zeros(len(sample_space))
-        no_intrusion_dist = np.zeros(len(sample_space))
-        terminal_dist = np.zeros(len(sample_space))
-        terminal_dist[-1] = 1
-        for metric_conds in self.system_model.conditional_metric_distributions:
-            for metric_cond in metric_conds:
-                if metric_cond.conditional_name == "intrusion" \
-                        and metric_cond.metric_name == "alerts_weighted_by_priority":
-                    intrusion_dist[0] = sum(metric_cond.generate_distributions_for_samples(
-                        samples=list(range(-len(sample_space), 1))))
-                    intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
-                if metric_cond.conditional_name == "no_intrusion" \
-                        and metric_cond.metric_name == "alerts_weighted_by_priority":
-                    no_intrusion_dist[0] = sum(metric_cond.generate_distributions_for_samples(
-                        samples=list(range(-len(sample_space), 1))))
-                    no_intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
-        intrusion_dist = list(np.array(intrusion_dist)*(1/sum(intrusion_dist)))
-        no_intrusion_dist = list(np.array(no_intrusion_dist)*(1/sum(no_intrusion_dist)))
-        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z = np.array(
-            [
-                [
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                ],
-                [
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                    [
-                        no_intrusion_dist,
-                        intrusion_dist,
-                        terminal_dist
-                    ],
-                ]
-            ]
-        )
+        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z = \
+            DynaSecAgent.get_Z_from_system_model(system_model=system_model, sample_space=sample_space)
         self.agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
                                 simulation_env_config=simulation_env_config, experiment_config=self.experiment_config)
         self.experiment_execution = None
@@ -280,6 +237,44 @@ class PolicyOptimizationProcess(threading.Thread):
         MetastoreFacade.save_experiment_execution(self.experiment_execution)
         for policy in self.experiment_execution.result.policies.values():
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+
+
+class EmulationMonitorThread(threading.Thread):
+    """
+    Process collects data from the emulation
+    """
+
+    def __init__(self, exp_result: ExperimentResult, emulation_env_config: EmulationEnvConfig,
+                 sleep_time_minutes: int, seed: int) -> None:
+        """
+        Initializes the thread
+
+        :param exp_result: the object to track data
+        :param emulation_env_config: the emulation environment configuration
+        :param sleep_time_minutes: sleep time between measurements
+        :param seed: the random seed
+        """
+        threading.Thread.__init__(self)
+        self.exp_result = exp_result
+        self.emulation_env_config = emulation_env_config
+        self.sleep_time_minutes = sleep_time_minutes
+        self.running =True
+        self.seed = seed
+
+    def run(self) -> None:
+        """
+        Runs the thread
+
+        :return: None
+        """
+        Logger.__call__().get_logger().info(f"[DynaSec] starting emulation monitor thread")
+        while self.running:
+            time.sleep(self.sleep_time_minutes)
+            metrics = ReadEmulationStatistics.read_all(emulation_env_config=self.emulation_env_config,
+                                             time_window_minutes=self.sleep_time_minutes)
+            if len(metrics.client_metrics) > 0:
+                num_clients = metrics.client_metrics[0].num_clients
+                self.exp_result.all_metrics[self.seed][agents_constants.DYNASEC.NUM_CLIENTS].append(num_clients)
 
 
 class DynaSecAgent(BaseAgent):
@@ -364,6 +359,8 @@ class DynaSecAgent(BaseAgent):
 
         # Initialize metrics
         exp_result = ExperimentResult()
+        exp_result.plot_metrics.append(agents_constants.DYNASEC.NUM_CLIENTS)
+        exp_result.plot_metrics.append(agents_constants.DYNASEC.STATIC_ATTACKER_TYPE)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_LENGTH)
@@ -374,19 +371,82 @@ class DynaSecAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
+
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       agents_constants.COMMON.AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       env_constants.ENV_METRICS.INTRUSION_LENGTH)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       env_constants.ENV_METRICS.INTRUSION_START)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       env_constants.ENV_METRICS.TIME_HORIZON)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                       env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
+
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       agents_constants.COMMON.AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       env_constants.ENV_METRICS.INTRUSION_LENGTH)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       env_constants.ENV_METRICS.INTRUSION_START)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       env_constants.ENV_METRICS.TIME_HORIZON)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                       env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
+
+
         for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
+            exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                           env_constants.ENV_METRICS.STOP + f"_{l}")
+            exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
+                                           env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
+            exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                           env_constants.ENV_METRICS.STOP + f"_{l}")
+            exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
+                                           env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
 
         descr = f"Training of policies with the DynaSec algorithm using " \
                 f"simulation:{self.simulation_env_config.name} and {len(self.emulation_executions)} " \
                 f"emulation executions of emulation {self.emulation_executions[0].emulation_env_config.name}"
+
         for seed in self.experiment_config.random_seeds:
             exp_result.all_metrics[seed] = {}
+            exp_result.all_metrics[seed][agents_constants.DYNASEC.NUM_CLIENTS] = []
+            exp_result.all_metrics[seed][agents_constants.DYNASEC.STATIC_ATTACKER_TYPE] = []
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
                 for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
                     exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
@@ -403,9 +463,52 @@ class DynaSecAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_START] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.TIME_HORIZON] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_START] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.TIME_HORIZON] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+
             for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+                exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_{l}"] = []
+                exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
+                exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_{l}"] = []
+                exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -453,6 +556,10 @@ class DynaSecAgent(BaseAgent):
         intrusion_start_p = self.experiment_config.hparams[agents_constants.DYNASEC.INTRUSION_START_P].value
         emulation_traces_to_save_with_data_collection_job = self.experiment_config.hparams[
             agents_constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB].value
+        warmup_episodes = self.experiment_config.hparams[agents_constants.DYNASEC.WARMUP_EPISODES].value
+        max_steps = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
+        emulation_monitor_sleep_time = self.experiment_config.hparams[
+            agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME].value
 
         # Start data collection processes
         data_collector_processes = []
@@ -472,14 +579,92 @@ class DynaSecAgent(BaseAgent):
             data_collector_processes.append(data_collector_process)
             time.sleep(sleep_time)
 
+        # Start emulation monitor
+        emulation_monitor_process = EmulationMonitorThread(
+            exp_result=exp_result,  emulation_env_config=self.emulation_executions[0].emulation_env_config,
+            sleep_time_minutes=emulation_monitor_sleep_time, seed=seed)
+        emulation_monitor_process.start()
+
+        # Warmup phase
+        completed_warmup_episodes = 0
+        while completed_warmup_episodes < warmup_episodes:
+            completed_warmup_episodes = sum(list(map(lambda x: len(x.emulation_traces), data_collector_processes)))
+            Logger.__call__().get_logger().info(f"[DynaSec] [warmup] "
+                                                f" collected traces: "
+                                                f"{completed_warmup_episodes}/{warmup_episodes}")
+            time.sleep(sleep_time)
+        emulation_statistics = MetastoreFacade.get_emulation_statistic(id=statistics_id)
+        new_emulation_statistics = EmulationStatistics(
+            emulation_name=self.emulation_executions[0].emulation_env_config.name, descr=descr)
+        statistics_id = MetastoreFacade.save_emulation_statistic(emulation_statistics=new_emulation_statistics)
+        new_emulation_statistics.id = statistics_id
+        for data_collector_process in data_collector_processes:
+            data_collector_process.emulation_statistics = new_emulation_statistics
+            data_collector_process.statistics_id = statistics_id
+            data_collector_process.emulation_traces = []
+
+        sys_id_process = SystemIdentificationProcess(
+            system_identification_config=self.system_identification_config,
+            emulation_statistics=emulation_statistics,
+            emulation_env_config=self.emulation_executions[0].emulation_env_config)
+        Logger.__call__().get_logger().info(f"[DynaSec] [warmup] starting system identification process")
+        sys_id_process.start()
+        sys_id_process.join()
+        initial_system_model = sys_id_process.system_model
+        Logger.__call__().get_logger().info(f"[DynaSec] [warmup] system identification process completed")
+
+        policy_optimization_process = PolicyOptimizationProcess(
+            system_model=initial_system_model,  experiment_config=spsa_experiment_config,
+            emulation_env_config=self.emulation_executions[0].emulation_env_config,
+            simulation_env_config=self.simulation_env_config)
+        Logger.__call__().get_logger().info(f"[DynaSec] [warmup] starting policy optimization process")
+        policy_optimization_process.start()
+        policy_optimization_process.join()
+        Logger.__call__().get_logger().info(f"[DynaSec] [warmup] policy optimization process completed")
+        initial_policy = list(policy_optimization_process.experiment_execution.result.policies.values())[0]
+        self.record_metrics(
+            exp_result=exp_result, seed=seed,
+            metrics_dict=policy_optimization_process.experiment_execution.result.all_metrics)
+        baseline = (initial_system_model, initial_policy)
+
+        policy = initial_policy.copy()
+        system_model = initial_system_model.copy()
+        attacker_type = StaticEmulationAttackerType.EXPERT
+
+        # Training
         training_epoch = 0
         while training_epoch < training_epochs:
-            new_traces = 0
-            while new_traces < episodes_between_model_updates:
-                new_traces = sum(list(map(lambda x: len(x.emulation_traces), data_collector_processes)))
+            new_traces = []
+            exp_result.all_metrics[seed][agents_constants.DYNASEC.STATIC_ATTACKER_TYPE].append(attacker_type)
+            while len(new_traces) < episodes_between_model_updates:
+                n_traces = []
+                for dcp in data_collector_processes:
+                    if len(dcp.emulation_traces) > 0:
+                        n_traces.append(dcp.emulation_traces[0])
+                        dcp.emulation_traces = []
+                if len(n_traces) > 0:
+                    Logger.__call__().get_logger().info(f"[DynaSec] eval "
+                                                        f"{len(new_traces)}/{episodes_between_model_updates}")
+                    avg_metrics = self.eval_traces(traces=n_traces, defender_policy=policy, max_steps=max_steps,
+                                                   system_model=system_model)
+                    avg_metrics_seed = {}
+                    avg_metrics_seed[seed] = avg_metrics
+                    print(avg_metrics_seed[seed])
+                    print(avg_metrics)
+                    self.record_metrics(
+                        exp_result=exp_result, seed=seed,
+                        metrics_dict=avg_metrics_seed, eval=True, baseline=False)
+                    avg_metrics = self.eval_traces(traces=n_traces, defender_policy=initial_policy, max_steps=max_steps,
+                                                   system_model=initial_system_model)
+                    avg_metrics_seed = {}
+                    avg_metrics_seed[seed] = avg_metrics
+                    self.record_metrics(
+                        exp_result=exp_result, seed=seed,
+                        metrics_dict=avg_metrics_seed, baseline=True, eval=False)
+                new_traces = new_traces + n_traces
                 Logger.__call__().get_logger().info(f"[DynaSec] waiting to collect enough traces. "
                                                     f"Number of new traces: "
-                                                    f"{new_traces}/{episodes_between_model_updates}")
+                                                    f"{len(new_traces)}/{episodes_between_model_updates}")
                 time.sleep(sleep_time)
             emulation_statistics = MetastoreFacade.get_emulation_statistic(id=statistics_id)
             new_emulation_statistics = EmulationStatistics(
@@ -509,52 +694,14 @@ class DynaSecAgent(BaseAgent):
             Logger.__call__().get_logger().info(f"[DynaSec] starting policy optimization process")
             policy_optimization_process.start()
             policy_optimization_process.join()
+            policy = list(policy_optimization_process.experiment_execution.result.policies.values())[0]
             Logger.__call__().get_logger().info(f"[DynaSec] policy optimization process completed")
             training_epoch += 1
 
             # Record metrics
-            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.AVERAGE_RETURN][-1])
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.T_SPSA.THETAS][-1])
-            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.T_SPSA.THRESHOLDS][-1])
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH][-1])
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.INTRUSION_START][-1])
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.TIME_HORIZON][-1])
-            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
-            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
-                    policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                        env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"][-1])
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1])
-            exp_result.all_metrics[seed][
-                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
-                policy_optimization_process.experiment_execution.result.all_metrics[seed][
-                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN][-1])
-
+            self.record_metrics(
+                exp_result=exp_result, seed=seed,
+                metrics_dict=policy_optimization_process.experiment_execution.result.all_metrics)
             if training_epoch % self.experiment_config.log_every == 0 and training_epoch > 0:
                 # Update training job
                 total_iterations = training_epochs
@@ -586,8 +733,226 @@ class DynaSecAgent(BaseAgent):
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
                     f"sigmoid(theta):{exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS][-1]}, "
                     f"progress: {round(progress*100,2)}%")
-
         return self.exp_execution
+
+    def eval_traces(self, traces: List[EmulationTrace], defender_policy: Policy, max_steps : int,
+                    system_model: GaussianMixtureSystemModel):
+        sample_space = self.simulation_env_config.simulation_env_input_config.stopping_game_config.O.tolist()
+        old_Z = self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z.copy()
+        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z = \
+            DynaSecAgent.get_Z_from_system_model(system_model=system_model, sample_space=sample_space)
+        metrics = {}
+        for trace in traces:
+            done = False
+            o = self.env.reset()
+            l = int(o[0])
+            b1 = o[1]
+            t = 1
+            r = 0
+            a = 0
+            info = {}
+            while not done and t <= max_steps:
+                Logger.__call__().get_logger().debug(f"t:{t}, a: {a}, b1:{b1}, r:{r}, l:{l}, info:{info}")
+                a = defender_policy.action(o=o)
+                o, r, done, info = self.env.step_trace(trace=trace, a1=a)
+                l = int(o[0])
+                b1 = o[1]
+                t += 1
+            metrics = TSPSAAgent.update_metrics(metrics=metrics, info=info)
+        avg_metrics = TSPSAAgent.compute_avg_metrics(metrics=metrics)
+        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z = old_Z
+        return avg_metrics
+
+    def record_metrics(self, exp_result :ExperimentResult, seed: int,
+                       metrics_dict: Dict,
+                       eval: bool = False, baseline: bool = False):
+        if not eval and not baseline:
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.AVERAGE_RETURN][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS].append(
+                metrics_dict[seed][
+                    agents_constants.T_SPSA.THETAS][-1])
+            exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS].append(
+                metrics_dict[seed][
+                    agents_constants.T_SPSA.THRESHOLDS][-1])
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH][-1])
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.INTRUSION_START][-1])
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.TIME_HORIZON][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
+            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
+                    metrics_dict[seed][
+                        env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
+                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
+                    metrics_dict[seed][
+                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"][-1])
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1])
+            exp_result.all_metrics[seed][
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN][-1])
+        elif not eval and baseline:
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.AVERAGE_RETURN].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.AVERAGE_RETURN][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_START].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.INTRUSION_START][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.TIME_HORIZON].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.TIME_HORIZON][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
+            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+                exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_{l}"].append(
+                    metrics_dict[seed][
+                        env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
+                exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
+                    metrics_dict[seed][
+                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                         env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1])
+            exp_result.all_metrics[seed][
+                agents_constants.COMMON.BASELINE_PREFIX +
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN][-1])
+        else:
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.AVERAGE_RETURN].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.AVERAGE_RETURN][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.INTRUSION_START].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.INTRUSION_START][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.TIME_HORIZON].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.TIME_HORIZON][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
+                metrics_dict[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
+            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+                exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_{l}"].append(
+                    metrics_dict[seed][
+                        env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
+                exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                             env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
+                    metrics_dict[seed][
+                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"][-1])
+            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                         env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1])
+            exp_result.all_metrics[seed][
+                agents_constants.COMMON.EVAL_PREFIX +
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+                metrics_dict[seed][
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN][-1])
+        return exp_result
+
+    @staticmethod
+    def get_Z_from_system_model(system_model: GaussianMixtureSystemModel, sample_space: List) -> np.ndarray:
+        intrusion_dist = np.zeros(len(sample_space))
+        no_intrusion_dist = np.zeros(len(sample_space))
+        terminal_dist = np.zeros(len(sample_space))
+        terminal_dist[-1] = 1
+        for metric_conds in system_model.conditional_metric_distributions:
+            for metric_cond in metric_conds:
+                if metric_cond.conditional_name == "intrusion" \
+                        and metric_cond.metric_name == "alerts_weighted_by_priority":
+                    intrusion_dist[0] = sum(metric_cond.generate_distributions_for_samples(
+                        samples=list(range(-len(sample_space), 1))))
+                    intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
+                if metric_cond.conditional_name == "no_intrusion" \
+                        and metric_cond.metric_name == "alerts_weighted_by_priority":
+                    no_intrusion_dist[0] = sum(metric_cond.generate_distributions_for_samples(
+                        samples=list(range(-len(sample_space), 1))))
+                    no_intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
+        intrusion_dist = list(np.array(intrusion_dist)*(1/sum(intrusion_dist)))
+        no_intrusion_dist = list(np.array(no_intrusion_dist)*(1/sum(no_intrusion_dist)))
+        Z = np.array(
+            [
+                [
+                    [
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
+                    ],
+                    [
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
+                    ],
+                ],
+                [
+                    [
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
+                    ],
+                    [
+                        no_intrusion_dist,
+                        intrusion_dist,
+                        terminal_dist
+                    ],
+                ]
+            ]
+        )
+        return Z
 
     def hparam_names(self) -> List[str]:
         """
@@ -599,5 +964,10 @@ class DynaSecAgent(BaseAgent):
                 agents_constants.T_SPSA.GRADIENT_BATCH_SIZE, agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 agents_constants.COMMON.RUNNING_AVERAGE,
                 system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
-                system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL
+                system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL,
+                agents_constants.DYNASEC.WARMUP_EPISODES, agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES,
+                agents_constants.DYNASEC.TRAINING_EPOCHS, agents_constants.DYNASEC.SLEEP_TIME,
+                agents_constants.DYNASEC.INTRUSION_START_P,
+                agents_constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB,
+                agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME
                 ]

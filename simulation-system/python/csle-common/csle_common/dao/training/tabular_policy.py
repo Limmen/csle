@@ -53,7 +53,7 @@ class TabularPolicy(Policy):
         return self.lookup_table[o][a]
 
     @staticmethod
-    def from_dict(d: Dict) -> "Policy":
+    def from_dict(d: Dict) -> "TabularPolicy":
         """
         Converts a dict representation to an instance
 
@@ -124,3 +124,9 @@ class TabularPolicy(Policy):
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def copy(self) -> "TabularPolicy":
+        """
+        :return: a copy of the DTO
+        """
+        return self.from_dict(self.to_dict())
