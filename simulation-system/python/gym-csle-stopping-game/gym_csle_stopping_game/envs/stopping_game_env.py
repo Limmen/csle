@@ -9,7 +9,6 @@ from csle_common.dao.training.policy import Policy
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
-from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.emulation_config.emulation_simulation_trace import EmulationSimulationTrace
 from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions \
     import EmulationAttackerStoppingActions
@@ -131,27 +130,35 @@ class StoppingGameEnv(BaseEnv):
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         done = False
         info = {}
-        a2_emulation_action = trace.attacker_actions[self.state.t-1]
-        a2 = 0
-        if a2_emulation_action.type != EmulationAttackerActionType.CONTINUE:
-            a2 = 1
+        if (self.state.t-1) < len(trace.attacker_actions):
+            a2_emulation_action = trace.attacker_actions[self.state.t-1]
+            a2 = 0
+            if a2_emulation_action.type != EmulationAttackerActionType.CONTINUE and self.state.s == 0:
+                a2 = 1
+            if self.state.s == 1:
+                a2 = 0
+            # Compute r, s', b',o'
+            r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
+            self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
+                                                              T=self.config.T,
+                                                              S=self.config.S, s=self.state.s)
+            o = max(self.config.O)
+            if self.state.s == 2:
+                done = True
+            else:
+                o = trace.defender_observation_states[self.state.t-1].ids_alert_counters.alerts_weighted_by_priority
+                self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
+                                                            config=self.config,
+                                                            l=self.state.l, a2=a2)
 
-        # Compute r, s', b',o'
-        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
-        self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
-                                                          T=self.config.T,
-                                                          S=self.config.S, s=self.state.s)
-        o = max(self.config.O)
-        if self.state.s == 2:
-            done = True
+            # Update stops remaining
+            self.state.l = self.state.l-a1
         else:
-            o = trace.defender_observation_states[self.state.t-1].ids_alert_counters.alerts_weighted_by_priority
-            self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
-                                                        config=self.config,
-                                                        l=self.state.l, a2=a2)
-
-        # Update stops remaining
-        self.state.l = self.state.l-a1
+            self.state.s = 2
+            done= True
+            a2=0
+            o=0
+            r=0
 
         # Update time-step
         self.state.t += 1
@@ -184,6 +191,8 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
+        print(f"step trace, a1: {a1}, a2: {a2}, returning: o:{(defender_obs, attacker_obs)}, r:{(r,-r)}, "
+              f"info: {info}, pi2:{pi2}, s:{self.state.s}, b:{self.state.b}, l:{self.state.l} ")
         return (defender_obs, attacker_obs), (r,-r), done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:

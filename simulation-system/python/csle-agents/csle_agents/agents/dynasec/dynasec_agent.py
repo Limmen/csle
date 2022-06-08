@@ -812,96 +812,108 @@ class DynaSecAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.AVERAGE_RETURN].append(
                 metrics_dict[seed][
-                    agents_constants.COMMON.AVERAGE_RETURN][-1])
+                    env_constants.ENV_METRICS.RETURN])
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
-                metrics_dict[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                                 agents_constants.COMMON.AVERAGE_RETURN],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                metrics_dict[seed][
-                    env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
+                metrics_dict[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH])
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                                 env_constants.ENV_METRICS.INTRUSION_LENGTH],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
                 metrics_dict[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH][-1])
-            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
-                                         env_constants.ENV_METRICS.INTRUSION_START].append(
-                metrics_dict[seed][
-                    env_constants.ENV_METRICS.INTRUSION_START][-1])
+                    env_constants.ENV_METRICS.INTRUSION_START])
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          env_constants.ENV_METRICS.TIME_HORIZON].append(
                 metrics_dict[seed][
-                    env_constants.ENV_METRICS.TIME_HORIZON][-1])
+                    env_constants.ENV_METRICS.TIME_HORIZON])
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
-                metrics_dict[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                                 env_constants.ENV_METRICS.TIME_HORIZON],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
                 exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     metrics_dict[seed][
-                        env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
+                        env_constants.ENV_METRICS.STOP + f"_{l}"])
                 exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    metrics_dict[seed][
-                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"][-1])
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
+                                                     env_constants.ENV_METRICS.STOP + f"_{l}"],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
                 metrics_dict[seed][
-                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1])
+                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
             exp_result.all_metrics[seed][
                 agents_constants.COMMON.BASELINE_PREFIX +
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                 metrics_dict[seed][
-                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN][-1])
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN])
         else:
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          agents_constants.COMMON.AVERAGE_RETURN].append(
                 metrics_dict[seed][
-                    agents_constants.COMMON.AVERAGE_RETURN][-1])
-            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                    env_constants.ENV_METRICS.RETURN])
+            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(
-                metrics_dict[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1])
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                                 agents_constants.COMMON.AVERAGE_RETURN],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
-                metrics_dict[seed][
-                    env_constants.ENV_METRICS.INTRUSION_LENGTH][-1])
+                metrics_dict[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH])
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH].append(
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                                 env_constants.ENV_METRICS.INTRUSION_LENGTH],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
                 metrics_dict[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH][-1])
-            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
-                                         env_constants.ENV_METRICS.INTRUSION_START].append(
-                metrics_dict[seed][
-                    env_constants.ENV_METRICS.INTRUSION_START][-1])
+                    env_constants.ENV_METRICS.INTRUSION_START])
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          env_constants.ENV_METRICS.TIME_HORIZON].append(
                 metrics_dict[seed][
-                    env_constants.ENV_METRICS.TIME_HORIZON][-1])
+                    env_constants.ENV_METRICS.TIME_HORIZON])
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
-                metrics_dict[seed][
-                    agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                                 env_constants.ENV_METRICS.TIME_HORIZON],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
                 exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     metrics_dict[seed][
-                        env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
+                        env_constants.ENV_METRICS.STOP + f"_{l}"])
                 exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    metrics_dict[seed][
-                        env_constants.ENV_METRICS.STOP + f"_running_average_{l}"][-1])
+                    ExperimentUtil.running_average(
+                        exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
+                                                     env_constants.ENV_METRICS.STOP + f"_{l}"],
+                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
                 metrics_dict[seed][
-                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1])
+                    env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
             exp_result.all_metrics[seed][
                 agents_constants.COMMON.EVAL_PREFIX +
                 env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                 metrics_dict[seed][
-                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN][-1])
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN])
         return exp_result
 
     @staticmethod
