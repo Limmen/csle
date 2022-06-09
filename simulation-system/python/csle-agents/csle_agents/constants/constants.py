@@ -337,6 +337,7 @@ class DYNASEC:
     EPISODES_BETWEEN_MODEL_UPDATES = "episodes_between_model_updates"
     WARMUP_EPISODES = "warmup_episodes"
     NUM_CLIENTS = "num_clients"
+    CLIENTS_ARRIVAL_RATE = "clients_arrival_rate"
     EMULATION_MONITOR_SLEEP_TIME = "emulation_monitor_sleep_time"
     STATIC_ATTACKER_TYPE = "static_attacker_type"
     REPLAY_WINDOW_SIZE = "replay_window_size"

@@ -130,6 +130,7 @@ class StoppingGameEnv(BaseEnv):
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         done = False
         info = {}
+        old_state = self.state.s
         if (self.state.t-1) < len(trace.attacker_actions):
             a2_emulation_action = trace.attacker_actions[self.state.t-1]
             a2 = 0
@@ -191,8 +192,10 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        print(f"step trace, a1: {a1}, a2: {a2}, returning: o:{(defender_obs, attacker_obs)}, r:{(r,-r)}, "
-              f"info: {info}, pi2:{pi2}, s:{self.state.s}, b:{self.state.b}, l:{self.state.l} ")
+        print(f"step trace, t: {self.state.t} "
+              f"o: {o}, a1: {a1}, a2: {a2}, returning: o:{(defender_obs, attacker_obs)}, r:{(r,-r)}, "
+              f"info: {info}, pi2:{pi2}, old_state: {old_state}, s_prime:{self.state.s}, "
+              f"b:{self.state.b}, l:{self.state.l} ")
         return (defender_obs, attacker_obs), (r,-r), done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:

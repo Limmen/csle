@@ -32,7 +32,7 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :return: the list of attacker actions
     """
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT][0:2]
+    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -117,13 +117,13 @@ if __name__ == '__main__':
                 value=2, name=agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES,
                 descr="the number of episodes between model updates in dynasec"),
             agents_constants.DYNASEC.WARMUP_EPISODES: HParam(
-                value=2, name=agents_constants.DYNASEC.WARMUP_EPISODES,
+                value=4, name=agents_constants.DYNASEC.WARMUP_EPISODES,
                 descr="the number of warmup episodes in dynasec"),
             agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME: HParam(
                 value=1, name=agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME,
                 descr="the sleep time of the emulation monitor (minutes)"),
             agents_constants.DYNASEC.REPLAY_WINDOW_SIZE: HParam(
-                value=10, name=agents_constants.DYNASEC.REPLAY_WINDOW_SIZE,
+                value=200, name=agents_constants.DYNASEC.REPLAY_WINDOW_SIZE,
                 descr="the replay window size for DynaSec (unit: episodes)")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
