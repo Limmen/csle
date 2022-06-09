@@ -1,5 +1,5 @@
 import random
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 import time
 import gym
 import os
@@ -134,11 +134,15 @@ class DataCollectorProcess(threading.Thread):
                 a2 = full_attacker_sequence[t]
                 Logger.__call__().get_logger().info(f"Worker {self.worker_id}, t:{t}, a1: {a1}, a2: {a2}")
                 s.defender_obs_state.reset_metric_lists()
-                emulation_trace, s = Emulator.run_actions(
-                    emulation_env_config=self.emulation_execution.emulation_env_config,
-                    attacker_action=a2, defender_action=a1,
-                    sleep_time=self.sleep_time, trace=emulation_trace, s=s)
-                s.defender_obs_state.average_metric_lists()
+                try:
+                    emulation_trace, s = Emulator.run_actions(
+                        emulation_env_config=self.emulation_execution.emulation_env_config,
+                        attacker_action=a2, defender_action=a1,
+                        sleep_time=self.sleep_time, trace=emulation_trace, s=s)
+                    s.defender_obs_state.average_metric_lists()
+                except:
+                    print(f"error in worker: {self.worker_id}")
+                    raise Exception(f"error in worker: {self.worker_id}")
                 self.emulation_statistics_windowed.add_state_transition(s=old_state.copy(), s_prime=s.copy(),
                                                                         a1=a1.copy(), a2=a2.copy())
                 self.emulation_statistics_windowed.update_emulation_statistics()
@@ -153,8 +157,11 @@ class DataCollectorProcess(threading.Thread):
                     f"progress: {self.data_collection_job.progress_percentage}, "
                     f"sequences completed: {i}")
                 sys.stdout.flush()
-                MetastoreFacade.update_data_collection_job(data_collection_job=self.data_collection_job,
-                                                           id=self.data_collection_job.id)
+                try:
+                    MetastoreFacade.update_data_collection_job(data_collection_job=self.data_collection_job,
+                                                               id=self.data_collection_job.id)
+                except:
+                    pass
 
             self.emulation_traces = self.emulation_traces + [emulation_trace]
             if len(self.emulation_traces) > self.data_collection_job.num_cached_traces:
@@ -224,7 +231,7 @@ class PolicyOptimizationProcess(threading.Thread):
         self.experiment_config = experiment_config
         self.simulation_env_config = simulation_env_config
         sample_space = self.simulation_env_config.simulation_env_input_config.stopping_game_config.O.tolist()
-        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z = \
+        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z, _, _ = \
             DynaSecAgent.get_Z_from_system_model(system_model=system_model, sample_space=sample_space)
         self.agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
                                 simulation_env_config=simulation_env_config, experiment_config=self.experiment_config)
@@ -488,8 +495,10 @@ class PolicyEvaluationThread(threading.Thread):
                     system_model: GaussianMixtureSystemModel):
         sample_space = self.simulation_env_config.simulation_env_input_config.stopping_game_config.O.tolist()
         old_Z = self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z.copy()
-        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z = \
+        self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z, int_mean, no_int_mean = \
             DynaSecAgent.get_Z_from_system_model(system_model=system_model, sample_space=sample_space)
+        self.exp_result.all_metrics[self.seed][agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN].append(no_int_mean)
+        self.exp_result.all_metrics[self.seed][agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN].append(int_mean)
         metrics = {}
         for trace in traces:
             done = False
@@ -625,6 +634,8 @@ class DynaSecAgent(BaseAgent):
         # Initialize metrics
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.DYNASEC.NUM_CLIENTS)
+        exp_result.plot_metrics.append(agents_constants.DYNASEC.INTRUSION_ALERTS_MEAN)
+        exp_result.plot_metrics.append(agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN)
         exp_result.plot_metrics.append(agents_constants.DYNASEC.CLIENTS_ARRIVAL_RATE)
         exp_result.plot_metrics.append(agents_constants.DYNASEC.STATIC_ATTACKER_TYPE)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
@@ -817,8 +828,6 @@ class DynaSecAgent(BaseAgent):
         # Hyperparameters
         spsa_experiment_config = self.get_spsa_experiment_config()
         training_epochs = self.experiment_config.hparams[agents_constants.DYNASEC.TRAINING_EPOCHS].value
-        episodes_between_model_updates = self.experiment_config.hparams[
-            agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES].value
         sleep_time = self.experiment_config.hparams[agents_constants.DYNASEC.SLEEP_TIME].value
         intrusion_start_p = self.experiment_config.hparams[agents_constants.DYNASEC.INTRUSION_START_P].value
         emulation_traces_to_save_with_data_collection_job = self.experiment_config.hparams[
@@ -844,7 +853,8 @@ class DynaSecAgent(BaseAgent):
             )
             data_collector_process.start()
             data_collector_processes.append(data_collector_process)
-            time.sleep(sleep_time)
+            time.sleep(sleep_time*3)
+        print("started all data collectors")
 
         # Start emulation monitor
         emulation_monitor_process = EmulationMonitorThread(
@@ -861,6 +871,17 @@ class DynaSecAgent(BaseAgent):
         # Warmup phase
         completed_warmup_episodes = 0
         while completed_warmup_episodes < warmup_episodes:
+            for i, dpc in enumerate(data_collector_processes):
+                if not dpc.is_alive():
+                    print("restarting DPC")
+                    data_collector_processes[i] = DataCollectorProcess(
+                        emulation_execution=dpc.emulation_execution, attacker_sequence=dpc.attacker_sequence,
+                        defender_sequence=dpc.defender_sequence, worker_id=dpc.worker_id, sleep_time=dpc.sleep_time,
+                        emulation_statistics_windowed=dpc.emulation_statistics_windowed,
+                        emulation_traces_to_save_with_data_collection_job=dpc.emulation_traces_to_save_with_data_collection_job,
+                        intrusion_start_p=dpc.intrusion_start_p
+                    )
+                    data_collector_processes[i].start()
             completed_warmup_episodes = sum(list(map(lambda x: x.completed_episodes, data_collector_processes)))
             Logger.__call__().get_logger().info(f"[DynaSec] [warmup] "
                                                 f" completed episodes: "
@@ -909,6 +930,17 @@ class DynaSecAgent(BaseAgent):
         training_epoch = 0
         while training_epoch < training_epochs:
             time.sleep(sleep_time)
+            for i, dpc in enumerate(data_collector_processes):
+                if not dpc.is_alive():
+                    print("restarting DPC")
+                    data_collector_processes[i] = DataCollectorProcess(
+                        emulation_execution=dpc.emulation_execution, attacker_sequence=dpc.attacker_sequence,
+                        defender_sequence=dpc.defender_sequence, worker_id=dpc.worker_id, sleep_time=dpc.sleep_time,
+                        emulation_statistics_windowed=dpc.emulation_statistics_windowed,
+                        emulation_traces_to_save_with_data_collection_job=dpc.emulation_traces_to_save_with_data_collection_job,
+                        intrusion_start_p=dpc.intrusion_start_p
+                    )
+                    data_collector_processes[i].start()
             if random.random() < 0.1:
                 attacker_type = random.randint(0,2)
             policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.DYNASEC.STATIC_ATTACKER_TYPE].append(
@@ -1029,7 +1061,8 @@ class DynaSecAgent(BaseAgent):
         return exp_result
 
     @staticmethod
-    def get_Z_from_system_model(system_model: GaussianMixtureSystemModel, sample_space: List) -> np.ndarray:
+    def get_Z_from_system_model(system_model: GaussianMixtureSystemModel, sample_space: List) -> Tuple[np.ndarray,
+                                                                                                       float, float]:
         intrusion_dist = np.zeros(len(sample_space))
         no_intrusion_dist = np.zeros(len(sample_space))
         terminal_dist = np.zeros(len(sample_space))
@@ -1048,6 +1081,8 @@ class DynaSecAgent(BaseAgent):
                     no_intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
         intrusion_dist = list(np.array(intrusion_dist)*(1/sum(intrusion_dist)))
         no_intrusion_dist = list(np.array(no_intrusion_dist)*(1/sum(no_intrusion_dist)))
+        int_mean = float(np.mean(intrusion_dist))
+        no_int_mean = float(np.mean(no_intrusion_dist))
         Z = np.array(
             [
                 [
@@ -1076,7 +1111,7 @@ class DynaSecAgent(BaseAgent):
                 ]
             ]
         )
-        return Z
+        return Z, int_mean, no_int_mean
 
     def hparam_names(self) -> List[str]:
         """
@@ -1089,7 +1124,6 @@ class DynaSecAgent(BaseAgent):
                 agents_constants.COMMON.RUNNING_AVERAGE,
                 system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
                 system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL,
-                agents_constants.DYNASEC.WARMUP_EPISODES, agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES,
                 agents_constants.DYNASEC.TRAINING_EPOCHS, agents_constants.DYNASEC.SLEEP_TIME,
                 agents_constants.DYNASEC.INTRUSION_START_P,
                 agents_constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB,

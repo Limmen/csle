@@ -32,7 +32,7 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :return: the list of attacker actions
     """
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT]
+    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT][0:5]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -52,9 +52,16 @@ def passive_defender_sequence(length: int, emulation_env_config: EmulationEnvCon
 if __name__ == '__main__':
     emulation_executions = [
         MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=16, emulation_name="csle-level11-001")
+        MetastoreFacade.get_emulation_execution(ip_first_octet=16, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=17, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=18, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=19, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=20, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=21, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=22, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=23, emulation_name="csle-level11-001"),
+        MetastoreFacade.get_emulation_execution(ip_first_octet=24, emulation_name="csle-level11-001")
     ]
-    # MetastoreFacade.get_emulation_execution(ip_first_octet=16, emulation_name="csle-level11-001")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}dynasec_test", title="DynaSec test",
@@ -67,10 +74,10 @@ if __name__ == '__main__':
                 descr="the discount factor gamma"),
             agents_constants.T_SPSA.THETA1: HParam(value=[-3]*(3), name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
-            agents_constants.T_SPSA.N: HParam(value=10, name=agents_constants.T_SPSA.N,
+            agents_constants.T_SPSA.N: HParam(value=20, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
             agents_constants.T_SPSA.c: HParam(
-                value=10, name=agents_constants.T_SPSA.c,
+                value=60, name=agents_constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
             agents_constants.T_SPSA.a: HParam(
                 value=1, name=agents_constants.T_SPSA.a,
@@ -99,7 +106,7 @@ if __name__ == '__main__':
                 value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
                 descr="the batch size of the gradient estimator"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
-                value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
+                value=50, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.DYNASEC.INTRUSION_START_P: HParam(
                 value=0.2, name=agents_constants.DYNASEC.INTRUSION_START_P,
@@ -113,11 +120,8 @@ if __name__ == '__main__':
             agents_constants.DYNASEC.TRAINING_EPOCHS: HParam(
                 value=10000, name=agents_constants.DYNASEC.TRAINING_EPOCHS,
                 descr="the number of training epochs of dynasec"),
-            agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES: HParam(
-                value=2, name=agents_constants.DYNASEC.EPISODES_BETWEEN_MODEL_UPDATES,
-                descr="the number of episodes between model updates in dynasec"),
             agents_constants.DYNASEC.WARMUP_EPISODES: HParam(
-                value=4, name=agents_constants.DYNASEC.WARMUP_EPISODES,
+                value=5, name=agents_constants.DYNASEC.WARMUP_EPISODES,
                 descr="the number of warmup episodes in dynasec"),
             agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME: HParam(
                 value=1, name=agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME,

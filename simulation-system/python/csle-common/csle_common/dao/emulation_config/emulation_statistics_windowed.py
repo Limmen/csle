@@ -61,16 +61,19 @@ class EmulationStatisticsWindowed:
         print(f"updating statistic, window size:{self.window_size}, samples: {len(self.state_transitions)}")
         if len(self.state_transitions) == 0:
             return
-        new_emulation_statistics = EmulationStatistics(emulation_name=self.emulation_name, descr=self.descr)
-        for i in range(len(self.state_transitions)):
-            new_emulation_statistics.update_delta_statistics(
-                s=self.state_transitions[i][0], s_prime=self.state_transitions[i][1],
-                a1=self.state_transitions[i][2], a2=self.state_transitions[i][3])
-        for i in range(len(self.initial_states)):
-            new_emulation_statistics.update_initial_statistics(s=self.initial_states[i])
-        self.emulation_statistics = new_emulation_statistics
-        self.emulation_statistics.id = self.statistics_id
-        MetastoreFacade.update_emulation_statistic(emulation_statistics=self.emulation_statistics,
-                                                   id=self.statistics_id)
+        try:
+            new_emulation_statistics = EmulationStatistics(emulation_name=self.emulation_name, descr=self.descr)
+            for i in range(len(self.state_transitions)):
+                new_emulation_statistics.update_delta_statistics(
+                    s=self.state_transitions[i][0], s_prime=self.state_transitions[i][1],
+                    a1=self.state_transitions[i][2], a2=self.state_transitions[i][3])
+            for i in range(len(self.initial_states)):
+                new_emulation_statistics.update_initial_statistics(s=self.initial_states[i])
+            self.emulation_statistics = new_emulation_statistics
+            self.emulation_statistics.id = self.statistics_id
+            MetastoreFacade.update_emulation_statistic(emulation_statistics=self.emulation_statistics,
+                                                       id=self.statistics_id)
+        except:
+            pass
 
 
