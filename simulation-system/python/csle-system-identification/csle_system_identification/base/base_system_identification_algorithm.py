@@ -6,6 +6,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.system_identification.system_model import SystemModel
+from csle_common.logging.log import Logger
 
 
 class BaseSystemIdentificationAlgorithm(ABC):
@@ -29,8 +30,11 @@ class BaseSystemIdentificationAlgorithm(ABC):
         if self.system_identification_config.output_dir[-1]== "/":
             self.system_identification_config.output_dir = self.system_identification_config.output_dir[0:-1]
         self.system_identification_config.output_dir = self.system_identification_config.output_dir + f"_{ts}/"
-        if not os.path.exists(self.system_identification_config.output_dir):
-            os.makedirs(self.system_identification_config.output_dir)
+        try:
+            if not os.path.exists(self.system_identification_config.output_dir):
+                os.makedirs(self.system_identification_config.output_dir)
+        except:
+            Logger.__call__().get_logger().info(f"There was an error creating log dirs.")
 
     @abstractmethod
     def fit(self) -> SystemModel:

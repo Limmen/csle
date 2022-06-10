@@ -19,6 +19,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.system_identification.system_model_type import SystemModelType
+from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions
 import csle_system_identification.constants.constants as system_identification_constants
 
 
@@ -32,7 +33,59 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
     :return: the list of attacker actions
     """
     wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * wait_steps
-    intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT][0:5]
+    # intrusion_seq = emulation_env_config.static_attacker_sequences[constants.STATIC_ATTACKERS.EXPERT][0:5]
+
+    intrusion_seq = [
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+        EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+        EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
+        EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
+    ]
+
+    # intrusion_seq = [
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
+    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
+    # ]
+
+    # intrusion_seq = [
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
+    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
+    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+    #     EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    # ]
+
+    # intrusion_seq = [
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
+    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
+    #     EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    #     EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
+    # ]
     seq = wait_seq + intrusion_seq
     return seq
 
@@ -51,17 +104,20 @@ def passive_defender_sequence(length: int, emulation_env_config: EmulationEnvCon
 
 if __name__ == '__main__':
     emulation_executions = [
-        MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=16, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=17, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=18, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=19, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=20, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=21, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=22, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=23, emulation_name="csle-level11-001"),
-        MetastoreFacade.get_emulation_execution(ip_first_octet=24, emulation_name="csle-level11-001")
+        MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level4-001")
     ]
+    # emulation_executions = [
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=15, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=16, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=17, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=18, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=19, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=20, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=21, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=22, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=23, emulation_name="csle-level4-001"),
+    #     MetastoreFacade.get_emulation_execution(ip_first_octet=24, emulation_name="csle-level4-001")
+    # ]
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}dynasec_test", title="DynaSec test",
@@ -72,12 +128,12 @@ if __name__ == '__main__':
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor gamma"),
-            agents_constants.T_SPSA.THETA1: HParam(value=[-3]*(3), name=agents_constants.T_SPSA.THETA1,
+            agents_constants.T_SPSA.THETA1: HParam(value=[2,0,-2], name=agents_constants.T_SPSA.THETA1,
                                                    descr="initial thresholds"),
-            agents_constants.T_SPSA.N: HParam(value=20, name=agents_constants.T_SPSA.N,
+            agents_constants.T_SPSA.N: HParam(value=30, name=agents_constants.T_SPSA.N,
                                               descr="the number of training iterations"),
             agents_constants.T_SPSA.c: HParam(
-                value=60, name=agents_constants.T_SPSA.c,
+                value=10, name=agents_constants.T_SPSA.c,
                 descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
             agents_constants.T_SPSA.a: HParam(
                 value=1, name=agents_constants.T_SPSA.a,
@@ -92,7 +148,7 @@ if __name__ == '__main__':
                 value=0.101, name=agents_constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             agents_constants.T_SPSA.L: HParam(value=3, name="L", descr="the number of stop actions"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=25, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=5, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -100,7 +156,7 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=75, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
                 value=1, name=agents_constants.T_SPSA.GRADIENT_BATCH_SIZE,
@@ -109,7 +165,7 @@ if __name__ == '__main__':
                 value=50, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.DYNASEC.INTRUSION_START_P: HParam(
-                value=0.2, name=agents_constants.DYNASEC.INTRUSION_START_P,
+                value=0.3, name=agents_constants.DYNASEC.INTRUSION_START_P,
                 descr="the p parameter for the geometric distribution of the intrusion start time"),
             agents_constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB: HParam(
                 value=1, name=agents_constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB,
@@ -121,13 +177,13 @@ if __name__ == '__main__':
                 value=10000, name=agents_constants.DYNASEC.TRAINING_EPOCHS,
                 descr="the number of training epochs of dynasec"),
             agents_constants.DYNASEC.WARMUP_EPISODES: HParam(
-                value=5, name=agents_constants.DYNASEC.WARMUP_EPISODES,
+                value=2, name=agents_constants.DYNASEC.WARMUP_EPISODES,
                 descr="the number of warmup episodes in dynasec"),
             agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME: HParam(
                 value=1, name=agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME,
                 descr="the sleep time of the emulation monitor (minutes)"),
             agents_constants.DYNASEC.REPLAY_WINDOW_SIZE: HParam(
-                value=200, name=agents_constants.DYNASEC.REPLAY_WINDOW_SIZE,
+                value=150, name=agents_constants.DYNASEC.REPLAY_WINDOW_SIZE,
                 descr="the replay window size for DynaSec (unit: episodes)")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
@@ -143,11 +199,11 @@ if __name__ == '__main__':
                 name=system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
                 descr="the conditional distributions to estimate"),
             system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL: HParam(
-                value=[2,3],
+                value=[1,2],
                 name=system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL,
                 descr="the number of mixtures per conditional distributions to estimate with EM"),
             system_identification_constants.SYSTEM_IDENTIFICATION.METRICS: HParam(
-                value=["alerts_weighted_by_priority"],
+                value=["warning_alerts"],
                 name=system_identification_constants.SYSTEM_IDENTIFICATION.METRICS,
                 descr="the metrics to estimate")
         }
@@ -157,7 +213,7 @@ if __name__ == '__main__':
         actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
         simulation_name=simulation_env_config.name, value_function=None, q_table=None,
         lookup_table=[
-            [0.8, 0.2],
+            [0.7, 0.3],
             [1, 0],
             [1,0]
         ],
@@ -168,7 +224,7 @@ if __name__ == '__main__':
                                                   emulation_env_config=emulation_executions[0].emulation_env_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
         R_INT=-10, R_COST=-10, R_SLA=0, R_ST=20, L=3))
-    simulation_env_config.simulation_env_input_config.stopping_game_config.O = np.array(list(range(0, 15000)))
+    simulation_env_config.simulation_env_input_config.stopping_game_config.O = np.array(list(range(0, 10000)))
     agent = DynaSecAgent(emulation_executions=emulation_executions, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config, attacker_sequence=attacker_sequence,
                          defender_sequence=defender_sequence, system_identification_config=system_identifcation_config)

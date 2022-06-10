@@ -58,7 +58,6 @@ class EmulationStatisticsWindowed:
 
         :return: None
         """
-        print(f"updating statistic, window size:{self.window_size}, samples: {len(self.state_transitions)}")
         if len(self.state_transitions) == 0:
             return
         try:

@@ -342,3 +342,5 @@ class DYNASEC:
     REPLAY_WINDOW_SIZE = "replay_window_size"
     INTRUSION_ALERTS_MEAN = "intrusion_alerts_mean"
     NO_INTRUSION_ALERTS_MEAN = "no_intrusion_alerts_mean"
+    INTRUSION_ALERTS_MEAN_BASELINE = "intrusion_alerts_mean_baseline"
+    NO_INTRUSION_ALERTS_MEAN_BASELINE = "no_intrusion_alerts_mean_baseline"

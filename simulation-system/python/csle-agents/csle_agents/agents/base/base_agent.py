@@ -6,6 +6,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_execution import ExperimentExecution
+from csle_common.logging.log import Logger
 
 
 class BaseAgent(ABC):
@@ -29,8 +30,11 @@ class BaseAgent(ABC):
         if self.experiment_config.output_dir[-1]== "/":
             self.experiment_config.output_dir = self.experiment_config.output_dir[0:-1]
         self.experiment_config.output_dir = self.experiment_config.output_dir + f"_{ts}/"
-        if not os.path.exists(self.experiment_config.output_dir):
-            os.makedirs(self.experiment_config.output_dir)
+        try:
+            if not os.path.exists(self.experiment_config.output_dir):
+                os.makedirs(self.experiment_config.output_dir)
+        except:
+            Logger.__call__().get_logger().info(f"There was an error creating log dirs.")
 
 
     @abstractmethod

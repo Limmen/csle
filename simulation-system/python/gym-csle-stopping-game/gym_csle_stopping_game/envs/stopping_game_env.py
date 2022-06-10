@@ -147,7 +147,9 @@ class StoppingGameEnv(BaseEnv):
             if self.state.s == 2:
                 done = True
             else:
-                o = trace.defender_observation_states[self.state.t-1].ids_alert_counters.alerts_weighted_by_priority
+                o = trace.defender_observation_states[self.state.t-1].avg_ids_alert_counters.warning_alerts
+                if o >= len(self.config.O):
+                    o = len(self.config.O)-1
                 self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
                                                             config=self.config,
                                                             l=self.state.l, a2=a2)
@@ -192,11 +194,19 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        print(f"step trace, t: {self.state.t} "
-              f"o: {o}, a1: {a1}, a2: {a2}, returning: o:{(defender_obs, attacker_obs)}, r:{(r,-r)}, "
-              f"info: {info}, pi2:{pi2}, old_state: {old_state}, s_prime:{self.state.s}, "
-              f"b:{self.state.b}, l:{self.state.l} ")
+        # print(f"step trace, t: {self.state.t} "
+        #       f"o: {o}, a1: {a1}, a2: {a2}, returning: o:{(defender_obs, attacker_obs)}, r:{(r,-r)}, "
+        #       f"info: {info}, pi2:{pi2}, old_state: {old_state}, s_prime:{self.state.s}, "
+        #       f"b:{self.state.b}, l:{self.state.l} no_intrusion_prob: {self.config.Z[a1][a2][0][o]}, "
+        #       f"intrusion_prob: {self.config.Z[a1][a2][1][o]}, intrusion mean: {self.mean(self.config.Z[a1][a2][1])}, "
+        #       f"no intrusion mean: {self.mean(self.config.Z[a1][a2][0])}")
         return (defender_obs, attacker_obs), (r,-r), done, info
+
+    def mean(self, prob_vector):
+        m = 0
+        for i in range(len(prob_vector)):
+            m += prob_vector[i]*i
+        return m
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
