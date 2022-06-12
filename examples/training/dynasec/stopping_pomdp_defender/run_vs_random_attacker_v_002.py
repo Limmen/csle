@@ -37,12 +37,10 @@ def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnv
 
     intrusion_seq = [
         EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
-        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks),
         EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
         EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
         EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
-        EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=1),
-        EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=2),
+        EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=emulation_env_config.topology_config.subnetwork_masks)
     ]
 
     # intrusion_seq = [
@@ -148,7 +146,7 @@ if __name__ == '__main__':
                 value=0.101, name=agents_constants.T_SPSA.EPSILON,
                 descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
             agents_constants.T_SPSA.L: HParam(value=3, name="L", descr="the number of stop actions"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=5, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=20, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
@@ -165,7 +163,7 @@ if __name__ == '__main__':
                 value=50, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.DYNASEC.INTRUSION_START_P: HParam(
-                value=0.3, name=agents_constants.DYNASEC.INTRUSION_START_P,
+                value=0.4, name=agents_constants.DYNASEC.INTRUSION_START_P,
                 descr="the p parameter for the geometric distribution of the intrusion start time"),
             agents_constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB: HParam(
                 value=1, name=agents_constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB,
@@ -183,7 +181,7 @@ if __name__ == '__main__':
                 value=1, name=agents_constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME,
                 descr="the sleep time of the emulation monitor (minutes)"),
             agents_constants.DYNASEC.REPLAY_WINDOW_SIZE: HParam(
-                value=150, name=agents_constants.DYNASEC.REPLAY_WINDOW_SIZE,
+                value=20, name=agents_constants.DYNASEC.REPLAY_WINDOW_SIZE,
                 descr="the replay window size for DynaSec (unit: episodes)")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
@@ -213,7 +211,7 @@ if __name__ == '__main__':
         actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
         simulation_name=simulation_env_config.name, value_function=None, q_table=None,
         lookup_table=[
-            [0.7, 0.3],
+            [0.6, 0.4],
             [1, 0],
             [1,0]
         ],
@@ -223,7 +221,7 @@ if __name__ == '__main__':
     defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_executions[0].emulation_env_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-10, R_COST=-10, R_SLA=0, R_ST=20, L=3))
+        R_INT=-10, R_COST=-30, R_SLA=0, R_ST=20, L=3))
     simulation_env_config.simulation_env_input_config.stopping_game_config.O = np.array(list(range(0, 10000)))
     agent = DynaSecAgent(emulation_executions=emulation_executions, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config, attacker_sequence=attacker_sequence,

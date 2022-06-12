@@ -5,6 +5,7 @@ from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
+from csle_common.dao.training.tabular_policy import TabularPolicy
 
 
 class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
@@ -44,7 +45,10 @@ class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
             try:
                 attacker_strategy = RandomPolicy.from_dict(d["attacker_strategy"])
             except:
-                attacker_strategy = PPOPolicy.from_dict(d["attacker_strategy"])
+                try:
+                    attacker_strategy = PPOPolicy.from_dict(d["attacker_strategy"])
+                except:
+                    attacker_strategy = TabularPolicy.from_dict(d["attacker_strategy"])
 
         obj = StoppingGameDefenderPomdpConfig(
             stopping_game_config=StoppingGameConfig.from_dict(d["stopping_game_config"]),

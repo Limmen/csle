@@ -62,6 +62,7 @@ class EmulationStatisticsWindowed:
             return
         try:
             new_emulation_statistics = EmulationStatistics(emulation_name=self.emulation_name, descr=self.descr)
+            print(f"updating statistic, num samples: {len(self.state_transitions)}")
             for i in range(len(self.state_transitions)):
                 new_emulation_statistics.update_delta_statistics(
                     s=self.state_transitions[i][0], s_prime=self.state_transitions[i][1],

@@ -1,4 +1,3 @@
-import sys
 from typing import List, Dict, Tuple
 import numpy as np
 from scipy.stats import betabinom

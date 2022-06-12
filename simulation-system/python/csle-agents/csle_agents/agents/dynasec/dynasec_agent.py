@@ -198,6 +198,7 @@ class SystemIdentificationProcess(threading.Thread):
         self.system_model = None
         self.periodic = periodic
         self.sleep_time = sleep_time
+        self.model_id = None
 
     def run(self) -> None:
         """
@@ -218,7 +219,13 @@ class SystemIdentificationProcess(threading.Thread):
                 emulation_env_config=self.emulation_env_config, emulation_statistics=self.emulation_statistics,
                 system_identification_config=self.system_identification_config)
             self.system_model = self.algorithm.fit()
-            MetastoreFacade.save_gaussian_mixture_system_model(gaussian_mixture_system_model=self.system_model)
+            if self.model_id is None:
+                self.model_id = MetastoreFacade.save_gaussian_mixture_system_model(
+                    gaussian_mixture_system_model=self.system_model)
+            else:
+                self.system_model.id = self.model_id
+                MetastoreFacade.update_gaussian_mixture_system_model(
+                    gaussian_mixture_system_model=self.system_model, id=self.model_id)
             self.running = False
 
 
@@ -249,6 +256,7 @@ class PolicyOptimizationProcess(threading.Thread):
         self.running =True
         self.periodic = periodic
         self.sleep_time = sleep_time
+        self.training_job = None
         self.policy = None
 
     def run(self) -> None:
@@ -267,8 +275,8 @@ class PolicyOptimizationProcess(threading.Thread):
                                     experiment_config=self.experiment_config)
             self.experiment_execution = self.agent.train()
             MetastoreFacade.save_experiment_execution(self.experiment_execution)
-            for policy in self.experiment_execution.result.policies.values():
-                MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+            # for policy in self.experiment_execution.result.policies.values():
+            #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
             self.running = False
         else:
             while self.running:
@@ -276,11 +284,13 @@ class PolicyOptimizationProcess(threading.Thread):
                 self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z, _, _ = \
                     DynaSecAgent.get_Z_from_system_model(system_model=self.system_model, sample_space=sample_space)
                 self.agent = TSPSAAgent(emulation_env_config=self.emulation_env_config,
-                                        simulation_env_config=self.simulation_env_config, experiment_config=self.experiment_config)
+                                        simulation_env_config=self.simulation_env_config,
+                                        experiment_config=self.experiment_config, training_job=self.training_job)
                 self.experiment_execution = self.agent.train()
+                self.training_job = self.agent.training_job
                 MetastoreFacade.save_experiment_execution(self.experiment_execution)
-                for policy in self.experiment_execution.result.policies.values():
-                    MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+                # for policy in self.experiment_execution.result.policies.values():
+                #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
                 self.policy = list(self.experiment_execution.result.policies.values())[0]
                 time.sleep(self.sleep_time*3)
 
@@ -566,11 +576,19 @@ class PolicyEvaluationThread(threading.Thread):
         :return: None
         """
         Logger.__call__().get_logger().info(f"[DynaSec] starting the policy evaluation thread")
+        evaluation_traces = []
         while self.running:
             time.sleep(self.sleep_time)
             new_traces = self.emulation_statistics_thread.new_traces
             if len(new_traces) > 0:
-                avg_metrics = self.eval_traces(traces=new_traces, defender_policy=self.policy, max_steps=self.max_steps,
+                # evaluation_traces = evaluation_traces + new_traces
+                evaluation_traces = new_traces
+                self.emulation_statistics_thread.new_traces = []
+                print(f"num evaluation traces: {len(evaluation_traces)}")
+                if len(evaluation_traces) > 50:
+                    evaluation_traces = evaluation_traces[-50:]
+                avg_metrics = self.eval_traces(traces=evaluation_traces, defender_policy=self.policy,
+                                               max_steps=self.max_steps,
                                                system_model=self.system_model, baseline=False)
                 avg_metrics_seed = {}
                 avg_metrics_seed[self.seed] = avg_metrics
@@ -578,7 +596,7 @@ class PolicyEvaluationThread(threading.Thread):
                     exp_result=self.exp_result, seed=self.seed,
                     metrics_dict=avg_metrics_seed, eval=True, baseline=False)
 
-                avg_metrics = self.eval_traces(traces=new_traces, defender_policy=self.baseline_policy,
+                avg_metrics = self.eval_traces(traces=evaluation_traces, defender_policy=self.baseline_policy,
                                                max_steps=self.max_steps,
                                                system_model=self.baseline_system_model, baseline=True)
                 avg_metrics_seed = {}
@@ -988,21 +1006,12 @@ class DynaSecAgent(BaseAgent):
         while training_epoch < training_epochs:
             time.sleep(sleep_time)
 
-            # Update emulation statistics for system identification
-            sys_id_process.emulation_statistics = windowed_emulation_statistics.emulation_statistics
-            system_models.append(sys_id_process.system_model)
-
-            # Update system model for policy learning process
-            policy_optimization_process.system_model = sys_id_process.system_model
-            policies.append(policy_optimization_process.policy)
-
             # Record metrics
             training_epoch += 1
-            policy_evaluation_thread.policy = policy_optimization_process.policy
-            policy_evaluation_thread.system_model = sys_id_process.system_model
-            policy_evaluation_thread.exp_result = self.record_metrics(
-                exp_result=policy_evaluation_thread.exp_result, seed=seed,
-                metrics_dict=policy_optimization_process.experiment_execution.result.all_metrics)
+            if policy_optimization_process.experiment_execution is not None:
+                policy_evaluation_thread.exp_result = self.record_metrics(
+                    exp_result=policy_evaluation_thread.exp_result, seed=seed,
+                    metrics_dict=policy_optimization_process.experiment_execution.result.all_metrics)
 
             # Failure detection on data collector processes
             for i, dpc in enumerate(data_collector_processes):
@@ -1028,6 +1037,20 @@ class DynaSecAgent(BaseAgent):
                     and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.AVERAGE_RETURN]) > 0 \
                     and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN]) > 0:
 
+
+                # Update emulation statistics for system identification
+                sys_id_process.emulation_statistics = windowed_emulation_statistics.emulation_statistics
+                system_models.append(sys_id_process.system_model)
+
+                # Update system model for policy learning process
+                policy_optimization_process.system_model = sys_id_process.system_model
+                policies.append(policy_optimization_process.policy)
+
+                # Update policy and model for evaluation
+                policy_evaluation_thread.policy = policy_optimization_process.policy
+                policy_evaluation_thread.system_model = sys_id_process.system_model
+
+
                 # Update training job
                 total_iterations = training_epochs
                 iterations_done = training_epoch
@@ -1051,10 +1074,8 @@ class DynaSecAgent(BaseAgent):
 
                 Logger.__call__().get_logger().info(
                     f"[DynaSec] i: {training_epoch}, "
-                    f"policy:{policy_evaluation_thread.policy.thresholds()}"
+                    f"policy:{policy_evaluation_thread.policy.thresholds()} "
                     f"baseline policy:{policy_evaluation_thread.baseline_policy.thresholds()}"
-                    f"system models means:{policy_evaluation_thread.system_model.mixtures_means}"
-                    f"baseline system models means:{policy_evaluation_thread.baseline_system_model.mixtures_means}"
                     f"J_train:{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1]}, "
                     f"J_train_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
                     f"{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]}, "

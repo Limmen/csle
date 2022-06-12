@@ -61,7 +61,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         d["T"] = list(self.T.tolist())
         d["O"] = list(self.O.tolist())
         d["Z"] = list(self.Z.tolist())
-        d["R"] = list(self.R.tolist())
+        d["R"] = list(self.R)
         d["S"] = list(self.S.tolist())
         d["L"] = self.L
         d["R_INT"] = self.R_INT

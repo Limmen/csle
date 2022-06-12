@@ -126,6 +126,75 @@ class StoppingGameEnv(BaseEnv):
 
         return (defender_obs, attacker_obs), (r,-r), done, info
 
+
+    def step_test(self, action_profile : Tuple[int, Tuple[np.ndarray, int]], sample_Z) \
+            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
+        """
+        Takes a step in the environment by executing the given action
+
+        :param action_profile: the actions to take (both players actions
+        :return: (obs, reward, done, info)
+        """
+
+        # Setup initial values
+        a1, a2_profile = action_profile
+        pi2, a2 = a2_profile
+        assert pi2.shape[0] == len(self.config.S)
+        assert pi2.shape[1] == len(self.config.A1)
+        done = False
+        info = {}
+
+        # Compute r, s', b',o'
+        r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
+        self.state.s = StoppingGameUtil.sample_next_state(l=self.state.l, a1=a1, a2=a2,
+                                                          T=self.config.T,
+                                                          S=self.config.S, s=self.state.s)
+        o = max(self.config.O)
+        if self.state.s == 2:
+            done = True
+        else:
+            o = StoppingGameUtil.sample_next_observation(Z=sample_Z,
+                                                         O=self.config.O, s_prime=self.state.s)
+            self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
+                                                        config=self.config,
+                                                        l=self.state.l, a2=a2)
+
+        # Update stops remaining
+        self.state.l = self.state.l-a1
+
+        # Update time-step
+        self.state.t += 1
+
+        # Populate info dict
+        info[env_constants.ENV_METRICS.STOPS_REMAINING] = self.state.l
+        info[env_constants.ENV_METRICS.STATE] = self.state.s
+        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
+        info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
+        info[env_constants.ENV_METRICS.OBSERVATION] = o
+        info[env_constants.ENV_METRICS.TIME_STEP] = self.state.t
+
+        # Get observations
+        attacker_obs = self.state.attacker_observation()
+        defender_obs = self.state.defender_observation()
+
+        # Log trace
+        self.trace.defender_rewards.append(r)
+        self.trace.attacker_rewards.append(-r)
+        self.trace.attacker_actions.append(a2)
+        self.trace.defender_actions.append(a1)
+        self.trace.infos.append(info)
+        self.trace.states.append(self.state.s)
+        self.trace.beliefs.append(self.state.b[1])
+        self.trace.infrastructure_metrics.append(o)
+        if not done:
+            self.trace.attacker_observations.append(attacker_obs)
+            self.trace.defender_observations.append(defender_obs)
+
+        # Populate info
+        info = self._info(info)
+
+        return (defender_obs, attacker_obs), (r,-r), done, info
+
     def step_trace(self, trace: EmulationTrace, a1: int, pi2: np.ndarray) \
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         done = False

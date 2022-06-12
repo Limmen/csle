@@ -161,3 +161,9 @@ class SimulationEnvConfig:
                f"plot_transition_probabilities: {self.plot_transition_probabilities}," \
                f"plot_reward_function: {self.plot_reward_function}"
 
+    def copy(self) -> "SimulationEnvConfig":
+        """
+        :return: a copy of the DTO
+        """
+        return self.from_dict(self.to_dict())
+
