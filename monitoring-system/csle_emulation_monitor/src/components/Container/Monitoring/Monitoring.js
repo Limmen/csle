@@ -127,9 +127,25 @@ const Monitoring = () => {
         }
     }
 
-    const getIdsMetrics = () => {
+    const getSnortIdsMetrics = () => {
         if (monitoringData !== null) {
-            return monitoringData.ids_metrics
+            return monitoringData.snort_ids_metrics
+        } else {
+            return null
+        }
+    }
+
+    const getOSSECHostMetrics = () => {
+        if (monitoringData !== null) {
+            return monitoringData.ossec_host_alert_counters[selectedContainer.label]
+        } else {
+            return null
+        }
+    }
+
+    const getAggregatedOSSECHostMetrics = () => {
+        if (monitoringData !== null) {
+            return monitoringData.aggregated_ossec_host_alert_counters
         } else {
             return null
         }
@@ -571,9 +587,10 @@ const Monitoring = () => {
                                       animation={props.animation}
                                       animationDuration={props.animationDuration.value}
                                       animationDurationFactor={props.animationDurationFactor}
-                                      clientMetrics={getClientMetrics()} idsMetrics={getIdsMetrics()}
+                                      clientMetrics={getClientMetrics()} snortIdsMetrics={getSnortIdsMetrics()}
                                       aggregatedHostMetrics={getAggregatedHostMetrics()}
                                       aggregatedDockerStats={getAggregatedDockerStats()}
+                                      aggregatedOSSECMetrics={getAggregatedOSSECHostMetrics()}
                     />
                     <div className="row hostMetricsDropdownRow">
                         <div className="col-sm-12">
@@ -593,6 +610,7 @@ const Monitoring = () => {
                                       loading={props.loadingSelectedEmulationExecution}
                                       hostMetrics={getHostMetrics()}
                                       dockerMetrics={getDockerMetrics()}
+                                      ossecAlerts={getOSSECHostMetrics()}
                                       animation={props.animation} animationDuration={props.animationDuration.value}
                                       animationDurationFactor={props.animationDurationFactor}/>
                 </div>

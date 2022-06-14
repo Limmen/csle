@@ -2,13 +2,13 @@ from typing import List, Dict, Any, Tuple
 import time
 import numpy as np
 import csle_collector.constants.constants as constants
-from csle_collector.ids_manager.ids_alert import FastLogAlert
-import csle_collector.ids_manager.ids_manager_pb2
+from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsFastLogAlert
+import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 
 
-class AlertCounters:
+class SnortIdsAlertCounters:
     """
-    DTO containing statistics from the IDS log
+    DTO containing statistics from the Snort IDS log
 
     """
     def __init__(self):
@@ -16,7 +16,7 @@ class AlertCounters:
         Initializes the DTO
         """
         self.priority_alerts = list(np.zeros(4))
-        self.class_alerts = list(np.zeros(len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))))
+        self.class_alerts = list(np.zeros(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))))
         self.severe_alerts = 0
         self.warning_alerts = 0
         self.total_alerts = 0
@@ -24,7 +24,7 @@ class AlertCounters:
         self.ip = None
         self.ts = None
 
-    def add(self, alert_counters: "AlertCounters") -> None:
+    def add(self, alert_counters: "SnortIdsAlertCounters") -> None:
         """
         Adds another alert counters object to this one
 
@@ -41,7 +41,7 @@ class AlertCounters:
             self.class_alerts[idx] = self.class_alerts[idx] + alert_counters.class_alerts[idx]
 
 
-    def count(self, alerts: List[FastLogAlert]) -> None:
+    def count(self, alerts: List[SnortIdsFastLogAlert]) -> None:
         """
         Counts the list of alerts
 
@@ -55,15 +55,15 @@ class AlertCounters:
                 self.class_alerts[a.class_id] += 1
 
         self.total_alerts = len(alerts)
-        self.severe_alerts = sum(self.priority_alerts[0:constants.IDS_ROUTER.SEVERE_ALERT_PRIORITY_THRESHOLD])
-        self.warning_alerts = sum(self.priority_alerts[constants.IDS_ROUTER.SEVERE_ALERT_PRIORITY_THRESHOLD:])
+        self.severe_alerts = sum(self.priority_alerts[0:constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD])
+        self.warning_alerts = sum(self.priority_alerts[constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD:])
         self.alerts_weighted_by_priority = 0
         for idx in range(len(self.priority_alerts)):
             priority = (5-idx+1)
             self.alerts_weighted_by_priority += priority*self.priority_alerts[idx]
 
     @staticmethod
-    def from_kafka_record(record: str) -> "AlertCounters":
+    def from_kafka_record(record: str) -> "SnortIdsAlertCounters":
         """
         Converts a kafka record to a DTO
 
@@ -71,7 +71,7 @@ class AlertCounters:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = AlertCounters()
+        obj = SnortIdsAlertCounters()
         obj.ts = float(parts[0])
         obj.ip = parts[1]
         obj.total_alerts = int(round(float(parts[2])))
@@ -80,10 +80,10 @@ class AlertCounters:
         obj.alerts_weighted_by_priority = int(round(float(parts[5])))
         obj.class_alerts = []
         obj.priority_alerts = []
-        for i in range(6, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6):
+        for i in range(6, len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 6):
             obj.class_alerts.append(int(round(float(parts[i]))))
-        for i in range(len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6,
-                       len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+10):
+        for i in range(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 6,
+                       len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 10):
             obj.priority_alerts.append(int(round(float(parts[i]))))
         return obj
 
@@ -104,10 +104,10 @@ class AlertCounters:
 
         self.class_alerts = []
         self.priority_alerts = []
-        for i in range(6, len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6):
+        for i in range(6, len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 6):
             self.class_alerts.append(int(round(float(parts[i]))))
-        for i in range(len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+6,
-                       len(set(constants.IDS_ROUTER.ALERT_IDS_ID.values()))+10):
+        for i in range(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 6,
+                       len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 10):
             self.priority_alerts.append(int(round(float(parts[i]))))
 
     def to_kafka_record(self, ip: str) -> str:
@@ -124,15 +124,15 @@ class AlertCounters:
         record_str = ",".join(list(map(lambda x: str(x), total_counters)))
         return record_str
 
-    def to_dto(self, ip: str) -> csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO:
+    def to_dto(self, ip: str) -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO:
         """
         Converts the object into a gRPC DTO for serialization
 
         :param ip: the ip to add to the DTO in addition to the statistics
-        :return: A csle_collector.ids_manager.ids_manager_pb2.IdsLogDTOb
+        :return: A csle_collector.snort_ids_manager.snort_ids_manager_pb2.IdsLogDTOb
         """
         ts = time.time()
-        csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO(
+        csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO(
             timestamp=ts,
             ip=ip,
             attempted_admin_alerts=self.class_alerts[33],
@@ -188,16 +188,15 @@ class AlertCounters:
                f"priority_alerts: {self.priority_alerts}, class_alerts: {self.class_alerts}," \
                f"alerts_weighted_by_priority: {self.alerts_weighted_by_priority}"
 
-
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "AlertCounters":
+    def from_dict(d: Dict[str, Any]) -> "SnortIdsAlertCounters":
         """
         Converts a dict representaion of the object into an instance
 
         :param d: the dict to convert
         :return: the DTO
         """
-        obj = AlertCounters()
+        obj = SnortIdsAlertCounters()
         obj.ip = d["ip"]
         obj.ts = d["ts"]
         obj.total_alerts = d["total_alerts"]
@@ -223,11 +222,11 @@ class AlertCounters:
         d["alerts_weighted_by_priority"] = self.alerts_weighted_by_priority
         return d
 
-    def copy(self) -> "AlertCounters":
+    def copy(self) -> "SnortIdsAlertCounters":
         """
         :return: a copy of the object
         """
-        c = AlertCounters()
+        c = SnortIdsAlertCounters()
         c.class_alerts = self.class_alerts
         c.priority_alerts = self.priority_alerts
         c.ip = self.ip
@@ -238,7 +237,7 @@ class AlertCounters:
         c.alerts_weighted_by_priority = self.alerts_weighted_by_priority
         return c
 
-    def get_deltas(self, counters_prime: "AlertCounters") -> Tuple[List[int], List[str]]:
+    def get_deltas(self, counters_prime: "SnortIdsAlertCounters") -> Tuple[List[int], List[str]]:
         """
         Get the deltas between two counters objects
 
@@ -253,6 +252,6 @@ class AlertCounters:
                      int(counters_prime.severe_alerts),
                      int(counters_prime.alerts_weighted_by_priority)
                  ] + deltas_priority + deltas_class
-        labels = constants.LOG_SINK.IDS_ALERTS_LABELS
+        labels = constants.LOG_SINK.SNORT_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels

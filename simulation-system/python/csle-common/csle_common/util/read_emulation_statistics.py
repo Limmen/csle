@@ -3,7 +3,9 @@ import time
 import datetime
 from confluent_kafka import Consumer, KafkaError, KafkaException, TopicPartition
 import csle_collector.constants.constants as collector_constants
-from csle_collector.ids_manager.alert_counters import AlertCounters
+import csle_common.constants.constants as constants
+from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.host_manager.host_metrics import HostMetrics
@@ -15,7 +17,6 @@ from csle_common.logging.log import Logger
 
 
 class ReadEmulationStatistics:
-
 
     @staticmethod
     def read_all(emulation_env_config: EmulationEnvConfig, time_window_minutes : int = 100) -> EmulationMetricsTimeSeries:
@@ -33,20 +34,28 @@ class ReadEmulationStatistics:
         aggregated_host_metrics = []
         defender_actions = []
         attacker_actions = []
-        ids_metrics = []
+        snort_ids_metrics = []
         total_host_metrics = []
+        ossec_host_ids_metrics = {}
+        total_ossec_metrics = []
+        aggregated_ossec_metrics = []
+
+        num_ossec_containers = len(list(filter(lambda x: x.name in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES,
+                                               emulation_env_config.containers_config.containers)))
 
         for c in emulation_env_config.containers_config.containers:
             docker_host_stats[c.get_full_name()] = []
             host_metrics[c.get_full_name()] = []
+            ossec_host_ids_metrics[c.get_full_name()] = []
 
         topic_names = [collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME,
                        collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME,
                        collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME,
                        collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
+                       collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME,
                        collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME
+                       collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
+                       collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME
                        ]
 
         start_consume_ts = time.time()
@@ -73,6 +82,7 @@ class ReadEmulationStatistics:
         done = False
         num_msg = 0
         host_metrics_counter = 0
+        ossec_host_metrics_counter = 0
         while not done:
             msg = consumer.poll(timeout=1.0)
             if msg is not None:
@@ -93,6 +103,12 @@ class ReadEmulationStatistics:
                         host_metrics[c.get_full_name()].append(metrics)
                         host_metrics_counter += 1
                         total_host_metrics.append(metrics)
+                    elif topic == collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME:
+                        metrics = OSSECIdsAlertCounters.from_kafka_record(record=msg.value().decode())
+                        c = emulation_env_config.containers_config.get_container_from_ip(metrics.ip)
+                        ossec_host_ids_metrics[c.get_full_name()].append(metrics)
+                        ossec_host_metrics_counter += 1
+                        total_ossec_metrics.append(metrics)
                     elif topic == collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME:
                         attacker_actions.append(EmulationAttackerAction.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME:
@@ -101,8 +117,8 @@ class ReadEmulationStatistics:
                         stats = DockerStats.from_kafka_record(record=msg.value().decode())
                         c = emulation_env_config.containers_config.get_container_from_ip(stats.ip)
                         docker_host_stats[c.get_full_name()].append(stats)
-                    elif topic == collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME:
-                        ids_metrics.append(AlertCounters.from_kafka_record(record=msg.value().decode()))
+                    elif topic == collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME:
+                        snort_ids_metrics.append(SnortIdsAlertCounters.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME:
                         client_metrics.append(ClientPopulationMetrics.from_kafka_record(record=msg.value().decode()))
                     if host_metrics_counter >= len(emulation_env_config.containers_config.containers):
@@ -111,14 +127,21 @@ class ReadEmulationStatistics:
                         aggregated_host_metrics.append(agg_host_metrics_dto)
                         host_metrics_counter = 0
                         total_host_metrics = []
+                    if ossec_host_metrics_counter >= num_ossec_containers:
+                        agg_ossec_metrics_dto = ReadEmulationStatistics.average_ossec_metrics(
+                            ossec_metrics=total_ossec_metrics)
+                        aggregated_ossec_metrics.append(agg_ossec_metrics_dto)
+                        ossec_host_metrics_counter = 0
+                        total_ossec_metrics = []
             else:
                 done=True
         consumer.close()
         dto = EmulationMetricsTimeSeries(
             client_metrics=client_metrics, aggregated_docker_stats=agg_docker_stats, host_metrics=host_metrics,
-            docker_host_stats=docker_host_stats, ids_metrics=ids_metrics, attacker_actions=attacker_actions,
+            docker_host_stats=docker_host_stats, snort_ids_metrics=snort_ids_metrics, attacker_actions=attacker_actions,
             defender_actions=defender_actions, aggregated_host_metrics=aggregated_host_metrics,
-            emulation_env_config=emulation_env_config)
+            emulation_env_config=emulation_env_config, aggregated_ossec_host_alert_counters=aggregated_ossec_metrics,
+            ossec_host_alert_counters=ossec_host_ids_metrics)
         return dto
 
 
@@ -145,3 +168,10 @@ class ReadEmulationStatistics:
         aggregated_host_metrics_dto.num_processes = total_num_processes
         aggregated_host_metrics_dto.num_users = total_num_users
         return aggregated_host_metrics_dto
+
+    @staticmethod
+    def average_ossec_metrics(ossec_metrics: List[OSSECIdsAlertCounters]) -> OSSECIdsAlertCounters:
+        aggregated_ossec_ids_alert_counters = OSSECIdsAlertCounters()
+        for alert_counters in ossec_metrics:
+            aggregated_ossec_ids_alert_counters.add(alert_counters)
+        return aggregated_ossec_ids_alert_counters

@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
-from csle_collector.ids_manager.alert_counters import AlertCounters
+from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.host_manager.host_metrics import HostMetrics
@@ -17,7 +18,10 @@ class EmulationMetricsTimeSeries:
                  docker_host_stats: Dict[str, List[DockerStats]], host_metrics: Dict[str, List[HostMetrics]],
                  aggregated_host_metrics: List[HostMetrics],
                  defender_actions: List[EmulationDefenderAction], attacker_actions: List[EmulationAttackerAction],
-                 ids_metrics: List[AlertCounters], emulation_env_config: EmulationEnvConfig):
+                 snort_ids_metrics: List[SnortIdsAlertCounters], emulation_env_config: EmulationEnvConfig,
+                 ossec_host_alert_counters = Dict[str, List[OSSECIdsAlertCounters]],
+                 aggregated_ossec_host_alert_counters = List[OSSECIdsAlertCounters]
+                 ):
         """
         Initializes the DTO
 
@@ -28,8 +32,10 @@ class EmulationMetricsTimeSeries:
         :param aggregated_host_metrics: Time series data with aggregated host metrics
         :param defender_actions: Time series data with defender actions
         :param attacker_actions: Time series data with attacker actions
-        :param ids_metrics: Time series data with IDS metrics
+        :param snort_ids_metrics: Time series data with Snort IDS metrics
         :param emulation_env_config: the emulation config
+        :param ossec_host_alert_counters: Time series data with ossec alert counters per host
+        :param ossec_host_alert_counters: Time series data with aggregated ossec alert counters
         """
         self.client_metrics = client_metrics
         self.aggregated_docker_stats = aggregated_docker_stats
@@ -37,9 +43,11 @@ class EmulationMetricsTimeSeries:
         self.host_metrics = host_metrics
         self.defender_actions = defender_actions
         self.attacker_actions = attacker_actions
-        self.ids_metrics = ids_metrics
+        self.snort_ids_metrics = snort_ids_metrics
         self.aggregated_host_metrics = aggregated_host_metrics
         self.emulation_env_config = emulation_env_config
+        self.ossec_host_alert_counters = ossec_host_alert_counters
+        self.aggregated_ossec_host_alert_counters = aggregated_ossec_host_alert_counters
 
 
     @staticmethod
@@ -56,6 +64,9 @@ class EmulationMetricsTimeSeries:
         host_metrics = {}
         for k,v in d["host_metrics"].items():
             host_metrics[k] = list(map(lambda x: HostMetrics.from_dict(x), v))
+        ossec_host_alerts = {}
+        for k,v in d["ossec_host_alert_counters"].items():
+            ossec_host_alerts[k] = list(map(lambda x: OSSECIdsAlertCounters.from_dict(x), v))
         obj = EmulationMetricsTimeSeries(
             client_metrics=list(map(lambda x: ClientPopulationMetrics.from_dict(x), d["client_metrics"])),
             aggregated_docker_stats=list(map(lambda x: DockerStats.from_dict(x), d["aggregated_docker_stats"])),
@@ -63,9 +74,11 @@ class EmulationMetricsTimeSeries:
             host_metrics=host_metrics,
             defender_actions=list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"])),
             attacker_actions=list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"])),
-            ids_metrics=list(map(lambda x: AlertCounters.from_dict(x), d["ids_metrics"])),
+            snort_ids_metrics=list(map(lambda x: SnortIdsAlertCounters.from_dict(x), d["snort_ids_metrics"])),
             aggregated_host_metrics=list(map(lambda x: HostMetrics.from_dict(x), d["aggregated_host_metrics"])),
-            emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"])
+            emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"]),
+            ossec_host_alert_counters=ossec_host_alerts,
+            aggregated_ossec_host_alert_counters=d["aggregated_ossec_host_alert_counters"]
         )
         return obj
 
@@ -84,9 +97,14 @@ class EmulationMetricsTimeSeries:
             d["host_metrics"][k] = list(map(lambda x: x.to_dict(), v))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
-        d["ids_metrics"] = list(map(lambda x: x.to_dict(), self.ids_metrics))
+        d["snort_ids_metrics"] = list(map(lambda x: x.to_dict(), self.snort_ids_metrics))
         d["aggregated_host_metrics"] = list(map(lambda x: x.to_dict(), self.aggregated_host_metrics))
         d["emulation_env_config"] = self.emulation_env_config.to_dict()
+        d["aggregated_ossec_host_alert_counters"] = list(map(lambda x: x.to_dict(),
+                                                             self.aggregated_ossec_host_alert_counters))
+        d["ossec_host_alert_counters"] = {}
+        for k,v in self.ossec_host_alert_counters.items():
+            d["ossec_host_alert_counters"][k] = list(map(lambda x: x.to_dict(), v))
         return d
 
     def __str__(self):
@@ -99,9 +117,11 @@ class EmulationMetricsTimeSeries:
                f"host_metrics: {list(map(lambda x: str(x), self.host_metrics))}," \
                f"defender_actions: {list(map(lambda x: str(x), self.defender_actions))}," \
                f"attacker_actions: {list(map(lambda x: str(x), self.attacker_actions))}," \
-               f"ids_metrics: {list(map(lambda x: str(x), self.ids_metrics))}," \
+               f"snort_ids_metrics: {list(map(lambda x: str(x), self.snort_ids_metrics))}," \
                f"aggregated_host_metrics: {list(map(lambda x: str(x), self.aggregated_host_metrics))}," \
-               f"config: {self.emulation_env_config}"
+               f"config: {self.emulation_env_config}," \
+               f"aggregated_ossec_host_alert_counters: {self.aggregated_ossec_host_alert_counters}," \
+               f"ossec_host_alert_counters: {self.ossec_host_alert_counters}"
 
     def to_json_str(self) -> str:
         """

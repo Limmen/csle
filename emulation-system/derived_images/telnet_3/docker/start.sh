@@ -1,5 +1,6 @@
 #!/bin/bash
 
+/var/ossec/bin/ossec-control start
 service rsyslog restart
 service postgresql restart
 sleep 2

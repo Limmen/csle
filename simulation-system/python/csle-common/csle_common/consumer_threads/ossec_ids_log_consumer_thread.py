@@ -2,38 +2,38 @@ import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
 import csle_collector.constants.constants as collector_constants
-from csle_collector.ids_manager.alert_counters import AlertCounters
+from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_common.logging.log import Logger
 
 
-class IdsLogConsumerThread(threading.Thread):
+class OSSECIdsLogConsumerThread(threading.Thread):
     """
-    Thread that polls the IDS log to get the latest metrics
+    Thread that polls the OSSEC IDS log to get the latest metrics
     """
 
-    def __init__(self, kafka_server_ip: str, kafka_port: int, ids_alert_counters : AlertCounters,
+    def __init__(self, kafka_server_ip: str, kafka_port: int, ossec_ids_alert_counters : OSSECIdsAlertCounters,
                  auto_offset_reset: str = "latest") -> None:
         """
         Initializes the thread
 
         :param kafka_server_ip: the ip of the kafka server
         :param kafka_port: the port of the kafka server
-        :param ids_alert_counters: the alert counters to updaten
+        :param ossec_ids_alert_counters: the alert counters to update
         :param auto_offset_reset: the offset for kafka to start reading from
         """
         threading.Thread.__init__(self)
         self.running =True
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
-        self.ids_alert_counters = ids_alert_counters
-        self.ids_alert_counters_list = []
+        self.ossec_ids_alert_counters = ossec_ids_alert_counters
+        self.ossec_ids_alert_counters_list = []
         self.ts = time.time()
         self.kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_server_ip}:{self.kafka_port}",
             collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"ids_log_consumer_thread_{self.ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
-        self.consumer.subscribe([collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME])
+        self.consumer.subscribe([collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME])
 
     def run(self) -> None:
         """
@@ -51,19 +51,19 @@ class IdsLogConsumerThread(threading.Thread):
                     elif msg.error():
                         raise KafkaException(msg.error())
                 else:
-                    self.ids_alert_counters.update_with_kafka_record(record=msg.value().decode())
-                    self.ids_alert_counters_list.append(self.ids_alert_counters.copy())
+                    self.ossec_ids_alert_counters.update_with_kafka_record(record=msg.value().decode())
+                    self.ossec_ids_alert_counters_list.append(self.ossec_ids_alert_counters.copy())
         self.consumer.close()
 
-    def get_aggregated_ids_alert_counters(self) -> AlertCounters:
+    def get_aggregated_ids_alert_counters(self) -> OSSECIdsAlertCounters:
         """
         :return: aggregated alert counters from the list
         """
-        if len(self.ids_alert_counters_list) == 0:
-            return self.ids_alert_counters.copy()
-        if len(self.ids_alert_counters_list) == 1:
-            return self.ids_alert_counters_list[0].copy()
-        alert_counters = self.ids_alert_counters_list[0].copy()
-        for j in range(1, len(self.ids_alert_counters_list)):
-            alert_counters.add(self.ids_alert_counters_list[j].copy())
+        if len(self.ossec_ids_alert_counters_list) == 0:
+            return self.ossec_ids_alert_counters.copy()
+        if len(self.ossec_ids_alert_counters_list) == 1:
+            return self.ossec_ids_alert_counters_list[0].copy()
+        alert_counters = self.ossec_ids_alert_counters_list[0].copy()
+        for j in range(1, len(self.ossec_ids_alert_counters_list)):
+            alert_counters.add(self.ossec_ids_alert_counters_list[j].copy())
         return alert_counters

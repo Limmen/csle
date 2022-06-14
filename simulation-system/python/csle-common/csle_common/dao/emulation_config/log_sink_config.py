@@ -11,7 +11,7 @@ class LogSinkConfig:
 
     def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig, topics: List[KafkaTopic],
                  kafka_port: int= 9092, time_step_len_seconds = 15, default_grpc_port = 50051,
-                 secondary_grpc_port = 50049,
+                 secondary_grpc_port = 50049, third_grpc_port = 50048,
                  version: str = "0.0.1") -> None:
         """
         Initializes the DTO
@@ -24,6 +24,8 @@ class LogSinkConfig:
         :param container: the container
         :param topics: list of kafka topics
         :param version: the version
+        :param secondary_grpc_port: secondary gRPC port
+        :param third_grpc_port: third gRPC port
         """
         self.kafka_port = kafka_port
         self.default_grpc_port = default_grpc_port
@@ -33,6 +35,7 @@ class LogSinkConfig:
         self.resources = resources
         self.topics = topics
         self.secondary_grpc_port = secondary_grpc_port
+        self.third_grpc_port = third_grpc_port
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "LogSinkConfig":
@@ -48,7 +51,7 @@ class LogSinkConfig:
             topics = list(map(lambda x: KafkaTopic.from_dict(x), d["topics"])),
             kafka_port=d["kafka_port"], time_step_len_seconds=d["time_step_len_seconds"],
             default_grpc_port=d["default_grpc_port"], secondary_grpc_port=d["secondary_grpc_port"],
-            version=d["version"]
+            version=d["version"], third_grpc_port=d["third_grpc_port"]
         )
         return obj
 
@@ -65,6 +68,7 @@ class LogSinkConfig:
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
         d["topics"] = list(map(lambda x: x.to_dict(), self.topics))
+        d["third_grpc_port"] = self.third_grpc_port
         return d
 
     def __str__(self) -> str:
@@ -75,7 +79,7 @@ class LogSinkConfig:
                f"port:{self.kafka_port}, version: {self.version}, resources: {self.resources}, " \
                f"topics: {','.join(list(map(lambda x: str(x), self.topics)))}, " \
                f"default_grpc_port:{self.default_grpc_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
-               f"secondary_grpc_port:{self.secondary_grpc_port}"
+               f"secondary_grpc_port:{self.secondary_grpc_port}, third_grpc_port: {self.third_grpc_port}"
 
     def to_json_str(self) -> str:
         """

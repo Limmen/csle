@@ -1,40 +1,40 @@
 syntax = "proto3";
 
 // Interface exported by the server
-service IdsManager {
-  rpc getIdsAlerts(GetIdsAlertsMsg) returns (IdsLogDTO) {}
-  rpc stopIdsMonitor(StopIdsMonitorMsg) returns (IdsMonitorDTO) {}
-  rpc startIdsMonitor(StartIdsMonitorMsg) returns (IdsMonitorDTO) {}
-  rpc getIdsMonitorStatus(GetIdsMonitorStatusMsg) returns (IdsMonitorDTO) {}
+service SnortIdsManager {
+  rpc getSnortIdsAlerts(GetSnortIdsAlertsMsg) returns (SnortIdsLogDTO) {}
+  rpc stopSnortIdsMonitor(StopSnortIdsMonitorMsg) returns (SnortIdsMonitorDTO) {}
+  rpc startSnortIdsMonitor(StartSnortIdsMonitorMsg) returns (SnortIdsMonitorDTO) {}
+  rpc getSnortIdsMonitorStatus(GetSnortIdsMonitorStatusMsg) returns (SnortIdsMonitorDTO) {}
 }
 
-// Message that the client sends to extract the IDS log statistics from a given timestamp
-message GetIdsAlertsMsg {
+// Message that the client sends to extract the Snort IDS log statistics from a given timestamp
+message GetSnortIdsAlertsMsg {
   float timestamp = 1;
   string log_file_path = 2;
 }
 
-// Message that the client sends to stop the IdsMonitor
-message StopIdsMonitorMsg {}
+// Message that the client sends to stop the SnortIdsMonitor
+message StopSnortIdsMonitorMsg {}
 
-// Message that the client sends to start the IdsMonitor
-message StartIdsMonitorMsg {
+// Message that the client sends to start the SnortIdsMonitor
+message StartSnortIdsMonitorMsg {
   string kafka_ip = 1;
   int32 kafka_port = 2;
   string log_file_path = 3;
   int32 time_step_len_seconds = 4;
 }
 
-// Message that the client sends to get the status of the IdsMonitor
-message GetIdsMonitorStatusMsg {}
+// Message that the client sends to get the status of the SnortIdsMonitor
+message GetSnortIdsMonitorStatusMsg {}
 
-//Message that the server returns when asked about the status of the IDS Monitor thread
-message IdsMonitorDTO {
+//Message that the server returns when asked about the status of the Snort IDS Monitor thread
+message SnortIdsMonitorDTO {
   bool running = 1;
 }
 
-// Message that the server returns when requested by the client, contains info about the IDS log
-message IdsLogDTO {
+// Message that the server returns when requested by the client, contains info about the Snort IDS log
+message SnortIdsLogDTO {
   float timestamp = 1;
   string ip =2;
   int32 attempted_admin_alerts = 3;

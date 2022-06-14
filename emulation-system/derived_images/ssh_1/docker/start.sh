@@ -1,5 +1,6 @@
 #!/bin/bash
 
+/var/ossec/bin/ossec-control start
 service named start &
 service rsyslog restart
 /usr/sbin/sshd -D &

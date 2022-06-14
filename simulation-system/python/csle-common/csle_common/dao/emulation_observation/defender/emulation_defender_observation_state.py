@@ -6,14 +6,16 @@ from csle_common.dao.emulation_action.defender.emulation_defender_action import 
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.consumer_threads.docker_stats_consumer_thread import DockerStatsConsumerThread
-from csle_common.consumer_threads.ids_log_consumer_thread import IdsLogConsumerThread
+from csle_common.consumer_threads.snort_ids_log_consumer_thread import SnortIdsLogConsumerThread
+from csle_common.consumer_threads.ossec_ids_log_consumer_thread import OSSECIdsLogConsumerThread
 from csle_common.consumer_threads.client_population_consumer_thread import ClientPopulationConsumerThread
 from csle_common.consumer_threads.attacker_actions_consumer_thread import AttackerActionsConsumerThread
 from csle_common.consumer_threads.defender_actions_consumer_thread import DefenderActionsConsumerThread
 from csle_common.consumer_threads.aggregated_host_metrics_thread import AggregatedHostMetricsThread
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
-from csle_collector.ids_manager.alert_counters import AlertCounters
+from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.host_manager.host_metrics import HostMetrics
 
 
@@ -24,7 +26,9 @@ class EmulationDefenderObservationState:
 
     def __init__(self, log_sink_config : LogSinkConfig,
                  client_population_metrics : ClientPopulationMetrics = None, docker_stats: DockerStats = None,
-                 ids_alert_counters : AlertCounters = None, aggregated_host_metrics: HostMetrics= None,
+                 snort_ids_alert_counters : SnortIdsAlertCounters = None,
+                 ossec_ids_alert_counters : OSSECIdsAlertCounters= None,
+                 aggregated_host_metrics: HostMetrics= None,
                  defender_actions : List[EmulationDefenderAction] = None,
                  attacker_actions: List[EmulationAttackerAction] = None):
         """
@@ -33,7 +37,8 @@ class EmulationDefenderObservationState:
         :param log_sink_config: the log sink config
         :param client_population_metrics: the client population metrics
         :param docker_stats: the docker stats
-        :param ids_alert_counters: the ids alert counters
+        :param snort_ids_alert_counters: the snort ids alert counters
+        :param ossec_ids_alert_counters: the ossec ids alert counters
         :param defender_actions: the list of defender actions
         :param attacker_actions: the list of attacker actions
         :param aggregated_host_metrics: the aggregated host metrics
@@ -49,10 +54,14 @@ class EmulationDefenderObservationState:
         if self.docker_stats is None:
             self.docker_stats = DockerStats()
         self.avg_docker_stats = self.docker_stats.copy()
-        self.ids_alert_counters = ids_alert_counters
-        if self.ids_alert_counters is None:
-            self.ids_alert_counters = AlertCounters()
-        self.avg_ids_alert_counters = self.ids_alert_counters.copy()
+        self.snort_ids_alert_counters = snort_ids_alert_counters
+        if self.snort_ids_alert_counters is None:
+            self.snort_ids_alert_counters = SnortIdsAlertCounters()
+        self.avg_snort_ids_alert_counters = self.snort_ids_alert_counters.copy()
+        self.ossec_ids_alert_counters = ossec_ids_alert_counters
+        if self.ossec_ids_alert_counters is None:
+            self.ossec_ids_alert_counters = OSSECIdsAlertCounters()
+        self.avg_ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
         self.attacker_actions = attacker_actions
         if self.attacker_actions is None:
             self.attacker_actions = []
@@ -65,7 +74,8 @@ class EmulationDefenderObservationState:
         self.avg_aggregated_host_metrics = self.aggregated_host_metrics.copy()
         self.docker_stats_consumer_thread = None
         self.client_population_consumer_thread = None
-        self.ids_log_consumer_thread = None
+        self.snort_ids_log_consumer_thread = None
+        self.ossec_ids_log_consumer_thread = None
         self.attacker_actions_consumer_thread = None
         self.defender_actions_consumer_thread = None
         self.aggregated_host_metrics_thread = None
@@ -90,10 +100,15 @@ class EmulationDefenderObservationState:
             kafka_port=self.log_sink_config.kafka_port,
             client_population_metrics=self.client_population_metrics
         )
-        self.ids_log_consumer_thread = IdsLogConsumerThread(
+        self.snort_ids_log_consumer_thread = SnortIdsLogConsumerThread(
             kafka_server_ip=self.log_sink_config.container.get_ips()[0],
             kafka_port=self.log_sink_config.kafka_port,
-            ids_alert_counters=self.ids_alert_counters
+            snort_ids_alert_counters=self.snort_ids_alert_counters
+        )
+        self.ossec_ids_log_consumer_thread = OSSECIdsLogConsumerThread(
+            kafka_server_ip=self.log_sink_config.container.get_ips()[0],
+            kafka_port=self.log_sink_config.kafka_port,
+            ossec_ids_alert_counters=self.ossec_ids_alert_counters
         )
         self.attacker_actions_consumer_thread = AttackerActionsConsumerThread(
             kafka_server_ip=self.log_sink_config.container.get_ips()[0],
@@ -108,7 +123,8 @@ class EmulationDefenderObservationState:
         self.aggregated_host_metrics_thread.start()
         self.docker_stats_consumer_thread.start()
         self.client_population_consumer_thread.start()
-        self.ids_log_consumer_thread.start()
+        self.snort_ids_log_consumer_thread.start()
+        self.ossec_ids_log_consumer_thread.start()
         self.attacker_actions_consumer_thread.start()
         self.defender_actions_consumer_thread.start()
         for m in self.machines:
@@ -127,7 +143,8 @@ class EmulationDefenderObservationState:
         obj.actions_tried = set(list(map(lambda x: tuple(x), d["actions_tried"])))
         obj.client_population_metrics = ClientPopulationMetrics.from_dict(d["client_population_metrics"])
         obj.docker_stats = DockerStats.from_dict(d["docker_stats"])
-        obj.ids_alert_counters = AlertCounters.from_dict(d["ids_alert_counters"])
+        obj.snort_ids_alert_counters = SnortIdsAlertCounters.from_dict(d["snort_ids_alert_counters"])
+        obj.ossec_ids_alert_counters = OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
         obj.aggregated_host_metrics = HostMetrics.from_dict(d["aggregated_host_metrics"])
         obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
         obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"]))
@@ -135,7 +152,8 @@ class EmulationDefenderObservationState:
         obj.avg_aggregated_host_metrics = HostMetrics.from_dict(d["avg_aggregated_host_metrics"])
         obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
         obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
-        obj.avg_ids_alert_counters = AlertCounters.from_dict(d["avg_ids_alert_counters"])
+        obj.avg_snort_ids_alert_counters = SnortIdsAlertCounters.from_dict(d["avg_snort_ids_alert_counters"])
+        obj.avg_ossec_ids_alert_counters = OSSECIdsAlertCounters.from_dict(d["avg_ossec_ids_alert_counters"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -147,7 +165,8 @@ class EmulationDefenderObservationState:
         d["actions_tried"] = list(self.actions_tried)
         d["client_population_metrics"] = self.client_population_metrics.to_dict()
         d["docker_stats"] = self.docker_stats.to_dict()
-        d["ids_alert_counters"] = self.ids_alert_counters.to_dict()
+        d["snort_ids_alert_counters"] = self.snort_ids_alert_counters.to_dict()
+        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict()
         d["log_sink_config"] = self.log_sink_config.to_dict()
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
@@ -155,7 +174,8 @@ class EmulationDefenderObservationState:
         d["avg_aggregated_host_metrics"] = self.avg_aggregated_host_metrics.to_dict()
         d["avg_client_population_metrics"] = self.avg_client_population_metrics.to_dict()
         d["avg_docker_stats"] = self.avg_docker_stats.to_dict()
-        d["avg_ids_alert_counters"] = self.avg_ids_alert_counters.to_dict()
+        d["avg_snort_ids_alert_counters"] = self.avg_snort_ids_alert_counters.to_dict()
+        d["avg_ossec_ids_alert_counters"] = self.avg_ossec_ids_alert_counters.to_dict()
         return d
 
     def sort_machines(self) -> None:
@@ -178,9 +198,12 @@ class EmulationDefenderObservationState:
         if self.client_population_consumer_thread is not None:
             self.client_population_consumer_thread.running = False
             self.client_population_consumer_thread.consumer.close()
-        if self.ids_log_consumer_thread is not None:
-            self.ids_log_consumer_thread.running = False
-            self.ids_log_consumer_thread.consumer.close()
+        if self.snort_ids_log_consumer_thread is not None:
+            self.snort_ids_log_consumer_thread.running = False
+            self.snort_ids_log_consumer_thread.consumer.close()
+        if self.ossec_ids_log_consumer_thread is not None:
+            self.ossec_ids_log_consumer_thread.running = False
+            self.ossec_ids_log_consumer_thread.consumer.close()
         if self.attacker_actions_consumer_thread is not None:
             self.attacker_actions_consumer_thread.running = False
             self.attacker_actions_consumer_thread.consumer.close()
@@ -198,7 +221,8 @@ class EmulationDefenderObservationState:
 
         :return: None
         """
-        self.ids_log_consumer_thread.ids_alert_counters_list = []
+        self.snort_ids_log_consumer_thread.snort_ids_alert_counters_list = []
+        self.ossec_ids_log_consumer_thread.ossec_ids_alert_counters_list = []
         self.docker_stats_consumer_thread.docker_stats_list = []
         self.client_population_consumer_thread.client_population_metrics_list = []
         self.aggregated_host_metrics_thread.host_metrics_list = []
@@ -207,7 +231,8 @@ class EmulationDefenderObservationState:
         """
         :return: computes the averages of the metric lists
         """
-        self.avg_ids_alert_counters = self.ids_log_consumer_thread.get_aggregated_ids_alert_counters()
+        self.avg_snort_ids_alert_counters = self.snort_ids_log_consumer_thread.get_aggregated_ids_alert_counters()
+        self.avg_ossec_ids_alert_counters = self.ossec_ids_log_consumer_thread.get_aggregated_ids_alert_counters()
         self.avg_docker_stats = self.docker_stats_consumer_thread.get_average_docker_stats()
         self.avg_aggregated_host_metrics = self.aggregated_host_metrics_thread.get_average_aggregated_host_metrics()
         self.avg_client_population_metrics = \
@@ -234,10 +259,13 @@ class EmulationDefenderObservationState:
         c = EmulationDefenderObservationState(
             log_sink_config=self.log_sink_config,
             client_population_metrics=self.client_population_metrics.copy(), docker_stats=self.docker_stats.copy(),
-            ids_alert_counters=self.ids_alert_counters.copy(), attacker_actions=self.attacker_actions.copy(),
+            snort_ids_alert_counters=self.snort_ids_alert_counters.copy(),
+            ossec_ids_alert_counters=self.ossec_ids_alert_counters.copy(),
+            attacker_actions=self.attacker_actions.copy(),
             defender_actions=self.defender_actions.copy(), aggregated_host_metrics=self.aggregated_host_metrics.copy())
         c.actions_tried = self.actions_tried.copy()
-        c.avg_ids_alert_counters = self.avg_ids_alert_counters.copy()
+        c.avg_snort_ids_alert_counters = self.avg_snort_ids_alert_counters.copy()
+        c.avg_ossec_ids_alert_counters = self.avg_ossec_ids_alert_counters.copy()
         c.avg_docker_stats = self.avg_docker_stats.copy()
         c.avg_aggregated_host_metrics = self.avg_aggregated_host_metrics.copy()
         c.avg_client_population_metrics = self.avg_client_population_metrics.copy()
@@ -252,11 +280,13 @@ class EmulationDefenderObservationState:
         """
         return f"client_population_metrics: {self.client_population_metrics}," \
                f"docker_stats: {self.docker_stats}," \
-               f"ids_alert_counters: {self.ids_alert_counters}," \
+               f"snort_ids_alert_counters: {self.snort_ids_alert_counters}," \
+               f"ossec_ids_alert_counters: {self.ossec_ids_alert_counters}," \
                f"aggregated_host_metrics: {self.aggregated_host_metrics}" \
                f"attacker_actions: {list(map(lambda x: str(x), self.attacker_actions))}," \
                f"defender_actions: {list(map(lambda x: str(x), self.defender_actions))}\n," \
-               f"avg_ids_alert_counters: {self.avg_ids_alert_counters}," \
+               f"avg_snort_ids_alert_counters: {self.avg_snort_ids_alert_counters}," \
+               f"avg_ossec_ids_alert_counters: {self.avg_ossec_ids_alert_counters}," \
                f"avg_docker_stats: {self.avg_docker_stats}," \
                f"avg_aggregated_host_metrics: {self.avg_aggregated_host_metrics}," \
                f"avg_client_population_metrics: {self.avg_client_population_metrics}" \

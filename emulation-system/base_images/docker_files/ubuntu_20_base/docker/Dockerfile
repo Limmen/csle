@@ -168,6 +168,10 @@ ADD docker_files/common/pulledpork.conf /pulledpork/etc/pulledpork.conf
 ADD docker_files/common/dropsid.conf /pulledpork/etc/dropsid.conf
 RUN /pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP
 
+# Setup OSSEC
+ADD docker_files/common/atomic.sh /atomic.sh
+RUN chmod 777 /atomic.sh && ./atomic.sh && apt-get update && apt-get -y install ossec-hids-server
+
 # DWVA WebApp Exploit
 ADD docker_files/common/sql_injection_exploit.sh /sql_injection_exploit.sh
 RUN chmod 777 /sql_injection_exploit.sh
@@ -212,9 +216,13 @@ RUN chmod 777 /client_manager.py
 ADD docker_files/common/kafka_manager.py /kafka_manager.py
 RUN chmod 777 /kafka_manager.py
 
-# IDS manager
-ADD docker_files/common/ids_manager.py /ids_manager.py
-RUN chmod 777 /ids_manager.py
+# Snort IDS manager
+ADD docker_files/common/snort_ids_manager.py /snort_ids_manager.py
+RUN chmod 777 /snort_ids_manager.py
+
+# OSSEC IDS manager
+ADD docker_files/common/ossec_ids_manager.py /ossec_ids_manager.py
+RUN chmod 777 /ossec_ids_manager.py
 
 # Host manager
 ADD docker_files/common/host_manager.py /host_manager.py

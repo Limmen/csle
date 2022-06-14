@@ -2768,11 +2768,18 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             attributes=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
-            name=collector_constants.LOG_SINK.IDS_LOG_TOPIC_NAME,
+            name=collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
             retention_time_hours = 240,
-            attributes= collector_constants.LOG_SINK.IDS_LOG_TOPIC_ATTRIBUTES
+            attributes= collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            retention_time_hours = 240,
+            attributes=collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
@@ -2813,7 +2820,7 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
 
     config = LogSinkConfig(container=container, resources=resources, topics=topics,
                            version=version, kafka_port=9092, default_grpc_port=50051,
-                           secondary_grpc_port = 50049, time_step_len_seconds=30)
+                           secondary_grpc_port = 50049, time_step_len_seconds=30, third_grpc_port=50048)
     return config
 
 

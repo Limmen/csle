@@ -519,9 +519,12 @@ const DataCollectionJob = (props) => {
                                                             <th># Received MB</th>
                                                             <th># Transmitted MB</th>
                                                             <th># PIDs</th>
-                                                            <th>Alerts weighted by priority</th>
-                                                            <th># Severe alerts</th>
-                                                            <th># Warning alerts</th>
+                                                            <th>Snort Alerts weighted by priority</th>
+                                                            <th># Snort Severe alerts</th>
+                                                            <th># Snort  Warning alerts</th>
+                                                            <th>OSSEC Alerts weighted by level</th>
+                                                            <th># OSSEC Severe alerts</th>
+                                                            <th># OSSEC  Warning alerts</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -541,9 +544,12 @@ const DataCollectionJob = (props) => {
                                                                 <td>{obs_state.docker_stats.net_rx}</td>
                                                                 <td>{obs_state.docker_stats.net_tx}</td>
                                                                 <td>{obs_state.docker_stats.pids}</td>
-                                                                <td>{obs_state.ids_alert_counters.alerts_weighted_by_priority}</td>
-                                                                <td>{obs_state.ids_alert_counters.severe_alerts}</td>
-                                                                <td>{obs_state.ids_alert_counters.warning_alerts}</td>
+                                                                <td>{obs_state.snort_ids_alert_counters.alerts_weighted_by_priority}</td>
+                                                                <td>{obs_state.snort_ids_alert_counters.severe_alerts}</td>
+                                                                <td>{obs_state.snort_ids_alert_counters.warning_alerts}</td>
+                                                                <td>{obs_state.ossec_ids_alert_counters.alerts_weighted_by_level}</td>
+                                                                <td>{obs_state.ossec_ids_alert_counters.severe_alerts}</td>
+                                                                <td>{obs_state.ossec_ids_alert_counters.warning_alerts}</td>
                                                             </tr>
                                                         )}
                                                         </tbody>

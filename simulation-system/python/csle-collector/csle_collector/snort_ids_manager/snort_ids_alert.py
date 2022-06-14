@@ -3,7 +3,7 @@ import datetime
 import csle_collector.constants.constants as constants
 
 
-class FastLogAlert:
+class SnortIdsFastLogAlert:
     """
     DTO representing an alert entry in the fast log of Snort
     """
@@ -21,7 +21,7 @@ class FastLogAlert:
         self.class_id = class_id
 
 
-class IdsAlert:
+class SnortIdsAlert:
     """
     Object representing an IDS Alert
     """
@@ -61,7 +61,7 @@ class IdsAlert:
 
 
     @staticmethod
-    def parse_from_str(csv_str_record : str, year: int) -> "IdsAlert":
+    def parse_from_str(csv_str_record : str, year: int) -> "SnortIdsAlert":
         """
         Parses the IDS alert from a string
 
@@ -72,7 +72,7 @@ class IdsAlert:
         if year is None:
             year = datetime.datetime.now().year
         a_fields = csv_str_record.split(",")
-        alert_dao = IdsAlert()
+        alert_dao = SnortIdsAlert()
         if len(a_fields) > 1:
             alert_dao.timestamp = a_fields[0]
             if alert_dao.timestamp is not None and alert_dao.timestamp != "" and alert_dao.timestamp != "0":
@@ -154,7 +154,7 @@ class IdsAlert:
         self.priority = priority
 
     @staticmethod
-    def fast_log_parse(fast_log_str: str, year: int) -> FastLogAlert:
+    def fast_log_parse(fast_log_str: str, year: int) -> SnortIdsFastLogAlert:
         """
         Parses the IDS Alert from a given string from the fast-log of Snort
 
@@ -162,19 +162,19 @@ class IdsAlert:
         :param year: the year
         :return: the priority, the class, and the time-stamp
         """
-        priorities = re.findall(constants.IDS_ROUTER.PRIORITY_REGEX, fast_log_str)
+        priorities = re.findall(constants.SNORT_IDS_ROUTER.PRIORITY_REGEX, fast_log_str)
         if len(priorities) > 0:
             temp = priorities[0].replace("Priority: ", "")
             priority = int(temp)
         else:
             priority = 1
-        alert_classes = re.findall(constants.IDS_ROUTER.CLASSIFICATION_REGEX, fast_log_str)
+        alert_classes = re.findall(constants.SNORT_IDS_ROUTER.CLASSIFICATION_REGEX, fast_log_str)
         alert_class = "unknown"
         alert_class_id = 1
         if len(alert_classes) > 0:
             alert_class = alert_classes[0]
-        if alert_class in constants.IDS_ROUTER.ALERT_IDS_ID:
-            alert_class_id = constants.IDS_ROUTER.ALERT_IDS_ID[alert_class]
+        if alert_class in constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID:
+            alert_class_id = constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID[alert_class]
 
         ts = fast_log_str.split(" ")[0]
         if ts is not None and ts != "":
@@ -187,6 +187,6 @@ class IdsAlert:
                     ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
             else:
                 ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
-        fast_log_alert = FastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id)
+        fast_log_alert = SnortIdsFastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id)
         return fast_log_alert
 

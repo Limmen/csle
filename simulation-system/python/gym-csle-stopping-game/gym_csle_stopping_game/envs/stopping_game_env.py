@@ -216,7 +216,7 @@ class StoppingGameEnv(BaseEnv):
             if self.state.s == 2:
                 done = True
             else:
-                o = trace.defender_observation_states[self.state.t-1].avg_ids_alert_counters.warning_alerts
+                o = trace.defender_observation_states[self.state.t-1].avg_snort_ids_alert_counters.warning_alerts
                 if o >= len(self.config.O):
                     o = len(self.config.O)-1
                 self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
@@ -394,8 +394,8 @@ class StoppingGameEnv(BaseEnv):
                     emulation_env_config=emulation_env_config, attacker_action=attacker_action,
                     defender_action=defender_action, trace=emulation_trace,
                     sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds)
-                o_components = [s.defender_obs_state.ids_alert_counters.severe_alerts,
-                                s.defender_obs_state.ids_alert_counters.warning_alerts,
+                o_components = [s.defender_obs_state.snort_ids_alert_counters.severe_alerts,
+                                s.defender_obs_state.snort_ids_alert_counters.warning_alerts,
                                 s.defender_obs_state.aggregated_host_metrics.num_failed_login_attempts]
                 o_components_str = ",".join(list(map(lambda x: str(x), o_components)))
                 logger.debug(f"o_components:{o_components}")

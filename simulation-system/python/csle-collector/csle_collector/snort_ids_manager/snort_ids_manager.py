@@ -5,15 +5,15 @@ import grpc
 import threading
 from concurrent import futures
 from confluent_kafka import Producer
-import csle_collector.ids_manager.ids_manager_pb2_grpc
-import csle_collector.ids_manager.ids_manager_pb2
-from csle_collector.ids_manager.ids_manager_util import IdsManagerUtil
+import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
+import csle_collector.snort_ids_manager.snort_ids_manager_pb2
+from csle_collector.snort_ids_manager.snort_ids_manager_util import SnortIdsManagerUtil
 import csle_collector.constants.constants as constants
 
 
-class IDSMonitorThread(threading.Thread):
+class SnortIDSMonitorThread(threading.Thread):
     """
-    Thread that collects the IDS statistics and pushes it to Kafka periodically
+    Thread that collects the Snort IDS statistics and pushes it to Kafka periodically
     """
 
     def __init__(self, kafka_ip: str, kafka_port: int, ip: str, hostname: str, log_file_path: str,
@@ -40,7 +40,7 @@ class IDSMonitorThread(threading.Thread):
                      constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**self.conf)
         self.running = True
-        logging.info(f"IDSMonitor thread started successfully")
+        logging.info(f"SnortIDSMonitor thread started successfully")
 
     def run(self) -> None:
         """
@@ -50,33 +50,34 @@ class IDSMonitorThread(threading.Thread):
         """
         while self.running:
             time.sleep(self.time_step_len_seconds)
-            alert_counters = IdsManagerUtil.read_ids_data(self.latest_ts)
+            alert_counters = SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
             record = alert_counters.to_kafka_record(ip = self.ip)
-            self.producer.produce(constants.LOG_SINK.IDS_LOG_TOPIC_NAME, record)
+            self.producer.produce(constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME, record)
             self.producer.poll(0)
             self.latest_ts = time.time()
 
 
-class IdsManagerServicer(csle_collector.ids_manager.ids_manager_pb2_grpc.IdsManagerServicer):
+class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer):
     """
-    gRPC server for collecting IDS statistics.
+    gRPC server for collecting Snort IDS statistics.
     """
 
     def __init__(self) -> None:
         """
         Initializes the server
         """
-        logging.basicConfig(filename="/ids_manager.log", level=logging.INFO)
+        logging.basicConfig(filename="/snort_ids_manager.log", level=logging.INFO)
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {
             constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
             constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.ids_monitor_thread = None
-        logging.info(f"Starting the IDSManager hostname: {self.hostname} ip: {self.ip}")
+        logging.info(f"Starting the SnortIDSManager hostname: {self.hostname} ip: {self.ip}")
 
-    def getIdsAlerts(self, request: csle_collector.ids_manager.ids_manager_pb2.GetIdsAlertsMsg,
-                     context: grpc.ServicerContext) -> csle_collector.ids_manager.ids_manager_pb2.IdsLogDTO:
+    def getSnortIdsAlerts(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsAlertsMsg,
+                     context: grpc.ServicerContext) \
+            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO:
         """
         Gets the statistics of the IDS log from a given timestamp
 
@@ -84,39 +85,40 @@ class IdsManagerServicer(csle_collector.ids_manager.ids_manager_pb2_grpc.IdsMana
         :param context: the gRPC context
         :return: a DTO with IDS statistics
         """
-        alert_counters = IdsManagerUtil.read_ids_data(request.timestamp)
+        alert_counters = SnortIdsManagerUtil.read_snort_ids_data(request.timestamp)
         ids_log_dto = alert_counters.to_dto(ip=self.ip)
         return ids_log_dto
 
-
-    def startIdsMonitor(self, request: csle_collector.ids_manager.ids_manager_pb2.StartIdsMonitorMsg,
-                     context: grpc.ServicerContext) -> csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO:
+    def startSnortIdsMonitor(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMonitorMsg,
+                     context: grpc.ServicerContext) \
+            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
-        Starts the IDS monitor thread
+        Starts the Snort IDS monitor thread
 
         :param request: the gRPC request
         :param context: the gRPC context
         :return: a DTO with the status of the IDS monitor thread
         """
-        logging.info(f"Starting the IDSMonitor thread, timestep length: {request.time_step_len_seconds}, "
+        logging.info(f"Starting the SnortIDSMonitor thread, timestep length: {request.time_step_len_seconds}, "
                      f"log file path: {request.log_file_path}, kafka ip: {request.kafka_ip}, "
                      f"kafka port: {request.kafka_port}")
         if self.ids_monitor_thread is not None:
             self.ids_monitor_thread.running = False
-        self.ids_monitor_thread = IDSMonitorThread(kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
-                                                   ip=self.ip, hostname=self.hostname,
-                                                   log_file_path=request.log_file_path,
-                                                   time_step_len_seconds=request.time_step_len_seconds)
+        self.ids_monitor_thread = SnortIDSMonitorThread(kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
+                                                        ip=self.ip, hostname=self.hostname,
+                                                        log_file_path=request.log_file_path,
+                                                        time_step_len_seconds=request.time_step_len_seconds)
         self.ids_monitor_thread.start()
-        logging.info(f"Started the IDSMonitor thread")
-        return csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO(
+        logging.info(f"Started the SnortIDSMonitor thread")
+        return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
             running = True
         )
 
-    def stopIdsMonitor(self, request: csle_collector.ids_manager.ids_manager_pb2.StopIdsMonitorMsg,
-                        context: grpc.ServicerContext) -> csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO:
+    def stopSnortIdsMonitor(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StopSnortIdsMonitorMsg,
+                        context: grpc.ServicerContext) \
+            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
-        Stops the IDS monitor thread if it is running
+        Stops the Snort IDS monitor thread if it is running
 
         :param request: the gRPC request
         :param context: the gRPC context
@@ -124,14 +126,15 @@ class IdsManagerServicer(csle_collector.ids_manager.ids_manager_pb2_grpc.IdsMana
         """
         if self.ids_monitor_thread is not None:
             self.ids_monitor_thread.running = False
-        return csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO(
+        return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
             running = False
         )
 
-    def getIdsMonitorStatus(self, request: csle_collector.ids_manager.ids_manager_pb2.GetIdsMonitorStatusMsg,
-                            context: grpc.ServicerContext) -> csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO:
+    def getSnortIdsMonitorStatus(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsMonitorStatusMsg,
+                            context: grpc.ServicerContext) \
+            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
-        Gets the status of the IDS Monitor thread
+        Gets the status of the Snort IDS Monitor thread
 
         :param request: the gRPC request
         :param context: the gRPC context
@@ -140,7 +143,7 @@ class IdsManagerServicer(csle_collector.ids_manager.ids_manager_pb2_grpc.IdsMana
         running = False
         if self.ids_monitor_thread is not None:
             running = self.ids_monitor_thread.running
-        return csle_collector.ids_manager.ids_manager_pb2.IdsMonitorDTO(
+        return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
             running = running
         )
 
@@ -153,11 +156,11 @@ def serve(port : int = 50051) -> None:
     :return: None
     """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-    csle_collector.ids_manager.ids_manager_pb2_grpc.add_IdsManagerServicer_to_server(
-        IdsManagerServicer(), server)
+    csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.add_SnortIdsManagerServicer_to_server(
+        SnortIdsManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
     server.start()
-    logging.info(f"IdsManager Server Started, Listening on port: {port}")
+    logging.info(f"SnortIdsManager Server Started, Listening on port: {port}")
     server.wait_for_termination()
 
 

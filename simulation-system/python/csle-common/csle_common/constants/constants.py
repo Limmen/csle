@@ -35,7 +35,9 @@ class CONTAINER_IMAGES:
     FTP_2 = "ftp_2"
     PENGINE_EXPLOIT_1 = "pengine_exploit_1"
     CVE_2014_0160_1 = "cve_2014_0160_1"
-    IDS_IMAGES = ["router_2"]
+    SNORT_IDS_IMAGES = ["router_2"]
+    OSSEC_IDS_IMAGES = ["honeypot_1", "honeypot_2", "pengine_exploit_1", "router_1", "router_2", "ssh_1", "ssh_2",
+                        "ssh_3", "telnet_1", "telnet_2", "telnet_3"]
     ROUTER_IMAGES = ["router_1", "router_2"]
     HACKER_IMAGES = ["hacker_kali_1"]
     CLIENT_IMAGES = ["client_1"]
@@ -765,10 +767,12 @@ class COMMANDS:
     START_CLIENT_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /client_manager.py --port {} &"
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
     START_KAFKA_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /kafka_manager.py --port {} &"
-    START_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ids_manager.py --port {} &"
+    START_SNORT_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /snort_ids_manager.py --port {} &"
+    START_OSSEC_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ossec_ids_manager.py --port {} &"
     START_HOST_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /host_manager.py --port {} &"
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
-    SEARCH_IDS_MANAGER = "/root/miniconda3/bin/python3 /ids_manager.py"
+    SEARCH_SNORT_IDS_MANAGER = "/root/miniconda3/bin/python3 /snort_ids_manager.py"
+    SEARCH_OSSEC_IDS_MANAGER = "/root/miniconda3/bin/python3 /ossec_ids_manager.py"
     SEARCH_HOST_MANAGER = "/root/miniconda3/bin/python3 /host_manager.py"
     DOCKER_STATS_MANAGER_PIDFILE = "/var/log/csle/statsmanager.pid"
     DOCKER_STATS_MANAGER_OUTFILE = "/var/log/csle/statsmanager.out"
@@ -957,7 +961,8 @@ class TRAFFIC_COMMANDS:
     BASH_PREAMBLE = "#!/bin/bash"
     CLIENT_MANAGER_FILE_NAME = "client_manager.py"
     KAFKA_MANAGER_FILE_NAME = "kafka_manager.py"
-    IDS_MANAGER_FILE_NAME = "ids_manager.py"
+    SNORT_IDS_MANAGER_FILE_NAME = "snort_ids_manager.py"
+    OSSEC_IDS_MANAGER_FILE_NAME = "ossec_ids_manager.py"
     HOST_MANAGER_FILE_NAME = "host_manager.py"
     GENERIC_COMMANDS = "generic_commands"
     CLIENT_1_SUBNET = "client_1_subnet"

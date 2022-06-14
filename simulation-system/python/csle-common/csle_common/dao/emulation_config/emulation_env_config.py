@@ -228,7 +228,7 @@ class EmulationEnvConfig:
         :return: True if it includes an IDS, otherwise False
         """
         for c in self.containers_config.containers:
-            if c.name in constants.CONTAINER_IMAGES.IDS_IMAGES:
+            if c.name in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 return True
         return False
 

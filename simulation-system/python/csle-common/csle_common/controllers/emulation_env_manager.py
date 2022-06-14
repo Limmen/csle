@@ -7,7 +7,8 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.controllers.container_manager import ContainerManager
-from csle_common.controllers.ids_manager import IDSManager
+from csle_common.controllers.snort_ids_manager import SnortIDSManager
+from csle_common.controllers.ossec_ids_manager import OSSECIDSManager
 from csle_common.controllers.host_manager import HostManager
 from csle_common.controllers.log_sink_manager import LogSinkManager
 from csle_common.controllers.users_manager import UsersManager
@@ -79,7 +80,7 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 18
+        steps = 19
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -136,10 +137,17 @@ class EmulationEnvManager:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
-                                            f"{current_step}/{steps}: Starting the Intrusion Detection System --")
-        IDSManager.start_ids(emulation_env_config=emulation_env_config)
+                                            f"{current_step}/{steps}: Starting the Snort Intrusion Detection System --")
+        SnortIDSManager.start_snort_ids(emulation_env_config=emulation_env_config)
         time.sleep(10)
-        IDSManager.start_ids_monitor_thread(emulation_env_config=emulation_env_config)
+        SnortIDSManager.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step "
+                                            f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
+        OSSECIDSManager.start_ossec_ids(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+        OSSECIDSManager.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")

@@ -7,6 +7,7 @@ import BlockIOChart from "../BlockIOChart/BlockIOChart";
 import PidsChart from "../PidsChart/PidsChart";
 import LoginsChart from "../LoginsChart/LoginsChart";
 import ConnectionsChart from "../ConnectionsChart/ConnectionsChart";
+import OssecAlertsChart from "../OssecAlertsChart/OssecAlertsChart";
 
 const ContainerMetrics = React.memo((props) => {
     if(!props.loading && (props.dockerMetrics === null || props.hostMetrics === null)) {
@@ -60,6 +61,15 @@ const ContainerMetrics = React.memo((props) => {
                             stats={props.hostMetrics}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
+                    </div>
+                </div>
+                <div className="row chartsRow">
+                    <div className="col-sm-6">
+                        <OssecAlertsChart stats={props.ossecAlerts}
+                                          animation={props.animation} animationDuration={props.animationDuration}
+                                          animationDurationFactor={props.animationDurationFactor}/>
+                    </div>
+                    <div className="col-sm-6">
                     </div>
                 </div>
             </div>

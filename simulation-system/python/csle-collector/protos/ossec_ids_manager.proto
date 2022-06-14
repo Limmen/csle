@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service OSSECIdsManager {
+  rpc getOSSECIdsAlerts(GetOSSECIdsAlertsMsg) returns (OSSECIdsLogDTO) {}
+  rpc stopOSSECIdsMonitor(StopOSSECIdsMonitorMsg) returns (OSSECIdsMonitorDTO) {}
+  rpc startOSSECIdsMonitor(StartOSSECIdsMonitorMsg) returns (OSSECIdsMonitorDTO) {}
+  rpc getOSSECIdsMonitorStatus(GetOSSECIdsMonitorStatusMsg) returns (OSSECIdsMonitorDTO) {}
+}
+
+// Message that the client sends to extract the IDS log statistics from a given timestamp
+message GetOSSECIdsAlertsMsg {
+  float timestamp = 1;
+  string log_file_path = 2;
+}
+
+// Message that the client sends to stop the OSSECIdsMonitor
+message StopOSSECIdsMonitorMsg {}
+
+// Message that the client sends to start the OSSECIdsMonitor
+message StartOSSECIdsMonitorMsg {
+  string kafka_ip = 1;
+  int32 kafka_port = 2;
+  string log_file_path = 3;
+  int32 time_step_len_seconds = 4;
+}
+
+// Message that the client sends to get the status of the OSSECIdsMonitor
+message GetOSSECIdsMonitorStatusMsg {}
+
+//Message that the server returns when asked about the status of the OSSEC IDS Monitor thread
+message OSSECIdsMonitorDTO {
+  bool running = 1;
+}
+
+// Message that the server returns when requested by the client, contains info about the OSSEC IDS log
+message OSSECIdsLogDTO {
+  float timestamp = 1;
+  string ip =2;
+  int32 attempted_admin_alerts = 3;
+  int32 total_alerts = 4;
+  int32 warning_alerts = 5;
+  int32 severe_alerts = 6;
+  int32 alerts_weighted_by_level = 7;
+  int32 level_0_alerts = 8;
+  int32 level_1_alerts = 9;
+  int32 level_2_alerts = 10;
+  int32 level_3_alerts = 11;
+  int32 level_4_alerts = 12;
+  int32 level_5_alerts = 13;
+  int32 level_6_alerts = 14;
+  int32 level_7_alerts = 15;
+  int32 level_8_alerts = 16;
+  int32 level_9_alerts = 17;
+  int32 level_10_alerts = 18;
+  int32 level_11_alerts = 19;
+  int32 level_12_alerts = 20;
+  int32 level_13_alerts = 21;
+  int32 level_14_alerts = 22;
+  int32 level_15_alerts = 23;
+  int32 invalid_login_alerts = 24;
+  int32 authentication_success_alerts = 25;
+  int32 authentication_failed_alerts = 26;
+  int32 connection_attempt_alerts = 27;
+  int32 attacks_alerts = 28;
+  int32 adduser_alerts = 29;
+  int32 sshd_alerts = 30;
+  int32 ids_alerts = 31;
+  int32 firewall_alerts = 32;
+  int32 squid_alerts = 33;
+  int32 apache_alerts = 34;
+  int32 syslog_alerts = 35;
+}

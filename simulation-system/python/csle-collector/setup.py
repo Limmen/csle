@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='csle_collector',
-      version='0.0.51',
+      version='0.0.52',
       install_requires=['grpcio-tools', 'scipy', 'confluent-kafka', 'docker'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',

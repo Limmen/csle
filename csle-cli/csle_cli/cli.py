@@ -119,18 +119,18 @@ def emulation_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--host', is_flag=True, help='Check the status of the Host managers')
 @click.option('--stats', is_flag=True, help='Check the status of the stats manager')
 @click.option('--kafka', is_flag=True, help='Check the status of the Kafka manager')
-@click.option('--ids', is_flag=True, help='Check the status of the IDS manager')
+@click.option('--snortids', is_flag=True, help='Check the status of the Snort IDS manager')
 @click.option('--clients', is_flag=True, help='Check the number of active clients of the emulation')
 @click.option('--executions', is_flag=True, help='Check the executions')
 @click.argument('emulation', default="", type=str, shell_complete=emulation_shell_complete)
 @click.command("em", help="emulation-name")
-def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host: bool, executions: bool) -> None:
+def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool, host: bool, executions: bool) -> None:
     """
     Extracts status information of a given emulation
 
     :param emulation: the emulation name
     :param clients: if true, print information about the client population
-    :param ids: if true, print information about the ids manager
+    :param snortids: if true, print information about the Snort ids manager
     :param kafka: if true, print information about the kafka manager
     :param stats: if true, print information about the statsmanager
     :param host: if true, print information about the hostmanagers
@@ -140,7 +140,7 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_manager import ContainerManager
     from csle_common.controllers.traffic_manager import TrafficManager
-    from csle_common.controllers.ids_manager import IDSManager
+    from csle_common.controllers.snort_ids_manager import SnortIDSManager
     from csle_common.controllers.log_sink_manager import LogSinkManager
     from csle_common.controllers.host_manager import HostManager
 
@@ -167,17 +167,17 @@ def em(emulation : str, clients: bool, ids: bool, kafka: bool, stats: bool, host
                     click.secho("Producer process " + f" {click.style('[inactive]', fg='red')}", bold=False)
                 click.secho(f"Clients time-step length: {clients_dto.clients_time_step_len_seconds} seconds", bold=False)
                 click.secho(f"Producer time-step length: {clients_dto.producer_time_step_len_seconds} seconds", bold=False)
-        if ids:
+        if snortids:
             for exec in executions:
-                ids_monitors_statuses = IDSManager.get_ids_monitor_thread_status(
+                snort_ids_monitors_statuses = SnortIDSManager.get_snort_ids_monitor_thread_status(
                     emulation_env_config=exec.emulation_env_config)
-                for ids_monitor_status in ids_monitors_statuses:
-                    click.secho(f"IDS monitor status for execution {exec.ip_first_octet} of {emulation}",
+                for snort_ids_monitor_status in snort_ids_monitors_statuses:
+                    click.secho(f"Snort IDS monitor status for execution {exec.ip_first_octet} of {emulation}",
                                 fg="magenta", bold=True)
-                    if ids_monitor_status.running:
-                        click.secho("IDS monitor status: " + f" {click.style('[running]', fg='green')}", bold=False)
+                    if snort_ids_monitor_status.running:
+                        click.secho("Snort IDS monitor status: " + f" {click.style('[running]', fg='green')}", bold=False)
                     else:
-                        click.secho("IDS monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+                        click.secho("Snort IDS monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
         if kafka:
             for exec in executions:
                 kafka_dto = LogSinkManager.get_kafka_status(emulation_env_config=exec.emulation_env_config)

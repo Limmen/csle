@@ -66,13 +66,26 @@ class EmulationStatistics:
         :param s_prime: the new state
         :return: None
         """
-        alert_deltas, alert_labels = s.defender_obs_state.avg_ids_alert_counters.get_deltas(
-            s_prime.defender_obs_state.avg_ids_alert_counters)
-        for i in range(len(alert_deltas)):
-            if alert_deltas[i] in d[alert_labels[i]]:
-                d[alert_labels[i]][alert_deltas[i]] += 1
+
+        # Snort alerts
+        snort_alert_deltas, snort_alert_labels = s.defender_obs_state.avg_snort_ids_alert_counters.get_deltas(
+            s_prime.defender_obs_state.avg_snort_ids_alert_counters)
+        for i in range(len(snort_alert_deltas)):
+            if snort_alert_deltas[i] in d[snort_alert_labels[i]]:
+                d[snort_alert_labels[i]][snort_alert_deltas[i]] += 1
             else:
-                d[alert_labels[i]][alert_deltas[i]] = 1
+                d[snort_alert_labels[i]][snort_alert_deltas[i]] = 1
+
+        # OSSEC alerts
+        ossec_alert_deltas, ossec_alert_labels = s.defender_obs_state.avg_ossec_ids_alert_counters.get_deltas(
+            s_prime.defender_obs_state.avg_ossec_ids_alert_counters)
+        for i in range(len(ossec_alert_deltas)):
+            if ossec_alert_deltas[i] in d[ossec_alert_labels[i]]:
+                d[ossec_alert_labels[i]][ossec_alert_deltas[i]] += 1
+            else:
+                d[ossec_alert_labels[i]][ossec_alert_deltas[i]] = 1
+
+        # Docker stats
         docker_stats_deltas, docker_stats_labels = s.defender_obs_state.avg_docker_stats.get_deltas(
             stats_prime=s_prime.defender_obs_state.avg_docker_stats)
         for i in range(len(docker_stats_deltas)):
@@ -81,6 +94,7 @@ class EmulationStatistics:
             else:
                 d[docker_stats_labels[i]][docker_stats_deltas[i]] = 1
 
+        # Client metrics
         client_population_metrics_deltas, client_population_metrics_labels = \
             s.defender_obs_state.avg_client_population_metrics.get_deltas(
             stats_prime=s_prime.defender_obs_state.avg_client_population_metrics)
@@ -89,6 +103,8 @@ class EmulationStatistics:
                 d[client_population_metrics_labels[i]][client_population_metrics_deltas[i]] += 1
             else:
                 d[client_population_metrics_labels[i]][client_population_metrics_deltas[i]] = 1
+
+        # Host metrics
         aggregated_host_metrics_deltas, aggregated_host_metrics_labels = \
             s.defender_obs_state.avg_aggregated_host_metrics.get_deltas(
                 stats_prime=s_prime.defender_obs_state.avg_aggregated_host_metrics)
@@ -134,12 +150,20 @@ class EmulationStatistics:
         :param s: the initial state
         :return: None
         """
-        alert_labels = collector_constants.LOG_SINK.IDS_ALERTS_LABELS
-        for i in range(len(alert_labels)):
-            if 0 in self.initial_distributions_counts[alert_labels[i]]:
-                self.initial_distributions_counts[alert_labels[i]][0] += 1
+        snort_alert_labels = collector_constants.LOG_SINK.SNORT_IDS_ALERTS_LABELS
+        for i in range(len(snort_alert_labels)):
+            if 0 in self.initial_distributions_counts[snort_alert_labels[i]]:
+                self.initial_distributions_counts[snort_alert_labels[i]][0] += 1
             else:
-                self.initial_distributions_counts[alert_labels[i]][0] = 1
+                self.initial_distributions_counts[snort_alert_labels[i]][0] = 1
+
+        ossec_alert_labels = collector_constants.LOG_SINK.OSSEC_IDS_ALERTS_LABELS
+        for i in range(len(ossec_alert_labels)):
+            if 0 in self.initial_distributions_counts[ossec_alert_labels[i]]:
+                self.initial_distributions_counts[ossec_alert_labels[i]][0] += 1
+            else:
+                self.initial_distributions_counts[ossec_alert_labels[i]][0] = 1
+
         docker_stats_values, docker_stats_labels = s.defender_obs_state.docker_stats.get_values()
         for i in range(len(docker_stats_values)):
             if docker_stats_values[i] in self.initial_distributions_counts[docker_stats_labels[i]]:

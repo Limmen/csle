@@ -1,8 +1,6 @@
-from typing import Union
 import argparse
 import os
 import numpy as np
-import csle_common.constants.constants as constants
 from csle_common.controllers.simulation_env_manager import SimulationEnvManager
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.util.experiment_util import ExperimentUtil

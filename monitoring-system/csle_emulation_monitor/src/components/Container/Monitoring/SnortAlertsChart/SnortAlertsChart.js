@@ -1,5 +1,5 @@
 import React from 'react';
-import './AlertsChart.css';
+import './SnortAlertsChart.css';
 import {
     CartesianGrid,
     Label,
@@ -11,7 +11,7 @@ import {
     YAxis
 } from "recharts";
 
-const AlertsChart = React.memo((props) => {
+const SnortAlertsChart = React.memo((props) => {
         const width = 500
         const height = 200
         const margin = {
@@ -40,7 +40,7 @@ const AlertsChart = React.memo((props) => {
                         margin={margin}
                     >
                         <text x={650} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="22">IDS Alerts</tspan>
+                            <tspan fontSize="22">Snort IDS Alerts</tspan>
                         </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain}>
@@ -79,6 +79,6 @@ const AlertsChart = React.memo((props) => {
     }
 )
 
-AlertsChart.propTypes = {};
-AlertsChart.defaultProps = {};
-export default AlertsChart;
+SnortAlertsChart.propTypes = {};
+SnortAlertsChart.defaultProps = {};
+export default SnortAlertsChart;

@@ -42,90 +42,163 @@ class DOCKER_STATS:
     UNIX_DOCKER_SOCK_URL = "unix://var/run/docker.sock"
 
 
-class IDS_ROUTER:
+class OSSEC:
     """
-    Constants related to the IDS
+    Constants related to the OSSEC HIDS
+    """
+    MAX_ALERTS = 10000
+    OSSEC_ALERTS_FILE = "/var/ossec/alerts/alerts.log"
+    TAIL_ALERTS_COMMAND = "sudo tail -" + str(MAX_ALERTS)
+    ALERTLINE_REGEX = re.compile(r"\*\* Alert (\d+.\d+)*: - (\w+.+)")
+    HOSTLINE_REGEX = re.compile(r"\d+ \w+ \d+ \d+:\d+:\d+ \((\w+.+)\) (\d+.\d+.\d+.\d+)")
+    SERVHOSTLINE_REGEX = re.compile(r"\d+ \w+ \d+ \d+:\d+:\d+ (\w+)")
+    RULELINE_REGEX = re.compile(r"Rule: (\d+)* \(level (\d+)\) -> '(\w+.+)'")
+    SRCIPLINE_REGEX = re.compile(r"Src IP: (\d+.\d+.\d+.\d+)")
+    USERLINE_REGEX = re.compile(r"User: (\w+)")
+    DATELINEREGEX = re.compile(r"\d+ \w+ \d+ \d+:\d+:\d+")
+    OSSEC_ALERT_RULE_ID_TO_DESCR = {}
+    OSSEC_ALERT_RULE_ID_TO_DESCR[0] = "Ignored - No action taken. Used to avoid false positives. " \
+                                      "These rules are scanned before all the others. " \
+                                      "They include events with no security relevance."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[1] = "None"
+    OSSEC_ALERT_RULE_ID_TO_DESCR[2] = "System low priority notification - System notification or status messages. " \
+                                      "They have no security relevance."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[3] = "Successful/Authorized events - They include successful login attempts, " \
+                                      "firewall allow events, etc."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[4] = "System low priority error - Errors related to bad configurations or " \
+                                      "unused devices/applications. They have no security relevance and are usually " \
+                                      "caused by default installations or software testing."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[5] = "User generated error - They include missed passwords, denied actions, etc. " \
+                                      "By itself they have no security relevance."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[6] = "Low relevance attack - They indicate a worm or a virus that have no affect to " \
+                                      "the system (like code red for apache servers, etc). " \
+                                      "They also include frequently IDS events and frequently errors."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[7] = "'Bad word' matching. They include words like 'bad', 'error', etc. These events " \
+                                      "are most of the time unclassified and may have some security relevance."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[8] = "First time seen - Include first time seen events. First time an IDS event is " \
+                                      "fired or the first time an user logged in. If you just started using OSSEC " \
+                                      "HIDS these messages will probably be frequently. After a while they should " \
+                                      "go away, It also includes security relevant actions (like the starting of a sniffer or something like that)."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[9] = "Error from invalid source - Include attempts to login as an unknown user or " \
+                                      "from an invalid source. May have security relevance (specially if repeated). " \
+                                      "They also include errors regarding the “admin” (root) account."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[10] = "Multiple user generated errors - They include multiple bad passwords, multiple " \
+                                       "failed logins, etc. They may indicate an attack or may just be that a user " \
+                                       "just forgot his credentials."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[11] = "Integrity checking warning - They include messages regarding the modification " \
+                                       "" \
+                                       "of binaries or the presence of rootkits (by rootcheck). If you just modified " \
+                                       "your system configuration you should be fine regarding the “syscheck” messages. " \
+                                       "They may indicate a successful attack. Also included IDS events that " \
+                                       "will be ignored (high number of repetitions)."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[12] = "High importancy event - They include error or warning messages from the " \
+                                       "system, kernel, etc. They may indicate an attack against a specific application."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[13] = "Unusual error (high importance) - Most of the times it matches a " \
+                                       "common attack pattern."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[14] = "High importance security event. Most of the times done with correlation and " \
+                                       "it indicates an attack."
+    OSSEC_ALERT_RULE_ID_TO_DESCR[15] = "Severe attack - No chances of false positives. Immediate attention " \
+                                       "is necessary."
+    OSSEC_IDS_ALERT_GROUP_ID = {}
+    OSSEC_IDS_ALERT_GROUP_ID["invalid_login"] = 0
+    OSSEC_IDS_ALERT_GROUP_ID["authentication_success"] = 1
+    OSSEC_IDS_ALERT_GROUP_ID["authentication_failed"] = 2
+    OSSEC_IDS_ALERT_GROUP_ID["connection_attempt"] = 3
+    OSSEC_IDS_ALERT_GROUP_ID["attacks"] = 4
+    OSSEC_IDS_ALERT_GROUP_ID["adduser"] = 5
+    OSSEC_IDS_ALERT_GROUP_ID["sshd"] = 6
+    OSSEC_IDS_ALERT_GROUP_ID["ids"] = 7
+    OSSEC_IDS_ALERT_GROUP_ID["firewall"] = 8
+    OSSEC_IDS_ALERT_GROUP_ID["squid"] = 9
+    OSSEC_IDS_ALERT_GROUP_ID["apache"] = 10
+    OSSEC_IDS_ALERT_GROUP_ID["syslog"] = 11
+    OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD = 10
+
+
+class SNORT_IDS_ROUTER:
+    """
+    Constants related to the Snort IDS
     """
     MAX_ALERTS = 10000
     UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
-    FAST_LOG_FILE = "/var/snort/fast.log"
-    ALERTS_FILE = "/var/snort/alert.csv"
-    STATS_FILE = "/var/snort/snort.stats"
+    SNORT_FAST_LOG_FILE = "/var/snort/fast.log"
+    SNORT_ALERTS_FILE = "/var/snort/alert.csv"
+    SNORT_STATS_FILE = "/var/snort/snort.stats"
     TAIL_ALERTS_COMMAND = "sudo tail -" + str(MAX_ALERTS)
     TAIL_FAST_LOG_COMMAND = "sudo tail -" + str(str(MAX_ALERTS))
     TAIL_ALERTS_LATEST_COMMAND = "sudo tail -1"
     PRIORITY_REGEX = re.compile(r"Priority: \d")
     CLASSIFICATION_REGEX = re.compile(r"(?<=Classification: )(.*?)(?=])")
-    SEVERE_ALERT_PRIORITY_THRESHOLD = 2
-    ALERT_IDS_ID = {}
-    ALERT_IDS_ID["tcp-connection"] = 0
-    ALERT_IDS_ID["A TCP connection was detected"] = 0
-    ALERT_IDS_ID["unknown"] = 1
-    ALERT_IDS_ID["Unknown Traffic"] = 1
-    ALERT_IDS_ID["string-detect"] = 2
-    ALERT_IDS_ID["A suspicious string was detected"] = 2
-    ALERT_IDS_ID["protocol-command-decode"] = 3
-    ALERT_IDS_ID["Generic Protocol Command Decode"] = 3
-    ALERT_IDS_ID["not-suspicious"] = 4
-    ALERT_IDS_ID["Not Suspicious Traffic"] = 4
-    ALERT_IDS_ID["network-scan"] = 5
-    ALERT_IDS_ID["Detection of a Network Scan"] = 5
-    ALERT_IDS_ID["misc-activity"] = 6
-    ALERT_IDS_ID["Misc activity"] = 6
-    ALERT_IDS_ID["icmp-event"] = 7
-    ALERT_IDS_ID["Generic ICMP event"] = 7
-    ALERT_IDS_ID["web-application-activity"] = 8
-    ALERT_IDS_ID["Access to a potentially vulnerable web application"] = 8
-    ALERT_IDS_ID["unusual-client-port-connection"] = 9
-    ALERT_IDS_ID["A client was using an unusual port"] = 9
-    ALERT_IDS_ID["system-call-detect"] = 10
-    ALERT_IDS_ID["A system call was detected"] = 10
-    ALERT_IDS_ID["suspicious-login"] = 11
-    ALERT_IDS_ID["An attempted login using a suspicious username was detected"] = 11
-    ALERT_IDS_ID["suspicious-filename-detect"] = 12
-    ALERT_IDS_ID["A suspicious filename was detected"] = 12
-    ALERT_IDS_ID["successful-recon-limited"] = 13
-    ALERT_IDS_ID["Information Leak"] = 13
-    ALERT_IDS_ID["successful-recon-largescale"] = 14
-    ALERT_IDS_ID["Large Scale Information Leak"] = 14
-    ALERT_IDS_ID["successful-dos"] = 15
-    ALERT_IDS_ID["Denial of Service"] = 15
-    ALERT_IDS_ID["rpc-portmap-decode"] = 16
-    ALERT_IDS_ID["Decode of an RPC Query"] = 16
-    ALERT_IDS_ID["non-standard-protocol"] = 17
-    ALERT_IDS_ID["Detection of a non-standard protocol or event"] = 17
-    ALERT_IDS_ID["misc-attack"] = 18
-    ALERT_IDS_ID["Misc Attack"] = 18
-    ALERT_IDS_ID["denial-of-service"] = 19
-    ALERT_IDS_ID["Detection of a Denial of Service Attack"] = 19
-    ALERT_IDS_ID["default-login-attempt"] = 20
-    ALERT_IDS_ID["Attempt to login by a default username and password"] = 20
-    ALERT_IDS_ID["bad-unknown"] = 21
-    ALERT_IDS_ID["Potentially Bad Traffic"] = 21
-    ALERT_IDS_ID["attempted-recon"] = 22
-    ALERT_IDS_ID["Attempted Information Leak"] = 22
-    ALERT_IDS_ID["attempted-dos"] = 23
-    ALERT_IDS_ID["Attempted Denial of Service"] = 23
-    ALERT_IDS_ID["web-application-attack"] = 24
-    ALERT_IDS_ID["Web Application Attack"] = 24
-    ALERT_IDS_ID["unsuccessful-user"] = 25
-    ALERT_IDS_ID["Unsuccessful User Privilege Gain"] = 25
-    ALERT_IDS_ID["trojan-activity"] = 26
-    ALERT_IDS_ID["A Network Trojan was detected"] = 26
-    ALERT_IDS_ID["successful-user"] = 27
-    ALERT_IDS_ID["Successful User Privilege Gain"] = 27
-    ALERT_IDS_ID["successful-admin"] = 28
-    ALERT_IDS_ID["Successful Administrator Privilege Gain"] = 28
-    ALERT_IDS_ID["shellcode-detect"] = 29
-    ALERT_IDS_ID["Executable code was detected"] = 29
-    ALERT_IDS_ID["policy-violation"] = 30
-    ALERT_IDS_ID["Potential Corporate Privacy Violation"] = 30
-    ALERT_IDS_ID["inappropriate-content"] = 31
-    ALERT_IDS_ID["Inappropriate Content was Detected"] = 31
-    ALERT_IDS_ID["attempted-user"] = 32
-    ALERT_IDS_ID["Attempted User Privilege Gain"] = 32
-    ALERT_IDS_ID["attempted-admin"] = 33
-    ALERT_IDS_ID["Attempted Administrator Privilege Gain"] = 33
+    SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD = 2
+    SNORT_ALERT_IDS_ID = {}
+    SNORT_ALERT_IDS_ID["tcp-connection"] = 0
+    SNORT_ALERT_IDS_ID["A TCP connection was detected"] = 0
+    SNORT_ALERT_IDS_ID["unknown"] = 1
+    SNORT_ALERT_IDS_ID["Unknown Traffic"] = 1
+    SNORT_ALERT_IDS_ID["string-detect"] = 2
+    SNORT_ALERT_IDS_ID["A suspicious string was detected"] = 2
+    SNORT_ALERT_IDS_ID["protocol-command-decode"] = 3
+    SNORT_ALERT_IDS_ID["Generic Protocol Command Decode"] = 3
+    SNORT_ALERT_IDS_ID["not-suspicious"] = 4
+    SNORT_ALERT_IDS_ID["Not Suspicious Traffic"] = 4
+    SNORT_ALERT_IDS_ID["network-scan"] = 5
+    SNORT_ALERT_IDS_ID["Detection of a Network Scan"] = 5
+    SNORT_ALERT_IDS_ID["misc-activity"] = 6
+    SNORT_ALERT_IDS_ID["Misc activity"] = 6
+    SNORT_ALERT_IDS_ID["icmp-event"] = 7
+    SNORT_ALERT_IDS_ID["Generic ICMP event"] = 7
+    SNORT_ALERT_IDS_ID["web-application-activity"] = 8
+    SNORT_ALERT_IDS_ID["Access to a potentially vulnerable web application"] = 8
+    SNORT_ALERT_IDS_ID["unusual-client-port-connection"] = 9
+    SNORT_ALERT_IDS_ID["A client was using an unusual port"] = 9
+    SNORT_ALERT_IDS_ID["system-call-detect"] = 10
+    SNORT_ALERT_IDS_ID["A system call was detected"] = 10
+    SNORT_ALERT_IDS_ID["suspicious-login"] = 11
+    SNORT_ALERT_IDS_ID["An attempted login using a suspicious username was detected"] = 11
+    SNORT_ALERT_IDS_ID["suspicious-filename-detect"] = 12
+    SNORT_ALERT_IDS_ID["A suspicious filename was detected"] = 12
+    SNORT_ALERT_IDS_ID["successful-recon-limited"] = 13
+    SNORT_ALERT_IDS_ID["Information Leak"] = 13
+    SNORT_ALERT_IDS_ID["successful-recon-largescale"] = 14
+    SNORT_ALERT_IDS_ID["Large Scale Information Leak"] = 14
+    SNORT_ALERT_IDS_ID["successful-dos"] = 15
+    SNORT_ALERT_IDS_ID["Denial of Service"] = 15
+    SNORT_ALERT_IDS_ID["rpc-portmap-decode"] = 16
+    SNORT_ALERT_IDS_ID["Decode of an RPC Query"] = 16
+    SNORT_ALERT_IDS_ID["non-standard-protocol"] = 17
+    SNORT_ALERT_IDS_ID["Detection of a non-standard protocol or event"] = 17
+    SNORT_ALERT_IDS_ID["misc-attack"] = 18
+    SNORT_ALERT_IDS_ID["Misc Attack"] = 18
+    SNORT_ALERT_IDS_ID["denial-of-service"] = 19
+    SNORT_ALERT_IDS_ID["Detection of a Denial of Service Attack"] = 19
+    SNORT_ALERT_IDS_ID["default-login-attempt"] = 20
+    SNORT_ALERT_IDS_ID["Attempt to login by a default username and password"] = 20
+    SNORT_ALERT_IDS_ID["bad-unknown"] = 21
+    SNORT_ALERT_IDS_ID["Potentially Bad Traffic"] = 21
+    SNORT_ALERT_IDS_ID["attempted-recon"] = 22
+    SNORT_ALERT_IDS_ID["Attempted Information Leak"] = 22
+    SNORT_ALERT_IDS_ID["attempted-dos"] = 23
+    SNORT_ALERT_IDS_ID["Attempted Denial of Service"] = 23
+    SNORT_ALERT_IDS_ID["web-application-attack"] = 24
+    SNORT_ALERT_IDS_ID["Web Application Attack"] = 24
+    SNORT_ALERT_IDS_ID["unsuccessful-user"] = 25
+    SNORT_ALERT_IDS_ID["Unsuccessful User Privilege Gain"] = 25
+    SNORT_ALERT_IDS_ID["trojan-activity"] = 26
+    SNORT_ALERT_IDS_ID["A Network Trojan was detected"] = 26
+    SNORT_ALERT_IDS_ID["successful-user"] = 27
+    SNORT_ALERT_IDS_ID["Successful User Privilege Gain"] = 27
+    SNORT_ALERT_IDS_ID["successful-admin"] = 28
+    SNORT_ALERT_IDS_ID["Successful Administrator Privilege Gain"] = 28
+    SNORT_ALERT_IDS_ID["shellcode-detect"] = 29
+    SNORT_ALERT_IDS_ID["Executable code was detected"] = 29
+    SNORT_ALERT_IDS_ID["policy-violation"] = 30
+    SNORT_ALERT_IDS_ID["Potential Corporate Privacy Violation"] = 30
+    SNORT_ALERT_IDS_ID["inappropriate-content"] = 31
+    SNORT_ALERT_IDS_ID["Inappropriate Content was Detected"] = 31
+    SNORT_ALERT_IDS_ID["attempted-user"] = 32
+    SNORT_ALERT_IDS_ID["Attempted User Privilege Gain"] = 32
+    SNORT_ALERT_IDS_ID["attempted-admin"] = 33
+    SNORT_ALERT_IDS_ID["Attempted Administrator Privilege Gain"] = 33
 
 
 class HOST_METRICS:
@@ -145,14 +218,15 @@ class LOG_SINK:
     NETWORK_ID_FOURTH_OCTET=253
     SUFFIX="_1"
     CLIENT_POPULATION_TOPIC_NAME = "client_population"
-    IDS_LOG_TOPIC_NAME = "ids_log"
+    SNORT_IDS_LOG_TOPIC_NAME = "snort_ids_log"
+    OSSEC_IDS_LOG_TOPIC_NAME = "ossec_ids_log"
     HOST_METRICS_TOPIC_NAME = "host_metrics"
     DOCKER_STATS_TOPIC_NAME = "docker_stats"
     DOCKER_HOST_STATS_TOPIC_NAME = "docker_host_stats"
     ATTACKER_ACTIONS_TOPIC_NAME = "attacker_actions"
     DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients", "rate"]
-    IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
+    SNORT_IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
                                 "inappropriate-content", "policy-violation", "shellcode-detect", "successful-admin",
                                 "successful-user", "trojan-activity", "unsuccessful-user", "web-application-attack",
                                 "attempted-dos", "attempted-recon", "bad-unknown", "default-login-attempt",
@@ -163,7 +237,17 @@ class LOG_SINK:
                                 "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
                                 "string-detect",
                                 "unknown", "tcp-connection", "priority_1", "priority_2", "priority_3", "priority_4",
-                                "alerts_weighted_by_priority"]
+                                      "alerts_weighted_by_priority", "total_alerts, severe_alerts", "warning_alerts"]
+    OSSEC_IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip",
+        "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_level",
+        "level_0_alerts", "level_1_alerts",
+        "level_2_alerts", "level_3_alerts", "level_4_alerts", "level_5_alerts", "level_6_alerts", "level_7_alerts",
+        "level_8_alerts", "level_9_alerts", "level_10_alerts", "level_11_alerts", "level_12_alerts",
+        "level_13_alerts", "level_14_alerts", "level_15_alerts",
+        "invalid_login_alerts", "authentication_success_alerts", "authentication_failed_alerts",
+        "connection_attempt_alerts", "attacks_alerts", "adduser_alerts", "sshd_alerts", "ids_alerts",
+        "firewall_alerts", "squid_alerts", "apache_alerts", "syslog_alerts"
+    ]
     HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
@@ -171,7 +255,7 @@ class LOG_SINK:
     ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
     DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
 
-    IDS_ALERTS_LABELS = [
+    SNORT_IDS_ALERTS_LABELS = [
         "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_priority",
         "priority_1_alerts", "priority_2_alerts",
         "priority_3_alerts", "priority_4_alerts", "attempted-admin_alerts",
@@ -189,6 +273,16 @@ class LOG_SINK:
         "misc-activity_alerts", "network-scan_alerts", "not-suspicious_alerts", "protocol-command-decode_alerts",
         "string-detect_alerts", "unknown_alerts", "tcp-connection_alerts"
     ]
+    OSSEC_IDS_ALERTS_LABELS = [
+        "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_level",
+        "level_0_alerts", "level_1_alerts",
+        "level_2_alerts", "level_3_alerts", "level_4_alerts", "level_5_alerts", "level_6_alerts", "level_7_alerts",
+        "level_8_alerts", "level_9_alerts", "level_10_alerts", "level_11_alerts", "level_12_alerts",
+        "level_13_alerts", "level_14_alerts", "level_15_alerts",
+        "invalid_login_alerts", "authentication_success_alerts", "authentication_failed_alerts",
+        "connection_attempt_alerts", "attacks_alerts", "adduser_alerts", "sshd_alerts", "ids_alerts",
+        "firewall_alerts", "squid_alerts", "apache_alerts", "syslog_alerts"
+    ]
     HOST_METRICS_LABELS = [
         "num_logged_in_users", "severe_alerts", "warning_alerts",
         "num_failed_login_attempts", "num_open_connections", "num_login_events",
@@ -202,10 +296,10 @@ class LOG_SINK:
         "cpu_percent", "cpu_percent"
     ]
     CLIENT_POPULATION_METRIC_LABELS = ["num_clients", "rate"]
-    ALL_DELTA_LABELS = IDS_ALERTS_LABELS + HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + \
-                       DOCKER_STATS_PERCENT_LABELS + CLIENT_POPULATION_METRIC_LABELS
+    ALL_DELTA_LABELS = SNORT_IDS_ALERTS_LABELS + HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + \
+                       DOCKER_STATS_PERCENT_LABELS + CLIENT_POPULATION_METRIC_LABELS + OSSEC_IDS_ALERTS_LABELS
     ALL_INITIAL_LABELS = HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + DOCKER_STATS_PERCENT_LABELS \
-                         + CLIENT_POPULATION_METRIC_LABELS + IDS_ALERTS_LABELS
+                         + CLIENT_POPULATION_METRIC_LABELS + SNORT_IDS_ALERTS_LABELS + OSSEC_IDS_ALERTS_LABELS
 
 
 class KAFKA:
