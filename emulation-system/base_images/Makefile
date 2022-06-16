@@ -7,7 +7,7 @@ VERSION=0.0.1
 	blank_ubuntu_20 pengine_exploit_base rm_kali_base rm_ubuntu_20_base rm_ubuntu_14_base rm_ssh_base rm_samba_base \
 	rm_shellshock_base rm_sql_injection_base rm_debian_jessie_base rm_cve_2015_3306_base rm_cve_2015_1427_base \
 	rm_cve_2016_10033_base rm_cve_2010_0426_base rm_cve_2015_5602_base \
-	rm_blank_ubuntu_20 rm_pengine_exploit_base cve_2014_0160_base rm_cve_2014_0160_base
+	rm_blank_ubuntu_20 rm_pengine_exploit_base cve_2014_0160_base rm_cve_2014_0160_base rm_ovs_base
 
 all: build
 
@@ -60,6 +60,9 @@ pengine_exploit_base:
 cve_2014_0160_base:
 	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(PROJECT)/cve_2014_0160_base:$(VERSION)
 
+ovs_base:
+	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(PROJECT)/ovs_base:$(VERSION)
+
 # Targets for removing all of the base images
 rm_kali_base:
 	-docker rmi $(PROJECT)/kali_base:$(VERSION)
@@ -109,6 +112,9 @@ rm_pengine_exploit_base:
 rm_cve_2014_0160_base:
 	-docker rmi $(PROJECT)/cve_2014_0160_base:$(VERSION)
 
+rm_ovs_base:
+	-docker rmi $(PROJECT)/ovs_base:$(VERSION)
+
 # Build all of the base images sequentially
 build:
 	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(PROJECT)/kali_base:$(VERSION)
@@ -127,6 +133,7 @@ build:
 	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(PROJECT)/blank_ubuntu_20:$(VERSION)
 	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(PROJECT)/pengine_exploit_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(PROJECT)/cve_2014_0160_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(PROJECT)/ovs_base:$(VERSION)
 
 # Remove all base images
 rm_image:
@@ -146,3 +153,4 @@ rm_image:
 	-docker rmi $(PROJECT)/blank_ubuntu_20:$(VERSION)
 	-docker rmi $(PROJECT)/pengine_exploit_base:$(VERSION)
 	-docker rmi $(PROJECT)/cve_2014_0160_base:$(VERSION)
+	-docker rmi $(PROJECT)/ovs_base:$(VERSION)

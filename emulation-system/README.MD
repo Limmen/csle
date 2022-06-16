@@ -24,7 +24,7 @@ make rm
 For more detailed information about installation of images, see ([README](./base_images/README.MD)), 
 ([README](./derived_images/README.MD)) and ([README](./envs/README.md)),
 
-### Setup Docker
+### Install and setup Docker
 
 The emulations are built around Docker containers and virtual networking. 
 A prerequisite is to have Docker installed:
@@ -66,6 +66,11 @@ sudo emacs -nw /etc/security/limits.conf # open the limits conf file
 # (Example) add the lines:
 kim             soft       nofile          102400
 kim             hard       nofile          1024000
+```
+
+### Install Open vSwitch (OVS)  for SDN emulations
+```bash
+sudo apt install -y openvswitch-switch
 ```
 
 ### Install Emulation System

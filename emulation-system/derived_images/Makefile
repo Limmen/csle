@@ -10,7 +10,7 @@ VERSION=0.0.1
 	rm_router_2 rm_samba_1 rm_samba_2 rm_shellshock_1 rm_sql_injection_1 rm_cve_2015_3306_1 rm_cve_2015_1427_1 \
 	rm_cve_2016_10033_1 \
 	rm_cve_2010_0426_1 rm_cve_2015_5602_1 rm_client_1 rm_blank_1 rm_pengine_exploit_1 cve_2014_0160_1 \
-	rm_cve_2014_0160_1 kafka_1
+	rm_cve_2014_0160_1 kafka_1 ovs_1
 
 all: build
 
@@ -96,6 +96,9 @@ cve_2014_0160_1:
 kafka_1:
 	docker build --no-cache -f ./kafka_1/docker/Dockerfile ./kafka_1/docker/ -t $(PROJECT)/kafka_1:$(VERSION)
 
+ovs_1:
+	docker build --no-cache -f ./ovs_1/docker/Dockerfile ./ovs_1/docker/ -t $(PROJECT)/ovs_1:$(VERSION)
+
 # Targets for removing all images
 
 rm_ftp_1:
@@ -179,6 +182,9 @@ rm_cve_2014_0160_1:
 rm_kafka_1:
 	-docker rmi $(PROJECT)/kafka_1:$(VERSION)
 
+rm_ovs_1:
+	-docker rmi $(PROJECT)/ovs_1:$(VERSION)
+
 # Building all images sequentially
 build:
 	docker build --no-cache -f ./ftp_1/docker/Dockerfile ./ftp_1/docker/ -t $(PROJECT)/ftp_1:$(VERSION)
@@ -208,6 +214,7 @@ build:
 	docker build --no-cache -f ./pengine_exploit_1/docker/Dockerfile ./pengine_exploit_1/docker/ -t $(PROJECT)/pengine_exploit_1:$(VERSION)
 	docker build --no-cache -f ./cve_2014_0160_1/docker/Dockerfile ./cve_2014_0160_1/docker/ -t $(PROJECT)/cve_2014_0160_1:$(VERSION)
 	docker build --no-cache -f ./kafka_1/docker/Dockerfile ./kafka_1/docker/ -t $(PROJECT)/kafka_1:$(VERSION)
+	docker build --no-cache -f ./ovs_1/docker/Dockerfile ./ovs_1/docker/ -t $(PROJECT)/ovs_1:$(VERSION)
 
 # Removing all images sequentially
 rm_image:
@@ -238,3 +245,4 @@ rm_image:
 	-docker rmi $(PROJECT)/pengine_exploit_1:$(VERSION)
 	-docker rmi $(PROJECT)/cve_2014_0160_1:$(VERSION)
 	-docker rmi $(PROJECT)/kafka_1:$(VERSION)
+	-docker rmi $(PROJECT)/ovs_1:$(VERSION)
