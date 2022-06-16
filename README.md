@@ -431,9 +431,9 @@ that policy convergence in self-play remains a challenge."
 }
 ```
 
-- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) (
+- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) 
   preprint: https://arxiv.org/abs/2106.07160, IEEE Proceedings: https://ieeexplore.ieee.org/document/9615542, IFIP Open
-  Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf)**
+  Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf**
 
 ``` bash
 @INPROCEEDINGS{hammar_stadler_cnsm_21,
@@ -449,7 +449,7 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 }
 ```
 
-- **Intrusion Prevention through Optimal Stopping (IEEE: https://ieeexplore.ieee.org/document/9779345, Preprint: https://arxiv.org/abs/2111.00289)**
+- **Intrusion Prevention through Optimal Stopping (TNSM 2022) IEEE proceedings: https://ieeexplore.ieee.org/document/9779345, Preprint: https://arxiv.org/abs/2111.00289**
 
 ```bash
 @ARTICLE{9779345,
@@ -463,7 +463,7 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
   doi={10.1109/TNSM.2022.3176781}}
 ```
 
-- **A System for Interactive Examination of Learned Security Policies (
+- **A System for Interactive Examination of Learned Security Policies (NOMS 2022 - BEST DEMO PAPER)(IEEE proceedings: https://ieeexplore.ieee.org/document/9789707
   Preprint: https://arxiv.org/abs/2204.01126)**
 
 ```bash
@@ -474,7 +474,7 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 }
 ```
 
-- **Learning Security Strategies through Game Play and Optimal Stopping (
+- **Learning Security Strategies through Game Play and Optimal Stopping (ICML 2022 ML4Cyber Workshop)
   Preprint: https://arxiv.org/abs/2205.14694)**
 
 ```bash
