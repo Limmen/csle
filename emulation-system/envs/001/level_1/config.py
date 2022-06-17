@@ -40,6 +40,7 @@ from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.metastore.metastore_facade import MetastoreFacade
 
 
 def default_config(name: str, network_id: int = 1, level: int = 1, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -1037,18 +1038,27 @@ if __name__ == '__main__':
         EmulationEnvManager.install_emulation(config=config)
         img_path = ExperimentUtil.default_emulation_picture_path()
         if os.path.exists(img_path):
-            image_data = ExperimentUtil.read_env_picture(img_path)
-            EmulationEnvManager.save_emulation_image(img=image_data, emulation_name=config.name)
+            encoded_image_str = ExperimentUtil.read_env_picture(img_path)
+            EmulationEnvManager.save_emulation_image(img=encoded_image_str, emulation_name=config.name)
     if args.uninstall:
         EmulationEnvManager.uninstall_emulation(config=config)
     if args.run:
         emulation_execution = EmulationEnvManager.create_execution(emulation_env_config=config)
-        EmulationEnvManager.run_containers(emulation_env_config=config, emulation_execution=emulation_execution)
+        EmulationEnvManager.run_containers(emulation_execution=emulation_execution)
     if args.stop:
-        EmulationEnvManager.stop_containers(emulation_env_config=config)
+        emulation_executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=config.name)
+        for exec in emulation_executions:
+            EmulationEnvManager.stop_containers(execution=exec)
     if args.clean:
-        EmulationEnvManager.stop_containers(emulation_env_config=config)
-        EmulationEnvManager.rm_containers(emulation_env_config=config)
+        emulation_executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=config.name)
+        for exec in emulation_executions:
+            EmulationEnvManager.stop_containers(execution=exec)
+            EmulationEnvManager.rm_containers(execution=exec)
         EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=config)
     if args.apply:
-        EmulationEnvManager.apply_emulation_env_config(emulation_env_config=config)
+        emulation_executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=config.name)
+        for exec in emulation_executions:
+            EmulationEnvManager.apply_emulation_env_config(emulation_execution=exec)

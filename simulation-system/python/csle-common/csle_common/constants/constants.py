@@ -33,6 +33,8 @@ class CONTAINER_IMAGES:
     TELNET_2 = "telnet_2"
     TELNET_3 = "telnet_3"
     FTP_2 = "ftp_2"
+    OVS_1 = "ovs_1"
+    RYU_1 = "ryu_1"
     PENGINE_EXPLOIT_1 = "pengine_exploit_1"
     CVE_2014_0160_1 = "cve_2014_0160_1"
     SNORT_IDS_IMAGES = ["router_2"]
@@ -54,6 +56,8 @@ class CONTAINER_OS:
     SAMBA_2_OS = "debian"
     HONEYPOT_1_OS = "ubuntu"
     FTP_1_OS = "ubuntu"
+    OVS_1_OS = "ubuntu"
+    RYU_1_OS = "ubuntu"
     HACKER_KALI_1_OS = "kali"
     SHELLSHOCK_1_OS = "debian"
     SQL_INJECTION_1_OS = "debian"
@@ -1037,6 +1041,8 @@ class TRAFFIC_COMMANDS:
         f"{CONTAINER_IMAGES.ROUTER_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.ROUTER_2}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.OVS_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         f"{CLIENT_1_SUBNET}": [
             # "sudo nmap -sS -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
