@@ -818,19 +818,21 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--id', default=None, type=int)
 @click.option('--no_clients', is_flag=True, help='skip starting the client population')
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
+@click.option('--no_network', is_flag=True, help='skip creating network when starting individual container')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | monitor | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job")
-def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool,) -> None:
+def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool) -> None:
     """
     Starts a container or all containers
 
     :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
-    :param no_traffic: a boolean parameter that is True if the client population should be skipped
+    :param no_clients: a boolean parameter that is True if the client population should be skipped
+    :param no_network: a boolean parameter that is True if the network should be skipped when creating a container
     :param id: (optional) an id parameter to identify the entity to start
     :return: None
     """
@@ -871,23 +873,24 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool,)
             else:
                 emulation_started =False
             if not emulation_started:
-                image_started = run_image(image=entity, name=name)
+                image_started = run_image(image=entity, name=name, create_network=(not no_network))
                 if not image_started:
                     click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
-def run_image(image: str, name: str) -> bool:
+def run_image(image: str, name: str, create_network : bool = True) -> bool:
     """
     Runs a container with a given image
 
     :param image: the image of the container
     :param name: the name that the container will be assigned
+    :param create_network: whether to create a virtual network or not
     :return: True if it was started successfully, False otherwise
     """
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 
     try:
-        EmulationEnvManager.run_container(image=image, name=name)
+        EmulationEnvManager.run_container(image=image, name=name, create_network=create_network)
         return True
     except Exception as e:
         return False

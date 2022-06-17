@@ -338,7 +338,7 @@ class EmulationEnvManager:
         subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1) -> None:
+    def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1, create_network : bool = True) -> None:
         """
         Runs a given container
 
@@ -346,23 +346,32 @@ class EmulationEnvManager:
         :param name: name of the container
         :param memory: memory in GB
         :param num_cpus: number of CPUs to allocate
+        :param create_network: whether to create a virtual network or not
         :return: None
         """
-        net_id = random.randint(128, 254)
-        sub_net_id= random.randint(2, 254)
-        host_id= random.randint(2, 254)
-        net_name = f"csle_custom_net_{name}_{net_id}"
-        ip = f"55.{net_id}.{sub_net_id}.{host_id}"
-        ContainerManager.create_network(name=net_name,
-                                        subnetmask=f"55.{net_id}.0.0/16",
-                                        existing_network_names=[])
         Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle-{name}-001")
-        cmd = f"docker container run -dt --name csle-{name}-001 " \
-              f"--hostname={name} " \
-              f"-e TZ=Europe/Stockholm " \
-              f"--network={net_name} --ip {ip} --publish-all=true " \
-              f"--memory={memory}G --cpus={num_cpus} " \
-              f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
+        if create_network:
+            net_id = random.randint(128, 254)
+            sub_net_id= random.randint(2, 254)
+            host_id= random.randint(2, 254)
+            net_name = f"csle_custom_net_{name}_{net_id}"
+            ip = f"55.{net_id}.{sub_net_id}.{host_id}"
+            ContainerManager.create_network(name=net_name,
+                                            subnetmask=f"55.{net_id}.0.0/16",
+                                            existing_network_names=[])
+            cmd = f"docker container run -dt --name csle-{name}-001 " \
+                  f"--hostname={name} " \
+                  f"-e TZ=Europe/Stockholm " \
+                  f"--network={net_name} --ip {ip} --publish-all=true " \
+                  f"--memory={memory}G --cpus={num_cpus} " \
+                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
+        else:
+            cmd = f"docker container run -dt --name csle-{name}-001 " \
+                  f"--hostname={name} " \
+                  f"-e TZ=Europe/Stockholm --net=none " \
+                  f"--publish-all=true " \
+                  f"--memory={memory}G --cpus={num_cpus} " \
+                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
         subprocess.call(cmd, shell=True)
 
     @staticmethod
