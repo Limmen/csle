@@ -62,21 +62,21 @@ def default_config(name: str, network_id: int = 4, level: int = 4, version: str 
     vuln_cfg = default_vulns_config(network_id=network_id)
     log_sink_cfg = default_log_sink_config(network_id=network_id, level=level, version=version)
     services_cfg = default_services_config(network_id=network_id)
-    descr= "An emulation environment with a set of nodes that run common networked services " \
-           "such as SSH, FTP, Telnet, IRC, Kafka," \
-           "Cassandra, etc. Some of the services are vulnerable to simple dictionary attacks as " \
-           "they use weak passwords." \
-           "The task of an attacker agent is to identify the vulnerabilities and exploit them and " \
-           "discover hidden flags" \
-           "on the nodes. Conversely, the task of the defender is to harden the defense of the nodes " \
-           "and to detect the" \
-           "attacker."
+    descr = "An emulation environment with a set of nodes that run common networked services " \
+            "such as SSH, FTP, Telnet, IRC, Kafka," \
+            "Cassandra, etc. Some of the services are vulnerable to simple dictionary attacks as " \
+            "they use weak passwords." \
+            "The task of an attacker agent is to identify the vulnerabilities and exploit them and " \
+            "discover hidden flags" \
+            "on the nodes. Conversely, the task of the defender is to harden the defense of the nodes " \
+            "and to detect the" \
+            "attacker."
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
         log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
-        static_attacker_sequences=static_attackers_cfg
+        static_attacker_sequences=static_attackers_cfg, sdn=False, ovs_config=None
     )
     return emulation_env_cfg
 
@@ -198,7 +198,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
         containers=containers,
         agent_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
         router_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-        ids_enabled=False, vulnerable_nodes=[
+        ids_enabled=True, vulnerable_nodes=[
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3"
@@ -675,11 +675,11 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7]
     topology = TopologyConfig(node_configs=node_configs,
                               subnetwork_masks=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                            f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                            f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}"
-                        ])
+                                  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                  f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                  f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}"
+                              ])
     return topology
 
 
@@ -725,7 +725,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.SINE_MODULATED_POISSON,
         lamb=20, mu=4, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=30,
-        time_scaling_factor= 0.04, period_scaling_factor= 160)
+        time_scaling_factor=0.04, period_scaling_factor=160)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf
@@ -770,63 +770,63 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             name=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
-            attributes= collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_ATTRIBUTES
+            retention_time_hours=240,
+            attributes=collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.LOG_SINK.HOST_METRICS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.LOG_SINK.ATTACKER_ACTIONS_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.LOG_SINK.DEFENDER_ACTIONS_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
         )
     ]
 
     config = LogSinkConfig(container=container, resources=resources, topics=topics,
                            version=version, kafka_port=9092, default_grpc_port=50051,
-                           secondary_grpc_port = 50049, time_step_len_seconds=15, third_grpc_port=50048)
+                           secondary_grpc_port=50049, time_step_len_seconds=15, third_grpc_port=50048)
     return config
 
 
@@ -999,7 +999,7 @@ def default_services_config(network_id: int) -> ServicesConfig:
         )
     ]
     service_cfg = ServicesConfig(
-        services_configs = services_configs
+        services_configs=services_configs
     )
     return service_cfg
 

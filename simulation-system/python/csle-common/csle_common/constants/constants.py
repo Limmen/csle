@@ -820,6 +820,21 @@ class COMMANDS:
     START_SYSTEM_IDENTIFICATION_JOB = "nohup csle systemidentificationjob {} &"
 
 
+class OVS:
+    """
+    String constants related to OVS
+    """
+    OVS_VSCTL = "ovs-vsctl"
+    ADD_BR = "add-br"
+    OVS_DOCKER = "ovs-docker"
+    ADD_PORT = "add-port"
+    IPADDRESS = "--ipaddress"
+    SET_VLAN = "set-vlan"
+    ADD_VETH_PEER_LINK = "ip link add dev {} type veth peer name {}"
+    SET_INTERFACE = "set interface"
+    TYPE_PATCH = "type=patch"
+    OPTIONS_PEER = "options:peer"
+
 class ETC_HOSTS:
     """
     Constants related to /etc/hosts configuration
@@ -1272,11 +1287,13 @@ class DOCKER:
 class CSLE:
     NAME = "csle"
     LEVEL = "level"
+    BRIDGE = "br"
     CSLE_NETWORK_PREFIX = "csle_net_"
     CSLE_SUBNETMASK_PREFIX = "<EXECUTION_ID>."
     CSLE_FIRST_IP_OCTET_PLACEHOLDER = "<EXECUTION_ID>"
     CSLE_LEVEL_SUBNETMASK_SUFFIX = ".0.0/16"
     CSLE_EDGE_SUBNETMASK_SUFFIX = ".0/24"
+    EDGE_SUBNETMASK_BITS = 24
     CSLE_EDGE_BITMASK = "255.255.255.0"
     NON_IDS_ROUTER = "router_1"
     LIST_OF_IP_SUBNETS = list(range(15,171)) + list(range(173,191)) + list(range(193,250))

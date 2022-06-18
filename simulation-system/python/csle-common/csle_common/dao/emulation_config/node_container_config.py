@@ -3,6 +3,7 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.general_util import GeneralUtil
 
+
 class NodeContainerConfig:
     """
     A DTO object representing an individual container in an emulation environment
