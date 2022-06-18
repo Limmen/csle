@@ -7,19 +7,17 @@ class OVSPort:
     A DTO representing an OVS port
     """
 
-    def __init__(self, bridge_name: str, port_name: str, container_name: str, ip: str, subnetmask_bits: int,
+    def __init__(self, port_name: str, container_name: str, ip: str, subnetmask_bits: int,
                  vlan_id: int):
         """
         Initializes the DTO
 
-        :param bridge_name: the name of the bridge the port belongs to
         :param port_name: the name of the port
         :param container_name: the name of the container to connect with the port
         :param ip: the ipaddress of the container
         :param subnetmask_bits: the number of bits for the subnetmask
         :param vlan_id: the vlan id
         """
-        self.bridge_name = bridge_name
         self.port_name = port_name
         self.container_name = container_name
         self.ip = ip
@@ -30,7 +28,7 @@ class OVSPort:
         """
         :return: a string representation of the DTO
         """
-        return f"bridge_name: {self.bridge_name}, port_name: {self.port_name}, " \
+        return f"port_name: {self.port_name}, " \
                f"container_name: {self.container_name}, " \
                f"ip: {self.ip}, vlan_id: {self.vlan_id}, subnetmask bits: {self.subnetmask_bits}"
 
@@ -42,7 +40,7 @@ class OVSPort:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = OVSPort(bridge_name=d["bridge_name"], port_name=d["port_name"], container_name=d["container_name"],
+        obj = OVSPort(port_name=d["port_name"], container_name=d["container_name"],
                       ip=d["ip"], vlan_id=d["vlan_id"],
                       subnetmask_bits=d["subnetmask_bits"])
         return obj
@@ -52,7 +50,6 @@ class OVSPort:
         :return: a dict representation of the object
         """
         d = {}
-        d["bridge_name"] = self.bridge_name
         d["port_name"] = self.port_name
         d["container_name"] = self.container_name
         d["ip"] = self.ip
@@ -75,4 +72,5 @@ class OVSPort:
         """
         config = self.copy()
         config.ip = GeneralUtil.replace_first_octet_of_ip(ip=config.ip, ip_first_octet=ip_first_octet)
+        config.container_name = config.container_name + f"-{ip_first_octet}"
         return config

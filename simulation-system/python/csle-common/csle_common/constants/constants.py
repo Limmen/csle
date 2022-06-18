@@ -826,6 +826,7 @@ class OVS:
     """
     OVS_VSCTL = "ovs-vsctl"
     ADD_BR = "add-br"
+    DEL_BR = "del-br"
     OVS_DOCKER = "ovs-docker"
     ADD_PORT = "add-port"
     IPADDRESS = "--ipaddress"
@@ -834,6 +835,8 @@ class OVS:
     SET_INTERFACE = "set interface"
     TYPE_PATCH = "type=patch"
     OPTIONS_PEER = "options:peer"
+    DELETE_VETH_PEER_LINK = "ip link delete {}"
+
 
 class ETC_HOSTS:
     """

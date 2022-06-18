@@ -96,12 +96,22 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
     """
     bridges = [
         OVSBridge(
-            name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                 f"{constants.CSLE.BRIDGE}1",
+            level=level, version=version, exec_id=-1, bridge_id=253,
             ports=[
                 OVSPort(
-                   bridge_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                               f"{constants.CSLE.BRIDGE}1",
+                    vlan_id=253,
+                    port_name=constants.NETWORKING.ETH0,
+                    container_name=f"{constants.CSLE.NAME}-"
+                                   f"{constants.CONTAINER_IMAGES.KAFKA_1}_1-{constants.CSLE.LEVEL}{level}",
+                    ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.253.253",
+                    subnetmask_bits=constants.CSLE.EDGE_SUBNETMASK_BITS
+                )
+            ]
+        ),
+        OVSBridge(
+            level=level, version=version, exec_id=-1, bridge_id=1,
+            ports=[
+                OVSPort(
                     vlan_id=1,
                     port_name=constants.NETWORKING.ETH0,
                     container_name=f"{constants.CSLE.NAME}-"
@@ -110,23 +120,8 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
                     subnetmask_bits=constants.CSLE.EDGE_SUBNETMASK_BITS
                 ),
                 OVSPort(
-                    bridge_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                f"{constants.CSLE.BRIDGE}1",
                     vlan_id=1,
                     port_name=constants.NETWORKING.ETH0,
-                    container_name=f"{constants.CSLE.NAME}-"
-                                   f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-{constants.CSLE.LEVEL}{level}",
-                    ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
-                    subnetmask_bits=constants.CSLE.EDGE_SUBNETMASK_BITS
-                ),
-                OVSPort(
-                    bridge_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                f"{constants.CSLE.BRIDGE}1",
-                    vlan_id=1,
-                    port_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                              f"{constants.CSLE.BRIDGE}1-to"
-                              f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                              f"{constants.CSLE.BRIDGE}2",
                     container_name=f"{constants.CSLE.NAME}-"
                                    f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-{constants.CSLE.LEVEL}{level}",
                     ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.191",
@@ -135,12 +130,9 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
             ]
         ),
         OVSBridge(
-            name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                 f"{constants.CSLE.BRIDGE}2",
+            level=level, version=version, exec_id=-1, bridge_id=2,
             ports=[
                 OVSPort(
-                    bridge_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                f"{constants.CSLE.BRIDGE}2",
                     vlan_id=2,
                     port_name=constants.NETWORKING.ETH0,
                     container_name=f"{constants.CSLE.NAME}-"
@@ -149,41 +141,23 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
                     subnetmask_bits=constants.CSLE.EDGE_SUBNETMASK_BITS
                 ),
                 OVSPort(
-                    bridge_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                f"{constants.CSLE.BRIDGE}2",
                     vlan_id=2,
                     port_name=constants.NETWORKING.ETH0,
                     container_name=f"{constants.CSLE.NAME}-"
                                    f"{constants.CONTAINER_IMAGES.TELNET_1}_1-{constants.CSLE.LEVEL}{level}",
                     ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                     subnetmask_bits=constants.CSLE.EDGE_SUBNETMASK_BITS
-                ),
-                OVSPort(
-                    bridge_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                f"{constants.CSLE.BRIDGE}2",
-                    vlan_id=2,
-                    port_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                              f"{constants.CSLE.BRIDGE}2-to"
-                              f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                              f"{constants.CSLE.BRIDGE}1",
-                    container_name=f"{constants.CSLE.NAME}-"
-                                   f"{constants.CONTAINER_IMAGES.HACKER_KALI_1}_1-{constants.CSLE.LEVEL}{level}",
-                    ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
-                    subnetmask_bits=constants.CSLE.EDGE_SUBNETMASK_BITS
                 )
             ]
         )
     ]
     bridges_connections = [
+        OVSBridgeConnection(bridge_1=bridges[1], bridge_2=bridges[2],
+                            port_1_name=f"{level}-{version.replace('.','')}-1-2",
+                            port_2_name=f"{level}-{version.replace('.','')}-2-1"),
         OVSBridgeConnection(bridge_1=bridges[0], bridge_2=bridges[1],
-                            port_1_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                        f"{constants.CSLE.BRIDGE}1-to"
-                                        f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                        f"{constants.CSLE.BRIDGE}2",
-                            port_2_name=f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                        f"{constants.CSLE.BRIDGE}2-to"
-                                        f"{constants.CSLE.NAME}-{level}-{version.replace('.','')}-"
-                                        f"{constants.CSLE.BRIDGE}1")
+                            port_1_name=f"{level}-{version.replace('.','')}-253-1",
+                            port_2_name=f"{level}-{version.replace('.','')}-1-253")
     ]
     ovs_config =OVSConfig(bridges=bridges, bridge_connections=bridges_connections)
     return ovs_config
@@ -494,11 +468,11 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     node_configs = [node_1, node_2, node_3, node_4]
     topology = TopologyConfig(node_configs=node_configs,
                               subnetwork_masks=[
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                            f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                            f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}"
-                        ])
+                                  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                  f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                  f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}"
+                              ])
     return topology
 
 
