@@ -4,7 +4,7 @@ setup(name='csle_common',
       version='0.0.1',
       install_requires=['gym', 'pyglet', 'numpy', 'torch', 'docker', 'paramiko', 'stable_baselines3', 'scp',
                         'random_username', 'Sphinx', 'sphinxcontrib-napoleon',
-                        'sphinx-rtd-theme', 'psycopg', 'click', 'flask', 'waitress', 'csle_collector'],
+                        'sphinx-rtd-theme', 'psycopg', 'click', 'flask', 'waitress', 'csle_collector', 'psutil'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='csle is a platform for evaluating and developing reinforcement learning agents for '

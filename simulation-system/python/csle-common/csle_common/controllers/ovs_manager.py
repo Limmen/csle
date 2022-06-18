@@ -53,7 +53,7 @@ class OVSManager:
 
             # Bridge 1
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} " \
-                  f"{constants.OVS.ADD_PORT} {bridge_conn.bridge_1.level} " \
+                  f"{constants.OVS.ADD_PORT} {bridge_conn.bridge_1.get_name()} " \
                   f"{bridge_conn.port_1_name}"
             Logger.__call__().get_logger().info(f"executing {cmd}")
             subprocess.call(cmd, shell=True)
@@ -71,7 +71,7 @@ class OVSManager:
 
             # Bridge 2
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} " \
-                  f"{constants.OVS.ADD_PORT} {bridge_conn.bridge_2.level} " \
+                  f"{constants.OVS.ADD_PORT} {bridge_conn.bridge_2.get_name()} " \
                   f"{bridge_conn.port_2_name}"
             Logger.__call__().get_logger().info(f"executing {cmd}")
             subprocess.call(cmd, shell=True)

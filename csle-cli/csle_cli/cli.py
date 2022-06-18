@@ -888,7 +888,6 @@ def run_image(image: str, name: str, create_network : bool = True) -> bool:
     :return: True if it was started successfully, False otherwise
     """
     from csle_common.controllers.emulation_env_manager import EmulationEnvManager
-
     try:
         EmulationEnvManager.run_container(image=image, name=name, create_network=create_network)
         return True

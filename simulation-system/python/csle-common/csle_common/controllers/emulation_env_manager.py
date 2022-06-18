@@ -338,8 +338,6 @@ class EmulationEnvManager:
         steps = 2
         current_step = 1
         Logger.__call__().get_logger().info(f"-- Configuring the logsink --")
-
-        current_step += 1
         Logger.__call__().get_logger().info(
             f"-- Log sink configuration step {current_step}/{steps}: Restarting the Kafka server --")
         LogSinkManager.stop_kafka_server(emulation_env_config=emulation_env_config)

@@ -131,7 +131,7 @@ running commands can read and write to this directory.
       psql> \password postgres # set postgres password
       ```
     - Setup password authentication for user postgres:
-        1. Open file `/etc/postgresql/10/main/pg_hba.conf`
+        1. Open file `/etc/postgresql/<YOUR_VERSION>/main/pg_hba.conf`
         2. Change `peer` to `md5` on line: `local all postgres peer`
         3. Save and close the file
         4. Restart postgres with the command `sudo service postgresql restart`
@@ -162,32 +162,32 @@ running commands can read and write to this directory.
 
     - Install `csle-collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
       ```bash
-       cd simulation-system/csle-collector/
+       cd simulation-system/python/csle-collector/
        pip install -e .
       ```
 
     - Install `csle-common` (see ([README](simulation-system/csle-common/README.md)) for more information)
       ```bash
-       cd simulation-system/csle-common/
+       cd simulation-system/python/csle-common/
        pip install -e .
       ```
 
     - Install `csle-attacker` (see ([README](simulation-system/csle-attacker/README.md)) for more information)
       ```bash
-      cd simulation-system/csle-attacker/
+      cd simulation-system/python/csle-attacker/
       pip install -e .
       ```
 
     - Install `csle-defender` (see ([README](simulation-system/csle-defender/README.md)) for more information)
       ```bash
-      cd simulation-system/csle-defender/
+      cd simulation-system/python/csle-defender/
       pip install -e .
       ```
 
     - Install `gym-csle-stopping-game` (see ([README](simulation-system/gym-csle-stopping-game/README.MD)) for more
       information)
       ```bash
-      cd simulation-system/gym-csle-stopping-game/
+      cd simulation-system/python/gym-csle-stopping-game/
       pip install -e .
       ```
 
@@ -212,6 +212,12 @@ running commands can read and write to this directory.
     ```
 
 5. **Install the emulation system**
+    - Add Docker's official GPG key:
+      ```bash
+      sudo mkdir -p /etc/apt/keyrings
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      ```
     - Install Docker (see ([README](emulation-system/README.MD)) for more information)
       ```bash
       sudo apt-get update
