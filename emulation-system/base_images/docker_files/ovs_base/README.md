@@ -41,6 +41,33 @@ sudo ovs-ofctl add-flow ovs-br2 ip,nw_dst=8.8.8.8,action=output:prov-to-int
 # 1. Make sure the switch the container is attached to has an IP on the same subnet as the host
 # 2. Setup a default gateway in the container to be the same as the router that the host talks to
 
+ovs-vsctl add-br ovs-br0
+ifconfig ovs-br0 up
+ovs-vsctl add-port ovs-br0 eth0
+ifconfig eth0 0
+ifconfig ovs-br0 15.13.2.2 netmask 255.255.255.0 up
+ping 15.13.2.10
+ovs-vsctl add-port ovs-br0 eth1
+ifconfig eth1 0
+ifconfig ovs-br0:1 15.13.3.2 netmask 255.255.255.0 up
+ping 15.13.3.3
+ovs-vsctl add-port ovs-br0 eth2
+ifconfig eth2 0
+ifconfig ovs-br0:2 15.13.5.2 netmask 255.255.255.0 up
+ping 15.13.5.31
+ovs-vsctl add-port ovs-br0 eth3
+ifconfig eth3 0
+ifconfig ovs-br0:3 15.13.253.2 netmask 255.255.255.0 up
+ping 15.13.253.253
+
+
+
+ovs-vsctl add-port ovs-br0 eth1
+ifconfig ovs-br0:1 15.13.3.2
+ifconfig ovs-br0:2 15.13.5.2
+ifconfig eth1 0
+ifconfig eth2 0
+ip route add 15.13.5.0/24 via 0.0.0.0 dev ovs-br0
 
 # You can use multiple IP addresses on an inteface using standard Linux IP aliasing:
 

@@ -81,13 +81,12 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        if emulation_execution.emulation_env_config.sdn:
+        if emulation_execution.emulation_env_config.host_ovs:
             EmulationEnvManager.apply_emulation_env_config_sdn(emulation_execution=emulation_execution,
                                                                no_clients=no_clients, no_traffic=no_traffic)
         else:
-            EmulationEnvManager.apply_emulation_env_config(emulation_execution=emulation_execution,
+            EmulationEnvManager.apply_emulation_env_config_no_sdn(emulation_execution=emulation_execution,
                                                                no_clients=no_clients, no_traffic=no_traffic)
-
 
     @staticmethod
     def apply_emulation_env_config_sdn(emulation_execution: EmulationExecution, no_traffic: bool = False,
@@ -105,22 +104,22 @@ class EmulationEnvManager:
             steps = steps-1
         if no_clients:
             steps = steps-1
-        if emulation_execution.emulation_env_config.sdn:
+        if emulation_execution.emulation_env_config.host_ovs:
             steps = steps + 3
 
         current_step = 1
         emulation_env_config = emulation_execution.emulation_env_config
         Logger.__call__().get_logger().info(f"-- Configuring the emulation: {emulation_env_config.name} --")
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating bridges --")
-        OVSManager.create_bridges(emulation_execution=emulation_execution)
+        OVSManager.create_bridges_on_docker_host(emulation_execution=emulation_execution)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create ports --")
-        OVSManager.create_ports(emulation_execution=emulation_execution)
+        OVSManager.create_ports_on_docker_host(emulation_execution=emulation_execution)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect bridges --")
-        OVSManager.connect_bridges(emulation_env_config=emulation_env_config)
+        OVSManager.connect_bridges_on_docker_host(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
@@ -201,7 +200,6 @@ class EmulationEnvManager:
         MonitorToolsController.start_prometheus()
         time.sleep(2)
 
-
     @staticmethod
     def apply_emulation_env_config_no_sdn(emulation_execution: EmulationExecution, no_traffic: bool = False,
                                    no_clients: bool = False) -> None:
@@ -213,7 +211,7 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 19
+        steps = 20
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -237,6 +235,10 @@ class EmulationEnvManager:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to log sink --")
         ContainerManager.connect_containers_to_logsink(containers_config=emulation_env_config.containers_config,
                                                        log_sink_config=emulation_env_config.log_sink_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
+        OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
@@ -321,7 +323,7 @@ class EmulationEnvManager:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        if emulation_env_config.sdn:
+        if emulation_env_config.host_ovs:
             EmulationEnvManager.apply_log_sink_config_sdn(emulation_env_config=emulation_env_config)
         else:
             EmulationEnvManager.apply_log_sink_config_non_sdn(emulation_env_config=emulation_env_config)
@@ -491,7 +493,7 @@ class EmulationEnvManager:
                   f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-                  f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
             subprocess.call(cmd, shell=True)
 
         c = emulation_env_config.log_sink_config.container
@@ -505,7 +507,7 @@ class EmulationEnvManager:
               f"-e TZ=Europe/Stockholm " \
               f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
               f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-              f"--restart={c.restart_policy} --cap-add NET_ADMIN csle/{c.name}:{c.version}"
+              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
         subprocess.call(cmd, shell=True)
 
     @staticmethod
@@ -535,14 +537,14 @@ class EmulationEnvManager:
                   f"-e TZ=Europe/Stockholm " \
                   f"--network={net_name} --ip {ip} --publish-all=true " \
                   f"--memory={memory}G --cpus={num_cpus} " \
-                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
+                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --cap-add=SYS_NICE {image}"
         else:
             cmd = f"docker container run -dt --name csle-{name}-001 " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm --net=none " \
                   f"--publish-all=true " \
                   f"--memory={memory}G --cpus={num_cpus} " \
-                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN {image}"
+                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --cap-add=SYS_NICE {image}"
         subprocess.call(cmd, shell=True)
 
     @staticmethod
@@ -584,9 +586,9 @@ class EmulationEnvManager:
             except Exception as e:
                 pass
             EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
-            if exec.emulation_env_config.sdn:
-                OVSManager.remove_bridges(emulation_env_config=exec.emulation_env_config)
-                OVSManager.remove_bridge_connections(emulation_env_config=exec.emulation_env_config)
+            if exec.emulation_env_config.host_ovs:
+                OVSManager.remove_bridges_on_docker_host(emulation_env_config=exec.emulation_env_config)
+                OVSManager.remove_bridge_connections_on_docker_host(emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
@@ -607,9 +609,9 @@ class EmulationEnvManager:
         except Exception as e:
             pass
         EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=execution.emulation_env_config)
-        if execution.emulation_env_config.sdn:
-            OVSManager.remove_bridges(emulation_env_config=execution.emulation_env_config)
-            OVSManager.remove_bridge_connections(emulation_env_config=execution.emulation_env_config)
+        if execution.emulation_env_config.host_ovs:
+            OVSManager.remove_bridges_on_docker_host(emulation_env_config=execution.emulation_env_config)
+            OVSManager.remove_bridge_connections_on_docker_host(emulation_env_config=execution.emulation_env_config)
         MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
 
     @staticmethod
@@ -629,9 +631,9 @@ class EmulationEnvManager:
             except Exception as e:
                 pass
             EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
-            if exec.emulation_env_config.sdn:
-                OVSManager.remove_bridges(emulation_env_config=exec.emulation_env_config)
-                OVSManager.remove_bridge_connections(emulation_env_config=exec.emulation_env_config)
+            if exec.emulation_env_config.host_ovs:
+                OVSManager.remove_bridges_on_docker_host(emulation_env_config=exec.emulation_env_config)
+                OVSManager.remove_bridge_connections_on_docker_host(emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod

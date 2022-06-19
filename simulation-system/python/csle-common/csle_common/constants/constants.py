@@ -38,6 +38,7 @@ class CONTAINER_IMAGES:
     PENGINE_EXPLOIT_1 = "pengine_exploit_1"
     CVE_2014_0160_1 = "cve_2014_0160_1"
     SNORT_IDS_IMAGES = ["router_2"]
+    OVS_IMAGES = ["ovs_1"]
     OSSEC_IDS_IMAGES = ["honeypot_1", "honeypot_2", "pengine_exploit_1", "router_1", "router_2", "ssh_1", "ssh_2",
                         "ssh_3", "telnet_1", "telnet_2", "telnet_3"]
     ROUTER_IMAGES = ["router_1", "router_2"]
@@ -818,12 +819,14 @@ class COMMANDS:
     KILL_PROCESS = "kill -9 {}"
     START_TRAINING_JOB = "nohup csle trainingjob {} &"
     START_SYSTEM_IDENTIFICATION_JOB = "nohup csle systemidentificationjob {} &"
+    DOCKER_EXEC_COMMAND = "docker exec"
 
 
 class OVS:
     """
     String constants related to OVS
     """
+    DEFAULT_BRIDGE_NAME = "ovs-br0"
     OVS_VSCTL = "ovs-vsctl"
     ADD_BR = "add-br"
     DEL_BR = "del-br"

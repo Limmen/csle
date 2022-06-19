@@ -438,6 +438,9 @@ class ContainerManager:
         log_sink_ip, logsink_net = log_sink_config.container.ips_and_networks[0]
         log_sink_network_prefix = ".".join(log_sink_ip.split(".")[0:-1])
         for c in containers_config.containers:
+            for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
+                if ovs_image in c.name:
+                    continue
             container_name = c.get_full_name()
 
             ip_suffix = c.ips_and_networks[0][0].split(".")[-1]

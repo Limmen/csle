@@ -7,16 +7,21 @@ class ContainerNetwork:
     DTO representing an IP network of virtual containers
     """
 
-    def __init__(self, name: str, subnet_mask: str, subnet_prefix: str):
+    def __init__(self, name: str, subnet_mask: str, bitmask: str, subnet_prefix: str, interface: str = "eth0"):
         """
         Initializes the DTO
 
         :param name: the name of the network
         :param subnet_mask: the subnet mask of the network
+        :param bitmask: the bitmask of the network
+        :param subnet_prefix: the subnet prefix of the network
+        :param interface: (optional) the interface of the network
         """
         self.name = name
         self.subnet_mask = subnet_mask
+        self.bitmask = bitmask
         self.subnet_prefix = subnet_prefix
+        self.interface = interface
 
 
     @staticmethod
@@ -28,7 +33,8 @@ class ContainerNetwork:
         :return: the created instance
         """
         obj = ContainerNetwork(
-            name = d["name"], subnet_mask=d["subnet_mask"], subnet_prefix=d["subnet_prefix"]
+            name = d["name"], subnet_mask=d["subnet_mask"], subnet_prefix=d["subnet_prefix"], interface=d["interface"],
+            bitmask=d["bitmask"]
         )
         return obj
 
@@ -40,13 +46,16 @@ class ContainerNetwork:
         d["name"] = self.name
         d["subnet_mask"] = self.subnet_mask
         d["subnet_prefix"] = self.subnet_prefix
+        d["interface"] = self.interface
+        d["bitmask"] = self.bitmask
         return d
 
     def __str__(self):
         """
         :return: a string representation of the object
         """
-        return f"name:{self.name}, subnet_mask:{self.subnet_mask}, subnet_prefix: {self.subnet_prefix}"
+        return f"name:{self.name}, subnet_mask:{self.subnet_mask}, subnet_prefix: {self.subnet_prefix}, " \
+               f"interface: {self.interface}, bitmask: {self.bitmask}"
 
     def to_json_str(self) -> str:
         """

@@ -28,7 +28,7 @@ class EmulationEnvConfig:
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
                  resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig,
-                 descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]], sdn: bool = False,
+                 descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]], host_ovs: bool = False,
                  ovs_config : OVSConfig = None):
         """
         Initializes the object
@@ -44,7 +44,7 @@ class EmulationEnvConfig:
         :param services_config: the services configuration
         :param descr: a description of the environment configuration
         :param static_attacker_sequences: dict with static attacker sequences
-        :param sdn: boolean flag indicating whether it is an SDN environment or not
+        :param host_ovs: boolean flag indicating whether the emulation is managed by an OVS on the Docker host
         :param ovs_config: the OVS config
         """
         self.name = name
@@ -66,7 +66,7 @@ class EmulationEnvConfig:
         self.image = None
         self.id = -1
         self.static_attacker_sequences = static_attacker_sequences
-        self.sdn = sdn
+        self.host_ovs = host_ovs
         self.ovs_config = ovs_config
 
     @staticmethod
@@ -91,7 +91,7 @@ class EmulationEnvConfig:
             log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
             services_config=ServicesConfig.from_dict(d["services_config"]),
             descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
-            sdn=d["sdn"], ovs_config=OVSConfig.from_dict(d["ovs_config"])
+            host_ovs=d["host_ovs"], ovs_config=OVSConfig.from_dict(d["ovs_config"])
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -118,7 +118,7 @@ class EmulationEnvConfig:
         d["image"] = self.image
         d["descr"] = self.descr
         d["id"] = self.id
-        d["sdn"] = self.sdn
+        d["host_ovs"] = self.host_ovs
         d2 = {}
         for k,v in self.static_attacker_sequences.items():
             d2[k] = list(map(lambda x: x.to_dict(), v))
@@ -254,7 +254,7 @@ class EmulationEnvConfig:
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
                f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}," \
-               f"sdn: {self.sdn}, ovs_config: {self.ovs_config}"
+               f"host_ovs: {self.host_ovs}, ovs_config: {self.ovs_config}"
 
     def get_all_ips(self) -> List[str]:
         """
@@ -312,7 +312,7 @@ class EmulationEnvConfig:
         config.resources_config = config.resources_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.log_sink_config = config.log_sink_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
-        if config.sdn:
+        if config.host_ovs:
             config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
         static_attacker_sequences = {}
         for k,v in config.static_attacker_sequences.items():
