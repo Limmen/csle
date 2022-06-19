@@ -12,7 +12,6 @@ from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
-from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
@@ -28,8 +27,7 @@ class EmulationEnvConfig:
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
                  resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig,
-                 descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]], host_ovs: bool = False,
-                 ovs_config : OVSConfig = None):
+                 descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]]):
         """
         Initializes the object
 
@@ -44,8 +42,6 @@ class EmulationEnvConfig:
         :param services_config: the services configuration
         :param descr: a description of the environment configuration
         :param static_attacker_sequences: dict with static attacker sequences
-        :param host_ovs: boolean flag indicating whether the emulation is managed by an OVS on the Docker host
-        :param ovs_config: the OVS config
         """
         self.name = name
         self.descr = descr
@@ -66,8 +62,6 @@ class EmulationEnvConfig:
         self.image = None
         self.id = -1
         self.static_attacker_sequences = static_attacker_sequences
-        self.host_ovs = host_ovs
-        self.ovs_config = ovs_config
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -90,8 +84,7 @@ class EmulationEnvConfig:
             resources_config=ResourcesConfig.from_dict(d["resources_config"]),
             log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
             services_config=ServicesConfig.from_dict(d["services_config"]),
-            descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
-            host_ovs=d["host_ovs"], ovs_config=OVSConfig.from_dict(d["ovs_config"])
+            descr=d["descr"], static_attacker_sequences=static_attacker_sequences
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -118,15 +111,10 @@ class EmulationEnvConfig:
         d["image"] = self.image
         d["descr"] = self.descr
         d["id"] = self.id
-        d["host_ovs"] = self.host_ovs
         d2 = {}
         for k,v in self.static_attacker_sequences.items():
             d2[k] = list(map(lambda x: x.to_dict(), v))
         d["static_attacker_sequences"] = d2
-        if self.ovs_config is not None:
-            d["ovs_config"] = self.ovs_config.to_dict()
-        else:
-            d["ovs_config"] = None
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> paramiko.SSHClient:
@@ -202,7 +190,7 @@ class EmulationEnvConfig:
         conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
                 f"{self.log_sink_config.container.get_ips()[0]}:{self.log_sink_config.kafka_port}",
-                collector_constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
+            collector_constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**conf)
 
     def close_all_connections(self) -> None:
@@ -253,8 +241,7 @@ class EmulationEnvConfig:
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
-               f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}," \
-               f"host_ovs: {self.host_ovs}, ovs_config: {self.ovs_config}"
+               f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}"
 
     def get_all_ips(self) -> List[str]:
         """
@@ -297,9 +284,9 @@ class EmulationEnvConfig:
 
     def create_execution_config(self, ip_first_octet: int) -> "EmulationEnvConfig":
         """
-        Creates an execution config from the general config
+        Creates an execution config from the base config
 
-        :param ip_first_octet: the first octet of the IP of the execution
+        :param ip_first_octet:  the id of the execution
         :return: the created execution config
         """
         config = self.copy()
@@ -312,8 +299,6 @@ class EmulationEnvConfig:
         config.resources_config = config.resources_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.log_sink_config = config.log_sink_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
-        if config.host_ovs:
-            config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
         static_attacker_sequences = {}
         for k,v in config.static_attacker_sequences.items():
             static_attacker_sequences[k] = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),

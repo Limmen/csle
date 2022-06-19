@@ -81,136 +81,6 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        if emulation_execution.emulation_env_config.host_ovs:
-            EmulationEnvManager.apply_emulation_env_config_sdn(emulation_execution=emulation_execution,
-                                                               no_clients=no_clients, no_traffic=no_traffic)
-        else:
-            EmulationEnvManager.apply_emulation_env_config_no_sdn(emulation_execution=emulation_execution,
-                                                               no_clients=no_clients, no_traffic=no_traffic)
-
-    @staticmethod
-    def apply_emulation_env_config_sdn(emulation_execution: EmulationExecution, no_traffic: bool = False,
-                                   no_clients: bool = False) -> None:
-        """
-        Applies the emulation env config
-
-        :param emulation_execution: the emulation execution
-        :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
-        :param no_clients: a boolean parameter that is True if the client population should be skipped
-        :return: None
-        """
-        steps = 19
-        if no_traffic:
-            steps = steps-1
-        if no_clients:
-            steps = steps-1
-        if emulation_execution.emulation_env_config.host_ovs:
-            steps = steps + 3
-
-        current_step = 1
-        emulation_env_config = emulation_execution.emulation_env_config
-        Logger.__call__().get_logger().info(f"-- Configuring the emulation: {emulation_env_config.name} --")
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating bridges --")
-        OVSManager.create_bridges_on_docker_host(emulation_execution=emulation_execution)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create ports --")
-        OVSManager.create_ports_on_docker_host(emulation_execution=emulation_execution)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect bridges --")
-        OVSManager.connect_bridges_on_docker_host(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
-        EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
-        UsersManager.create_users(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
-        VulnerabilitiesManager.create_vulns(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating flags --")
-        FlagsManager.create_flags(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
-        TopologyManager.create_topology(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
-        ResourceConstraintsManager.apply_resource_constraints(emulation_env_config=emulation_env_config)
-
-        if not no_traffic:
-            current_step += 1
-            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "
-                                                f"on internal nodes --")
-            TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
-
-        if not no_clients:
-            current_step += 1
-            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
-            TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step "
-                                            f"{current_step}/{steps}: Starting the Snort Intrusion Detection System --")
-        SnortIDSManager.start_snort_ids(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-        SnortIDSManager.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step "
-                                            f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
-        OSSECIDSManager.start_ossec_ids(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-        OSSECIDSManager.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
-        HostManager.start_host_monitor_thread(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
-        MonitorToolsController.start_docker_stats_manager(port=50051)
-        time.sleep(10)
-        ContainerManager.start_docker_stats_thread(execution=emulation_execution)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
-        MonitorToolsController.start_cadvisor()
-        time.sleep(2)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Grafana --")
-        MonitorToolsController.start_grafana()
-        time.sleep(2)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Node_exporter --")
-        MonitorToolsController.start_node_exporter()
-        time.sleep(2)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Prometheus --")
-        MonitorToolsController.start_prometheus()
-        time.sleep(2)
-
-    @staticmethod
-    def apply_emulation_env_config_no_sdn(emulation_execution: EmulationExecution, no_traffic: bool = False,
-                                   no_clients: bool = False) -> None:
-        """
-        Applies the emulation env config
-
-        :param emulation_execution: the emulation execution
-        :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
-        :param no_clients: a boolean parameter that is True if the client population should be skipped
-        :return: None
-        """
         steps = 20
         if no_traffic:
             steps = steps-1
@@ -317,43 +187,6 @@ class EmulationEnvManager:
 
     @staticmethod
     def apply_log_sink_config(emulation_env_config: EmulationEnvConfig) -> None:
-        """
-        Applies the log sink config
-
-        :param emulation_env_config: the emulation env config
-        :return: None
-        """
-        if emulation_env_config.host_ovs:
-            EmulationEnvManager.apply_log_sink_config_sdn(emulation_env_config=emulation_env_config)
-        else:
-            EmulationEnvManager.apply_log_sink_config_non_sdn(emulation_env_config=emulation_env_config)
-
-
-    @staticmethod
-    def apply_log_sink_config_sdn(emulation_env_config: EmulationEnvConfig) -> None:
-        """
-        Applies the log sink config
-
-        :param emulation_env_config: the emulation env config
-        :return: None
-        """
-        steps = 2
-        current_step = 1
-        Logger.__call__().get_logger().info(f"-- Configuring the logsink --")
-        Logger.__call__().get_logger().info(
-            f"-- Log sink configuration step {current_step}/{steps}: Restarting the Kafka server --")
-        LogSinkManager.stop_kafka_server(emulation_env_config=emulation_env_config)
-        time.sleep(20)
-        LogSinkManager.start_kafka_server(emulation_env_config=emulation_env_config)
-        time.sleep(20)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Create topics --")
-        LogSinkManager.create_topics(emulation_env_config=emulation_env_config)
-
-
-    @staticmethod
-    def apply_log_sink_config_non_sdn(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Applies the log sink config
 
@@ -586,9 +419,6 @@ class EmulationEnvManager:
             except Exception as e:
                 pass
             EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
-            if exec.emulation_env_config.host_ovs:
-                OVSManager.remove_bridges_on_docker_host(emulation_env_config=exec.emulation_env_config)
-                OVSManager.remove_bridge_connections_on_docker_host(emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
@@ -609,9 +439,6 @@ class EmulationEnvManager:
         except Exception as e:
             pass
         EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=execution.emulation_env_config)
-        if execution.emulation_env_config.host_ovs:
-            OVSManager.remove_bridges_on_docker_host(emulation_env_config=execution.emulation_env_config)
-            OVSManager.remove_bridge_connections_on_docker_host(emulation_env_config=execution.emulation_env_config)
         MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
 
     @staticmethod
@@ -631,9 +458,6 @@ class EmulationEnvManager:
             except Exception as e:
                 pass
             EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
-            if exec.emulation_env_config.host_ovs:
-                OVSManager.remove_bridges_on_docker_host(emulation_env_config=exec.emulation_env_config)
-                OVSManager.remove_bridge_connections_on_docker_host(emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
