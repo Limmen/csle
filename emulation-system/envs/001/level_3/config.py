@@ -37,9 +37,9 @@ from csle_common.dao.emulation_config.transport_protocol import TransportProtoco
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
+from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
-from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.metastore.metastore_facade import MetastoreFacade
 
 
@@ -71,17 +71,20 @@ def default_config(name: str, network_id: int = 3, level: int = 3, version: str 
             "of the nodes and to detect the" \
             "attacker."
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
+    ovs_config = default_ovs_config(network_id=network_id, level=level, version=version)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
         log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
-        static_attacker_sequences=static_attackers_cfg
+        static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config
     )
     return emulation_env_cfg
 
 
 def default_containers_config(network_id: int, level: int, version: str) -> ContainersConfig:
     """
+    Generates default containers config
+
     :param version: the version of the containers to use
     :param level: the level parameter of the emulation
     :param network_id: the network id
@@ -811,6 +814,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
 
 def default_flags_config(network_id: int) -> FlagsConfig:
     """
+    Generates default flags config
+
     :param network_id: the network id
     :return: The flags confguration
     """
@@ -870,6 +875,8 @@ def default_flags_config(network_id: int) -> FlagsConfig:
 
 def default_resource_constraints_config(network_id: int, level: int) -> ResourcesConfig:
     """
+    Generates default resource constraints config
+
     :param level: the level parameter of the emulation
     :param network_id: the network id
     :return: generates the ResourcesConfig
@@ -1675,6 +1682,8 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
 
 def default_topology_config(network_id: int) -> TopologyConfig:
     """
+    Generates default topology config
+
     :param network_id: the network id
     :return: the Topology configuration
     """
@@ -2683,6 +2692,8 @@ def default_topology_config(network_id: int) -> TopologyConfig:
 
 def default_traffic_config(network_id: int) -> TrafficConfig:
     """
+    Generates default traffic config
+
     :param network_id: the network id
     :return: the traffic configuration
     """
@@ -2836,6 +2847,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
 def default_log_sink_config(network_id: int, level: int, version: str) -> LogSinkConfig:
     """
     Generates the default log sink configuration
+
     :param network_id: the id of the emulation network
     :param level: the level of the emulation
     :param version: the version of the emulation
@@ -2934,6 +2946,8 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
 
 def default_users_config(network_id: int) -> UsersConfig:
     """
+    Generates default users config
+
     :param network_id: the network id
     :return: generates the UsersConfig
     """
@@ -3035,6 +3049,8 @@ def default_users_config(network_id: int) -> UsersConfig:
 
 def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
     """
+    Generates default vulnerabilities config
+
     :param network_id: the network id
     :return: the vulnerability config
     """
@@ -3150,6 +3166,8 @@ def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
 
 def default_services_config(network_id: int) -> ServicesConfig:
     """
+    Generates default services config
+
     :param network_id: the network id
     :return: The services configuration
     """
@@ -3656,12 +3674,29 @@ def default_services_config(network_id: int) -> ServicesConfig:
     )
     return service_cfg
 
+
 def default_static_attacker_sequences(subnet_masks: List[str]) -> Dict[str, List[EmulationAttackerAction]]:
     """
+    Generates default subnetmasks config
+
     :param subnetmasks: list of subnet masks for the emulation
     :return: the default static attacker sequences configuration
     """
     return {}
+
+
+def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
+    """
+    Generates default OVS config
+
+    :param network_id: the network id of the emulation
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the default OVS config
+    """
+    ovs_config = OVSConfig(switch_configs=[])
+    return ovs_config
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -81,7 +81,7 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 20
+        steps = 21
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -107,8 +107,12 @@ class EmulationEnvManager:
                                                        log_sink_config=emulation_env_config.log_sink_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
         OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
+        OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")

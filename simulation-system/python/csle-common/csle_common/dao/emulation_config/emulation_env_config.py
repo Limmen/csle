@@ -12,6 +12,7 @@ from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
+from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
@@ -27,7 +28,8 @@ class EmulationEnvConfig:
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
                  resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig,
-                 descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]]):
+                 descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]],
+                 ovs_config: OVSConfig):
         """
         Initializes the object
 
@@ -42,6 +44,7 @@ class EmulationEnvConfig:
         :param services_config: the services configuration
         :param descr: a description of the environment configuration
         :param static_attacker_sequences: dict with static attacker sequences
+        :param ovs_config: the OVS config
         """
         self.name = name
         self.descr = descr
@@ -62,6 +65,7 @@ class EmulationEnvConfig:
         self.image = None
         self.id = -1
         self.static_attacker_sequences = static_attacker_sequences
+        self.ovs_config = ovs_config
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -84,7 +88,8 @@ class EmulationEnvConfig:
             resources_config=ResourcesConfig.from_dict(d["resources_config"]),
             log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
             services_config=ServicesConfig.from_dict(d["services_config"]),
-            descr=d["descr"], static_attacker_sequences=static_attacker_sequences
+            descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
+            ovs_config=OVSConfig.from_dict(d["ovs_config"])
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -111,6 +116,7 @@ class EmulationEnvConfig:
         d["image"] = self.image
         d["descr"] = self.descr
         d["id"] = self.id
+        d["ovs_config"] = self.ovs_config.to_dict()
         d2 = {}
         for k,v in self.static_attacker_sequences.items():
             d2[k] = list(map(lambda x: x.to_dict(), v))
@@ -241,7 +247,8 @@ class EmulationEnvConfig:
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
-               f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}"
+               f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}," \
+               f"ovs_config: {self.ovs_config}"
 
     def get_all_ips(self) -> List[str]:
         """
@@ -299,6 +306,7 @@ class EmulationEnvConfig:
         config.resources_config = config.resources_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.log_sink_config = config.log_sink_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
         static_attacker_sequences = {}
         for k,v in config.static_attacker_sequences.items():
             static_attacker_sequences[k] = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),

@@ -214,6 +214,9 @@ class HOST_METRICS:
 
 
 class LOG_SINK:
+    """
+    Constants related to the log sink
+    """
     NETWORK_ID_THIRD_OCTET=253
     NETWORK_ID_FOURTH_OCTET=253
     SUFFIX="_1"

@@ -1519,3 +1519,26 @@ class STATIC_ATTACKERS:
     EXPERT = "expert"
     EXPERIENCED = "experienced"
     NOVICE = "novice"
+
+
+class RYU_CONTROLLER:
+    """
+    Constants related to the RYU Controller
+    """
+    NETWORK_ID_THIRD_OCTET=253
+    NETWORK_ID_FOURTH_OCTET=252
+    SUFFIX="_1"
+    DEFAULT_PORT = 6633
+    DEFAULT_TRANSPORT_PROTOCOL = "tcp"
+
+
+class OPENFLOW:
+    """
+    Constants related to OPENFLOW
+    """
+    OPENFLOW_V_1_0 = "OpenFlow10"
+    OPENFLOW_V_1_1 = "OpenFlow11"
+    OPENFLOW_V_1_2 = "OpenFlow12"
+    OPENFLOW_V_1_3 = "OpenFlow13"
+    OPENFLOW_V_1_4 = "OpenFlow14"
+    OPENFLOW_V_1_5 = "OpenFlow15"
