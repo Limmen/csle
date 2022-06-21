@@ -4,4 +4,8 @@ USER root
 
 # RYU
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
-RUN pip install ryu, eventlet==0.32.2
+RUN pip install ryu eventlet==0.30.2 csle_ryu
+
+# Controller start script
+ADD docker_files/common/ryu_controller.py /ryu_controller.py
+RUN chmod 777 /ryu_controller.py

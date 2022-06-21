@@ -1,0 +1,16 @@
+import csle_ryu.constants.constants as constants
+import argparse
+import subprocess
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--port", help="the port to start the RYU controller", type=int)
+    parser.add_argument("-w", "--webport", help="the port to start the RYU web interface", type=int)
+    parser.add_argument("-c", "--controller", help="the controller file name", type=str)
+    args = parser.parse_args()
+    cmd = f"{constants.RYU.RYU_MANAGER} {constants.RYU.CONTROLLER_PORT_ARG} {args.port} " \
+          f"{constants.RYU.LOG_FILE_ARG} /csle_sdn_controller.log {constants.RYU.WEB_APP_PORT_ARG} {args.webport} " \
+          f"{constants.RYU.APP_LISTS_ARG} " \
+          f"{constants.RYU.OFCTL_REST_APP},{constants.RYU.CONTROLLERS_PREFIX}{args.controller}"
+    p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+    (output, err) = p.communicate()

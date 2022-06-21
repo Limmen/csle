@@ -2158,7 +2158,8 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
 
     sdn_controller_config = SDNControllerConfig(
         container=container, resources=resources, version=version, controller_type=SDNControllerType.RYU,
-        controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT, time_step_len_seconds=15
+        controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT, time_step_len_seconds=15,
+        controller_web_api_port=8080, controller_module_name="learning_switch_controller"
     )
 
     return sdn_controller_config

@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(name='csle_ryu',
-      version='0.0.1',
-      install_requires=['csle-common', 'csle-collector', 'csle-attacker', 'csle-defender'],
+      version='0.0.3',
+      install_requires=['ryu', 'eventlet==0.30.2'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
-      description='Scripts for system identification in CSLE',
+      description='RYU SDN Controllers in CSLE',
       license='Creative Commons Attribution-ShareAlike 4.0 International',
       keywords='Reinforcement-Learning Cyber-Security Markov-Games Markov-Decision-Processes',
       url='https://github.com/Limmen/csle',

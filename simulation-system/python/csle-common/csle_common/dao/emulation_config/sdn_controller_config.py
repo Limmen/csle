@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Dict, Any, Union
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
@@ -10,7 +10,7 @@ class SDNControllerConfig:
     """
 
     def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig, controller_port: int,
-                 controller_type: SDNControllerType,
+                 controller_type: SDNControllerType, controller_module_name: str, controller_web_api_port: int,
                  time_step_len_seconds = 15, version: str = "0.0.1"):
         """
         Initializes the DTO
@@ -20,6 +20,8 @@ class SDNControllerConfig:
         :param controller_port: the port of the controller
         :param controller_type: the type of the controller
         :param time_step_len_seconds: the length of a time-step in the emulation (for monitoring)
+        :param controller_module_name: the name of the controller Python module
+        :param controller_web_api_port: the port to run the controller's web API
         :param version: the version
         """
         self.container= container
@@ -28,9 +30,11 @@ class SDNControllerConfig:
         self.time_step_len_seconds = time_step_len_seconds
         self.version = version
         self.controller_type = controller_type
+        self.controller_module_name = controller_module_name
+        self.controller_web_api_port = controller_web_api_port
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "SDNControllerConfig":
+    def from_dict(d: Dict[str, Any]) -> Union["SDNControllerConfig", None]:
         """
         Converts a dict representation to an instance
 
@@ -43,7 +47,8 @@ class SDNControllerConfig:
             container=NodeContainerConfig.from_dict(d["container"]),
             resources=NodeResourcesConfig.from_dict(d["resources"]),
             time_step_len_seconds=d["time_step_len_seconds"],
-            version=d["version"], controller_type=d["controller_type"], controller_port=d["controller_port"]
+            version=d["version"], controller_type=d["controller_type"], controller_port=d["controller_port"],
+            controller_web_api_port = d["controller_web_api_port"], controller_module_name=d["controller_module_name"]
         )
         return obj
 
@@ -58,6 +63,8 @@ class SDNControllerConfig:
         d["controller_type"] = self.controller_type
         d["controller_port"] = self.controller_port
         d["version"] = self.version
+        d["controller_module_name"] = self.controller_module_name
+        d["controller_web_api_port"] = self.controller_web_api_port
         return d
 
     def __str__(self) -> str:
@@ -67,7 +74,8 @@ class SDNControllerConfig:
         return f"container: {self.container}, " \
                f"resources: {self.resources}, time step len: {self.time_step_len_seconds}, " \
                f"controller type: {self.controller_type}, controller_port: {self.controller_port}, " \
-               f"version: {self.version}"
+               f"version: {self.version}, controller_module_name: {self.controller_module_name}, " \
+               f"controller_web_api_port: {self.controller_web_api_port}"
 
     def to_json_str(self) -> str:
         """
