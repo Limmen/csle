@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import socket
 import paramiko
 from confluent_kafka import Producer
@@ -13,6 +13,7 @@ from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
+from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
@@ -29,7 +30,7 @@ class EmulationEnvConfig:
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
                  resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig,
                  descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]],
-                 ovs_config: OVSConfig):
+                 ovs_config: OVSConfig, sdn_controller_config: Optional[SDNControllerConfig]):
         """
         Initializes the object
 
@@ -45,6 +46,7 @@ class EmulationEnvConfig:
         :param descr: a description of the environment configuration
         :param static_attacker_sequences: dict with static attacker sequences
         :param ovs_config: the OVS config
+        :param sdn_controller_config: the SDN controller config
         """
         self.name = name
         self.descr = descr
@@ -66,6 +68,7 @@ class EmulationEnvConfig:
         self.id = -1
         self.static_attacker_sequences = static_attacker_sequences
         self.ovs_config = ovs_config
+        self.sdn_controller_config = sdn_controller_config
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -89,7 +92,8 @@ class EmulationEnvConfig:
             log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
             services_config=ServicesConfig.from_dict(d["services_config"]),
             descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
-            ovs_config=OVSConfig.from_dict(d["ovs_config"])
+            ovs_config=OVSConfig.from_dict(d["ovs_config"]),
+            sdn_controller_config=SDNControllerConfig.from_dict(d["sdn_controller_config"])
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -117,13 +121,18 @@ class EmulationEnvConfig:
         d["descr"] = self.descr
         d["id"] = self.id
         d["ovs_config"] = self.ovs_config.to_dict()
+        if self.sdn_controller_config is not None:
+            d["sdn_controller_config"] = self.sdn_controller_config.to_dict()
+        else:
+            d["sdn_controller_config"] = None
         d2 = {}
         for k,v in self.static_attacker_sequences.items():
             d2[k] = list(map(lambda x: x.to_dict(), v))
         d["static_attacker_sequences"] = d2
         return d
 
-    def connect(self, ip: str = "", username: str = "", pw: str = "", create_producer: bool = False) -> paramiko.SSHClient:
+    def connect(self, ip: str = "", username: str = "", pw: str = "",
+                create_producer: bool = False) -> paramiko.SSHClient:
         """
         Connects to the agent's host with SSH, either directly or through a jumphost
 
@@ -248,7 +257,7 @@ class EmulationEnvConfig:
                f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
                f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}," \
-               f"ovs_config: {self.ovs_config}"
+               f"ovs_config: {self.ovs_config}, sdn_controller_config: {self.sdn_controller_config}"
 
     def get_all_ips(self) -> List[str]:
         """
@@ -307,6 +316,9 @@ class EmulationEnvConfig:
         config.log_sink_config = config.log_sink_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
+        if config.sdn_controller_config is not None:
+            config.sdn_controller_config = config.sdn_controller_config.create_execution_config(
+                ip_first_octet=ip_first_octet)
         static_attacker_sequences = {}
         for k,v in config.static_attacker_sequences.items():
             static_attacker_sequences[k] = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),

@@ -24,7 +24,8 @@ class OVSManager:
         for c in containers_config.containers:
             for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
                 if ovs_image in c.name:
-                    Logger.__call__().get_logger().info(f"Configuring OVS bridge on container: {c.get_full_name()}")
+                    Logger.__call__().get_logger().info(f"Creating OVS bridge and ports "
+                                                        f"on container: {c.get_full_name()}")
                     container_name = c.get_full_name()
                     bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} {constants.OVS.OVS_VSCTL} " \

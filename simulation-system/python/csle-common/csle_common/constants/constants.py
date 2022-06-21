@@ -71,6 +71,7 @@ class CONTAINER_OS:
     CVE_2016_10033_1_OS = "debian"
     CLIENT_1_OS = "ubuntu"
     KAFKA_1_OS = "ubuntu"
+    RYU_1_OS = "ubuntu"
     ROUTER_1_OS = "ubuntu"
     TELNET_1_OS = "ubuntu"
     SSH_2_OS = "ubuntu"

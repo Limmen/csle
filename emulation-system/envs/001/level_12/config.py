@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 import argparse
 import os
 import multiprocessing
@@ -39,6 +39,8 @@ from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.ovs_switch_config import OvsSwitchConfig
+from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
+from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -74,11 +76,13 @@ def default_config(name: str, network_id: int = 12, level: int = 12, version: st
            "attacker."
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     ovs_config = default_ovs_config(network_id=network_id, level=level, version=version)
+    sdn_controller_config = default_sdn_controller_config(network_id=network_id, level=level, version=version)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
         log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
-        static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config
+        static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config,
+        sdn_controller_config=sdn_controller_config
     )
     return emulation_env_cfg
 
@@ -2113,6 +2117,51 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         )
     ])
     return ovs_config
+
+
+def default_sdn_controller_config(network_id: int, level: int, version: str) -> Union[None, SDNControllerConfig]:
+    """
+    Generates the default SDN controller config
+
+    :param network_id: the network id of the emulation
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the default SDN Controller config
+    """
+    container = NodeContainerConfig(
+        name=f"{constants.CONTAINER_IMAGES.RYU_1}",
+        os=constants.CONTAINER_OS.RYU_1_OS,
+        ips_and_networks=[
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.{constants.RYU_CONTROLLER.NETWORK_ID_FOURTH_OCTET}",
+             ContainerNetwork(
+                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}",
+                 subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                             f"{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}"
+                             f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                 bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+             )),
+        ],
+        version=version, level=str(level),
+        restart_policy=constants.DOCKER.ON_FAILURE_3, suffix=constants.RYU_CONTROLLER.SUFFIX)
+
+    resources = NodeResourcesConfig(
+        container_name=f"{constants.CSLE.NAME}-"
+                       f"{constants.CONTAINER_IMAGES.RYU_1}{constants.RYU_CONTROLLER.SUFFIX}-"
+                       f"{constants.CSLE.LEVEL}{level}",
+        num_cpus=min(8, multiprocessing.cpu_count()), available_memory_gb=4,
+        ips_and_network_configs=[
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.{constants.RYU_CONTROLLER.NETWORK_ID_FOURTH_OCTET}",
+             None)])
+
+    sdn_controller_config = SDNControllerConfig(
+        container=container, resources=resources, version=version, controller_type=SDNControllerType.RYU,
+        controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT, time_step_len_seconds=15
+    )
+
+    return sdn_controller_config
 
 
 if __name__ == '__main__':

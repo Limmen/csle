@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 import argparse
 import os
 import multiprocessing
@@ -38,6 +38,7 @@ from csle_common.dao.emulation_config.node_services_config import NodeServicesCo
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
+from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -73,11 +74,13 @@ def default_config(name: str, network_id: int = 6, level: int = 6, version: str 
             "attacker."
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     ovs_config = default_ovs_config(network_id=network_id, level=level, version=version)
+    sdn_controller_config = default_sdn_controller_config(network_id=network_id, level=level, version=version)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
         log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
-        static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config
+        static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config,
+        sdn_controller_config=sdn_controller_config
     )
     return emulation_env_cfg
 
@@ -3697,6 +3700,18 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
     """
     ovs_config = OVSConfig(switch_configs=[])
     return ovs_config
+
+
+def default_sdn_controller_config(network_id: int, level: int, version: str) -> Union[None, SDNControllerConfig]:
+    """
+    Generates the default SDN controller config
+
+    :param network_id: the network id of the emulation
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the default SDN Controller config
+    """
+    return None
 
 
 if __name__ == '__main__':

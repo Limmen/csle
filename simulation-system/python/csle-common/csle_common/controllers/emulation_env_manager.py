@@ -11,6 +11,7 @@ from csle_common.controllers.snort_ids_manager import SnortIDSManager
 from csle_common.controllers.ossec_ids_manager import OSSECIDSManager
 from csle_common.controllers.host_manager import HostManager
 from csle_common.controllers.log_sink_manager import LogSinkManager
+from csle_common.controllers.sdn_controller_manager import SDNControllerManager
 from csle_common.controllers.users_manager import UsersManager
 from csle_common.controllers.vulnerabilities_manager import VulnerabilitiesManager
 from csle_common.controllers.flags_manager import FlagsManager
@@ -81,7 +82,7 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 21
+        steps = 22
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -105,6 +106,11 @@ class EmulationEnvManager:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to log sink --")
         ContainerManager.connect_containers_to_logsink(containers_config=emulation_env_config.containers_config,
                                                        log_sink_config=emulation_env_config.log_sink_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply SDN controller config --")
+        SDNControllerManager.connect_sdn_controller_to_network(
+            sdn_controller_config=emulation_env_config.sdn_controller_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
@@ -310,6 +316,8 @@ class EmulationEnvManager:
         """
         path = ExperimentUtil.default_output_dir()
         emulation_env_config = emulation_execution.emulation_env_config
+
+        # Start regular containers
         for c in emulation_env_config.containers_config.containers:
             ips = c.get_ips()
             container_resources : NodeResourcesConfig = None
@@ -333,9 +341,9 @@ class EmulationEnvManager:
                   f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
             subprocess.call(cmd, shell=True)
 
+        # Start the logsink container
         c = emulation_env_config.log_sink_config.container
         container_resources : NodeResourcesConfig = emulation_env_config.log_sink_config.resources
-
         name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
@@ -346,6 +354,21 @@ class EmulationEnvManager:
               f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
               f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
         subprocess.call(cmd, shell=True)
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Start the SDN controller container
+            c = emulation_env_config.sdn_controller_config.container
+            container_resources : NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
+            name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
+            Logger.__call__().get_logger().info(f"Starting container:{name}")
+            cmd = f"docker container run -dt --name {name} " \
+                  f"--hostname={c.name}{c.suffix} --label dir={path} " \
+                  f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+                  f"-e TZ=Europe/Stockholm " \
+                  f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
+                  f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
+            subprocess.call(cmd, shell=True)
 
     @staticmethod
     def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1, create_network : bool = True) -> None:
@@ -393,17 +416,28 @@ class EmulationEnvManager:
         :return: None
         """
         emulation_env_config = execution.emulation_env_config
+
+        # Stop regular containers
         for c in emulation_env_config.containers_config.containers:
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Stopping container:{name}")
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
 
+        # Stop the logsink container
         c = emulation_env_config.log_sink_config.container
         name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Stopping container:{name}")
         cmd = f"docker stop {name}"
         subprocess.call(cmd, shell=True)
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Stop the SDN controller container
+            c = emulation_env_config.sdn_controller_config.container
+            name = c.get_full_name()
+            Logger.__call__().get_logger().info(f"Stopping container:{name}")
+            cmd = f"docker stop {name}"
+            subprocess.call(cmd, shell=True)
 
     @staticmethod
     def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig) -> None:
@@ -472,17 +506,28 @@ class EmulationEnvManager:
         :param execution: the execution to remove
         :return: None
         """
+
+        # Remove regular containers
         for c in execution.emulation_env_config.containers_config.containers:
             name = c.get_full_name()
             Logger.__call__().get_logger().info(f"Removing container:{name}")
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
+        # Remove the logsink container
         c = execution.emulation_env_config.log_sink_config.container
         name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Removing container:{name}")
         cmd = f"docker rm {name}"
         subprocess.call(cmd, shell=True)
+
+        if execution.emulation_env_config.sdn_controller_config is not None:
+            # Remove the SDN controller container
+            c = execution.emulation_env_config.sdn_controller_config.container
+            name = c.get_full_name()
+            Logger.__call__().get_logger().info(f"Removing container:{name}")
+            cmd = f"docker rm {name}"
+            subprocess.call(cmd, shell=True)
 
     @staticmethod
     def install_emulation(config: EmulationEnvConfig) -> None:

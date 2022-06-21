@@ -34,7 +34,7 @@ class OvsSwitchConfig:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = OvsSwitchConfig(container_name=d["container_name"], ip=d["str"],
+        obj = OvsSwitchConfig(container_name=d["container_name"], ip=d["ip"],
                               openflow_protocols=d["openflow_protocols"], controller_ip=d["controller_ip"],
                               controller_port=d["controller_port"],
                               controller_transport_protocol=d["controller_transport_protocol"])

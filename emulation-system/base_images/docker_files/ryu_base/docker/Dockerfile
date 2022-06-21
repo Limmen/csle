@@ -4,4 +4,4 @@ USER root
 
 # RYU
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
-RUN pip install ryu
+RUN pip install ryu, eventlet==0.32.2
