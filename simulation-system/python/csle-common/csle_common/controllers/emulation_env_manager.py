@@ -82,7 +82,7 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 23
+        steps = 22
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -102,11 +102,6 @@ class EmulationEnvManager:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
         EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to log sink --")
-        ContainerManager.connect_containers_to_logsink(containers_config=emulation_env_config.containers_config,
-                                                       log_sink_config=emulation_env_config.log_sink_config,
-                                                       ovs_config=emulation_env_config.ovs_config)
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
         OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
@@ -207,17 +202,9 @@ class EmulationEnvManager:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        steps = 4
+        steps = 3
         current_step = 1
         Logger.__call__().get_logger().info(f"-- Configuring the logsink --")
-
-        # Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Creating networks --")
-        # networks = ContainerManager.get_network_references()
-        # networks = list(map(lambda x: x.name, networks))
-        # ip, net = emulation_env_config.log_sink_config.container.ips_and_networks[0]
-        # ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
-
-        current_step += 1
         Logger.__call__().get_logger().info(
             f"-- Log sink configuration step {current_step}/{steps}: Connect log sink container to network --")
         ContainerManager.connect_logsink_to_network(log_sink_config=emulation_env_config.log_sink_config)
