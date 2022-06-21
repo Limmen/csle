@@ -105,7 +105,15 @@ class EmulationEnvManager:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to log sink --")
         ContainerManager.connect_containers_to_logsink(containers_config=emulation_env_config.containers_config,
-                                                       log_sink_config=emulation_env_config.log_sink_config)
+                                                       log_sink_config=emulation_env_config.log_sink_config,
+                                                       ovs_config=emulation_env_config.ovs_config)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
+        OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
+        OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
@@ -115,14 +123,6 @@ class EmulationEnvManager:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller --")
         SDNControllerManager.start_controller(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
-        OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
-        OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
@@ -211,11 +211,11 @@ class EmulationEnvManager:
         current_step = 1
         Logger.__call__().get_logger().info(f"-- Configuring the logsink --")
 
-        Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Creating networks --")
-        networks = ContainerManager.get_network_references()
-        networks = list(map(lambda x: x.name, networks))
-        ip, net = emulation_env_config.log_sink_config.container.ips_and_networks[0]
-        ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
+        # Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Creating networks --")
+        # networks = ContainerManager.get_network_references()
+        # networks = list(map(lambda x: x.name, networks))
+        # ip, net = emulation_env_config.log_sink_config.container.ips_and_networks[0]
+        # ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
 
         current_step += 1
         Logger.__call__().get_logger().info(

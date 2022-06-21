@@ -150,3 +150,26 @@ class TopologyManager:
                                               wait_for_completion=True)
 
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
+
+        # Add default gw to SDN controller if it exists
+        if emulation_env_config.sdn_controller_config is not None:
+            gw = None
+            for ovs_sw in emulation_env_config.ovs_config.switch_configs:
+                if ovs_sw.ingress_gw:
+                    gw = ovs_sw
+            if gw is not None:
+                gw_ip = ".".join(emulation_env_config.sdn_controller_config.container.get_ips()[0].split(".")[0:-1]) \
+                        + str(gw.ip.split(".")[-1])
+                ips = emulation_env_config.sdn_controller_config.container.get_ips()
+                ip = ips[0]
+                Logger.__call__().get_logger().info("Connecting to node:{}".format(ip))
+                EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
+                cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} " \
+                      f"-net {emulation_env_config.execution_id}.{emulation_env_config.level}.0.0/24 " \
+                      f"{constants.COMMANDS.NETMASK} {constants.CSLE.CSLE_BITMASK} " \
+                      f"gw {gw_ip}"
+                print("SDN CONTROLLER ROUTE:")
+                print(cmd)
+                EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
+                                              wait_for_completion=True)
+                EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)

@@ -1,23 +1,18 @@
-import logging
-from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
-from ryu.ofproto import ofproto_v1_0
 from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 from ryu.lib.packet import ether_types
 from csle_ryu.dao.ryu_controller_type import RYUControllerType
+from csle_ryu.monitor.flow_and_port_stats_monitor import FlowAndPortStatsMonitor
 
 
-class LearningSwitchController(app_manager.RyuApp):
+class LearningSwitchController(FlowAndPortStatsMonitor):
     """
     RYU Controller implementing a learning L2 switch
     """
-
-    # OpenFlow version to use
-    OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION]
 
     def __init__(self, *args, **kwargs):
         """

@@ -14,6 +14,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.ovs_config import OVSConfig
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
@@ -427,29 +428,33 @@ class ContainerManager:
 
 
     @staticmethod
-    def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: LogSinkConfig) -> None:
+    def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: LogSinkConfig,
+                                      ovs_config: OVSConfig) -> None:
         """
         Connects running containers to the log sink
 
         :param containers_config: the containers configuration
         :param log_sink_config: the configuration of the logsink
+        :param ovs_config: the OVS config
         :return: None
         """
         log_sink_ip, logsink_net = log_sink_config.container.ips_and_networks[0]
         log_sink_network_prefix = ".".join(log_sink_ip.split(".")[0:-1])
         for c in containers_config.containers:
+            ovs = False
             for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
                 if ovs_image in c.name:
-                    continue
-            container_name = c.get_full_name()
+                    ovs = True
+            if not ovs:
+                container_name = c.get_full_name()
 
-            ip_suffix = c.ips_and_networks[0][0].split(".")[-1]
-            c_ip = log_sink_network_prefix + "." + ip_suffix
-            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c_ip} {logsink_net.name} " \
-                  f"{container_name}"
-            Logger.__call__().get_logger().info(
-                f"Connecting container:{container_name} to network:{logsink_net.name} with ip: {c_ip}")
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+                ip_suffix = c.ips_and_networks[0][0].split(".")[-1]
+                c_ip = log_sink_network_prefix + "." + ip_suffix
+                cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c_ip} {logsink_net.name} " \
+                      f"{container_name}"
+                Logger.__call__().get_logger().info(
+                    f"Connecting container:{container_name} to network:{logsink_net.name} with ip: {c_ip}")
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
     def create_network_from_dto(network_dto: ContainerNetwork, existing_network_names = None) -> None:

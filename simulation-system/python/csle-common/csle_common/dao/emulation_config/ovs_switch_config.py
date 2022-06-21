@@ -8,7 +8,7 @@ class OvsSwitchConfig:
     """
 
     def __init__(self, container_name: str, ip: str, openflow_protocols: List[str], controller_ip: str,
-                 controller_port: int, controller_transport_protocol: str):
+                 controller_port: int, controller_transport_protocol: str, ingress_gw: bool = False):
         """
         Initializes the DTO
 
@@ -25,6 +25,7 @@ class OvsSwitchConfig:
         self.controller_ip = controller_ip
         self.controller_port = controller_port
         self.controller_transport_protocol = controller_transport_protocol
+        self.ingress_gw = ingress_gw
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "OvsSwitchConfig":
@@ -37,7 +38,8 @@ class OvsSwitchConfig:
         obj = OvsSwitchConfig(container_name=d["container_name"], ip=d["ip"],
                               openflow_protocols=d["openflow_protocols"], controller_ip=d["controller_ip"],
                               controller_port=d["controller_port"],
-                              controller_transport_protocol=d["controller_transport_protocol"])
+                              controller_transport_protocol=d["controller_transport_protocol"],
+                              ingress_gw=d["ingress_gw"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -51,6 +53,7 @@ class OvsSwitchConfig:
         d["controller_ip"] = self.controller_ip
         d["controller_port"] = self.controller_port
         d["controller_transport_protocol"] = self.controller_transport_protocol
+        d["ingress_gw"] = self.ingress_gw
         return d
 
     def __str__(self) -> str:
@@ -59,7 +62,7 @@ class OvsSwitchConfig:
         """
         return f"ip:{self.ip}, container_name: {self.container_name}, openflow_protocols: {self.openflow_protocols}, " \
                f"controller_ip: {self.controller_ip}, controller_port: {self.controller_port}, " \
-               f"controller_transport_protocol: {self.controller_transport_protocol}"
+               f"controller_transport_protocol: {self.controller_transport_protocol}, ingress_gw: {self.ingress_gw}"
 
     def to_json_str(self) -> str:
         """

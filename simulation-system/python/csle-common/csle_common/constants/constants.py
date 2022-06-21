@@ -1306,6 +1306,7 @@ class CSLE:
     CSLE_EDGE_SUBNETMASK_SUFFIX = ".0/24"
     EDGE_SUBNETMASK_BITS = 24
     CSLE_EDGE_BITMASK = "255.255.255.0"
+    CSLE_BITMASK = "255.255.0.0"
     NON_IDS_ROUTER = "router_1"
     LIST_OF_IP_SUBNETS = list(range(15,171)) + list(range(173,191)) + list(range(193,250))
 
@@ -1530,6 +1531,7 @@ class RYU_CONTROLLER:
     """
     Constants related to the RYU Controller
     """
+
     NETWORK_ID_THIRD_OCTET=253
     NETWORK_ID_FOURTH_OCTET=252
     SUFFIX="_1"

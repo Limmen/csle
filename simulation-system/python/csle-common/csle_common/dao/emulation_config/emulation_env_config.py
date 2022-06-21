@@ -30,7 +30,8 @@ class EmulationEnvConfig:
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
                  resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig,
                  descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]],
-                 ovs_config: OVSConfig, sdn_controller_config: Optional[SDNControllerConfig]):
+                 ovs_config: OVSConfig, sdn_controller_config: Optional[SDNControllerConfig],
+                 level: int, version: str, execution_id : int):
         """
         Initializes the object
 
@@ -47,6 +48,9 @@ class EmulationEnvConfig:
         :param static_attacker_sequences: dict with static attacker sequences
         :param ovs_config: the OVS config
         :param sdn_controller_config: the SDN controller config
+        :param level: the level of the emulation
+        :param version: the version of the emulation
+        :param execution_id: the execution id of the emulation
         """
         self.name = name
         self.descr = descr
@@ -69,6 +73,9 @@ class EmulationEnvConfig:
         self.static_attacker_sequences = static_attacker_sequences
         self.ovs_config = ovs_config
         self.sdn_controller_config = sdn_controller_config
+        self.level = level
+        self.execution_id = execution_id
+        self.version = version
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -93,7 +100,8 @@ class EmulationEnvConfig:
             services_config=ServicesConfig.from_dict(d["services_config"]),
             descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
             ovs_config=OVSConfig.from_dict(d["ovs_config"]),
-            sdn_controller_config=SDNControllerConfig.from_dict(d["sdn_controller_config"])
+            sdn_controller_config=SDNControllerConfig.from_dict(d["sdn_controller_config"]),
+            level=d["level"], execution_id=d["execution_id"], version=d["version"]
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -120,6 +128,9 @@ class EmulationEnvConfig:
         d["image"] = self.image
         d["descr"] = self.descr
         d["id"] = self.id
+        d["version"] = self.version
+        d["level"] = self.level
+        d["execution_id"] = self.execution_id
         d["ovs_config"] = self.ovs_config.to_dict()
         if self.sdn_controller_config is not None:
             d["sdn_controller_config"] = self.sdn_controller_config.to_dict()
@@ -306,6 +317,7 @@ class EmulationEnvConfig:
         :return: the created execution config
         """
         config = self.copy()
+        config.execution_id = ip_first_octet
         config.containers_config = config.containers_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.users_config = config.users_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.flags_config = config.flags_config.create_execution_config(ip_first_octet=ip_first_octet)

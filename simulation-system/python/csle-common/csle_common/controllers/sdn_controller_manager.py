@@ -33,6 +33,7 @@ class SDNControllerManager:
         # Wait a few seconds before connecting
         time.sleep(2)
 
+        # Connect SDN controller
         for ip_net in c.ips_and_networks:
             ip, net = ip_net
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \

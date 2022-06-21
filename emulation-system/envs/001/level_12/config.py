@@ -82,7 +82,7 @@ def default_config(name: str, network_id: int = 12, level: int = 12, version: st
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
         log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
         static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config,
-        sdn_controller_config=sdn_controller_config
+        sdn_controller_config=sdn_controller_config, level=level, execution_id=-1, version=version
     )
     return emulation_env_cfg
 
@@ -181,6 +181,17 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{network_id}.5{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH2,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.2",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.253{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH3,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -1176,6 +1187,22 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.2",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                         f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
+                                f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
             )
         ],
         output_accept=set([]),
@@ -1265,6 +1292,22 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.2",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                         f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
+                                f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
@@ -2083,7 +2126,8 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
                 constants.OPENFLOW.OPENFLOW_V_1_0, constants.OPENFLOW.OPENFLOW_V_1_1,
                 constants.OPENFLOW.OPENFLOW_V_1_2, constants.OPENFLOW.OPENFLOW_V_1_3,
                 constants.OPENFLOW.OPENFLOW_V_1_4, constants.OPENFLOW.OPENFLOW_V_1_5
-            ]
+            ],
+            ingress_gw=True
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
@@ -2098,7 +2142,8 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
                 constants.OPENFLOW.OPENFLOW_V_1_0, constants.OPENFLOW.OPENFLOW_V_1_1,
                 constants.OPENFLOW.OPENFLOW_V_1_2, constants.OPENFLOW.OPENFLOW_V_1_3,
                 constants.OPENFLOW.OPENFLOW_V_1_4, constants.OPENFLOW.OPENFLOW_V_1_5
-            ]
+            ],
+            ingress_gw=False
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
@@ -2113,7 +2158,8 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
                 constants.OPENFLOW.OPENFLOW_V_1_0, constants.OPENFLOW.OPENFLOW_V_1_1,
                 constants.OPENFLOW.OPENFLOW_V_1_2, constants.OPENFLOW.OPENFLOW_V_1_3,
                 constants.OPENFLOW.OPENFLOW_V_1_4, constants.OPENFLOW.OPENFLOW_V_1_5
-            ]
+            ],
+            ingress_gw=False
         )
     ])
     return ovs_config

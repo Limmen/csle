@@ -11,6 +11,8 @@ if __name__ == '__main__':
     cmd = f"{constants.RYU.RYU_MANAGER} {constants.RYU.CONTROLLER_PORT_ARG} {args.port} " \
           f"{constants.RYU.LOG_FILE_ARG} /csle_sdn_controller.log {constants.RYU.WEB_APP_PORT_ARG} {args.webport} " \
           f"{constants.RYU.APP_LISTS_ARG} " \
-          f"{constants.RYU.OFCTL_REST_APP},{constants.RYU.CONTROLLERS_PREFIX}{args.controller}"
+          f"{constants.RYU.OFCTL_REST_APP},{constants.RYU.OFCTL_REST_TOPOLOGY},{constants.RYU.OFCTL_WS_TOPOLOGY}," \
+          f"{constants.RYU.OFCTL_GUI_TOPOLOGY},{constants.RYU.CONTROLLERS_PREFIX}{args.controller} " \
+          f"{constants.RYU.OBSERVE_LINKS}"
     p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
     (output, err) = p.communicate()

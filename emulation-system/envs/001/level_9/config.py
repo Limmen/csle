@@ -87,7 +87,7 @@ def default_config(name: str, network_id: int = 9, level: int = 9, version: str 
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
         log_sink_config=log_sink_cfg, services_config=services_cfg, descr=descr,
         static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config,
-        sdn_controller_config=sdn_controller_config
+        sdn_controller_config=sdn_controller_config, level=level, execution_id=-1, version=version
     )
     return emulation_env_cfg
 
