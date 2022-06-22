@@ -120,10 +120,6 @@ class EmulationEnvManager:
         OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
-        OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
-
-        current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
         UsersManager.create_users(emulation_env_config=emulation_env_config)
 
@@ -138,6 +134,10 @@ class EmulationEnvManager:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
         TopologyManager.create_topology(emulation_env_config=emulation_env_config)
+
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
+        # OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
 
         if not no_traffic:
             current_step += 1
