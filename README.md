@@ -473,21 +473,30 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
   Preprint: https://arxiv.org/abs/2204.01126)**
 
 ```bash
-@misc{hammar2022policyexamination,
-      title={A System for Interactive Examination  of Learned Security Policies},
-      author={Kim Hammar and Rolf Stadler},
-      year={2022}
-}
+@INPROCEEDINGS{hammar_stadler_noms_22,
+  author={Hammar, Kim and Stadler, Rolf},
+  booktitle={NOMS 2022-2022 IEEE/IFIP Network Operations and Management Symposium},
+  title={A System for Interactive Examination of Learned Security Policies},
+  year={2022},
+  volume={},
+  number={},
+  pages={1-3},
+  doi={10.1109/NOMS54207.2022.9789707}}
 ```
 
 - **Learning Security Strategies through Game Play and Optimal Stopping (ICML 2022 ML4Cyber Workshop)
   Preprint: https://arxiv.org/abs/2205.14694)**
 
 ```bash
-@misc{hammar2022policyexamination,
-      title={Learning Security Strategies through Game Play and Optimal Stopping},
-      author={Kim Hammar and Rolf Stadler},
-      year={2022}
+@inproceedings{hammar_stadler_game_22_preprint,
+  author = {Hammar, Kim and Stadler, Rolf},
+  title = {Learning Security Strategies through Game Play and Optimal Stopping},
+  booktitle = {Proceedings of the ML4Cyber workshop at the
+               39th International Conference on Machine Learning,
+               {ICML} 2022, Baltimore, USA, July
+               17-23, 2022},
+  publisher = {{PMLR}},
+  year      = {2022}
 }
 ```
 

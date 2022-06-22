@@ -1,18 +1,27 @@
 from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER
 from ryu.controller.handler import set_ev_cls
-from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
-from ryu.lib.packet import ether_types
 from csle_ryu.dao.ryu_controller_type import RYUControllerType
 from csle_ryu.monitor.flow_and_port_stats_monitor import FlowAndPortStatsMonitor
 import csle_ryu.constants.constants as constants
+from ryu.lib import stplib
 
 
 class LearningSwitchController(FlowAndPortStatsMonitor):
     """
-    RYU Controller implementing a learning L2 switch for OpenFlow 1.3
+    RYU Controller implementing a learning L2 switch for OpenFlow 1.3 with the STP spanning tree protocol
+
+    To avoid the problems associated with redundant links in a switched LAN,
+    STP is implemented on switches to monitor the network topology. Every link between switches,
+    and in particular redundant links, are catalogued.
+    The spanning-tree algorithm then blocks forwarding on redundant links by setting up one preferred link
+    between switches in the LAN. This preferred link is used for all Ethernet frames unless it fails,
+    in which case a non-preferred redundant link is enabled. When implemented in a network,
+    STP designates one layer-2 switch as root bridge. All switches then select their best connection
+    towards the root bridge for forwarding and block other redundant links.
+    All switches constantly communicate with their neighbors in the LAN using bridge protocol data units (BPDUs)
     """
 
     def __init__(self, *args, **kwargs):
@@ -27,9 +36,36 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         # MAC-to-PORT table to be learned
         self.mac_to_port = {}
 
+        # The spanning tree protocol version version
+        self.stp = kwargs['stplib']
+
         # Controller type
         self.controller_type = RYUControllerType.LEARNING_SWITCH
 
+    def delete_flow(self, datapath) -> None:
+        """
+        Utility function for instructing a switch to delete all flows that have been installed
+
+        :param datapath: the datapath, i.e. abstraction of the link to the switch
+        :return: None
+        """
+
+        # Extract protcol version and OF parser
+        openflow_protocol = datapath.ofproto
+        parser = datapath.ofproto_parser
+
+        for dst_mac_address in self.mac_to_port[datapath.id].keys():
+            # Match all flows with the given MAC address as destination
+            match = parser.OFPMatch(eth_dst=dst_mac_address)
+
+            # Create an OpenFlow Modify-State message to remove the flow
+            mod = parser.OFPFlowMod(
+                datapath, command=openflow_protocol.OFPFC_DELETE,
+                out_port=openflow_protocol.OFPP_ANY, out_group=openflow_protocol.OFPG_ANY,
+                priority=1, match=match)
+
+            # Send the message to the switch
+            datapath.send_msg(mod)
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
@@ -96,11 +132,12 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         # Send the message to the switch
         datapath.send_msg(mod)
 
-    @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
+    @set_ev_cls(stplib.EventPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev) -> None:
         """
         Handler called when the switch has received a packet with an unknown destination and thus forwards
-        the packet to the controller
+        the packet to the controller. Excludes BPDU (bridge protocol data units) packets that are part of the
+        STP protocol.
 
         :param ev: the packet-in-event
         :return: None
@@ -110,30 +147,24 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         msg = ev.msg
         datapath = msg.datapath
 
-        # message protocol and parser and input port
+        # Extract message protocol, parser, input port, ethernet protocol, and source and destination MAC addresses
         openflow_protocol = datapath.ofproto
         parser = datapath.ofproto_parser
         in_port = msg.match['in_port']
-
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocols(ethernet.ethernet)[0]
-
-        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
-            # ignore link-layer discovery protocol (lldp) packet
-            return
-
         dst_mac_address = eth.dst
         src_mac_address = eth.src
 
         # Each switch is identified by a datapath 64-bit ID (DPID) containing the 48-bit MAC address
         # as well as 16-bit additional ID bits
-        datapath_id = format(datapath.id, "d").zfill(16)
+        datapath_id = datapath.id
 
         # Initialize empty row in the mac-to-port table
         self.mac_to_port.setdefault(datapath_id, {})
 
         self.logger.info(f"[SDN-Controller {self.controller_type}] received packet in, DPID:{datapath_id}, "
-                     f"src_mac_address:{src_mac_address}, dst_mac_address:{dst_mac_address}, port number:{in_port}")
+                         f"src_mac_address:{src_mac_address}, dst_mac_address:{dst_mac_address}, port number:{in_port}")
 
         # learn a mac address to avoid FLOOD next time, i.e. map the port of the switch to the source MAC address
         self.mac_to_port[datapath_id][src_mac_address] = in_port
@@ -155,15 +186,10 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         # flow table.
         if out_port != openflow_protocol.OFPP_FLOOD:
             # Create a matcher object which defines how packets are matched to the flow
-            match = parser.OFPMatch(in_port=in_port, eth_dst=dst_mac_address, eth_src=src_mac_address)
+            match = parser.OFPMatch(in_port=in_port, eth_dst=dst_mac_address)
 
-            # verify if we have a valid buffer_id, if yes then we dont have to assign a new buffer id and
-            # we dont have to send back the packet data since it is already queued in the buffer
-            if msg.buffer_id != openflow_protocol.OFP_NO_BUFFER:
-                self.add_flow(datapath, 1, match, actions, msg.buffer_id)
-                return
-            else:
-                self.add_flow(datapath, 1, match, actions)
+            # Add the flow to the switch with priority 1.
+            self.add_flow(datapath, 1, match, actions)
 
         # The switch normally keeps packet it does not know how to forward in a queue/buffer. We extract the
         # buffer id from the openflow event. However if the switch does not use buffering, it will send the complete
@@ -174,9 +200,51 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
             data = msg.data
 
         # Prepare OFP message to send to the switch and instruct it what to do with this packet.
-        out = datapath.ofproto_parser.OFPPacketOut(
-            datapath=datapath, buffer_id=msg.buffer_id, in_port=in_port,
-            actions=actions, data=data)
-
+        out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id,
+                                  in_port=in_port, actions=actions, data=data)
         # Send the message to the Switch
         datapath.send_msg(out)
+
+    @set_ev_cls(stplib.EventTopologyChange, MAIN_DISPATCHER)
+    def _topology_change_handler(self, ev) -> None:
+        """
+        Handler called when a topology change has been detected by the STP protocol
+
+        :param ev: the topology change event
+        :return:
+        """
+        # Extract the datapath (abstraction of the communication link to the switch)
+        datapath = ev.dp
+
+        self.logger.info(f"[SDN-Controller {self.controller_type}] received topology change event from "
+                         f"DPID:{datapath.id}, "
+                         f"flushing the MAC table and deleting installed flows")
+
+        # If we have flows installed for this switch and learned mac-to-port mappings, delete them
+        if datapath.id in self.mac_to_port:
+            self.delete_flow(datapath)
+            del self.mac_to_port[datapath.id]
+
+    @set_ev_cls(stplib.EventPortStateChange, MAIN_DISPATCHER)
+    def _port_state_change_handler(self, ev) -> None:
+        """
+        Handler called when the controller receives a message from the switch which indicates that one of its
+        ports has changed
+
+        :param ev: the port-change evnet
+        :return: None
+        """
+        datapath_id = ev.dp.id
+
+        # Extract metadata from the received OpenFlow event
+        port_no = ev.port_no
+
+        # Map port state to strings for logging
+        openflow_state = {stplib.PORT_STATE_DISABLE: 'DISABLE',
+                    stplib.PORT_STATE_BLOCK: 'BLOCK',
+                    stplib.PORT_STATE_LISTEN: 'LISTEN',
+                    stplib.PORT_STATE_LEARN: 'LEARN',
+                    stplib.PORT_STATE_FORWARD: 'FORWARD'}
+
+        self.logger.info(f"[SDN-Controller {self.controller_type}] a port {port_no} was modified on switch with "
+                         f"DPID: {datapath_id}. Port state: {openflow_state[ev.port_state]}")

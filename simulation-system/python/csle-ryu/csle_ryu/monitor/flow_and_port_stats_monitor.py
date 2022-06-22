@@ -5,6 +5,7 @@ from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
+from ryu.lib import stplib
 
 
 class FlowAndPortStatsMonitor(app_manager.RyuApp):
@@ -14,6 +15,9 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
 
     # OpenFlow version to use
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
+
+    # Spanning tree protocol to use
+    _CONTEXTS = {'stplib': stplib.Stp}
 
     def __init__(self, *args, **kwargs):
         """
