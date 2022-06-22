@@ -2433,7 +2433,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.OVS_1}_1-{constants.CSLE.LEVEL}{level}",
-            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}."
                           f"3",
@@ -2444,7 +2444,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.OVS_1}_2-{constants.CSLE.LEVEL}{level}",
-            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.3",
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.10",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}."
                           f"11",
@@ -2455,7 +2455,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.OVS_1}_3-{constants.CSLE.LEVEL}{level}",
-            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.31",
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}."
                           f"19",

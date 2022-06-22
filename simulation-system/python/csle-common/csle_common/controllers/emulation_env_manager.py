@@ -98,13 +98,13 @@ class EmulationEnvManager:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
         ContainerManager.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
-        # EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
-        # ResourceConstraintsManager.apply_resource_constraints(emulation_env_config=emulation_env_config)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
+        EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
+        ResourceConstraintsManager.apply_resource_constraints(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
@@ -119,80 +119,85 @@ class EmulationEnvManager:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
         OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
-        # UsersManager.create_users(emulation_env_config=emulation_env_config)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: "
+                                            f"Verify that the SDN controller can ping the switches --")
+        SDNControllerManager.ping_all(emulation_env_config=emulation_env_config)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
-        # VulnerabilitiesManager.create_vulns(emulation_env_config=emulation_env_config)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
+        OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating flags --")
-        # FlagsManager.create_flags(emulation_env_config=emulation_env_config)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
-        # TopologyManager.create_topology(emulation_env_config=emulation_env_config)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
+        UsersManager.create_users(emulation_env_config=emulation_env_config)
 
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
-        # OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
+        VulnerabilitiesManager.create_vulns(emulation_env_config=emulation_env_config)
 
-        # if not no_traffic:
-        #     current_step += 1
-        #     Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "
-        #                                         f"on internal nodes --")
-        #     TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
-        #
-        # if not no_clients:
-        #     current_step += 1
-        #     Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
-        #     TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step "
-        #                                     f"{current_step}/{steps}: Starting the Snort Intrusion Detection System --")
-        # SnortIDSManager.start_snort_ids(emulation_env_config=emulation_env_config)
-        # time.sleep(10)
-        # SnortIDSManager.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step "
-        #                                     f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
-        # OSSECIDSManager.start_ossec_ids(emulation_env_config=emulation_env_config)
-        # time.sleep(10)
-        # OSSECIDSManager.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
-        # HostManager.start_host_monitor_thread(emulation_env_config=emulation_env_config)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
-        # MonitorToolsController.start_docker_stats_manager(port=50051)
-        # time.sleep(10)
-        # ContainerManager.start_docker_stats_thread(execution=emulation_execution)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
-        # MonitorToolsController.start_cadvisor()
-        # time.sleep(2)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Grafana --")
-        # MonitorToolsController.start_grafana()
-        # time.sleep(2)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Node_exporter --")
-        # MonitorToolsController.start_node_exporter()
-        # time.sleep(2)
-        #
-        # current_step += 1
-        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Prometheus --")
-        # MonitorToolsController.start_prometheus()
-        # time.sleep(2)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating flags --")
+        FlagsManager.create_flags(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
+        TopologyManager.create_topology(emulation_env_config=emulation_env_config)
+
+        if not no_traffic:
+            current_step += 1
+            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "
+                                                f"on internal nodes --")
+            TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
+
+        if not no_clients:
+            current_step += 1
+            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
+            TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step "
+                                            f"{current_step}/{steps}: Starting the Snort Intrusion Detection System --")
+        SnortIDSManager.start_snort_ids(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+        SnortIDSManager.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step "
+                                            f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
+        OSSECIDSManager.start_ossec_ids(emulation_env_config=emulation_env_config)
+        time.sleep(10)
+        OSSECIDSManager.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
+        HostManager.start_host_monitor_thread(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
+        MonitorToolsController.start_docker_stats_manager(port=50051)
+        time.sleep(10)
+        ContainerManager.start_docker_stats_thread(execution=emulation_execution)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
+        MonitorToolsController.start_cadvisor()
+        time.sleep(2)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Grafana --")
+        MonitorToolsController.start_grafana()
+        time.sleep(2)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Node_exporter --")
+        MonitorToolsController.start_node_exporter()
+        time.sleep(2)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Prometheus --")
+        MonitorToolsController.start_prometheus()
+        time.sleep(2)
 
     @staticmethod
     def apply_log_sink_config(emulation_env_config: EmulationEnvConfig) -> None:

@@ -824,6 +824,7 @@ class COMMANDS:
     START_TRAINING_JOB = "nohup csle trainingjob {} &"
     START_SYSTEM_IDENTIFICATION_JOB = "nohup csle systemidentificationjob {} &"
     DOCKER_EXEC_COMMAND = "docker exec"
+    PING = "ping"
 
 
 class OVS:
