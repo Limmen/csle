@@ -89,7 +89,7 @@ class SDNControllerManager:
                     cmd=cmd,
                     conn=emulation_env_config.get_connection(
                         ip=emulation_env_config.sdn_controller_config.container.get_ips()[0]))
-                time.sleep(5)
+                time.sleep(0.2)
         else:
             raise ValueError(f"Controller type: {emulation_env_config.sdn_controller_config.controller_type} "
                              f"not recognized")

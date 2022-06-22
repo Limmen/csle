@@ -336,7 +336,8 @@ class ContainerManager:
                 ip, net = ip_net
                 cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                       f"{container_name}"
-                Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+                Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
+                                                    f"with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod

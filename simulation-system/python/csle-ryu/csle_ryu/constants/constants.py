@@ -6,6 +6,7 @@ class RYU:
     """
     CONTROLLERS_PREFIX = "csle_ryu.controllers."
     OFCTL_REST_APP = "ryu.app.ofctl_rest"
+    OFCTL_REST_QOS_APP = "ryu.app.rest_qos"
     OFCTL_REST_TOPOLOGY = "ryu.app.rest_topology"
     OFCTL_WS_TOPOLOGY = "ryu.app.ws_topology"
     OFCTL_GUI_TOPOLOGY = "ryu.app.gui_topology.gui_topology"

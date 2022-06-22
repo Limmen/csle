@@ -31,20 +31,20 @@ class OVSManager:
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} {constants.OVS.OVS_VSCTL} " \
                           f"{constants.OVS.ADD_BR} {bridge_name}"
                     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-                    time.sleep(1)
+                    time.sleep(0.2)
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} ifconfig {bridge_name} up"
                     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-                    time.sleep(1)
+                    time.sleep(0.2)
                     idx = 0
                     for ip_net in c.ips_and_networks:
                         ip, net = ip_net
                         cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} {constants.OVS.OVS_VSCTL} " \
                               f"{constants.OVS.ADD_PORT} {bridge_name} {net.interface}"
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-                        time.sleep(1)
+                        time.sleep(0.2)
                         cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} ifconfig {net.interface} 0"
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-                        time.sleep(1)
+                        time.sleep(0.2)
                         if idx==0:
                             bridge_intf = bridge_name
                         else:
@@ -52,7 +52,7 @@ class OVSManager:
                         cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} ifconfig {bridge_intf} {ip} " \
                               f"netmask {net.bitmask}"
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-                        time.sleep(1)
+                        time.sleep(0.2)
                         idx+=1
 
     @staticmethod
