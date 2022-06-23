@@ -17,6 +17,7 @@ class RYU:
     WEB_APP_PORT_ARG = "--wsapi-port"
     RYU_MANAGER = "/root/miniconda3/bin/ryu-manager"
     PACKET_BUFFER_MAX_LEN = 512
+    NORTHBOUND_API_APP_NAME = "csle_api_app"
 
 
 class CONTROLLERS:

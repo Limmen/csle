@@ -29,7 +29,6 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         # Controller type
         self.controller_type = RYUControllerType.LEARNING_SWITCH
 
-
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
         """

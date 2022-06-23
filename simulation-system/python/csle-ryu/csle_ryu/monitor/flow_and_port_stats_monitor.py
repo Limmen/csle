@@ -1,4 +1,5 @@
 from confluent_kafka import Producer
+import json
 from operator import attrgetter
 from ryu.controller.handler import MAIN_DISPATCHER, DEAD_DISPATCHER
 from ryu.lib import hub
@@ -6,6 +7,10 @@ from ryu.base import app_manager
 from ryu.controller import ofp_event
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
+from ryu.app.wsgi import ControllerBase
+from ryu.app.wsgi import Response
+from ryu.app.wsgi import route
+from ryu.app.wsgi import WSGIApplication
 
 
 class FlowAndPortStatsMonitor(app_manager.RyuApp):
@@ -15,6 +20,10 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
 
     # OpenFlow version to use
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
+
+    # Include WSGI context for the northbound API
+    # Specifyies Ryu's WSGI-compatible Web server clas to use
+    _CONTEXTS = {'wsgi': WSGIApplication}
 
     def __init__(self, *args, **kwargs):
         """
@@ -30,6 +39,11 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
 
         # Thread which will periodically query switches for statistics
         self.monitor_thread = hub.spawn(self._monitor)
+
+        # Acquires the the WSGIApplication to register the controller class
+        self.logger.info(f"Registering CSLE Northbound REST API Controller")
+        wsgi = kwargs['wsgi']
+        wsgi.register(NorthBoundRestAPIController, {"csle_api_app": self})
 
 
     @set_ev_cls(ofp_event.EventOFPStateChange, [MAIN_DISPATCHER, DEAD_DISPATCHER])
@@ -144,3 +158,18 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         for stat in sorted(body, key=attrgetter('port_no')):
             self.logger.info(f"{ev.msg.datapath.id} {stat.port_no} {stat.rx_packets} {stat.rx_bytes} {stat.rx_errors} "
                              f"{stat.tx_packets} {stat.tx_bytes} {stat.tx_errors}")
+
+
+class NorthBoundRestAPIController(ControllerBase):
+    """
+    Controller class for the Northbound REST API that accepts HTTP requests.
+    """
+
+    def __init__(self, req, link, data, **config):
+        super(NorthBoundRestAPIController, self).__init__(req, link, data, **config)
+        self.csle_api_app = data["csle_api_app"] # These names has to match!
+
+    @route('csle_api_app', "/cslenorthboundapi/producer/status", methods=['GET'])
+    def test(self, req, **kwargs):
+        response_body = json.dumps({"hello": "test"})
+        return Response(content_type='application/json', text=response_body)

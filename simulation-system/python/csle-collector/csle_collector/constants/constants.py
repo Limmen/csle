@@ -226,8 +226,8 @@ class LOG_SINK:
     HOST_METRICS_TOPIC_NAME = "host_metrics"
     DOCKER_STATS_TOPIC_NAME = "docker_stats"
     DOCKER_HOST_STATS_TOPIC_NAME = "docker_host_stats"
-    OPENFLOW_FLOW_STATS_TOPIC_NAME = "openflow_flow_stats_topic_name"
-    OPENFLOW_PORT_STATS_TOPIC_NAME = "openflow_port_stats_topic_name"
+    OPENFLOW_FLOW_STATS_TOPIC_NAME = "openflow_flow_stats_topic"
+    OPENFLOW_PORT_STATS_TOPIC_NAME = "openflow_port_stats_topic"
     ATTACKER_ACTIONS_TOPIC_NAME = "attacker_actions"
     DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients", "rate"]

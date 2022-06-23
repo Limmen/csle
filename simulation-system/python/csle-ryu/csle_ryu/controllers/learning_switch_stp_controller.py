@@ -43,7 +43,7 @@ class LearningSwitchSTPController(FlowAndPortStatsMonitor):
         self.stp = kwargs['stplib']
 
         # Controller type
-        self.controller_type = RYUControllerType.LEARNING_SWITCH
+        self.controller_type = RYUControllerType.LEARNING_SWITCH_STP
 
     def delete_flow(self, datapath) -> None:
         """

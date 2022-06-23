@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='csle_ryu',
-      version='0.0.14',
+      version='0.0.15',
       install_requires=['ryu', 'eventlet==0.30.2', 'confluent-kafka',],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
