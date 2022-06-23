@@ -977,7 +977,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.DROP,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                          f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
@@ -985,7 +985,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                 f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH2,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             )
@@ -1095,7 +1094,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                 f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH3,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             )
@@ -1132,7 +1130,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1206,7 +1203,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                 f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             )
@@ -1229,7 +1225,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1276,7 +1271,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.3{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1291,7 +1285,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.5{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH2,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1342,7 +1335,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.3{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1357,7 +1349,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.4{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1454,7 +1445,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.5{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1469,7 +1459,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.6{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1566,7 +1555,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.4{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1584,7 +1572,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                 f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1677,7 +1664,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.4{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1695,7 +1681,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                 f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1788,7 +1773,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.6{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1806,7 +1790,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                 f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1899,7 +1882,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.6{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH0,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -1917,7 +1899,6 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                 f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    interface=constants.NETWORKING.ETH1,
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
@@ -2490,7 +2471,6 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
                              f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
                                f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.2",
-                 interface=constants.NETWORKING.ETH0,
                  bitmask=constants.RYU_CONTROLLER.BITMASK
              )),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
@@ -2503,7 +2483,6 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
                              f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
                                f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.9",
-                 interface=constants.NETWORKING.ETH1,
                  bitmask=constants.RYU_CONTROLLER.BITMASK
              )),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
@@ -2516,7 +2495,6 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
                              f"{constants.RYU_CONTROLLER.SUBNETMASK_SUFFIX}",
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
                                f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
-                 interface=constants.NETWORKING.ETH2,
                  bitmask=constants.RYU_CONTROLLER.BITMASK
              ))
         ],
