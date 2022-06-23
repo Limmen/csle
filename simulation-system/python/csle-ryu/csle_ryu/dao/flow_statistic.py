@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 
 class FlowStatistic:
@@ -161,4 +161,24 @@ class FlowStatistic:
         self.idle_timeout=int(parts[10])
         self.priority=int(parts[11])
         self.cookie=int(parts[12])
+
+
+    @staticmethod
+    def average_flow_statistics(timestamp: float, datapath_id: int,
+                                flow_statistics: List["FlowStatistic"]) -> "FlowStatistic":
+        """
+        Computes the average metrics from a list of flow statistics
+
+        :param flow_statistics: the list of flow statistics to average
+        :return: the computed averages
+        """
+        total_num_logged_in_users = 0
+
+        for flow in flow_statistics:
+            total_num_logged_in_users += flow.num_logged_in_users
+        aggregated_flow_statistics_dto.num_logged_in_users = total_num_logged_in_users
+        aggregated_flow_statistics_dto = FlowStatistic(
+            timestamp=timestamp, datapath_id=datapath_id
+        )
+        return aggregated_flow_statistics_dto
 

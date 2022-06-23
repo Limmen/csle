@@ -15,6 +15,8 @@ from ryu.app.wsgi import WSGIApplication
 import csle_ryu.constants.constants as constants
 from csle_ryu.dao.flow_statistic import FlowStatistic
 from csle_ryu.dao.port_statistic import PortStatistic
+from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
+from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
 
 
 class FlowAndPortStatsMonitor(app_manager.RyuApp):
@@ -89,7 +91,6 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         """
         while True:
             if self.producer_running:
-                self.logger.info("requesting stats")
                 for dp in self.datapaths.values():
                     self._request_stats(dp)
             hub.sleep(self.time_step_len_seconds)
@@ -101,8 +102,6 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         :param datapath: the datapath, i.e. abstraction of the link to the switch
         :return: None
         """
-        self.logger.info(f"Sending a request to switch with DPID:{datapath.id} to return its flow and port statistics")
-
         # Extract the protocol and message parser to use for sending the request
         openflow_protocol = datapath.ofproto
         parser = datapath.ofproto_parser
@@ -133,7 +132,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         ts = time.time()
 
         # Log the statistics
-
+        flow_stats = []
         for flow in body:
             in_port = -1
             eth_dst = -1
@@ -145,11 +144,20 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 timestamp=ts, datapath_id=ev.msg.datapath.id, in_port=in_port,
                 out_port=flow.instructions[0].actions[0].port, dst_mac_address=eth_dst, num_packets=flow.packet_count,
                 num_bytes=flow.byte_count, duration_nanoseconds=flow.duration_nsec, duration_seconds=flow.duration_sec,
-                hard_timeout=flow.hard_timeout, idle_timeout=flow.idle_timeout, priority=flow.priority,
-                cookie=flow.cookie
+                hard_timeout=flow.avg_hard_timeout, idle_timeout=flow.avg_idle_timeout, priority=flow.avg_priority,
+                cookie=flow.avg_cookie
             )
-            self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_FLOW_STATS_TOPIC_NAME,
-                                  flow_statistic_dto.to_kafka_record())
+            if self.producer_running:
+                self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_FLOW_STATS_TOPIC_NAME,
+                                      flow_statistic_dto.to_kafka_record())
+                self.producer.poll(0)
+                flow_stats.append(flow_statistic_dto)
+
+        if self.producer_running and len(flow_stats) > 0:
+            avg_flow_stats = AvgFlowStatistic.average_flow_statistics(
+                timestamp=ts, datapath_id=flow_stats[0].datapath_id, flow_statistics=flow_stats)
+            self.producer.produce(constants.TOPIC_NAMES.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
+                                  avg_flow_stats.to_kafka_record())
             self.producer.poll(0)
 
     @set_ev_cls(ofp_event.EventOFPPortStatsReply, MAIN_DISPATCHER)
@@ -164,6 +172,8 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         # Extract the response body
         body = ev.msg.body
         ts = time.time()
+        
+        port_stats = []
 
         # Log the statistics
         for port in body:
@@ -181,6 +191,14 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_PORT_STATS_TOPIC_NAME,
                                       port_statistics_dto.to_kafka_record())
                 self.producer.poll(0)
+                port_stats.append(port_statistics_dto)
+        
+        if self.producer_running and len(port_stats) > 0:
+            avg_flow_stats = AvgPortStatistic.average_port_statistics(
+                timestamp=ts, datapath_id=port_stats[0].datapath_id, port_statistics=port_stats)
+            self.producer.produce(constants.TOPIC_NAMES.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
+                                  avg_flow_stats.to_kafka_record())
+            self.producer.poll(0)
 
 
 class NorthBoundRestAPIController(ControllerBase):
@@ -191,7 +209,7 @@ class NorthBoundRestAPIController(ControllerBase):
 
     curl -X GET http://15.12.252.3:8080/cslenorthboundapi/producer/status
     curl -X PUT -d '{"bootstrap.servers": "15.12.253.253", "time_step_len_seconds": 30}' http://15.12.252.3:8080/cslenorthboundapi/producer/start
-    curl -X POST http://15.12.252.3:8080/cslenorthboundapi/producer/start
+    curl -X POST http://15.12.252.3:8080/cslenorthboundapi/producer/stop
     """
 
     def __init__(self, req, link, data, **config):

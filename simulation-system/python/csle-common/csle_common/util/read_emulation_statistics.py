@@ -144,9 +144,14 @@ class ReadEmulationStatistics:
             ossec_host_alert_counters=ossec_host_ids_metrics)
         return dto
 
-
     @staticmethod
     def average_host_metrics(host_metrics: List[HostMetrics]) -> HostMetrics:
+        """
+        Computes the average metrics from a list of host metrics
+
+        :param host_metrics: the list of host metrics to average
+        :return: the computed averages
+        """
         total_num_logged_in_users = 0
         total_num_failed_login_attempts = 0
         total_num_open_connections = 0
@@ -171,6 +176,12 @@ class ReadEmulationStatistics:
 
     @staticmethod
     def average_ossec_metrics(ossec_metrics: List[OSSECIdsAlertCounters]) -> OSSECIdsAlertCounters:
+        """
+        Computes the average metrics from a list of OSSEC metrics
+
+        :param ossec_metrics: the list of OSSEC metrics
+        :return: the computed averages
+        """
         aggregated_ossec_ids_alert_counters = OSSECIdsAlertCounters()
         for alert_counters in ossec_metrics:
             aggregated_ossec_ids_alert_counters.add(alert_counters)

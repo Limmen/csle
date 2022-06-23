@@ -228,6 +228,8 @@ class LOG_SINK:
     DOCKER_HOST_STATS_TOPIC_NAME = "docker_host_stats"
     OPENFLOW_FLOW_STATS_TOPIC_NAME = "openflow_flow_stats_topic"
     OPENFLOW_PORT_STATS_TOPIC_NAME = "openflow_port_stats_topic"
+    AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_flow_stats_per_switch_topic"
+    AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_port_stats_per_switch_topic"
     ATTACKER_ACTIONS_TOPIC_NAME = "attacker_actions"
     DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients", "rate"]
@@ -269,6 +271,18 @@ class LOG_SINK:
                                             "num_transmitted_dropped", "num_received_frame_errors",
                                             "num_received_overrun_errors", "num_received_crc_errors", "num_collisions",
                                             "duration_nanoseconds", "duration_seconds"]
+
+
+    AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES = [
+        "timestamp", "datapath_id",  "avg_num_packets", "avg_num_bytes", "avg_duration_nanoseconds",
+        "avg_duration_seconds",
+        "avg_hard_timeout", "avg_idle_timeout", "avg_priority", "avg_cookie"]
+    AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES = [
+        "timestamp", "datapath_id", "avg_num_received_packets", "avg_num_received_bytes", "avg_num_received_errors",
+        "avg_num_transmitted_packets", "avg_num_transmitted_bytes", "avg_num_transmitted_errors",
+        "avg_num_received_dropped",
+        "avg_num_transmitted_dropped", "avg_num_received_frame_errors", "avg_num_received_overrun_errors",
+        "avg_num_received_crc_errors", "avg_num_collisions", "avg_duration_nanoseconds", "avg_duration_seconds"]
 
     SNORT_IDS_ALERTS_LABELS = [
         "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_priority",

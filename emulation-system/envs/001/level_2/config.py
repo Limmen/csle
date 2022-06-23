@@ -1855,6 +1855,20 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             num_partitions=1,
             retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            retention_time_hours = 240,
+            attributes=collector_constants.LOG_SINK.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            retention_time_hours = 240,
+            attributes=collector_constants.LOG_SINK.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES
         )
     ]
 

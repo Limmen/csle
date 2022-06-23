@@ -34,7 +34,8 @@ class TOPIC_NAMES:
     """
     OPENFLOW_FLOW_STATS_TOPIC_NAME = "openflow_flow_stats_topic"
     OPENFLOW_PORT_STATS_TOPIC_NAME = "openflow_port_stats_topic"
-
+    AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_flow_stats_per_switch_topic"
+    AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_port_stats_per_switch_topic"
 
 class KAFKA:
     """
