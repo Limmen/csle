@@ -260,10 +260,15 @@ class LOG_SINK:
     ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
     DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
     OPENFLOW_FLOW_STATS_TOPIC_ATTRIBUTES = ["timestamp", "datapath_id", "in_port", "out_port", "dst_mac_address",
-                                     "num_packets", "num_bytes"]
+                                            "num_packets", "num_bytes", "duration_nanoseconds",
+                                            "duration_seconds", "hard_timeout", "idle_timeout", "priority",
+                                            "cookie"]
     OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES = ["timestamp", "datapath_id", "port", "num_received_packets",
                                             "num_received_bytes", "num_received_errors", "num_transmitted_packets",
-                                            "num_transmitted_bytes", "num_transmitted_errors"]
+                                            "num_transmitted_bytes", "num_transmitted_errors", "num_received_dropped",
+                                            "num_transmitted_dropped", "num_received_frame_errors",
+                                            "num_received_overrun_errors", "num_received_crc_errors", "num_collisions",
+                                            "duration_nanoseconds", "duration_seconds"]
 
     SNORT_IDS_ALERTS_LABELS = [
         "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_priority",

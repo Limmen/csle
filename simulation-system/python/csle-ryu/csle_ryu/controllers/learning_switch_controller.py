@@ -130,7 +130,7 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         # Initialize empty row in the mac-to-port table
         self.mac_to_port.setdefault(datapath_id, {})
 
-        self.logger.info(f"[SDN-Controller {self.controller_type}] received packet in, DPID:{datapath_id}, "
+        self.logger.debug(f"[SDN-Controller {self.controller_type}] received packet in, DPID:{datapath_id}, "
                          f"src_mac_address:{src_mac_address}, dst_mac_address:{dst_mac_address}, port number:{in_port}")
 
         # learn a mac address to avoid FLOOD next time, i.e. map the port of the switch to the source MAC address

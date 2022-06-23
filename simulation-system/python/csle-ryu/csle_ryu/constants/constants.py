@@ -28,6 +28,14 @@ class CONTROLLERS:
     LEARNING_SWITCH_STP_CONTROLLER = "learning_switch_stp_controller"
 
 
+class TOPIC_NAMES:
+    """
+    Topic names for SDN statistics
+    """
+    OPENFLOW_FLOW_STATS_TOPIC_NAME = "openflow_flow_stats_topic"
+    OPENFLOW_PORT_STATS_TOPIC_NAME = "openflow_port_stats_topic"
+
+
 class KAFKA:
     """
     String constants for managing Kafka
@@ -42,4 +50,5 @@ class KAFKA:
     AUTO_OFFSET_RESET_PROPERTY = "auto.offset.reset"
     EARLIEST_OFFSET = "earliest"
     PORT = 9092
+    TIME_STEP_LEN_SECONDS = "time_step_len_seconds"
 
