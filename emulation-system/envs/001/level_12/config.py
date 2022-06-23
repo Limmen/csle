@@ -4,6 +4,7 @@ import os
 import multiprocessing
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
+import csle_ryu.constants.constants as ryu_constants
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
@@ -2160,6 +2161,20 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
             num_partitions=1,
             retention_time_hours = 240,
             attributes=collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.OPENFLOW_FLOW_STATS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            retention_time_hours = 240,
+            attributes=collector_constants.LOG_SINK.OPENFLOW_FLOW_STATS_TOPIC_ATTRIBUTES
+        ),
+        KafkaTopic(
+            name=collector_constants.LOG_SINK.OPENFLOW_PORT_STATS_TOPIC_NAME,
+            num_replicas=1,
+            num_partitions=1,
+            retention_time_hours = 240,
+            attributes=collector_constants.LOG_SINK.OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES
         )
     ]
 
@@ -2496,6 +2511,18 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
                  subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}"
                                f"{constants.RYU_CONTROLLER.NETWORK_ID_THIRD_OCTET}.18",
                  bitmask=constants.RYU_CONTROLLER.BITMASK
+             )),
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{constants.RYU_CONTROLLER.NETWORK_ID_FOURTH_OCTET}",
+             ContainerNetwork(
+                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                      f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
+                 subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                             f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
+                             f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                 interface=constants.NETWORKING.ETH1,
+                 bitmask=constants.CSLE.CSLE_EDGE_BITMASK
              ))
         ],
         version=version, level=str(level),
@@ -2521,7 +2548,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
     sdn_controller_config = SDNControllerConfig(
         container=container, resources=resources, version=version, controller_type=SDNControllerType.RYU,
         controller_port=constants.RYU_CONTROLLER.DEFAULT_PORT, time_step_len_seconds=15,
-        controller_web_api_port=8080, controller_module_name="learning_switch_controller"
+        controller_web_api_port=8080, controller_module_name=ryu_constants.CONTROLLERS.LEARNING_SWITCH_CONTROLLER
     )
 
     return sdn_controller_config

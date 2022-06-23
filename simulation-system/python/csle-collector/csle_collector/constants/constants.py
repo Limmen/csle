@@ -226,6 +226,8 @@ class LOG_SINK:
     HOST_METRICS_TOPIC_NAME = "host_metrics"
     DOCKER_STATS_TOPIC_NAME = "docker_stats"
     DOCKER_HOST_STATS_TOPIC_NAME = "docker_host_stats"
+    OPENFLOW_FLOW_STATS_TOPIC_NAME = "openflow_flow_stats_topic_name"
+    OPENFLOW_PORT_STATS_TOPIC_NAME = "openflow_port_stats_topic_name"
     ATTACKER_ACTIONS_TOPIC_NAME = "attacker_actions"
     DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients", "rate"]
@@ -257,6 +259,11 @@ class LOG_SINK:
                                      "mem_percent", "blk_read", "blk_write", "net_rc", "net_tx", "pids"]
     ATTACKER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
     DEFENDER_ACTIONS_ATTRIBUTES = ["timestamp", "id", "description", "index", "name", "time", "ip", "cmd"]
+    OPENFLOW_FLOW_STATS_TOPIC_ATTRIBUTES = ["timestamp", "datapath_id", "in_port", "out_port", "dst_mac_address",
+                                     "num_packets", "num_bytes"]
+    OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES = ["timestamp", "datapath_id", "port", "num_received_packets",
+                                            "num_received_bytes", "num_received_errors", "num_transmitted_packets",
+                                            "num_transmitted_bytes", "num_transmitted_errors"]
 
     SNORT_IDS_ALERTS_LABELS = [
         "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_priority",

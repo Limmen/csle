@@ -17,3 +17,11 @@ class RYU:
     WEB_APP_PORT_ARG = "--wsapi-port"
     RYU_MANAGER = "/root/miniconda3/bin/ryu-manager"
     PACKET_BUFFER_MAX_LEN = 512
+
+
+class CONTROLLERS:
+    """
+    RYU Controllers in CSLE
+    """
+    LEARNING_SWITCH_CONTROLLER = "learning_switch_controller"
+    LEARNING_SWITCH_STP_CONTROLLER = "learning_switch_stp_controller"

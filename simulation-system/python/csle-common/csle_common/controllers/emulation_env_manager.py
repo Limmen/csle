@@ -82,7 +82,7 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 23
+        steps = 24
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -120,13 +120,16 @@ class EmulationEnvManager:
         OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: "
-                                            f"Verify that the SDN controller can ping the switches --")
-        SDNControllerManager.ping_all(emulation_env_config=emulation_env_config)
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: tests connections with Ping --")
+        EmulationEnvManager.ping_all(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
         OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: tests connections with Ping --")
+        EmulationEnvManager.ping_all(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
@@ -575,3 +578,36 @@ class EmulationEnvManager:
                 stopped_emulations.append(em)
         return running_emulations, stopped_emulations
 
+
+    @staticmethod
+    def ping_all(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Tests the connections between all the containers using ping
+
+        :param emulation_env_config: the emulation config
+        :return: None
+        """
+        if emulation_env_config.sdn_controller_config is not None:
+
+            # Ping controller-switches
+            for ovs_sw in emulation_env_config.ovs_config.switch_configs:
+                Logger.__call__().get_logger().info(f"Ping {ovs_sw.controller_ip} to {ovs_sw.ip}")
+                cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} " \
+                      f"{emulation_env_config.sdn_controller_config.container.get_full_name()} " \
+                      f"{constants.COMMANDS.PING} " \
+                      f"{ovs_sw.ip} -c 5 &"
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+                Logger.__call__().get_logger().info(f"Ping {ovs_sw.ip} to {ovs_sw.controller_ip}")
+                cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {ovs_sw.container_name} {constants.COMMANDS.PING} " \
+                      f"{ovs_sw.controller_ip} -c 5 &"
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+        # Ping containers to switches
+        for c1 in emulation_env_config.containers_config.containers:
+            for c2 in emulation_env_config.containers_config.containers:
+                for ip in c2.get_ips():
+                    Logger.__call__().get_logger().info(f"Ping {c1.get_ips()[0]} to {ip}")
+                    cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {c1.get_full_name()} {constants.COMMANDS.PING} " \
+                          f"{ip} -c 5 &"
+                    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)

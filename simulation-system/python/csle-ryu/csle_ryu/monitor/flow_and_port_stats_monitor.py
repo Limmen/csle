@@ -1,3 +1,4 @@
+from confluent_kafka import Producer
 from operator import attrgetter
 from ryu.controller.handler import MAIN_DISPATCHER, DEAD_DISPATCHER
 from ryu.lib import hub

@@ -4,7 +4,6 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
-from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
@@ -94,24 +93,3 @@ class SDNControllerManager:
         else:
             raise ValueError(f"Controller type: {emulation_env_config.sdn_controller_config.controller_type} "
                              f"not recognized")
-
-    @staticmethod
-    def ping_all(emulation_env_config: EmulationEnvConfig) -> None:
-        """
-        Pings all the OVS switches from the container so that they can populate their forwarding tables
-
-        :param emulation_env_config: the emulation config
-        :return: None
-        """
-        if emulation_env_config.sdn_controller_config is None:
-            return
-        for ovs_sw in emulation_env_config.ovs_config.switch_configs:
-
-            # Connect
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
-                                        ip=ovs_sw.controller_ip)
-            cmd = f"{constants.COMMANDS.PING} {ovs_sw.ip} -c 5"
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
-                ip=ovs_sw.controller_ip))
-            time.sleep(5)
-
