@@ -552,7 +552,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  )),
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                                 f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.5",
+                                 f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.4",
                                  ContainerNetwork(
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
