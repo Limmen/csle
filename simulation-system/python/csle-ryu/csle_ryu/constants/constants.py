@@ -26,3 +26,20 @@ class CONTROLLERS:
     """
     LEARNING_SWITCH_CONTROLLER = "learning_switch_controller"
     LEARNING_SWITCH_STP_CONTROLLER = "learning_switch_stp_controller"
+
+
+class KAFKA:
+    """
+    String constants for managing Kafka
+    """
+    KAFKA_STATUS = "service kafka status"
+    KAFKA_STOP = "service kafka stop"
+    KAFKA_START = "service kafka start"
+    RETENTION_MS_CONFIG_PROPERTY = "retention.ms"
+    BOOTSTRAP_SERVERS_PROPERTY = "bootstrap.servers"
+    CLIENT_ID_PROPERTY = "client.id"
+    GROUP_ID_PROPERTY = "group.id"
+    AUTO_OFFSET_RESET_PROPERTY = "auto.offset.reset"
+    EARLIEST_OFFSET = "earliest"
+    PORT = 9092
+

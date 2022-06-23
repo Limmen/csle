@@ -1,5 +1,6 @@
 from confluent_kafka import Producer
 import json
+import socket
 from operator import attrgetter
 from ryu.controller.handler import MAIN_DISPATCHER, DEAD_DISPATCHER
 from ryu.lib import hub
@@ -11,6 +12,7 @@ from ryu.app.wsgi import ControllerBase
 from ryu.app.wsgi import Response
 from ryu.app.wsgi import route
 from ryu.app.wsgi import WSGIApplication
+import csle_ryu.constants.constants as constants
 
 
 class FlowAndPortStatsMonitor(app_manager.RyuApp):
@@ -40,10 +42,15 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         # Thread which will periodically query switches for statistics
         self.monitor_thread = hub.spawn(self._monitor)
 
+        # State
+        self.kafka_conf = {}
+        self.producer_running = False
+        self.producer = None
+
         # Acquires the the WSGIApplication to register the controller class
         self.logger.info(f"Registering CSLE Northbound REST API Controller")
         wsgi = kwargs['wsgi']
-        wsgi.register(NorthBoundRestAPIController, {"csle_api_app": self})
+        wsgi.register(NorthBoundRestAPIController, {"controller_app": self})
 
 
     @set_ev_cls(ofp_event.EventOFPStateChange, [MAIN_DISPATCHER, DEAD_DISPATCHER])
@@ -163,13 +170,71 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
 class NorthBoundRestAPIController(ControllerBase):
     """
     Controller class for the Northbound REST API that accepts HTTP requests.
+
+    Example requests:
+
+    curl -X GET http://15.12.252.3:8080/cslenorthboundapi/producer/status
+    curl -X PUT -d '{"bootstrap.servers": "test"}' http://15.12.252.3:8080/cslenorthboundapi/producer/start
+    curl -X POST http://15.12.252.3:8080/cslenorthboundapi/producer/start
     """
 
     def __init__(self, req, link, data, **config):
         super(NorthBoundRestAPIController, self).__init__(req, link, data, **config)
-        self.csle_api_app = data["csle_api_app"] # These names has to match!
+        self.controller_app = data["controller_app"] # These names has to match!
+        self.hostname = socket.gethostname()
+        self.ip = socket.gethostbyname(self.hostname)
 
-    @route('csle_api_app', "/cslenorthboundapi/producer/status", methods=['GET'])
-    def test(self, req, **kwargs):
-        response_body = json.dumps({"hello": "test"})
+    @route('controller_app', "/cslenorthboundapi/producer/status", methods=['GET'])
+    def producer_status(self, req, **kwargs):
+        """
+        Gets the status of the Kafka producer
+
+        :param req: the REST API request
+        :param kwargs: the WSGI arguments
+        :return: the REST API response
+        """
+        response_body = json.dumps({"kafka_conf": self.controller_app.kafka_conf,
+                                    "producer_running": self.controller_app.producer_running})
         return Response(content_type='application/json', text=response_body)
+
+    @route('controller_app', "/cslenorthboundapi/producer/start", methods=['PUT'])
+    def start_producer(self, req, **kwargs) -> None:
+        """
+        Starts the Kafka producer that sends flow and port statistics
+
+        :param req: the REST API request
+        :param kwargs: WSGI arguments
+        :return: the REST API response
+        """
+        try:
+            kafka_conf = req.json if req.body else {}
+        except ValueError:
+            raise Response(status=400)
+        if constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY in kafka_conf:
+            self.controller_app.kafka_conf = {
+                constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: kafka_conf[constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY],
+                constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
+            self.controller_app.logger.info(f"Starting Kafka producer with conf: {self.controller_app.kafka_conf}")
+            self.controller_app.producer_running = True
+            self.controller_app.producer = Producer(**self.controller_app.kafka_conf)
+            body = json.dumps(self.controller_app.kafka_conf)
+            return Response(content_type='application/json', text=body, status=200)
+        else:
+            return Response(status=500)
+
+    @route('controller_app', "/cslenorthboundapi/producer/stop", methods=['POST'])
+    def stop_producer(self, req, **kwargs):
+        """
+        Stops the Kafka producer that sends flow and port statistics
+
+        :param req: the REST API request
+        :param kwargs: WSGI arguments
+        :return: The REST response
+        """
+        self.controller_app.logger.info(f"Stopping Kafka producer")
+        self.controller_app.kafka_conf = {}
+        self.controller_app.producer_running = False
+        self.controller_app.producer = None
+        response_body = json.dumps({"kafka_conf": self.controller_app.kafka_conf,
+                                    "producer_running": self.controller_app.producer_running})
+        return Response(content_type='application/json', text=response_body, status=200)
