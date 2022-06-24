@@ -144,8 +144,8 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 timestamp=ts, datapath_id=ev.msg.datapath.id, in_port=in_port,
                 out_port=flow.instructions[0].actions[0].port, dst_mac_address=eth_dst, num_packets=flow.packet_count,
                 num_bytes=flow.byte_count, duration_nanoseconds=flow.duration_nsec, duration_seconds=flow.duration_sec,
-                hard_timeout=flow.avg_hard_timeout, idle_timeout=flow.avg_idle_timeout, priority=flow.avg_priority,
-                cookie=flow.avg_cookie
+                hard_timeout=flow.hard_timeout, idle_timeout=flow.idle_timeout, priority=flow.priority,
+                cookie=flow.cookie
             )
             if self.producer_running:
                 self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_FLOW_STATS_TOPIC_NAME,
@@ -218,7 +218,7 @@ class NorthBoundRestAPIController(ControllerBase):
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
 
-    @route('controller_app', "/cslenorthboundapi/producer/status", methods=['GET'])
+    @route('controller_app', constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE, methods=['GET'])
     def producer_status(self, req, **kwargs):
         """
         Gets the status of the Kafka producer
@@ -232,7 +232,7 @@ class NorthBoundRestAPIController(ControllerBase):
                                     "time_step_len_seconds": self.controller_app.time_step_len_seconds})
         return Response(content_type='application/json', text=response_body)
 
-    @route('controller_app', "/cslenorthboundapi/producer/start", methods=['PUT'])
+    @route('controller_app', constants.RYU.START_PRODUCER_HTTP_RESOURCE, methods=['PUT'])
     def start_producer(self, req, **kwargs) -> None:
         """
         Starts the Kafka producer that sends flow and port statistics
@@ -259,7 +259,7 @@ class NorthBoundRestAPIController(ControllerBase):
         else:
             return Response(status=500)
 
-    @route('controller_app', "/cslenorthboundapi/producer/stop", methods=['POST'])
+    @route('controller_app', constants.RYU.STOP_PRODUCER_HTTP_RESOURCE, methods=['POST'])
     def stop_producer(self, req, **kwargs):
         """
         Stops the Kafka producer that sends flow and port statistics

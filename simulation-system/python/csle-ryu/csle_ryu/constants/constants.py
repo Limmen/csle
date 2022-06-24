@@ -18,6 +18,9 @@ class RYU:
     RYU_MANAGER = "/root/miniconda3/bin/ryu-manager"
     PACKET_BUFFER_MAX_LEN = 512
     NORTHBOUND_API_APP_NAME = "csle_api_app"
+    START_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/start"
+    STOP_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/stop"
+    STATUS_PRODUCER_HTTP_RESOURCE = "/cslenorthboundapi/producer/status"
 
 
 class CONTROLLERS:

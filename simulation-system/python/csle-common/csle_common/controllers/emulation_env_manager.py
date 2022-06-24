@@ -82,7 +82,7 @@ class EmulationEnvManager:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 24
+        steps = 25
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -130,6 +130,11 @@ class EmulationEnvManager:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: tests connections with Ping --")
         EmulationEnvManager.ping_all(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start Kafka producer at "
+                                            f"SDN controller --")
+        SDNControllerManager.start_controller_producer(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
@@ -577,7 +582,6 @@ class EmulationEnvManager:
             else:
                 stopped_emulations.append(em)
         return running_emulations, stopped_emulations
-
 
     @staticmethod
     def ping_all(emulation_env_config: EmulationEnvConfig) -> None:

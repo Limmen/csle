@@ -493,6 +493,11 @@ class HTTPS:
     """
     SERVICE_NAME = "HTTPS"
     DEFAULT_PORT = 443
+    OK_STATUS_CODE=200
+    CREATED_STATUS_CODE=201
+    BAD_REQUEST_STATUS_CODE=400
+    NOT_FOUND_STATUS_CODE=404
+    INTERNAL_SERVER_ERROR_STATUS_CODE=500
 
 
 class RETHINKDB:
@@ -573,12 +578,15 @@ class SNMP:
     SERVICE_NAME = "snmp"
     DEFAULT_PORT = 161
 
+
 class HTTP:
     """
     Constants related to the DNS service
     """
     SERVICE_NAME = "http"
     DEFAULT_PORT = 80
+    HTTP_PROTOCOL_PREFIX = "http://"
+
 
 class DNS:
     """
@@ -603,6 +611,7 @@ class CASSANDRA:
     SERVICE_NAME = "cassandra"
     DEFAULT_PORT = 9042
 
+
 class SAMBA:
     """
     Constants related to the Samba service
@@ -618,6 +627,7 @@ class SAMBA:
     AUTH_OK = "Authentication ok"
     VERIFYING = "Verifying"
     VULNERABILITY_NAME = "cve-2017-7494"
+
 
 class CVE_2010_0426:
     """

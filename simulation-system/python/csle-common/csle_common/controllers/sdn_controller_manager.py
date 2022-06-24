@@ -1,6 +1,9 @@
 import subprocess
 import time
+import json
+import requests
 import csle_common.constants.constants as constants
+import csle_ryu.constants.constants as ryu_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
@@ -45,7 +48,7 @@ class SDNControllerManager:
     @staticmethod
     def start_controller(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Connects the SDN controller to the Docker network
+        Starts the SDN controller
 
         :param emulation_env_config: the emulation env config
         :return: None
@@ -93,3 +96,63 @@ class SDNControllerManager:
         else:
             raise ValueError(f"Controller type: {emulation_env_config.sdn_controller_config.controller_type} "
                              f"not recognized")
+
+    @staticmethod
+    def start_controller_producer(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Starts the Kafka producer at the SDN controller
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        if emulation_env_config.sdn_controller_config is None:
+            return
+        Logger.__call__().get_logger().info(f"Sends request to the SDN controller to start the Kafka producer"
+                                            f" for telemetry")
+        response = requests.put(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                           f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                           f"{emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                           f"{ryu_constants.RYU.START_PRODUCER_HTTP_RESOURCE}",
+                           data = json.dumps({ryu_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
+                                       emulation_env_config.log_sink_config.container.get_ips()[0],
+                                   ryu_constants.KAFKA.TIME_STEP_LEN_SECONDS:
+                                       emulation_env_config.sdn_controller_config.time_step_len_seconds}))
+        assert response.status_code == 200
+        Logger.__call__().get_logger().info(f"Kafka producer started successfully")
+
+    @staticmethod
+    def stop_controller_producer(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Stops the Kafka producer at the SDN controller
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        if emulation_env_config.sdn_controller_config is None:
+            return
+        Logger.__call__().get_logger().info(f"Sends request to the SDN controller to stop the Kafka producer"
+                                            f" for telemetry")
+        response = requests.post(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                f"{emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                f"{ryu_constants.RYU.STOP_PRODUCER_HTTP_RESOURCE}")
+        assert response.status_code == 200
+        Logger.__call__().get_logger().info(f"Kafka producer stopped successfully")
+
+    @staticmethod
+    def get_controller_producer_status(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Gets the status of the Kafka producer at the SDN controller
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        if emulation_env_config.sdn_controller_config is None:
+            return
+        Logger.__call__().get_logger().info(f"Sends request for the status of the Kafka producer at the SDN controller")
+        response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                 f"{emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                 f"{emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                 f"{ryu_constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE}")
+        assert response.status_code == 200
+        Logger.__call__().get_logger().info(f"Kafka producer status: {response.content}")
