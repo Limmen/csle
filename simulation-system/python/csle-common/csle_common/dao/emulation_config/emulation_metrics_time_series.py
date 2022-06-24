@@ -4,6 +4,10 @@ from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAl
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.host_manager.host_metrics import HostMetrics
+from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
+from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
+from csle_ryu.dao.flow_statistic import FlowStatistic
+from csle_ryu.dao.port_statistic import PortStatistic
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -19,8 +23,10 @@ class EmulationMetricsTimeSeries:
                  aggregated_host_metrics: List[HostMetrics],
                  defender_actions: List[EmulationDefenderAction], attacker_actions: List[EmulationAttackerAction],
                  snort_ids_metrics: List[SnortIdsAlertCounters], emulation_env_config: EmulationEnvConfig,
-                 ossec_host_alert_counters = Dict[str, List[OSSECIdsAlertCounters]],
-                 aggregated_ossec_host_alert_counters = List[OSSECIdsAlertCounters]
+                 ossec_host_alert_counters : Dict[str, List[OSSECIdsAlertCounters]],
+                 aggregated_ossec_host_alert_counters : List[OSSECIdsAlertCounters],
+                 openflow_flow_stats : List[FlowStatistic], openflow_port_stats : List[PortStatistic],
+                 avg_openflow_flow_stats : List[AvgFlowStatistic], avg_openflow_port_stats : List[AvgPortStatistic]
                  ):
         """
         Initializes the DTO
@@ -35,7 +41,11 @@ class EmulationMetricsTimeSeries:
         :param snort_ids_metrics: Time series data with Snort IDS metrics
         :param emulation_env_config: the emulation config
         :param ossec_host_alert_counters: Time series data with ossec alert counters per host
-        :param ossec_host_alert_counters: Time series data with aggregated ossec alert counters
+        :param aggregated_ossec_host_alert_counters: Time series data with aggregated ossec alert counters
+        :param openflow_flow_stats: openflow flow statistics
+        :param openflow_port_stats: openflow port statistics
+        :param avg_openflow_flow_stats: average openflow flow statistics per switch
+        :param avg_openflow_port_stats: average openflow port statistics per switch
         """
         self.client_metrics = client_metrics
         self.aggregated_docker_stats = aggregated_docker_stats
@@ -48,7 +58,10 @@ class EmulationMetricsTimeSeries:
         self.emulation_env_config = emulation_env_config
         self.ossec_host_alert_counters = ossec_host_alert_counters
         self.aggregated_ossec_host_alert_counters = aggregated_ossec_host_alert_counters
-
+        self.openflow_flow_stats = openflow_flow_stats
+        self.openflow_port_stats = openflow_port_stats
+        self.avg_openflow_flow_stats = avg_openflow_flow_stats
+        self.avg_openflow_port_stats = avg_openflow_port_stats
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationMetricsTimeSeries":
@@ -78,7 +91,11 @@ class EmulationMetricsTimeSeries:
             aggregated_host_metrics=list(map(lambda x: HostMetrics.from_dict(x), d["aggregated_host_metrics"])),
             emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"]),
             ossec_host_alert_counters=ossec_host_alerts,
-            aggregated_ossec_host_alert_counters=d["aggregated_ossec_host_alert_counters"]
+            aggregated_ossec_host_alert_counters=d["aggregated_ossec_host_alert_counters"],
+            openflow_flow_stats=list(map(lambda x: FlowStatistic.from_dict(x), d["openflow_flow_stats"])),
+            openflow_port_stats=list(map(lambda x: PortStatistic.from_dict(x), d["openflow_port_stats"])),
+            avg_openflow_flow_stats=list(map(lambda x: AvgFlowStatistic.from_dict(x), d["avg_openflow_flow_stats"])),
+            avg_openflow_port_stats=list(map(lambda x: AvgPortStatistic.from_dict(x), d["avg_openflow_port_stats"])),
         )
         return obj
 
@@ -105,9 +122,13 @@ class EmulationMetricsTimeSeries:
         d["ossec_host_alert_counters"] = {}
         for k,v in self.ossec_host_alert_counters.items():
             d["ossec_host_alert_counters"][k] = list(map(lambda x: x.to_dict(), v))
+        d["openflow_flow_stats"] = list(map(lambda x: x.to_dict(), self.openflow_flow_stats))
+        d["openflow_port_stats"] = list(map(lambda x: x.to_dict(), self.openflow_port_stats))
+        d["avg_openflow_flow_stats"] = list(map(lambda x: x.to_dict(), self.avg_openflow_flow_stats))
+        d["avg_openflow_port_stats"] = list(map(lambda x: x.to_dict(), self.avg_openflow_port_stats))
         return d
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         :return: a string representation
         """
@@ -121,7 +142,10 @@ class EmulationMetricsTimeSeries:
                f"aggregated_host_metrics: {list(map(lambda x: str(x), self.aggregated_host_metrics))}," \
                f"config: {self.emulation_env_config}," \
                f"aggregated_ossec_host_alert_counters: {self.aggregated_ossec_host_alert_counters}," \
-               f"ossec_host_alert_counters: {self.ossec_host_alert_counters}"
+               f"ossec_host_alert_counters: {self.ossec_host_alert_counters}," \
+               f"openflow_flow_stats: {self.openflow_flow_stats}, openflow_port_stats: {self.openflow_port_stats}," \
+               f"avg_openflow_flow_stats: {self.avg_openflow_flow_stats}, " \
+               f"avg_openflow_port_stats: {self.avg_openflow_port_stats}"
 
     def to_json_str(self) -> str:
         """

@@ -410,6 +410,7 @@ const Monitoring = () => {
     )
         .then(res => res.json())
         .then(response => {
+            console.log(response)
             setMonitoringData(response)
             setLoadingSelectedEmulationExecution(false)
         })

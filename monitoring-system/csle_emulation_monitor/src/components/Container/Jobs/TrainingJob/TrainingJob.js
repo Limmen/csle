@@ -24,8 +24,6 @@ const TrainingJob = (props) => {
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-    console.log(props.job)
-
     const fetchLogs = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/file',

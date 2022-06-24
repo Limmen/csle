@@ -28,6 +28,8 @@ const Emulation = (props) => {
     const [kafkaTopicsOpen, setKafkaTopicsOpen] = useState(false);
     const [firewallOpen, setFirewallOpen] = useState(false);
     const [staticAttackerSequenceOpen, setStaticAttackerSequenceOpen] = useState(false);
+    const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
+    const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
@@ -158,6 +160,55 @@ const Emulation = (props) => {
             Stop emulation
         </Tooltip>
     );
+
+    const SdnControllerConfig = (props) => {
+        if (props.emulation.sdn_controller_config === null || props.emulation.sdn_controller_config === undefined) {
+            return (<span> </span>)
+        } else {
+            return (
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setSdnControllerConfigOpen(!sdnControllerConfigOpen)}
+                            aria-controls="sdnControllerConfigBody"
+                            aria-expanded={sdnControllerConfigOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">SDN Controller Config</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={sdnControllerConfigOpen}>
+                        <div id="sdnControllerConfigBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Container name</th>
+                                    <th>Container os</th>
+                                    <th>IPs</th>
+                                    <th>Controller module</th>
+                                    <th>Port</th>
+                                    <th>Web port</th>
+                                    <th>Time step length (s)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{props.emulation.sdn_controller_config.container.full_name_str}</td>
+                                    <td>{props.emulation.sdn_controller_config.container.os}</td>
+                                    <td>{getIps(props.emulation.sdn_controller_config.container.ips_and_networks).join(", ")}</td>
+                                    <td>{props.emulation.sdn_controller_config.controller_module_name}</td>
+                                    <td>{props.emulation.sdn_controller_config.controller_port}</td>
+                                    <td>{props.emulation.sdn_controller_config.controller_web_api_port}</td>
+                                    <td>{props.emulation.sdn_controller_config.time_step_len_seconds}</td>
+                                </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+            )
+        }
+    }
 
     const RenderActions = (props) => {
         if(!props.execution){
@@ -900,6 +951,50 @@ const Emulation = (props) => {
                         </div>
                     </Collapse>
                 </Card>
+
+                <Card>
+                    <Card.Header>
+                        <Button
+                            onClick={() => setOvsSwitchesOpen(!ovsSwitchesOpen)}
+                            aria-controls="ovsSwitchesBody"
+                            aria-expanded={ovsSwitchesOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">Open vSwitch switches configurations </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={ovsSwitchesOpen}>
+                        <div id="ovsSwitchesBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Container name</th>
+                                    <th>Controller ip</th>
+                                    <th>Controller port</th>
+                                    <th>Controller transport protocol</th>
+                                    <th>IP</th>
+                                    <th>OpenFlow protocols</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {emulation.ovs_config.switch_configs.map((switch_config, index) =>
+                                    <tr key={switch_config.container_name + "-" + index}>
+                                        <td>{switch_config.container_name}</td>
+                                        <td>{switch_config.controler_ip}</td>
+                                        <td>{switch_config.controller_port}</td>
+                                        <td>{switch_config.controller_transport_protocol}</td>
+                                        <td>{switch_config.ip}</td>
+                                        <td>{switch_config.openflow_protocols.join(", ")}</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <SdnControllerConfig emulation={emulation}/>
+
             </Card.Body>
         </Accordion.Collapse>
     </Card>)

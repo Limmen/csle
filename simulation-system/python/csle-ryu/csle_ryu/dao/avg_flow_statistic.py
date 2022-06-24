@@ -8,15 +8,15 @@ class AvgFlowStatistic:
     """
 
     def __init__(self, timestamp: float, datapath_id: int,
-                 avg_num_packets: int, avg_num_bytes: int, avg_duration_nanoseconds: int, avg_duration_seconds: int,
+                 total_num_packets: int, total_num_bytes: int, avg_duration_nanoseconds: int, avg_duration_seconds: int,
                  avg_hard_timeout: int, avg_idle_timeout: int, avg_priority: int, avg_cookie: int):
         """
         Initializes the DTO
 
         :param timestamp: the timestamp the data was received
         :param datapath_id: the datapath ID
-        :param avg_num_packets: the avg number of packets of the flow
-        :param avg_num_bytes: the avg number of bytes of the flow
+        :param total_num_packets: the total number of packets of the flow
+        :param total_num_bytes: the total number of bytes of the flow
         :param avg_duration_nanoseconds: the avg duration of the flow in nanoseconds
         :param avg_duration_seconds: the avg duration of the flow in seconds
         :param avg_hard_timeout: the avg hard timeout of the flow
@@ -26,8 +26,8 @@ class AvgFlowStatistic:
         """
         self.timestamp = timestamp
         self.datapath_id = datapath_id
-        self.avg_num_packets = avg_num_packets
-        self.avg_num_bytes = avg_num_bytes
+        self.total_num_packets = total_num_packets
+        self.total_num_bytes = total_num_bytes
         self.avg_duration_nanoseconds = avg_duration_nanoseconds
         self.avg_duration_seconds = avg_duration_seconds
         self.avg_hard_timeout = avg_hard_timeout
@@ -44,8 +44,8 @@ class AvgFlowStatistic:
         :return: the created instance
         """
         obj = AvgFlowStatistic(
-            timestamp=d["timestamp"], datapath_id=d["datapath_id"], avg_num_packets=d["avg_num_packets"],
-            avg_num_bytes=d["avg_num_bytes"],
+            timestamp=d["timestamp"], datapath_id=d["datapath_id"], total_num_packets=d["total_num_packets"],
+            total_num_bytes=d["total_num_bytes"],
             avg_duration_nanoseconds=d["avg_duration_nanoseconds"],
             avg_duration_seconds=d["avg_duration_seconds"],
             avg_hard_timeout=d["avg_hard_timeout"], avg_idle_timeout=d["avg_idle_timeout"],
@@ -61,8 +61,8 @@ class AvgFlowStatistic:
         d = {}
         d["timestamp"] = self.timestamp
         d["datapath_id"] = self.datapath_id
-        d["avg_num_packets"] = self.avg_num_packets
-        d["avg_num_bytes"] = self.avg_num_bytes
+        d["total_num_packets"] = self.total_num_packets
+        d["total_num_bytes"] = self.total_num_bytes
         d["avg_duration_nanoseconds"] = self.avg_duration_nanoseconds
         d["avg_duration_seconds"]=self.avg_duration_seconds
         d["avg_hard_timeout"] = self.avg_hard_timeout
@@ -76,8 +76,8 @@ class AvgFlowStatistic:
         :return: a string representation of the object
         """
         return f"timestamp: {self.timestamp}, datapath_id: {self.datapath_id}, " \
-               f"avg_num_packets: {self.avg_num_packets}," \
-               f"avg_num_bytes: {self.avg_num_bytes}, avg_duration_nanoseconds: {self.avg_duration_nanoseconds}, " \
+               f"total_num_packets: {self.total_num_packets}," \
+               f"total_num_bytes: {self.total_num_bytes}, avg_duration_nanoseconds: {self.avg_duration_nanoseconds}, " \
                f"avg_hard_timeout: {self.avg_hard_timeout}, avg_idle_timeout: {self.avg_idle_timeout}, " \
                f"avg_priority: {self.avg_priority}," \
                f"avg_cookie: {self.avg_cookie}"
@@ -119,8 +119,8 @@ class AvgFlowStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = AvgFlowStatistic(timestamp = float(parts[0]), datapath_id=int(parts[1]), avg_num_packets=int(parts[2]),
-                               avg_num_bytes=int(parts[3]), avg_duration_nanoseconds=int(parts[4]),
+        obj = AvgFlowStatistic(timestamp = float(parts[0]), datapath_id=int(parts[1]), total_num_packets=int(parts[2]),
+                               total_num_bytes=int(parts[3]), avg_duration_nanoseconds=int(parts[4]),
                                avg_duration_seconds=int(parts[5]),
                                avg_hard_timeout=int(parts[6]), avg_idle_timeout=int(parts[7]), avg_priority=int(parts[8]),
                                avg_cookie=int(parts[9]))
@@ -133,7 +133,7 @@ class AvgFlowStatistic:
         :return: the kafka record
         """
         return f"{self.timestamp},{self.datapath_id}," \
-               f"{self.avg_num_packets},{self.avg_num_bytes},{self.avg_duration_nanoseconds}," \
+               f"{self.total_num_packets},{self.total_num_bytes},{self.avg_duration_nanoseconds}," \
                f"{self.avg_duration_seconds}," \
                f"{self.avg_hard_timeout},{self.avg_idle_timeout},{self.avg_priority},{self.avg_cookie}"
 
@@ -147,8 +147,8 @@ class AvgFlowStatistic:
         parts = record.split(",")
         self.timestamp = float(parts[0])
         self.datapath_id=int(parts[1])
-        self.avg_num_packets=int(parts[2])
-        self.avg_num_bytes=int(parts[3])
+        self.total_num_packets=int(parts[2])
+        self.total_num_bytes=int(parts[3])
         self.avg_duration_nanoseconds=int(parts[4])
         self.avg_duration_seconds=int(parts[5])
         self.avg_hard_timeout=int(parts[6])
@@ -188,8 +188,8 @@ class AvgFlowStatistic:
         num_flows = len(flow_statistics)
         aggregated_flow_statistics_dto = AvgFlowStatistic(
             timestamp=timestamp, datapath_id=datapath_id,
-            avg_num_packets=int(total_num_packets/num_flows),
-            avg_num_bytes=int(total_num_bytes/num_flows),
+            total_num_packets=total_num_packets,
+            total_num_bytes=total_num_bytes,
             avg_duration_nanoseconds=int(total_duration_nanoseconds/num_flows),
             avg_duration_seconds=int(total_duration_seconds/num_flows),
             avg_hard_timeout=int(total_hard_timeout/num_flows),

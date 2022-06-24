@@ -99,7 +99,9 @@ class DockerUtil:
                 container_name_2 = name_parts[1]
                 level = name_parts[2]
                 inspect_info = client2.inspect_container(c.id)
-                net = list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())[0]
+                net = None
+                if len(list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())) > 0:
+                    net = list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())[0]
                 labels = c.labels
                 config_path = None
                 dir_path = None
@@ -114,20 +116,31 @@ class DockerUtil:
                 if constants.DOCKER.LOGSINK in labels:
                     log_sink = labels[constants.DOCKER.LOGSINK]
 
+                ip = ""
+                network_id = -1
+                gateway = ""
+                mac = ""
+                ip_prefix_len = ""
+                if net is not None:
+                    ip = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.IP_ADDRESS_INFO]
+                    network_id = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.NETWORK_ID_INFO]
+                    gateway = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.GATEWAY_INFO]
+                    mac = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.MAC_ADDRESS_INFO]
+                    ip_prefix_len = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
+                        constants.DOCKER.IP_PREFIX_LEN_INFO]
                 parsed_c = DockerContainerMetadata(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags = c.image.tags, id=c.id,
                     created=inspect_info[constants.DOCKER.CREATED_INFO],
-                    ip=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
-                        constants.DOCKER.IP_ADDRESS_INFO],
-                    network_id=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
-                        constants.DOCKER.NETWORK_ID_INFO],
-                    gateway=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
-                        constants.DOCKER.GATEWAY_INFO],
-                    mac=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
-                        constants.DOCKER.MAC_ADDRESS_INFO],
-                    ip_prefix_len=inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
-                        constants.DOCKER.IP_PREFIX_LEN_INFO],
+                    ip=ip,
+                    network_id=network_id,
+                    gateway=gateway,
+                    mac=mac,
+                    ip_prefix_len=ip_prefix_len,
                     name2=container_name_2, level=level,
                     hostname=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.HOSTNAME_INFO],
                     image_name=inspect_info[constants.DOCKER.CONFIG]["Image"],

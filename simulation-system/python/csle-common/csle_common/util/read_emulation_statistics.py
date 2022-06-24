@@ -2,6 +2,10 @@ from typing import List
 import time
 import datetime
 from confluent_kafka import Consumer, KafkaError, KafkaException, TopicPartition
+from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
+from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
+from csle_ryu.dao.flow_statistic import FlowStatistic
+from csle_ryu.dao.port_statistic import PortStatistic
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
@@ -39,6 +43,10 @@ class ReadEmulationStatistics:
         ossec_host_ids_metrics = {}
         total_ossec_metrics = []
         aggregated_ossec_metrics = []
+        openflow_flow_stats = []
+        openflow_port_stats = []
+        avg_openflow_flow_stats = []
+        avg_openflow_port_stats = []
 
         num_ossec_containers = len(list(filter(lambda x: x.name in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES,
                                                emulation_env_config.containers_config.containers)))
@@ -55,7 +63,11 @@ class ReadEmulationStatistics:
                        collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME,
                        collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
                        collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
-                       collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME
+                       collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME,
+                       collector_constants.LOG_SINK.OPENFLOW_FLOW_STATS_TOPIC_NAME,
+                       collector_constants.LOG_SINK.OPENFLOW_PORT_STATS_TOPIC_NAME,
+                       collector_constants.LOG_SINK.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
+                       collector_constants.LOG_SINK.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME
                        ]
 
         start_consume_ts = time.time()
@@ -121,6 +133,14 @@ class ReadEmulationStatistics:
                         snort_ids_metrics.append(SnortIdsAlertCounters.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME:
                         client_metrics.append(ClientPopulationMetrics.from_kafka_record(record=msg.value().decode()))
+                    elif topic == collector_constants.LOG_SINK.OPENFLOW_FLOW_STATS_TOPIC_NAME:
+                        openflow_flow_stats.append(FlowStatistic.from_kafka_record(record=msg.value().decode()))
+                    elif topic == collector_constants.LOG_SINK.OPENFLOW_PORT_STATS_TOPIC_NAME:
+                        openflow_port_stats.append(PortStatistic.from_kafka_record(record=msg.value().decode()))
+                    elif topic == collector_constants.LOG_SINK.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME:
+                        avg_openflow_flow_stats.append(AvgFlowStatistic.from_kafka_record(record=msg.value().decode()))
+                    elif topic == collector_constants.LOG_SINK.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME:
+                        avg_openflow_port_stats.append(AvgPortStatistic.from_kafka_record(record=msg.value().decode()))
                     if host_metrics_counter >= len(emulation_env_config.containers_config.containers):
                         agg_host_metrics_dto = ReadEmulationStatistics.average_host_metrics(
                             host_metrics=total_host_metrics)
@@ -141,7 +161,10 @@ class ReadEmulationStatistics:
             docker_host_stats=docker_host_stats, snort_ids_metrics=snort_ids_metrics, attacker_actions=attacker_actions,
             defender_actions=defender_actions, aggregated_host_metrics=aggregated_host_metrics,
             emulation_env_config=emulation_env_config, aggregated_ossec_host_alert_counters=aggregated_ossec_metrics,
-            ossec_host_alert_counters=ossec_host_ids_metrics)
+            ossec_host_alert_counters=ossec_host_ids_metrics,
+            avg_openflow_flow_stats=avg_openflow_flow_stats, avg_openflow_port_stats=avg_openflow_port_stats,
+            openflow_port_stats=openflow_port_stats, openflow_flow_stats=openflow_flow_stats
+        )
         return dto
 
     @staticmethod
