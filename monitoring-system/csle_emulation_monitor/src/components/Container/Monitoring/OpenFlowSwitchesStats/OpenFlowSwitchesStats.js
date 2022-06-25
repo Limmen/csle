@@ -15,6 +15,7 @@ import TransmittedDroppedChart from "../TransmittedDroppedChart/TransmittedDropp
 import TransmittedErrorsChart from "../TransmittedErrorsChart/TransmittedErrorsChart.js";
 import FlowDurationChart from "../FlowDurationChart/FlowDurationChart";
 import FlowPriorityChart from "../FlowPriorityChart/FlowPriorityChart";
+import NumFlowsChart from "../NumFlowsChart/NumFlowsChart";
 
 const OpenFlowSwitchesStats = React.memo((props) => {
     if(!props.loading && (props.flowStats === null || props.portStats === null)) {
@@ -130,6 +131,16 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                             stats={props.flowStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
+                    </div>
+                </div>
+                <div className="row chartsRow">
+                    <div className="col-sm-6">
+                        <NumFlowsChart
+                            stats={props.aggFlowStats}
+                            animation={props.animation} animationDuration={props.animationDuration}
+                            animationDurationFactor={props.animationDurationFactor}/>
+                    </div>
+                    <div className="col-sm-6">
                     </div>
                 </div>
             </div>

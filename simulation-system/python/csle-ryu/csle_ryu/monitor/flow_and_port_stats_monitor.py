@@ -2,6 +2,7 @@ from confluent_kafka import Producer
 import json
 import socket
 import time
+import requests
 from ryu.controller.handler import MAIN_DISPATCHER, DEAD_DISPATCHER
 from ryu.lib import hub
 from ryu.base import app_manager
@@ -17,6 +18,7 @@ from csle_ryu.dao.flow_statistic import FlowStatistic
 from csle_ryu.dao.port_statistic import PortStatistic
 from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
 from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
+from csle_ryu.dao.agg_flow_statistic import AggFlowStatistic
 
 
 class FlowAndPortStatsMonitor(app_manager.RyuApp):
@@ -93,6 +95,18 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
             if self.producer_running:
                 for dp in self.datapaths.values():
                     self._request_stats(dp)
+                    self.logger.info(f"id: {dp.id}")
+                    response = requests.get(f"http://"
+                                            f"localhost:8080{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}")
+                    aggflows = json.loads(response.content)[str(dp.id)][0]
+                    agg_flow_stat = AggFlowStatistic(timestamp=time.time(), datapath_id=dp.id,
+                                                     total_num_bytes=aggflows["byte_count"],
+                                                     total_num_packets=aggflows["packet_count"],
+                                                     total_num_flows=aggflows["flow_count"])
+                    if self.producer_running:
+                        self.producer.produce(constants.TOPIC_NAMES.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
+                                              agg_flow_stat.to_kafka_record())
+                        self.producer.poll(0)
             hub.sleep(self.time_step_len_seconds)
 
     def _request_stats(self, datapath) -> None:

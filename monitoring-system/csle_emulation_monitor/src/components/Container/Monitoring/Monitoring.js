@@ -139,6 +139,14 @@ const Monitoring = () => {
         }
     }
 
+    const getAggFlowStats = () => {
+        if (monitoringData !== null && selectedOpenFlowSwitch != null) {
+            return monitoringData.agg_openflow_flow_metrics_per_switch[selectedOpenFlowSwitch.label]
+        } else {
+            return null
+        }
+    }
+
     const getFlowStats = () => {
         if (monitoringData !== null && selectedOpenFlowSwitch !== null) {
             return monitoringData.openflow_flow_avg_metrics_per_switch[selectedOpenFlowSwitch.label]
@@ -667,6 +675,7 @@ const Monitoring = () => {
                                       loading={props.loadingSelectedEmulationExecution}
                                       portStats={getPortStats()}
                                       flowStats={getFlowStats()}
+                                      aggFlowStats={getAggFlowStats()}
                                       animation={props.animation} animationDuration={props.animationDuration.value}
                                       animationDurationFactor={props.animationDurationFactor} />
                 </div>

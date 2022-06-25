@@ -39,7 +39,6 @@ const SDNController = (props) => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log(response)
                 setSwitches(response)
             })
             .catch(error => console.log("error:" + error))

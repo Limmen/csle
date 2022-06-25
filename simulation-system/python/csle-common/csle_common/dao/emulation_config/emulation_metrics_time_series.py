@@ -8,6 +8,7 @@ from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
 from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
 from csle_ryu.dao.flow_statistic import FlowStatistic
 from csle_ryu.dao.port_statistic import PortStatistic
+from csle_ryu.dao.agg_flow_statistic import AggFlowStatistic
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -30,7 +31,9 @@ class EmulationMetricsTimeSeries:
                  openflow_flow_metrics_per_switch: Dict[str, List[FlowStatistic]],
                  openflow_port_metrics_per_switch: Dict[str, List[PortStatistic]],
                  openflow_flow_avg_metrics_per_switch: Dict[str, List[AvgFlowStatistic]],
-                 openflow_port_avg_metrics_per_switch: Dict[str, List[AvgPortStatistic]]
+                 openflow_port_avg_metrics_per_switch: Dict[str, List[AvgPortStatistic]],
+                 agg_openflow_flow_metrics_per_switch: Dict[str, List[AggFlowStatistic]],
+                 agg_openflow_flow_stats : List[AggFlowStatistic]
                  ):
         """
         Initializes the DTO
@@ -54,6 +57,8 @@ class EmulationMetricsTimeSeries:
         :param openflow_port_metrics_per_switch: openflow port statistics per aggregated per switch
         :param openflow_flow_avg_metrics_per_switch: average openflow flow statistics per aggregated per switch
         :param openflow_port_avg_metrics_per_switch: average openflow port statistics per aggregated per switch
+        :param agg_openflow_flow_stats: aggregated openflow flow statistics
+        :param agg_openflow_flow_metrics_per_switch: aggregated openflow flow statistics aggregatd per switch
         """
         self.client_metrics = client_metrics
         self.aggregated_docker_stats = aggregated_docker_stats
@@ -74,6 +79,8 @@ class EmulationMetricsTimeSeries:
         self.openflow_port_metrics_per_switch = openflow_port_metrics_per_switch
         self.openflow_flow_avg_metrics_per_switch = openflow_flow_avg_metrics_per_switch
         self.openflow_port_avg_metrics_per_switch = openflow_port_avg_metrics_per_switch
+        self.agg_openflow_flow_stats = agg_openflow_flow_stats
+        self.agg_openflow_flow_metrics_per_switch = agg_openflow_flow_metrics_per_switch
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationMetricsTimeSeries":
@@ -109,6 +116,10 @@ class EmulationMetricsTimeSeries:
         for k,v in d["openflow_port_avg_metrics_per_switch"].items():
             openflow_port_avg_metrics_per_switch[k] = list(map(lambda x: AvgPortStatistic.from_dict(x), v))
 
+        agg_openflow_flow_metrics_per_switch = {}
+        for k,v in d["agg_openflow_flow_metrics_per_switch"].items():
+            agg_openflow_flow_metrics_per_switch[k] = list(map(lambda x: AggFlowStatistic.from_dict(x), v))
+
         obj = EmulationMetricsTimeSeries(
             client_metrics=list(map(lambda x: ClientPopulationMetrics.from_dict(x), d["client_metrics"])),
             aggregated_docker_stats=list(map(lambda x: DockerStats.from_dict(x), d["aggregated_docker_stats"])),
@@ -128,7 +139,9 @@ class EmulationMetricsTimeSeries:
             openflow_flow_metrics_per_switch=openflow_flow_metrics_per_switch,
             openflow_port_metrics_per_switch=openflow_port_metrics_per_switch,
             openflow_flow_avg_metrics_per_switch=openflow_flow_avg_metrics_per_switch,
-            openflow_port_avg_metrics_per_switch=openflow_port_avg_metrics_per_switch
+            openflow_port_avg_metrics_per_switch=openflow_port_avg_metrics_per_switch,
+            agg_openflow_flow_stats=list(map(lambda x: AggFlowStatistic.from_dict(x), d["agg_openflow_flow_stats"])),
+            agg_openflow_flow_metrics_per_switch=agg_openflow_flow_metrics_per_switch
         )
         return obj
 
@@ -175,6 +188,12 @@ class EmulationMetricsTimeSeries:
         d["openflow_port_avg_metrics_per_switch"] = {}
         for k,v in self.openflow_port_avg_metrics_per_switch.items():
             d["openflow_port_avg_metrics_per_switch"][k] = list(map(lambda x: x.to_dict(), v))
+
+        d["agg_openflow_flow_metrics_per_switch"] = {}
+        for k,v in self.agg_openflow_flow_metrics_per_switch.items():
+            d["agg_openflow_flow_metrics_per_switch"][k] = list(map(lambda x: x.to_dict(), v))
+
+        d["agg_openflow_flow_stats"] = list(map(lambda x: x.to_dict(), self.agg_openflow_flow_stats))
         return d
 
     def __str__(self) -> str:
@@ -198,7 +217,9 @@ class EmulationMetricsTimeSeries:
                f"openflow_flow_metrics_per_switch: {self.openflow_flow_metrics_per_switch}," \
                f"openflow_port_metrics_per_switch: {self.openflow_port_metrics_per_switch}," \
                f"openflow_flow_avg_metrics_per_switch: {self.openflow_flow_avg_metrics_per_switch}," \
-               f"openflow_port_avg_metrics_per_switch: {self.openflow_port_avg_metrics_per_switch}"
+               f"openflow_port_avg_metrics_per_switch: {self.openflow_port_avg_metrics_per_switch}," \
+               f"agg_openflow_flow_stats: {self.agg_openflow_flow_stats}," \
+               f"agg_openflow_flow_metrics_per_switch: {self.agg_openflow_flow_metrics_per_switch}"
 
     def to_json_str(self) -> str:
         """
