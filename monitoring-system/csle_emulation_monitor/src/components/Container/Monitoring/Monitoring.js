@@ -7,6 +7,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import Modal from 'react-bootstrap/Modal'
 import ContainerMetrics from "./ContainerMetrics/ContainerMetrics";
 import AggregateMetrics from "./AggregateMetrics/AggregateMetrics";
+import OpenFlowSwitchesStats from "./OpenFlowSwitchesStats/OpenFlowSwitchesStats";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import DataCollection from './MonitoringSetup.png'
@@ -100,6 +101,9 @@ const Monitoring = () => {
     const [nodeExporterStatus, setNodeExporterStatus] = useState(null);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [searchString, setSearchString] = useState("");
+    const [openFlowSwitchesOptions, setOpenFlowSwitchesOptions] = useState([]);
+    const [selectedOpenFlowSwitch, setSelectedOpenFlowSwitch] = useState(null);
+
     // const ip = "172.31.212.92"
 
     const animationDurationUpdate = (selectedObj) => {
@@ -122,6 +126,22 @@ const Monitoring = () => {
     const getHostMetrics = () => {
         if (monitoringData !== null) {
             return monitoringData.host_metrics[selectedContainer.label]
+        } else {
+            return null
+        }
+    }
+
+    const getPortStats = () => {
+        if (monitoringData !== null && selectedOpenFlowSwitch != null) {
+            return monitoringData.openflow_port_avg_metrics_per_switch[selectedOpenFlowSwitch.label]
+        } else {
+            return null
+        }
+    }
+
+    const getFlowStats = () => {
+        if (monitoringData !== null && selectedOpenFlowSwitch !== null) {
+            return monitoringData.openflow_flow_avg_metrics_per_switch[selectedOpenFlowSwitch.label]
         } else {
             return null
         }
@@ -198,6 +218,10 @@ const Monitoring = () => {
 
     const updateHost = (container) => {
         setSelectedContainer(container)
+    }
+
+    const updateOpenFlowSwitch = (openFlowSwitch) => {
+        setSelectedOpenFlowSwitch(openFlowSwitch)
     }
 
     const refresh = () => {
@@ -413,6 +437,17 @@ const Monitoring = () => {
             console.log(response)
             setMonitoringData(response)
             setLoadingSelectedEmulationExecution(false)
+            var openFlowSwitchesOptions = []
+            openFlowSwitchesOptions = Object.keys(response.openflow_port_avg_metrics_per_switch).map((dpid, index) => {
+                return {
+                    value: dpid,
+                    label: dpid
+                }
+            })
+            setOpenFlowSwitchesOptions(openFlowSwitchesOptions)
+            if (openFlowSwitchesOptions.length > 0) {
+                setSelectedOpenFlowSwitch(openFlowSwitchesOptions[0])
+            }
         })
         .catch(error => console.log("error:" + error)), []);
 
@@ -614,6 +649,26 @@ const Monitoring = () => {
                                       ossecAlerts={getOSSECHostMetrics()}
                                       animation={props.animation} animationDuration={props.animationDuration.value}
                                       animationDurationFactor={props.animationDurationFactor}/>
+
+                    <div className="row hostMetricsDropdownRow">
+                        <div className="col-sm-12">
+                            <h5 className="text-center inline-block monitoringHeader">
+                                <SelectOpenFlowSwitchDropdownOrSpinner
+                                    loading={props.loadingSelectedEmulationExecution}
+                                    selectedEmulation={props.selectedEmulationExecution.emulation_env_config}
+                                    selectedSwitch={props.selectedSwitch}
+                                    switchesOptions={props.switchesOptions}
+                                />
+                            </h5>
+                        </div>
+                    </div>
+                    <hr/>
+                    <OpenFlowSwitchesStats key={'switch' + '-' + props.animationDuration.value}
+                                      loading={props.loadingSelectedEmulationExecution}
+                                      portStats={getPortStats()}
+                                      flowStats={getFlowStats()}
+                                      animation={props.animation} animationDuration={props.animationDuration.value}
+                                      animationDurationFactor={props.animationDurationFactor} />
                 </div>
             )
         }
@@ -706,6 +761,39 @@ const Monitoring = () => {
                                     options={props.containerOptions}
                                     onChange={updateHost}
                                     placeholder="Select a container from the emulation"
+                                />
+                            </div>
+                        </div>
+                    </h4>
+                </div>
+            )
+        }
+    }
+
+
+    const SelectOpenFlowSwitchDropdownOrSpinner = (props) => {
+        if (!props.loading && props.selectedEmulation === null) {
+            return (<></>)
+        }
+        if (props.loading || props.selectedEmulation === null || props.selectedSwitch === null) {
+            return (
+                <Spinner animation="border" role="status" className="dropdownSpinner">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <div>
+                    <h4>
+                        Metrics for OpenFlow switch with datapath ID:
+                        <div className="conditionalDist inline-block selectEmulation">
+                            <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                                <Select
+                                    style={{display: 'inline-block', width: "1000px"}}
+                                    value={props.selectedSwitch}
+                                    defaultValue={props.selectedSwitch}
+                                    options={props.switchesOptions}
+                                    onChange={updateOpenFlowSwitch}
+                                    placeholder="Select an OpenFlow switch"
                                 />
                             </div>
                         </div>
@@ -893,7 +981,8 @@ const Monitoring = () => {
                                    emulationExecutionContainerOptions={emulationExecutionContainerOptions}
                                    animationDurationFactor={animationDurationFactor}
                                    animation={animation}
-
+                                   selectedSwitch={selectedOpenFlowSwitch}
+                                   switchesOptions={openFlowSwitchesOptions}
             />
             <div className="row">
                 <div className="col-sm-12">

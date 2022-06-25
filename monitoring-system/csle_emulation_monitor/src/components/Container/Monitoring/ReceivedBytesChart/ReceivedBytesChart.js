@@ -1,5 +1,5 @@
 import React from 'react';
-import './PidsChart.css';
+import './ReceivedBytesChart.css';
 import {
     CartesianGrid,
     Label,
@@ -11,24 +11,33 @@ import {
     YAxis
 } from "recharts";
 
-const PidsChart = React.memo((props) => {
+const ReceivedBytesChart = React.memo((props) => {
         const width = 500
         const height = 200
         const margin = {
             top: 10,
             right: 30,
-            left: 15,
+            left: 60,
             bottom: 25
         }
 
         if (props.stats !== undefined && props.stats.length > 0) {
-            const data = props.stats.map((docker_stats, index) => {
+            var minBytes = 1000000000000
+            var maxBytes = 0
+            const data = props.stats.map((port_stats, index) => {
+                if (parseInt(port_stats.total_num_received_bytes) < minBytes){
+                    minBytes = parseInt(port_stats.total_num_received_bytes)
+                }
+                if (parseInt(port_stats.total_num_received_bytes) > maxBytes){
+                    maxBytes = parseInt(port_stats.total_num_received_bytes)
+                }
                 return {
                     "t": (index + 1),
-                    "Number of processes (PIDs)": parseInt(docker_stats.pids)
+                    "Received bytes": parseInt(port_stats.total_num_received_bytes)
                 }
             })
             var domain = [0, Math.max(1, data.length)]
+            var yDomain = [minBytes, maxBytes]
 
             return (
                 <ResponsiveContainer width='100%' height={300}>
@@ -39,14 +48,14 @@ const PidsChart = React.memo((props) => {
                         margin={margin}
                     >
                         <text x={650} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="22">Number of processes</tspan>
+                            <tspan fontSize="22">Received bytes</tspan>
                         </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain}>
                             <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
-                        <YAxis type="number">
-                            <Label angle={270} value="# Processes" offset={0} position="insideLeft"
+                        <YAxis type="number" domain={yDomain}>
+                            <Label angle={270} value="# Received bytes" offset={-50} position="insideLeft"
                                    className="largeFont"
                                    dy={50}/>
                         </YAxis>
@@ -54,7 +63,7 @@ const PidsChart = React.memo((props) => {
                         <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
                                 className="largeFont"/>
                         <Line isAnimationActive={props.animation} animation={props.animation} type="monotone"
-                              dataKey="Number of processes (PIDs)"
+                              dataKey="Received bytes"
                               stroke="#8884d8" addDot={false} activeDot={{r: 8}}
                               animationEasing={'linear'}
                               animationDuration={((1 - (props.animationDuration / 100)) * props.animationDurationFactor)}/>
@@ -69,8 +78,8 @@ const PidsChart = React.memo((props) => {
         }
     }
 )
-PidsChart.propTypes = {};
+ReceivedBytesChart.propTypes = {};
 
-PidsChart.defaultProps = {};
+ReceivedBytesChart.defaultProps = {};
 
-export default PidsChart;
+export default ReceivedBytesChart;
