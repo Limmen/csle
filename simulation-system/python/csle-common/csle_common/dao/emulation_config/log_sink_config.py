@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
+from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 
 
@@ -9,7 +10,9 @@ class LogSinkConfig:
     Represents the configuration of a LogSink in CSLE
     """
 
-    def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig, topics: List[KafkaTopic],
+    def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig,
+                 firewall_config: NodeFirewallConfig,
+                 topics: List[KafkaTopic],
                  kafka_port: int= 9092, time_step_len_seconds = 15, default_grpc_port = 50051,
                  secondary_grpc_port = 50049, third_grpc_port = 50048,
                  version: str = "0.0.1") -> None:
@@ -21,6 +24,7 @@ class LogSinkConfig:
         :param kafka_port: the port that the Kafka server is listening to
         :param default_grpc_port: the default port for gRPC
         :param time_step_len_seconds: the length of a time-step (period for logging)
+        :param firewall_config: the firewall configuration
         :param container: the container
         :param topics: list of kafka topics
         :param version: the version
@@ -36,6 +40,7 @@ class LogSinkConfig:
         self.topics = topics
         self.secondary_grpc_port = secondary_grpc_port
         self.third_grpc_port = third_grpc_port
+        self.firewall_config = firewall_config
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "LogSinkConfig":
@@ -51,7 +56,8 @@ class LogSinkConfig:
             topics = list(map(lambda x: KafkaTopic.from_dict(x), d["topics"])),
             kafka_port=d["kafka_port"], time_step_len_seconds=d["time_step_len_seconds"],
             default_grpc_port=d["default_grpc_port"], secondary_grpc_port=d["secondary_grpc_port"],
-            version=d["version"], third_grpc_port=d["third_grpc_port"]
+            version=d["version"], third_grpc_port=d["third_grpc_port"],
+            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
         )
         return obj
 
@@ -69,6 +75,7 @@ class LogSinkConfig:
         d["version"] = self.version
         d["topics"] = list(map(lambda x: x.to_dict(), self.topics))
         d["third_grpc_port"] = self.third_grpc_port
+        d["firewall_config"] = self.firewall_config.to_dict()
         return d
 
     def __str__(self) -> str:
@@ -79,7 +86,8 @@ class LogSinkConfig:
                f"port:{self.kafka_port}, version: {self.version}, resources: {self.resources}, " \
                f"topics: {','.join(list(map(lambda x: str(x), self.topics)))}, " \
                f"default_grpc_port:{self.default_grpc_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
-               f"secondary_grpc_port:{self.secondary_grpc_port}, third_grpc_port: {self.third_grpc_port}"
+               f"secondary_grpc_port:{self.secondary_grpc_port}, third_grpc_port: {self.third_grpc_port}," \
+               f"firewall_config: {self.firewall_config}"
 
     def to_json_str(self) -> str:
         """
@@ -119,5 +127,6 @@ class LogSinkConfig:
         config = self.copy()
         config.container = config.container.create_execution_config(ip_first_octet=ip_first_octet)
         config.resources = config.resources.create_execution_config(ip_first_octet=ip_first_octet)
+        config.firewall_config = config.firewall_config.create_execution_config(ip_first_octet=ip_first_octet)
         return config
 

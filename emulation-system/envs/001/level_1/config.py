@@ -374,6 +374,33 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
              f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}.{collector_constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
              None)])
 
+    firewall_config = NodeFirewallConfig(
+        hostname=f"{constants.CONTAINER_IMAGES.KAFKA_1}_1",
+        ips_gw_default_policy_networks=[
+            DefaultNetworkFirewallConfig(
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                   f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}."
+                   f"{collector_constants.LOG_SINK.NETWORK_ID_FOURTH_OCTET}",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                         f"{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.{collector_constants.LOG_SINK.NETWORK_ID_THIRD_OCTET}"
+                                f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            )
+        ],
+        output_accept=set([]),
+        input_accept=set([]),
+        forward_accept=set([]),
+        output_drop=set(), input_drop=set(), forward_drop=set(), routes=set())
+
     topics = [
         KafkaTopic(
             name=collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
@@ -461,7 +488,7 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
         )
     ]
 
-    config = LogSinkConfig(container=container, resources=resources, topics=topics,
+    config = LogSinkConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
                            version=version, kafka_port=9092, default_grpc_port=50051,
                            secondary_grpc_port=50049, time_step_len_seconds=15,
                            third_grpc_port=50048)

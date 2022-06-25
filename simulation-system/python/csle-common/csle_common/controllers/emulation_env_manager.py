@@ -103,10 +103,6 @@ class EmulationEnvManager:
         EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
-        ResourceConstraintsManager.apply_resource_constraints(emulation_env_config=emulation_env_config)
-
-        current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
         SDNControllerManager.connect_sdn_controller_to_network(
             sdn_controller_config=emulation_env_config.sdn_controller_config)
@@ -114,6 +110,10 @@ class EmulationEnvManager:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller --")
         SDNControllerManager.start_controller(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
+        ResourceConstraintsManager.apply_resource_constraints(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")

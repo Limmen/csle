@@ -1,6 +1,7 @@
 from typing import Dict, Any, Union
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
+from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
 
 
@@ -9,7 +10,9 @@ class SDNControllerConfig:
     DTO containing configuration for the SDN controller
     """
 
-    def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig, controller_port: int,
+    def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig,
+                 firewall_config: NodeFirewallConfig,
+                 controller_port: int,
                  controller_type: SDNControllerType, controller_module_name: str, controller_web_api_port: int,
                  time_step_len_seconds = 15, version: str = "0.0.1"):
         """
@@ -17,6 +20,7 @@ class SDNControllerConfig:
 
         :param container: the container config of the controller
         :param resources: the resources config of the controller
+        :param firewall_config: the firewall config of the controller
         :param controller_port: the port of the controller
         :param controller_type: the type of the controller
         :param time_step_len_seconds: the length of a time-step in the emulation (for monitoring)
@@ -26,6 +30,7 @@ class SDNControllerConfig:
         """
         self.container= container
         self.resources = resources
+        self.firewall_config = firewall_config
         self.controller_port = controller_port
         self.time_step_len_seconds = time_step_len_seconds
         self.version = version
@@ -48,7 +53,8 @@ class SDNControllerConfig:
             resources=NodeResourcesConfig.from_dict(d["resources"]),
             time_step_len_seconds=d["time_step_len_seconds"],
             version=d["version"], controller_type=d["controller_type"], controller_port=d["controller_port"],
-            controller_web_api_port = d["controller_web_api_port"], controller_module_name=d["controller_module_name"]
+            controller_web_api_port = d["controller_web_api_port"], controller_module_name=d["controller_module_name"],
+            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
         )
         return obj
 
@@ -65,6 +71,7 @@ class SDNControllerConfig:
         d["version"] = self.version
         d["controller_module_name"] = self.controller_module_name
         d["controller_web_api_port"] = self.controller_web_api_port
+        d["firewall_config"] = self.firewall_config.to_dict()
         return d
 
     def __str__(self) -> str:
@@ -75,7 +82,7 @@ class SDNControllerConfig:
                f"resources: {self.resources}, time step len: {self.time_step_len_seconds}, " \
                f"controller type: {self.controller_type}, controller_port: {self.controller_port}, " \
                f"version: {self.version}, controller_module_name: {self.controller_module_name}, " \
-               f"controller_web_api_port: {self.controller_web_api_port}"
+               f"controller_web_api_port: {self.controller_web_api_port}, firewall_config: {self.firewall_config}"
 
     def to_json_str(self) -> str:
         """
@@ -115,5 +122,6 @@ class SDNControllerConfig:
         config = self.copy()
         config.container = config.container.create_execution_config(ip_first_octet=ip_first_octet)
         config.resources = config.resources.create_execution_config(ip_first_octet=ip_first_octet)
+        config.firewall_config = config.firewall_config.create_execution_config(ip_first_octet=ip_first_octet)
         return config
 

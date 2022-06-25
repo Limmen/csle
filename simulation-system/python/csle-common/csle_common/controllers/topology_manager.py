@@ -18,7 +18,11 @@ class TopologyManager:
         :return: None
         """
         Logger.__call__().get_logger().info("Creating topology")
-        for node in emulation_env_config.topology_config.node_configs:
+        topology_configs = emulation_env_config.topology_config.node_configs
+        topology_configs = topology_configs + [emulation_env_config.log_sink_config.firewall_config]
+        if emulation_env_config.sdn_controller_config is not None:
+            topology_configs = topology_configs + [emulation_env_config.sdn_controller_config.firewall_config]
+        for node in topology_configs:
             ips = node.get_ips()
             ip = ips[0]
             Logger.__call__().get_logger().info("Connecting to node:{}".format(ip))
@@ -34,7 +38,7 @@ class TopologyManager:
                 if default_network_fw_config.default_gw is not None:
                     cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} " \
                           f"-net {default_network_fw_config.network.subnet_mask.replace('/24', '')} " \
-                          f"{constants.COMMANDS.NETMASK} {constants.CSLE.CSLE_EDGE_BITMASK} " \
+                          f"{constants.COMMANDS.NETMASK} {default_network_fw_config.network.bitmask} " \
                           f"gw {default_network_fw_config.default_gw}"
                     EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                                   wait_for_completion=True)
