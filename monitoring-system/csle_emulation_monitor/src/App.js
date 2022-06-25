@@ -14,6 +14,7 @@ import TrainingResults from "./components/Container/TrainingResults/TrainingResu
 import About from "./components/Container/About/About";
 import Policies from "./components/Container/Policies/Policies";
 import Jobs from "./components/Container/Jobs/Jobs";
+import SDNControllers from "./components/Container/SDNControllers/SDNControllers";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
@@ -48,6 +49,8 @@ function App() {
                                 <Route path="policies" index element={<Policies/>}>
                                 </Route>
                                 <Route path="jobs" index element={<Jobs/>}>
+                                </Route>
+                                <Route path="sdncontrollers" index element={<SDNControllers/>}>
                                 </Route>
                                 <Route path="about" index element={<About/>}>
                                 </Route>

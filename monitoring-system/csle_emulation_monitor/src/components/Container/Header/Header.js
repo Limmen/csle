@@ -72,6 +72,12 @@ const Header = () => {
         </Tooltip>
     );
 
+    const renderSdnControllersTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Information about SDN controllers
+        </Tooltip>
+    );
+
     const renderAboutTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Information about the environment
@@ -195,6 +201,16 @@ const Header = () => {
                                 overlay={renderJobsTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={"jobs"}>
                                     Jobs
+                                </NavLink>
+                            </OverlayTrigger>
+                        </li>
+                        <li className="nav-item navtabheader">
+                            <OverlayTrigger
+                                placement="top"
+                                delay={{show: 0, hide: 0}}
+                                overlay={renderSdnControllersTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"sdncontrollers"}>
+                                    SDN Controllers
                                 </NavLink>
                             </OverlayTrigger>
                         </li>

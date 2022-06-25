@@ -1236,6 +1236,48 @@ def read_file():
     return response
 
 
+@app.route('/sdncontrollersids', methods=['GET'])
+def sdncontrollerids():
+    emulations = MetastoreFacade.list_emulations()
+    rc_emulations = ContainerManager.list_running_emulations()
+    response_dicts = []
+    for em in emulations:
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
+        if em.sdn_controller_config is not None:
+            running = False
+            if em.name in rc_emulations:
+                running = True
+            for exec in executions:
+                response_dicts.append({
+                    "id": em.id,
+                    "emulation": em.name,
+                    "running": running,
+                    "ip": exec.emulation_env_config.sdn_controller_config.container.get_ips()[0],
+                    "exec_id": exec.ip_first_octet
+                })
+    response = jsonify(response_dicts)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/sdncontrollersids/get/<emulation_id>/<exec_id>', methods=['GET'])
+def sdn_controller_by_id(emulation_id: int, exec_id: int):
+    em = MetastoreFacade.get_emulation(id=emulation_id)
+    rc_emulations = ContainerManager.list_running_emulations()
+    em_dict = {}
+    print(f"getting em id:{emulation_id}, exec id:{exec_id}")
+    if em is not None and em.sdn_controller_config is not None:
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
+        if em.name in rc_emulations:
+            em.running = True
+        for exec in executions:
+            if int(exec.ip_first_octet) == int(exec_id):
+                exec.emulation_env_config.running = True
+                em_dict = exec.emulation_env_config.to_dict()                    
+    response = jsonify(em_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 if __name__ == "__main__":
     serve(app, host='0.0.0.0', port=7777, threads=100)
     #app.run(port=7777,host='0.0.0.0')
