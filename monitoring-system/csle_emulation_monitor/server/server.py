@@ -1,7 +1,9 @@
 import base64
 import time
 import os
+import requests
 from flask import Flask, jsonify, request
+import csle_ryu.constants.constants as ryu_constants
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.container_manager import ContainerManager
@@ -1264,16 +1266,125 @@ def sdn_controller_by_id(emulation_id: int, exec_id: int):
     em = MetastoreFacade.get_emulation(id=emulation_id)
     rc_emulations = ContainerManager.list_running_emulations()
     em_dict = {}
-    print(f"getting em id:{emulation_id}, exec id:{exec_id}")
     if em is not None and em.sdn_controller_config is not None:
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
         if em.name in rc_emulations:
             em.running = True
         for exec in executions:
             if int(exec.ip_first_octet) == int(exec_id):
-                exec.emulation_env_config.running = True
-                em_dict = exec.emulation_env_config.to_dict()                    
+                if em.running:
+                    exec.emulation_env_config.running = True
+                em_dict = exec.emulation_env_config.to_dict()
     response = jsonify(em_dict)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/sdncontroller/switches/get/<emulation_id>/<exec_id>', methods=['GET'])
+def sdn_controller_switches(emulation_id: int, exec_id: int):
+    em = MetastoreFacade.get_emulation(id=emulation_id)
+    response_data = {}
+    if em is not None and em.sdn_controller_config is not None:
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
+        for exec in executions:
+            if int(exec.ip_first_octet) == int(exec_id):
+                response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                        f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                        f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                        f"{ryu_constants.RYU.STATS_SWITCHES_RESOURCE}")
+                switches = json.loads(response.content)
+                switches_dicts = []
+                for dpid in switches:
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_DESC_RESOURCE}/{dpid}")
+                    sw_dict = {}
+                    sw_dict["dpid"] = dpid
+                    sw_dict["desc"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_FLOW_RESOURCE}/{dpid}")
+                    sw_dict["flows"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dpid}")
+                    sw_dict["aggflows"] = json.loads(response.content)[str(dpid)][0]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_TABLE_RESOURCE}/{dpid}")
+                    tables = json.loads(response.content)[str(dpid)]
+                    tables = list(filter(lambda x: x["active_count"] > 0, tables))
+                    filtered_table_ids = list(map(lambda x: x["table_id"], tables))
+                    sw_dict["tables"] = tables
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_TABLE_FEATURES_RESOURCE}/{dpid}")
+                    tablefeatures = json.loads(response.content)[str(dpid)]
+                    tablefeatures = list(filter(lambda x: x["table_id"] in filtered_table_ids, tablefeatures))
+                    sw_dict["tablefeatures"] = tablefeatures
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_PORT_RESOURCE}/{dpid}")
+                    sw_dict["portstats"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_PORT_DESC_RESOURCE}/{dpid}")
+                    sw_dict["portdescs"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_QUEUE_RESOURCE}/{dpid}")
+                    sw_dict["queues"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_QUEUE_CONFIG_RESOURCE}/{dpid}")
+                    sw_dict["queueconfigs"] = json.loads(response.content)[str(dpid)][0]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_GROUP_RESOURCE}/{dpid}")
+                    sw_dict["groups"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_GROUP_DESC_RESOURCE}/{dpid}")
+                    sw_dict["groupdescs"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_GROUP_FEATURES_RESOURCE}/{dpid}")
+                    sw_dict["groupfeatures"] = json.loads(response.content)[str(dpid)][0]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_METER_RESOURCE}/{dpid}")
+                    sw_dict["meters"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_METER_CONFIG_RESOURCE}/{dpid}")
+                    sw_dict["meter_configs"] = json.loads(response.content)[str(dpid)]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_METER_FEATURES_RESOURCE}/{dpid}")
+                    sw_dict["meter_features"] = json.loads(response.content)[str(dpid)][0]
+                    response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                            f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
+                                            f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
+                                            f"{ryu_constants.RYU.STATS_ROLE_RESOURCE}/{dpid}")
+                    sw_dict["roles"] = json.loads(response.content)[str(dpid)][0]
+                    switches_dicts.append(sw_dict)
+                response_data = switches_dicts
+
+    response = jsonify(response_data)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
