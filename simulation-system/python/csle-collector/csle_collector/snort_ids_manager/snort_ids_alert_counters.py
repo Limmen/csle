@@ -40,7 +40,6 @@ class SnortIdsAlertCounters:
         for idx in range(len(self.class_alerts)):
             self.class_alerts[idx] = self.class_alerts[idx] + alert_counters.class_alerts[idx]
 
-
     def count(self, alerts: List[SnortIdsFastLogAlert]) -> None:
         """
         Counts the list of alerts

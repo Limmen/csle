@@ -280,7 +280,7 @@ class ConnectionUtil:
                         except Exception as e:
                             Logger.__call__().get_logger().warning("SSH exception :{}".format(str(e)))
                             Logger.__call__().get_logger().warning("user:{}, pw:{}".format(cr.username, cr.pw))
-                            Logger.__call__().get_logger().warningf("Agent reachable:{}".format(
+                            Logger.__call__().get_logger().warning("Agent reachable:{}".format(
                                 s.attacker_obs_state.agent_reachable))
                             Logger.__call__().get_logger().warning("Action:{}, {}, {}".format(a.id, a.ips, a.descr))
                     else:

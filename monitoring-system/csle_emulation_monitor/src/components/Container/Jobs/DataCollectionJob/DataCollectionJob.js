@@ -531,25 +531,25 @@ const DataCollectionJob = (props) => {
                                                         {trace.defender_observation_states.map((obs_state, index) =>
                                                             <tr key={index}>
                                                                 <td>{index + 1}</td>
-                                                                <td>{obs_state.client_population_metrics.num_clients}</td>
-                                                                <td>{obs_state.aggregated_host_metrics.num_failed_login_attempts}</td>
-                                                                <td>{obs_state.aggregated_host_metrics.num_logged_in_users}</td>
-                                                                <td>{obs_state.aggregated_host_metrics.num_login_events}</td>
-                                                                <td>{obs_state.aggregated_host_metrics.num_open_connections}</td>
-                                                                <td>{obs_state.aggregated_host_metrics.num_users}</td>
-                                                                <td>{obs_state.docker_stats.blk_read}</td>
-                                                                <td>{obs_state.docker_stats.blk_write}</td>
-                                                                <td>{obs_state.docker_stats.cpu_percent}</td>
-                                                                <td>{obs_state.docker_stats.mem_percent}</td>
-                                                                <td>{obs_state.docker_stats.net_rx}</td>
-                                                                <td>{obs_state.docker_stats.net_tx}</td>
-                                                                <td>{obs_state.docker_stats.pids}</td>
-                                                                <td>{obs_state.snort_ids_alert_counters.alerts_weighted_by_priority}</td>
-                                                                <td>{obs_state.snort_ids_alert_counters.severe_alerts}</td>
-                                                                <td>{obs_state.snort_ids_alert_counters.warning_alerts}</td>
-                                                                <td>{obs_state.ossec_ids_alert_counters.alerts_weighted_by_level}</td>
-                                                                <td>{obs_state.ossec_ids_alert_counters.severe_alerts}</td>
-                                                                <td>{obs_state.ossec_ids_alert_counters.warning_alerts}</td>
+                                                                <td>{obs_state.avg_client_population_metrics.num_clients}</td>
+                                                                <td>{obs_state.avg_aggregated_host_metrics.num_failed_login_attempts}</td>
+                                                                <td>{obs_state.avg_aggregated_host_metrics.num_logged_in_users}</td>
+                                                                <td>{obs_state.avg_aggregated_host_metrics.num_login_events}</td>
+                                                                <td>{obs_state.avg_aggregated_host_metrics.num_open_connections}</td>
+                                                                <td>{obs_state.avg_aggregated_host_metrics.num_users}</td>
+                                                                <td>{obs_state.avg_docker_stats.blk_read}</td>
+                                                                <td>{obs_state.avg_docker_stats.blk_write}</td>
+                                                                <td>{obs_state.avg_docker_stats.cpu_percent}</td>
+                                                                <td>{obs_state.avg_docker_stats.mem_percent}</td>
+                                                                <td>{obs_state.avg_docker_stats.net_rx}</td>
+                                                                <td>{obs_state.avg_docker_stats.net_tx}</td>
+                                                                <td>{obs_state.avg_docker_stats.pids}</td>
+                                                                <td>{obs_state.avg_snort_ids_alert_counters.alerts_weighted_by_priority}</td>
+                                                                <td>{obs_state.avg_snort_ids_alert_counters.severe_alerts}</td>
+                                                                <td>{obs_state.avg_snort_ids_alert_counters.warning_alerts}</td>
+                                                                <td>{obs_state.avg_ossec_ids_alert_counters.alerts_weighted_by_level}</td>
+                                                                <td>{obs_state.avg_ossec_ids_alert_counters.severe_alerts}</td>
+                                                                <td>{obs_state.avg_ossec_ids_alert_counters.warning_alerts}</td>
                                                             </tr>
                                                         )}
                                                         </tbody>

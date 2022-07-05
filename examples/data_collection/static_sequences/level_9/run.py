@@ -89,11 +89,11 @@ def run() -> None:
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,
                                   defender_sequence=defender_sequence, repeat_times= 5000,
                                   sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds,
-                                  descr="Intrusion data collected against expert attacker",
+                                  descr="Intrusion data collected against novice attacker",
                                   save_emulation_traces_every=1,
                                   emulation_traces_to_save_with_data_collection_job=1,
-                                  emulation_statistics=em_statistic, intrusion_start_p=0.1,
-                                  intrusion_continue=0.3)
+                                  emulation_statistics=em_statistic, intrusion_start_p=0.2,
+                                  intrusion_continue=1)
 
 
 # Program entrypoint

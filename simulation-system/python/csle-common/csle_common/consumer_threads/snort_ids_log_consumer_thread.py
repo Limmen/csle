@@ -1,3 +1,4 @@
+from typing import List
 import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
@@ -26,7 +27,7 @@ class SnortIdsLogConsumerThread(threading.Thread):
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.snort_ids_alert_counters = snort_ids_alert_counters
-        self.snort_ids_alert_counters_list = []
+        self.snort_ids_alert_counters_list : List[SnortIdsAlertCounters] = []
         self.ts = time.time()
         self.kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_server_ip}:{self.kafka_port}",

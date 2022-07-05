@@ -149,10 +149,10 @@ RUN pip install flask &&\
 RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
     unzip latest-glassfish.zip
 
+#     rm -rf /etc/snort/rules/* &&\
+  #    touch /etc/snort/rules/local.rules &&\
 # Setup Snort
 RUN mkdir /var/snort &&\
-    rm -rf /etc/snort/rules/* &&\
-    touch /etc/snort/rules/local.rules &&\
     mkdir /etc/snort/rules/iplists &&\
     chmod 777 /var/snort &&\
     mv /etc/snort/snort.conf /etc/snort/snort.conf.bak

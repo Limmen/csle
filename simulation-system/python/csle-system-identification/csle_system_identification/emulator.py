@@ -108,7 +108,7 @@ class Emulator:
             full_attacker_sequence = attacker_wait_seq
             full_defender_sequence = defender_wait_seq
             for i in range(len(attacker_sequence)):
-                num_wait_steps = np.random.geometric(p=intrusion_continue, size=1)[0]
+                num_wait_steps = np.random.geometric(p=intrusion_continue, size=1)[0]-1
                 wait_steps = [EmulationAttackerStoppingActions.CONTINUE(index=-1)]*num_wait_steps
                 full_attacker_sequence = full_attacker_sequence + wait_steps
                 full_attacker_sequence = full_attacker_sequence + [attacker_sequence[i]]
@@ -116,7 +116,8 @@ class Emulator:
                                          [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * (num_wait_steps+1)
             T = len(full_attacker_sequence)
             assert  len(full_defender_sequence) == len(full_attacker_sequence)
-            logger.info(f"Starting execution of static action sequences, iteration:{i}, T:{T}, I_t:{intrusion_start_time}")
+            logger.info(f"Starting execution of static action sequences, iteration:{i}, T:{T}, "
+                        f"I_t:{intrusion_start_time}")
             sys.stdout.flush()
             s.reset()
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
@@ -126,6 +127,11 @@ class Emulator:
             time.sleep(sleep_time)
             s.defender_obs_state.average_metric_lists()
             emulation_statistics.update_initial_statistics(s=s)
+            traces = emulation_traces + [emulation_trace]
+            if len(traces) > data_collection_job.num_cached_traces:
+                data_collection_job.traces = traces[-data_collection_job.num_cached_traces:]
+            else:
+                data_collection_job.traces = traces
             for t in range(T):
                 old_state = s.copy()
                 a1 = full_defender_sequence[t]
@@ -135,18 +141,13 @@ class Emulator:
                 emulation_trace, s = Emulator.run_actions(
                     emulation_env_config=emulation_env_config,  attacker_action=a2, defender_action=a1,
                     sleep_time=sleep_time, trace=emulation_trace, s=s)
-                s.defender_obs_state.average_metric_lists()
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
                 total_steps = (1/intrusion_start_p)*repeat_times
                 collected_steps += 1
                 data_collection_job.num_collected_steps=collected_steps
                 data_collection_job.progress_percentage = (round(collected_steps / total_steps, 2))
                 data_collection_job.num_sequences_completed = i
-                traces = emulation_traces + [emulation_trace]
-                if len(traces) > data_collection_job.num_cached_traces:
-                    data_collection_job.traces = traces[-data_collection_job.num_cached_traces:]
-                else:
-                    data_collection_job.traces = traces
+                data_collection_job.traces[-1] = emulation_trace
                 logger.debug(f"job updated, steps collected: {data_collection_job.num_collected_steps}, "
                             f"progress: {data_collection_job.progress_percentage}, "
                             f"sequences completed: {i}/{repeat_times}")
@@ -199,10 +200,11 @@ class Emulator:
                      f"ips:{defender_action.ips}")
         sys.stdout.flush()
         EnvDynamicsUtil.cache_defender_action(a=defender_action, s=s_prime_prime)
-        s = s_prime_prime
         time.sleep(sleep_time)
+        s_prime_prime.defender_obs_state.average_metric_lists()
         trace.attacker_observation_states.append(s_prime_prime.attacker_obs_state.copy())
         trace.defender_observation_states.append(s_prime_prime.defender_obs_state.copy())
         trace.attacker_actions.append(attacker_action)
         trace.defender_actions.append(defender_action)
+        s = s_prime_prime
         return trace, s
