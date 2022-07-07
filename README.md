@@ -191,6 +191,34 @@ running commands can read and write to this directory.
       pip install -e .
       ```
 
+   - Install `csle-rest-api` (see ([README](simulation-system/csle-rest-api/README.MD)) for more
+     information)
+     ```bash
+     cd simulation-system/python/csle-rest-api/
+     pip install -e .
+     ```
+
+   - Install `csle-agents` (see ([README](simulation-system/csle-agents/README.MD)) for more
+     information)
+     ```bash
+     cd simulation-system/python/csle-agents/
+     pip install -e .
+     ```
+
+   - Install `csle-system-identification` (see ([README](simulation-system/csle-system-identification/README.MD)) for more
+     information)
+     ```bash
+     cd simulation-system/python/csle-system-identification/
+     pip install -e .
+     ```
+
+   - Install `csle-ryu` (see ([README](simulation-system/csle-ryu/README.MD)) for more
+     information)
+     ```bash
+     cd simulation-system/python/csle-ryu/
+     pip install -e .
+     ```
+
 4. **Install the CLI tool**
     - Install the CLI tool and make it executable as a script:
       ```bash
@@ -293,6 +321,11 @@ csle rm emulations
 pip uninstall gym-csle-stopping-game
 pip uninstall csle-common
 pip uninstall csle-collector
+pip uninstall csle-agents
+pip uninstall csle-ryu
+pip uninstall csle-rest
+pip uninstall csle-system-identification
+pip uninstall csle-attacker
 cd emulation-system && make rm
 cd metastore; make clean
 ```

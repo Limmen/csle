@@ -15,7 +15,19 @@ This folder contains python projects that implement the functionality of the sim
   - Contains code for emulating defender actions
     
 - **gym-csle-stopping-game** ([gym-csle-stopping-game](./gym-csle-stopping-game)):
-    - A gym environment for an optimal stopping game        
+    - A gym environment for an optimal stopping game
+
+- **csle-ryu** ([csle-ryu](./csle-ryu)):
+  - A library with RYU SDN controllers
+
+- **csle-rest-api** ([csle-rest-api](./csle-rest-api)):
+  - The CSLE REST API for the management platform
+
+- **csle-agents** ([csle-agents](./csle-agents)):
+  - Implementation of control, learning, and game-theoretic algorithms for finding defender policies
+
+- **csle-system-identification** ([csle-system-identification](./csle-system-identification)):
+  - Implementation of system identification algorithms to learn system models based on measured data and traces
 
 ## Author & Maintainer
 
