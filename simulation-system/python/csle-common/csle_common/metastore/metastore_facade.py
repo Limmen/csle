@@ -209,6 +209,7 @@ class MetastoreFacade:
                                                          sort_keys=True)
         emulation_simulation_trace: EmulationSimulationTrace = \
             EmulationSimulationTrace.from_dict(json.loads(emulation_simulation_trace_json_str))
+        emulation_simulation_trace.id = emulation_simulation_trace_record[0]
         return emulation_simulation_trace
 
     @staticmethod
@@ -469,9 +470,9 @@ class MetastoreFacade:
 
 
     @staticmethod
-    def list_emulation_traces_ids() -> List[EmulationTrace]:
+    def list_emulation_traces_ids() -> List[Dict]:
         """
-        :return: A list of emulation traces in the metastore
+        :return: A list of emulation traces ids in the metastore
         """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
@@ -481,11 +482,23 @@ class MetastoreFacade:
                 records = cur.fetchall()
                 return records
 
+    @staticmethod
+    def list_emulation_simulation_traces_ids() -> List[Dict]:
+        """
+        :return: A list of emulation-simulation traces ids in the metastore
+        """
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE}")
+                records = cur.fetchall()
+                return records
 
     @staticmethod
     def list_simulation_traces_ids() -> List[Dict]:
         """
-        :return: A list of emulation traces in the metastore
+        :return: A list of simulation traces ids in the metastore
         """
         with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
                              f"password={constants.METADATA_STORE.PASSWORD} "
@@ -566,6 +579,27 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Emulation trace "
                                                      f"with id {emulation_trace.id} deleted successfully")
+
+    @staticmethod
+    def remove_emulation_simulation_trace(emulation_simulation_trace: EmulationSimulationTrace) -> None:
+        """
+        Removes an emulation-simulation trace from the metastore
+
+        :param emulation_simulation_trace: the emulation-simulation trace to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing an emulation-simulation trace with "
+                                             f"id:{emulation_simulation_trace.id} "
+                                             f"from the metastore")
+        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                             f"password={constants.METADATA_STORE.PASSWORD} "
+                             f"host={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} WHERE id = %s",
+                            (emulation_simulation_trace.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Emulation-Simulation trace "
+                                                     f"with id {emulation_simulation_trace.id} deleted successfully")
 
     @staticmethod
     def get_emulation_statistic(id: int) -> Union[None, EmulationStatistics]:

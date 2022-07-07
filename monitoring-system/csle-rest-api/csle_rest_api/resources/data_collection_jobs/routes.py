@@ -1,5 +1,5 @@
 """
-Routes and resources for the /data-collection-jobs resource
+Routes and sub-resources for the /data-collection-jobs resource
 """
 import time
 from flask import Blueprint, jsonify, request

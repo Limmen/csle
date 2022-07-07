@@ -1,5 +1,5 @@
 """
-Routes and resources for the /simulation-traces resource
+Routes and sub-resources for the /simulation-traces resource
 """
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants

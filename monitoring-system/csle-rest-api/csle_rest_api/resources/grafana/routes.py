@@ -1,5 +1,5 @@
 """
-Routes and resources for the /grafana-page page
+Routes and sub-resources for the /grafana-page page
 """
 
 from flask import Blueprint, jsonify, request
@@ -10,11 +10,7 @@ import csle_rest_api.constants.constants as api_constants
 
 # Creates a blueprint "sub application" of the main REST app
 grafana_bp = Blueprint(api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE, __name__,
-                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}",
-                       static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
-                                    f'{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}'
-                                    f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
-                       static_folder='../../../csle-mgmt-webapp/build')
+                       url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}")
 
 
 @grafana_bp.route("",
@@ -33,10 +29,10 @@ def grafana():
             MonitorToolsController.start_grafana()
             running = True
     grafana_dict = {
-        "running": running,
-        "port": port,
-        "url": f"http://localhost:{port}/"
+        api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
+        api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
+        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://localhost:{port}/"
     }
     response = jsonify(grafana_dict)
-    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response

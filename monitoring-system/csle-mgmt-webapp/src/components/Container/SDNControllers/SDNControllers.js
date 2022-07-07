@@ -27,7 +27,7 @@ const SDNControllers = () => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/sdncontrollersids',
+            `http://` + ip + ':7777/sdn-controllers?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -63,7 +63,7 @@ const SDNControllers = () => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/sdncontrollersids/get/' + emulation_id.value + "/"+ emulation_id.exec_id,
+            `http://` + ip + ':7777/emulations/' + emulation_id.value + "/executions/"+ emulation_id.exec_id,
             {
                 method: "GET",
                 headers: new Headers({

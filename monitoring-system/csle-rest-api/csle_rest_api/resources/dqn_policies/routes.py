@@ -1,5 +1,5 @@
 """
-Routes and resources for the /dqn-policies resource
+Routes and sub-resources for the /dqn-policies resource
 """
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants

@@ -1,5 +1,5 @@
 """
-Routes and resources for the /alpha-vec-policies resource
+Routes and sub-resources for the /alpha-vec-policies resource
 """
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants

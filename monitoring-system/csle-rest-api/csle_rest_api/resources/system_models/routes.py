@@ -1,5 +1,5 @@
 """
-Routes and resources for the /system-models resource
+Routes and sub-resources for the /system-models resource
 """
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants

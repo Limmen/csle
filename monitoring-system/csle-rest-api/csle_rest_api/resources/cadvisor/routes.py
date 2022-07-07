@@ -1,5 +1,5 @@
 """
-Routes and resources for the /cadvisor resource
+Routes and sub-resources for the /cadvisor resource
 """
 
 from flask import Blueprint, jsonify, request
@@ -10,11 +10,7 @@ import csle_rest_api.constants.constants as api_constants
 
 # Creates a blueprint "sub application" of the main REST app
 cadvisor_bp = Blueprint(api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE, __name__,
-                        url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}",
-                        static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
-                                     f'{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}'
-                                     f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
-                        static_folder='../../../csle-mgmt-webapp/build')
+                        url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}")
 
 
 @cadvisor_bp.route("",
@@ -33,10 +29,10 @@ def cadvisor():
             MonitorToolsController.start_cadvisor()
             running = True
     cadvisor_dict = {
-        "running": running,
-        "port": port,
-        "url": f"http://localhost:{port}/"
+        api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
+        api_constants.MGMT_WEBAPP.PORT_PROPERTY: port,
+        api_constants.MGMT_WEBAPP.URL_PROPERTY: f"http://localhost:{port}/"
     }
     response = jsonify(cadvisor_dict)
-    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response

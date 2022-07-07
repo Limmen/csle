@@ -1,22 +1,21 @@
 """
-Routes and sub-resources for the /emulation-traces resource
+Routes and sub-resources for the /emulation-simulation-traces resource
 """
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.controllers.container_manager import ContainerManager
 
 
 # Creates a blueprint "sub application" of the main REST app
-emulation_traces_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}")
+emulation_simulation_traces_bp = Blueprint(
+    api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE, __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}")
 
 
-@emulation_traces_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+@emulation_simulation_traces_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                         api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def emulation_traces():
+def emulation_simulation_traces():
     """
     The /emulation-traces resource.
 
@@ -27,39 +26,38 @@ def emulation_traces():
         # Check if ids query parameter is True, then only return the ids and not the whole dataset
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return emulation_traces_ids()
+            return emulation_simulation_traces_ids()
 
-        emulation_trcs = MetastoreFacade.list_emulation_traces()
+        emulation_trcs = MetastoreFacade.list_emulation_simulation_traces()
         traces_dicts = list(map(lambda x: x.to_dict(), emulation_trcs))
         response = jsonify(traces_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-        traces = MetastoreFacade.list_emulation_traces()
+        traces = MetastoreFacade.list_emulation_simulation_traces()
         for trace in traces:
-            MetastoreFacade.remove_emulation_trace(trace)
+            MetastoreFacade.remove_emulation_simulation_trace(trace)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response
 
 
-def emulation_traces_ids():
+def emulation_simulation_traces_ids():
     """
     :return: An HTTP response with all emulation ids
     """
-    ids_emulations = MetastoreFacade.list_emulation_traces_ids()
+    ids_emulations = MetastoreFacade.list_emulation_simulation_traces_ids()
     response_dicts = []
     for tup in ids_emulations:
         response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1]
+            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0]
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response
 
 
-@emulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+@emulation_simulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def emulation_trace(trace_id: int):
     """

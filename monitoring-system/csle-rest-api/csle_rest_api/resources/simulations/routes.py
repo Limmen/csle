@@ -1,5 +1,5 @@
 """
-Routes and resources for the /simulations resource
+Routes and sub-resources for the /simulations resource
 """
 import base64
 from flask import Blueprint, jsonify, request

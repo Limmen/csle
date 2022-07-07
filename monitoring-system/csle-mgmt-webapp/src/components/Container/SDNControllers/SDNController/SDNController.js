@@ -29,7 +29,7 @@ const SDNController = (props) => {
 
     const fetchSwitches = useCallback((emulation_id, exec_id) => {
         fetch(
-            `http://` + ip + ':7777/sdncontroller/switches/get/' + emulation_id + "/" + exec_id,
+            `http://` + ip + ':7777/emulations/' + emulation_id + "/executions/" + exec_id + "/switches",
             {
                 method: "GET",
                 headers: new Headers({

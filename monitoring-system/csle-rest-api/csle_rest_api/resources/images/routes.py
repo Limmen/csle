@@ -1,5 +1,5 @@
 """
-Routes and resources for the /images resource
+Routes and sub-resources for the /images resource
 """
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants

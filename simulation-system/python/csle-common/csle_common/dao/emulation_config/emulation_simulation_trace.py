@@ -17,6 +17,7 @@ class EmulationSimulationTrace:
         """
         self.emulation_trace = emulation_trace
         self.simulation_trace = simulation_trace
+        self.id = -1
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationSimulationTrace":
@@ -30,6 +31,7 @@ class EmulationSimulationTrace:
             emulation_trace=EmulationTrace.from_dict(d["emulation_trace"]),
             simulation_trace=SimulationTrace.from_dict(d["simulation_trace"]),
         )
+        obj.id = d["id"]
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -39,13 +41,14 @@ class EmulationSimulationTrace:
         d = {}
         d["emulation_trace"] = self.emulation_trace.to_dict()
         d["simulation_trace"] = self.simulation_trace.to_dict()
+        d["id"] = self.id
         return d
 
     def __str__(self):
         """
         :return: a string representation of the object
         """
-        return f"emulation_trace:{self.emulation_trace}, simulation_trace:{self.simulation_trace}"
+        return f"emulation_trace:{self.emulation_trace}, simulation_trace:{self.simulation_trace}, id:{self.id}"
 
     def to_json_str(self) -> str:
         """
