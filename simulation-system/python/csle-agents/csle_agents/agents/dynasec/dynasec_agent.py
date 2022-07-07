@@ -961,7 +961,7 @@ class DynaSecAgent(BaseAgent):
             simulation_env_config=self.simulation_env_config, periodic=False, sleep_time=sleep_time)
         policy_optimization_process.start()
         policy_optimization_process.join()
-        initial_policy = list(policy_optimization_process.experiment_execution.result.policies.values())[0]
+        initial_policy = list(policy_optimization_process.experiment_execution.result.policies_page_bp.values())[0]
 
         policy = initial_policy.copy()
         system_model = initial_system_model.copy()

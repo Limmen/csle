@@ -15,49 +15,51 @@ from csle_common.util.emulation_util import EmulationUtil
 from csle_agents.job_controllers.training_job_manager import TrainingJobManager
 from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 from csle_system_identification.job_controllers.system_identification_job_manager import SystemIdentificationJobManager
-from csle_rest_api.emulations.routes import emulations
-from csle_rest_api.simulations.routes import simulations
-from csle_rest_api.monitoring.routes import monitoring
-from csle_rest_api.traces.routes import traces
-from csle_rest_api.emulation_statistics.routes import emulation_statistics
-from csle_rest_api.system_models.routes import system_models
-from csle_rest_api.about.routes import about
-from csle_rest_api.cadvisor.routes import cadvisor
-from csle_rest_api.grafana.routes import grafana
-from csle_rest_api.images.routes import images
-from csle_rest_api.jobs.routes import jobs
-from csle_rest_api.node_exporter.routes import node_exporter
-from csle_rest_api.policies.routes import policies
-from csle_rest_api.policy_examination.routes import policy_examination
-from csle_rest_api.prometheus.routes import prometheus
-from csle_rest_api.training.routes import training
-from csle_rest_api.sdn_controllers.routes import sdn_controllers
+from csle_rest_api.pages.emulations.routes import emulations_page_bp
+from csle_rest_api.pages.simulations.routes import simulations_page_bp
+from csle_rest_api.pages.monitoring.routes import monitoring_page_bp
+from csle_rest_api.pages.traces.routes import traces_page_bp
+from csle_rest_api.pages.emulation_statistics.routes import emulation_statistics_page_bp
+from csle_rest_api.pages.system_models.routes import system_models_page_bp
+from csle_rest_api.pages.about.routes import about_page_bp
+from csle_rest_api.resources.cadvisor.routes import cadvisor_bp
+from csle_rest_api.resources.grafana.routes import grafana_bp
+from csle_rest_api.pages.images.routes import images_page_bp
+from csle_rest_api.pages.jobs.routes import jobs_page_bp
+from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
+from csle_rest_api.pages.policies.routes import policies_page_bp
+from csle_rest_api.pages.policy_examination.routes import policy_examination_page_bp
+from csle_rest_api.resources.prometheus.routes import prometheus_bp
+from csle_rest_api.pages.training.routes import training_page_bp
+from csle_rest_api.pages.sdn_controllers.routes import sdn_controllers_page_bp
 import json
 from waitress import serve
 
 
 app = Flask(__name__, static_url_path='', static_folder='../../csle-mgmt-webapp/build')
-app.register_blueprint(emulations)
-app.register_blueprint(simulations)
-app.register_blueprint(traces)
-app.register_blueprint(monitoring)
-app.register_blueprint(emulation_statistics)
-app.register_blueprint(system_models)
-app.register_blueprint(about)
-app.register_blueprint(cadvisor)
-app.register_blueprint(grafana)
-app.register_blueprint(images)
-app.register_blueprint(jobs)
-app.register_blueprint(node_exporter)
-app.register_blueprint(policies)
-app.register_blueprint(policy_examination)
-app.register_blueprint(prometheus)
-app.register_blueprint(training)
-app.register_blueprint(sdn_controllers)
+app.register_blueprint(emulations_page_bp)
+app.register_blueprint(simulations_page_bp)
+app.register_blueprint(traces_page_bp)
+app.register_blueprint(monitoring_page_bp)
+app.register_blueprint(emulation_statistics_page_bp)
+app.register_blueprint(system_models_page_bp)
+app.register_blueprint(about_page_bp)
+app.register_blueprint(cadvisor_bp)
+app.register_blueprint(grafana_bp)
+app.register_blueprint(images_page_bp)
+app.register_blueprint(jobs_page_bp)
+app.register_blueprint(node_exporter_bp)
+app.register_blueprint(policies_page_bp)
+app.register_blueprint(policy_examination_page_bp)
+app.register_blueprint(prometheus_bp)
+app.register_blueprint(training_page_bp)
+app.register_blueprint(sdn_controllers_page_bp)
+
 
 @app.route('/', methods=['GET'])
 def root():
     return app.send_static_file('index.html')
+
 
 @app.route('/imagesdata', methods=['GET'])
 def images():

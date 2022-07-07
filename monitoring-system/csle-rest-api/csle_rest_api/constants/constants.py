@@ -1,0 +1,28 @@
+
+
+class MGMT_WEBAPP:
+    """
+    Constants related to the management webapp
+    """
+    STATIC_RESOURCE_INDEX = "index.html"
+    HTTP_REST_GET = "GET"
+    HTTP_REST_POST = "POST"
+    HTTP_REST_PUT = "PUT"
+    STATIC = "static"
+    ABOUT_PAGE_RESOURCE = "about-page"
+    EMULATION_STATISTICS_PAGE_RESOURCE = "emulation-statistics-page"
+    EMULATIONS_PAGE_RESOURCE = "emulations-page"
+    IMAGES_PAGE_RESOURCE = "images-page"
+    JOBS_PAGE_RESOURCE = "jobs-page"
+    MONITORING_PAGE_RESOURCE = "monitoring-page"
+    POLICIES_PAGE_RESOURCE = "policies-page"
+    POLICY_EXAMINATION_PAGE_RESOURCE = "policy-examination-page"
+    SDN_CONTROLLERS_PAGE_RESOURCE = "sdn-controllers-page"
+    SIMULATIONS_PAGE_RESOURCE = "simulations-page"
+    SYSTEM_MODELS_PAGE_RESOURCE = "system-models-page"
+    TRACES_PAGE_RESOURCE = "traces-page"
+    TRAINING_PAGE_RESOURCE = "training-page"
+    CADVISOR_RESOURCE = "cadivsor"
+    GRAFANA_RESOURCE = "grafana"
+    NODE_EXPORTER_RESOURCE = "node-exporter"
+    PROMETHEUS_RESOURCE = "prometheus"

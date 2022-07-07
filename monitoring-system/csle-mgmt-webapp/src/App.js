@@ -28,31 +28,31 @@ function App() {
                                    element={<Container/>}>
                                 <Route index element={<Emulations/>}>
                                 </Route>
-                                <Route path="emulations" index element={<Emulations/>}>
+                                <Route path="emulations-page" index element={<Emulations/>}>
                                 </Route>
-                                <Route path="simulations" index element={<Simulations/>}>
+                                <Route path="simulations-page" index element={<Simulations/>}>
                                 </Route>
-                                <Route path="monitoring" index element={<Monitoring/>}>
+                                <Route path="monitoring-page" index element={<Monitoring/>}>
                                 </Route>
-                                <Route path="traces" index element={<Traces/>}>
+                                <Route path="traces-page" index element={<Traces/>}>
                                 </Route>
-                                <Route path="emulationstatistics" index element={<EmulationStatistics/>}>
+                                <Route path="emulation-statistics-page" index element={<EmulationStatistics/>}>
                                 </Route>
-                                <Route path="systemmodels" index element={<SystemModels/>}>
+                                <Route path="system-models-page" index element={<SystemModels/>}>
                                 </Route>
-                                <Route path="policyexamination" index element={<PolicyExamination/>}>
+                                <Route path="policy-examination-page" index element={<PolicyExamination/>}>
                                 </Route>
-                                <Route path="images" index element={<ContainerImages/>}>
+                                <Route path="images-page" index element={<ContainerImages/>}>
                                 </Route>
-                                <Route path="training" index element={<TrainingResults/>}>
+                                <Route path="training-page" index element={<TrainingResults/>}>
                                 </Route>
-                                <Route path="policies" index element={<Policies/>}>
+                                <Route path="policies-page" index element={<Policies/>}>
                                 </Route>
-                                <Route path="jobs" index element={<Jobs/>}>
+                                <Route path="jobs-page" index element={<Jobs/>}>
                                 </Route>
-                                <Route path="sdncontrollers" index element={<SDNControllers/>}>
+                                <Route path="sdn-controllers-page" index element={<SDNControllers/>}>
                                 </Route>
-                                <Route path="about" index element={<About/>}>
+                                <Route path="about-page" index element={<About/>}>
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
                             </Route>

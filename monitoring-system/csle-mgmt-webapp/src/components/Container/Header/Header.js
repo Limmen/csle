@@ -99,7 +99,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderEmulationsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"emulations"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"emulations-page"}>
                                     Emulations
                                 </NavLink>
                             </OverlayTrigger>
@@ -109,7 +109,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderSimulationsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"simulations"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"simulations-page"}>
                                     Simulations
                                 </NavLink>
                             </OverlayTrigger>
@@ -119,7 +119,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderMonitoringTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"monitoring"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"monitoring-page"}>
                                     Monitoring
                                 </NavLink>
                             </OverlayTrigger>
@@ -129,7 +129,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderTracesTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"traces"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"traces-page"}>
                                     Traces
                                 </NavLink>
                             </OverlayTrigger>
@@ -139,7 +139,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderEmulationStatisticsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"emulationstatistics"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"emulation-statistics-page"}>
                                     Statistics
                                 </NavLink>
                             </OverlayTrigger>
@@ -149,7 +149,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderSystemModelsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"systemmodels"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"system-models-page"}>
                                     System models
                                 </NavLink>
                             </OverlayTrigger>
@@ -159,7 +159,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderPolicyExaminationTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"policyexamination"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"policy-examination-page"}>
                                     Policy Examination
                                 </NavLink>
                             </OverlayTrigger>
@@ -169,7 +169,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderContainerImagesTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"images"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"images-page"}>
                                     Images
                                 </NavLink>
                             </OverlayTrigger>
@@ -179,7 +179,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderTrainingResultsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"training"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"training-page"}>
                                     Training
                                 </NavLink>
                             </OverlayTrigger>
@@ -189,7 +189,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderPoliciesTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"policies"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"policies-page"}>
                                     Policies
                                 </NavLink>
                             </OverlayTrigger>
@@ -199,7 +199,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderJobsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"jobs"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"jobs-page"}>
                                     Jobs
                                 </NavLink>
                             </OverlayTrigger>
@@ -209,7 +209,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderSdnControllersTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"sdncontrollers"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"sdn-controllers-page"}>
                                     SDN Controllers
                                 </NavLink>
                             </OverlayTrigger>
@@ -219,7 +219,7 @@ const Header = () => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderAboutTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"about"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"about-page"}>
                                     About
                                 </NavLink>
                             </OverlayTrigger>
