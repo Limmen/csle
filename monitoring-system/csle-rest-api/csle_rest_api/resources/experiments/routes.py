@@ -44,7 +44,7 @@ def experiments():
 
 def experiments_ids():
     """
-    :return: An HTTP response with all system experiments ids
+    :return: An HTTP response with all experiments ids
     """
     experiments_ids = MetastoreFacade.list_experiment_executions_ids()
     response_dicts = []

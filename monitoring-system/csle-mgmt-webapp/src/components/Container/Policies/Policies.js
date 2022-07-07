@@ -76,7 +76,7 @@ const Policies = () => {
 
     const fetchMultiThresholdPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/multithresholdpoliciesids',
+            `http://` + ip + ':7777/multi-threshold-policies?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -109,7 +109,7 @@ const Policies = () => {
 
     const fetchPPOPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/ppopoliciesids',
+            `http://` + ip + ':7777/ppo-policies?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -142,7 +142,7 @@ const Policies = () => {
 
     const fetchDQNPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/dqnpoliciesids',
+            `http://` + ip + ':7777/dqn-policies?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -175,7 +175,7 @@ const Policies = () => {
 
     const fetchTabularPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/tabularpoliciesids',
+            `http://` + ip + ':7777/tabular-policies?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -208,7 +208,7 @@ const Policies = () => {
 
     const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/vectorpoliciesids',
+            `http://` + ip + ':7777/vector-policies?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -241,7 +241,7 @@ const Policies = () => {
 
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/alphavecpoliciesids',
+            `http://` + ip + ':7777/alpha-vec-policies?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -274,7 +274,7 @@ const Policies = () => {
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/fnnwsoftmaxpoliciesids',
+            `http://` + ip + ':7777/fnn-w-softmax-policies?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -325,9 +325,9 @@ const Policies = () => {
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/ppopolicies/remove/' + ppo_policy_id,
+            `http://` + ip + ':7777/ppo-policies/' + ppo_policy_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -342,7 +342,7 @@ const Policies = () => {
 
     const fetchPpoPolicy = useCallback((ppo_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/ppopolicies/get/' + ppo_policy_id.value,
+            `http://` + ip + ':7777/ppo-policies/' + ppo_policy_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -361,9 +361,9 @@ const Policies = () => {
 
     const removeAllPpoPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/ppopolicies/remove',
+            `http://` + ip + ':7777/ppo-policies',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -383,9 +383,9 @@ const Policies = () => {
 
     const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/fnnwsoftmaxpolicies/remove/' + fnn_w_softmax_policy_id,
+            `http://` + ip + ':7777/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -400,7 +400,7 @@ const Policies = () => {
 
     const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/fnnwsoftmaxpolicies/get/' + fnn_w_softmax_policy_id.value,
+            `http://` + ip + ':7777/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -419,9 +419,9 @@ const Policies = () => {
 
     const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/fnnwsoftmaxpolicies/remove',
+            `http://` + ip + ':7777/fnn-w-softmax-policies',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -441,9 +441,9 @@ const Policies = () => {
 
     const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/dqnpolicies/remove/' + dqn_policy_id,
+            `http://` + ip + ':7777/dqn-policies' + dqn_policy_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -458,7 +458,7 @@ const Policies = () => {
 
     const fetchDQNPolicy = useCallback((dqn_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/dqnpolicies/get/' + dqn_policy_id.value,
+            `http://` + ip + ':7777/dqn-policies/' + dqn_policy_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -477,9 +477,9 @@ const Policies = () => {
 
     const removeAllDQNPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/dqnpolicies/remove',
+            `http://` + ip + ':7777/dqn-policies',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -499,9 +499,9 @@ const Policies = () => {
 
     const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/tabularpolicies/remove/' + tabular_policy_id,
+            `http://` + ip + ':7777/tabular-policies/' + tabular_policy_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -516,9 +516,9 @@ const Policies = () => {
 
     const fetchTabularPolicy = useCallback((tabular_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/tabularpolicies/get/' + tabular_policy_id.value,
+            `http://` + ip + ':7777/tabular-policies/' + tabular_policy_id.value,
             {
-                method: "GET",
+                method: "DELETE",
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -535,9 +535,9 @@ const Policies = () => {
 
     const removeAllTabularPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/tabularpolicies/remove',
+            `http://` + ip + ':7777/tabular-policies',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -558,9 +558,9 @@ const Policies = () => {
     //vec
     const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/vectorpolicies/remove/' + vector_policy_id,
+            `http://` + ip + ':7777/vector-policies/' + vector_policy_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -575,9 +575,9 @@ const Policies = () => {
 
     const fetchVectorPolicy = useCallback((vector_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/vectorpolicies/get/' + vector_policy_id.value,
+            `http://` + ip + ':7777/vector-policies/' + vector_policy_id.value,
             {
-                method: "GET",
+                method: "DELETE",
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -594,9 +594,9 @@ const Policies = () => {
 
     const removeAllVectorPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/vectorpolicies/remove',
+            `http://` + ip + ':7777/vector-policies',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -616,9 +616,9 @@ const Policies = () => {
 
     const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
-            `http://` + ip + ':7777/alphavecpolicies/remove/' + alpha_vec_policies_id,
+            `http://` + ip + ':7777/alpha-vec-policies/' + alpha_vec_policies_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -633,7 +633,7 @@ const Policies = () => {
 
     const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/alphavecpolicies/get/' + alpha_vec_policy_id.value,
+            `http://` + ip + ':7777/alpha-vec-policies/' + alpha_vec_policy_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -652,9 +652,9 @@ const Policies = () => {
 
     const removeAllAlphaVecPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/alphavecpolicies/remove',
+            `http://` + ip + ':7777/alpha-vec-policies',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -674,9 +674,9 @@ const Policies = () => {
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/multithresholdpolicies/remove/' + multi_threshold_policy_id,
+            `http://` + ip + ':7777/multi-threshold-policies/' + multi_threshold_policy_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -692,7 +692,7 @@ const Policies = () => {
 
     const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/multithresholdpolicies/get/' + multi_threshold_policy_id.value,
+            `http://` + ip + ':7777/multi-threshold-policies/' + multi_threshold_policy_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -710,9 +710,9 @@ const Policies = () => {
 
     const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/multithresholdpolicies/remove',
+            `http://` + ip + ':7777/multi-threshold-policies',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
