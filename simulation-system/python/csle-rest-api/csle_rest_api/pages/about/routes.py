@@ -11,7 +11,7 @@ about_page_bp = Blueprint(
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.ABOUT_PAGE_RESOURCE}",
     static_url_path=f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.ABOUT_PAGE_RESOURCE}'
                     f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
-    static_folder="../../../../../monitoring-system/csle-mgmt-webapp/build")
+    static_folder="../../../../../../monitoring-system/csle-mgmt-webapp/build")
 
 
 @about_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -19,4 +19,5 @@ def about_page():
     """
     :return: static resources for the /about-page url
     """
+    print("about page??")
     return about_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)

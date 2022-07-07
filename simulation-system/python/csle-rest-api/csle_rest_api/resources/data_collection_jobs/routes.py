@@ -62,9 +62,8 @@ def data_collection_jobs_ids():
     for tup in data_collection_jobs_ids:
         response_dicts.append({
             api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[2],
-            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: EmulationUtil.check_pid(tup[3])
+            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: EmulationUtil.check_pid(tup[2])
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

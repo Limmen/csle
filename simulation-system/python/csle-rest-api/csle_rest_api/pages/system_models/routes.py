@@ -14,7 +14,7 @@ system_models_page_bp = Blueprint(api_constants.MGMT_WEBAPP.SYSTEM_MODELS_PAGE_R
                                   static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
                                           f'{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_PAGE_RESOURCE}'
                                           f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
-                                  static_folder="../../../../../monitoring-system/csle-mgmt-webapp/build")
+                                  static_folder="../../../../../../monitoring-system/csle-mgmt-webapp/build")
 
 
 @system_models_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
