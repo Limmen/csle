@@ -1,6 +1,7 @@
 # `csle-system-identification`
 
-TODO
+A library with system identification algorithms for learning system models in CSLE based on traces and data collected
+from emulated infrastructures.
 
 ## Author & Maintainer
 

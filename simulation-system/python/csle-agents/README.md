@@ -1,6 +1,7 @@
 # `csle-agents`
 
-TODO
+A library with reinforcement learning algorithms, control-theoreitc algorithms, dynamic programming algorithms,
+and game-theoretic algorithms for finding defender policies. 
 
 ## Author & Maintainer
 

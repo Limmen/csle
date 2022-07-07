@@ -1,6 +1,6 @@
 # `csle-ryu`
 
-TODO
+A library with SDN controllers used in CSLE for emulating software-defined networks.
 
 ## Author & Maintainer
 

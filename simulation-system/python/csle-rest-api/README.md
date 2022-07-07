@@ -1,7 +1,8 @@
-# `csle-attacker`
+# `csle-rest-api`
 
-Scrips and programs for automating cyber attacks in CSLE. 
-These attacks are used to evaluate defender policies and to collect data.
+A REST API for the CSLE management platform.
+
+
 
 ## Author & Maintainer
 

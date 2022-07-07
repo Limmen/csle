@@ -98,6 +98,10 @@ cases.
 - **Policy-examination**
     - [x] A System for Inspecting Automated Intrusion Prevention Policies
 
+- **Management and Monitoring**
+    - [x] A distributed telemetry system for real-time monitoring
+    - [x] A management platform with an extensive REST API and web frontend
+
 ## Installation
 
 Follow the instructions below to install CSLE.
