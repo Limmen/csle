@@ -16,7 +16,7 @@ simulations_page_bp = Blueprint(api_constants.MGMT_WEBAPP.SIMULATIONS_PAGE_RESOU
                                 static_folder='../../../csle-mgmt-webapp/build')
 
 
-@simulations_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@simulations_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def simulations_page():
     """
     :return: static resources for the /simulations-page url

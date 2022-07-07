@@ -15,7 +15,7 @@ jobs_page_bp = Blueprint(api_constants.MGMT_WEBAPP.JOBS_PAGE_RESOURCE, __name__,
                          static_folder='../../../csle-mgmt-webapp/build')
 
 
-@jobs_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@jobs_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def jobs_page():
     """
     :return: static resources for the /jobs-page url

@@ -161,7 +161,7 @@ const EmulationStatistics = () => {
 
     const fetchEmulationStatisticsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationstatisticsdataids',
+            `http://` + ip + ':7777/emulation-statistics?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -200,7 +200,7 @@ const EmulationStatistics = () => {
 
     const fetchEmulationStatistic = useCallback((statistic_id) => {
         fetch(
-            `http://` + ip + ':7777/emulationstatisticsdata/get/' + statistic_id.value,
+            `http://` + ip + ':7777/emulation-statistics/' + statistic_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -238,9 +238,9 @@ const EmulationStatistics = () => {
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `http://` + ip + ':7777/emulationstatisticsdata/remove/' + statistic_id,
+            `http://` + ip + ':7777/emulation-statistics/' + statistic_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

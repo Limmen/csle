@@ -369,7 +369,7 @@ const Monitoring = () => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationsexecutionsids',
+            `http://` + ip + ':7777/emulation-executions?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -402,7 +402,8 @@ const Monitoring = () => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            `http://` + ip + ':7777/emulationsexecutionsids/get/' + id_obj.value.emulation + '/execution/' + id_obj.value.id,
+            (`http://` + ip + ':7777/emulation-executions/' + id_obj.value.id + "?emulation="
+                + id_obj.value.emulation),
             {
                 method: "GET",
                 headers: new Headers({
@@ -431,8 +432,8 @@ const Monitoring = () => {
     }, []);
 
     const fetchMonitoringData = useCallback((len, execution) => fetch(
-        (`http://` + ip + ':7777/monitor/' + execution.emulation_env_config.name + "/"
-            + execution.ip_first_octet + "/" + len),
+        (`http://` + ip + ':7777/emulations/' + execution.emulation_env_config.id +
+            "/executions/" + execution.ip_first_octet + "/monitor/" + len),
         {
             method: "GET",
             headers: new Headers({
@@ -442,7 +443,6 @@ const Monitoring = () => {
     )
         .then(res => res.json())
         .then(response => {
-            console.log(response)
             setMonitoringData(response)
             setLoadingSelectedEmulationExecution(false)
             var openFlowSwitchesOptions = []

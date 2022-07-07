@@ -147,7 +147,7 @@ const SystemModels = () => {
 
     const fetchSystemModelsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/systemmodelsdataids',
+            `http://` + ip + ':7777/system-models?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -185,7 +185,7 @@ const SystemModels = () => {
 
     const fetchModel = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/systemmodelsdata/get/' + model_id.value,
+            `http://` + ip + ':7777/system-models/' + model_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -227,9 +227,9 @@ const SystemModels = () => {
 
     const removeModelRequest = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/systemmodelsdata/remove/' + model_id,
+            `http://` + ip + ':7777/system-models/' + model_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

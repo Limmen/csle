@@ -17,7 +17,7 @@ cadvisor_bp = Blueprint(api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE, __name__,
                         static_folder='../../../csle-mgmt-webapp/build')
 
 
-@cadvisor_bp.route(constants.COMMANDS.SLASH_DELIM,
+@cadvisor_bp.route("",
                    methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def cadvisor():
     """

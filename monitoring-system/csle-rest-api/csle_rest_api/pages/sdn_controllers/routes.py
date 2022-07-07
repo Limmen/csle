@@ -16,7 +16,7 @@ sdn_controllers_page_bp = Blueprint(api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_PA
                                     static_folder='../../../csle-mgmt-webapp/build')
 
 
-@sdn_controllers_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@sdn_controllers_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def sdn_controllers_page():
     """
     :return: static resources for the /sdn-controllers-page url

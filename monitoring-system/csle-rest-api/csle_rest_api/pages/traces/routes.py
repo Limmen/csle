@@ -16,7 +16,7 @@ traces_page_bp = Blueprint(api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE, __nam
                            static_folder='../../../csle-mgmt-webapp/build')
 
 
-@traces_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@traces_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def traces_page():
     """
     :return: static resources for the /traces-page url

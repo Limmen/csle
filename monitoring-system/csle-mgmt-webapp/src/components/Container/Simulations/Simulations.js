@@ -30,7 +30,7 @@ const Simulations = () => {
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulationsdataids',
+            `http://` + ip + ':7777/simulations?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -64,7 +64,7 @@ const Simulations = () => {
 
     const fetchSimulation = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':7777/simulationsdata/get/' + simulation_id.value,
+            `http://` + ip + ':7777/simulations/' + simulation_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -82,9 +82,9 @@ const Simulations = () => {
 
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulationsdata/remove',
+            `http://` + ip + ':7777/simulations',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -103,11 +103,11 @@ const Simulations = () => {
     }, [fetchSimulationsIds]);
 
 
-    const removeSimulationRequest = useCallback((simulation_name) => {
+    const removeSimulationRequest = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':7777/simulationsdata/remove/' + simulation_name,
+            `http://` + ip + ':7777/simulations/' + simulation_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -122,7 +122,7 @@ const Simulations = () => {
 
     const removeSimulation = (simulation) => {
         setLoading(true)
-        removeSimulationRequest(simulation.name)
+        removeSimulationRequest(simulation.id)
         setSelectedSimulation(null)
     }
 

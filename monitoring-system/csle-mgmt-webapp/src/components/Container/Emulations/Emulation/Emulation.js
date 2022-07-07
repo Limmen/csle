@@ -35,7 +35,7 @@ const Emulation = (props) => {
 
     const startorStopEmulationPre = (emulation) => {
         setLoading(true)
-        props.startOrStopEmulation(emulation.name, emulation.id)
+        props.startOrStopEmulation(emulation.id)
     }
 
     const getSubnetMasks = (emulation) => {

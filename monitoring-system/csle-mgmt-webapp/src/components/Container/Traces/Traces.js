@@ -40,7 +40,7 @@ const Traces = () => {
 
     const fetchEmulationTraces = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationtraces',
+            `http://` + ip + ':7777/emulation-traces',
             {
                 method: "GET",
                 headers: new Headers({
@@ -58,7 +58,7 @@ const Traces = () => {
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `http://` + ip + ':7777/emulationtraces/get/' + trace_id.value,
+            `http://` + ip + ':7777/emulation-traces/' + trace_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -76,7 +76,7 @@ const Traces = () => {
 
     const fetchSimulationTrace = useCallback((trace_id) => {
         fetch(
-            `http://` + ip + ':7777/simulationtraces/get/' + trace_id.value,
+            `http://` + ip + ':7777/simulation-traces/' + trace_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -94,7 +94,7 @@ const Traces = () => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationtracesids',
+            `http://` + ip + ':7777/emulation-traces?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -126,7 +126,7 @@ const Traces = () => {
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulationtracesids',
+            `http://` + ip + ':7777/simulation-traces?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -158,7 +158,7 @@ const Traces = () => {
 
     const fetchSimulationTraces = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulationtraces',
+            `http://` + ip + ':7777/simulation-traces',
             {
                 method: "GET",
                 headers: new Headers({
@@ -182,11 +182,11 @@ const Traces = () => {
         fetchSimulationTracesIds()
     }, [fetchSimulationTraces, fetchEmulationTraces]);
 
-    const removeSimulationTraceRequest = useCallback((simulation_id) => {
+    const removeSimulationTraceRequest = useCallback((simulation_trace_id) => {
         fetch(
-            `http://` + ip + ':7777/simulationtraces/remove/' + simulation_id,
+            `http://` + ip + ':7777/simulation-traces/' + simulation_trace_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -208,9 +208,9 @@ const Traces = () => {
 
     const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
         fetch(
-            `http://` + ip + ':7777/emulationtraces/remove/' + emulation_trace_id,
+            `http://` + ip + ':7777/emulation-traces/' + emulation_trace_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -225,9 +225,9 @@ const Traces = () => {
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationtraces/remove',
+            `http://` + ip + ':7777/emulation-traces',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -242,9 +242,9 @@ const Traces = () => {
 
     const removeAllSimulationTracesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulationtraces/remove',
+            `http://` + ip + ':7777/simulation-traces',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

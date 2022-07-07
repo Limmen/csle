@@ -29,7 +29,7 @@ const Emulations = () => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationsdataids',
+            `http://` + ip + ':7777/emulations?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -67,13 +67,16 @@ const Emulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeEmulationRequest = useCallback((emulation_name) => {
+    const removeEmulationRequest = useCallback((emulationId) => {
+        console.log("removing " + `http://` + ip + ':7777/emulations/' + emulationId)
         fetch(
-            `http://` + ip + ':7777/emulationsdata/remove/' + emulation_name,
+            `http://` + ip + ':7777/emulations/' + emulationId,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
+                    Accept: "application/vnd.github.cloak-preview",
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Request-Method': 'GET, POST, DELETE, PUT, OPTIONS'
                 })
             }
         )
@@ -84,11 +87,11 @@ const Emulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeEmulationExecutionRequest = useCallback((emulation_id, emulation_name, execution_id) => {
+    const removeEmulationExecutionRequest = useCallback((emulation_id, execution_id) => {
         fetch(
-            `http://` + ip + ':7777/emulationsdata/remove/' + emulation_name + '/execution/' + execution_id,
+            `http://` + ip + ':7777/emulations/' + emulation_id + '/executions/' + execution_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -106,9 +109,9 @@ const Emulations = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const startOrStopEmulationRequest = useCallback((emulation_name, emulation_id) => {
+    const startOrStopEmulationRequest = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulationsdata/' + emulation_name,
+            `http://` + ip + ':7777/emulations/' + emulation_id,
             {
                 method: "POST",
                 headers: new Headers({
@@ -130,7 +133,7 @@ const Emulations = () => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulationsdata/get/' + emulation_id.value,
+            `http://` + ip + ':7777/emulations/' + emulation_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -148,9 +151,9 @@ const Emulations = () => {
 
     const removeAllEmulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulationsdata/remove',
+            `http://` + ip + ':7777/emulations',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -165,16 +168,16 @@ const Emulations = () => {
 
     const removeEmulation = (emulation) => {
         setLoading(true)
-        removeEmulationRequest(emulation.name)
+        removeEmulationRequest(emulation.id)
         setSelectedEmulation(null)
     }
 
     const removeExecution = (emulation, ip_first_octet) => {
-        removeEmulationExecutionRequest(emulation.id, emulation.name, ip_first_octet)
+        removeEmulationExecutionRequest(emulation.id, ip_first_octet)
     }
 
-    const startOrStopEmulation = (emulation, emulation_id) => {
-        startOrStopEmulationRequest(emulation, emulation_id)
+    const startOrStopEmulation = (emulation_id) => {
+        startOrStopEmulationRequest(emulation_id)
     }
 
     useEffect(() => {

@@ -16,7 +16,7 @@ policies_page_bp = Blueprint(api_constants.MGMT_WEBAPP.POLICIES_PAGE_RESOURCE, _
                              static_folder='../../../csle-mgmt-webapp/build')
 
 
-@policies_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@policies_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def policies_page():
     """
     :return: static resources for the /policies-page url

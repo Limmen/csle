@@ -17,7 +17,7 @@ emulation_statistics_page_bp = Blueprint(api_constants.MGMT_WEBAPP.EMULATION_STA
                                          static_folder='../../../csle-mgmt-webapp/build')
 
 
-@emulation_statistics_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@emulation_statistics_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def emulation_statistics_page():
     """
     :return: static resources for the /emulation-statistics-page url

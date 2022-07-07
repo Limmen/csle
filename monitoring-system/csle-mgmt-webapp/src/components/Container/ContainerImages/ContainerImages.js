@@ -23,7 +23,7 @@ const ContainerImages = () => {
 
     const fetchImages = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/imagesdata',
+            `http://` + ip + ':7777/images',
             {
                 method: "GET",
                 headers: new Headers({

@@ -16,7 +16,7 @@ images_page_bp = Blueprint(api_constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE, __nam
                            static_folder='../../../csle-mgmt-webapp/build')
 
 
-@images_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@images_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def images_page():
     """
     :return: static resources for the /images-page url

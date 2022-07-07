@@ -17,7 +17,7 @@ grafana_bp = Blueprint(api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE, __name__,
                        static_folder='../../../csle-mgmt-webapp/build')
 
 
-@grafana_bp.route(constants.COMMANDS.SLASH_DELIM,
+@grafana_bp.route("",
                   methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def grafana():
     """

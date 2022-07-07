@@ -17,7 +17,7 @@ system_models_page_bp = Blueprint(api_constants.MGMT_WEBAPP.SYSTEM_MODELS_PAGE_R
                                   static_folder='../../../csle-mgmt-webapp/build')
 
 
-@system_models_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@system_models_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def system_models_page():
     """
     :return: static resources for the /system-models-page url

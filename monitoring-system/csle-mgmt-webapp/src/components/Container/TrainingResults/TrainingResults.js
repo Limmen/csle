@@ -29,7 +29,7 @@ const TrainingResults = () => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/experimentsdataids',
+            `http://` + ip + ':7777/experiments?ids=true',
             {
                 method: "GET",
                 headers: new Headers({
@@ -67,7 +67,7 @@ const TrainingResults = () => {
 
     const fetchExperiment = useCallback((experiment_id) => {
         fetch(
-            `http://` + ip + ':7777/experimentsdata/get/' + experiment_id.value,
+            `http://` + ip + ':7777/experiments/' + experiment_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -85,9 +85,9 @@ const TrainingResults = () => {
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
-            `http://` + ip + ':7777/experimentsdata/remove/' + experiment_id,
+            `http://` + ip + ':7777/experiments/' + experiment_id,
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -102,9 +102,9 @@ const TrainingResults = () => {
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/experimentsdata/remove',
+            `http://` + ip + ':7777/experiments',
             {
-                method: "POST",
+                method: "DELETE",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

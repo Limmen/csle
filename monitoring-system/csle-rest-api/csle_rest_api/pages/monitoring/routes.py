@@ -16,7 +16,7 @@ monitoring_page_bp = Blueprint(api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURC
                                static_folder='../../../csle-mgmt-webapp/build')
 
 
-@monitoring_page_bp.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@monitoring_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def monitoring_page():
     """
     :return: static resources for the /monitoring-page url
