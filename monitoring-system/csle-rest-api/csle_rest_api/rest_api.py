@@ -19,42 +19,41 @@ from csle_rest_api.emulations.routes import emulations
 from csle_rest_api.simulations.routes import simulations
 from csle_rest_api.monitoring.routes import monitoring
 from csle_rest_api.traces.routes import traces
-from csle_rest_api.emulationstatistics.routes import emulationstatistics
-from csle_rest_api.systemmodels.routes import systemmodels
+from csle_rest_api.emulation_statistics.routes import emulation_statistics
+from csle_rest_api.system_models.routes import system_models
 from csle_rest_api.about.routes import about
 from csle_rest_api.cadvisor.routes import cadvisor
 from csle_rest_api.grafana.routes import grafana
 from csle_rest_api.images.routes import images
 from csle_rest_api.jobs.routes import jobs
-from csle_rest_api.nodeexporter.routes import nodeexporter
+from csle_rest_api.node_exporter.routes import node_exporter
 from csle_rest_api.policies.routes import policies
-from csle_rest_api.policyexamination.routes import policyexamination
+from csle_rest_api.policy_examination.routes import policy_examination
 from csle_rest_api.prometheus.routes import prometheus
 from csle_rest_api.training.routes import training
-from csle_rest_api.sdn_controllers.routes import sdncontrollers
+from csle_rest_api.sdn_controllers.routes import sdn_controllers
 import json
 from waitress import serve
 
-# app = Flask(__name__, static_url_path='', static_folder='../build/')
+
 app = Flask(__name__, static_url_path='', static_folder='../../csle-mgmt-webapp/build')
 app.register_blueprint(emulations)
 app.register_blueprint(simulations)
 app.register_blueprint(traces)
 app.register_blueprint(monitoring)
-app.register_blueprint(emulationstatistics)
-app.register_blueprint(systemmodels)
+app.register_blueprint(emulation_statistics)
+app.register_blueprint(system_models)
 app.register_blueprint(about)
 app.register_blueprint(cadvisor)
 app.register_blueprint(grafana)
 app.register_blueprint(images)
 app.register_blueprint(jobs)
-app.register_blueprint(nodeexporter)
+app.register_blueprint(node_exporter)
 app.register_blueprint(policies)
-app.register_blueprint(policyexamination)
+app.register_blueprint(policy_examination)
 app.register_blueprint(prometheus)
 app.register_blueprint(training)
-app.register_blueprint(sdncontrollers)
-
+app.register_blueprint(sdn_controllers)
 
 @app.route('/', methods=['GET'])
 def root():
