@@ -825,8 +825,8 @@ class COMMANDS:
     NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
     START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
-    BUILD_MONITOR = "cd $CSLE_HOME/monitoring-system/csle_emulation_monitor && npm run build"
-    START_MONITOR = "nohup python $CSLE_HOME/monitoring-system/csle_emulation_monitor" \
+    BUILD_MONITOR = "cd $CSLE_HOME/monitoring-system/csle-mgmt-webapp && npm run build"
+    START_MONITOR = "nohup python $CSLE_HOME/monitoring-system/csle-mgmt-webapp" \
                     "/server/server.py &"
     GET_LATEST_PID = "$!"
     SAVE_PID = "echo {} > {}"

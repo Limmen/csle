@@ -18,7 +18,7 @@ sudo npm install -g npx
 sudo npm cache clean -f
 sudo npm install -g n
 sudo n stable
-cd csle_emulation_monitor; npm install
+cd csle-mgmt-webapp; npm install
 sudo npm install react-file-download --save
 sudo npm install react-bootstrap bootstrap
 

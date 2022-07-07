@@ -1,12 +1,12 @@
 # CSLE Monitoring System
 
-This system builds on Grafana, Prometheus, Cadvisor, NodeExporter and the `csle_emulation_monitor` applicaton 
+This system builds on Grafana, Prometheus, Cadvisor, NodeExporter, the rest api, and the `csle-mgmt-webapp` applicaton 
 
 ## Contents
 This directory includes scripts for starting Grafana+Prometheus+Cadvisor+NodeExporter for monitoring running
 emulations as well as the host system. 
 
-The directory also includes a scripts for starting a custom web-app (`csle_emulation_monitor`) 
+The directory also includes a scripts for starting a custom web-app (`csle-mgmt-webapp`) 
 for keeping track of the emulation configurations.
 
 ## Grafana
@@ -25,7 +25,7 @@ Grafana is used to monitor the performance of the emulation environments
 A webapp for monitoring emulation environments created with csle
 
 <p align="center">
-<img src="csle_emulation_monitor/docs/screen.png" width="1200">
+<img src="csle-mgmt-webapp/docs/screen.png" width="1200">
 </p>
 
 ## Useful scripts
@@ -45,8 +45,8 @@ mv node_exporter-1.3.1.linux-amd64 node_exporter
 rm -rf node_exporter-1.3.1.linux-amd64.tar.gz
 `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
 
-./install.sh   # Installs prometheus, grafana, csle_emulation_monitor, NodeExporter, Dashboards, C_Advisor etc.
-./csle_emulation_monitor.sh  # Installs csle_emulation_monitor
+./install.sh   # Installs prometheus, grafana, csle-mgmt-webapp, NodeExporter, Dashboards, C_Advisor etc.
+./csle-mgmt-webapp.sh  # Installs csle-mgmt-webapp
 ./run_c_advisor.sh # Installs C_Advisor
 ./run_grafana.sh  # Installs Grafana
 ./run_node_exporter.sh # Installs node exporter

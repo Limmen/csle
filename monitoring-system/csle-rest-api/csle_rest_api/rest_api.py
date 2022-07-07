@@ -15,139 +15,50 @@ from csle_common.util.emulation_util import EmulationUtil
 from csle_agents.job_controllers.training_job_manager import TrainingJobManager
 from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 from csle_system_identification.job_controllers.system_identification_job_manager import SystemIdentificationJobManager
+from csle_rest_api.emulations.routes import emulations
+from csle_rest_api.simulations.routes import simulations
+from csle_rest_api.monitoring.routes import monitoring
+from csle_rest_api.traces.routes import traces
+from csle_rest_api.emulationstatistics.routes import emulationstatistics
+from csle_rest_api.systemmodels.routes import systemmodels
+from csle_rest_api.about.routes import about
+from csle_rest_api.cadvisor.routes import cadvisor
+from csle_rest_api.grafana.routes import grafana
+from csle_rest_api.images.routes import images
+from csle_rest_api.jobs.routes import jobs
+from csle_rest_api.nodeexporter.routes import nodeexporter
+from csle_rest_api.policies.routes import policies
+from csle_rest_api.policyexamination.routes import policyexamination
+from csle_rest_api.prometheus.routes import prometheus
+from csle_rest_api.training.routes import training
+from csle_rest_api.sdn_controllers.routes import sdncontrollers
 import json
 from waitress import serve
 
-app = Flask(__name__, static_url_path='', static_folder='../build/')
+# app = Flask(__name__, static_url_path='', static_folder='../build/')
+app = Flask(__name__, static_url_path='', static_folder='../../csle-mgmt-webapp/build')
+app.register_blueprint(emulations)
+app.register_blueprint(simulations)
+app.register_blueprint(traces)
+app.register_blueprint(monitoring)
+app.register_blueprint(emulationstatistics)
+app.register_blueprint(systemmodels)
+app.register_blueprint(about)
+app.register_blueprint(cadvisor)
+app.register_blueprint(grafana)
+app.register_blueprint(images)
+app.register_blueprint(jobs)
+app.register_blueprint(nodeexporter)
+app.register_blueprint(policies)
+app.register_blueprint(policyexamination)
+app.register_blueprint(prometheus)
+app.register_blueprint(training)
+app.register_blueprint(sdncontrollers)
 
 
 @app.route('/', methods=['GET'])
 def root():
     return app.send_static_file('index.html')
-
-@app.route('/emulations', methods=['GET'])
-def emulationspage():
-    return app.send_static_file('index.html')
-
-@app.route('/simulations', methods=['GET'])
-def simulationspage():
-    return app.send_static_file('index.html')
-
-@app.route('/monitoring', methods=['GET'])
-def monitoringpage():
-    return app.send_static_file('index.html')
-
-@app.route('/traces', methods=['GET'])
-def tracespage():
-    return app.send_static_file('index.html')
-
-@app.route('/emulationstatistics', methods=['GET'])
-def statisticspage():
-    return app.send_static_file('index.html')
-
-@app.route('/systemmodels', methods=['GET'])
-def modelspage():
-    return app.send_static_file('index.html')
-
-@app.route('/policyexamination', methods=['GET'])
-def policy_examination_page():
-    return app.send_static_file('index.html')
-
-@app.route('/images', methods=['GET'])
-def images_page():
-    return app.send_static_file('index.html')
-
-@app.route('/training', methods=['GET'])
-def training_page():
-    return app.send_static_file('index.html')
-
-@app.route('/policies', methods=['GET'])
-def policies_page():
-    return app.send_static_file('index.html')
-
-@app.route('/jobs', methods=['GET'])
-def jobs_page():
-    return app.send_static_file('index.html')
-
-@app.route('/about', methods=['GET'])
-def about_page():
-    return app.send_static_file('index.html')
-
-@app.route('/nodeexporter', methods=['GET', 'POST'])
-def node_exporter():
-    running = MonitorToolsController.is_node_exporter_running()
-    port = constants.COMMANDS.NODE_EXPORTER_PORT
-    node_exporter_dict = {
-        "running": running,
-        "port": port,
-        "url": f"http://localhost:{port}/"
-    }
-    response = jsonify(node_exporter_dict)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-
-@app.route('/prometheus', methods=['GET', 'POST'])
-def prometheus():
-    running = MonitorToolsController.is_prometheus_running()
-    port = constants.COMMANDS.PROMETHEUS_PORT
-    if request.method == "POST":
-        if running:
-            MonitorToolsController.stop_prometheus()
-            running = False
-        else:
-            MonitorToolsController.start_prometheus()
-            running = True
-    prometheus_dict = {
-        "running": running,
-        "port": port,
-        "url": f"http://localhost:{port}/"
-    }
-    response = jsonify(prometheus_dict)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-
-@app.route('/cadvisor', methods=['GET', 'POST'])
-def cadvisor():
-    running = MonitorToolsController.is_cadvisor_running()
-    port = constants.COMMANDS.CADVISOR_PORT
-    if request.method == "POST":
-        if running:
-            MonitorToolsController.stop_cadvisor()
-            running = False
-        else:
-            MonitorToolsController.start_cadvisor()
-            running = True
-    cadvisor_dict = {
-        "running": running,
-        "port": port,
-        "url": f"http://localhost:{port}/"
-    }
-    response = jsonify(cadvisor_dict)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-
-@app.route('/grafana', methods=['GET', 'POST'])
-def grafana():
-    running = MonitorToolsController.is_grafana_running()
-    port = constants.COMMANDS.GRAFANA_PORT
-    if request.method == "POST":
-        if running:
-            MonitorToolsController.stop_grafana()
-            running = False
-        else:
-            MonitorToolsController.start_grafana()
-            running = True
-    grafana_dict = {
-        "running": running,
-        "port": port,
-        "url": f"http://localhost:{port}/"
-    }
-    response = jsonify(grafana_dict)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
 
 @app.route('/imagesdata', methods=['GET'])
 def images():
@@ -1388,7 +1299,6 @@ def sdn_controller_switches(emulation_id: int, exec_id: int):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-
-if __name__ == "__main__":
+def start_server():
     serve(app, host='0.0.0.0', port=7777, threads=100)
-    #app.run(port=7777,host='0.0.0.0')
+
