@@ -31,23 +31,14 @@ class MetastoreFacade:
     """
 
     @staticmethod
-    def get_db_conn():
-        """
-        :return: the database connection to the metastore
-        """
-        conn = psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                               f"password={constants.METADATA_STORE.PASSWORD} "
-                               f"host={constants.METADATA_STORE.HOST}")
-        return conn
-
-    @staticmethod
     def list_emulations() -> List[EmulationEnvConfig]:
         """
         :return: A list of emulations in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATIONS_TABLE}")
                 records = cur.fetchall()
@@ -59,9 +50,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.EMULATIONS_TABLE}")
                 records = cur.fetchall()
@@ -75,9 +67,10 @@ class MetastoreFacade:
         :param name: the name of the emulation
         :return: The emulation config or None if the emulation was not found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (name,))
                 record = cur.fetchone()
@@ -93,9 +86,10 @@ class MetastoreFacade:
         :param id: the id of the emulation
         :return: The emulation config or None if the emulation was not found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -108,9 +102,10 @@ class MetastoreFacade:
         """
         :return: A list of simulations in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
                 records = cur.fetchall()
@@ -122,9 +117,10 @@ class MetastoreFacade:
         """
         :return: A list of simulation ids and names in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
                 records = cur.fetchall()
@@ -138,9 +134,10 @@ class MetastoreFacade:
         :param name: the name of the simulation
         :return: The simulation config or None if the simulation was not found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE name = %s", (name,))
                 record = cur.fetchone()
@@ -157,9 +154,10 @@ class MetastoreFacade:
         :param id: the id of the simulation
         :return: The simulation config or None if the simulation was not found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -285,9 +283,10 @@ class MetastoreFacade:
         :return: id of the created row
         """
         Logger.__call__().get_logger().debug(f"Installing emulation:{config.name} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
@@ -309,9 +308,10 @@ class MetastoreFacade:
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Uninstalling emulation:{config.name} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (config.name,))
                 conn.commit()
@@ -327,9 +327,10 @@ class MetastoreFacade:
         :return: id of the created row
         """
         Logger.__call__().get_logger().debug(f"Installing simulation:{config.name} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
@@ -352,9 +353,10 @@ class MetastoreFacade:
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Uninstalling simulation:{config.name} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.SIMULATIONS_TABLE} WHERE name = %s", (config.name,))
                 conn.commit()
@@ -370,9 +372,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Installing emulation trace for "
                                              f"emulation:{emulation_trace.emulation_name} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} (emulation_name, trace) "
@@ -394,9 +397,10 @@ class MetastoreFacade:
         Logger.__call__().get_logger().debug(f"Installing statistics "
                                              f"for emulation:{emulation_statistics.emulation_name} in the metastore")
         emulation_statistics.compute_descriptive_statistics_and_distributions()
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO "
@@ -422,9 +426,10 @@ class MetastoreFacade:
         Logger.__call__().get_logger().debug(f"Installing statistics "
                                              f"for emulation:{emulation_statistics.emulation_name} in the metastore")
         emulation_statistics.compute_descriptive_statistics_and_distributions()
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
@@ -442,9 +447,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation statistics in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
                 records = cur.fetchall()
@@ -456,9 +462,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation statistics ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
                 records = cur.fetchall()
@@ -469,9 +476,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation traces in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
@@ -484,9 +492,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation traces ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
@@ -497,9 +506,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation-simulation traces ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
@@ -510,9 +520,10 @@ class MetastoreFacade:
         """
         :return: A list of simulation traces ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,gym_env FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
@@ -523,9 +534,10 @@ class MetastoreFacade:
         """
         :return: A list of simulation traces in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
@@ -542,9 +554,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing simulation traec with "
                                              f"id:{simulation_trace.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} WHERE id = %s",
                             (simulation_trace.id,))
@@ -560,9 +573,10 @@ class MetastoreFacade:
         :param id: the id of the emulation trace
         :return: The emulation trace or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -580,9 +594,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing simulation traec with "
                                              f"id:{emulation_trace.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE} WHERE id = %s",
                             (emulation_trace.id,))
@@ -601,9 +616,10 @@ class MetastoreFacade:
         Logger.__call__().get_logger().debug(f"Removing an emulation-simulation trace with "
                                              f"id:{emulation_simulation_trace.id} "
                                              f"from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} WHERE id = %s",
                             (emulation_simulation_trace.id,))
@@ -619,9 +635,10 @@ class MetastoreFacade:
         :param id: the id of the statistics
         :return: The emulation statistic or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
                             f"WHERE id = %s", (id,))
@@ -642,9 +659,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing emulation statistic with "
                                              f"id:{emulation_statistic.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} WHERE id = %s",
                             (emulation_statistic.id,))
@@ -660,9 +678,10 @@ class MetastoreFacade:
         :param id: the id of the simulation trace
         :return: The simulation trace or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -681,9 +700,10 @@ class MetastoreFacade:
         Logger.__call__().get_logger().debug(f"Installing simulation trace "
                                              f"for simulation env:{simulation_trace.simulation_env} "
                                              f"in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(simulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} (gym_env, trace) "
@@ -712,9 +732,10 @@ class MetastoreFacade:
             emulation_trace=emulation_simulation_trace.emulation_trace)
         simulation_trace_id = MetastoreFacade.save_simulation_trace(
             simulation_trace=emulation_simulation_trace.simulation_trace)
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} "
@@ -731,9 +752,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation-simulation traces in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
@@ -749,9 +771,10 @@ class MetastoreFacade:
         :param id: the id of the emulation-simulation trace
         :return: The emulation-simulation trace or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE} "
                             f"WHERE id = %s", (id,))
@@ -772,9 +795,10 @@ class MetastoreFacade:
         :return: id of the created row
         """
         Logger.__call__().get_logger().debug(f"Saving image for emulation:{emulation_name} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_IMAGES_TABLE} (emulation_name, image) "
@@ -792,9 +816,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation names and images in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_IMAGES_TABLE}")
                 records = cur.fetchall()
@@ -810,9 +835,10 @@ class MetastoreFacade:
         :param emulation_name: the name of the emulatin to fetch the image for
         :return: The simulation trace or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_IMAGES_TABLE} "
                             f"WHERE emulation_name = %s", (emulation_name,))
@@ -831,9 +857,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Deleting all traces from table "
                                              f"{table}")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {table}")
                 conn.commit()
@@ -851,9 +878,10 @@ class MetastoreFacade:
         :return: id of the created row
         """
         Logger.__call__().get_logger().debug(f"Saving image for simulation:{simulation_name} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 try:
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} (simulation_name, image) "
@@ -871,9 +899,10 @@ class MetastoreFacade:
         """
         :return: A list of simulation names and images in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE}")
                 records = cur.fetchall()
@@ -889,9 +918,10 @@ class MetastoreFacade:
         :param simulation_name: the name of the simulation to fetch the image for
         :return: The simulation trace or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} "
                             f"WHERE simulation_name = %s", (simulation_name,))
@@ -912,9 +942,10 @@ class MetastoreFacade:
                                              f"{experiment_execution.emulation_name} "
                                              f"and simulation: {experiment_execution.simulation_name} "
                                              f"in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(experiment_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} "
@@ -934,9 +965,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation traces in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
@@ -948,9 +980,10 @@ class MetastoreFacade:
         """
         :return: A list of experiment execution ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name,emulation_name FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
@@ -977,9 +1010,10 @@ class MetastoreFacade:
         :param id: the id of the emulation trace
         :return: The emulation trace or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -998,9 +1032,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing experiment execution with "
                                              f"id:{experiment_execution.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE} WHERE id = %s",
                             (experiment_execution.id,))
@@ -1013,9 +1048,10 @@ class MetastoreFacade:
         """
         :return: A list of Multi-threshold stopping policies in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1028,9 +1064,10 @@ class MetastoreFacade:
         """
         :return: A list of Multi-threshold stopping policies ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1061,9 +1098,10 @@ class MetastoreFacade:
         :param id: the id of the multi-threshold policy
         :return: The mult-threshold policy or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
                             f"WHERE id = %s", (id,))
@@ -1084,9 +1122,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing Multi-threshold stopping policy with "
                                              f"id:{multi_threshold_stopping_policy.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
                             f"WHERE id = %s",
@@ -1105,9 +1144,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Installing a multi-threshold stopping policy in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
@@ -1137,9 +1177,10 @@ class MetastoreFacade:
         """
         :return: A list of training jobs in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
                 records = cur.fetchall()
@@ -1151,9 +1192,10 @@ class MetastoreFacade:
         """
         :return: A list of training job ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name,emulation_name,pid FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
                 records = cur.fetchall()
@@ -1167,9 +1209,10 @@ class MetastoreFacade:
         :param id: the id of the training job config
         :return: The trainign job config or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -1186,9 +1229,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Saving a training job in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
@@ -1222,9 +1266,10 @@ class MetastoreFacade:
         """
         :return: A list of data collection jobs in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
                 records = cur.fetchall()
@@ -1237,9 +1282,10 @@ class MetastoreFacade:
         """
         :return: A list of data collection job ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name,pid FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
                 records = cur.fetchall()
@@ -1253,9 +1299,10 @@ class MetastoreFacade:
         :param id: the id of the data collection job config
         :return: The data collection job config or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -1273,9 +1320,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Saving a data collection job in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 data_collection_job_json = json.dumps(data_collection_job.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
@@ -1299,9 +1347,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Updating training job with id: {id} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
@@ -1322,9 +1371,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Updating experiment execution with id: {id} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(experiment_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
@@ -1345,9 +1395,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Updating data collection job with id: {id} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(data_collection_job.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"UPDATE "
@@ -1367,9 +1418,10 @@ class MetastoreFacade:
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Removing training job with id:{training_job.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE} WHERE id = %s",
                             (training_job.id,))
@@ -1386,9 +1438,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing data collection job with "
                                              f"id:{data_collection_job.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} WHERE id = %s",
                             (data_collection_job.id,))
@@ -1401,9 +1454,10 @@ class MetastoreFacade:
         """
         :return: A list of PPO policies in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1416,9 +1470,10 @@ class MetastoreFacade:
         """
         :return: A list of PPO policies ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1445,9 +1500,10 @@ class MetastoreFacade:
         :param id: the id of the PPO policy
         :return: The PPO policy or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -1465,9 +1521,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing ppo policy with "
                                              f"id:{ppo_policy.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE} WHERE id = %s",
                             (ppo_policy.id,))
@@ -1484,9 +1541,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Installing PPO policy in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(ppo_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.PPO_POLICIES_TABLE} "
@@ -1518,9 +1576,10 @@ class MetastoreFacade:
         """
         :return: A list of system identification jobs in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
                 records = cur.fetchall()
@@ -1533,9 +1592,10 @@ class MetastoreFacade:
         """
         :return: A list of system identification job ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name,pid FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
                 records = cur.fetchall()
@@ -1549,9 +1609,10 @@ class MetastoreFacade:
         :param id: the id of the system identification job config
         :return: The system identification job config or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -1569,9 +1630,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Saving a system identification job in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 system_identification_job_json = json.dumps(system_identification_job.to_dict(), indent=4,
                                                       sort_keys=True, cls=NpEncoder)
@@ -1595,9 +1657,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Updating system identification job with id: {id} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(system_identification_job.to_dict(), indent=4, sort_keys=True,
                                              cls=NpEncoder)
@@ -1619,9 +1682,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing system identification job with "
                                              f"id:{system_identification_job.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE} WHERE id = %s",
                             (system_identification_job.id,))
@@ -1650,9 +1714,10 @@ class MetastoreFacade:
         """
         :return: A list of gaussian mixture system model jobs in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
@@ -1665,9 +1730,10 @@ class MetastoreFacade:
         """
         :return: A list of gaussian mixture system model ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
@@ -1681,9 +1747,10 @@ class MetastoreFacade:
         :param id: the id of the gaussian mixture system model job config
         :return: The gaussian mixture system model job config or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} "
                             f"WHERE id = %s", (id,))
@@ -1702,9 +1769,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Saving a gaussian mixture system model job in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 gaussian_mixture_system_model_json = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4,
                                                             sort_keys=True, cls=NpEncoder)
@@ -1728,9 +1796,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Updating gaussian mixture system model job with id: {id} in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 config_json_str = json.dumps(gaussian_mixture_system_model.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"UPDATE "
@@ -1751,9 +1820,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing gaussian mixture system model job with "
                                              f"id:{gaussian_mixture_system_model.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE} WHERE id = %s",
                             (gaussian_mixture_system_model.id,))
@@ -1765,9 +1835,10 @@ class MetastoreFacade:
         """
         :return: A list of Tabular policies in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1780,9 +1851,10 @@ class MetastoreFacade:
         """
         :return: A list of Tabular policies ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1809,9 +1881,10 @@ class MetastoreFacade:
         :param id: the id of the Tabular policy
         :return: The Tabular policy or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -1829,9 +1902,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing tabular policy with "
                                              f"id:{tabular_policy.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} WHERE id = %s",
                             (tabular_policy.id,))
@@ -1848,9 +1922,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Installing Tabular policy in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(tabular_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} "
@@ -1866,9 +1941,10 @@ class MetastoreFacade:
         """
         :return: A list of AlphaVec policies in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1881,9 +1957,10 @@ class MetastoreFacade:
         """
         :return: A list of AlphaVec policies ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1910,9 +1987,10 @@ class MetastoreFacade:
         :param id: the id of the AlphaVec policy
         :return: The AlphaVec policy or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -1930,9 +2008,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing alpha_vec policy with "
                                              f"id:{alpha_vec_policy.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} WHERE id = %s",
                             (alpha_vec_policy.id,))
@@ -1949,9 +2028,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Installing AlphaVec policy in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(alpha_vec_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} "
@@ -1967,9 +2047,10 @@ class MetastoreFacade:
         """
         :return: A list of DQN policies in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -1982,9 +2063,10 @@ class MetastoreFacade:
         """
         :return: A list of DQN policies ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -2011,9 +2093,10 @@ class MetastoreFacade:
         :param id: the id of the DQN policy
         :return: The DQN policy or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -2031,9 +2114,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing dqn policy with "
                                              f"id:{dqn_policy.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE} WHERE id = %s",
                             (dqn_policy.id,))
@@ -2050,9 +2134,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Installing DQN policy in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(dqn_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.DQN_POLICIES_TABLE} "
@@ -2068,9 +2153,10 @@ class MetastoreFacade:
         """
         :return: A list of FNN with softmax policies in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -2083,9 +2169,10 @@ class MetastoreFacade:
         """
         :return: A list of FNN with softmax policies ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -2112,9 +2199,10 @@ class MetastoreFacade:
         :param id: the id of the FNN with softmax policy
         :return: The FNN with softmax policy or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -2132,9 +2220,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing fnn_w_softmax policy with "
                                              f"id:{fnn_w_softmax_policy.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} WHERE id = %s",
                             (fnn_w_softmax_policy.id,))
@@ -2151,9 +2240,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Installing FNN with softmax policy in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(fnn_w_softmax_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
@@ -2169,9 +2259,10 @@ class MetastoreFacade:
         """
         :return: A list of vector policies in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -2184,9 +2275,10 @@ class MetastoreFacade:
         """
         :return: A list of vector policies ids in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
                 records = cur.fetchall()
@@ -2213,9 +2305,10 @@ class MetastoreFacade:
         :param id: the id of the vector policy
         :return: The vector policy or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} WHERE id = %s", (id,))
                 record = cur.fetchone()
@@ -2233,9 +2326,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing vector policy with "
                                              f"id:{vector_policy.id} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} WHERE id = %s",
                             (vector_policy.id,))
@@ -2252,9 +2346,10 @@ class MetastoreFacade:
         :return: id of the created record
         """
         Logger.__call__().get_logger().debug(f"Installing vector policy in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(vector_policy.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} "
@@ -2270,9 +2365,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation executions in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT ip_first_octet,emulation_name FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
@@ -2283,9 +2379,10 @@ class MetastoreFacade:
         """
         :return: A list of emulation executions in the metastore
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
@@ -2298,9 +2395,10 @@ class MetastoreFacade:
         :param emulation_name: the name of the emulation
         :return: A list of emulation executions in the metastore for a given emulation
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
                             f"WHERE emulation_name = %s", (emulation_name,))
@@ -2314,9 +2412,10 @@ class MetastoreFacade:
         :param id: the first IP octet of the execution
         :return: A list of emulation executions in the metastore for a given emulation
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
                             f"WHERE ip_first_octet = %s", (id,))
@@ -2345,9 +2444,10 @@ class MetastoreFacade:
         :param emulation_name: the name of the emulation
         :return: The emulation execution or None if it could not be found
         """
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
                             f"WHERE ip_first_octet = %s AND emulation_name=%s", (ip_first_octet, emulation_name))
@@ -2366,9 +2466,10 @@ class MetastoreFacade:
         """
         Logger.__call__().get_logger().debug(f"Removing emulation execution with "
                                              f"ip_first_octet:{emulation_execution.ip_first_octet} from the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} WHERE ip_first_octet = %s "
                             f"AND emulation_name = %s",
@@ -2387,9 +2488,10 @@ class MetastoreFacade:
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Installing emulation execution in the metastore")
-        with psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
-                             f"password={constants.METADATA_STORE.PASSWORD} "
-                             f"host={constants.METADATA_STORE.HOST}") as conn:
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 emulation_execution_str = \
                     json.dumps(emulation_execution.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
