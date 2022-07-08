@@ -1,10 +1,12 @@
 # OS
-FROM kalilinux/kali-last-release
+#FROM kalilinux/kali-last-release
+FROM registry.gitlab.com/kalilinux/build-scripts/kali-docker/kali-last-release:2021.4
+#FROM registry.gitlab.com/kalilinux/build-scripts/kali-docker/kali-rolling:2020-02-02
 USER root
 
 # Install dependencies
 RUN apt update --fix-missing && apt -y reinstall ca-certificates
-RUN apt-get -y install apt-utils  \
+RUN apt-get -y --install-suggests --fix-broken install apt-utils  \
                        openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 ncat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
