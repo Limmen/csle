@@ -13,12 +13,9 @@ mv prometheus.yml prometheus/prometheus.yml
 
 sudo sysctl fs.inotify.max_user_watches=1048576
 
-sudo apt-get install npm
-sudo npm install -g npx
 sudo npm cache clean -f
-sudo npm install -g n
-sudo n stable
-cd csle-mgmt-webapp; npm install
+
+cd csle-mgmt-webapp; npm install --package-lock-only --force
 sudo npm install react-file-download --save
 sudo npm install react-bootstrap bootstrap
 

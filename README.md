@@ -309,11 +309,19 @@ running commands can read and write to this directory.
       ```bash
        export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
        ```
+      or for fish shell:
+      ```bash
+       fish_add_path /path/to/csle/monitoring-system/prometheus/
+       ```
    To have the binary permanently in $PATH, add the following line to the
    .bashrc: `export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
     - Add node_exporter binary to the path
       ```bash
        export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH
+       ```
+      or for fish shell:
+      ```bash
+       fish_add_path /path/to/csle/monitoring-system/node_exporter/
        ```
    To have the binary permanently in $PATH, add the following line to the
    .bashrc: `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
