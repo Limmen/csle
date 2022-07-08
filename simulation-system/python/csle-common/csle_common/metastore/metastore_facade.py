@@ -31,6 +31,16 @@ class MetastoreFacade:
     """
 
     @staticmethod
+    def get_db_conn():
+        """
+        :return: the database connection to the metastore
+        """
+        conn = psycopg.connect(f"dbname={constants.METADATA_STORE.DBNAME} user={constants.METADATA_STORE.USER} "
+                               f"password={constants.METADATA_STORE.PASSWORD} "
+                               f"host={constants.METADATA_STORE.HOST}")
+        return conn
+
+    @staticmethod
     def list_emulations() -> List[EmulationEnvConfig]:
         """
         :return: A list of emulations in the metastore

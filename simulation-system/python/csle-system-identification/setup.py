@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name='csle_ryu',
+setup(name='csle_system_identification',
       version='0.0.1',
       install_requires=['csle-common', 'csle-collector', 'csle-attacker', 'csle-defender'],
       author='Kim Hammar',

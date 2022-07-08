@@ -168,12 +168,14 @@ running commands can read and write to this directory.
       ```bash
        cd simulation-system/python/csle-collector/
        pip install -e .
+       cd ../../../
       ```
 
     - Install `csle-common` (see ([README](simulation-system/csle-common/README.md)) for more information)
       ```bash
        cd simulation-system/python/csle-common/
        pip install -e .
+       cd ../../../
       ```
 
     - Install `csle-attacker` (see ([README](simulation-system/csle-attacker/README.md)) for more information)
@@ -186,6 +188,7 @@ running commands can read and write to this directory.
       ```bash
       cd simulation-system/python/csle-defender/
       pip install -e .
+      cd ../../../
       ```
 
     - Install `gym-csle-stopping-game` (see ([README](simulation-system/gym-csle-stopping-game/README.MD)) for more
@@ -193,13 +196,15 @@ running commands can read and write to this directory.
       ```bash
       cd simulation-system/python/gym-csle-stopping-game/
       pip install -e .
+      cd ../../../
       ```
 
-   - Install `csle-rest-api` (see ([README](simulation-system/csle-rest-api/README.MD)) for more
+   - Install `csle-system-identification` (see ([README](simulation-system/csle-system-identification/README.MD)) for more
      information)
      ```bash
-     cd simulation-system/python/csle-rest-api/
+     cd simulation-system/python/csle-system-identification/
      pip install -e .
+     cd ../../../
      ```
 
    - Install `csle-agents` (see ([README](simulation-system/csle-agents/README.MD)) for more
@@ -207,13 +212,7 @@ running commands can read and write to this directory.
      ```bash
      cd simulation-system/python/csle-agents/
      pip install -e .
-     ```
-
-   - Install `csle-system-identification` (see ([README](simulation-system/csle-system-identification/README.MD)) for more
-     information)
-     ```bash
-     cd simulation-system/python/csle-system-identification/
-     pip install -e .
+     cd ../../../
      ```
 
    - Install `csle-ryu` (see ([README](simulation-system/csle-ryu/README.MD)) for more
@@ -221,6 +220,15 @@ running commands can read and write to this directory.
      ```bash
      cd simulation-system/python/csle-ryu/
      pip install -e .
+     cd ../../../
+     ```
+
+   - Install `csle-rest-api` (see ([README](simulation-system/csle-rest-api/README.MD)) for more
+     information)
+     ```bash
+     cd simulation-system/python/csle-rest-api/
+     pip install -e .
+     cd ../../../
      ```
 
 4. **Install the CLI tool**
