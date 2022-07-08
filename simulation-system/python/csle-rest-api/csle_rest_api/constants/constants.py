@@ -93,3 +93,4 @@ class MGMT_WEBAPP:
     TABLE_ID_PROPERTY = "table_id"
     PORT_PROPERTY = "port"
     URL_PROPERTY = "url"
+    TRAJECTORIES_PROPERTY = "trajectories"

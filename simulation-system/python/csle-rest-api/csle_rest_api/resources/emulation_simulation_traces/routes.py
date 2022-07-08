@@ -2,6 +2,7 @@
 Routes and sub-resources for the /emulation-simulation-traces resource
 """
 from flask import Blueprint, jsonify, request
+import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -28,9 +29,12 @@ def emulation_simulation_traces():
         if ids is not None and ids:
             return emulation_simulation_traces_ids()
 
-        emulation_trcs = MetastoreFacade.list_emulation_simulation_traces()
-        traces_dicts = list(map(lambda x: x.to_dict(), emulation_trcs))
-        response = jsonify(traces_dicts)
+        f = open('/var/log/csle/one_tau.json')
+        d = json.load(f)
+        response = jsonify(d[api_constants.MGMT_WEBAPP.TRAJECTORIES_PROPERTY])
+        # emulation_trcs = MetastoreFacade.list_emulation_simulation_traces()
+        # traces_dicts = list(map(lambda x: x.to_dict(), emulation_trcs))
+        # response = jsonify(traces_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:

@@ -59,7 +59,6 @@ const PolicyExamination = () => {
         }
     ]
 
-
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [loading, setLoading] = useState([]);
     const [traces, setTraces] = useState([]);
@@ -92,12 +91,8 @@ const PolicyExamination = () => {
     };
     // const ip = "172.31.212.92"
 
-    // window.addEventListener('keydown', e => {
-    //     handleKeyPress(e)
-    // });
-
     const fetchTraces = useCallback(() => {
-        fetch(`http://` + ip + ':7777/emulationsimulationtraces', {
+        fetch(`http://` + ip + ':7777/emulation-simulation-traces', {
             method: "GET", headers: new Headers({
                 Accept: "application/vnd.github.cloak-preview"
             })
@@ -209,16 +204,6 @@ const PolicyExamination = () => {
         }
     }
 
-    // <div className="conditionalDist inline-block windowLengthDropdown" style={{width: "350px"}}>
-    //     <Select
-    //         style={{display: 'inline-block'}}
-    //         value={props.animationDuration}
-    //         defaultValue={props.animationDuration}
-    //         options={evolutionSpeedOptions}
-    //         onChange={animationDurationUpdate}
-    //         placeholder="Set the evolution speed"
-    //     />
-    // </div>
     const updateFoundNodes = (trace) => {
         var attacker_found_nodes = []
         var attacker_compromised_nodes = []
