@@ -1,7 +1,10 @@
 # OS
 #FROM kalilinux/kali-last-release
+#FROM kalilinux/kali-rolling
 FROM registry.gitlab.com/kalilinux/build-scripts/kali-docker/kali-last-release:2021.4
 #FROM registry.gitlab.com/kalilinux/build-scripts/kali-docker/kali-rolling:2020-02-02
+#FROM registry.gitlab.com/kalilinux/build-scripts/kali-docker/kali-rolling:2020-02-02
+#FROM jasonchaffee/kali-linux
 USER root
 
 # Install dependencies
@@ -10,11 +13,12 @@ RUN apt-get -y --install-suggests --fix-broken install apt-utils  \
                        openssl net-tools iputils-ping sudo emacs curl htop telnet ssh openssh-server ftp \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 ncat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
-                       snmp postgresql-client smbclient tcpdump netcat-traditional traceroute sysstat iproute2 iperf3 lsof
+                       snmp postgresql-client smbclient tcpdump netcat-traditional traceroute sysstat iproute2  \
+                       iperf3 lsof; exit 0
 
 #RUN apt-get -y install man-db
 #&& DEBIAN_FRONTEND=noninteractive apt -yqq install kali-linux-headless
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing kali-tools-top10
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing kali-tools-top10; exit 0
 
 # Setup users
 

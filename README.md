@@ -140,11 +140,14 @@ running commands can read and write to this directory.
       sudo -u postgres psql  # start psql session as admin user posgres
       psql> \password postgres # set postgres password
       ```
-    - Setup password authentication for user postgres:
+    - Setup password authentication for user postgres and allow remote connections:
         1. Open file `/etc/postgresql/<YOUR_VERSION>/main/pg_hba.conf`
         2. Change `peer` to `md5` on line: `local all postgres peer`
-        3. Save and close the file
-        4. Restart postgres with the command `sudo service postgresql restart`
+        3. Add the line `host    all             all             0.0.0.0/0            md5`
+        4. Open file `/etc/postgresql/<YOUR_VERSION>/main/postgresql.conf`
+        5. Change `localhost` to `*` on line `listen_addresses = 'localhost'`
+        6. Save and close the file
+        7. Restart postgres with the command `sudo service postgresql restart`
     - Create database and tables:
      ```bash
      sudo psql -U postgres -a -f metastore/create_tables.sql
