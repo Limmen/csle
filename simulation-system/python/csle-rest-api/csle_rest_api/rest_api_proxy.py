@@ -464,8 +464,12 @@ def create_app(static_folder: str, proxy_server: str):
                f'<simulation_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def simulation_proxy(simulation_id: int):
-        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
-                   f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+            return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
