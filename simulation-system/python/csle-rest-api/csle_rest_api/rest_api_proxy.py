@@ -305,7 +305,7 @@ def create_app(static_folder: str, proxy_server: str):
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                f'<statistics_id>')
-    def emulation_statistics_proxy(statistics_id: int):
+    def emulation_statistic_proxy(statistics_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{statistics_id}').content
 
