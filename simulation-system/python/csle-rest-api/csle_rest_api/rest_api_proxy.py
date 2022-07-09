@@ -291,7 +291,7 @@ def create_app(static_folder: str, proxy_server: str):
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                f'<trace_id>')
-    def emulation_execution_proxy(trace_id: int):
+    def emulation_simulation_trace_proxy(trace_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
 
@@ -404,7 +404,7 @@ def create_app(static_folder: str, proxy_server: str):
     def system_model_proxy(system_model_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
-    
+
     return app
 
 
