@@ -123,7 +123,12 @@ running commands can read and write to this directory.
 Logs of CSLE will be stored in `/tmp/csle`, create this directory and set the permissions so that the user used for
 running commands can read and write to this directory.
 
-2. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
+2. **Create log directory**
+   - ```bash
+     mkdir /tmp/csle     
+     ```
+
+3. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
       ```bash
       sudo apt-get install postgresql
@@ -153,7 +158,7 @@ running commands can read and write to this directory.
      ```
    and then rebuild it with the commands above.
 
-3. **Install the simulation system**
+4. **Install the simulation system**
     - Install Python 3.8 or higher:
         - Using conda:
           ```bash
@@ -231,7 +236,7 @@ running commands can read and write to this directory.
      cd ../../../
      ```
 
-4. **Install the CLI tool**
+5. **Install the CLI tool**
     - Install the CLI tool and make it executable as a script:
       ```bash
       cd csle-cli
@@ -251,7 +256,7 @@ running commands can read and write to this directory.
       _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish 
     ```
 
-5. **Install the emulation system**
+6. **Install the emulation system**
     - Add Docker's official GPG key:
       ```bash
       sudo mkdir -p /etc/apt/keyrings
@@ -288,7 +293,7 @@ running commands can read and write to this directory.
       make build
       ```   
 
-6. **Install the monitoring system**
+7. **Install the monitoring system**
     - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm
       installed, to install node and npm execute:
        ```bash
