@@ -42,8 +42,6 @@ from csle_rest_api.resources.sdn_controllers.routes import sdn_controllers_bp
 from csle_rest_api.resources.file.routes import file_bp
 import csle_rest_api.constants.constants as api_constants
 
-
-
 def create_app(static_folder: str):
     """
     Creates and initializes the Flask App
