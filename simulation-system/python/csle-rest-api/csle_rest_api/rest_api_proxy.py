@@ -1,6 +1,6 @@
 from flask import Flask, request
 from waitress import serve
-from requests import get
+from requests import get, post, delete
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.pages.emulations.routes import emulations_page_bp
@@ -121,6 +121,290 @@ def create_app(static_folder: str, proxy_server: str):
                    f'{execution_id}{constants.COMMANDS.SLASH_DELIM}'
                    f'{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}').content
 
+    @app.route(f'/{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}')
+    def alpha_vec_policies_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    def alpha_vec_policy_proxy(policy_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}')
+    def cadvisor_proxy():
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}')
+    def prometheus_proxy():
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}')
+    def nodeexporter_proxy():
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}')
+    def grafana_proxy():
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}')
+    def data_collection_jobs_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>')
+    def data_collection_job_proxy(job_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}')
+    def dqn_policies_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    def dqn_policy_proxy(policy_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}')
+    def fnn_w_softmax_policies_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    def fnn_w_softmax_policy_proxy(policy_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}')
+    def ppo_policies_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    def ppo_policy_proxy(policy_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}')
+    def tabular_policies_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    def tabular_policy_proxy(policy_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}')
+    def vector_policies_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    def vector_policy_proxy(policy_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}')
+    def multi_threshold_policies_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    def multi_threshold_policy_proxy(policy_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}')
+    def training_jobs_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>')
+    def training_job_proxy(job_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}')
+    def system_identification_jobs_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}{constants.COMMANDS.SLASH_DELIM}<job_id>')
+    def system_identification_job_proxy(job_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}')
+    def emulation_executions_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<execution_id>')
+    def emulation_execution_proxy(execution_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{execution_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}')
+    def emulation_simulation_traces_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<trace_id>')
+    def emulation_execution_proxy(trace_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}')
+    def emulation_statistics_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<statistics_id>')
+    def emulation_statistics_proxy(statistics_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{statistics_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}')
+    def emulation_traces_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<trace_id>')
+    def emulation_trace_proxy(trace_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}')
+    def simulation_traces_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<trace_id>')
+    def simulation_trace_proxy(trace_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}')
+    def experiments_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<experiment_id>')
+    def experiment_proxy(experiment_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{experiment_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.FILE_RESOURCE}')
+    def fileproxy():
+        return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}')
+    def images_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<image_id>')
+    def image_proxy(image_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{image_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}')
+    def sdn_controllers_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}')
+    def simulations_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<simulation_id>')
+    def simulation_proxy(simulation_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}')
+    def system_models_proxy():
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}?ids=true').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<system_model_id>')
+    def system_model_proxy(system_model_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+    
     return app
 
 
