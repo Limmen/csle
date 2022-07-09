@@ -147,7 +147,6 @@ def create_app(static_folder: str, proxy_server: str):
     @app.route(f'/{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def cadvisor_proxy():
-        print("get cadvisor")
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,

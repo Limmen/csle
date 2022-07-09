@@ -335,7 +335,7 @@ const Monitoring = () => {
 
     const startOrStopNodeExporterRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/node_exporter',
+            `http://` + ip + ':7777/node-exporter',
             {
                 method: "POST",
                 headers: new Headers({
@@ -535,7 +535,7 @@ const Monitoring = () => {
 
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/nodeexporter',
+            `http://` + ip + ':7777/node-exporter',
             {
                 method: "GET",
                 headers: new Headers({
