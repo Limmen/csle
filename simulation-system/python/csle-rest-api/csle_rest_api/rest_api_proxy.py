@@ -91,6 +91,9 @@ def create_app(static_folder: str, proxy_server: str):
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+                          f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
@@ -175,22 +178,34 @@ def create_app(static_folder: str, proxy_server: str):
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def cadvisor_proxy():
-        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def prometheus_proxy():
-        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}').content
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def nodeexporter_proxy():
-        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}').content
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def grafana_proxy():
-        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}').content
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
