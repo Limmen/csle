@@ -56,10 +56,9 @@ app.register_blueprint(sdn_controllers_page_bp,
                        url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                   f"{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE}")
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def proxy(path):
-    return get(f'{SITE_NAME}{path}').content
+@app.route('/emulations')
+def proxy():
+    return get(f'{SITE_NAME}emulations').content
 
 @app.route('/<path:path>/<path:path2>')
 def proxy_1(path, path2):
