@@ -94,3 +94,6 @@ class MGMT_WEBAPP:
     PORT_PROPERTY = "port"
     URL_PROPERTY = "url"
     TRAJECTORIES_PROPERTY = "trajectories"
+    CONTENT_TYPE_HEADER = "Content-type"
+    ACCEPT_HEADER = "Accept"
+    APPLICATION_JSON_DATA_TYPE = "application/json"
