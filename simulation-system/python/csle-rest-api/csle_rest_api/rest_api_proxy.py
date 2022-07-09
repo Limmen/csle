@@ -396,7 +396,10 @@ def create_app(static_folder: str, proxy_server: str):
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.FILE_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def fileproxy():
-        return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
+        res = post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
+        print(f"returning:{res}")
+        return res
+        # return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def images_proxy():
