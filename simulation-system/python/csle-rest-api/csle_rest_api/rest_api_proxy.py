@@ -394,7 +394,10 @@ def create_app(static_folder: str, proxy_server: str):
         if ids is not None and ids:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}?ids=true').content
         else:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}').content
+            if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}').content
+            elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
