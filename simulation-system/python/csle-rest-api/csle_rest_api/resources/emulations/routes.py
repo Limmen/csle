@@ -154,7 +154,8 @@ def get_executions_of_emulation(emulation_id: int):
 
 
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
-                     f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}/<execution_id>',
+                     f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+                     f'<execution_id>',
                      methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def get_execution_of_emulation(emulation_id: int, execution_id: int):
@@ -212,7 +213,8 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
 
 
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
-                     f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}/<exec_id>/'
+                     f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<exec_id>'
+                     f'{constants.COMMANDS.SLASH_DELIM}'
                      f'{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}',
                      methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])

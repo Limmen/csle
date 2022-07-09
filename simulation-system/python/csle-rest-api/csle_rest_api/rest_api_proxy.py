@@ -70,6 +70,53 @@ def create_app(static_folder: str, proxy_server: str):
     def emulations_proxy():
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}').content
 
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>')
+    def emulation_proxy(emulation_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}')
+    def executions_of_emulation_proxy(emulation_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<execution_id>')
+    def execution_of_emulation_proxy(emulation_id: int, execution_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{execution_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<execution_id>'
+               f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
+               f'{constants.COMMANDS.SLASH_DELIM}<minutes>')
+    def monitor_emulation_proxy(emulation_id: int, execution_id: int, minutes: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{execution_id}{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{minutes}').content
+
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<execution_id>'
+               f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}')
+    def sdn_switches_of_execution_proxy(emulation_id: int, execution_id: int):
+        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
+                   f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{execution_id}{constants.COMMANDS.SLASH_DELIM}'
+                   f'{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}').content
+
     return app
 
 
