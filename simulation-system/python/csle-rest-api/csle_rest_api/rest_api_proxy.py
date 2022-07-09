@@ -111,13 +111,11 @@ def create_app(static_folder: str, proxy_server: str):
                f'{constants.COMMANDS.SLASH_DELIM}<minutes>',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def monitor_emulation_proxy(emulation_id: int, execution_id: int, minutes: int):
-        print("monitor request")
         res =  get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
                    f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                    f'{execution_id}{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{minutes}').content
-        print(f"monitor res:{res}")
         return res
 
 
@@ -328,7 +326,6 @@ def create_app(static_folder: str, proxy_server: str):
     def emulation_execution_proxy(execution_id: int):
         emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
         if emulation is not None:
-            print(f"emulation param is not none:{emulation}")
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{execution_id}?'
                        f'{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}={emulation}').content
