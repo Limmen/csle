@@ -781,7 +781,7 @@ const Monitoring = () => {
 
 
     const SelectOpenFlowSwitchDropdownOrSpinner = (props) => {
-        if (!props.loading && props.selectedEmulation === null) {
+        if (!props.loading && (props.selectedEmulation === null) || props.selectedSwitch === null) {
             return (<></>)
         }
         if (props.loading || props.selectedEmulation === null || props.selectedSwitch === null) {
