@@ -1,6 +1,7 @@
 from flask import Flask, request
 from waitress import serve
 from requests import get, post, delete
+import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.pages.emulations.routes import emulations_page_bp
@@ -396,7 +397,8 @@ def create_app(static_folder: str, proxy_server: str):
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.FILE_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def fileproxy():
-        res = post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
+        path = json.loads(request.data)[api_constants.MGMT_WEBAPP.PATH_PROPERTY]
+        res = post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}', json=path).content
         print(f"returning:{res}")
         return res
         # return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
