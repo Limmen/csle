@@ -379,7 +379,8 @@ const Monitoring = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log("got emulation executions: " + response)
+                console.log("got emulation executions: ")
+                console.log(response)
                 const emulationExecutionIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj,
@@ -414,7 +415,8 @@ const Monitoring = () => {
         )
             .then(res => res.json())
             .then(response => {
-                console.log("got emulation execution: " + response)
+                console.log("got emulation execution: ")
+                console.log(response)
                 setSelectedEmulationExecution(response)
                 setLoadingSelectedEmulationExecution(false)
                 if (response !== null && response !== undefined) {
@@ -445,7 +447,8 @@ const Monitoring = () => {
     )
         .then(res => res.json())
         .then(response => {
-            console.log("got monitor data: " + response)
+            console.log("got monitor data: ")
+            console.log(response)
             setMonitoringData(response)
             setLoadingSelectedEmulationExecution(false)
             var openFlowSwitchesOptions = []
