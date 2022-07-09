@@ -20,9 +20,7 @@ def read_file():
 
     :return: Reads a given file and returns its contents
     """
-    print(f"received request data:{request.data}")
     path = json.loads(request.data)[api_constants.MGMT_WEBAPP.PATH_PROPERTY]
-    print(f"Received file path:{path}")
     data = ""
     if os.path.exists(path):
         with open(path, 'r') as fp:

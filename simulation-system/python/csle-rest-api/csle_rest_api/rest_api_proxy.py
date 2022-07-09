@@ -147,6 +147,7 @@ def create_app(static_folder: str, proxy_server: str):
     @app.route(f'/{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                                            api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def cadvisor_proxy():
+        print("get cadvisor")
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -398,14 +399,10 @@ def create_app(static_folder: str, proxy_server: str):
     @app.route(f'/{api_constants.MGMT_WEBAPP.FILE_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def fileproxy():
         post_json_data = json.loads(request.data)
-        print(post_json_data)
         headers = {api_constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE,
                    api_constants.MGMT_WEBAPP.ACCEPT_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE}
-        res = post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}',
+        return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}',
                    json=post_json_data, headers=headers).content
-        print(f"returning:{res}")
-        return res
-        # return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def images_proxy():
