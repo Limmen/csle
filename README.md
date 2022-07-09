@@ -112,7 +112,8 @@ Follow the instructions below to install CSLE.
 
 ```bash
 git clone https://github.com/Limmen/clse
-export CSLE_HOME=/path/to/csle/
+export CSLE_HOME=/path/to/csle/ # for bash
+set -gx CSLE_HOME "/path/to/csle"  # for fish
 ```
 
 To set CSLE_HOME permanently, add the following line to the .bashrc: `export CSLE_HOME=/path/to/csle/`
