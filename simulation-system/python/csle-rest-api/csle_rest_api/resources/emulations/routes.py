@@ -216,8 +216,7 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
                      f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<exec_id>'
                      f'{constants.COMMANDS.SLASH_DELIM}'
                      f'{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}',
-                     methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                     methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
     """
     The /emulations/id/executions/id/switches resource. Gets SDN switches of a given execution of a given emulation.

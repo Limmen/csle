@@ -66,7 +66,8 @@ def create_app(static_folder: str, proxy_server: str):
     def root():
         return app.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulations_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -75,14 +76,17 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
-               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>')
+               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+                                                                           api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def emulation_proxy(emulation_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
-               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}')
+               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                                                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def executions_of_emulation_proxy(emulation_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
@@ -90,7 +94,8 @@ def create_app(static_folder: str, proxy_server: str):
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
-               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<execution_id>')
+               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<execution_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def execution_of_emulation_proxy(emulation_id: int, execution_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
@@ -101,7 +106,8 @@ def create_app(static_folder: str, proxy_server: str):
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<execution_id>'
                f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
-               f'{constants.COMMANDS.SLASH_DELIM}<minutes>')
+               f'{constants.COMMANDS.SLASH_DELIM}<minutes>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def monitor_emulation_proxy(emulation_id: int, execution_id: int, minutes: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
@@ -113,7 +119,8 @@ def create_app(static_folder: str, proxy_server: str):
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}<execution_id>'
-               f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}')
+               f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def sdn_switches_of_execution_proxy(emulation_id: int, execution_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
@@ -121,7 +128,8 @@ def create_app(static_folder: str, proxy_server: str):
                    f'{execution_id}{constants.COMMANDS.SLASH_DELIM}'
                    f'{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def alpha_vec_policies_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -129,28 +137,34 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def alpha_vec_policy_proxy(policy_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                                                           api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def cadvisor_proxy():
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                                                             api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def prometheus_proxy():
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def nodeexporter_proxy():
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                                                          api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def grafana_proxy():
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def data_collection_jobs_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -158,12 +172,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def data_collection_job_proxy(job_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def dqn_policies_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -171,12 +187,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def dqn_policy_proxy(policy_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def fnn_w_softmax_policies_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -184,12 +202,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def fnn_w_softmax_policy_proxy(policy_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def ppo_policies_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -197,12 +217,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def ppo_policy_proxy(policy_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def tabular_policies_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -210,12 +232,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def tabular_policy_proxy(policy_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def vector_policies_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -223,12 +247,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def vector_policy_proxy(policy_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def multi_threshold_policies_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -236,12 +262,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def multi_threshold_policy_proxy(policy_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def training_jobs_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -249,12 +277,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def training_job_proxy(job_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def system_identification_jobs_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -262,12 +292,14 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}{constants.COMMANDS.SLASH_DELIM}<job_id>')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}{constants.COMMANDS.SLASH_DELIM}<job_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def system_identification_job_proxy(job_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_executions_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -276,12 +308,14 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<execution_id>')
+               f'<execution_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_execution_proxy(execution_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{execution_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_simulation_traces_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -290,12 +324,14 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<trace_id>')
+               f'<trace_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_simulation_trace_proxy(trace_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_statistics_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -304,12 +340,14 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<statistics_id>')
+               f'<statistics_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_statistic_proxy(statistics_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{statistics_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_traces_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -318,12 +356,14 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<trace_id>')
+               f'<trace_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulation_trace_proxy(trace_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def simulation_traces_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -332,12 +372,14 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<trace_id>')
+               f'<trace_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def simulation_trace_proxy(trace_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def experiments_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -346,16 +388,17 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<experiment_id>')
+               f'<experiment_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def experiment_proxy(experiment_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{experiment_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.FILE_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.FILE_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def fileproxy():
         return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.FILE_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def images_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -363,13 +406,8 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<image_id>')
-    def image_proxy(image_id: int):
-        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}'
-                   f'{constants.COMMANDS.SLASH_DELIM}{image_id}').content
-
-    @app.route(f'/{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def sdn_controllers_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -377,7 +415,8 @@ def create_app(static_folder: str, proxy_server: str):
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def simulations_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -386,12 +425,14 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<simulation_id>')
+               f'<simulation_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def simulation_proxy(simulation_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}')
+    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def system_models_proxy():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
@@ -400,7 +441,8 @@ def create_app(static_folder: str, proxy_server: str):
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-               f'<system_model_id>')
+               f'<system_model_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def system_model_proxy(system_model_id: int):
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
