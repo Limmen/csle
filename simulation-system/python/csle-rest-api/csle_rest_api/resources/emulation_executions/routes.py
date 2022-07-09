@@ -66,7 +66,6 @@ def emulation_execution(execution_id: int):
 
     :return: The given execution
     """
-
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     if emulation is not None:

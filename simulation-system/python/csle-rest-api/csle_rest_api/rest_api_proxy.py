@@ -326,8 +326,15 @@ def create_app(static_folder: str, proxy_server: str):
                f'{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                f'<execution_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def emulation_execution_proxy(execution_id: int):
-        return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
-                   f'{constants.COMMANDS.SLASH_DELIM}{execution_id}').content
+        emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+        if emulation is not None:
+            print(f"emulation param is not none:{emulation}")
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{execution_id}?'
+                       f'{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}={emulation}').content
+        else:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{execution_id}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}',
