@@ -15,7 +15,7 @@ sudo sysctl fs.inotify.max_user_watches=1048576
 
 sudo npm cache clean -f
 
-cd csle-mgmt-webapp; npm install --package-lock-only --force
+cd csle-mgmt-webapp; npm install --force
 sudo npm install react-file-download --save
 sudo npm install react-bootstrap bootstrap
 
