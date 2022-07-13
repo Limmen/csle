@@ -17,7 +17,6 @@ import {useDebouncedCallback} from 'use-debounce';
 
 const Traces = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [emulationTraces, setEmulationTraces] = useState([]);
     const [simulationTraces, setSimulationTraces] = useState([]);
     const [selectedEmulationTraceId, setSelectedEmulationTraceId] = useState(null);
     const [selectedSimulationTraceId, setSelectedSimulationTraceId] = useState(null);
@@ -37,24 +36,6 @@ const Traces = () => {
     // const ip = "172.31.212.92"
 
     const wrapper = createRef();
-
-    const fetchEmulationTraces = useCallback(() => {
-        fetch(
-            `http://` + ip + ':7777/emulation-traces',
-            {
-                method: "GET",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => res.json())
-            .then(response => {
-                setEmulationTraces(response)
-                setLoadingEmulationTraces(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
@@ -180,7 +161,7 @@ const Traces = () => {
         setLoadingSimulationTraces(true)
         fetchEmulationTracesIds()
         fetchSimulationTracesIds()
-    }, [fetchSimulationTraces, fetchEmulationTraces]);
+    }, [fetchSimulationTracesIds, fetchEmulationTracesIds]);
 
     const removeSimulationTraceRequest = useCallback((simulation_trace_id) => {
         fetch(
@@ -267,7 +248,7 @@ const Traces = () => {
     const refreshEmulationTraces = () => {
         setLoadingEmulationTraces(true)
         setLoadingSelectedEmulationTrace(true)
-        fetchEmulationTraces()
+        fetchEmulationTracesIds()
     }
 
     const removeAllEmulationTraces = () => {
@@ -287,7 +268,7 @@ const Traces = () => {
     const refreshSimulationTraces = () => {
         setLoadingSimulationTraces(true)
         setLoadingSelectedSimulationTrace(true)
-        fetchSimulationTraces()
+        fetchSimulationTracesIds()
     }
 
     const renderRefreshEmulationTracesTooltip = (props) => (
