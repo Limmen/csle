@@ -186,6 +186,26 @@ class RANDOM_SEARCH:
     DELTA = "delta"
 
 
+class BAYESIAN_OPTIMIZATION:
+    """
+    String constants related to Bayesian Optimization
+    """
+    L = "L"
+    PARAMETER_BOUNDS = "parameter_bounds"
+    N = "N"
+    THETA1 = "theta1"
+    THETAS = "thetas"
+    THRESHOLDS = "thresholds"
+    STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
+    STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    UTILITY_FUNCTION = "utility_function"
+    UCB_KAPPA = "ucb_kappa"
+    UCB_XI = "ucb_xi"
+    UCB = "ucb"
+    TARGET = "target"
+    PARAMS = "params"
+
+
 class DIFFERENTIAL_EVOLUTION:
     """
     String constants related to differential evolution
