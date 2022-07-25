@@ -19,7 +19,7 @@ class EmpiricalConditional:
         """
         self.conditional_name = conditional_name
         self.probabilities = probabilities
-        assert sum(probabilities) == 1
+        assert round(sum(probabilities),2) == 1
         self.metric_name = metric_name
         self.sample_space = sample_space
 
@@ -51,9 +51,8 @@ class EmpiricalConditional:
         """
         :return: a string representation of the DTO
         """
-        return f"conditional_name:{self.conditional_name}" \               
-               f"metric_name: {self.metric_name}, sample space: {self.sample_space}, " \
-               f"probability distribution: {self.probabilities}"
+        return f"conditional_name:{self.conditional_name}, metric_name: {self.metric_name}, " \
+               f"sample_space: {self.sample_space}, probabilities: {self.probabilities}"
 
     def to_json_str(self) -> str:
         """

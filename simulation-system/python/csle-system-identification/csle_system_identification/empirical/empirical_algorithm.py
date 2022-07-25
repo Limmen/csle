@@ -1,5 +1,6 @@
 from typing import List, Optional
 import os
+import numpy as np
 from csle_system_identification.base.base_system_identification_algorithm import BaseSystemIdentificationAlgorithm
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
@@ -72,22 +73,27 @@ class EmpiricalAlgorithm(BaseSystemIdentificationAlgorithm):
                                             f"emulation_statistic_id: {self.emulation_statistics.id},"
                                             f"conditionals: {conditionals}, metrics: {metrics}")
         empirical_conditionals = []
+        complete_sample_space = set()
         for i, conditional in enumerate(conditionals):
-            gaussian_conditional_metrics_mixtures = []
+            for j, metric in enumerate(metrics):
+                counts = self.emulation_statistics.conditionals_counts[conditional][metric]
+                for val,count in counts.items():
+                    complete_sample_space.add(val)
+
+        for i, conditional in enumerate(conditionals):
+            empirical_conditionals_metrics = []
             for j, metric in enumerate(metrics):
                 self.emulation_statistics.compute_descriptive_statistics_and_distributions()
-                probs = []
-                sample_space = []
-                X = []
-                X_set = set()
+                sample_space = list(complete_sample_space)
+                probs = list(np.zeros(len(complete_sample_space)))
                 for val,prob in self.emulation_statistics.conditionals_probs[conditional][metric].items():
-                    sample_space.append(val)
-                    probs.append(prob)
-                empirical_conditionals.append(EmpiricalConditional(
+                    idx = sample_space.index(val)
+                    probs[idx] = prob
+                empirical_conditionals_metrics.append(EmpiricalConditional(
                     conditional_name=conditional, metric_name=metric, sample_space=sample_space,
                     probabilities=probs
                 ))
-            empirical_conditionals.append(gaussian_conditional_metrics_mixtures)
+            empirical_conditionals.append(empirical_conditionals_metrics)
 
         model_descr = f"Model fitted through empirical algorithm, " \
                 f"emulation:{self.emulation_env_config.name}, statistic id: {self.emulation_statistics.id}"

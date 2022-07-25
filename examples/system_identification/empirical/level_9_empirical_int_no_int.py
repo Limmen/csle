@@ -14,7 +14,7 @@ if __name__ == '__main__':
     system_identifcation_config = SystemIdentificationConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}empirical_level9_test",
         title="Empirical algorithm level 9 test",
-        model_type=SystemModelType.GAUSSIAN_MIXTURE,
+        model_type=SystemModelType.EMPIRICAL_DISTRIBUTION,
         log_every=1,
         hparams={
             system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS: HParam(
@@ -31,8 +31,4 @@ if __name__ == '__main__':
                                                  emulation_statistics=emulation_statistic,
                                                  system_identification_config=system_identifcation_config)
     system_model = algorithm.fit()
-    samples = list(range(0, 15000))
-    for metric_conds in system_model.conditional_metric_distributions:
-        for metric_cond in metric_conds:
-            intrusion_dist = metric_cond.generate_distributions_for_samples(samples=samples)
-    MetastoreFacade.save_gaussian_mixture_system_model(gaussian_mixture_system_model=system_model)
+    MetastoreFacade.save_empirical_system_model(empirical_system_model=system_model)
