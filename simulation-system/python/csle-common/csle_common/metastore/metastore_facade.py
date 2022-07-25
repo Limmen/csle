@@ -15,6 +15,8 @@ from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
+from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
+from csle_common.dao.system_identification.gp_system_model import GPSystemModel
 from csle_common.util.np_encoder import NpEncoder
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
@@ -1830,6 +1832,7 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Gaussian mixture system model with "
                                                      f"id {gaussian_mixture_system_model.id} deleted successfully")
+
     @staticmethod
     def list_tabular_policies() -> List[TabularPolicy]:
         """
@@ -2503,3 +2506,280 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"emulation execution saved successfully")
                 return None
+
+    @staticmethod
+    def _convert_empirical_system_model_record_to_dto(empirical_system_model_record) -> \
+            EmpiricalSystemModel:
+        """
+        Converts a empirical system model job record fetched from the metastore into a DTO
+
+        :param empirical_system_model_record: the record to convert
+        :return: the DTO representing the record
+        """
+        empirical_system_model_config_json = json.dumps(empirical_system_model_record[1], indent=4,
+                                                               sort_keys=True)
+        empirical_system_model_config: EmpiricalSystemModel = \
+            EmpiricalSystemModel.from_dict(json.loads(empirical_system_model_config_json))
+        empirical_system_model_config.id = empirical_system_model_record[0]
+        return empirical_system_model_config
+
+    @staticmethod
+    def list_empirical_system_models() -> List[EmpiricalSystemModel]:
+        """
+        :return: A list of empirical system model jobs in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_empirical_system_model_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def list_empirical_system_models_ids() -> List[Dict]:
+        """
+        :return: A list of empirical system model ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM "
+                            f"{constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def get_empirical_system_model_config(id: int) -> Union[None, EmpiricalSystemModel]:
+        """
+        Function for fetching a empirical system model job config with a given id from the metastore
+
+        :param id: the id of the empirical system model job config
+        :return: The empirical system model job config or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_empirical_system_model_record_to_dto(
+                        empirical_system_model_record=record)
+                return record
+
+    @staticmethod
+    def save_empirical_system_model(empirical_system_model: EmpiricalSystemModel) -> Union[Any, int]:
+        """
+        Saves a empirical system model to the metastore
+
+        :param empirical_system_model: the empirical system model job to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a empirical system model job in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                empirical_system_model_json = json.dumps(empirical_system_model.to_dict(), indent=4,
+                                                                sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
+                            f"(model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (empirical_system_model_json,
+                                                                  empirical_system_model.emulation_env_name,
+                                                                  empirical_system_model.emulation_statistic_id))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"empirical system model saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_empirical_system_model(empirical_system_model: EmpiricalSystemModel, id: int) -> None:
+        """
+        Updates a empirical system model job in the metastore
+
+        :param empirical_system_model: the empirical system model job to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating empirical system model job with id: {id} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(empirical_system_model.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Empirical system model with id: {id} updated successfully")
+
+    @staticmethod
+    def remove_empirical_system_model(empirical_system_model: EmpiricalSystemModel) -> None:
+        """
+        Removes a empirical system model job from the metastore
+
+        :param empirical_system_model: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing empirical system model job with "
+                                             f"id:{empirical_system_model.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE} WHERE id = %s",
+                            (empirical_system_model.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Empirical system model with "
+                                                     f"id {empirical_system_model.id} deleted successfully")
+
+    @staticmethod
+    def _convert_gp_system_model_record_to_dto(gp_system_model_record) -> GPSystemModel:
+        """
+        Converts a gp system model job record fetched from the metastore into a DTO
+
+        :param gp_system_model_record: the record to convert
+        :return: the DTO representing the record
+        """
+        gp_system_model_config_json = json.dumps(gp_system_model_record[1], indent=4,
+                                                        sort_keys=True)
+        gp_system_model_config: GPSystemModel = \
+            GPSystemModel.from_dict(json.loads(gp_system_model_config_json))
+        gp_system_model_config.id = gp_system_model_record[0]
+        return gp_system_model_config
+
+    @staticmethod
+    def list_gp_system_models() -> List[GPSystemModel]:
+        """
+        :return: A list of gp system model jobs in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_gp_system_model_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def list_gp_system_models_ids() -> List[Dict]:
+        """
+        :return: A list of gp system model ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM "
+                            f"{constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def get_gp_system_model_config(id: int) -> Union[None, GPSystemModel]:
+        """
+        Function for fetching a gp system model job config with a given id from the metastore
+
+        :param id: the id of the gp system model job config
+        :return: The gp system model job config or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_gp_system_model_record_to_dto(
+                        gp_system_model_record=record)
+                return record
+
+    @staticmethod
+    def save_gp_system_model(gp_system_model: GPSystemModel) -> Union[Any, int]:
+        """
+        Saves a gp system model to the metastore
+
+        :param gp_system_model: the gp system model job to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a gp system model job in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                gp_system_model_json = json.dumps(gp_system_model.to_dict(), indent=4,
+                                                         sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
+                            f"(model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (gp_system_model_json,
+                                                                  gp_system_model.emulation_env_name,
+                                                                  gp_system_model.emulation_statistic_id))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"gp system model saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_gp_system_model(gp_system_model: GPSystemModel, id: int) -> None:
+        """
+        Updates a gp system model job in the metastore
+
+        :param gp_system_model: the gp system model job to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating gp system model job with id: {id} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(gp_system_model.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"GP system model with id: {id} updated successfully")
+
+    @staticmethod
+    def remove_gp_system_model(gp_system_model: GPSystemModel) -> None:
+        """
+        Removes a gp system model job from the metastore
+
+        :param gp_system_model: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing gp system model job with "
+                                             f"id:{gp_system_model.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE} WHERE id = %s",
+                            (gp_system_model.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"GP system model with "
+                                                     f"id {gp_system_model.id} deleted successfully")

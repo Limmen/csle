@@ -1426,6 +1426,8 @@ class METADATA_STORE:
     FNN_W_SOFTMAX_POLICIES_TABLE = "fnn_w_softmax_policies"
     VECTOR_POLICIES_TABLE = "vector_policies"
     EMULATION_EXECUTIONS_TABLE = "emulation_executions"
+    EMPIRICAL_SYSTEM_MODELS_TABLE = "empirical_system_models"
+    GP_SYSTEM_MODELS_TABLE = "gp_system_models"
 
 
 class CONTAINER_POOLS:

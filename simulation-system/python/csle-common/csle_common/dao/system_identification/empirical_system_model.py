@@ -1,18 +1,18 @@
 from typing import List, Dict, Any
 import math
 from scipy.special import rel_entr
-from csle_common.dao.system_identification.gaussian_mixture_conditional import GaussianMixtureConditional
+from csle_common.dao.system_identification.empirical_conditional import EmpiricalConditional
 from csle_common.dao.system_identification.system_model import SystemModel
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 
 
-class GaussianMixtureSystemModel(SystemModel):
+class EmpiricalSystemModel(SystemModel):
     """
-    A system model (list of conditional distributions) made up of Gaussian Mixtures
+    A system model (list of conditional distributions) made up of empirical distributions
     """
 
     def __init__(self, emulation_env_name: str, emulation_statistic_id: int,
-                 conditional_metric_distributions: List[List[GaussianMixtureConditional]], descr: str):
+                 conditional_metric_distributions: List[List[EmpiricalConditional]], descr: str):
         """
         Initializes the object
 
@@ -21,16 +21,8 @@ class GaussianMixtureSystemModel(SystemModel):
         :param conditional_metric_distributions: the list of conditional distributions
         :param descr: description of the model
         """
-        super(GaussianMixtureSystemModel, self).__init__(descr=descr, model_type= SystemModelType.GAUSSIAN_MIXTURE)
+        super(EmpiricalSystemModel, self).__init__(descr=descr, model_type= SystemModelType.EMPIRICAL_DISTRIBUTION)
         self.conditional_metric_distributions = conditional_metric_distributions
-        complete_sample_space = set()
-        for conds in self.conditional_metric_distributions:
-            for cond in conds:
-                complete_sample_space = complete_sample_space.union(set(cond.sample_space))
-        for conds in self.conditional_metric_distributions:
-            for cond in conds:
-                cond.sample_space = list(complete_sample_space)
-                cond.generate_distributions()
         self.emulation_env_name = emulation_env_name
         self.emulation_statistic_id = emulation_statistic_id
         self.id = -1
@@ -51,8 +43,8 @@ class GaussianMixtureSystemModel(SystemModel):
                 for i, metric_dist in enumerate(metric_distributions_condition_1):
                     self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
                         metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name] = \
-                            float(round(sum(rel_entr(metric_dist.combined_distribution,
-                                                     metric_distributions_condition_2[i].combined_distribution)), 3))
+                            float(round(sum(rel_entr(metric_dist.probabilities,
+                                                     metric_distributions_condition_2[i].probabilities)), 3))
                     if math.isinf(self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
                                       metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name]):
                         self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
@@ -60,16 +52,16 @@ class GaussianMixtureSystemModel(SystemModel):
                             metric_dist.metric_name]="inf"
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "GaussianMixtureSystemModel":
+    def from_dict(d: Dict[str, Any]) -> "EmpiricalSystemModel":
         """
         Converts a dict representation of the DTO into an instance
 
         :param d: the dict to convert
         :return: the converted instance
         """
-        dto = GaussianMixtureSystemModel(
+        dto = EmpiricalSystemModel(
             conditional_metric_distributions=list(map(
-                lambda x: list(map(lambda y: GaussianMixtureConditional.from_dict(y), x)),
+                lambda x: list(map(lambda y: EmpiricalConditional.from_dict(y), x)),
                 d["conditional_metric_distributions"])),
             emulation_env_name=d["emulation_env_name"], emulation_statistic_id=d["emulation_statistic_id"],
             descr=d["descr"]
@@ -124,7 +116,7 @@ class GaussianMixtureSystemModel(SystemModel):
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
-    def copy(self) -> "GaussianMixtureSystemModel":
+    def copy(self) -> "EmpiricalSystemModel":
         """
         :return: a copy of the DTO
         """

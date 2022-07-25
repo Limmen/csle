@@ -851,38 +851,38 @@ def create_app(static_folder: str, proxy_server: str):
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
 
-    @app.route(f'/{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}',
+    @app.route(f'/{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-    def system_models_proxy():
+    def gaussian_mixture_system_models_proxy():
         """
-        Proxy for the /system-models resource
+        Proxy for the /gaussian-mixture-system-models resource
 
         :return: the /system-models resource
         """
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}?ids=true').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
-               f'{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                f'<system_model_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-    def system_model_proxy(system_model_id: int):
+    def gaussian_mixture_system_model_proxy(system_model_id: int):
         """
-        Proxy for the /system-models/system_model_id resource
+        Proxy for the /gaussian-mixture-system-models/system_model_id resource
 
-        :return: the /system-models/system_model_id resource
+        :return: the /gaussian-mixture-system-models/system_model_id resource
         """
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}'
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-            return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}'
+            return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
 
     return app

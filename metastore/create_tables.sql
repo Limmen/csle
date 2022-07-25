@@ -217,3 +217,23 @@ CREATE TABLE IF NOT EXISTS emulation_executions (
     PRIMARY KEY (ip_first_octet, emulation_name)
 );
 GRANT ALL ON emulation_executions TO csle;
+
+-- Create table that stores the empirical system models --
+CREATE TABLE IF NOT EXISTS empirical_system_models (
+    id serial PRIMARY KEY,
+    model json NOT NULL,
+    emulation_name TEXT references emulations(name),
+    emulation_statistic_id int references emulation_statistics(id)
+);
+GRANT ALL ON empirical_system_models TO csle;
+GRANT USAGE, SELECT ON SEQUENCE empirical_system_models_id_seq TO csle;
+
+-- Create table that stores the gp system models --
+CREATE TABLE IF NOT EXISTS gp_system_models (
+    id serial PRIMARY KEY,
+    model json NOT NULL,
+    emulation_name TEXT references emulations(name),
+    emulation_statistic_id int references emulation_statistics(id)
+);
+GRANT ALL ON gp_system_models TO csle;
+GRANT USAGE, SELECT ON SEQUENCE gp_system_models_id_seq TO csle;
