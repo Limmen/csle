@@ -7,3 +7,4 @@ class SystemModelType(IntEnum):
     """
     GAUSSIAN_MIXTURE = 0
     EMPIRICAL_DISTRIBUTION=1
+    GAUSSIAN_PROCESS = 2

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(name='csle_system_identification',
       version='0.0.1',
-      install_requires=['csle-common', 'csle-collector', 'csle-attacker', 'csle-defender'],
+      install_requires=['csle-common', 'csle-collector', 'csle-attacker', 'csle-defender', 'gpytorch'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='Scripts for system identification in CSLE',
