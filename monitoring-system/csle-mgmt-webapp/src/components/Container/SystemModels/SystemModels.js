@@ -637,7 +637,7 @@ const SystemModels = () => {
             props.selectedConditionals === undefined || props.selectedConditionals === null ||
             getSystemModelTypeStr(props.selectedSystemModel.model_type) !== "gaussian_mixture"){
             return (
-                <span>  </span>
+                <></>
             )
         } else {
             return props.selectedConditionals.map((conditional, index) => {
@@ -658,7 +658,7 @@ const SystemModels = () => {
             props.selectedConditionals === undefined || props.selectedConditionals === null ||
             getSystemModelTypeStr(props.selectedSystemModel.model_type) !== "gaussian_mixture"){
             return (
-                <span>  </span>
+                <></>
             )
         } else {
             return props.selectedConditionals.map((conditional, index) => {
@@ -678,7 +678,7 @@ const SystemModels = () => {
             props.selectedConditionals === undefined || props.selectedConditionals === null ||
             getSystemModelTypeStr(props.selectedSystemModel.model_type) !== "gaussian_mixture"){
             return (
-                <span>  </span>
+                <></>
             )
         } else {
             return props.selectedConditionals.map((conditional, index) => {
