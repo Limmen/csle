@@ -118,6 +118,9 @@ const SystemModels = () => {
         if(systemModelIdObj.type == "empirical") {
             fetchEmpiricalSystemModel(systemModelIdObj)
         }
+        if(systemModelIdObj.type == "gp") {
+            fetchGPSystemModel(systemModelIdObj)
+        }
         setLoadingSelectedSystemModel(true)
     }
     const updateSelectedConditionals = (selected) => {
@@ -183,6 +186,9 @@ const SystemModels = () => {
                     }
                     if (modelIds[0].type == "empirical") {
                         fetchEmpiricalSystemModel(modelIds[0])
+                    }
+                    if (modelIds[0].type == "gp") {
+                        fetchGPSystemModel(modelIds[0])
                     }
                     setLoadingSelectedSystemModel(true)
                 } else {
@@ -282,6 +288,49 @@ const SystemModels = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const fetchGPSystemModel = useCallback((model_id) => {
+        fetch(
+            `http://` + ip + ':7777/gp-system-models/' + model_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
+                    var conditionalOptions = []
+                    for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
+                        for (let j = 0; j < response.conditional_metric_distributions[i].length; j++) {
+                            conditionalOptions.push(
+                                {
+                                    value: response.conditional_metric_distributions[i][j],
+                                    label: response.conditional_metric_distributions[i][j].conditional_name
+                                }
+                            )
+                        }
+                    }
+                    setConditionals(conditionalOptions)
+                    setSelectedConditionals([conditionalOptions[0]])
+                    setSelectedSystemModel(response)
+                    setLoadingSelectedSystemModel(false)
+                    const metricOptions = getMetricForSelectedConditional(conditionalOptions,
+                        [conditionalOptions[0]]).map((metricName, index) => {
+                        return {
+                            value: metricName,
+                            label: metricName
+                        }
+                    })
+                    setMetrics(metricOptions)
+                    setSelectedMetric(metricOptions[0])
+                }
+
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removeGaussianMixtureSystemModelRequest = useCallback((model_id) => {
         fetch(
             `http://` + ip + ':7777/gaussian-mixture-system-models/' + model_id,
@@ -316,6 +365,23 @@ const SystemModels = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const removeGpSystemModelRequest = useCallback((model_id) => {
+        fetch(
+            `http://` + ip + ':7777/gp-system-models/' + model_id,
+            {
+                method: "DELETE",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSystemModelsIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const removeModel = (model) => {
         setLoading(true)
         resetState()
@@ -324,6 +390,9 @@ const SystemModels = () => {
         }
         if(model.type == "empirical") {
             removeEmpiricalSystemModelRequest(model.id)
+        }
+        if(model.type == "gp") {
+            removeGpSystemModelRequest(model.id)
         }
         setSelectedSystemModel(null)
     }

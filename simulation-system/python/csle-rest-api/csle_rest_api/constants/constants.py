@@ -50,6 +50,7 @@ class MGMT_WEBAPP:
     SYSTEM_MODELS_RESOURCE = "system-models"
     GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE = "gaussian-mixture-system-models"
     EMPIRICAL_SYSTEM_MODELS_RESOURCE = "empirical-system-models"
+    GP_SYSTEM_MODELS_RESOURCE = "gp-system-models"
     EXPERIMENTS_RESOURCE = "experiments"
     MULTI_THRESHOLD_POLICIES_RESOURCE = "multi-threshold-policies"
     PPO_POLICIES_RESOURCE = "ppo-policies"
@@ -102,3 +103,4 @@ class MGMT_WEBAPP:
     APPLICATION_JSON_DATA_TYPE = "application/json"
     GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE = "gaussian_mixture"
     EMPIRICAL_SYSTEM_MODEL_TYPE = "empirical"
+    GP_SYSTEM_MODEL_TYPE = "gp"

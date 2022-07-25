@@ -94,7 +94,7 @@ class GPConditional:
 
     def generate_distribution(self):
         self.sample_space.sort()
-        self.distribution = self.generate_distributions_for_samples(samples=self.sample_space)
+        self.distribution = list(self.generate_distributions_for_samples(samples=self.sample_space).tolist())
 
     def generate_distributions_for_samples(self, samples):
         samples = torch.tensor(samples)
