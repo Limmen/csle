@@ -16,6 +16,8 @@ import {useDebouncedCallback} from 'use-debounce';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const EmulationStatistics = () => {
     const [emulationStatisticIds, setEmulationStatisticIds] = useState([]);
@@ -105,26 +107,6 @@ const EmulationStatistics = () => {
         );
     }
 
-    const updateEmulationStatistic = (stat) => {
-        setSelectedEmulationStatistic(stat)
-        const conditionalOptions = Object.keys(stat.value.conditionals_counts).map((conditionalName, index) => {
-            return {
-                value: conditionalName,
-                label: conditionalName
-            }
-        })
-        setConditionals(conditionalOptions)
-        setSelectedConditionals([conditionalOptions[0]])
-        const metricOptions = Object.keys(stat.value.conditionals_counts[
-            Object.keys(stat.value.conditionals_counts)[0]]).map((metricName, index) => {
-            return {
-                value: metricName,
-                label: metricName
-            }
-        })
-        setMetrics(metricOptions)
-        setSelectedMetric(metricOptions[0])
-    }
     const updateSelectedConditionals = (selected) => {
         setSelectedConditionals(selected)
     }
@@ -260,6 +242,56 @@ const EmulationStatistics = () => {
         setSelectedEmulationStatistic(null)
     }
 
+    const removeStatisticConfirm = (statistic) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the statistic with ID: ' + statistic.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeStatistic(statistic)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the statistic with ID {statistic.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeStatistic(statistic)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const searchFilter = (statIdObj, searchVal) => {
         return (searchVal === "" || statIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
@@ -352,7 +384,7 @@ const EmulationStatistics = () => {
                         overlay={renderRemoveStatisticTooltip}
                     >
                         <Button variant="danger" className="removeButton"
-                                onClick={() => removeStatistic(selectedEmulationStatistic)}>
+                                onClick={() => removeStatisticConfirm(selectedEmulationStatistic)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>

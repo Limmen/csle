@@ -16,6 +16,8 @@ import {useDebouncedCallback} from 'use-debounce';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const SystemModels = () => {
     const [systemModelsIds, setSystemModelsIds] = useState([]);
@@ -249,6 +251,56 @@ const SystemModels = () => {
         setSelectedSystemModel(null)
     }
 
+    const removeModelConfirm = (model) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the system model with ID: ' + model.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeModel(model)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the system model with ID {model.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                            onClick={() => {
+                                                removeModel(model)
+                                                onClose()
+                                            }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const searchFilter = (modelIdObj, searchVal) => {
         return (searchVal === "" || modelIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
@@ -384,7 +436,7 @@ const SystemModels = () => {
                         overlay={renderRemoveModelTooltip}
                     >
                         <Button variant="danger" className="removeButton"
-                                onClick={() => removeModel(selectedSystemModel)}>
+                                onClick={() => removeModelConfirm(selectedSystemModel)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>

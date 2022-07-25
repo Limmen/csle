@@ -14,6 +14,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import { useDebouncedCallback } from 'use-debounce';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Jobs = () => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
@@ -284,6 +286,104 @@ const Jobs = () => {
         setSelectedTrainingJob(null)
     }
 
+    const removeAllTrainingJobsConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all training jobs? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllTrainingJobs()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all training jobs? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllTrainingJobs()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeTrainingJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the training job with ID: ' + job.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeTrainingJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the training job with ID {job.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeTrainingJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const removeSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
             `http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id,
@@ -330,6 +430,105 @@ const Jobs = () => {
         setSystemIdentificationJobsLoading(true)
         removeAllSystemIdentificationJobsRequest()
         setSelectedSystemIdentificationJob(null)
+    }
+
+    const removeAllSystemIdentificationJobsConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all system identification jobs? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllSystemIdentificationJobs()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all system identification jobs?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllSystemIdentificationJobs()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeSystemIdentificationJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the system identification job with ID: ' + job.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeSystemIdentificationJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the system identification job with ID {job.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeSystemIdentificationJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
     }
 
     const stopTrainingJobRequest = useCallback((training_job_id) => {
@@ -713,10 +912,109 @@ const Jobs = () => {
         setSelectedDataCollectionJob(null)
     }
 
-    const removeAllDataCollectionJobs = (job) => {
+    const removeAllDataCollectionJobs = () => {
         setDataCollectionJobsLoading(true)
         removeAllDataCollectionJobsRequest()
         setSelectedDataCollectionJob(null)
+    }
+
+    const removeAllDataCollectionJobsConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all data collection jobs? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllDataCollectionJobs()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all data collection jobs?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllDataCollectionJobs()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeDataCollectionJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the data collection job with ID: ' + job.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeDataCollectionJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the data collection job with ID {job.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeDataCollectionJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
     }
 
     const stopDataCollectionJobRequest = useCallback((data_collection_job_id) => {
@@ -797,6 +1095,300 @@ const Jobs = () => {
     const refreshDataCollectionJobs = () => {
         setDataCollectionJobsLoading(true)
         fetchDataCollectionJobIds()
+    }
+
+    const startTrainingJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm starting',
+            message: 'Are you sure you want to start the training job with ID: ' + job.id +
+                "?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => startTrainingJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm starting job</h1>
+                                    Are you sure you want to start the training job with ID {job.id}?
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    startTrainingJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, start it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const stopTrainingJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm stopping',
+            message: 'Are you sure you want to stop the training job with ID: ' + job.id +
+                "?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => stopTrainingJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm stopping job</h1>
+                                    Are you sure you want to stop the training job with ID {job.id}?
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    stopTrainingJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, stop it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const startSystemIdentificationJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm starting',
+            message: 'Are you sure you want to start the system identification job with ID: ' + job.id +
+                "?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => startSystemIdentificationJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm starting job</h1>
+                                    Are you sure you want to start the system identification job with ID {job.id}?
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    startSystemIdentificationJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, start it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const stopSystemIdentificationJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm stopping',
+            message: 'Are you sure you want to stop the system identification job with ID: ' + job.id +
+                "?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => stopSystemIdentificationJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm stopping job</h1>
+                                    Are you sure you want to stop the system identification job with ID {job.id}?
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    stopSystemIdentificationJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, stop it it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const startDataCollectionJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm starting',
+            message: 'Are you sure you want to start the data collection job with ID: ' + job.id +
+                "?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => startDataCollectionJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm starting job</h1>
+                                    Are you sure you want to start the data collection job with ID {job.id}?
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    startDataCollectionJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, start it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const stopDataCollectionJobConfirm = (job) => {
+        confirmAlert({
+            title: 'Confirm stopping',
+            message: 'Are you sure you want to stop the data collection job with ID: ' + job.id +
+                "?",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => stopDataCollectionJob(job)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm stopping job</h1>
+                                    Are you sure you want to stop the data collection job with ID {job.id}?
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    stopDataCollectionJob(job)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, stop it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
     }
 
     const renderTrainingJobsInfoTooltip = (props) => (
@@ -942,7 +1534,7 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllTrainingJobsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllTrainingJobs}>
+                        <Button variant="danger" onClick={removeAllTrainingJobsConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1023,7 +1615,7 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllDataCollectionJobsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllDataCollectionJobs}>
+                        <Button variant="danger" onClick={removeAllDataCollectionJobsConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1102,7 +1694,7 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllSystemIdentificationJobsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllSystemIdentificationJobs}>
+                        <Button variant="danger" onClick={removeAllSystemIdentificationJobsConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1212,8 +1804,8 @@ const Jobs = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     <TrainingJob job={props.selectedTrainingJob} wrapper={wrapper} key={props.selectedTrainingJob.id}
-                                 removeTrainingJob={removeTrainingJob} stopTrainingJob={stopTrainingJob}
-                                 startTrainingJob={startTrainingJob}/>
+                                 removeTrainingJob={removeTrainingJobConfirm} stopTrainingJob={stopTrainingJobConfirm}
+                                 startTrainingJob={startTrainingJobConfirm}/>
                 </Accordion>
             )
         }
@@ -1240,9 +1832,9 @@ const Jobs = () => {
                 <Accordion defaultActiveKey="0">
                     <SystemIdentificationJob job={props.selectedSystemIdentificationJob} wrapper={wrapper}
                                              key={props.selectedSystemIdentificationJob.id}
-                                             removeSystemIdentificationJob={removeSystemIdentificationJob}
-                                             stopSystemIdentificationJob={stopSystemIdentificationJob}
-                                             startSystemIdentificationJob={startSystemIdentificationJob}/>
+                                             removeSystemIdentificationJob={removeSystemIdentificationJobConfirm}
+                                             stopSystemIdentificationJob={stopSystemIdentificationJobConfirm}
+                                             startSystemIdentificationJob={startSystemIdentificationJobConfirm}/>
                 </Accordion>
             )
         }
@@ -1269,9 +1861,9 @@ const Jobs = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     <DataCollectionJob job={props.selectedDataCollectionJob} wrapper={wrapper} key={props.selectedDataCollectionJob.id}
-                                       removeDataCollectionJob={removeDataCollectionJob}
-                                       stopDataCollectionJob={stopDataCollectionJob}
-                                       startDataCollectionJob={startDataCollectionJob}
+                                       removeDataCollectionJob={removeDataCollectionJobConfirm}
+                                       stopDataCollectionJob={stopDataCollectionJobConfirm}
+                                       startDataCollectionJob={startDataCollectionJobConfirm}
                     />
                 </Accordion>
             )

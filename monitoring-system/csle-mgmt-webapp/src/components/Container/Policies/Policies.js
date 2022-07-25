@@ -19,6 +19,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import { useDebouncedCallback } from 'use-debounce';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Policies = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -381,6 +383,104 @@ const Policies = () => {
         removePpoPoliciesRequest(ppoPolicy.id)
     }
 
+    const removeAllPPOPoliciesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all PPO policies? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllPPOPolicies()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all PPO policies? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllPPOPolicies()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removePPOPolicyConfirm = (ppoPolicy) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the PPO policy with ID: ' + ppoPolicy.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removePPOPolicy(ppoPolicy)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the PPO policy with ID {ppoPolicy.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removePPOPolicy(ppoPolicy)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
             `http://` + ip + ':7777/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id,
@@ -455,6 +555,203 @@ const Policies = () => {
             })
             .catch(error => console.log("error:" + error))
     }, []);
+
+    const removeAllDQNPoliciesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all DQN policies? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllDQNPolicies()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all DQN policies? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllDQNPolicies()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeDQNPolicyConfirm = (dqnPolicy) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the DQN policy with ID: ' + dqnPolicy.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeDQNPolicy(dqnPolicy)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the DQN policy with ID {dqnPolicy.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeDQNPolicy(dqnPolicy)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeAllFnnWSoftmaxPoliciesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all FNN-with-softmax policies? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllFnnWSoftmaxPolicies()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all FNN-with-softmax policies?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllFnnWSoftmaxPolicies()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeFnnWSoftmaxPolicyConfirm = (fnnWSoftmaxPolicy) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the FNN-with-softmax policy with ID: ' + fnnWSoftmaxPolicy.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeFnnWSoftmaxPolicy(fnnWSoftmaxPolicy)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the FNN-with-softmax policy with ID {fnnWSoftmaxPolicy.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeFnnWSoftmaxPolicy(fnnWSoftmaxPolicy)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
 
     const fetchDQNPolicy = useCallback((dqn_policy_id) => {
         fetch(
@@ -555,7 +852,104 @@ const Policies = () => {
         removeTabularPoliciesRequest(tabularPolicy.id)
     }
 
-    //vec
+    const removeAllTabularPoliciesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all Tabular policies? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllTabularPolicies()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all tabular policies? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllTabularPolicies()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeTabularPolicyConfirm = (tabularPolicy) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the tabular policy with ID: ' + tabularPolicy.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeTabularPolicy(tabularPolicy)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the tabular policy with ID {tabularPolicy.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeTabularPolicy(tabularPolicy)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
         fetch(
             `http://` + ip + ':7777/vector-policies/' + vector_policy_id,
@@ -614,6 +1008,104 @@ const Policies = () => {
         removeVectorPoliciesRequest(vectorPolicy.id)
     }
 
+    const removeAllVectorPoliciesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all vector policies? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllVectorPolicies()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all vector policies? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllVectorPolicies()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeVectorPolicyConfirm = (vectorPolicy) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the vector policy with ID: ' + vectorPolicy.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeVectorPolicy(vectorPolicy)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the vector policy with ID {vectorPolicy.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeVectorPolicy(vectorPolicy)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
             `http://` + ip + ':7777/alpha-vec-policies/' + alpha_vec_policies_id,
@@ -670,6 +1162,105 @@ const Policies = () => {
     const removeAlphaVecPolicy = (alphaVecPolicy) => {
         setLoadingAlphaVecPolicies(true)
         removeAlphaVecPoliciesRequest(alphaVecPolicy.id)
+    }
+
+    const removeAllAlphaVecPoliciesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all alpha-vector policies? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllAlphaVecPolicies()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all alpha-vector policies?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllAlphaVecPolicies()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeAlphaVecPolicyConfirm = (alphaVecPolicy) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the alpha-vector policy with ID: ' + alphaVecPolicy.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAlphaVecPolicy(alphaVecPolicy)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the alpha-vector policy with ID {alphaVecPolicy.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAlphaVecPolicy(alphaVecPolicy)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
     }
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
@@ -733,6 +1324,106 @@ const Policies = () => {
     const removeAllMultiThresholdPolicies = () => {
         setLoadingMultiThresholdPolicies(true)
         removeAllMultiThresholdPoliciesRequest()
+    }
+
+    const removeAllMultiThresholdPoliciesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all multi-threshold policies? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllMultiThresholdPolicies()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all multi-threshold policies?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllMultiThresholdPolicies()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeMultiThresholdPolicyConfirm = (multiThresholdPolicy) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the multi-threshold policy with ID: ' + multiThresholdPolicy.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeMultiThresholdPolicy(multiThresholdPolicy)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the multi-threshold policy
+                                    with ID {multiThresholdPolicy.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeMultiThresholdPolicy(multiThresholdPolicy)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
     }
 
     const removeAllPPOPolicies = () => {
@@ -1031,7 +1722,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllMultiThresholdPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllMultiThresholdPolicies}>
+                        <Button variant="danger" onClick={removeAllMultiThresholdPoliciesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1111,7 +1802,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllPPOPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllPPOPolicies}>
+                        <Button variant="danger" onClick={removeAllPPOPoliciesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1191,7 +1882,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllFnnWSoftmaxPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllFnnWSoftmaxPolicies}>
+                        <Button variant="danger" onClick={removeAllFnnWSoftmaxPoliciesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1270,7 +1961,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllDQNPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllDQNPolicies}>
+                        <Button variant="danger" onClick={removeAllDQNPoliciesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1349,7 +2040,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllTabularPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllTabularPolicies}>
+                        <Button variant="danger" onClick={removeAllTabularPoliciesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1429,7 +2120,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllVectorPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllVectorPolicies}>
+                        <Button variant="danger" onClick={removeAllVectorPoliciesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1508,7 +2199,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllAlphaVecPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllAlphaVecPolicies}>
+                        <Button variant="danger" onClick={removeAllAlphaVecPoliciesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1540,7 +2231,7 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     <MultiThresholdPolicy policy={selectedMultiThresholdPolicy} wrapper={wrapper} key={selectedMultiThresholdPolicy.id}
-                                          removeMultiThresholdPolicy={removeMultiThresholdPolicy}
+                                          removeMultiThresholdPolicy={removeMultiThresholdPolicyConfirm}
                     />
                 </Accordion>
             )
@@ -1566,7 +2257,7 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     <PPOPolicy policy={selectedPpoPolicy} wrapper={wrapper} key={selectedPpoPolicy.id}
-                               removePPOPolicy={removePPOPolicy}
+                               removePPOPolicy={removePPOPolicyConfirm}
                     />
                 </Accordion>
             )
@@ -1593,7 +2284,7 @@ const Policies = () => {
                 <Accordion defaultActiveKey="0">
                     <FnnWSoftmaxPolicy policy={props.selectedFnnWSoftmaxPolicy} wrapper={wrapper}
                                key={props.selectedFnnWSoftmaxPolicy.id}
-                                       removeFnnWSoftmaxPolicy={removeFnnWSoftmaxPolicy}
+                                       removeFnnWSoftmaxPolicy={removeFnnWSoftmaxPolicyConfirm}
                     />
                 </Accordion>
             )
@@ -1619,7 +2310,7 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     <DQNPolicy policy={selectedDQNPolicy} wrapper={wrapper} key={selectedDQNPolicy.id}
-                               removeDQNPolicy={removeDQNPolicy}
+                               removeDQNPolicy={removeDQNPolicyConfirm}
                     />
                 </Accordion>
             )
@@ -1645,7 +2336,7 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
-                               removeTabularPolicy={removeTabularPolicy}
+                               removeTabularPolicy={removeTabularPolicyConfirm}
                     />
                 </Accordion>
             )
@@ -1671,7 +2362,7 @@ const Policies = () => {
             return (
                 <Accordion defaultActiveKey="0">
                     <VectorPolicy policy={selectedVectorPolicy} wrapper={wrapper} key={selectedVectorPolicy.id}
-                                   removeVectorPolicy={removeVectorPolicy}
+                                   removeVectorPolicy={removeVectorPolicyConfirm}
                     />
                 </Accordion>
             )
@@ -1698,7 +2389,7 @@ const Policies = () => {
                 <Accordion defaultActiveKey="0">
                     <AlphaVecPolicy policy={selectedAlphaVecPolicy} wrapper={wrapper}
                                    key={selectedAlphaVecPolicy.id}
-                                   removeAlphaVecPolicy={removeAlphaVecPolicy}
+                                   removeAlphaVecPolicy={removeAlphaVecPolicyConfirm}
                     />
                 </Accordion>
             )

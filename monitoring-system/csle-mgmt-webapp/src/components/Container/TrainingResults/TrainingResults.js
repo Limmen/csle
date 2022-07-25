@@ -13,6 +13,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import { useDebouncedCallback } from 'use-debounce';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const TrainingResults = () => {
     const [experimentsIds, setExperimentsIds] = useState([]);
@@ -143,6 +145,104 @@ const TrainingResults = () => {
         setLoadingSelectedExperiment(true)
     }
 
+    const removeAllExperimentsConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all experiments? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllExperiments()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all experiments? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllExperiments()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeExperimentConfirm = (experiment) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the experiment with ID: ' + experiment.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeExperiment(experiment)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the experiment with ID {experiment.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeExperiment(experiment)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const SelectExperimentOrSpinner = (props) => {
         if (!props.loading && props.experimentIds.length === 0) {
             return (
@@ -213,7 +313,7 @@ const TrainingResults = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllExperimentsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllExperiments}>
+                        <Button variant="danger" onClick={removeAllExperimentsConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -326,7 +426,7 @@ const TrainingResults = () => {
                 <Accordion defaultActiveKey="0">
                     <Experiment experiment={props.selectedExperiment} wrapper={wrapper}
                                 key={props.selectedExperiment.id}
-                                removeExperiment={removeExperiment}
+                                removeExperiment={removeExperimentConfirm}
                     />
                 </Accordion>
             )

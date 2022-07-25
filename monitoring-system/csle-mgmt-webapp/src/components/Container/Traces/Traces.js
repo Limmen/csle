@@ -14,6 +14,8 @@ import Form from 'react-bootstrap/Form'
 import Select from 'react-select'
 import './Traces.css';
 import {useDebouncedCallback} from 'use-debounce';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Traces = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -265,6 +267,202 @@ const Traces = () => {
         setSelectedSimulationTrace(null)
     }
 
+    const removeAllEmulationTracesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all emulation traces? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllEmulationTraces()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all emulation traces? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllEmulationTraces()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeEmulationTraceConfirm = (trace) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the emulation trace with ID: ' + trace.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeEmulationTrace(trace)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the emulation trace with ID {trace.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeEmulationTrace(trace)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeAllSimulationTracesConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all simulation traces? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllSimulationTraces()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all simulation traces? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllSimulationTraces()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeSimulationTraceConfirm = (trace) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the simulation trace with ID: ' + trace.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeSimulationTrace(trace)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the simulation trace with ID {trace.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeSimulationTrace(trace)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const refreshSimulationTraces = () => {
         setLoadingSimulationTraces(true)
         setLoadingSelectedSimulationTrace(true)
@@ -448,7 +646,7 @@ const Traces = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllEmulationTracesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllEmulationTraces}>
+                        <Button variant="danger" onClick={removeAllEmulationTracesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -524,7 +722,7 @@ const Traces = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllSimulationTracesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllSimulationTraces}>
+                        <Button variant="danger" onClick={removeAllSimulationTracesConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -579,7 +777,7 @@ const Traces = () => {
                     {props.emulationTraces.map((emulationTrace, index) =>
                         <EmulationTrace emulationTrace={emulationTrace}
                                         wrapper={wrapper} key={emulationTrace.id + "-" + index}
-                                        removeEmulationTrace={removeEmulationTrace}
+                                        removeEmulationTrace={removeEmulationTraceConfirm}
                         />
                     )}
                 </Accordion>
@@ -607,7 +805,7 @@ const Traces = () => {
                 <Accordion defaultActiveKey="0">
                     <EmulationTrace emulationTrace={props.selectedEmulationTrace}
                                     wrapper={wrapper} key={props.selectedEmulationTrace.id}
-                                    removeEmulationTrace={removeEmulationTrace}
+                                    removeEmulationTrace={removeEmulationTraceConfirm}
                     />
                 </Accordion>
             )
@@ -626,7 +824,7 @@ const Traces = () => {
                     {props.simulationTraces.map((simulationTrace, index) =>
                         <SimulationTrace simulationTrace={simulationTrace}
                                          wrapper={wrapper} key={simulationTrace.id + "-" + index}
-                                         removeSimulationTrace={removeSimulationTrace}
+                                         removeSimulationTrace={removeSimulationTraceConfirm}
                         />
                     )}
                 </Accordion>
@@ -655,7 +853,7 @@ const Traces = () => {
                 <Accordion defaultActiveKey="0">
                     <SimulationTrace simulationTrace={props.selectedSimulationTrace}
                                      wrapper={wrapper} key={props.selectedSimulationTrace.id}
-                                     removeSimulationTrace={removeSimulationTrace}
+                                     removeSimulationTrace={removeSimulationTraceConfirm}
                     />
                 </Accordion>
             )

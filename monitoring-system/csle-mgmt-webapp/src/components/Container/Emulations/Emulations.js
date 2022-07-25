@@ -13,6 +13,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Emulations = () => {
     const [emulationIds, setEmulationIds] = useState([]);
@@ -68,7 +70,6 @@ const Emulations = () => {
     }, []);
 
     const removeEmulationRequest = useCallback((emulationId) => {
-        console.log("removing " + `http://` + ip + ':7777/emulations/' + emulationId)
         fetch(
             `http://` + ip + ':7777/emulations/' + emulationId,
             {
@@ -206,6 +207,233 @@ const Emulations = () => {
         setSelectedEmulation(null)
     }
 
+    const removeAllEmulationsConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all emulations? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllEmulations()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all emulations? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllEmulations()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const startOrStopEmulationConfirm = (emulation) => {
+        confirmAlert({
+            title: 'Confirm start/stop emulation',
+            message: 'Are you sure you want to start/stop the emulation with id: ' + emulation.id,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => startOrStopEmulation(emulation.id)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                if(emulation.running) {
+                    return (
+                        <div id="react-confirm-alert" onClick={onClose}>
+                            <div className="react-confirm-alert-overlay">
+                                <div className="react-confirm-alert" onClick={onClose}>
+                                    <div className="react-confirm-alert-body">
+                                        <h1>Confirm starting</h1>
+                                        Are you sure you want to start the emulation with id {emulation.id}?
+                                        <div className="react-confirm-alert-button-group">
+                                            <Button className="remove-confirm-button"
+                                                    onClick={() => {
+                                                        startOrStopEmulation(emulation.id)
+                                                        onClose()
+                                                    }}
+                                            >
+                                                <span className="remove-confirm-button-text">Yes, start it.</span>
+                                            </Button>
+                                            <Button className="remove-confirm-button"
+                                                    onClick={onClose}>
+                                                <span className="remove-confirm-button-text">No</span>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div id="react-confirm-alert" onClick={onClose}>
+                            <div className="react-confirm-alert-overlay">
+                                <div className="react-confirm-alert" onClick={onClose}>
+                                    <div className="react-confirm-alert-body">
+                                        <h1>Confirm starting</h1>
+                                        Are you sure you want to stop the emulation with id {emulation.id}?
+                                        This will stop and delete all executions of the emulation.
+                                        <div className="react-confirm-alert-button-group">
+                                            <Button className="remove-confirm-button"
+                                                    onClick={() => {
+                                                        startOrStopEmulation(emulation.id)
+                                                        onClose()
+                                                    }}
+                                            >
+                                                <span className="remove-confirm-button-text">Yes, stop it it.</span>
+                                            </Button>
+                                            <Button className="remove-confirm-button"
+                                                    onClick={onClose}>
+                                                <span className="remove-confirm-button-text">No</span>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            }
+        })
+    }
+
+    const removeEmulationConfirm = (emulation) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the emulation with ID: ' + emulation.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeEmulation(emulation)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the emulation with ID {emulation.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeEmulation(emulation)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeExecutionConfirm = (emulation, execution_id) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the execution with ID: ' + execution_id.id +
+                " and emulation ID: " + emulation.id + "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeExecution(emulation, execution_id)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the execution with ID {execution_id.id}
+                                    and emulation {emulation.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeExecution(emulation, execution_id)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const searchFilter = (em_id_obj, searchVal) => {
         return (searchVal === "" || em_id_obj.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
@@ -287,9 +515,9 @@ const Emulations = () => {
                         <Accordion defaultActiveKey="0" key={index + exec.ip_first_octet}>
                             <Emulation emulation={exec.emulation_env_config}
                                        wrapper={wrapper} key={exec.emulation_env_config.name + "_" + index}
-                                       removeEmulation={removeEmulation} execution={true}
-                                       removeExecution={removeExecution}
-                                       startOrStopEmulation={startOrStopEmulation}
+                                       removeEmulation={removeEmulationConfirm} execution={true}
+                                       removeExecution={removeExecutionConfirm}
+                                       startOrStopEmulation={startOrStopEmulationConfirm}
                                        execution_ip_octet={exec.ip_first_octet}/>
                         </Accordion>
                     )
@@ -325,9 +553,9 @@ const Emulations = () => {
                     <Accordion defaultActiveKey="0">
                         <Emulation emulation={props.selectedEmulation}
                                    wrapper={wrapper} key={props.selectedEmulation.name}
-                                   removeEmulation={removeEmulation} execution={false}
-                                   execution_ip_octet={-1} removeExecution={removeExecution}
-                                   startOrStopEmulation={startOrStopEmulation}
+                                   removeEmulation={removeEmulationConfirm} execution={false}
+                                   execution_ip_octet={-1} removeExecution={removeExecutionConfirm}
+                                   startOrStopEmulation={startOrStopEmulationConfirm}
                         />
                     </Accordion>
                     <GetExecutions executions={props.selectedEmulation.executions}/>
@@ -404,7 +632,7 @@ const Emulations = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveEmulationsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllEmulations}>
+                        <Button variant="danger" onClick={removeAllEmulationsConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>

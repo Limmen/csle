@@ -13,6 +13,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Simulations = () => {
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -155,6 +157,104 @@ const Simulations = () => {
         setSelectedSimulation(null)
     }
 
+    const removeAllSimulationsConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all simulations? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllSimulations()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all simulations? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllSimulations()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeSimulationConfirm = (simulation) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the simulation with ID: ' + simulation.id +
+                "? this action cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeSimulation(simulation)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the simulation with ID {simulation.id}?
+                                    this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeSimulation(simulation)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
     const searchFilter = (simIdObj, searchVal) => {
         return (searchVal === "" || simIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
@@ -233,7 +333,7 @@ const Simulations = () => {
                 <Accordion defaultActiveKey="0">
                     {props.simulations.map((simulation, index) =>
                         <Simulation simulation={simulation} wrapper={wrapper} key={simulation.name + "-" + index}
-                                    removeSimulation={removeSimulation}
+                                    removeSimulation={removeSimulationConfirm}
                         />
                     )}
                 </Accordion>
@@ -261,7 +361,7 @@ const Simulations = () => {
                 <Accordion defaultActiveKey="0">
                     <Simulation simulation={props.selectedSimulation} wrapper={wrapper}
                                 key={props.selectedSimulation.name}
-                                removeSimulation={removeSimulation}
+                                removeSimulation={removeSimulationConfirm}
                     />
                 </Accordion>
             )
@@ -344,7 +444,7 @@ const Simulations = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllSimulationsTooltop}
                     >
-                        <Button variant="danger" onClick={removeAllSimulations}>
+                        <Button variant="danger" onClick={removeAllSimulationsConfirm}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
