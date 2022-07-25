@@ -18,6 +18,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import getSystemModelTypeStr from "../../Common/getSystemModelTypeStr";
 
 const SystemModels = () => {
     const [systemModelsIds, setSystemModelsIds] = useState([]);
@@ -109,9 +110,14 @@ const SystemModels = () => {
         );
     }
 
-    const updateSystemModelId = (systemModelId) => {
-        setSelectedSystemModelId(systemModelId)
-        fetchModel(systemModelId)
+    const updateSystemModelId = (systemModelIdObj) => {
+        setSelectedSystemModelId(systemModelIdObj)
+        if(systemModelIdObj.type == "gaussian_mixture") {
+            fetchGaussianMixtureSystemModel(systemModelIdObj)
+        }
+        if(systemModelIdObj.type == "empirical") {
+            fetchEmpiricalSystemModel(systemModelIdObj)
+        }
         setLoadingSelectedSystemModel(true)
     }
     const updateSelectedConditionals = (selected) => {
@@ -162,7 +168,9 @@ const SystemModels = () => {
                 const modelIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistic_id: " + id_obj.statistic_id
+                        label: ("ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistic_id: "
+                            + id_obj.statistic_id + ", (" + id_obj.system_model_type + ")") ,
+                        type: id_obj.system_model_type
                     }
                 })
                 setSystemModelsIds(modelIds)
@@ -170,7 +178,12 @@ const SystemModels = () => {
                 setLoading(false)
                 if (modelIds.length > 0) {
                     setSelectedSystemModelId(modelIds[0])
-                    fetchModel(modelIds[0])
+                    if (modelIds[0].type == "gaussian_mixture") {
+                        fetchGaussianMixtureSystemModel(modelIds[0])
+                    }
+                    if (modelIds[0].type == "empirical") {
+                        fetchEmpiricalSystemModel(modelIds[0])
+                    }
                     setLoadingSelectedSystemModel(true)
                 } else {
                     setLoadingSelectedSystemModel(false)
@@ -185,9 +198,9 @@ const SystemModels = () => {
         fetchSystemModelsIds()
     }, [fetchSystemModelsIds]);
 
-    const fetchModel = useCallback((model_id) => {
+    const fetchGaussianMixtureSystemModel = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/system-models/' + model_id.value,
+            `http://` + ip + ':7777/gaussian-mixture-system-models/' + model_id.value,
             {
                 method: "GET",
                 headers: new Headers({
@@ -197,8 +210,6 @@ const SystemModels = () => {
         )
             .then(res => res.json())
             .then(response => {
-                setSelectedSystemModel(response)
-                setLoadingSelectedSystemModel(false)
                 if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
                     var conditionalOptions = []
                     for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
@@ -213,6 +224,8 @@ const SystemModels = () => {
                     }
                     setConditionals(conditionalOptions)
                     setSelectedConditionals([conditionalOptions[0]])
+                    setSelectedSystemModel(response)
+                    setLoadingSelectedSystemModel(false)
                     const metricOptions = getMetricForSelectedConditional(conditionalOptions, [conditionalOptions[0]]).map((metricName, index) => {
                         return {
                             value: metricName,
@@ -227,9 +240,68 @@ const SystemModels = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const removeModelRequest = useCallback((model_id) => {
+    const fetchEmpiricalSystemModel = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/system-models/' + model_id,
+            `http://` + ip + ':7777/empirical-system-models/' + model_id.value,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
+                    var conditionalOptions = []
+                    for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
+                        for (let j = 0; j < response.conditional_metric_distributions[i].length; j++) {
+                            conditionalOptions.push(
+                                {
+                                    value: response.conditional_metric_distributions[i][j],
+                                    label: response.conditional_metric_distributions[i][j].conditional_name
+                                }
+                            )
+                        }
+                    }
+                    setConditionals(conditionalOptions)
+                    setSelectedConditionals([conditionalOptions[0]])
+                    setSelectedSystemModel(response)
+                    setLoadingSelectedSystemModel(false)
+                    const metricOptions = getMetricForSelectedConditional(conditionalOptions, [conditionalOptions[0]]).map((metricName, index) => {
+                        return {
+                            value: metricName,
+                            label: metricName
+                        }
+                    })
+                    setMetrics(metricOptions)
+                    setSelectedMetric(metricOptions[0])
+                }
+
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeGaussianMixtureSystemModelRequest = useCallback((model_id) => {
+        fetch(
+            `http://` + ip + ':7777/gaussian-mixture-system-models/' + model_id,
+            {
+                method: "DELETE",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                fetchSystemModelsIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeEmpiricalSystemModelRequest = useCallback((model_id) => {
+        fetch(
+            `http://` + ip + ':7777/empirical-system-models/' + model_id,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -247,7 +319,12 @@ const SystemModels = () => {
     const removeModel = (model) => {
         setLoading(true)
         resetState()
-        removeModelRequest(model.id)
+        if(model.type == "gaussian_mixture") {
+            removeGaussianMixtureSystemModelRequest(model.id)
+        }
+        if(model.type == "empirical") {
+            removeEmpiricalSystemModelRequest(model.id)
+        }
         setSelectedSystemModel(null)
     }
 
@@ -323,7 +400,7 @@ const SystemModels = () => {
             }
             if (!selectedModelRemoved) {
                 setSelectedSystemModelId(filteredMIds[0])
-                fetchModel(filteredMIds[0])
+                fetchGaussianMixtureSystemModel(filteredMIds[0])
                 setLoadingSelectedSystemModel(true)
             }
         } else {
@@ -554,6 +631,71 @@ const SystemModels = () => {
         }
     }
 
+    const MixtureComponentsOrEmpty = (props) => {
+        if(props.loadingSelectedSystemModel ||
+            props.loading || props.selectedSystemModel === null || props.selectedSystemModel === undefined ||
+            props.selectedConditionals === undefined || props.selectedConditionals === null ||
+            getSystemModelTypeStr(props.selectedSystemModel.model_type) !== "gaussian_mixture"){
+            return (
+                <span>  </span>
+            )
+        } else {
+            return props.selectedConditionals.map((conditional, index) => {
+                return (
+                    <tr key={conditional.label + "-" + index}>
+                        <td>Conditional: {conditional.label}, num mixture components
+                        </td>
+                        <td>{conditional.value.mixture_weights.length}</td>
+                    </tr>
+                )
+            })
+        }
+    }
+
+    const MixtureMeansOrEmpty = (props) => {
+        if(props.loadingSelectedSystemModel ||
+            props.loading || props.selectedSystemModel === null || props.selectedSystemModel === undefined ||
+            props.selectedConditionals === undefined || props.selectedConditionals === null ||
+            getSystemModelTypeStr(props.selectedSystemModel.model_type) !== "gaussian_mixture"){
+            return (
+                <span>  </span>
+            )
+        } else {
+            return props.selectedConditionals.map((conditional, index) => {
+                    return (
+                        <tr key={conditional.label + "-" + index}>
+                            <td>Conditional: {conditional.label}, mixture means</td>
+                            <td>{conditional.value.mixture_means.join(", ")}</td>
+                        </tr>
+                    )
+                })
+        }
+    }
+
+    const MixtureCovariancesOrEmpty = (props) => {
+        if(props.loadingSelectedSystemModel ||
+            props.loading || props.selectedSystemModel === null || props.selectedSystemModel === undefined ||
+            props.selectedConditionals === undefined || props.selectedConditionals === null ||
+            getSystemModelTypeStr(props.selectedSystemModel.model_type) !== "gaussian_mixture"){
+            return (
+                <span>  </span>
+            )
+        } else {
+            return props.selectedConditionals.map((conditional, index) => {
+                return (conditional.value.mixtures_covariance_matrix.map((cov_row, index) => {
+                    return (
+                        <tr key={conditional.label + "-" + index}>
+                            <td>Conditional: {conditional.label}, mixture
+                                component: {index}, covariance
+                            </td>
+                            <td>{cov_row.join(", ")}</td>
+                        </tr>
+                    )
+                }))
+            })
+        }
+    }
+
     const conditionalPairs = () => {
         if (selectedConditionals.length < 2) {
             return []
@@ -650,46 +792,14 @@ const SystemModels = () => {
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {props.selectedConditionals.map((conditional, index) => {
-                                                return (
-                                                    <tr key={conditional.label + "-" + index}>
-                                                        <td>Conditional: {conditional.label}, num mixture components
-                                                        </td>
-                                                        <td>{conditional.value.mixture_weights.length}</td>
-                                                    </tr>
-                                                )
-                                            })}
+                                            <MixtureComponentsOrEmpty selectedSystemModel={props.selectedSystemModel}
+                                                                   selectedConditionals={props.selectedConditionals}/>
 
-                                            {props.selectedConditionals.map((conditional, index) => {
-                                                return (
-                                                    <tr key={conditional.label + "-" + index}>
-                                                        <td>Conditional: {conditional.label}, mixture means</td>
-                                                        <td>{conditional.value.mixture_means.join(", ")}</td>
-                                                    </tr>
-                                                )
-                                            })}
+                                            <MixtureMeansOrEmpty selectedSystemModel={props.selectedSystemModel}
+                                                                      selectedConditionals={props.selectedConditionals}/>
 
-                                            {props.selectedConditionals.map((conditional, index) => {
-                                                return (
-                                                    <tr key={conditional.label + "-" + index}>
-                                                        <td>Conditional: {conditional.label}, mixture weights</td>
-                                                        <td>{conditional.value.mixture_weights.join(", ")}</td>
-                                                    </tr>
-                                                )
-                                            })}
-
-                                            {props.selectedConditionals.map((conditional, index) => {
-                                                return (conditional.value.mixtures_covariance_matrix.map((cov_row, index) => {
-                                                    return (
-                                                        <tr key={conditional.label + "-" + index}>
-                                                            <td>Conditional: {conditional.label}, mixture
-                                                                component: {index}, covariance
-                                                            </td>
-                                                            <td>{cov_row.join(", ")}</td>
-                                                        </tr>
-                                                    )
-                                                }))
-                                            })}
+                                            <MixtureCovariancesOrEmpty selectedSystemModel={props.selectedSystemModel}
+                                                                 selectedConditionals={props.selectedConditionals}/>
 
                                             {conditionalPairs().map((conditionalPair, index) => {
                                                 return (

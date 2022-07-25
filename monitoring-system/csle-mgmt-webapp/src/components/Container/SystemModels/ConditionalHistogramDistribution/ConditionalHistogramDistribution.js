@@ -1,5 +1,6 @@
 import React from 'react';
 import './ConditionalHistogramDistribution.css';
+import getSystemModelTypeStr from '../../../Common/getSystemModelTypeStr'
 import {
     CartesianGrid,
     Label,
@@ -53,14 +54,24 @@ const ConditionalHistogramDistribution = React.memo((props) => {
             var data = []
             const p = num_samples/conds[0].sample_space.length
             for (let k = 0; k < conds[0].sample_space.length; k++) {
+                var maxY = 0
                 if(Math.random() < p) {
                     var data_row = {
                         "val": conds[0].sample_space[k]
                     }
                     for (let i = 0; i < conds.length; i++) {
                         var prob = 0
-                        for (let j = 0; j < conds[i].weighted_mixture_distributions.length; j++) {
-                            prob = prob + conds[i].weighted_mixture_distributions[j][k]
+                        if(getSystemModelTypeStr(props.data.model_type) === "gaussian_mixture") {
+                            for (let j = 0; j < conds[i].weighted_mixture_distributions.length; j++) {
+                                prob = prob + conds[i].weighted_mixture_distributions[j][k]
+                            }
+                        }
+                        if(getSystemModelTypeStr(props.data.model_type) === "empirical"){
+                            prob = conds[i].probabilities[k]
+                        }
+                        prob = Math.round(prob * 100000) / 100000
+                        if (prob > maxY){
+                            maxY = prob
                         }
                         data_row[conds[i].conditional_name] = prob
                     }
@@ -68,6 +79,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                 }
             }
             var domain = conds[0].sample_space
+            var yDomain = [0, maxY]
 
             return (
                 <div className="row">
@@ -86,7 +98,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 <XAxis dataKey="val" type="number" domain={domain}>
                                     <Label value="value" offset={-20} position="insideBottom" className="largeFont"/>
                                 </XAxis>
-                                <YAxis type="number">
+                                <YAxis type="number" domain={yDomain}>
                                     <Label angle={270} value="Probability" offset={-30} position="insideLeft"
                                            className="largeFont"
                                            dy={50}/>

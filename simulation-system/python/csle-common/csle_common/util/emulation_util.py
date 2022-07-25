@@ -360,7 +360,7 @@ class EmulationUtil:
 
         # Privilege escalation only legal if machine discovered and logged in and not root
         if action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
-                                                                                or machine_root_login):
+                                                                                      or machine_root_login):
             return False
 
         # Exploit only legal if we have not already compromised the node

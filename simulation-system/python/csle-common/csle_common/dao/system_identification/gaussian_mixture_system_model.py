@@ -3,6 +3,7 @@ import math
 from scipy.special import rel_entr
 from csle_common.dao.system_identification.gaussian_mixture_conditional import GaussianMixtureConditional
 from csle_common.dao.system_identification.system_model import SystemModel
+from csle_common.dao.system_identification.system_model_type import SystemModelType
 
 
 class GaussianMixtureSystemModel(SystemModel):
@@ -20,7 +21,7 @@ class GaussianMixtureSystemModel(SystemModel):
         :param conditional_metric_distributions: the list of conditional distributions
         :param descr: description of the model
         """
-        super(GaussianMixtureSystemModel, self).__init__(descr=descr)
+        super(GaussianMixtureSystemModel, self).__init__(descr=descr, model_type= SystemModelType.GAUSSIAN_MIXTURE)
         self.conditional_metric_distributions = conditional_metric_distributions
         complete_sample_space = set()
         for conds in self.conditional_metric_distributions:
@@ -89,6 +90,7 @@ class GaussianMixtureSystemModel(SystemModel):
         d["descr"] = self.descr
         d["id"] = self.id
         d["conditionals_kl_divergences"] = self.conditionals_kl_divergences
+        d["model_type"] = self.model_type
         return d
 
     def __str__(self):
@@ -97,7 +99,8 @@ class GaussianMixtureSystemModel(SystemModel):
         """
         return f"conditional_distributions: {self.conditional_metric_distributions}, " \
                f"emulation_env_name: {self.emulation_env_name}, emulation_statistic_id: {self.emulation_statistic_id}," \
-               f"descr: {self.descr}, conditionals_kl_divergences: {self.conditionals_kl_divergences}"
+               f"descr: {self.descr}, conditionals_kl_divergences: {self.conditionals_kl_divergences}, " \
+               f"model_type: {self.model_type}"
 
     def to_json_str(self) -> str:
         """
