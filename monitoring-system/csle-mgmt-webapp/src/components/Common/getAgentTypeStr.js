@@ -69,6 +69,9 @@ const getAgentTypeStr = (agentType) => {
     if(agentType === 22) {
         return "DynaSec"
     }
+    if(agentType === 23) {
+        return "BAYESIAN OPTIMIZATION"
+    }
     else {
         return "Unknown"
     }
