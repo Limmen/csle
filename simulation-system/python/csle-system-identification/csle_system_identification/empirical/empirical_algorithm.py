@@ -1,12 +1,11 @@
 from typing import List, Optional
 import os
-from sklearn.mixture import GaussianMixture
 from csle_system_identification.base.base_system_identification_algorithm import BaseSystemIdentificationAlgorithm
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
-from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
-from csle_common.dao.system_identification.gaussian_mixture_conditional import GaussianMixtureConditional
+from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
+from csle_common.dao.system_identification.empirical_conditional import EmpiricalConditional
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 import csle_system_identification.constants.constants as system_identification_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -35,7 +34,7 @@ class EmpiricalAlgorithm(BaseSystemIdentificationAlgorithm):
         )
         self.system_identification_job = system_identification_job
 
-    def fit(self) -> GaussianMixtureSystemModel:
+    def fit(self) -> EmpiricalSystemModel:
         """
         Fits an empirical distribution for each conditional and metric
 
@@ -76,24 +75,23 @@ class EmpiricalAlgorithm(BaseSystemIdentificationAlgorithm):
         for i, conditional in enumerate(conditionals):
             gaussian_conditional_metrics_mixtures = []
             for j, metric in enumerate(metrics):
+                self.emulation_statistics.compute_descriptive_statistics_and_distributions()
+                probs = []
+                sample_space = []
                 X = []
                 X_set = set()
-                counts = self.emulation_statistics.conditionals_counts[conditional][metric]
-                for val,count in counts.items():
-                    X.append([val])
-                    X_set.add(val)
-                num_components = self.system_identification_config.hparams[
-                    system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL].value[i]
-                gmm = GaussianMixture(n_components = num_components).fit(X)
-                gaussian_conditional_metrics_mixtures.append(
-                    GaussianMixtureConditional.from_sklearn_gaussian_mixture(
-                        gmm=gmm, conditional_name=conditional, num_components=num_components, dim=1,
-                        metric_name=metric, sample_space=list(X_set)))
+                for val,prob in self.emulation_statistics.conditionals_probs[conditional][metric].items():
+                    sample_space.append(val)
+                    probs.append(prob)
+                empirical_conditionals.append(EmpiricalConditional(
+                    conditional_name=conditional, metric_name=metric, sample_space=sample_space,
+                    probabilities=probs
+                ))
             empirical_conditionals.append(gaussian_conditional_metrics_mixtures)
 
-        model_descr = f"Model fitted through Expectation Maximization, " \
+        model_descr = f"Model fitted through empirical algorithm, " \
                 f"emulation:{self.emulation_env_config.name}, statistic id: {self.emulation_statistics.id}"
-        model = GaussianMixtureSystemModel(emulation_env_name=self.emulation_env_config.name,
+        model = EmpiricalSystemModel(emulation_env_name=self.emulation_env_config.name,
                                            emulation_statistic_id=self.emulation_statistics.id,
                                            conditional_metric_distributions=empirical_conditionals,
                                            descr=model_descr)
@@ -101,7 +99,7 @@ class EmpiricalAlgorithm(BaseSystemIdentificationAlgorithm):
         self.system_identification_job.progress_percentage = 100
         MetastoreFacade.update_system_identification_job(system_identification_job=self.system_identification_job,
                                                          id=self.system_identification_job.id)
-        Logger.__call__().get_logger().info(f"Execution of the Expectation-Maximization algorithm complete."
+        Logger.__call__().get_logger().info(f"Execution of the empirical algorithm complete."
                                             f"Emulation env name: {self.emulation_env_config.name}, "
                                             f"emulation_statistic_id: {self.emulation_statistics.id},"
                                             f"conditionals: {conditionals}, metrics: {metrics}")
@@ -113,5 +111,5 @@ class EmpiricalAlgorithm(BaseSystemIdentificationAlgorithm):
         """
         return [
             system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
-            system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL
+            system_identification_constants.SYSTEM_IDENTIFICATION.METRICS
         ]

@@ -114,5 +114,6 @@ class ExpectationMaximizationAlgorithm(BaseSystemIdentificationAlgorithm):
         """
         return [
             system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS,
-            system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL
+            system_identification_constants.EXPECTATION_MAXIMIZATION.NUM_MIXTURES_PER_CONDITIONAL,
+            system_identification_constants.SYSTEM_IDENTIFICATION.METRICS
         ]
