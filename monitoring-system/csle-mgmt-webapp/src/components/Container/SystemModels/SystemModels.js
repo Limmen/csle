@@ -170,7 +170,7 @@ const SystemModels = () => {
             .then(response => {
                 const modelIds = response.map((id_obj, index) => {
                     return {
-                        value: id_obj.id,
+                        value: id_obj.id + "_" + id_obj.system_model_type,
                         label: ("ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistic_id: "
                             + id_obj.statistic_id + ", (" + id_obj.system_model_type + ")") ,
                         type: id_obj.system_model_type
@@ -204,9 +204,9 @@ const SystemModels = () => {
         fetchSystemModelsIds()
     }, [fetchSystemModelsIds]);
 
-    const fetchGaussianMixtureSystemModel = useCallback((model_id) => {
+    const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
         fetch(
-            `http://` + ip + ':7777/gaussian-mixture-system-models/' + model_id.value,
+            `http://` + ip + ':7777/gaussian-mixture-system-models/' + parseInt(model_id_obj.value.split("_")[0]),
             {
                 method: "GET",
                 headers: new Headers({
@@ -246,9 +246,9 @@ const SystemModels = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchEmpiricalSystemModel = useCallback((model_id) => {
+    const fetchEmpiricalSystemModel = useCallback((model_id_obj) => {
         fetch(
-            `http://` + ip + ':7777/empirical-system-models/' + model_id.value,
+            `http://` + ip + ':7777/empirical-system-models/' + parseInt(model_id_obj.value.split("_")[0]),
             {
                 method: "GET",
                 headers: new Headers({
@@ -288,9 +288,9 @@ const SystemModels = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchGPSystemModel = useCallback((model_id) => {
+    const fetchGPSystemModel = useCallback((model_id_obj) => {
         fetch(
-            `http://` + ip + ':7777/gp-system-models/' + model_id.value,
+            `http://` + ip + ':7777/gp-system-models/' + parseInt(model_id_obj.value.split("_")[0]),
             {
                 method: "GET",
                 headers: new Headers({
@@ -386,13 +386,13 @@ const SystemModels = () => {
         setLoading(true)
         resetState()
         if(model.type == "gaussian_mixture") {
-            removeGaussianMixtureSystemModelRequest(model.id)
+            removeGaussianMixtureSystemModelRequest(parseInt(model.id.split("_")[0]))
         }
         if(model.type == "empirical") {
-            removeEmpiricalSystemModelRequest(model.id)
+            removeEmpiricalSystemModelRequest(parseInt(model.id.split("_")[0]))
         }
         if(model.type == "gp") {
-            removeGpSystemModelRequest(model.id)
+            removeGpSystemModelRequest(parseInt(model.id.split("_")[0]))
         }
         setSelectedSystemModel(null)
     }
@@ -400,7 +400,7 @@ const SystemModels = () => {
     const removeModelConfirm = (model) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the system model with ID: ' + model.id +
+            message: 'Are you sure you want to delete the system model with ID: ' + parseInt(model.id.split("_")[0]) +
                 "? this action cannot be undone",
             buttons: [
                 {
@@ -422,7 +422,7 @@ const SystemModels = () => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the system model with ID {model.id}?
+                                    Are you sure you want to delete the system model with ID {parseInt(model.id.split("_")[0])}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
@@ -463,7 +463,7 @@ const SystemModels = () => {
         if (!loadingSelectedSystemModel && filteredMIds.length > 0) {
             for (let i = 0; i < filteredMIds.length; i++) {
                 if (selectedSystemModel !== null && selectedSystemModel !== undefined &&
-                    selectedSystemModel.id === filteredMIds[i].value) {
+                    selectedSystemModel.id === parseInt(filteredMIds[i].value.split("_")[0])) {
                     selectedModelRemoved = true
                 }
             }
