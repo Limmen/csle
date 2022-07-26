@@ -91,9 +91,7 @@ const Header = () => {
                         Cyber Security Learning Environment (CSLE)
                     </h1>
 
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    </nav>
-                    <ul className="nav nav-tabs justify-content-center navtabsheader">
+                    <ul className="nav nav-tabs justify-content-center navtabsheader navbar-expand">
                         <li className="nav-item navtabheader">
                             <OverlayTrigger
                                 placement="top"
@@ -150,7 +148,7 @@ const Header = () => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderSystemModelsTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={"system-models-page"}>
-                                    System models
+                                    Models
                                 </NavLink>
                             </OverlayTrigger>
                         </li>
@@ -210,7 +208,7 @@ const Header = () => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderSdnControllersTooltip}>
                                 <NavLink className="nav-link navtablabel largeFont" to={"sdn-controllers-page"}>
-                                    SDN Controllers
+                                    SDN
                                 </NavLink>
                             </OverlayTrigger>
                         </li>

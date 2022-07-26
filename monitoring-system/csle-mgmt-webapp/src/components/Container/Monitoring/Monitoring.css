@@ -3,16 +3,12 @@
     margin-bottom: 55px
 }
 
-.largeFont {
-    font-size: 22px;
-}
-
 .evolutionTitle {
-    font-size: 22px;
+    font-size: 14px;
 }
 
 .formLabel {
-    font-size: 22px;
+    font-size: 14px;
 }
 
 .chartsRow {
@@ -20,7 +16,7 @@
 }
 
 .dropdownText {
-    font-size: 22px;
+    font-size: 14px;
 }
 .monitoringHeader {
     display: inline-block;
@@ -53,7 +49,7 @@
 
 .refreshButton {
     margin-right: 10px;
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .windowLengthInput {
@@ -61,15 +57,15 @@
 }
 
 .toolTipRefresh {
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .emptyEmulations {
-    font-size: 22px;
+    font-size: 14px;
 }
 
 .grafanaStatus {
-    font-size: 20px;
+    font-size: 14px;
     margin-left:20px
 }
 

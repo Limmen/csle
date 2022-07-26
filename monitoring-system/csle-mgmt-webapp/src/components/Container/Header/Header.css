@@ -7,18 +7,19 @@
     color: black !important;
 }
 .title {
+    margin-top:-10px;
     font-weight: bold;
     color: black !important;
 }
 
 .navtabsheader{
-    margin-top:15px;
-    font-size: 25px;
+    margin-top:0px;
+    font-size: 10px;
     color: black !important;
 }
 
 .jumbotron {
-    height:188px;
+    height:108px;
     color: black !important;
 }
 

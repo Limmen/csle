@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState} from 'react';
 import './Emulation.css';
 import Card from 'react-bootstrap/Card';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -166,7 +166,7 @@ const Emulation = (props) => {
             return (<span> </span>)
         } else {
             return (
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setSdnControllerConfigOpen(!sdnControllerConfigOpen)}
@@ -221,7 +221,7 @@ const Emulation = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveEmulationTooltip}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removeEmulation(emulation)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -259,7 +259,7 @@ const Emulation = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderRemoveAndCleanExecutionTooltip}
                 >
-                    <Button variant="danger" className="removeButton"
+                    <Button variant="danger" className="removeButton" size="sm"
                             onClick={() => removeExecutionPre(emulation, props.execution_ip_octet)}>
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
@@ -300,7 +300,7 @@ const Emulation = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopEmulationTooltip}
                     >
-                        <Button variant="warning" className="startButton"
+                        <Button variant="warning" className="startButton" size="sm"
                                 onClick={() => startorStopEmulationPre(emulation)}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -313,7 +313,7 @@ const Emulation = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAndCleanExecutionTooltip}
                     >
-                        <Button variant="success" className="startButton"
+                        <Button variant="success" className="startButton" size="sm"
                                 onClick={() => startorStopEmulationPre(emulation)}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -338,7 +338,7 @@ const Emulation = (props) => {
 
                 <RenderActions execution={props.execution} removeEmulation={props.removeEmulation}
                                removeExecution={props.removeExecution} execution_ip_octet={props.execution_ip_octet}/>
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -401,7 +401,7 @@ const Emulation = (props) => {
                 </Card>
 
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setTopologyOpen(!topologyOpen)}
@@ -420,7 +420,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setContainersOpen(!containersOpen)}
@@ -455,7 +455,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setFlagsOpen(!flagsOpen)}
@@ -494,7 +494,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setUsersOpen(!usersOpen)}
@@ -531,7 +531,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setServicesOpen(!servicesOpen)}
@@ -568,7 +568,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setVulnerabilitiesOpen(!vulnerabilitiesOpen)}
@@ -607,7 +607,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setResourcesOpen(!resourcesOpen)}
@@ -643,7 +643,7 @@ const Emulation = (props) => {
                 </Card>
 
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setNetworkInterfacesOpen(!networkInterfacesOpen)}
@@ -699,7 +699,7 @@ const Emulation = (props) => {
                         </div>
                     </Collapse>
                 </Card>
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setClientPopulationOpen(!clientPopulationOpen)}
@@ -740,7 +740,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setTrafficOpen(!trafficOpen)}
@@ -774,7 +774,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setKafkaOpen(!kafkaOpen)}
@@ -815,7 +815,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setKafkaTopicsOpen(!kafkaTopicsOpen)}
@@ -854,7 +854,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setFirewallOpen(!firewallOpen)}
@@ -900,7 +900,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setStaticAttackerSequenceOpen(!staticAttackerSequenceOpen)}
@@ -952,7 +952,7 @@ const Emulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setOvsSwitchesOpen(!ovsSwitchesOpen)}

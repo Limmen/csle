@@ -39,8 +39,8 @@ const ConnectionsChart = React.memo((props) => {
                         data={data}
                         margin={margin}
                     >
-                        <text x={650} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="22">Connections and user sessions</tspan>
+                        <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
+                            <tspan fontSize="15">Connections and user sessions</tspan>
                         </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain}>
@@ -51,7 +51,7 @@ const ConnectionsChart = React.memo((props) => {
                                    dy={50}/>
                         </YAxis>
                         <Tooltip/>
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                 className="largeFont"/>
                         <Line isAnimationActive={props.animation} animation={props.animation} type="monotone"
                               dataKey="TCP connections"

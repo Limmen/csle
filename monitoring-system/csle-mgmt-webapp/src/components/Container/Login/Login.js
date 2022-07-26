@@ -1,18 +1,38 @@
-import React, {useState, useEffect, createRef, useCallback} from 'react';
+import React, {useState} from 'react';
 import './Login.css';
 
-const Login = () => {
+const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const ip = "localhost"
 
-    const formSubmit = (event) => {
-        // prevent page refresh
-        event.preventDefault()
-
-
+    async function loginUser(credentials) {
+        return fetch(`http://` + ip + ':7777/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        })
+            .then(data => data.json())
     }
 
-    
+
+    const formSubmit = async (event) => {
+        // prevent page refresh
+        event.preventDefault()
+        const credentials = {
+            "username": username,
+            "password": password
+        }
+        const token = await loginUser({
+            username,
+            password
+        });
+        props.setToken(token)
+    }
+
+
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value)

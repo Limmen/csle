@@ -1,5 +1,5 @@
 .infoButton2 {
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .infoPolicyExp {
@@ -31,7 +31,7 @@
 
 .defenderPolicyPlotSliderLabel {
     margin-top:22px;
-    font-size:22px;
+    font-size:14px;
 }
 
 .noIntrusion {
@@ -42,12 +42,8 @@
     color: darkred;
 }
 
-.largeFont {
-    font-size: 22px;
-}
-
 .labelTest {
-    font-size: 22px;
+    font-size: 14px;
 }
 
 .cardTitle {

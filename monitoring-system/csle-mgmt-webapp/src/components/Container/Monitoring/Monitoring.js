@@ -591,36 +591,38 @@ const Monitoring = () => {
             return (
                 <div>
                     <div className="row">
-                        <div className="col-sm-2">
+                        <div className="col-sm-5">
                             <h4>
                                 Time-series window length:
+                                <div className="conditionalDist inline-block selectEmulation">
+                                    <div className="conditionalDist inline-block" style={{width: "300px"}}>
+                                        <Select
+                                            style={{display: 'inline-block'}}
+                                            value={props.windowLength}
+                                            defaultValue={props.windowLength}
+                                            options={props.windowLengthOptions}
+                                            onChange={onChangeWindowLength}
+                                            placeholder="Select a window length"
+                                        />
+                                    </div>
+                                </div>
                             </h4>
                         </div>
-                        <div className="col-sm-3" style={{width: "250px"}}>
+                        <div className="col-sm-5">
                             <h4>
-                                <Select
-                                    style={{display: 'inline-block'}}
-                                    value={props.windowLength}
-                                    defaultValue={props.windowLength}
-                                    options={props.windowLengthOptions}
-                                    onChange={onChangeWindowLength}
-                                    placeholder="Select a window length"
-                                />
-                            </h4>
-                        </div>
-                        <div className="col-sm-2">
-                            <h4>Evolution speed:</h4>
-                        </div>
-                        <div className="col-sm-3" style={{width: "250px"}}>
-                            <h4>
-                                <Select
-                                    style={{display: 'inline-block'}}
-                                    value={props.animationDuration}
-                                    defaultValue={props.animationDuration}
-                                    options={props.evolutionSpeedOptions}
-                                    onChange={animationDurationUpdate}
-                                    placeholder="Set the evolution speed"
-                                />
+                                Evolution speed:
+                                <div className="conditionalDist inline-block selectEmulation">
+                                    <div className="conditionalDist inline-block" style={{width: "300px"}}>
+                                        <Select
+                                            style={{display: 'inline-block'}}
+                                            value={props.animationDuration}
+                                            defaultValue={props.animationDuration}
+                                            options={props.evolutionSpeedOptions}
+                                            onChange={animationDurationUpdate}
+                                            placeholder="Set the evolution speed"
+                                        />
+                                    </div>
+                                </div>
                             </h4>
                         </div>
                         <div className="col-sm-2">
@@ -672,12 +674,12 @@ const Monitoring = () => {
                     </div>
                     <hr/>
                     <OpenFlowSwitchesStats key={'switch' + '-' + props.animationDuration.value}
-                                      loading={props.loadingSelectedEmulationExecution}
-                                      portStats={getPortStats()}
-                                      flowStats={getFlowStats()}
-                                      aggFlowStats={getAggFlowStats()}
-                                      animation={props.animation} animationDuration={props.animationDuration.value}
-                                      animationDurationFactor={props.animationDurationFactor} />
+                                           loading={props.loadingSelectedEmulationExecution}
+                                           portStats={getPortStats()}
+                                           flowStats={getFlowStats()}
+                                           aggFlowStats={getAggFlowStats()}
+                                           animation={props.animation} animationDuration={props.animationDuration.value}
+                                           animationDurationFactor={props.animationDurationFactor}/>
                 </div>
             )
         }

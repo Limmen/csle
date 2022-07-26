@@ -40,8 +40,8 @@ const CpuAndMemoryUtilizationChart = React.memo((props) => {
                         data={data}
                         margin={margin}
                     >
-                        <text x={650} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="22">Avg memory and CPU utilization</tspan>
+                        <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
+                            <tspan fontSize="15">Avg memory and CPU utilization</tspan>
                         </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain}>
@@ -52,7 +52,7 @@ const CpuAndMemoryUtilizationChart = React.memo((props) => {
                                    dy={50}/>
                         </YAxis>
                         <Tooltip/>
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                 className="largeFont"/>
                         <Area isAnimationActive={props.animation} animation={props.animation} type="monotone"
                               stackId={"1"}

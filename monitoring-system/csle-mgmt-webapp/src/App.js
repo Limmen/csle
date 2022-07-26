@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Container from "./components/Container/Container";
 import NotFound from "./components/Container/NotFound/NotFound";
@@ -19,6 +19,7 @@ import SDNControllers from "./components/Container/SDNControllers/SDNControllers
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
+    const [token, setToken] = useState(null);
     return (
         <div className="App index container-fluid">
             <div className="row contentRow">
@@ -57,7 +58,7 @@ function App() {
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
                             </Route>
-                            <Route path="login-page" index element={<Login/>}>
+                            <Route path="login-page" index element={<Login setToken={setToken}/>}>
                             </Route>
                         </Routes>
                     </BrowserRouter>

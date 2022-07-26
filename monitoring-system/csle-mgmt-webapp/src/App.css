@@ -1,13 +1,45 @@
+h5 {
+  font-size: 13px;
+}
+
+h4 {
+  font-size: 14px;
+}
+
+h3 {
+  font-size: 14px;
+}
+
+.contained-modal-title-vcenter {
+  font-size:14px;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+.searchForm {
+  font-size:10px
+}
+
+.searchGroup {
+  font-size:10px
+}
+
+.searchBar {
+  font-size:14px
+}
+
 .remove-confirm {
-  font-size: 22px
+  font-size: 14px
 }
 
 .remove-confirm-button {
-  font-size: 22px
+  font-size: 14px
 }
 
 .remove-confirm-button-text {
-  font-size: 22px
+  font-size: 14px
 }
 
 .App {
@@ -49,3 +81,31 @@
   }
 }
 
+.table-responsive {
+  font-size: 12px;
+}
+
+/*.accordion {*/
+/*  height:10px*/
+/*}*/
+/*.card {*/
+/*  height:50px;*/
+/*}*/
+
+.mgHeader {
+  margin-top:-10px;
+  margin-bottom:-10px;
+}
+
+/*.card-header {*/
+/*  margin-top:-10px;*/
+/*  margin-bottom:-10px;*/
+/*}*/
+
+.subCard {
+  /*margin-top:-20px;*/
+  margin-bottom:-14px;
+}
+.largeFont {
+  font-size: 13px;
+}

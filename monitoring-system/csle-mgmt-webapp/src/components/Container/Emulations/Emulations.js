@@ -596,7 +596,7 @@ const Emulations = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Emulation:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedEmulationId}
@@ -632,7 +632,7 @@ const Emulations = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveEmulationsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllEmulationsConfirm}>
+                        <Button variant="danger" onClick={removeAllEmulationsConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -700,7 +700,7 @@ const Emulations = () => {
     return (
         <div className="Emulations">
             <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectEmulationOrSpinner loading={loading}
                                                   emulationIds={filteredEmulationsIds}
@@ -708,7 +708,7 @@ const Emulations = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="basic-addon1" className="searchIcon">
