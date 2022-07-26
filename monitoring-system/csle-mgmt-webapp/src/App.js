@@ -12,6 +12,7 @@ import ContainerImages from "./components/Container/ContainerImages/ContainerIma
 import Simulations from "./components/Container/Simulations/Simulations";
 import TrainingResults from "./components/Container/TrainingResults/TrainingResults";
 import About from "./components/Container/About/About";
+import Login from "./components/Container/Login/Login";
 import Policies from "./components/Container/Policies/Policies";
 import Jobs from "./components/Container/Jobs/Jobs";
 import SDNControllers from "./components/Container/SDNControllers/SDNControllers";
@@ -55,6 +56,8 @@ function App() {
                                 <Route path="about-page" index element={<About/>}>
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
+                            </Route>
+                            <Route path="login-page" index element={<Login/>}>
                             </Route>
                         </Routes>
                     </BrowserRouter>

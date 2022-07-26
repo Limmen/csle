@@ -19,5 +19,4 @@ def about_page():
     """
     :return: static resources for the /about-page url
     """
-    print("about page??")
     return about_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)

@@ -15,6 +15,7 @@ class MGMT_WEBAPP:
     HTTP_REST_PUT = "PUT"
     STATIC = "static"
     ABOUT_PAGE_RESOURCE = "about-page"
+    LOGIN_PAGE_RESOURCE = "login-page"
     EMULATION_STATISTICS_PAGE_RESOURCE = "emulation-statistics-page"
     EMULATIONS_PAGE_RESOURCE = "emulations-page"
     IMAGES_PAGE_RESOURCE = "images-page"
