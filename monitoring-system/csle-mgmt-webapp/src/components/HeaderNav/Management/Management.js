@@ -1,4 +1,4 @@
-import './Container.css';
+import './Management.css';
 import Header from "./Header/Header";
 import {Outlet} from "react-router-dom";
 

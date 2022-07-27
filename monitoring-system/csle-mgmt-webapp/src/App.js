@@ -1,34 +1,34 @@
 import React, {useState} from 'react';
 import './App.css';
-import Management from "./components/NavTest/Management/Container";
-import NavTest from "./components/NavTest/NavTest";
-import NotFound from "./components/NavTest/Management/NotFound/NotFound";
-import Emulations from "./components/NavTest/Management/Emulations/Emulations";
-import Monitoring from "./components/NavTest/Management/Monitoring/Monitoring";
-import Traces from "./components/NavTest/Management/Traces/Traces";
-import EmulationStatistics from "./components/NavTest/Management/EmulationStatistics/EmulationStatistics";
-import SystemModels from "./components/NavTest/Management/SystemModels/SystemModels";
-import PolicyExamination from "./components/NavTest/Management/PolicyExamination/PolicyExamination";
-import ContainerImages from "./components/NavTest/Management/ContainerImages/ContainerImages";
-import Simulations from "./components/NavTest/Management/Simulations/Simulations";
-import TrainingResults from "./components/NavTest/Management/TrainingResults/TrainingResults";
-import About from "./components/NavTest/Management/About/About";
-import Login from "./components/NavTest/Management/Login/Login";
-import Policies from "./components/NavTest/Management/Policies/Policies";
-import Jobs from "./components/NavTest/Management/Jobs/Jobs";
-import SDNControllers from "./components/NavTest/Management/SDNControllers/SDNControllers";
+import Management from "./components/HeaderNav/Management/Management";
+import HeaderNav from "./components/HeaderNav/HeaderNav";
+import NotFound from "./components/HeaderNav/Management/NotFound/NotFound";
+import Emulations from "./components/HeaderNav/Management/Emulations/Emulations";
+import Monitoring from "./components/HeaderNav/Management/Monitoring/Monitoring";
+import Traces from "./components/HeaderNav/Management/Traces/Traces";
+import EmulationStatistics from "./components/HeaderNav/Management/EmulationStatistics/EmulationStatistics";
+import SystemModels from "./components/HeaderNav/Management/SystemModels/SystemModels";
+import PolicyExamination from "./components/HeaderNav/Management/PolicyExamination/PolicyExamination";
+import ContainerImages from "./components/HeaderNav/Management/ContainerImages/ContainerImages";
+import Simulations from "./components/HeaderNav/Management/Simulations/Simulations";
+import TrainingResults from "./components/HeaderNav/Management/TrainingResults/TrainingResults";
+import About from "./components/HeaderNav/Management/About/About";
+import Login from "./components/HeaderNav/Management/Login/Login";
+import Policies from "./components/HeaderNav/Management/Policies/Policies";
+import Jobs from "./components/HeaderNav/Management/Jobs/Jobs";
+import SDNControllers from "./components/HeaderNav/Management/SDNControllers/SDNControllers";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 function App() {
     const [token, setToken] = useState(null);
     return (
-        <div className="App index container-fluid">
-            <div className="row contentRow">
+        <div className="App container-fluid">
+            <div className="row">
                 <div className="col-sm-12">
                     <BrowserRouter>
                         <Routes>
                             <Route path="/"
-                                   element={<NavTest/>}>
+                                   element={<HeaderNav/>}>
                                 <Route index element={<Emulations/>}>
                                 </Route>
                                 <Route path="emulations-page" index element={<Emulations/>}>

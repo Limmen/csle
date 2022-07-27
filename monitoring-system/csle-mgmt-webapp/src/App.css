@@ -42,8 +42,21 @@ h1 {
   font-size: 14px
 }
 
+.container-fluid {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 0px;
+  padding:0px;
+  width:100%;
+}
+
 .App {
   text-align: center;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 0px;
+  padding:0px;
+  width:100%;
 }
 
 .App-logo {
