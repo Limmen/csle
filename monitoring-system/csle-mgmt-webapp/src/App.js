@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
 import MainContainer from "./components/MainContainer/MainContainer";
 import NotFound from "./components/MainContainer/NotFound/NotFound";
@@ -17,9 +17,12 @@ import Policies from "./components/MainContainer/Policies/Policies";
 import Jobs from "./components/MainContainer/Jobs/Jobs";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+import useToken from "./components/MainContainer/TokenManagement/useToken";
+
 
 function App() {
-    const [token, setToken] = useState(null);
+    const { token, setToken } = useToken();
+
     return (
         <div className="App container-fluid">
             <div className="row">
@@ -28,7 +31,8 @@ function App() {
                         <Routes>
                             <Route path="/"
                                    element={<MainContainer/>}>
-                                <Route index element={<Emulations/>}>
+                                <Route index element={<Login setToken={setToken}
+                                                             token={token}/>}>
                                 </Route>
                                 <Route path="emulations-page" index element={<Emulations/>}>
                                 </Route>
@@ -56,7 +60,8 @@ function App() {
                                 </Route>
                                 <Route path="about-page" index element={<About/>}>
                                 </Route>
-                                <Route path="login-page" index element={<Login setToken={setToken}/>}>
+                                <Route path="login-page" index element={<Login setToken={setToken}
+                                                                               token={token}/>}>
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
                             </Route>

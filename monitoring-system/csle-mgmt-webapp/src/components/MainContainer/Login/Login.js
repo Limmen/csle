@@ -19,14 +19,23 @@ const Login = (props) => {
                 body: JSON.stringify(credentials)
             }
         )
-            .then(res => res.json())
-            .then(response => {
-                if(!response.ok) {
-                    alert.show("Oh look, an alert!")
+            .then(res => {
+                if(!res.ok) {
+                    alert.show("Login failed. Wrong username and password combination.")
+                    return null
                 } else {
-                    console.log("Received token")
-                    console.log(response)
-                    // props.setToken(token)
+                    return res.json()
+                }
+            })
+            .then(response => {
+                console.log(response)
+                if(response !== null) {
+                    props.setToken(
+                        {
+                            "token": response.token
+                        }
+                    )
+                    console.log("match")
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -48,9 +57,10 @@ const Login = (props) => {
     const handlePwChange = (event) => {
         setPassword(event.target.value)
     }
-
-    return (
-        <div className="Login Auth-form-container">
+    console.log("token:")
+    console.log(props.token)
+    if(!props.token) {
+        return (<div className="Login Auth-form-container">
             <form className="Auth-form" onSubmit={formSubmit}>
                 <div className="Auth-form-content">
                     <h3 className="Auth-form-title">Sign In</h3>
@@ -81,8 +91,14 @@ const Login = (props) => {
                     </div>
                 </div>
             </form>
-        </div>
-    );
+        </div>)
+    } else {
+        return (
+            <div>
+                Logged in
+            </div>
+        )
+    }
 }
 
 Login.propTypes = {};
