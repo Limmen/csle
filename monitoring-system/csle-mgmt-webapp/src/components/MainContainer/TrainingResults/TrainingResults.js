@@ -479,6 +479,8 @@ const TrainingResults = (props) => {
                         <Experiment experiment={props.selectedExperiment} wrapper={wrapper}
                                     key={props.selectedExperiment.id}
                                     removeExperiment={removeExperimentConfirm}
+                                    sessionData={props.sessionData}
+                                    setSessionData={props.setSessionData}
                         />
                     </Accordion>
                 </div>
@@ -519,7 +521,10 @@ const TrainingResults = (props) => {
                 </div>
             </div>
             <TrainingRunAccordion loadingSelectedExperiment={loadingSelectedExperiment}
-                                  selectedExperiment={selectedExperiment}/>
+                                  selectedExperiment={selectedExperiment}
+                                  sessionData={props.sessionData}
+                                  setSessionData={props.setSessionData}
+            />
         </div>
     );
 }

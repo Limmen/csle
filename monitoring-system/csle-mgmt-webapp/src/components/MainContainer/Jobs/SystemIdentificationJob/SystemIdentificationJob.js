@@ -8,6 +8,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const SystemIdentificationJob = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
@@ -16,6 +18,8 @@ const SystemIdentificationJob = (props) => {
     const [hyperparametersOpen, setHyperparametersOpen] = useState(false);
     const [logs, setLogs] = useState(null);
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const renderRemoveSystemIdentificationJobTooltip = (props) => (
@@ -59,7 +63,7 @@ const SystemIdentificationJob = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/file',
+            `http://` + ip + ':7777/file' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -68,7 +72,15 @@ const SystemIdentificationJob = (props) => {
                 body: JSON.stringify({path: props.job.log_file_path})
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
                 setLoadingLogs(false)
                 setLogs(parseLogs(response))

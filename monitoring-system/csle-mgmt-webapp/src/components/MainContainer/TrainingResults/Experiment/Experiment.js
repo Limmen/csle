@@ -13,6 +13,8 @@ import Spinner from 'react-bootstrap/Spinner'
 import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 import getDateStr from "../../../Common/getDateStr";
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const Experiment = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
@@ -26,12 +28,14 @@ const Experiment = (props) => {
     const [logs, setLogs] = useState(null);
 
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/file',
+            `http://` + ip + ':7777/file' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -40,7 +44,15 @@ const Experiment = (props) => {
                 body: JSON.stringify({path: props.experiment.log_file_path})
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
                 setLoadingLogs(false)
                 setLogs(parseLogs(response))

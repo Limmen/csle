@@ -1970,7 +1970,10 @@ const Jobs = (props) => {
                                      key={props.selectedTrainingJob.id}
                                      removeTrainingJob={removeTrainingJobConfirm}
                                      stopTrainingJob={stopTrainingJobConfirm}
-                                     startTrainingJob={startTrainingJobConfirm}/>
+                                     startTrainingJob={startTrainingJobConfirm}
+                                     sessionData={props.sessionData}
+                                     setSessionData={props.setSessionData}
+                        />
                     </Accordion>
                 </div>
             )
@@ -2004,7 +2007,10 @@ const Jobs = (props) => {
                                                  key={props.selectedSystemIdentificationJob.id}
                                                  removeSystemIdentificationJob={removeSystemIdentificationJobConfirm}
                                                  stopSystemIdentificationJob={stopSystemIdentificationJobConfirm}
-                                                 startSystemIdentificationJob={startSystemIdentificationJobConfirm}/>
+                                                 startSystemIdentificationJob={startSystemIdentificationJobConfirm}
+                                                 sessionData={props.sessionData}
+                                                 setSessionData={props.setSessionData}
+                        />
                     </Accordion>
                 </div>
             )
@@ -2040,6 +2046,8 @@ const Jobs = (props) => {
                                            removeDataCollectionJob={removeDataCollectionJobConfirm}
                                            stopDataCollectionJob={stopDataCollectionJobConfirm}
                                            startDataCollectionJob={startDataCollectionJobConfirm}
+                                           sessionData={props.sessionData}
+                                           setSessionData={props.setSessionData}
                         />
                     </Accordion>
                 </div>
@@ -2091,7 +2099,9 @@ const Jobs = (props) => {
             </div>
 
             <TrainingJobAccordion loadingSelectedTrainingJob={loadingSelectedTrainingJob}
-                                  selectedTrainingJob={selectedTrainingJob}/>
+                                  selectedTrainingJob={selectedTrainingJob}
+                                  sessionData={props.sessionData}
+                                  setSessionData={props.setSessionData}/>
 
 
             <div className="row systemIdentificationJobs">
@@ -2134,7 +2144,9 @@ const Jobs = (props) => {
                 </div>
             </div>
             <DataCollectionJobAccordion selectedDataCollectionJob={selectedDataCollectionJob}
-                                        loadingSelectedDataCollectionJob={loadingSelectedDataCollectionJob}/>
+                                        loadingSelectedDataCollectionJob={loadingSelectedDataCollectionJob}
+                                        sessionData={props.sessionData}
+                                        setSessionData={props.setSessionData}/>
 
 
             <div className="row systemIdentificationJobs">
@@ -2178,7 +2190,9 @@ const Jobs = (props) => {
                 </div>
             </div>
             <SystemIdentificationJobAccordion selectedSystemIdentificationJob={selectedSystemIdentificationJob}
-                                              loadingSelectedSystemIdentificationJob={loadingSelectedSystemIdentificationJob}/>
+                                              loadingSelectedSystemIdentificationJob={loadingSelectedSystemIdentificationJob}
+                                              sessionData={props.sessionData}
+                                              setSessionData={props.setSessionData}/>
 
         </div>
     );
