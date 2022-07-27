@@ -199,7 +199,7 @@ const SDNControllers = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Running SDN controller:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedEmulationId}
@@ -278,7 +278,8 @@ const SDNControllers = () => {
     const wrapper = createRef();
 
     return (
-        <div className="Emulations">
+        <div className="SDNControllers">
+            <h3 className="managementTitle"> Management of SDN Controllers </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
@@ -288,7 +289,7 @@ const SDNControllers = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-5">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="basic-addon1" className="searchIcon">

@@ -13,7 +13,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
-import { confirmAlert } from 'react-confirm-alert';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Simulations = () => {
@@ -174,7 +174,7 @@ const Simulations = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -223,7 +223,7 @@ const Simulations = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -268,14 +268,14 @@ const Simulations = () => {
         setSearchString(searchVal)
 
         var selectedSimulationRemoved = false
-        if(!loadingSelectedSimulation && filteredSimsIds.length > 0){
+        if (!loadingSelectedSimulation && filteredSimsIds.length > 0) {
             for (let i = 0; i < filteredSimsIds.length; i++) {
-                if(selectedSimulation !== null && selectedSimulation !== undefined &&
+                if (selectedSimulation !== null && selectedSimulation !== undefined &&
                     selectedSimulation.id === filteredSimsIds[i].value) {
                     selectedSimulationRemoved = true
                 }
             }
-            if(!selectedSimulationRemoved) {
+            if (!selectedSimulationRemoved) {
                 setSelectedSimulationId(filteredSimsIds[0])
                 fetchSimulation(filteredSimsIds[0])
                 setLoadingSelectedSimulation(true)
@@ -322,25 +322,6 @@ const Simulations = () => {
         );
     }
 
-    const SimulationAccordions = (props) => {
-        if (props.loading) {
-            return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
-        } else {
-            return (
-                <Accordion defaultActiveKey="0">
-                    {props.simulations.map((simulation, index) =>
-                        <Simulation simulation={simulation} wrapper={wrapper} key={simulation.name + "-" + index}
-                                    removeSimulation={removeSimulationConfirm}
-                        />
-                    )}
-                </Accordion>
-            )
-        }
-    }
-
     const SimulationAccordion = (props) => {
         if (props.loadingSelectedSimulation || props.selectedSimulation === null || props.selectedSimulation === undefined) {
             if (props.loadingSelectedSimulation) {
@@ -358,12 +339,17 @@ const Simulations = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <Simulation simulation={props.selectedSimulation} wrapper={wrapper}
-                                key={props.selectedSimulation.name}
-                                removeSimulation={removeSimulationConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of selected simulation:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <Simulation simulation={props.selectedSimulation} wrapper={wrapper}
+                                    key={props.selectedSimulation.name}
+                                    removeSimulation={removeSimulationConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
@@ -404,7 +390,7 @@ const Simulations = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Simulation:
+                            Selected simulation:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -458,13 +444,14 @@ const Simulations = () => {
 
     return (
         <div className="Simulations">
+            <h3 className="managementTitle"> Management of Simulations </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                    <SelectSimulationOrSpinner loading={loading}
-                                               simulationIds={filteredSimulationIds}
-                                               selectedSimulationId={selectedSimulationId}
-                    />
+                        <SelectSimulationOrSpinner loading={loading}
+                                                   simulationIds={filteredSimulationIds}
+                                                   selectedSimulationId={selectedSimulationId}
+                        />
                     </h4>
                 </div>
                 <div className="col-sm-3">

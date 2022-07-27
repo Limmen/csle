@@ -548,7 +548,7 @@ const Emulations = () => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Emulation Configuration:
+                        Configuration of selected emulation:
                     </h3>
                     <Accordion defaultActiveKey="0">
                         <Emulation emulation={props.selectedEmulation}
@@ -594,7 +594,7 @@ const Emulations = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Emulation:
+                            Selected emulation:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -699,6 +699,7 @@ const Emulations = () => {
 
     return (
         <div className="Emulations">
+            <h3 className="managementTitle"> Management of Emulated Infrastructures </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">

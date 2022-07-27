@@ -392,7 +392,7 @@ const EmulationStatistics = () => {
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Statistic:
+                            Selected statistic:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -813,6 +813,7 @@ const EmulationStatistics = () => {
 
     return (
         <div className="emulationStatistics">
+            <h3 className="managementTitle"> Statistics of Emulations </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4>

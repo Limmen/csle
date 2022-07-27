@@ -7,19 +7,19 @@
     color: black !important;
 }
 .title {
-    margin-top:-10px;
+    margin-top:-30px;
     font-weight: bold;
     color: black !important;
 }
 
 .navtabsheader{
-    margin-top:0px;
+    margin-top:18px;
     font-size: 10px;
     color: black !important;
 }
 
 .jumbotron {
-    height:108px;
+    height:70px;
     color: black !important;
 }
 
@@ -33,4 +33,8 @@
 
 .active {
     font-weight: bolder;
+}
+
+.dropdown-item {
+    font-size: 13px;
 }

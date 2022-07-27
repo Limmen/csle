@@ -590,7 +590,7 @@ const SystemModels = () => {
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Model:
+                            Selected system model:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -907,6 +907,7 @@ const SystemModels = () => {
 
     return (
         <div className="systemModels">
+            <h3 className="managementTitle"> Management of System models </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">

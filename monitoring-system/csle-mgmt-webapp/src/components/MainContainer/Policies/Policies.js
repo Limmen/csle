@@ -18,8 +18,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
-import { useDebouncedCallback } from 'use-debounce';
-import { confirmAlert } from 'react-confirm-alert';
+import {useDebouncedCallback} from 'use-debounce';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Policies = () => {
@@ -400,7 +400,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -449,7 +449,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -573,7 +573,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -622,7 +622,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -671,7 +671,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -721,14 +721,15 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the FNN-with-softmax policy with ID {fnnWSoftmaxPolicy.id}?
+                                    Are you sure you want to delete the FNN-with-softmax policy with
+                                    ID {fnnWSoftmaxPolicy.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
@@ -869,7 +870,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -918,7 +919,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1025,7 +1026,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1074,7 +1075,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1181,7 +1182,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1231,7 +1232,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1343,7 +1344,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1393,7 +1394,7 @@ const Policies = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1683,7 +1684,7 @@ const Policies = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Multi-threshold policy:
+                            Selected multi-threshold policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -1762,7 +1763,7 @@ const Policies = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            PPO policy:
+                            Selected PPO policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -1842,7 +1843,7 @@ const Policies = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Feed-forward neural network policy:
+                            Selected feed-forward neural network policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -1921,7 +1922,7 @@ const Policies = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            DQN policy:
+                            Selected DQN policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -2000,7 +2001,7 @@ const Policies = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Tabular policy:
+                            Selected tabular policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -2080,7 +2081,7 @@ const Policies = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Vector policy:
+                            Selected vector policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -2159,7 +2160,7 @@ const Policies = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Alpha-vector policy:
+                            Selected alpha-vector policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -2214,7 +2215,7 @@ const Policies = () => {
     const MultiThresholdPolicyAccordion = (props) => {
         if (props.loadingMultiThresholdPolicy || props.selectedMultiThresholdPolicy === null ||
             props.selectedMultiThresholdPolicy === undefined) {
-            if(props.loadingMultiThresholdPolicy) {
+            if (props.loadingMultiThresholdPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -2229,18 +2230,24 @@ const Policies = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <MultiThresholdPolicy policy={selectedMultiThresholdPolicy} wrapper={wrapper} key={selectedMultiThresholdPolicy.id}
-                                          removeMultiThresholdPolicy={removeMultiThresholdPolicyConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected multi-threshold policy:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <MultiThresholdPolicy policy={selectedMultiThresholdPolicy} wrapper={wrapper}
+                                              key={selectedMultiThresholdPolicy.id}
+                                              removeMultiThresholdPolicy={removeMultiThresholdPolicyConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     const PPOPolicyAccordion = (props) => {
         if (props.loadingPpoPolicy || props.selectedPpoPolicy === null || props.selectedPpoPolicy === undefined) {
-            if(props.loadingPpoPolicy) {
+            if (props.loadingPpoPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -2255,18 +2262,23 @@ const Policies = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <PPOPolicy policy={selectedPpoPolicy} wrapper={wrapper} key={selectedPpoPolicy.id}
-                               removePPOPolicy={removePPOPolicyConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected PPO policy:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <PPOPolicy policy={selectedPpoPolicy} wrapper={wrapper} key={selectedPpoPolicy.id}
+                                   removePPOPolicy={removePPOPolicyConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     const FnnWSoftmaxPolicyAccordion = (props) => {
         if (props.loadingFnnWSoftmaxPolicy || props.selectedFnnWSoftmaxPolicy === null || props.selectedFnnWSoftmaxPolicy === undefined) {
-            if(props.loadingFnnWSoftmaxPolicy) {
+            if (props.loadingFnnWSoftmaxPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -2281,19 +2293,24 @@ const Policies = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <FnnWSoftmaxPolicy policy={props.selectedFnnWSoftmaxPolicy} wrapper={wrapper}
-                               key={props.selectedFnnWSoftmaxPolicy.id}
-                                       removeFnnWSoftmaxPolicy={removeFnnWSoftmaxPolicyConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected feed-forward neural network policy:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <FnnWSoftmaxPolicy policy={props.selectedFnnWSoftmaxPolicy} wrapper={wrapper}
+                                           key={props.selectedFnnWSoftmaxPolicy.id}
+                                           removeFnnWSoftmaxPolicy={removeFnnWSoftmaxPolicyConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     const DQNPolicyAccordion = (props) => {
         if (props.loadingDQNPolicy || props.selectedDQNPolicy === null || props.selectedDQNPolicy === undefined) {
-            if(props.loadingDQNPolicy) {
+            if (props.loadingDQNPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -2308,18 +2325,23 @@ const Policies = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <DQNPolicy policy={selectedDQNPolicy} wrapper={wrapper} key={selectedDQNPolicy.id}
-                               removeDQNPolicy={removeDQNPolicyConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected DQN policy:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <DQNPolicy policy={selectedDQNPolicy} wrapper={wrapper} key={selectedDQNPolicy.id}
+                                   removeDQNPolicy={removeDQNPolicyConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     const TabularPolicyAccordion = (props) => {
         if (props.loadingTabularPolicy || props.selectedTabularPolicy === null || props.selectedTabularPolicy === undefined) {
-            if(props.loadingTabularPolicy) {
+            if (props.loadingTabularPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -2334,18 +2356,23 @@ const Policies = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
-                               removeTabularPolicy={removeTabularPolicyConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected tabular policy:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
+                                       removeTabularPolicy={removeTabularPolicyConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     const VectorPolicyAccordion = (props) => {
         if (props.loadingVectorPolicy || props.selectedVectorPolicy === null || props.selectedVectorPolicy === undefined) {
-            if(props.loadingVectorPolicy) {
+            if (props.loadingVectorPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -2360,18 +2387,23 @@ const Policies = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <VectorPolicy policy={selectedVectorPolicy} wrapper={wrapper} key={selectedVectorPolicy.id}
-                                   removeVectorPolicy={removeVectorPolicyConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected vector policy:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <VectorPolicy policy={selectedVectorPolicy} wrapper={wrapper} key={selectedVectorPolicy.id}
+                                      removeVectorPolicy={removeVectorPolicyConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     const AlphaVecPolicyAccordion = (props) => {
         if (props.loadingAlphaVecPolicy || props.selectedAlphaVecPolicy === null || props.selectedAlphaVecPolicy === undefined) {
-            if(props.loadingAlphaVecPolicy) {
+            if (props.loadingAlphaVecPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -2386,18 +2418,23 @@ const Policies = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <AlphaVecPolicy policy={selectedAlphaVecPolicy} wrapper={wrapper}
-                                   key={selectedAlphaVecPolicy.id}
-                                   removeAlphaVecPolicy={removeAlphaVecPolicyConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected alpha-vector policy:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <AlphaVecPolicy policy={selectedAlphaVecPolicy} wrapper={wrapper}
+                                        key={selectedAlphaVecPolicy.id}
+                                        removeAlphaVecPolicy={removeAlphaVecPolicyConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     const searchMultiThresholdPoliciesFilter = (multiThresholdPolicyId, searchVal) => {
-        return (searchVal === "" ||  multiThresholdPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+        return (searchVal === "" || multiThresholdPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchMultiThresholdPolicyChange = (event) => {
@@ -2409,14 +2446,14 @@ const Policies = () => {
         setMultiThresholdPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
-        if(!loadingMultiThresholdPolicy && fPoliciesIds.length > 0){
+        if (!loadingMultiThresholdPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if(selectedMultiThresholdPolicy !== null && selectedMultiThresholdPolicy !== undefined &&
+                if (selectedMultiThresholdPolicy !== null && selectedMultiThresholdPolicy !== undefined &&
                     selectedMultiThresholdPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
-            if(!selectedPolicyRemoved) {
+            if (!selectedPolicyRemoved) {
                 setSelectedMultiThresholdPolicyId(fPoliciesIds[0])
                 fetchMultiThresholdPolicy(fPoliciesIds[0])
                 setLoadingMultiThresholdPolicy(true)
@@ -2446,14 +2483,14 @@ const Policies = () => {
         setPpoPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
-        if(!loadingPpoPolicy && fPoliciesIds.length > 0){
+        if (!loadingPpoPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if(selectedPpoPolicy !== null && selectedPpoPolicy !== undefined &&
+                if (selectedPpoPolicy !== null && selectedPpoPolicy !== undefined &&
                     selectedPpoPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
-            if(!selectedPolicyRemoved) {
+            if (!selectedPolicyRemoved) {
                 setSelectedPpoPolicyId(fPoliciesIds[0])
                 fetchPpoPolicy(fPoliciesIds[0])
                 setLoadingPpoPolicy(true)
@@ -2485,14 +2522,14 @@ const Policies = () => {
         setFnnWSoftmaxPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
-        if(!loadingFnnWSoftmaxPolicy && fPoliciesIds.length > 0){
+        if (!loadingFnnWSoftmaxPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if(selectedFnnWSoftmaxPolicy !== null && selectedFnnWSoftmaxPolicy !== undefined &&
+                if (selectedFnnWSoftmaxPolicy !== null && selectedFnnWSoftmaxPolicy !== undefined &&
                     selectedFnnWSoftmaxPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
-            if(!selectedPolicyRemoved) {
+            if (!selectedPolicyRemoved) {
                 setSelectedFnnWSoftmaxPolicyId(fPoliciesIds[0])
                 fetchFnnWSoftmaxPolicy(fPoliciesIds[0])
                 setLoadingFnnWSoftmaxPolicy(true)
@@ -2522,14 +2559,14 @@ const Policies = () => {
         setDQNPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
-        if(!loadingDQNPolicy && fPoliciesIds.length > 0){
+        if (!loadingDQNPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if(selectedDQNPolicy !== null && selectedDQNPolicy !== undefined &&
+                if (selectedDQNPolicy !== null && selectedDQNPolicy !== undefined &&
                     selectedDQNPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
-            if(!selectedPolicyRemoved) {
+            if (!selectedPolicyRemoved) {
                 setSelectedDQNPolicyId(fPoliciesIds[0])
                 fetchDQNPolicy(fPoliciesIds[0])
                 setLoadingDQNPolicy(true)
@@ -2560,14 +2597,14 @@ const Policies = () => {
         setTabularPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
-        if(!loadingTabularPolicy && fPoliciesIds.length > 0){
+        if (!loadingTabularPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if(selectedTabularPolicy !== null && selectedTabularPolicy !== undefined &&
+                if (selectedTabularPolicy !== null && selectedTabularPolicy !== undefined &&
                     selectedTabularPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
-            if(!selectedPolicyRemoved) {
+            if (!selectedPolicyRemoved) {
                 setSelectedTabularPolicyId(fPoliciesIds[0])
                 fetchTabularPolicy(fPoliciesIds[0])
                 setLoadingTabularPolicy(true)
@@ -2597,14 +2634,14 @@ const Policies = () => {
         setVectorPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
-        if(!loadingVectorPolicy && fPoliciesIds.length > 0){
+        if (!loadingVectorPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if(selectedVectorPolicy !== null && selectedVectorPolicy !== undefined &&
+                if (selectedVectorPolicy !== null && selectedVectorPolicy !== undefined &&
                     selectedVectorPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
-            if(!selectedPolicyRemoved) {
+            if (!selectedPolicyRemoved) {
                 setSelectedVectorPolicyId(fPoliciesIds[0])
                 fetchVectorPolicy(fPoliciesIds[0])
                 setLoadingVectorPolicy(true)
@@ -2634,14 +2671,14 @@ const Policies = () => {
         setAlphaVecPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
-        if(!loadingAlphaVecPolicy && fPoliciesIds.length > 0){
+        if (!loadingAlphaVecPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if(selectedAlphaVecPolicy !== null && selectedAlphaVecPolicy !== undefined &&
+                if (selectedAlphaVecPolicy !== null && selectedAlphaVecPolicy !== undefined &&
                     selectedAlphaVecPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
-            if(!selectedPolicyRemoved) {
+            if (!selectedPolicyRemoved) {
                 setSelectedALphaVecPolicyId(fPoliciesIds[0])
                 fetchAlphaVecPolicy(fPoliciesIds[0])
                 setLoadingAlphaVecPolicy(true)
@@ -2660,6 +2697,7 @@ const Policies = () => {
 
     return (
         <div className="policyExamination">
+            <h3 className="managementTitle"> Management of Policies </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
@@ -2730,8 +2768,8 @@ const Policies = () => {
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectTabularPolicyOrSpinner loadingTabularPolicies={loadingTabularPolicies}
-                                                  tabularPoliciesIds={filteredTabulaPoliciesIds}
-                                                  selectedTabularPolicyId={selectedTabularPolicyId}
+                                                      tabularPoliciesIds={filteredTabulaPoliciesIds}
+                                                      selectedTabularPolicyId={selectedTabularPolicyId}
                         />
                     </h4>
                 </div>
@@ -2757,15 +2795,15 @@ const Policies = () => {
             </div>
 
             <TabularPolicyAccordion loadingTabularPolicy={loadingTabularPolicy}
-                                selectedTabularPolicy={selectedTabularPolicy}/>
+                                    selectedTabularPolicy={selectedTabularPolicy}/>
 
 
             <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectAlphaVecPolicyOrSpinner loadingAlphaVecPolicies={loadingAlphaVecPolicies}
-                                                      alphaVecPoliciesIds={filteredAlphaVecPoliciesIds}
-                                                      selectedAlphaVecPolicyId={selectedAlphaVecPolicyId}
+                                                       alphaVecPoliciesIds={filteredAlphaVecPoliciesIds}
+                                                       selectedAlphaVecPolicyId={selectedAlphaVecPolicyId}
                         />
                     </h4>
                 </div>
@@ -2791,7 +2829,7 @@ const Policies = () => {
             </div>
 
             <AlphaVecPolicyAccordion loadingAlphaVecPolicy={loadingAlphaVecPolicy}
-                                    selectedAlphaVecPolicy={selectedAlphaVecPolicy}/>
+                                     selectedAlphaVecPolicy={selectedAlphaVecPolicy}/>
 
 
             <div className="row dqnPolicies simulationTracesHeader">
@@ -2830,8 +2868,8 @@ const Policies = () => {
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectFnnWSoftmaxPolicyOrSpinner loadingFnnWSoftmaxPolicies={loadingFnnWSoftmaxPolicies}
-                                                  fnnWSoftmaxPoliciesIds={filteredFnnWSoftmaxPoliciesIds}
-                                                  selectedFnnWSoftmaxPolicyId={selectedFnnWSoftmaxPolicyId}
+                                                          fnnWSoftmaxPoliciesIds={filteredFnnWSoftmaxPoliciesIds}
+                                                          selectedFnnWSoftmaxPolicyId={selectedFnnWSoftmaxPolicyId}
                         />
                     </h4>
                 </div>
@@ -2864,8 +2902,8 @@ const Policies = () => {
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectVectorPolicyOrSpinner loadingVectorPolicies={loadingVectorPolicies}
-                                                      vectorPoliciesIds={filteredVectorPoliciesIds}
-                                                      selectedVectorPolicyId={selectedVectorPolicyId}
+                                                     vectorPoliciesIds={filteredVectorPoliciesIds}
+                                                     selectedVectorPolicyId={selectedVectorPolicyId}
                         />
                     </h4>
                 </div>
@@ -2891,7 +2929,7 @@ const Policies = () => {
             </div>
 
             <VectorPolicyAccordion loadingVectorPolicy={loadingVectorPolicy}
-                                    selectedVectorPolicy={selectedVectorPolicy}/>
+                                   selectedVectorPolicy={selectedVectorPolicy}/>
 
         </div>
     );

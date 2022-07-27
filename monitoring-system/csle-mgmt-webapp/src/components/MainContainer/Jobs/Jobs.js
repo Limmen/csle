@@ -13,8 +13,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
-import { useDebouncedCallback } from 'use-debounce';
-import { confirmAlert } from 'react-confirm-alert';
+import {useDebouncedCallback} from 'use-debounce';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Jobs = () => {
@@ -85,7 +85,7 @@ const Jobs = () => {
             .then(response => {
                 const trainingJobsIds = response.map((id_obj, index) => {
                     var lbl = ""
-                    if(id_obj.running){
+                    if (id_obj.running) {
                         lbl = "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation + " (running)"
                     } else {
                         lbl = "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation
@@ -144,7 +144,7 @@ const Jobs = () => {
             .then(response => {
                 const dataCollectionJobIds = response.map((id_obj, index) => {
                     var lbl = ""
-                    if(id_obj.running) {
+                    if (id_obj.running) {
                         lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + " (running)"
                     } else {
                         lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
@@ -203,7 +203,7 @@ const Jobs = () => {
             .then(response => {
                 const systemIdentificationJobsIds = response.map((id_obj, index) => {
                     var lbl = ""
-                    if(id_obj.running) {
+                    if (id_obj.running) {
                         lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + " (running)"
                     } else {
                         lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
@@ -303,7 +303,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -352,7 +352,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -449,7 +449,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -499,7 +499,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -678,14 +678,14 @@ const Jobs = () => {
         setTrainingJobsSearchString(trainingJobsSearchString)
 
         var selectedTrainingJobRemoved = false
-        if(!loadingSelectedTrainingJob && filteredTJobIds.length > 0){
+        if (!loadingSelectedTrainingJob && filteredTJobIds.length > 0) {
             for (let i = 0; i < filteredTJobIds.length; i++) {
-                if(selectedTrainingJob !== null && selectedTrainingJob !== undefined &&
+                if (selectedTrainingJob !== null && selectedTrainingJob !== undefined &&
                     selectedTrainingJob.id === filteredTJobIds[i].value) {
                     selectedTrainingJobRemoved = true
                 }
             }
-            if(!selectedTrainingJobRemoved) {
+            if (!selectedTrainingJobRemoved) {
                 setSelectedTrainingJobId(filteredTJobIds[0])
                 fetchTrainingJob(filteredTJobIds[0])
                 setLoadingSelectedTrainingJob(true)
@@ -704,14 +704,14 @@ const Jobs = () => {
         setSystemIdentificationJobsSearchString(systemIdentificationJobsSearchString)
 
         var selectedSystemIdentificationJobRemoved = false
-        if(!loadingSelectedSystemIdentificationJob && filteredSIJobsIds.length > 0){
+        if (!loadingSelectedSystemIdentificationJob && filteredSIJobsIds.length > 0) {
             for (let i = 0; i < filteredSIJobsIds.length; i++) {
-                if(selectedSystemIdentificationJob !== null && selectedSystemIdentificationJob !== undefined &&
+                if (selectedSystemIdentificationJob !== null && selectedSystemIdentificationJob !== undefined &&
                     selectedSystemIdentificationJob.id === filteredSIJobsIds[i].value) {
                     selectedSystemIdentificationJobRemoved = true
                 }
             }
-            if(!selectedSystemIdentificationJobRemoved) {
+            if (!selectedSystemIdentificationJobRemoved) {
                 setSelectedSystemIdentificationJobId(filteredSIJobsIds[0])
                 fetchSystemIdentificationJob(filteredSIJobsIds[0])
                 setLoadingSelectedSystemIdentificationJob(true)
@@ -723,7 +723,7 @@ const Jobs = () => {
 
     const runningTrainingJobsChange = (event) => {
         var filteredTJobIds = null
-        if(!showOnlyRunningTrainingJobs) {
+        if (!showOnlyRunningTrainingJobs) {
             filteredTJobIds = filteredTrainingJobsIds.filter(job => {
                 return job.running
             });
@@ -737,14 +737,14 @@ const Jobs = () => {
         setShowOnlyRunningTrainingJobs(!showOnlyRunningTrainingJobs)
 
         var selectedTrainingJobRemoved = false
-        if(!loadingSelectedTrainingJob && filteredTJobIds.length > 0){
+        if (!loadingSelectedTrainingJob && filteredTJobIds.length > 0) {
             for (let i = 0; i < filteredTJobIds.length; i++) {
-                if(selectedTrainingJob !== null && selectedTrainingJob !== undefined &&
+                if (selectedTrainingJob !== null && selectedTrainingJob !== undefined &&
                     selectedTrainingJob.id === filteredTJobIds[i].value) {
                     selectedTrainingJobRemoved = true
                 }
             }
-            if(!selectedTrainingJobRemoved) {
+            if (!selectedTrainingJobRemoved) {
                 setSelectedTrainingJobId(filteredTJobIds[0])
                 fetchTrainingJob(filteredTJobIds[0])
                 setLoadingSelectedTrainingJob(true)
@@ -755,7 +755,7 @@ const Jobs = () => {
     }
 
     const runningDataCollectionJobsChange = (event) => {
-        var filteredDCJobsIds= null
+        var filteredDCJobsIds = null
         if (!showOnlyRunningDataCollectionJobs) {
             filteredDCJobsIds = filteredDataCollectionJobsIds.filter(job => {
                 return job.running
@@ -770,14 +770,14 @@ const Jobs = () => {
         setShowOnlyRunningDataCollectionJobs(!showOnlyRunningDataCollectionJobs)
 
         var selectedDataCollectionJobRemoved = false
-        if(!loadingSelectedDataCollectionJob && filteredDCJobsIds.length > 0){
+        if (!loadingSelectedDataCollectionJob && filteredDCJobsIds.length > 0) {
             for (let i = 0; i < filteredDCJobsIds.length; i++) {
-                if(selectedDataCollectionJob !== null && selectedDataCollectionJob !== undefined &&
+                if (selectedDataCollectionJob !== null && selectedDataCollectionJob !== undefined &&
                     selectedDataCollectionJob.id === filteredDCJobsIds[i].value) {
                     selectedDataCollectionJobRemoved = true
                 }
             }
-            if(!selectedDataCollectionJobRemoved) {
+            if (!selectedDataCollectionJobRemoved) {
                 setSelectedDataCollectionJobId(filteredDCJobsIds[0])
                 fetchDataCollectionJob(filteredDCJobsIds[0])
                 setLoadingSelectedDataCollectionJob(true)
@@ -789,7 +789,7 @@ const Jobs = () => {
 
     const runningSystemIdentificationJobsChange = (event) => {
         var filteredSIJobsIds = null
-        if(!showOnlyRunningSystemIdentificationJobs) {
+        if (!showOnlyRunningSystemIdentificationJobs) {
             filteredSIJobsIds = filteredSystemIdentificationJobsIds.filter(job => {
                 return job.running
             });
@@ -802,14 +802,14 @@ const Jobs = () => {
         }
         setShowOnlyRunningSystemIdentificationJobs(!showOnlyRunningSystemIdentificationJobs)
         var selectedSystemIdentificationJobRemoved = false
-        if(!loadingSelectedSystemIdentificationJob && filteredSIJobsIds.length > 0){
+        if (!loadingSelectedSystemIdentificationJob && filteredSIJobsIds.length > 0) {
             for (let i = 0; i < filteredSIJobsIds.length; i++) {
-                if(selectedSystemIdentificationJob !== null && selectedSystemIdentificationJob !== undefined &&
+                if (selectedSystemIdentificationJob !== null && selectedSystemIdentificationJob !== undefined &&
                     selectedSystemIdentificationJob.id === filteredSIJobsIds[i].value) {
                     selectedSystemIdentificationJobRemoved = true
                 }
             }
-            if(!selectedSystemIdentificationJobRemoved) {
+            if (!selectedSystemIdentificationJobRemoved) {
                 setSelectedSystemIdentificationJobId(filteredSIJobsIds[0])
                 fetchSystemIdentificationJob(filteredSIJobsIds[0])
                 setLoadingSelectedSystemIdentificationJob(true)
@@ -846,14 +846,14 @@ const Jobs = () => {
         setDataCollectionJobsSearchString(searchVal)
 
         var selectedDataCollectionJobRemoved = false
-        if(!loadingSelectedDataCollectionJob && filteredDCJobsIds.length > 0){
+        if (!loadingSelectedDataCollectionJob && filteredDCJobsIds.length > 0) {
             for (let i = 0; i < filteredDCJobsIds.length; i++) {
-                if(selectedDataCollectionJob !== null && selectedDataCollectionJob !== undefined &&
+                if (selectedDataCollectionJob !== null && selectedDataCollectionJob !== undefined &&
                     selectedDataCollectionJob.id === filteredDCJobsIds[i].value) {
                     selectedDataCollectionJobRemoved = true
                 }
             }
-            if(!selectedDataCollectionJobRemoved) {
+            if (!selectedDataCollectionJobRemoved) {
                 setSelectedDataCollectionJobId(filteredDCJobsIds[0])
                 fetchDataCollectionJob(filteredDCJobsIds[0])
                 setLoadingSelectedDataCollectionJob(true)
@@ -935,7 +935,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -985,7 +985,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1115,7 +1115,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1164,7 +1164,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1213,7 +1213,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1262,7 +1262,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1311,7 +1311,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1360,7 +1360,7 @@ const Jobs = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -1493,7 +1493,7 @@ const Jobs = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Training job:
+                            Selected training job:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -1522,7 +1522,8 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderTrainingJobsInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowTrainingJobsInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowTrainingJobsInfoModal(true)}
+                                className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1574,7 +1575,7 @@ const Jobs = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Data collection job:
+                            Selected data collection job:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -1654,7 +1655,7 @@ const Jobs = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            System identification job:
+                            Selected system identification job:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -1682,7 +1683,8 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderSystemIdentificationJobsInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowSystemIdentificationJobsInfoModal(true)}
+                                className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1787,7 +1789,7 @@ const Jobs = () => {
 
     const TrainingJobAccordion = (props) => {
         if (props.loadingSelectedTrainingJob || props.selectedTrainingJob === null || props.selectedTrainingJob === undefined) {
-            if(props.loadingSelectedTrainingJob) {
+            if (props.loadingSelectedTrainingJob) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching selected training job... </span>
@@ -1802,11 +1804,18 @@ const Jobs = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <TrainingJob job={props.selectedTrainingJob} wrapper={wrapper} key={props.selectedTrainingJob.id}
-                                 removeTrainingJob={removeTrainingJobConfirm} stopTrainingJob={stopTrainingJobConfirm}
-                                 startTrainingJob={startTrainingJobConfirm}/>
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected training job:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <TrainingJob job={props.selectedTrainingJob} wrapper={wrapper}
+                                     key={props.selectedTrainingJob.id}
+                                     removeTrainingJob={removeTrainingJobConfirm}
+                                     stopTrainingJob={stopTrainingJobConfirm}
+                                     startTrainingJob={startTrainingJobConfirm}/>
+                    </Accordion>
+                </div>
             )
         }
     }
@@ -1814,7 +1823,7 @@ const Jobs = () => {
     const SystemIdentificationJobAccordion = (props) => {
         if (props.loadingSelectedSystemIdentificationJob || props.selectedSystemIdentificationJob === null
             || props.selectedSystemIdentificationJob === undefined) {
-            if(props.loadingSelectedSystemIdentificationJob) {
+            if (props.loadingSelectedSystemIdentificationJob) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching selected system identification job... </span>
@@ -1829,13 +1838,18 @@ const Jobs = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <SystemIdentificationJob job={props.selectedSystemIdentificationJob} wrapper={wrapper}
-                                             key={props.selectedSystemIdentificationJob.id}
-                                             removeSystemIdentificationJob={removeSystemIdentificationJobConfirm}
-                                             stopSystemIdentificationJob={stopSystemIdentificationJobConfirm}
-                                             startSystemIdentificationJob={startSystemIdentificationJobConfirm}/>
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected system identification job:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <SystemIdentificationJob job={props.selectedSystemIdentificationJob} wrapper={wrapper}
+                                                 key={props.selectedSystemIdentificationJob.id}
+                                                 removeSystemIdentificationJob={removeSystemIdentificationJobConfirm}
+                                                 stopSystemIdentificationJob={stopSystemIdentificationJobConfirm}
+                                                 startSystemIdentificationJob={startSystemIdentificationJobConfirm}/>
+                    </Accordion>
+                </div>
             )
         }
     }
@@ -1843,7 +1857,7 @@ const Jobs = () => {
     const DataCollectionJobAccordion = (props) => {
         if (props.loadingSelectedDataCollectionJob || props.selectedDataCollectionJob === null ||
             props.selectedDataCollectionJob === undefined) {
-            if(props.loadingSelectedDataCollectionJob) {
+            if (props.loadingSelectedDataCollectionJob) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching selected data collection job... </span>
@@ -1859,25 +1873,32 @@ const Jobs = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <DataCollectionJob job={props.selectedDataCollectionJob} wrapper={wrapper} key={props.selectedDataCollectionJob.id}
-                                       removeDataCollectionJob={removeDataCollectionJobConfirm}
-                                       stopDataCollectionJob={stopDataCollectionJobConfirm}
-                                       startDataCollectionJob={startDataCollectionJobConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of the selected data collection job:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <DataCollectionJob job={props.selectedDataCollectionJob} wrapper={wrapper}
+                                           key={props.selectedDataCollectionJob.id}
+                                           removeDataCollectionJob={removeDataCollectionJobConfirm}
+                                           stopDataCollectionJob={stopDataCollectionJobConfirm}
+                                           startDataCollectionJob={startDataCollectionJobConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     return (
-        <div className="policyExamination">
+        <div className="jobs">
+            <h3 className="managementTitle"> Management of Jobs </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectTrainingJobOrSpinner trainingJobsLoading={trainingJobsLoading}
-                                                   trainingJobsIds={filteredTrainingJobsIds}
-                                                   selectedTrainingJobId={selectedTrainingJobId}
+                                                    trainingJobsIds={filteredTrainingJobsIds}
+                                                    selectedTrainingJobId={selectedTrainingJobId}
                         />
                     </h4>
                 </div>
@@ -1913,7 +1934,7 @@ const Jobs = () => {
             </div>
 
             <TrainingJobAccordion loadingSelectedTrainingJob={loadingSelectedTrainingJob}
-                                    selectedTrainingJob={selectedTrainingJob}/>
+                                  selectedTrainingJob={selectedTrainingJob}/>
 
 
             <div className="row systemIdentificationJobs">
@@ -1962,9 +1983,10 @@ const Jobs = () => {
             <div className="row systemIdentificationJobs">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectSystemIdentificationJobOrSpinner systemIdentificationJobsLoading={systemIdentificationJobsLoading}
-                                                                systemIdentificationJobsIds={filteredSystemIdentificationJobsIds}
-                                                                selectedSystemIdentificationJobId={selectedSystemIdentificationJobId}
+                        <SelectSystemIdentificationJobOrSpinner
+                            systemIdentificationJobsLoading={systemIdentificationJobsLoading}
+                            systemIdentificationJobsIds={filteredSystemIdentificationJobsIds}
+                            selectedSystemIdentificationJobId={selectedSystemIdentificationJobId}
                         />
                     </h4>
                 </div>

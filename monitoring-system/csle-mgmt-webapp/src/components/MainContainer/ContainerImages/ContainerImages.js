@@ -148,6 +148,7 @@ const ContainerImages = () => {
 
     return (
         <div className="Monitoring">
+            <h3 className="managementTitle"> Management of Container Images </h3>
             <div className="row">
                 <div className="col-sm-3">
                 </div>

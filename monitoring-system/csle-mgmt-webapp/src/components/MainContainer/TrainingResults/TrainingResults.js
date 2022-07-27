@@ -12,8 +12,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
-import { useDebouncedCallback } from 'use-debounce';
-import { confirmAlert } from 'react-confirm-alert';
+import {useDebouncedCallback} from 'use-debounce';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const TrainingResults = () => {
@@ -162,7 +162,7 @@ const TrainingResults = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -211,7 +211,7 @@ const TrainingResults = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -273,7 +273,7 @@ const TrainingResults = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Training run:
+                            Selected training run:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "600px"}}>
                             <Select
@@ -353,14 +353,14 @@ const TrainingResults = () => {
         setSearchString(searchVal)
 
         var selectedExperimentRemoved = false
-        if(!loadingSelectedExperiment && fExpIds.length > 0){
+        if (!loadingSelectedExperiment && fExpIds.length > 0) {
             for (let i = 0; i < fExpIds.length; i++) {
-                if(selectedExperiment !== null && selectedExperiment !== undefined &&
+                if (selectedExperiment !== null && selectedExperiment !== undefined &&
                     selectedExperiment.id === fExpIds[i].value) {
                     selectedExperimentRemoved = true
                 }
             }
-            if(!selectedExperimentRemoved) {
+            if (!selectedExperimentRemoved) {
                 setSelectedExperimentId(fExpIds[0])
                 fetchExperiment(fExpIds[0])
                 setLoadingSelectedExperiment(true)
@@ -411,7 +411,7 @@ const TrainingResults = () => {
 
     const TrainingRunAccordion = (props) => {
         if (props.loadingSelectedExperiment || props.selectedExperiment === null || props.selectedExperiment === undefined) {
-            if(props.loadingSelectedExperiment) {
+            if (props.loadingSelectedExperiment) {
                 return (
                     <Spinner animation="border" role="status">
                         <span className="visually-hidden"></span>
@@ -423,18 +423,24 @@ const TrainingResults = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <Experiment experiment={props.selectedExperiment} wrapper={wrapper}
-                                key={props.selectedExperiment.id}
-                                removeExperiment={removeExperimentConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Results of the selected training run:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <Experiment experiment={props.selectedExperiment} wrapper={wrapper}
+                                    key={props.selectedExperiment.id}
+                                    removeExperiment={removeExperimentConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     return (
         <div className="TrainingResults">
+            <h3 className="managementTitle"> Management of Training Results </h3>
             <div className="row">
                 <div className="col-sm-6">
                     <h4 className="text-center inline-block emulationsHeader">

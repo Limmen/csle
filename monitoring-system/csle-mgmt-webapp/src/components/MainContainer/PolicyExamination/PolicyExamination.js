@@ -290,7 +290,8 @@ const PolicyExamination = () => {
 
     return (
         <div className="policyExamination" onKeyDown={handleKeyPress} tabIndex={0}>
-            <h4> Policy Examination
+            <h3 className="managementTitle"> Policy Examination </h3>
+            <h4>Selected emulation trace:
                 <span className="infoPolicyExp">
                     <OverlayTrigger
                         placement="right"

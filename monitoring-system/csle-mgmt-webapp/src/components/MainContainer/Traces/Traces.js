@@ -14,7 +14,7 @@ import Form from 'react-bootstrap/Form'
 import Select from 'react-select'
 import './Traces.css';
 import {useDebouncedCallback} from 'use-debounce';
-import { confirmAlert } from 'react-confirm-alert';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Traces = () => {
@@ -284,7 +284,7 @@ const Traces = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -333,7 +333,7 @@ const Traces = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -382,7 +382,7 @@ const Traces = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -431,7 +431,7 @@ const Traces = () => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -511,14 +511,14 @@ const Traces = () => {
         setFilteredEmulationTracesIds(filteredEmTracesIds)
         setEmulationTracesSearchString(searchVal)
         var selectedEmulationTraceRemoved = false
-        if(!loadingSelectedEmulationTrace && filteredEmTracesIds.length > 0){
+        if (!loadingSelectedEmulationTrace && filteredEmTracesIds.length > 0) {
             for (let i = 0; i < filteredEmTracesIds.length; i++) {
-                if(selectedEmulationTrace !== null && selectedEmulationTrace !== undefined &&
+                if (selectedEmulationTrace !== null && selectedEmulationTrace !== undefined &&
                     selectedEmulationTrace.id === filteredEmTracesIds[i].value) {
                     selectedEmulationTraceRemoved = true
                 }
             }
-            if(!selectedEmulationTraceRemoved) {
+            if (!selectedEmulationTraceRemoved) {
                 setSelectedEmulationTraceId(filteredEmTracesIds[0])
                 fetchEmulationTrace(filteredEmTracesIds[0])
                 setLoadingSelectedEmulationTrace(true)
@@ -546,14 +546,14 @@ const Traces = () => {
         setSimulationTracesSearchString(searchVal)
 
         var selectedSimulationTraceRemoved = false
-        if(!loadingSelectedSimulationTrace && filteredSimTracesIds.length > 0){
+        if (!loadingSelectedSimulationTrace && filteredSimTracesIds.length > 0) {
             for (let i = 0; i < filteredSimTracesIds.length; i++) {
-                if(selectedSimulationTrace !== null && selectedSimulationTrace !== undefined &&
+                if (selectedSimulationTrace !== null && selectedSimulationTrace !== undefined &&
                     selectedSimulationTrace.id === filteredSimTracesIds[i].value) {
                     selectedSimulationTraceRemoved = true
                 }
             }
-            if(!selectedSimulationTraceRemoved) {
+            if (!selectedSimulationTraceRemoved) {
                 setSelectedSimulationTraceId(filteredSimTracesIds[0])
                 fetchSimulationTrace(filteredSimTracesIds[0])
                 setLoadingSelectedSimulationTrace(true)
@@ -607,7 +607,7 @@ const Traces = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Emulation trace:
+                            Selected emulation trace:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -683,7 +683,7 @@ const Traces = () => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Simulation trace:
+                            Selected simulation trace:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
@@ -802,32 +802,17 @@ const Traces = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <EmulationTrace emulationTrace={props.selectedEmulationTrace}
-                                    wrapper={wrapper} key={props.selectedEmulationTrace.id}
-                                    removeEmulationTrace={removeEmulationTraceConfirm}
-                    />
-                </Accordion>
-            )
-        }
-    }
-
-    const SimulationTracesAccordions = (props) => {
-        if (props.loadingSimulationTraces) {
-            return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
-        } else {
-            return (
-                <Accordion defaultActiveKey="0">
-                    {props.simulationTraces.map((simulationTrace, index) =>
-                        <SimulationTrace simulationTrace={simulationTrace}
-                                         wrapper={wrapper} key={simulationTrace.id + "-" + index}
-                                         removeSimulationTrace={removeSimulationTraceConfirm}
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of selected emulation trace:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <EmulationTrace emulationTrace={props.selectedEmulationTrace}
+                                        wrapper={wrapper} key={props.selectedEmulationTrace.id}
+                                        removeEmulationTrace={removeEmulationTraceConfirm}
                         />
-                    )}
-                </Accordion>
+                    </Accordion>
+                </div>
             )
         }
     }
@@ -850,18 +835,24 @@ const Traces = () => {
             }
         } else {
             return (
-                <Accordion defaultActiveKey="0">
-                    <SimulationTrace simulationTrace={props.selectedSimulationTrace}
-                                     wrapper={wrapper} key={props.selectedSimulationTrace.id}
-                                     removeSimulationTrace={removeSimulationTraceConfirm}
-                    />
-                </Accordion>
+                <div>
+                    <h3 className="emulationConfigTitle">
+                        Configuration of selected simulation trace:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <SimulationTrace simulationTrace={props.selectedSimulationTrace}
+                                         wrapper={wrapper} key={props.selectedSimulationTrace.id}
+                                         removeSimulationTrace={removeSimulationTraceConfirm}
+                        />
+                    </Accordion>
+                </div>
             )
         }
     }
 
     return (
         <div className="Traces">
+            <h3 className="managementTitle"> Traces </h3>
             <div className="row emulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">

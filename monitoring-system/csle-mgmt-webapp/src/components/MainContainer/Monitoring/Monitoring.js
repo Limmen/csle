@@ -731,9 +731,9 @@ const Monitoring = () => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    Emulation Execution:
+                    Selected emulation execution:
                     <div className="conditionalDist inline-block selectEmulation">
-                        <div className="conditionalDist inline-block" style={{width: "700px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedEmulationExecutionId}
@@ -953,6 +953,7 @@ const Monitoring = () => {
 
     return (
         <div className="container-fluid">
+            <h3 className="managementTitle"> Monitoring of Emulations </h3>
             <div className="row">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
@@ -962,7 +963,7 @@ const Monitoring = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="basic-addon1" className="searchIcon">
