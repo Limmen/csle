@@ -19,6 +19,7 @@ class MGMT_WEBAPP:
     EMULATION_STATISTICS_PAGE_RESOURCE = "emulation-statistics-page"
     EMULATIONS_PAGE_RESOURCE = "emulations-page"
     IMAGES_PAGE_RESOURCE = "images-page"
+    DOWNLOADS_PAGE_RESOURCE = "downloads-page"
     JOBS_PAGE_RESOURCE = "jobs-page"
     MONITORING_PAGE_RESOURCE = "monitoring-page"
     POLICIES_PAGE_RESOURCE = "policies-page"

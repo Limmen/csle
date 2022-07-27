@@ -16,12 +16,24 @@ import Login from "./components/MainContainer/Login/Login";
 import Policies from "./components/MainContainer/Policies/Policies";
 import Jobs from "./components/MainContainer/Jobs/Jobs";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Downloads from "./components/MainContainer/Downloads/Downloads";
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import useSession from "./components/MainContainer/SessionManagement/useSession";
 
 
 function App() {
-    const { sessionData, setSessionData } = useSession();
+    const {sessionData, setSessionData} = useSession();
+
+    const ProtectedRoute = ({
+                                user,
+                                redirectPath = '/login-page',
+                                children,
+                            }) => {
+        if (!sessionData) {
+            return <Navigate to={redirectPath} replace/>;
+        }
+        return children;
+    };
 
     return (
         <div className="App container-fluid">
@@ -34,31 +46,78 @@ function App() {
                                 <Route index element={<Login setSessionData={setSessionData}
                                                              sessionData={sessionData}/>}>
                                 </Route>
-                                <Route path="emulations-page" index element={<Emulations/>}>
+                                <Route path="emulations-page" index element={
+                                    <ProtectedRoute>
+                                        <Emulations/>
+                                    </ProtectedRoute>}>
                                 </Route>
-                                <Route path="simulations-page" index element={<Simulations/>}>
+                                <Route path="simulations-page" index element={
+                                    <ProtectedRoute>
+                                        <Simulations/>
+                                    </ProtectedRoute>}>
                                 </Route>
-                                <Route path="monitoring-page" index element={<Monitoring/>}>
+                                <Route path="monitoring-page" index element={
+                                    <ProtectedRoute>
+                                        <Monitoring/>
+                                    </ProtectedRoute>}>
                                 </Route>
-                                <Route path="traces-page" index element={<Traces/>}>
+                                <Route path="traces-page" index element={
+                                    <ProtectedRoute>
+                                        <Traces/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="emulation-statistics-page" index element={<EmulationStatistics/>}>
+                                <Route path="emulation-statistics-page" index element={
+                                    <ProtectedRoute>
+                                        <EmulationStatistics/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="system-models-page" index element={<SystemModels/>}>
+                                <Route path="system-models-page" index element={
+                                    <ProtectedRoute>
+                                        <SystemModels/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="policy-examination-page" index element={<PolicyExamination/>}>
+                                <Route path="policy-examination-page" index element={
+                                    <ProtectedRoute>
+                                        <PolicyExamination/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="images-page" index element={<ContainerImages/>}>
+                                <Route path="images-page" index element={
+                                    <ProtectedRoute>
+                                        <ContainerImages/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="training-page" index element={<TrainingResults/>}>
+                                <Route path="training-page" index element={
+                                    <ProtectedRoute>
+                                        <TrainingResults/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="policies-page" index element={<Policies/>}>
+                                <Route path="policies-page" index element={
+                                    <ProtectedRoute>
+                                        <Policies/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="jobs-page" index element={<Jobs/>}>
+                                <Route path="jobs-page" index element={
+                                    <ProtectedRoute>
+                                        <Jobs/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
-                                <Route path="sdn-controllers-page" index element={<SDNControllers/>}>
+                                <Route path="sdn-controllers-page" index element={
+                                    <ProtectedRoute>
+                                        <SDNControllers/>
+                                    </ProtectedRoute>
+                                }>
                                 </Route>
                                 <Route path="about-page" index element={<About/>}>
+                                </Route>
+                                <Route path="downloads-page" index element={<Downloads/>}>
                                 </Route>
                                 <Route path="login-page" index element={<Login setSessionData={setSessionData}
                                                                                sessionData={sessionData}/>}>

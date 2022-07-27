@@ -9,6 +9,7 @@ from csle_rest_api.pages.emulation_statistics.routes import emulation_statistics
 from csle_rest_api.pages.system_models.routes import system_models_page_bp
 from csle_rest_api.pages.about.routes import about_page_bp
 from csle_rest_api.pages.login.routes import login_page_bp
+from csle_rest_api.pages.downloads.routes import downloads_page_bp
 from csle_rest_api.pages.images.routes import images_page_bp
 from csle_rest_api.pages.jobs.routes import jobs_page_bp
 from csle_rest_api.pages.policies.routes import policies_page_bp
@@ -77,6 +78,9 @@ def create_app(static_folder: str):
     app.register_blueprint(login_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGIN_PAGE_RESOURCE}")
+    app.register_blueprint(downloads_page_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.DOWNLOADS_PAGE_RESOURCE}")
     app.register_blueprint(cadvisor_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}")
     app.register_blueprint(grafana_bp,
