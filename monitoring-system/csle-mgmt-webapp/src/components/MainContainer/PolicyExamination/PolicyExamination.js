@@ -30,7 +30,7 @@ const onLoad = (reactFlowInstance) => {
     reactFlowInstance.fitView();
 }
 
-const PolicyExamination = () => {
+const PolicyExamination = (props) => {
 
     const evolutionSpeedOptions = [
         {
@@ -92,7 +92,7 @@ const PolicyExamination = () => {
     // const ip = "172.31.212.92"
 
     const fetchTraces = useCallback(() => {
-        fetch(`http://` + ip + ':7777/emulation-simulation-traces', {
+        fetch(`http://` + ip + ':7777/emulation-simulation-traces' + "?token=" + props.sessionData.token, {
             method: "GET", headers: new Headers({
                 Accept: "application/vnd.github.cloak-preview"
             })

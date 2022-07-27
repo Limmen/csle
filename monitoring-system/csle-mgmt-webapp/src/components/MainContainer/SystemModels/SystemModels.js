@@ -20,7 +20,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import getSystemModelTypeStr from "../../Common/getSystemModelTypeStr";
 
-const SystemModels = () => {
+const SystemModels = (props) => {
     const [systemModelsIds, setSystemModelsIds] = useState([]);
     const [filteredSystemModelsIds, setFilteredSystemModelsIds] = useState([]);
     const [selectedSystemModel, setSelectedSystemModel] = useState(null);
@@ -158,7 +158,7 @@ const SystemModels = () => {
 
     const fetchSystemModelsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/system-models?ids=true',
+            `http://` + ip + ':7777/system-models?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -206,7 +206,8 @@ const SystemModels = () => {
 
     const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
         fetch(
-            `http://` + ip + ':7777/gaussian-mixture-system-models/' + parseInt(model_id_obj.value.split("_")[0]),
+            (`http://` + ip + ':7777/gaussian-mixture-system-models/' + parseInt(model_id_obj.value.split("_")[0])
+            + "?token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -248,7 +249,8 @@ const SystemModels = () => {
 
     const fetchEmpiricalSystemModel = useCallback((model_id_obj) => {
         fetch(
-            `http://` + ip + ':7777/empirical-system-models/' + parseInt(model_id_obj.value.split("_")[0]),
+            (`http://` + ip + ':7777/empirical-system-models/' + parseInt(model_id_obj.value.split("_")[0])
+                + "?token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -290,7 +292,8 @@ const SystemModels = () => {
 
     const fetchGPSystemModel = useCallback((model_id_obj) => {
         fetch(
-            `http://` + ip + ':7777/gp-system-models/' + parseInt(model_id_obj.value.split("_")[0]),
+            (`http://` + ip + ':7777/gp-system-models/' + parseInt(model_id_obj.value.split("_")[0]) + "?token="
+                + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -333,7 +336,8 @@ const SystemModels = () => {
 
     const removeGaussianMixtureSystemModelRequest = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/gaussian-mixture-system-models/' + model_id,
+            (`http://` + ip + ':7777/gaussian-mixture-system-models/' + model_id + "?token="
+                + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -350,7 +354,7 @@ const SystemModels = () => {
 
     const removeEmpiricalSystemModelRequest = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/empirical-system-models/' + model_id,
+            (`http://` + ip + ':7777/empirical-system-models/' + model_id + "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -367,7 +371,7 @@ const SystemModels = () => {
 
     const removeGpSystemModelRequest = useCallback((model_id) => {
         fetch(
-            `http://` + ip + ':7777/gp-system-models/' + model_id,
+            (`http://` + ip + ':7777/gp-system-models/' + model_id + "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({

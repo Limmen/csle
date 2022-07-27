@@ -22,7 +22,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Policies = () => {
+const Policies = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [multiThresholdPoliciesIds, setMultiThresholdPoliciesIds] = useState([]);
     const [filteredMultiThresholdPoliciesIds, setFilteredMultiThresholdPoliciesIds] = useState([]);
@@ -78,7 +78,7 @@ const Policies = () => {
 
     const fetchMultiThresholdPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/multi-threshold-policies?ids=true',
+            `http://` + ip + ':7777/multi-threshold-policies?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -111,7 +111,7 @@ const Policies = () => {
 
     const fetchPPOPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/ppo-policies?ids=true',
+            `http://` + ip + ':7777/ppo-policies?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -144,7 +144,7 @@ const Policies = () => {
 
     const fetchDQNPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/dqn-policies?ids=true',
+            `http://` + ip + ':7777/dqn-policies?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -177,7 +177,7 @@ const Policies = () => {
 
     const fetchTabularPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/tabular-policies?ids=true',
+            `http://` + ip + ':7777/tabular-policies?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -210,7 +210,7 @@ const Policies = () => {
 
     const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/vector-policies?ids=true',
+            `http://` + ip + ':7777/vector-policies?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -243,7 +243,7 @@ const Policies = () => {
 
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/alpha-vec-policies?ids=true',
+            `http://` + ip + ':7777/alpha-vec-policies?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -276,7 +276,7 @@ const Policies = () => {
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/fnn-w-softmax-policies?ids=true',
+            `http://` + ip + ':7777/fnn-w-softmax-policies?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -327,7 +327,7 @@ const Policies = () => {
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/ppo-policies/' + ppo_policy_id,
+            `http://` + ip + ':7777/ppo-policies/' + ppo_policy_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -344,7 +344,7 @@ const Policies = () => {
 
     const fetchPpoPolicy = useCallback((ppo_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/ppo-policies/' + ppo_policy_id.value,
+            `http://` + ip + ':7777/ppo-policies/' + ppo_policy_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -363,7 +363,7 @@ const Policies = () => {
 
     const removeAllPpoPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/ppo-policies',
+            `http://` + ip + ':7777/ppo-policies' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -483,7 +483,8 @@ const Policies = () => {
 
     const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id,
+            (`http://` + ip + ':7777/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id +
+            "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -500,7 +501,8 @@ const Policies = () => {
 
     const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id.value,
+            (`http://` + ip + ':7777/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id.value +
+            "?token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -519,7 +521,7 @@ const Policies = () => {
 
     const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/fnn-w-softmax-policies',
+            (`http://` + ip + ':7777/fnn-w-softmax-policies' + "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -541,7 +543,7 @@ const Policies = () => {
 
     const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/dqn-policies' + dqn_policy_id,
+            `http://` + ip + ':7777/dqn-policies' + dqn_policy_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -756,7 +758,7 @@ const Policies = () => {
 
     const fetchDQNPolicy = useCallback((dqn_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/dqn-policies/' + dqn_policy_id.value,
+            `http://` + ip + ':7777/dqn-policies/' + dqn_policy_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -775,7 +777,7 @@ const Policies = () => {
 
     const removeAllDQNPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/dqn-policies',
+            `http://` + ip + ':7777/dqn-policies' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -797,7 +799,7 @@ const Policies = () => {
 
     const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/tabular-policies/' + tabular_policy_id,
+            `http://` + ip + ':7777/tabular-policies/' + tabular_policy_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -814,7 +816,8 @@ const Policies = () => {
 
     const fetchTabularPolicy = useCallback((tabular_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/tabular-policies/' + tabular_policy_id.value,
+            (`http://` + ip + ':7777/tabular-policies/' + tabular_policy_id.value
+            + "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -833,7 +836,7 @@ const Policies = () => {
 
     const removeAllTabularPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/tabular-policies',
+            `http://` + ip + ':7777/tabular-policies' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -953,7 +956,7 @@ const Policies = () => {
 
     const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/vector-policies/' + vector_policy_id,
+            `http://` + ip + ':7777/vector-policies/' + vector_policy_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -970,7 +973,8 @@ const Policies = () => {
 
     const fetchVectorPolicy = useCallback((vector_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/vector-policies/' + vector_policy_id.value,
+            (`http://` + ip + ':7777/vector-policies/' + vector_policy_id.value
+            + "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -989,7 +993,7 @@ const Policies = () => {
 
     const removeAllVectorPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/vector-policies',
+            `http://` + ip + ':7777/vector-policies' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -1109,7 +1113,8 @@ const Policies = () => {
 
     const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
-            `http://` + ip + ':7777/alpha-vec-policies/' + alpha_vec_policies_id,
+            (`http://` + ip + ':7777/alpha-vec-policies/' + alpha_vec_policies_id + "?token="
+            + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -1126,7 +1131,8 @@ const Policies = () => {
 
     const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/alpha-vec-policies/' + alpha_vec_policy_id.value,
+            (`http://` + ip + ':7777/alpha-vec-policies/' + alpha_vec_policy_id.value + "?token="
+                + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -1145,7 +1151,7 @@ const Policies = () => {
 
     const removeAllAlphaVecPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/alpha-vec-policies',
+            `http://` + ip + ':7777/alpha-vec-policies' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -1266,7 +1272,8 @@ const Policies = () => {
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/multi-threshold-policies/' + multi_threshold_policy_id,
+            (`http://` + ip + ':7777/multi-threshold-policies/' + multi_threshold_policy_id + "?token="
+                + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -1284,7 +1291,8 @@ const Policies = () => {
 
     const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
         fetch(
-            `http://` + ip + ':7777/multi-threshold-policies/' + multi_threshold_policy_id.value,
+            (`http://` + ip + ':7777/multi-threshold-policies/' + multi_threshold_policy_id.value +
+                "?token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -1302,7 +1310,7 @@ const Policies = () => {
 
     const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/multi-threshold-policies',
+            `http://` + ip + ':7777/multi-threshold-policies' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

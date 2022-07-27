@@ -1,6 +1,7 @@
 from typing import List, Union, Any, Tuple, Dict
 import psycopg
 import json
+import time
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
@@ -26,6 +27,7 @@ from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolic
 from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.management.management_user import ManagementUser
+from csle_common.dao.management.session_token import SessionToken
 
 
 class MetastoreFacade:
@@ -2891,7 +2893,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
-                            f" SET username=%s, password=%s, admin=%s, salt=%s"
+                            f" SET username=%s, password=%s, admin=%s, salt=%s "
                             f"WHERE {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}.id = %s",
                             (management_user.username, management_user.password, management_user.admin,
                              management_user.salt, id))
@@ -2937,4 +2939,142 @@ class MetastoreFacade:
                 record = cur.fetchone()
                 if record is not None:
                     record = MetastoreFacade._convert_management_user_record_to_dto(management_user_record=record)
+                return record
+
+    @staticmethod
+    def _convert_session_token_record_to_dto(session_token_record) -> SessionToken:
+        """
+        Converts a session token record fetched from the metastore into a DTO
+
+        :param session_token_record: the record to convert
+        :return: the DTO representing the record
+        """
+        session_token = SessionToken(token = session_token_record[0], timestamp=session_token_record[1],
+                                     username=session_token_record[2])
+        return session_token
+
+    @staticmethod
+    def list_session_tokens() -> List[SessionToken]:
+        """
+        :return: A list of session tokens in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_session_token_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def get_session_token_metadata(token: str) -> Union[None, SessionToken]:
+        """
+        Function for fetching the metadata of a given session token
+
+        :param token: the token to lookup the metadata dor
+        :return: The session token and its metadata or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+                            f"WHERE token = %s", (token,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_session_token_record_to_dto(
+                        session_token_record=record)
+                return record
+
+    @staticmethod
+    def save_session_token(session_token: SessionToken) -> Union[Any, int]:
+        """
+        Saves a session token to the metastore
+
+        :param session_token: the session token to save
+        :return: token of the created record
+        """
+        ts = time.time()
+        Logger.__call__().get_logger().debug(f"Saving a session token in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+                            f"(token, timestamp, username) "
+                            f"VALUES (%s, %s, %s) RETURNING token",
+                            (session_token.token, ts, session_token.username))
+                token_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"session token saved successfully")
+                return token_of_new_row
+
+    @staticmethod
+    def update_session_token(session_token: SessionToken, token: str) -> None:
+        """
+        Updates a session token in the metastore
+
+        :param session_token: the session token to update
+        :param token: the token of the row to update
+        :return: token of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating session token with token: {token} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+                            f" SET token=%s, timestamp=%s, username=%s "
+                            f"WHERE {constants.METADATA_STORE.SESSION_TOKENS_TABLE}.token = %s",
+                            (session_token.token, session_token.timestamp, session_token.username,
+                             token))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Session token {token} updated successfully")
+
+    @staticmethod
+    def remove_session_token(session_token: SessionToken) -> None:
+        """
+        Removes a session token from the metastore
+
+        :param session_token: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing session token with "
+                                             f"token:{session_token.token} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE} WHERE token = %s",
+                            (session_token.token,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Session token with "
+                                                     f"token {session_token.token} deleted successfully")
+
+    @staticmethod
+    def get_session_token_by_username(username: str) -> Union[None, SessionToken]:
+        """
+        Function for extracting a session token account based on the username
+
+        :param username: the username of the user
+        :return: The session token or None if no user with the given username was found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+                            f"WHERE username = %s", (username,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_session_token_record_to_dto(session_token_record=record)
                 return record

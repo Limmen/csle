@@ -248,3 +248,11 @@ CREATE TABLE IF NOT EXISTS management_users (
 );
 GRANT ALL ON management_users TO csle;
 GRANT USAGE, SELECT ON SEQUENCE management_users_id_seq TO csle;
+
+-- Create table that stores the session tokens --
+CREATE TABLE IF NOT EXISTS session_tokens (
+    token VARCHAR(128) UNIQUE NOT NULL PRIMARY KEY,
+    timestamp DOUBLE PRECISION NOT NULL,
+    username VARCHAR(128) UNIQUE references management_users(username)
+);
+GRANT ALL ON session_tokens TO csle;

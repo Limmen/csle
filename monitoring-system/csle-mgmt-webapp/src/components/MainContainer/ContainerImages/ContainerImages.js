@@ -12,7 +12,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import {useDebouncedCallback} from 'use-debounce';
 
-const ContainerImages = () => {
+const ContainerImages = (props) => {
     const [images, setImages] = useState([]);
     const [filteredImages, setFilteredImages] = useState([]);
     const [searchString, setSearchString] = useState("");
@@ -23,7 +23,7 @@ const ContainerImages = () => {
 
     const fetchImages = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/images',
+            `http://` + ip + ':7777/images' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

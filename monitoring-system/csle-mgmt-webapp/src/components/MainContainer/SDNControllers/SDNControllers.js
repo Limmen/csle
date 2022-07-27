@@ -13,7 +13,7 @@ import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 
-const SDNControllers = () => {
+const SDNControllers = (props) => {
     const [emulationIds, setEmulationIds] = useState([]);
     const [selectedEmulationId, setSelectedEmulationId] = useState(null);
     const [selectedEmulation, setSelectedEmulation] = useState(null);
@@ -27,7 +27,7 @@ const SDNControllers = () => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/sdn-controllers?ids=true',
+            `http://` + ip + ':7777/sdn-controllers?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -63,7 +63,8 @@ const SDNControllers = () => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id.value + "/executions/"+ emulation_id.exec_id,
+            `http://` + ip + ':7777/emulations/' + emulation_id.value + "/executions/"+ emulation_id.exec_id
+            + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

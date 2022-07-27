@@ -16,7 +16,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const TrainingResults = () => {
+const TrainingResults = (props) => {
     const [experimentsIds, setExperimentsIds] = useState([]);
     const [selectedExperimentId, setSelectedExperimentId] = useState(null);
     const [selectedExperiment, setSelectedExperiment] = useState(null);
@@ -31,7 +31,7 @@ const TrainingResults = () => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/experiments?ids=true',
+            `http://` + ip + ':7777/experiments?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -69,7 +69,7 @@ const TrainingResults = () => {
 
     const fetchExperiment = useCallback((experiment_id) => {
         fetch(
-            `http://` + ip + ':7777/experiments/' + experiment_id.value,
+            `http://` + ip + ':7777/experiments/' + experiment_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -87,7 +87,7 @@ const TrainingResults = () => {
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
-            `http://` + ip + ':7777/experiments/' + experiment_id,
+            `http://` + ip + ':7777/experiments/' + experiment_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -104,7 +104,7 @@ const TrainingResults = () => {
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/experiments',
+            `http://` + ip + ':7777/experiments' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

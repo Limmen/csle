@@ -1430,6 +1430,7 @@ class METADATA_STORE:
     EMPIRICAL_SYSTEM_MODELS_TABLE = "empirical_system_models"
     GP_SYSTEM_MODELS_TABLE = "gp_system_models"
     MANAGEMENT_USERS_TABLE = "management_users"
+    SESSION_TOKENS_TABLE = "session_tokens"
 
 
 class CONTAINER_POOLS:
@@ -1574,4 +1575,5 @@ class OPENFLOW:
     OPENFLOW_V_1_3 = "OpenFlow13"
     OPENFLOW_V_1_4 = "OpenFlow14"
     OPENFLOW_V_1_5 = "OpenFlow15"
+
 

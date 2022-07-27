@@ -17,7 +17,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Jobs = () => {
+const Jobs = (props) => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
     const [trainingJobsLoading, setTrainingJobsLoading] = useState(false);
     const [trainingJobs, setTrainingJobs] = useState([]);
@@ -52,28 +52,9 @@ const Jobs = () => {
     const ip = "localhost"
     // const ip = "172.31.212.92"
 
-    const fetchTrainingJobs = useCallback(() => {
-        fetch(
-            `http://` + ip + ':7777/training-jobs',
-            {
-                method: "GET",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => res.json())
-            .then(response => {
-                setTrainingJobs(response);
-                setFilteredTrainingJobsIds(response);
-                setTrainingJobsLoading(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
     const fetchTrainingJobsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/training-jobs?ids=true',
+            `http://` + ip + ':7777/training-jobs?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -111,28 +92,10 @@ const Jobs = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchDataCollectionJobs = useCallback(() => {
-        fetch(
-            `http://` + ip + ':7777/data-collection-jobs',
-            {
-                method: "GET",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => res.json())
-            .then(response => {
-                setDataCollectionJobs(response);
-                setFilteredDataCollectionJobsIds(response);
-                setDataCollectionJobsLoading(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
 
     const fetchDataCollectionJobIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/data-collection-jobs?ids=true',
+            `http://` + ip + ':7777/data-collection-jobs?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -170,28 +133,10 @@ const Jobs = () => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchSystemIdentificationJobs = useCallback(() => {
-        fetch(
-            `http://` + ip + ':7777/system-identification-jobs',
-            {
-                method: "GET",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => res.json())
-            .then(response => {
-                setSystemIdentificationJobs(response);
-                setFilteredSystemIdentificationJobsIds(response);
-                setSystemIdentificationJobsLoading(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
 
     const fetchSystemIdentificationJobsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/system-identification-jobs?ids=true',
+            `http://` + ip + ':7777/system-identification-jobs?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -240,7 +185,7 @@ const Jobs = () => {
 
     const removeTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `http://` + ip + ':7777/training-jobs/' + training_job_id,
+            `http://` + ip + ':7777/training-jobs/' + training_job_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -258,7 +203,7 @@ const Jobs = () => {
 
     const removeAllTrainingJobsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/training-jobs',
+            `http://` + ip + ':7777/training-jobs' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -386,7 +331,8 @@ const Jobs = () => {
 
     const removeSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            `http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id,
+            (`http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id +
+            "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -404,7 +350,7 @@ const Jobs = () => {
 
     const removeAllSystemIdentificationJobsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/system-identification-jobs',
+            `http://` + ip + ':7777/system-identification-jobs' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -533,7 +479,8 @@ const Jobs = () => {
 
     const stopTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `http://` + ip + ':7777/training-jobs/' + training_job_id + "?stop=true",
+            (`http://` + ip + ':7777/training-jobs/' + training_job_id + "?stop=true" + "&token="
+                + props.sessionData.token),
             {
                 method: "POST",
                 headers: new Headers({
@@ -551,7 +498,7 @@ const Jobs = () => {
 
     const fetchTrainingJob = useCallback((training_job_id) => {
         fetch(
-            `http://` + ip + ':7777/training-jobs/' + training_job_id.value,
+            `http://` + ip + ':7777/training-jobs/' + training_job_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -575,7 +522,8 @@ const Jobs = () => {
 
     const stopSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            `http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id + "?stop=true",
+            (`http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id + "?stop=true" +
+                "&token=" + props.sessionData.token),
             {
                 method: "POST",
                 headers: new Headers({
@@ -593,7 +541,8 @@ const Jobs = () => {
 
     const fetchSystemIdentificationJob = useCallback((system_identification_job_id) => {
         fetch(
-            `http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id.value,
+            (`http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id.value +
+            "?token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -617,7 +566,7 @@ const Jobs = () => {
 
     const startTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `http://` + ip + ':7777/training-jobs/' + training_job_id,
+            `http://` + ip + ':7777/training-jobs/' + training_job_id + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -640,7 +589,8 @@ const Jobs = () => {
 
     const startSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            `http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id,
+            (`http://` + ip + ':7777/system-identification-jobs/' + system_identification_job_id +
+                "?token=" + props.sessionData.token),
             {
                 method: "POST",
                 headers: new Headers({
@@ -872,7 +822,8 @@ const Jobs = () => {
 
     const removeDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            `http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id,
+            (`http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id +
+            "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -890,7 +841,7 @@ const Jobs = () => {
 
     const removeAllDataCollectionJobsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/data-collection-jobs',
+            `http://` + ip + ':7777/data-collection-jobs' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -1019,7 +970,8 @@ const Jobs = () => {
 
     const stopDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            `http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id + "?stop=true",
+            (`http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id + "?stop=true"
+            + "&token=" + props.sessionData.token),
             {
                 method: "POST",
                 headers: new Headers({
@@ -1037,7 +989,8 @@ const Jobs = () => {
 
     const fetchDataCollectionJob = useCallback((data_collection_job_id) => {
         fetch(
-            `http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id.value,
+            (`http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id.value +
+            "?token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -1061,7 +1014,8 @@ const Jobs = () => {
 
     const startDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            `http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id,
+            (`http://` + ip + ':7777/data-collection-jobs/' + data_collection_job_id +
+            "?token=" + props.sessionData.token),
             {
                 method: "POST",
                 headers: new Headers({

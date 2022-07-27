@@ -6,7 +6,8 @@ class MGMT_WEBAPP:
     """
     ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin"
     IDS_QUERY_PARAM = "ids"
-    STOP_QUERY_PARAM = "ids"
+    TOKEN_QUERY_PARAM = "token"
+    STOP_QUERY_PARAM = "stop"
     EMULATION_QUERY_PARAM = "emulation"
     STATIC_RESOURCE_INDEX = "index.html"
     HTTP_REST_GET = "GET"
@@ -111,3 +112,10 @@ class MGMT_WEBAPP:
     GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE = "gaussian_mixture"
     EMPIRICAL_SYSTEM_MODEL_TYPE = "empirical"
     GP_SYSTEM_MODEL_TYPE = "gp"
+
+
+class SESSION_TOKENS:
+    """
+    Constants related to session tokens
+    """
+    EXPIRE_TIME_HOURS = 48

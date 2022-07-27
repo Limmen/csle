@@ -1,6 +1,7 @@
 """
 Routes and sub-resources for the /login resource
 """
+import time
 import json
 import secrets
 import bcrypt
@@ -8,6 +9,7 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.management.session_token import SessionToken
 
 # Creates a blueprint "sub application" of the main REST app
 login_bp = Blueprint(
@@ -33,6 +35,12 @@ def read_login():
         pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode("utf-8")
         if user_account.password == pw_hash:
             response_code = constants.HTTPS.OK_STATUS_CODE
+            existing_token = MetastoreFacade.get_session_token_by_username(username=username)
+            if existing_token is not None:
+                MetastoreFacade.remove_session_token(session_token=existing_token)
+            ts = time.time()
+            new_token = SessionToken(token=token, username=username, timestamp=ts)
+            MetastoreFacade.save_session_token(session_token=new_token)
             data_dict = {
                 api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: token,
                 api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin,

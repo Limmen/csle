@@ -51,70 +51,70 @@ function App() {
                                 </Route>
                                 <Route path="emulations-page" index element={
                                     <ProtectedRoute>
-                                        <Emulations/>
+                                        <Emulations sessionData={sessionData}/>
                                     </ProtectedRoute>}>
                                 </Route>
                                 <Route path="simulations-page" index element={
                                     <ProtectedRoute>
-                                        <Simulations/>
+                                        <Simulations sessionData={sessionData}/>
                                     </ProtectedRoute>}>
                                 </Route>
                                 <Route path="monitoring-page" index element={
                                     <ProtectedRoute>
-                                        <Monitoring/>
+                                        <Monitoring sessionData={sessionData}/>
                                     </ProtectedRoute>}>
                                 </Route>
                                 <Route path="traces-page" index element={
                                     <ProtectedRoute>
-                                        <Traces/>
+                                        <Traces sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="emulation-statistics-page" index element={
                                     <ProtectedRoute>
-                                        <EmulationStatistics/>
+                                        <EmulationStatistics sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="system-models-page" index element={
                                     <ProtectedRoute>
-                                        <SystemModels/>
+                                        <SystemModels sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="policy-examination-page" index element={
                                     <ProtectedRoute>
-                                        <PolicyExamination/>
+                                        <PolicyExamination sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="images-page" index element={
                                     <ProtectedRoute>
-                                        <ContainerImages/>
+                                        <ContainerImages sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="training-page" index element={
                                     <ProtectedRoute>
-                                        <TrainingResults/>
+                                        <TrainingResults sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="policies-page" index element={
                                     <ProtectedRoute>
-                                        <Policies/>
+                                        <Policies sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="jobs-page" index element={
                                     <ProtectedRoute>
-                                        <Jobs/>
+                                        <Jobs sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="sdn-controllers-page" index element={
                                     <ProtectedRoute>
-                                        <SDNControllers/>
+                                        <SDNControllers sessionData={sessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>

@@ -27,6 +27,14 @@ def emulations():
 
     :return: Returns a list of emulations, a list of emulation ids, or deletes the list of emulations
     """
+    # Extract token and check if user is authorized
+    token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+    token_obj = MetastoreFacade.get_session_token_metadata(token=token)
+    if token_obj == None or token_obj.expired(valid_length_hours=api_constants.SESSION_TOKENS.EXPIRE_TIME_HOURS):
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
     # Check if ids query parameter is True, then only return the ids and not the whole dataset
     ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
     if ids is not None and ids:

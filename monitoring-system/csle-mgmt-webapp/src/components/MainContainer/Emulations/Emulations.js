@@ -16,7 +16,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Emulations = () => {
+const Emulations = (props) => {
     const [emulationIds, setEmulationIds] = useState([]);
     const [selectedEmulationId, setSelectedEmulationId] = useState(null);
     const [selectedEmulation, setSelectedEmulation] = useState(null);
@@ -31,7 +31,7 @@ const Emulations = () => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulations?ids=true',
+            `http://` + ip + ':7777/emulations?ids=true&token=' + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -71,7 +71,7 @@ const Emulations = () => {
 
     const removeEmulationRequest = useCallback((emulationId) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulationId,
+            `http://` + ip + ':7777/emulations/' + emulationId + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -90,7 +90,8 @@ const Emulations = () => {
 
     const removeEmulationExecutionRequest = useCallback((emulation_id, execution_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id + '/executions/' + execution_id,
+            (`http://` + ip + ':7777/emulations/' + emulation_id + '/executions/' + execution_id
+                + "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -112,7 +113,7 @@ const Emulations = () => {
 
     const startOrStopEmulationRequest = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id,
+            `http://` + ip + ':7777/emulations/' + emulation_id + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -134,7 +135,7 @@ const Emulations = () => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id.value,
+            `http://` + ip + ':7777/emulations/' + emulation_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -152,7 +153,7 @@ const Emulations = () => {
 
     const removeAllEmulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulations',
+            `http://` + ip + ':7777/emulations' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

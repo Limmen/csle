@@ -19,7 +19,7 @@ import Form from 'react-bootstrap/Form';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const EmulationStatistics = () => {
+const EmulationStatistics = (props) => {
     const [emulationStatisticIds, setEmulationStatisticIds] = useState([]);
     const [filteredEmulationStatisticIds, setFilteredEmulationStatisticIds] = useState([]);
     const [selectedEmulationStatistic, setSelectedEmulationStatistic] = useState(null);
@@ -143,7 +143,7 @@ const EmulationStatistics = () => {
 
     const fetchEmulationStatisticsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulation-statistics?ids=true',
+            `http://` + ip + ':7777/emulation-statistics?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -182,7 +182,8 @@ const EmulationStatistics = () => {
 
     const fetchEmulationStatistic = useCallback((statistic_id) => {
         fetch(
-            `http://` + ip + ':7777/emulation-statistics/' + statistic_id.value,
+            (`http://` + ip + ':7777/emulation-statistics/' + statistic_id.value +
+            "?token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -220,7 +221,7 @@ const EmulationStatistics = () => {
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `http://` + ip + ':7777/emulation-statistics/' + statistic_id,
+            `http://` + ip + ':7777/emulation-statistics/' + statistic_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

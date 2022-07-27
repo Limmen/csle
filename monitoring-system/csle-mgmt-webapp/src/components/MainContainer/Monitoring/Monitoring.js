@@ -16,7 +16,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import {useDebouncedCallback} from 'use-debounce';
 
-const Monitoring = () => {
+const Monitoring = (props) => {
     const windowLengthOptions = [
         {
             value: 15,
@@ -301,7 +301,7 @@ const Monitoring = () => {
 
     const startOrStopGrafanaRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/grafana',
+            `http://` + ip + ':7777/grafana' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -318,7 +318,7 @@ const Monitoring = () => {
 
     const startOrStopcAdvisorRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/cadvisor',
+            `http://` + ip + ':7777/cadvisor' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -335,7 +335,7 @@ const Monitoring = () => {
 
     const startOrStopNodeExporterRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/node-exporter',
+            `http://` + ip + ':7777/node-exporter' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -352,7 +352,7 @@ const Monitoring = () => {
 
     const startOrStopPrometheusRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/prometheus',
+            `http://` + ip + ':7777/prometheus' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -369,7 +369,7 @@ const Monitoring = () => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulation-executions?ids=true',
+            `http://` + ip + ':7777/emulation-executions?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -403,7 +403,7 @@ const Monitoring = () => {
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
             (`http://` + ip + ':7777/emulation-executions/' + id_obj.value.id + "?emulation="
-                + id_obj.value.emulation),
+                + id_obj.value.emulation + "&token=" + props.sessionData.token),
             {
                 method: "GET",
                 headers: new Headers({
@@ -433,7 +433,7 @@ const Monitoring = () => {
 
     const fetchMonitoringData = useCallback((len, execution) => fetch(
         (`http://` + ip + ':7777/emulations/' + execution.emulation_env_config.id +
-            "/executions/" + execution.ip_first_octet + "/monitor/" + len),
+            "/executions/" + execution.ip_first_octet + "/monitor/" + len + "?token=" + props.sessionData.token),
         {
             method: "GET",
             headers: new Headers({
@@ -468,7 +468,7 @@ const Monitoring = () => {
 
     const fetchGrafanaStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/grafana',
+            `http://` + ip + ':7777/grafana' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -491,7 +491,7 @@ const Monitoring = () => {
 
     const fetchCadvisorStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/cadvisor',
+            `http://` + ip + ':7777/cadvisor' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -513,7 +513,7 @@ const Monitoring = () => {
 
     const fetchPrometheusStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/prometheus',
+            `http://` + ip + ':7777/prometheus' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -535,7 +535,7 @@ const Monitoring = () => {
 
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/node-exporter',
+            `http://` + ip + ':7777/node-exporter' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

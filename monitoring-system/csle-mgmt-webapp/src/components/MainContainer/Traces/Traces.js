@@ -17,7 +17,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Traces = () => {
+const Traces = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [simulationTraces, setSimulationTraces] = useState([]);
     const [selectedEmulationTraceId, setSelectedEmulationTraceId] = useState(null);
@@ -41,7 +41,7 @@ const Traces = () => {
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `http://` + ip + ':7777/emulation-traces/' + trace_id.value,
+            `http://` + ip + ':7777/emulation-traces/' + trace_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -59,7 +59,7 @@ const Traces = () => {
 
     const fetchSimulationTrace = useCallback((trace_id) => {
         fetch(
-            `http://` + ip + ':7777/simulation-traces/' + trace_id.value,
+            `http://` + ip + ':7777/simulation-traces/' + trace_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -77,7 +77,7 @@ const Traces = () => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulation-traces?ids=true',
+            `http://` + ip + ':7777/emulation-traces?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -109,7 +109,7 @@ const Traces = () => {
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulation-traces?ids=true',
+            `http://` + ip + ':7777/simulation-traces?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -141,7 +141,7 @@ const Traces = () => {
 
     const fetchSimulationTraces = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulation-traces',
+            `http://` + ip + ':7777/simulation-traces' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -167,7 +167,8 @@ const Traces = () => {
 
     const removeSimulationTraceRequest = useCallback((simulation_trace_id) => {
         fetch(
-            `http://` + ip + ':7777/simulation-traces/' + simulation_trace_id,
+            (`http://` + ip + ':7777/simulation-traces/' + simulation_trace_id + "?token="
+                + props.sessionData.token),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -191,7 +192,7 @@ const Traces = () => {
 
     const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
         fetch(
-            `http://` + ip + ':7777/emulation-traces/' + emulation_trace_id,
+            `http://` + ip + ':7777/emulation-traces/' + emulation_trace_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -208,7 +209,7 @@ const Traces = () => {
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulation-traces',
+            `http://` + ip + ':7777/emulation-traces' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -225,7 +226,7 @@ const Traces = () => {
 
     const removeAllSimulationTracesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulation-traces',
+            `http://` + ip + ':7777/simulation-traces' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

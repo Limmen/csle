@@ -16,13 +16,11 @@ import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const Simulations = () => {
+const Simulations = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [simulations, setSimulations] = useState([]);
     const [simulationIds, setSimulationIds] = useState([]);
     const [selectedSimulation, setSelectedSimulation] = useState(null);
     const [selectedSimulationId, setSelectedSimulationId] = useState(null);
-    const [filteredSimulations, setFilteredSimulations] = useState([]);
     const [filteredSimulationIds, setFilteredSimulationsIds] = useState([]);
     const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState(true);
@@ -32,7 +30,7 @@ const Simulations = () => {
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulations?ids=true',
+            `http://` + ip + ':7777/simulations?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -66,7 +64,7 @@ const Simulations = () => {
 
     const fetchSimulation = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':7777/simulations/' + simulation_id.value,
+            `http://` + ip + ':7777/simulations/' + simulation_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -84,7 +82,7 @@ const Simulations = () => {
 
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulations',
+            `http://` + ip + ':7777/simulations' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -107,7 +105,7 @@ const Simulations = () => {
 
     const removeSimulationRequest = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':7777/simulations/' + simulation_id,
+            `http://` + ip + ':7777/simulations/' + simulation_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
