@@ -33,14 +33,14 @@ def simulation_traces():
         traces_dicts = list(map(lambda x: x.to_dict(), simulation_trcs))
         response = jsonify(traces_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         traces = MetastoreFacade.list_simulation_traces()
         for trace in traces:
             MetastoreFacade.remove_simulation_trace(trace)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def simulation_traces_ids():
@@ -56,7 +56,7 @@ def simulation_traces_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @simulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -77,4 +77,4 @@ def simulation_trace(trace_id: int):
         else:
             MetastoreFacade.remove_simulation_trace(trace)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

@@ -93,7 +93,7 @@ const Login = (props) => {
     } else {
         return (
             <div>
-                <h3 className="loggedInTitle"> Already logged in.
+                <h3 className="loggedInTitle"> Logged in.
                     <Button variant="danger" onClick={logout} size="sm" className="logoutButton">
                         Logout
                     </Button>

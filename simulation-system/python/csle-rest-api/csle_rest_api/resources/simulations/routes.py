@@ -43,7 +43,7 @@ def simulations():
         simulations_dicts = {}
     response = jsonify(simulations_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def simulation_ids():
@@ -59,7 +59,7 @@ def simulation_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @simulations_bp.route('/<simulation_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -79,5 +79,5 @@ def get_simulation(simulation_id: int):
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             SimulationEnvManager.uninstall_simulation(simulation)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 

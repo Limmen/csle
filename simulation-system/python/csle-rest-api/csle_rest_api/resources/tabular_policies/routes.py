@@ -32,14 +32,14 @@ def tabular_policies():
         tabular_policies_dicts = list(map(lambda x: x.to_dict(), tabular_policies))
         response = jsonify(tabular_policies_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_tabular_policies()
         for policy in policies:
             MetastoreFacade.remove_tabular_policy(tabular_policy=policy)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def tabular_policies_ids():
@@ -55,7 +55,7 @@ def tabular_policies_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @tabular_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -76,4 +76,4 @@ def tabular_policy(policy_id: int):
         else:
             MetastoreFacade.remove_tabular_policy(tabular_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

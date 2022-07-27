@@ -19,10 +19,12 @@ import SDNControllers from "./components/MainContainer/SDNControllers/SDNControl
 import Downloads from "./components/MainContainer/Downloads/Downloads";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import useSession from "./components/MainContainer/SessionManagement/useSession";
+import { useAlert } from "react-alert";
 
 
 function App() {
     const {sessionData, setSessionData} = useSession();
+    const alert = useAlert();
 
     const ProtectedRoute = ({
                                 user,
@@ -30,6 +32,7 @@ function App() {
                                 children,
                             }) => {
         if (!sessionData) {
+            alert.show("Only logged in users can access this page")
             return <Navigate to={redirectPath} replace/>;
         }
         return children;

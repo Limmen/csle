@@ -32,14 +32,14 @@ def empirical_system_models():
         models_dicts = list(map(lambda x: x.to_dict(), models))
         response = jsonify(models_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         models = MetastoreFacade.list_empirical_system_models()
         for model in models:
             MetastoreFacade.remove_empirical_system_model(model)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def empirical_system_models_ids():
@@ -56,7 +56,7 @@ def empirical_system_models_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @empirical_system_models_bp.route("/<model_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -77,4 +77,4 @@ def empirical_system_model(model_id: int):
         else:
             MetastoreFacade.remove_empirical_system_model(empirical_system_model=model)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

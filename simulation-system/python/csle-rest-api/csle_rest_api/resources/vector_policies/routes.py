@@ -32,14 +32,14 @@ def vector_policies():
         vector_policies_dicts = list(map(lambda x: x.to_dict(), vector_policies))
         response = jsonify(vector_policies_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_vector_policies()
         for policy in policies:
             MetastoreFacade.remove_vector_policy(vector_policy=policy)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def vector_policies_ids():
@@ -55,7 +55,7 @@ def vector_policies_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @vector_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -76,4 +76,4 @@ def vector_policy(policy_id: int):
         else:
             MetastoreFacade.remove_vector_policy(vector_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

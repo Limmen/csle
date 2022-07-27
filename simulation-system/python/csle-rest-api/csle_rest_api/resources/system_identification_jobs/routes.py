@@ -41,7 +41,7 @@ def system_identification_jobs():
         system_identification_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
         response = jsonify(system_identification_jobs_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         jobs = MetastoreFacade.list_system_identification_jobs()
         for job in jobs:
@@ -50,7 +50,7 @@ def system_identification_jobs():
         time.sleep(2)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def system_identification_jobs_ids():
@@ -67,7 +67,7 @@ def system_identification_jobs_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @system_identification_jobs_bp.route("/<job_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -106,4 +106,4 @@ def system_identification_policy(job_id: int):
                 time.sleep(2)
 
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

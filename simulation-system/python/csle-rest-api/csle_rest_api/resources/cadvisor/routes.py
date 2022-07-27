@@ -35,4 +35,4 @@ def cadvisor():
     }
     response = jsonify(cadvisor_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

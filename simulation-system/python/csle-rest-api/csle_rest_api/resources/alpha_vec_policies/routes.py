@@ -32,14 +32,14 @@ def alpha_vec_policies():
         alphavec_policies_dicts = list(map(lambda x: x.to_dict(), alphavec_policies))
         response = jsonify(alphavec_policies_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_alpha_vec_policies()
         for policy in policies:
             MetastoreFacade.remove_alpha_vec_policy(alpha_vec_policy=policy)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def alpha_vec_policies_ids():
@@ -55,7 +55,7 @@ def alpha_vec_policies_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @alpha_vec_policies_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -76,4 +76,4 @@ def alpha_vec_policy(policy_id: int):
         else:
             MetastoreFacade.remove_alpha_vec_policy(alpha_vec_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

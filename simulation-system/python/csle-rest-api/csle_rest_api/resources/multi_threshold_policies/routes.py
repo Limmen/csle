@@ -32,14 +32,14 @@ def multi_threshold_policies():
         multi_threshold_stopping_policies_dicts = list(map(lambda x: x.to_dict(), multi_threshold_stopping_policies))
         response = jsonify(multi_threshold_stopping_policies_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_multi_threshold_stopping_policies()
         for policy in policies:
             MetastoreFacade.remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def multi_threshold_policies_ids():
@@ -55,7 +55,7 @@ def multi_threshold_policies_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @multi_threshold_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -76,5 +76,5 @@ def multi_threshold_policy(policy_id: int):
         else:
             MetastoreFacade.remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 

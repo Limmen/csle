@@ -32,14 +32,14 @@ def fnn_w_softmax_policies():
         policies_dicts = list(map(lambda x: x.to_dict(), policies))
         response = jsonify(policies_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_fnn_w_softmax_policies()
         for policy in policies:
             MetastoreFacade.remove_fnn_w_softmax_policy(fnn_w_softmax_policy=policy)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def fnn_w_softmax_policies_ids():
@@ -55,7 +55,7 @@ def fnn_w_softmax_policies_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @fnn_w_softmax_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -76,5 +76,5 @@ def fnn_w_softmax_policy(policy_id: int):
         else:
             MetastoreFacade.remove_fnn_w_softmax_policy(fnn_w_softmax_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 

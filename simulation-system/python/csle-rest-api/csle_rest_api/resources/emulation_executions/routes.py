@@ -33,7 +33,7 @@ def emulation_executions():
         emulation_execution_dicts.append(exec.to_dict())
     response = jsonify(emulation_execution_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def emulation_execution_ids():
@@ -54,7 +54,7 @@ def emulation_execution_ids():
             })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @emulation_executions_bp.route("/<execution_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -82,4 +82,4 @@ def emulation_execution(execution_id: int):
 
         response = jsonify(all_executions_with_the_given_id_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

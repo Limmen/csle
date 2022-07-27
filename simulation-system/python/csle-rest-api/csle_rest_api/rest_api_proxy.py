@@ -893,6 +893,89 @@ def create_app(static_folder: str, proxy_server: str):
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
 
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def empirical_system_models_proxy():
+        """
+        Proxy for the /empirical-system-models resource
+
+        :return: the /system-models resource
+        """
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}?ids=true').content
+        else:
+            if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}').content
+            elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}').content
+
+    @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<system_model_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def empirical_system_model_proxy(system_model_id: int):
+        """
+        Proxy for the /empirical-system-models/system_model_id resource
+
+        :return: the /empirical-system-models/system_model_id resource
+        """
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+            return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}'
+                          f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def gp_system_models_proxy():
+        """
+        Proxy for the /gp-system-models resource
+
+        :return: the /system-models resource
+        """
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}?ids=true').content
+        else:
+            if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}').content
+            elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}').content
+
+    @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<system_model_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def gp_system_model_proxy(system_model_id: int):
+        """
+        Proxy for the /gp-system-models/system_model_id resource
+
+        :return: the /gp-system-models/system_model_id resource
+        """
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+            return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}'
+                          f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+    def login_proxy():
+        """
+        Proxy for the /login resournce
+
+        :return: the /login resource
+        """
+        post_json_data = json.loads(request.data)
+        headers = {api_constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE,
+                   api_constants.MGMT_WEBAPP.ACCEPT_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE}
+        return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}',
+                    json=post_json_data, headers=headers).content
+
     return app
 
 

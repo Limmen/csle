@@ -32,14 +32,14 @@ def dqn_policies():
         dqn_policies_dicts = list(map(lambda x: x.to_dict(), dqn_policies))
         response = jsonify(dqn_policies_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_dqn_policies()
         for policy in policies:
             MetastoreFacade.remove_dqn_policy(dqn_policy=policy)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def dqn_policies_ids():

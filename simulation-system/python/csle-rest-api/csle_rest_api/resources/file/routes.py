@@ -28,4 +28,4 @@ def read_file():
     data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

@@ -32,14 +32,14 @@ def experiments():
         experiment_dicts = list(map(lambda x: x.to_dict(), experiments))
         response = jsonify(experiment_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         experiments = MetastoreFacade.list_experiment_executions()
         for exp in experiments:
             MetastoreFacade.remove_experiment_execution(experiment_execution=exp)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def experiments_ids():
@@ -56,7 +56,7 @@ def experiments_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @experiments_bp.route("/<experiment_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -77,4 +77,4 @@ def experiment(experiment_id: int):
         else:
             MetastoreFacade.remove_experiment_execution(experiment_execution=experiment)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

@@ -60,7 +60,7 @@ def emulations():
             EmulationEnvManager.uninstall_emulation(config=em)
     response = jsonify(emulations_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def emulation_ids():
@@ -83,7 +83,7 @@ def emulation_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>',
@@ -150,7 +150,7 @@ def get_executions_of_emulation(emulation_id: int):
         execution_dicts = list(map(lambda x: x.to_dict(), executions))
     response = jsonify(execution_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
@@ -179,7 +179,7 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
             EmulationEnvManager.clean_emulation_execution(emulation_env_config=execution.emulation_env_config,
                                                           execution_id=execution.ip_first_octet)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>'
@@ -209,7 +209,7 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
                                                        time_window_minutes=minutes).to_dict()
     response = jsonify(time_series)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
@@ -330,4 +330,4 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
                 response_data = switches_dicts
     response = jsonify(response_data)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

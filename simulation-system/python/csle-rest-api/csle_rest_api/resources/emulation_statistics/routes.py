@@ -32,14 +32,14 @@ def emulation_statistics():
         stats_dicts = list(map(lambda x: x.to_dict(), stats))
         response = jsonify(stats_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         statistics = MetastoreFacade.list_emulation_statistics()
         for stat in statistics:
             MetastoreFacade.remove_emulation_statistic(stat)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def emulation_statistics_ids():
@@ -55,7 +55,7 @@ def emulation_statistics_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @emulation_statistics_bp.route("/<statistics_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
@@ -76,4 +76,4 @@ def emulation_statistic(statistics_id: int):
         else:
             MetastoreFacade.remove_emulation_statistic(statistic)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
