@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify, request
 from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
-
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 cadvisor_bp = Blueprint(api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE, __name__,
@@ -19,6 +19,10 @@ def cadvisor():
     """
     :return: static resources for the /cadvisor url
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     running = MonitorToolsController.is_cadvisor_running()
     port = constants.COMMANDS.CADVISOR_PORT
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:

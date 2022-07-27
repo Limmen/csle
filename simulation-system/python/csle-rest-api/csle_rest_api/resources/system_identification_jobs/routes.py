@@ -9,6 +9,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 from csle_system_identification.job_controllers.system_identification_job_manager import SystemIdentificationJobManager
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -25,6 +26,9 @@ def system_identification_jobs():
 
     :return: A list of system-identification-jobs or a list of ids of the jobs or deletes the jobs
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole dataset
@@ -81,6 +85,10 @@ def system_identification_policy(job_id: int):
 
     :return: The given policy or deletes the policy
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     job = MetastoreFacade.get_system_identification_job_config(id=job_id)
     response = jsonify({})
     if job is not None:

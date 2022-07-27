@@ -5,6 +5,8 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.controllers.container_manager import ContainerManager
+import csle_rest_api.util.rest_api_util as rest_api_util
+
 
 # Creates a blueprint "sub application" of the main REST app
 images_bp = Blueprint(
@@ -19,6 +21,10 @@ def images():
 
     :return: Returns a list of images
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     images=ContainerManager.list_all_images()
     images_dicts = []
     for img in images:

@@ -6,6 +6,7 @@ import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.container_manager import ContainerManager
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -21,6 +22,9 @@ def emulation_executions():
 
     :return: A list of emulation executions or a list of ids of the executions
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
 
     # Check if ids query parameter is True, then only return the ids and not the whole dataset
     ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
@@ -66,6 +70,10 @@ def emulation_execution(execution_id: int):
 
     :return: The given execution
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     if emulation is not None:

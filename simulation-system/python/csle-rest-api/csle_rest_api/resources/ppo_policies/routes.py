@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -21,6 +22,9 @@ def ppo_policies():
 
     :return: A list of ppo-policies or a list of ids of the policies or deletes the policies
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole dataset
@@ -68,6 +72,10 @@ def ppo_policy(policy_id: int):
 
     :return: The given policy or deletes the policy
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     policy = MetastoreFacade.get_ppo_policy(id=policy_id)
     response = jsonify({})
     if policy is not None:

@@ -2,10 +2,11 @@
 Routes and sub-resources for the /node_exporter resource
 """
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -20,6 +21,10 @@ def node_exporter():
     """
     :return: static resources for the /node-exporter url
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     running = MonitorToolsController.is_node_exporter_running()
     port = constants.COMMANDS.NODE_EXPORTER_PORT
     node_exporter_dict = {

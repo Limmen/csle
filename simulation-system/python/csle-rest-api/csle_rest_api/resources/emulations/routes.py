@@ -12,6 +12,7 @@ from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 from csle_common.util.read_emulation_statistics import ReadEmulationStatistics
 import csle_ryu.constants.constants as ryu_constants
 import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -27,13 +28,9 @@ def emulations():
 
     :return: Returns a list of emulations, a list of emulation ids, or deletes the list of emulations
     """
-    # Extract token and check if user is authorized
-    token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
-    token_obj = MetastoreFacade.get_session_token_metadata(token=token)
-    if token_obj == None or token_obj.expired(valid_length_hours=api_constants.SESSION_TOKENS.EXPIRE_TIME_HOURS):
-        response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
 
     # Check if ids query parameter is True, then only return the ids and not the whole dataset
     ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
@@ -105,6 +102,10 @@ def emulation_by_id(emulation_id: int):
     :param emulation_id: the id of the emulation
     :return: the emulation with the given id if it exists
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     em = MetastoreFacade.get_emulation(id=emulation_id)
     rc_emulations = ContainerManager.list_running_emulations()
     em_dict = {}
@@ -151,6 +152,10 @@ def get_executions_of_emulation(emulation_id: int):
     :param emulation_id: the id of the emulation
     :return: the list of executions of the emulation
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     em = MetastoreFacade.get_emulation(id=emulation_id)
     execution_dicts = []
     if em is not None:
@@ -175,6 +180,10 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
 
     :return: The sought for execution if it exist
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     execution = None
     emulation = MetastoreFacade.get_emulation(id=emulation_id)
     if emulation is not None:
@@ -205,6 +214,10 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
     :param minutes: the number of minutes past to collect data from
     :return: the collected data
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     minutes = int(minutes)
     execution = None
     emulation = MetastoreFacade.get_emulation(id=emulation_id)
@@ -234,6 +247,10 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
 
     :return: The sought for switches if they exist
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     em = MetastoreFacade.get_emulation(id=emulation_id)
     response_data = {}
     if em is not None and em.sdn_controller_config is not None:

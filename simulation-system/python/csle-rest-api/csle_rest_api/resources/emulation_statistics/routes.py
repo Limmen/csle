@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 emulation_statistics_bp = Blueprint(
@@ -21,6 +21,9 @@ def emulation_statistics():
 
     :return: A list of emulation statistics or a list of ids of the statistics or deletes the statistics
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole dataset
@@ -68,6 +71,10 @@ def emulation_statistic(statistics_id: int):
 
     :return: The given statistic or deletes the statistic
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     statistic = MetastoreFacade.get_emulation_statistic(id=statistics_id)
     response = jsonify({})
     if statistic is not None:

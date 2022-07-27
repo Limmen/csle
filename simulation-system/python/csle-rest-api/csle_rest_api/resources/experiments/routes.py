@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 experiments_bp = Blueprint(
@@ -21,6 +21,9 @@ def experiments():
 
     :return: A list of experiments or a list of ids of the experiments or deletes the experiments
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole dataset
@@ -69,6 +72,10 @@ def experiment(experiment_id: int):
 
     :return: The given experiment or deletes the experiment
     """
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
     experiment = MetastoreFacade.get_experiment_execution(id=experiment_id)
     response = jsonify({})
     if experiment is not None:
