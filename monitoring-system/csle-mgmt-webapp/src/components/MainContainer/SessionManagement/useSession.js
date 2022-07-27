@@ -10,11 +10,11 @@ export default function useSession() {
 
     const saveSessionData = sessionData => {
         localStorage.setItem('csleSession', JSON.stringify(sessionData));
-        setToken(sessionData);
+        setSessionData(sessionData);
     };
 
     return {
-        setToken: saveSessionData,
+        setSessionData: saveSessionData,
         sessionData
     }
 }

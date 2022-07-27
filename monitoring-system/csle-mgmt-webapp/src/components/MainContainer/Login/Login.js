@@ -1,6 +1,8 @@
 import React, {useState, useCallback} from 'react';
 import { useAlert } from "react-alert";
 import './Login.css';
+import getBoolStr from "../../Common/getBoolStr";
+import Button from 'react-bootstrap/Button'
 
 const Login = (props) => {
     const [username, setUsername] = useState("");
@@ -28,7 +30,6 @@ const Login = (props) => {
                 }
             })
             .then(response => {
-                console.log(response)
                 if(response !== null) {
                     props.setSessionData(response)
                 }
@@ -43,6 +44,10 @@ const Login = (props) => {
             "password": password
         }
         loginUser(credentials)
+    }
+
+    const logout = () => {
+        props.setSessionData(null)
     }
 
     const handleUsernameChange = (event) => {
@@ -88,9 +93,13 @@ const Login = (props) => {
     } else {
         return (
             <div>
-                <h3 className="managementTitle"> Already logged in.</h3>
-                <p className="bold"> Username: </p> {props.sessionData.username}
-                <p className="bold"> Admin: </p> {props.sessionData.admin}
+                <h3 className="loggedInTitle"> Already logged in.
+                    <Button variant="danger" onClick={logout} size="sm" className="logoutButton">
+                        Logout
+                    </Button>
+                </h3>
+                <p className="userNameVal"><span className="loginPageUsername">Username:</span>{props.sessionData.username}</p>
+                <p className="adminRights"><span className="loginPageAdmin">Admin rights:</span>{getBoolStr(props.sessionData.admin)}</p>
             </div>
         )
     }
