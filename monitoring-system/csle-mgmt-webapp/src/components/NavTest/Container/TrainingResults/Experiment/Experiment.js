@@ -10,9 +10,9 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import MetricPlot from "./MetricPlot/MetricPlot";
 import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
-import getAgentTypeStr from '../../../Common/getAgentTypeStr'
-import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
-import getDateStr from "../../../Common/getDateStr";
+import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
+import getPlayerTypeStr from '../../../../Common/getPlayerTypeStr'
+import getDateStr from "../../../../Common/getDateStr";
 
 const Experiment = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);

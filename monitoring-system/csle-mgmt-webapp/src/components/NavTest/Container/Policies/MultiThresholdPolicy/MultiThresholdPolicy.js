@@ -7,8 +7,8 @@ import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
-import getAgentTypeStr from '../../../Common/getAgentTypeStr'
-import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
+import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
+import getPlayerTypeStr from '../../../../Common/getPlayerTypeStr'
 
 const MultiThresholdPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
