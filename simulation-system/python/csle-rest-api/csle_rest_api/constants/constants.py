@@ -81,6 +81,7 @@ class MGMT_WEBAPP:
     USERNAME_PROPERTY = "username"
     PASSWORD_PROPERTY = "password"
     TOKEN_PROPERTY = "token"
+    ADMIN_PROPERTY = "admin"
     DPID_PROPERTY = "dpid"
     DESC_PROPERTY = "desc"
     FLOWS_PROPERTY = "flows"

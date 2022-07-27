@@ -44,6 +44,7 @@ from csle_rest_api.resources.system_identification_jobs.routes import system_ide
 from csle_rest_api.resources.emulation_simulation_traces.routes import emulation_simulation_traces_bp
 from csle_rest_api.resources.sdn_controllers.routes import sdn_controllers_bp
 from csle_rest_api.resources.file.routes import file_bp
+from csle_rest_api.resources.login.routes import login_bp
 import csle_rest_api.constants.constants as api_constants
 
 
@@ -170,6 +171,9 @@ def create_app(static_folder: str):
     app.register_blueprint(file_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.FILE_RESOURCE}")
+    app.register_blueprint(login_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}")
     app.register_blueprint(sdn_controllers_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}")

@@ -25,6 +25,7 @@ from csle_common.dao.training.dqn_policy import DQNPolicy
 from csle_common.dao.training.fnn_with_softmax_policy import FNNWithSoftmaxPolicy
 from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.dao.management.management_user import ManagementUser
 
 
 class MetastoreFacade:
@@ -2783,3 +2784,157 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"GP system model with "
                                                      f"id {gp_system_model.id} deleted successfully")
+
+    @staticmethod
+    def _convert_management_user_record_to_dto(management_user_record) -> ManagementUser:
+        """
+        Converts a management user record fetched from the metastore into a DTO
+
+        :param management_user_record: the record to convert
+        :return: the DTO representing the record
+        """
+        management_user = ManagementUser(username=management_user_record[1], password=management_user_record[2],
+                                         admin=management_user_record[3], salt=management_user_record[4])
+        management_user.id = management_user_record[0]
+        return management_user
+
+    @staticmethod
+    def list_management_users() -> List[ManagementUser]:
+        """
+        :return: A list of management users in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_management_user_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def list_management_users_ids() -> List[Dict]:
+        """
+        :return: A list of management user ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id FROM "
+                            f"{constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def get_management_user_config(id: int) -> Union[None, ManagementUser]:
+        """
+        Function for fetching a management user with a given id from the metastore
+
+        :param id: the id of the management user
+        :return: The management user or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_management_user_record_to_dto(
+                        management_user_record=record)
+                return record
+
+    @staticmethod
+    def save_management_user(management_user: ManagementUser) -> Union[Any, int]:
+        """
+        Saves a management user to the metastore
+
+        :param management_user: the management user to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a management user in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+                            f"(username, password, admin, salt) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id",
+                            (management_user.username, management_user.password, management_user.admin,
+                             management_user.salt))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"management user saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_management_user(management_user: ManagementUser, id: int) -> None:
+        """
+        Updates a management user in the metastore
+
+        :param management_user: the management user to update
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating management user with id: {id} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+                            f" SET username=%s, password=%s, admin=%s, salt=%s"
+                            f"WHERE {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}.id = %s",
+                            (management_user.username, management_user.password, management_user.admin,
+                             management_user.salt, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Management user with id: {id} updated successfully")
+
+    @staticmethod
+    def remove_management_user(management_user: ManagementUser) -> None:
+        """
+        Removes a management user from the metastore
+
+        :param management_user: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing management user with "
+                                             f"id:{management_user.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} WHERE id = %s",
+                            (management_user.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Management user with "
+                                                     f"id {management_user.id} deleted successfully")
+
+    @staticmethod
+    def get_management_user_by_username(username: str) -> Union[None, ManagementUser]:
+        """
+        Function for extracting a management user account based on the username
+
+        :param username: the username of the user
+        :return: The management user or None if no user with the given username was found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
+                            f"WHERE username = %s", (username,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_management_user_record_to_dto(management_user_record=record)
+                return record

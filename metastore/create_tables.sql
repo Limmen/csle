@@ -237,3 +237,14 @@ CREATE TABLE IF NOT EXISTS gp_system_models (
 );
 GRANT ALL ON gp_system_models TO csle;
 GRANT USAGE, SELECT ON SEQUENCE gp_system_models_id_seq TO csle;
+
+-- Create table that stores the management user accounts --
+CREATE TABLE IF NOT EXISTS management_users (
+    id serial PRIMARY KEY,
+    username VARCHAR(128) UNIQUE NOT NULL,
+    password VARCHAR(128) NOT NULL,
+    admin BOOLEAN NOT NULL,
+    salt VARCHAR(128) NOT NULL
+);
+GRANT ALL ON management_users TO csle;
+GRANT USAGE, SELECT ON SEQUENCE management_users_id_seq TO csle;

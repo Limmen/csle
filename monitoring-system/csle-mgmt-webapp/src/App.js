@@ -56,9 +56,9 @@ function App() {
                                 </Route>
                                 <Route path="about-page" index element={<About/>}>
                                 </Route>
+                                <Route path="login-page" index element={<Login setToken={setToken}/>}>
+                                </Route>
                                 <Route path="*" element={<NotFound/>}/>
-                            </Route>
-                            <Route path="login-page" index element={<Login setToken={setToken}/>}>
                             </Route>
                         </Routes>
                     </BrowserRouter>

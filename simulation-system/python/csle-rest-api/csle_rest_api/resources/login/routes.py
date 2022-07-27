@@ -3,9 +3,11 @@ Routes and sub-resources for the /login resource
 """
 import json
 import secrets
+import bcrypt
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
+from csle_common.metastore.metastore_facade import MetastoreFacade
 
 # Creates a blueprint "sub application" of the main REST app
 login_bp = Blueprint(
@@ -22,10 +24,19 @@ def read_login():
     """
     token = secrets.token_urlsafe(32)
     username = json.loads(request.data)[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
-    password = json.loads(request.data)[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
-    data_dict = {
-        api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: token
-    }
-    response = jsonify(data_dict)
+    user_account = MetastoreFacade.get_management_user_by_username(username=username)
+    response_code = constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+    response = jsonify({})
+    if user_account is not None:
+        password = json.loads(request.data)[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
+        byte_pwd = password.encode('utf-8')
+        pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode("utf-8")
+        if user_account.password == pw_hash:
+            response_code = constants.HTTPS.OK_STATUS_CODE
+            data_dict = {
+                api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: token,
+                api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin
+            }
+            response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, response_code

@@ -1,38 +1,45 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
+import { useAlert } from "react-alert";
 import './Login.css';
 
 const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const ip = "localhost"
+    const alert = useAlert();
 
-    async function loginUser(credentials) {
-        return fetch(`http://` + ip + ':7777/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(credentials)
-        })
-            .then(data => data.json())
-    }
-
+    const loginUser = useCallback((credentials) => {
+        fetch(
+            `http://` + ip + ':7777/login',
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify(credentials)
+            }
+        )
+            .then(res => res.json())
+            .then(response => {
+                if(!response.ok) {
+                    alert.show("Oh look, an alert!")
+                } else {
+                    console.log("Received token")
+                    console.log(response)
+                    // props.setToken(token)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
 
     const formSubmit = async (event) => {
-        // prevent page refresh
         event.preventDefault()
         const credentials = {
             "username": username,
             "password": password
         }
-        const token = await loginUser({
-            username,
-            password
-        });
-        props.setToken(token)
+        loginUser(credentials)
     }
-
-
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value)
