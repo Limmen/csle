@@ -524,6 +524,7 @@ const TrainingJob = (props) => {
                     <Collapse in={logsOpen}>
                         <div id="logsOpenBody" className="cardBodyHidden">
                             <SpinnerOrLogs loadingLogs={loadingLogs} logs={logs}/>
+                            <p className="extraMarginTop"></p>
                         </div>
                     </Collapse>
                 </Card>
