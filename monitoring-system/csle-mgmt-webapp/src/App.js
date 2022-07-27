@@ -17,11 +17,11 @@ import Policies from "./components/MainContainer/Policies/Policies";
 import Jobs from "./components/MainContainer/Jobs/Jobs";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import useToken from "./components/MainContainer/TokenManagement/useToken";
+import useSession from "./components/MainContainer/SessionManagement/useSession";
 
 
 function App() {
-    const { token, setToken } = useToken();
+    const { sessionData, setSessionData } = useSession();
 
     return (
         <div className="App container-fluid">
@@ -31,8 +31,8 @@ function App() {
                         <Routes>
                             <Route path="/"
                                    element={<MainContainer/>}>
-                                <Route index element={<Login setToken={setToken}
-                                                             token={token}/>}>
+                                <Route index element={<Login setSessionData={setSessionData}
+                                                             sessionData={sessionData}/>}>
                                 </Route>
                                 <Route path="emulations-page" index element={<Emulations/>}>
                                 </Route>
@@ -60,8 +60,8 @@ function App() {
                                 </Route>
                                 <Route path="about-page" index element={<About/>}>
                                 </Route>
-                                <Route path="login-page" index element={<Login setToken={setToken}
-                                                                               token={token}/>}>
+                                <Route path="login-page" index element={<Login setSessionData={setSessionData}
+                                                                               sessionData={sessionData}/>}>
                                 </Route>
                                 <Route path="*" element={<NotFound/>}/>
                             </Route>

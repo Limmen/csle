@@ -35,7 +35,8 @@ def read_login():
             response_code = constants.HTTPS.OK_STATUS_CODE
             data_dict = {
                 api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: token,
-                api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin
+                api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin,
+                api_constants.MGMT_WEBAPP.USERNAME_PROPERTY: user_account.username
             }
             response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

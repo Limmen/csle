@@ -30,12 +30,7 @@ const Login = (props) => {
             .then(response => {
                 console.log(response)
                 if(response !== null) {
-                    props.setToken(
-                        {
-                            "token": response.token
-                        }
-                    )
-                    console.log("match")
+                    props.setSessionData(response)
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -57,9 +52,7 @@ const Login = (props) => {
     const handlePwChange = (event) => {
         setPassword(event.target.value)
     }
-    console.log("token:")
-    console.log(props.token)
-    if(!props.token) {
+    if(!props.sessionData) {
         return (<div className="Login Auth-form-container">
             <form className="Auth-form" onSubmit={formSubmit}>
                 <div className="Auth-form-content">
@@ -95,7 +88,9 @@ const Login = (props) => {
     } else {
         return (
             <div>
-                Logged in
+                <h3 className="managementTitle"> Already logged in.</h3>
+                <p className="bold"> Username: </p> {props.sessionData.username}
+                <p className="bold"> Admin: </p> {props.sessionData.admin}
             </div>
         )
     }
