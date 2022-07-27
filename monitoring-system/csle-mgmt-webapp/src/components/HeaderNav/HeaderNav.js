@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Logo from './logo.jpg'
 
 function HeaderNav() {
   return (
@@ -18,9 +19,9 @@ function HeaderNav() {
                       <Navbar.Collapse id="basic-navbar-nav">
                           <Nav className="me-auto">
                               <Nav.Link href="#home">Login</Nav.Link>
-                              <Nav.Link href="#link">Management</Nav.Link>
+                              <Nav.Link href="#link">About</Nav.Link>
                               <Nav.Link href="#link">Downloads</Nav.Link>
-                              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                              <NavDropdown title="Management System" id="basic-nav-dropdown">
                                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                                   <NavDropdown.Item href="#action/3.2">
                                       Another action
