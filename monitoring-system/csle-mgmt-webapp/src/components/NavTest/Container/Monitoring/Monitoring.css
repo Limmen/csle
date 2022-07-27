@@ -1,0 +1,79 @@
+
+.aggregatedMetrics {
+    margin-bottom: 55px
+}
+
+.evolutionTitle {
+    font-size: 14px;
+}
+
+.formLabel {
+    font-size: 14px;
+}
+
+.chartsRow {
+    margin-bottom: 70px;
+}
+
+.dropdownText {
+    font-size: 14px;
+}
+.monitoringHeader {
+    display: inline-block;
+}
+
+.dropdownSpinner {
+    margin-left: 50px
+}
+
+.aggregatedMetricsSpinner {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.hostMetricsDropdownRow {
+    margin-top: 100px;
+}
+
+.monitoringHeader{
+    margin-right: 30px
+}
+
+.windowLength {
+    display: inline-block;
+}
+
+.windowLengthLabel {
+    display: inline-block;
+}
+
+.refreshButton {
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.windowLengthInput {
+    font-size: 18px;
+}
+
+.toolTipRefresh {
+    font-size: 14px;
+}
+
+.emptyEmulations {
+    font-size: 14px;
+}
+
+.grafanaStatus {
+    font-size: 14px;
+    margin-left:20px
+}
+
+.selectEmulation {
+    margin-left:15px;
+    margin-right:15px
+}
+
+.windowLengthDropdown {
+    margin-left:20px
+}

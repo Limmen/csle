@@ -1,0 +1,36 @@
+.Header {
+    color: black !important;
+}
+
+.subtitle {
+    font-style: italic;
+    color: black !important;
+}
+.title {
+    margin-top:-10px;
+    font-weight: bold;
+    color: black !important;
+}
+
+.navtabsheader{
+    margin-top:0px;
+    font-size: 10px;
+    color: black !important;
+}
+
+.jumbotron {
+    height:108px;
+    color: black !important;
+}
+
+.navdropdownheader {
+    color: black !important;
+}
+
+.navtablabel {
+    color: black !important;
+}
+
+.active {
+    font-weight: bolder;
+}

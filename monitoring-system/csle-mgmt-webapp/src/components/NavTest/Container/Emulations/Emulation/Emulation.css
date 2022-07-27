@@ -1,0 +1,22 @@
+.startButton {
+    margin-left:5px
+}
+
+.startStopIcon {
+    font-size: 14px;
+}
+
+.toolTipRefresh {
+    font-size: 14px;
+}
+
+.removeButton {
+    margin-right:10px;
+    margin-left:10px;
+}
+
+.cardBodyHidden {
+    margin-top:20px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
