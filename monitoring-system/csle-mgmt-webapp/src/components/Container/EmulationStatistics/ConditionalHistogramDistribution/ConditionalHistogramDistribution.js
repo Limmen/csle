@@ -17,7 +17,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
         const width = 500
         const colors  = ["#8884d8", "#82ca9d"]
         const shapes  = ["triangle", "circle"]
-        const height = 600
+        const height = 400
         const margin = {
             top: 10,
             right: 30,
@@ -115,8 +115,8 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 data={data3}
                                 margin={margin}
                             >
-                                <text x={1300 / 2} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="22">{props.title2} (downsampled to {num_samples} samples)</tspan>
+                                <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
+                                    <tspan fontSize="15">{props.title2} (downsampled to {num_samples} samples)</tspan>
                                 </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
@@ -128,7 +128,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                            dy={50}/>
                                 </YAxis>
                                 <Tooltip/>
-                                <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                                <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                         className="largeFont"/>
                                 {selectedConditionals.map((conditional, index) => {
                                     if (index === 0) {
@@ -156,8 +156,8 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 data={data2}
                                 margin={margin}
                             >
-                                <text x={1300 / 2} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="22">{props.title1} (downsampled to {num_samples} samples)</tspan>
+                                <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
+                                    <tspan fontSize="15">{props.title1} (downsampled to {num_samples} samples)</tspan>
                                 </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
@@ -169,7 +169,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                            dy={50}/>
                                 </YAxis>
                                 <Tooltip/>
-                                <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                                <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                         className="largeFont"/>
                                 {selectedConditionals.map((conditional, index) => {
                                     return (

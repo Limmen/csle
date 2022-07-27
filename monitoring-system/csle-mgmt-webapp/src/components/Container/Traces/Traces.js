@@ -609,7 +609,7 @@ const Traces = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Emulation trace:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedEmulationTraceId}
@@ -646,7 +646,7 @@ const Traces = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllEmulationTracesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllEmulationTracesConfirm}>
+                        <Button variant="danger" onClick={removeAllEmulationTracesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -685,7 +685,7 @@ const Traces = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Simulation trace:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedSimulationTraceId}
@@ -722,7 +722,7 @@ const Traces = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllSimulationTracesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllSimulationTracesConfirm}>
+                        <Button variant="danger" onClick={removeAllSimulationTracesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -863,7 +863,7 @@ const Traces = () => {
     return (
         <div className="Traces">
             <div className="row emulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
 
                         <SelectEmulationTraceOrSpinner loadingEmulationTraces={loadingEmulationTraces}
@@ -872,7 +872,7 @@ const Traces = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="emulationTracesInput" className="searchIcon">
@@ -896,14 +896,14 @@ const Traces = () => {
                                      loadingSelectedEmulationTrace={loadingSelectedEmulationTrace}
             />
             <div className="row simulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block">
                         <SelectSimulationTraceOrSpinner loadingSimulationTraces={loadingSimulationTraces}
                                                         simulationTracesIds={filteredSimulationTracesIds}
                                                         selectedSimulationTraceId={selectedSimulationTraceId}/>
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="simulationTracesInput" className="searchIcon">

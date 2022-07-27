@@ -15,7 +15,7 @@ import {
 
 const PolicyAndBeliefChart = React.memo((props) => {
         const width = 2000
-        const height = 200
+        const height = 310
         const margin = {
             top: 10,
             right: 30,
@@ -51,7 +51,7 @@ const PolicyAndBeliefChart = React.memo((props) => {
                             Probability of defensive action πΘ(a|h) and belief about intrusion b(1)
                         </h4>
                     </div>
-                    <ResponsiveContainer width='100%' height={350}>
+                    <ResponsiveContainer width='100%' height={height}>
                         <AreaChart
                             width={width}
                             height={height}
@@ -82,7 +82,7 @@ const PolicyAndBeliefChart = React.memo((props) => {
                                            stroke="black" label={{
                                 position: 'insideTopRight',
                                 value: 'Intrusion starts', fill: 'black',
-                                fontSize: 22, marginTop: "10px"
+                                fontSize: 15, marginTop: "10px"
                             }} strokeDasharray="3 3"/>
                             <ReferenceLine y={0.5}
                                            stroke="black" strokeDasharray="5 5 "/>
@@ -95,7 +95,7 @@ const PolicyAndBeliefChart = React.memo((props) => {
                                   isAnimationActive={props.animation} fillOpacity={1} fill="url(#colorPv)"
                                   animationEasing={'linear'}
                                   animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}/>
-                            <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                            <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                     className="largeFont"/>
                         </AreaChart>
                     </ResponsiveContainer>

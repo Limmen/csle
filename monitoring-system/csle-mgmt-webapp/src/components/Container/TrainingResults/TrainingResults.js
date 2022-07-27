@@ -313,7 +313,7 @@ const TrainingResults = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllExperimentsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllExperimentsConfirm}>
+                        <Button variant="danger" onClick={removeAllExperimentsConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>

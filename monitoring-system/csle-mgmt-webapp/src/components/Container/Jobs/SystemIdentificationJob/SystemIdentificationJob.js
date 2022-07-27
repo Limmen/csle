@@ -94,7 +94,7 @@ const SystemIdentificationJob = (props) => {
                 delay={{show: 0, hide: 0}}
                 overlay={renderStartSystemIdentificationJobTooltip}
             >
-                <Button variant="success" className="startButton"
+                <Button variant="success" className="startButton" size="sm"
                         onClick={() => props.startSystemIdentificationJob(props.job)}>
                     <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                 </Button>
@@ -186,14 +186,14 @@ const SystemIdentificationJob = (props) => {
                             delay={{show: 0, hide: 0}}
                             overlay={renderRemoveSystemIdentificationJobTooltip}
                         >
-                            <Button variant="danger" className="removeButton"
+                            <Button variant="danger" className="removeButton" size="sm"
                                     onClick={() => props.removeSystemIdentificationJob(props.job)}>
                                 <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
                     </h5>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -254,7 +254,7 @@ const SystemIdentificationJob = (props) => {
                         </Collapse>
                     </Card>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={() => setHyperparametersOpen(!hyperparametersOpen)}
@@ -291,7 +291,7 @@ const SystemIdentificationJob = (props) => {
                         </Collapse>
                     </Card>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={getLogs}

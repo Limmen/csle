@@ -15,7 +15,7 @@ import {
 
 const DeltaAlertsLineChart = React.memo((props) => {
         const width = 5000
-        const height = 300
+        const height = 310
         const margin = {
             top: 10,
             right: 30,
@@ -59,7 +59,7 @@ const DeltaAlertsLineChart = React.memo((props) => {
                             Measured infrastructure metrics (Δx, Δy, Δz)
                         </h4>
                     </div>
-                    <ResponsiveContainer width='100%' height={350}>
+                    <ResponsiveContainer width='100%' height={height}>
                         <BarChart
                             width={width}
                             height={height}
@@ -78,13 +78,13 @@ const DeltaAlertsLineChart = React.memo((props) => {
                                        className="largeFont"/>
                             </YAxis>
                             <Tooltip/>
-                            <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                            <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                     className="largeFont"/>
                             <ReferenceLine x={props.activeTrace.value.intrusion_start_index}
                                            stroke="black" label={{
                                 position: 'insideTopRight',
                                 value: 'Intrusion starts', fill: 'black',
-                                fontSize: 22, marginTop: "10px"
+                                fontSize: 15, marginTop: "10px"
                             }} strokeDasharray="3 3"
                             />
                             <Bar dataKey="Severe Alerts Δx" fill="#8884d8" stroke="black" animationEasing={'linear'}

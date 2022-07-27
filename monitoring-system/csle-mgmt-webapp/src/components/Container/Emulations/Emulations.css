@@ -55,9 +55,9 @@
 }
 
 .topologyImg {
-    width: 550px;
-    height: auto;
     margin-bottom: 50px;
+    height:20%;
+    width:20%;
 }
 
 .emulationsHeader{

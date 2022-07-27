@@ -47,14 +47,14 @@ const AlphaVecPolicy = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAlphaVecPolicy}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removeAlphaVecPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </h5>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -103,7 +103,7 @@ const AlphaVecPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setActionsOpen(!actionsOpen)}
@@ -138,7 +138,7 @@ const AlphaVecPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setAlphaVectorsOpen(!alphaVectorsOpen)}

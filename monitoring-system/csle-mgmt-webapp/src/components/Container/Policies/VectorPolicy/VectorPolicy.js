@@ -39,14 +39,14 @@ const VectorPolicy = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveVectroPolicy}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removeVectorPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </h5>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -95,7 +95,7 @@ const VectorPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setActionsOpen(!actionsOpen)}
@@ -129,7 +129,7 @@ const VectorPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setPolicyOpen(!policyOpen)}

@@ -146,7 +146,7 @@ const Experiment = (props) => {
                     </OverlayTrigger>
                 </h5>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -208,7 +208,7 @@ const Experiment = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setHyperparametersOpen(!hyperparametersOpen)}
@@ -245,7 +245,7 @@ const Experiment = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setRandomSeedsAndOutputsOpen(!randomSeedsAndOutputsOpen)}
@@ -280,7 +280,7 @@ const Experiment = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setMetricPlotsOpen(!metricPlotsOpen)}
@@ -328,7 +328,7 @@ const Experiment = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setMetricTablesOpen(!metricTablesOpen)}
@@ -381,7 +381,7 @@ const Experiment = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setPoliciesOpen(!policiesOpen)}
@@ -423,7 +423,7 @@ const Experiment = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={getLogs}

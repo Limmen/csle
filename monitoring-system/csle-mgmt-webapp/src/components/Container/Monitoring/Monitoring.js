@@ -835,7 +835,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton"
+                        <Button variant="success" className="startButton" size="sm"
                                 onClick={() => startOrStopGrafana()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -848,7 +848,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopGrafana()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -866,7 +866,7 @@ const Monitoring = () => {
                     placement="right"
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton"
+                        <Button variant="success" className="startButton" size="sm"
                                 onClick={() => startOrStopPrometheus()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -879,7 +879,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopPrometheus()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -897,7 +897,7 @@ const Monitoring = () => {
                     placement="right"
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton btn-sm"
+                        <Button variant="success" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopNodeExporter()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -910,7 +910,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopNodeExporter()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -928,7 +928,7 @@ const Monitoring = () => {
                     placement="right"
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTooltip()}>
-                        <Button variant="success" className="startButton btn-sm"
+                        <Button variant="success" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopcAdvisor()}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -941,7 +941,7 @@ const Monitoring = () => {
                         placement="right"
                         delay={{show: 0, hide: 0}}
                         overlay={renderStopTooltip()}>
-                        <Button variant="warning" className="startButton btn-sm"
+                        <Button variant="warning" className="startButton btn-sm" size="sm"
                                 onClick={() => startOrStopcAdvisor()}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>

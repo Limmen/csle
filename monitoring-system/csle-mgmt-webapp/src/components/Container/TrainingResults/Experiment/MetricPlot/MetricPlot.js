@@ -14,7 +14,7 @@ import {
 
 const MetricPlot = React.memo((props) => {
         const width = 500
-        const height = 600
+        const height = 400
         const margin = {
             top: 10,
             right: 30,
@@ -42,8 +42,8 @@ const MetricPlot = React.memo((props) => {
                         data={data}
                         margin={margin}
                     >
-                        <text x={1300} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="22">{props.title}</tspan>
+                        <text x={900} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
+                            <tspan fontSize="15">{props.title}</tspan>
                         </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
@@ -55,7 +55,7 @@ const MetricPlot = React.memo((props) => {
                                    dy={50}/>
                         </YAxis>
                         <Tooltip/>
-                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                        <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                 className="largeFont"/>
                         <Line type="monotone" dataKey={props.metricName}  stroke="#8884d8" addDot={false} activeDot={{r: 8}}>
                             <ErrorBar dataKey="err" width={4} strokeWidth={2} stroke="green" direction="y" />

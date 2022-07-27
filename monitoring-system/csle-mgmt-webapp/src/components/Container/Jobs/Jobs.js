@@ -1495,7 +1495,7 @@ const Jobs = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Training job:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedTrainingJobId}
@@ -1534,7 +1534,7 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllTrainingJobsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllTrainingJobsConfirm}>
+                        <Button variant="danger" onClick={removeAllTrainingJobsConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1576,7 +1576,7 @@ const Jobs = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Data collection job:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedDataCollectionJobId}
@@ -1615,7 +1615,7 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllDataCollectionJobsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllDataCollectionJobsConfirm}>
+                        <Button variant="danger" onClick={removeAllDataCollectionJobsConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1656,7 +1656,7 @@ const Jobs = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             System identification job:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedSystemIdentificationJobId}
@@ -1694,7 +1694,7 @@ const Jobs = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllSystemIdentificationJobsTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllSystemIdentificationJobsConfirm}>
+                        <Button variant="danger" onClick={removeAllSystemIdentificationJobsConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1873,7 +1873,7 @@ const Jobs = () => {
     return (
         <div className="policyExamination">
             <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectTrainingJobOrSpinner trainingJobsLoading={trainingJobsLoading}
                                                    trainingJobsIds={filteredTrainingJobsIds}
@@ -1881,7 +1881,7 @@ const Jobs = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="trainingJobInput" className="searchIcon">
@@ -1917,7 +1917,7 @@ const Jobs = () => {
 
 
             <div className="row systemIdentificationJobs">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectDataCollectionJobOrSpinner dataCollectionJobsLoading={dataCollectionJobsLoading}
                                                           dataCollectionJobsIds={filteredDataCollectionJobsIds}
@@ -1925,7 +1925,7 @@ const Jobs = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="dataCollectionJobInput" className="searchIcon">
@@ -1960,7 +1960,7 @@ const Jobs = () => {
 
 
             <div className="row systemIdentificationJobs">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectSystemIdentificationJobOrSpinner systemIdentificationJobsLoading={systemIdentificationJobsLoading}
                                                                 systemIdentificationJobsIds={filteredSystemIdentificationJobsIds}
@@ -1968,7 +1968,7 @@ const Jobs = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="systemIdentificationJobInput" className="searchIcon">

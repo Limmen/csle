@@ -176,7 +176,7 @@ const DataCollectionJob = (props) => {
                 delay={{show: 0, hide: 0}}
                 overlay={renderStartDataCollectionJobTooltip}
             >
-                <Button variant="success" className="startButton"
+                <Button variant="success" className="startButton" size="sm"
                         onClick={() => props.startDataCollectionJob(props.job)}>
                     <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                 </Button>
@@ -273,14 +273,14 @@ const DataCollectionJob = (props) => {
                             delay={{show: 0, hide: 0}}
                             overlay={renderRemoveDataCollectionJobTooltip}
                         >
-                            <Button variant="danger" className="removeButton"
+                            <Button variant="danger" className="removeButton" size="sm"
                                     onClick={() => props.removeDataCollectionJob(props.job)}>
                                 <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                             </Button>
                         </OverlayTrigger>
                     </h5>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -353,7 +353,7 @@ const DataCollectionJob = (props) => {
                         </Collapse>
                     </Card>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={() => setAttackerActionSequenceOpen(!attackerActionSequenceOpen)}
@@ -401,7 +401,7 @@ const DataCollectionJob = (props) => {
                         </Collapse>
                     </Card>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={() => setDefenderActionSequenceOpen(!defenderActionSequenceOpen)}
@@ -449,7 +449,7 @@ const DataCollectionJob = (props) => {
                         </Collapse>
                     </Card>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={() => setTracesOpen(!tracesOpen)}
@@ -563,7 +563,7 @@ const DataCollectionJob = (props) => {
                         </Collapse>
                     </Card>
 
-                    <Card>
+                    <Card className="subCard">
                         <Card.Header>
                             <Button
                                 onClick={getLogs}

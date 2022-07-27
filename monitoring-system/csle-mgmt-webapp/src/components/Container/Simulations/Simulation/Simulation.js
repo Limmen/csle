@@ -92,14 +92,14 @@ const Simulation = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveSimulationTooltip}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removeSimulation(props.simulation)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </h5>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -159,7 +159,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setPlayersOpen(!playersOpen)}
@@ -194,7 +194,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setStateSpaceOpen(!stateSpaceOpen)}
@@ -229,7 +229,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setActionSpacesOpen(!actionSpacesOpen)}
@@ -269,7 +269,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setInitialStateDistributionOpen(!initialStateDistributionOpen)}
@@ -302,7 +302,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setOtherEnvParametersOpen(!otherEnvParametersOpen)}
@@ -337,7 +337,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setObservationSpacesOpen(!observationSpacesOpen)}
@@ -396,7 +396,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setTransitionProbabilitiesOpen(!transitionProbabilitiesOpen)}
@@ -417,7 +417,7 @@ const Simulation = (props) => {
                 </Card>
 
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setObservationFunctionOpen(!observationFunctionOpen)}
@@ -436,7 +436,7 @@ const Simulation = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setRewardFunctionOpen(!rewardFunctionOpen)}

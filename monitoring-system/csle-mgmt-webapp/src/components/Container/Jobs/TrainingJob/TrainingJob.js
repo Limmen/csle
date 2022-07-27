@@ -198,7 +198,7 @@ const TrainingJob = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderStartTrainingJobTooltip}
                 >
-                    <Button variant="success" className="startButton"
+                    <Button variant="success" className="startButton" size="sm"
                             onClick={() => props.startTrainingJob(props.job)}>
                         <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                     </Button>
@@ -247,14 +247,14 @@ const TrainingJob = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveTrainingJobTooltip}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removeTrainingJob(props.job)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </h5>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -327,7 +327,7 @@ const TrainingJob = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setHyperparametersOpen(!hyperparametersOpen)}
@@ -364,7 +364,7 @@ const TrainingJob = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setMetricPlotsOpen(!metricPlotsOpen)}
@@ -405,7 +405,7 @@ const TrainingJob = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setMetricTablesOpen(!metricTablesOpen)}
@@ -456,7 +456,7 @@ const TrainingJob = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setSimulationTracesOpen(!simulationTracesOpen)}
@@ -510,7 +510,7 @@ const TrainingJob = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={getLogs}

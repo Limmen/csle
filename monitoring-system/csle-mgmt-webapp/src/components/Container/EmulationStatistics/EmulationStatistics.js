@@ -383,7 +383,7 @@ const EmulationStatistics = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveStatisticTooltip}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => removeStatisticConfirm(selectedEmulationStatistic)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -394,7 +394,7 @@ const EmulationStatistics = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Statistic:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "400px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedEmulationStatisticId}
@@ -428,7 +428,7 @@ const EmulationStatistics = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Conditionals:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "800px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "500px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedConditionals}
@@ -463,7 +463,7 @@ const EmulationStatistics = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Metric:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedMetric}
@@ -585,7 +585,7 @@ const EmulationStatistics = () => {
             return (
                 <div>
                     <div className="row chartsRow">
-                        <Card className="col-sm-12">
+                        <Card className="col-sm-12 subCard">
                             <Card.Header>
                                 <Button
                                     onClick={() => setDeltaCountsOpen(!deltaCountsOpen)}
@@ -614,7 +614,7 @@ const EmulationStatistics = () => {
                             </Collapse>
                         </Card>
 
-                        <Card className="col-sm-12">
+                        <Card className="col-sm-12 subCard">
                             <Card.Header>
                                 <Button
                                     onClick={() => setInitialCountsOpen(!initialCountsOpen)}
@@ -643,7 +643,7 @@ const EmulationStatistics = () => {
                             </Collapse>
                         </Card>
 
-                        <Card className="col-sm-12">
+                        <Card className="col-sm-12 subCard">
                             <Card.Header>
                                 <Button
                                     onClick={() => setDeltaProbsOpen(!deltaProbsOpen)}
@@ -672,7 +672,7 @@ const EmulationStatistics = () => {
                             </Collapse>
                         </Card>
 
-                        <Card className="col-sm-12">
+                        <Card className="col-sm-12 subCard">
                             <Card.Header>
                                 <Button
                                     onClick={() => setInitialProbsOpen(!initialProbsOpen)}
@@ -703,7 +703,7 @@ const EmulationStatistics = () => {
                             </Collapse>
                         </Card>
 
-                        <Card className="col-sm-12">
+                        <Card className="col-sm-12 subCard">
                             <Card.Header>
                                 <Button
                                     onClick={() => setDescriptiveStatsOpen(!descriptiveStatsOpen)}
@@ -814,7 +814,7 @@ const EmulationStatistics = () => {
     return (
         <div className="emulationStatistics">
             <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4>
                         <SelectEmulationStatisticDropdownOrSpinner
                             emulationStatisticsIds={filteredEmulationStatisticIds}
@@ -823,7 +823,7 @@ const EmulationStatistics = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="basic-addon1" className="searchIcon">

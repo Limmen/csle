@@ -24,7 +24,7 @@ const About = () => {
                 the the Markov decision process or game and to evaluate policies, whereas the simulation
                 system is used to learn policies.
             </p>
-            <img src={Arch} alt="CSLE Architecture"/>
+            <img src={Arch} alt="CSLE Architecture" height="30%" width="30%"/>
         </div>
     );
 }

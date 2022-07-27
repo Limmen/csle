@@ -10,7 +10,7 @@ import getWindowDimensions from "./getDimensions";
  */
 const getNodes = (base_position = {x: 0, y: 0}) => {
     const dimensions = getWindowDimensions()
-    const attackerBaseY=dimensions.height
+    const attackerBaseY=dimensions.height+500
     const attackerBaseX=0
     const gatewayBaseY = attackerBaseY + 100
     const gatewayBaseX = attackerBaseX + 175

@@ -41,14 +41,14 @@ const PPOPolicy = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemovePPOPolicy}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removePPOPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </h5>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setGeneralInfoOpen(!generalInfoOpen)}
@@ -101,7 +101,7 @@ const PPOPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setHParamsOpen(!hParamsOpen)}
@@ -138,7 +138,7 @@ const PPOPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setNeuralNetworkDetailsOpen(!neuralNetworkDetailsOpen)}
@@ -177,7 +177,7 @@ const PPOPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setActionsOpen(!actionsOpen)}

@@ -74,7 +74,7 @@ const PolicyExamination = () => {
     const rawElements = getElements({x: 0, y: 0})
     const [elements, setElements] = useState(rawElements);
     const [attackerFoundNodes, setAttackerFoundNodes] = useState([]);
-    const height = 900
+    const height = 745
     const nodeTypes = {
         applicationServer: ApplicationServer,
         gateway: Gateway,
@@ -346,7 +346,7 @@ const PolicyExamination = () => {
                                 <div className="row">
                                     <div className="Network col-sm-12">
                                         {/*<h4 className="attackerNetworkTitle"> IT Infrastructure Status </h4>*/}
-                                        <div className="layoutflow">
+                                        <div className="layoutflow netTopology">
                                             <ReactFlowProvider>
                                                 <ReactFlow
                                                     style={{height: height}}
@@ -355,8 +355,8 @@ const PolicyExamination = () => {
                                                     nodesDraggable={false}
                                                     nodesConnectable={false}
                                                     paneMoveable={false}
-                                                    defaultZoom={1}
-                                                    minZoom={1}
+                                                    defaultZoom={0.85}
+                                                    minZoom={0.85}
                                                     maxZoom={1}
                                                     nodeTypes={nodeTypes}
                                                 />

@@ -25,19 +25,18 @@ const SimulationTrace = (props) => {
         <Accordion.Collapse eventKey={props.simulationTrace.id}>
             <Card.Body>
                 <h5 className="semiTitle">
+                    Actions:
                     <OverlayTrigger
                         className="removeButton"
                         placement="left"
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveSimulationTraceTooltip}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removeSimulationTrace(props.simulationTrace)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-
-                    Trace
                 </h5>
                 <div className="table-responsive">
                     <Table striped bordered hover>

@@ -41,7 +41,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
         const width = 500
         const colors = ["#8884d8", "#82ca9d"]
         const shapes = ["triangle", "circle"]
-        const height = 600
+        const height = 400
         const margin = {
             top: 10,
             right: 30,
@@ -91,8 +91,8 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 data={data}
                                 margin={margin}
                             >
-                                <text x={1150} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="22">Metric: {conds[0].metric_name} (Downsampled to {num_samples} samples)</tspan>
+                                <text x={950} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
+                                    <tspan fontSize="15">Metric: {conds[0].metric_name} (Downsampled to {num_samples} samples)</tspan>
                                 </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="val" type="number" domain={domain}>
@@ -112,7 +112,7 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                               stroke={colors[index]} addDot={false} activeDot={{r: 8}}/>
                                     )
                                 })}
-                                <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '22px'}}
+                                <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                         className="largeFont"/>
 
                             </LineChart>

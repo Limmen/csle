@@ -1685,7 +1685,7 @@ const Policies = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Multi-threshold policy:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedMultiThresholdPolicyId}
@@ -1722,7 +1722,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllMultiThresholdPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllMultiThresholdPoliciesConfirm}>
+                        <Button variant="danger" onClick={removeAllMultiThresholdPoliciesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1764,7 +1764,7 @@ const Policies = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             PPO policy:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedPpoPolicyId}
@@ -1802,7 +1802,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllPPOPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllPPOPoliciesConfirm}>
+                        <Button variant="danger" onClick={removeAllPPOPoliciesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1844,7 +1844,7 @@ const Policies = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Feed-forward neural network policy:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedFnnWSoftmaxPolicyId}
@@ -1882,7 +1882,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllFnnWSoftmaxPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllFnnWSoftmaxPoliciesConfirm}>
+                        <Button variant="danger" onClick={removeAllFnnWSoftmaxPoliciesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -1923,7 +1923,7 @@ const Policies = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             DQN policy:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedDQNPolicyId}
@@ -1961,7 +1961,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllDQNPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllDQNPoliciesConfirm}>
+                        <Button variant="danger" onClick={removeAllDQNPoliciesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -2002,7 +2002,7 @@ const Policies = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Tabular policy:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedTabularPolicyId}
@@ -2040,7 +2040,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllTabularPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllTabularPoliciesConfirm}>
+                        <Button variant="danger" onClick={removeAllTabularPoliciesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -2082,7 +2082,7 @@ const Policies = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Vector policy:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedVectorPolicyId}
@@ -2120,7 +2120,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllVectorPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllVectorPoliciesConfirm}>
+                        <Button variant="danger" onClick={removeAllVectorPoliciesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -2161,7 +2161,7 @@ const Policies = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Alpha-vector policy:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedAlphaVecPolicyId}
@@ -2199,7 +2199,7 @@ const Policies = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveAllAlphaVecPoliciesTooltip}
                     >
-                        <Button variant="danger" onClick={removeAllAlphaVecPoliciesConfirm}>
+                        <Button variant="danger" onClick={removeAllAlphaVecPoliciesConfirm} size="sm">
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -2661,7 +2661,7 @@ const Policies = () => {
     return (
         <div className="policyExamination">
             <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectMultiThresholdPolicyOrSpinner
                             loadingMultiThresholdPolicies={loadingMultiThresholdPolicies}
@@ -2670,7 +2670,7 @@ const Policies = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="tSpsaPoliciesSearchField" className="searchIcon">
@@ -2694,7 +2694,7 @@ const Policies = () => {
                                            selectedMultiThresholdPolicy={selectedMultiThresholdPolicy}/>
 
             <div className="row ppoPolicies simulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectPpoPolicyOrSpinner loadingPPOPolicies={loadingPPOPolicies}
                                                   ppoPoliciesIds={filteredPPOPoliciesIds}
@@ -2702,7 +2702,7 @@ const Policies = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="ppoPoliciesSearchField" className="searchIcon">
@@ -2727,7 +2727,7 @@ const Policies = () => {
 
 
             <div className="row ppoPolicies simulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectTabularPolicyOrSpinner loadingTabularPolicies={loadingTabularPolicies}
                                                   tabularPoliciesIds={filteredTabulaPoliciesIds}
@@ -2735,7 +2735,7 @@ const Policies = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="tabularPoliciesSearchField" className="searchIcon">
@@ -2761,7 +2761,7 @@ const Policies = () => {
 
 
             <div className="row ppoPolicies simulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectAlphaVecPolicyOrSpinner loadingAlphaVecPolicies={loadingAlphaVecPolicies}
                                                       alphaVecPoliciesIds={filteredAlphaVecPoliciesIds}
@@ -2769,7 +2769,7 @@ const Policies = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="alphaVecPoliciesSearchField" className="searchIcon">
@@ -2795,7 +2795,7 @@ const Policies = () => {
 
 
             <div className="row dqnPolicies simulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectDQNPolicyOrSpinner loadingDQNPolicies={loadingDQNPolicies}
                                                   dqnPoliciesIds={filteredDQNPoliciesIds}
@@ -2803,7 +2803,7 @@ const Policies = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="dqnPoliciesSearchField" className="searchIcon">
@@ -2827,7 +2827,7 @@ const Policies = () => {
             <DQNPolicyAccordion loadingDQNPolicy={loadingDQNPolicy} selectedDQNPolicy={selectedDQNPolicy}/>
 
             <div className="row fnnWSoftmaxPolicies simulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectFnnWSoftmaxPolicyOrSpinner loadingFnnWSoftmaxPolicies={loadingFnnWSoftmaxPolicies}
                                                   fnnWSoftmaxPoliciesIds={filteredFnnWSoftmaxPoliciesIds}
@@ -2835,7 +2835,7 @@ const Policies = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="fnnWSoftmaxPoliciesSearchField" className="searchIcon">
@@ -2861,7 +2861,7 @@ const Policies = () => {
 
 
             <div className="row ppoPolicies simulationTracesHeader">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectVectorPolicyOrSpinner loadingVectorPolicies={loadingVectorPolicies}
                                                       vectorPoliciesIds={filteredVectorPoliciesIds}
@@ -2869,7 +2869,7 @@ const Policies = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="vectorPoliciesSearchField" className="searchIcon">

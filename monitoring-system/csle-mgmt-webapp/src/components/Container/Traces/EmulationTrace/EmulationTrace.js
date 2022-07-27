@@ -121,14 +121,14 @@ const EmulationTrace = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveEmulationTraceTooltip}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => props.removeEmulationTrace(props.emulationTrace)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </h5>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setAttackerActionsOpen(!attackerActionsOpen)}
@@ -176,7 +176,7 @@ const EmulationTrace = (props) => {
                         </div>
                     </Collapse>
                 </Card>
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setDefenderActionsOpen(!defenderActionsOpen)}
@@ -225,7 +225,7 @@ const EmulationTrace = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setAttackerObservationsOpen(!attackerObservationsOpen)}
@@ -268,7 +268,7 @@ const EmulationTrace = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card>
+                <Card className="subCard">
                     <Card.Header>
                         <Button
                             onClick={() => setDefenderObservationsOpen(!defenderObservationsOpen)}

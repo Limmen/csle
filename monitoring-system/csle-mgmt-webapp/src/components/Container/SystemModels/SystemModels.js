@@ -581,7 +581,7 @@ const SystemModels = () => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderRemoveModelTooltip}
                     >
-                        <Button variant="danger" className="removeButton"
+                        <Button variant="danger" className="removeButton" size="sm"
                                 onClick={() => removeModelConfirm(selectedSystemModel)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
@@ -592,7 +592,7 @@ const SystemModels = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Model:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedSystemModelId}
@@ -649,7 +649,7 @@ const SystemModels = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Conditionals:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "800px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "400px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedConditionals}
@@ -684,7 +684,7 @@ const SystemModels = () => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Metric:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedMetric}
@@ -808,7 +808,7 @@ const SystemModels = () => {
                 <div>
                     <div className="row chartsRow">
 
-                        <Card className="col-sm-12">
+                        <Card className="col-sm-12 subCard">
                             <Card.Header>
                                 <Button
                                     onClick={() => setDeltaProbsOpen(!deltaProbsOpen)}
@@ -837,7 +837,7 @@ const SystemModels = () => {
                             </Collapse>
                         </Card>
 
-                        <Card className="col-sm-12">
+                        <Card className="col-sm-12 subCard">
                             <Card.Header>
                                 <Button
                                     onClick={() => setDescriptiveStatsOpen(!descriptiveStatsOpen)}
@@ -908,7 +908,7 @@ const SystemModels = () => {
     return (
         <div className="systemModels">
             <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectSystemModelDropdownOrSpinner systemModelsIds={filteredSystemModelsIds}
                                                             selectedSystemModelId={selectedSystemModelId}
@@ -916,7 +916,7 @@ const SystemModels = () => {
                         />
                     </h4>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-3">
                     <Form className="searchForm">
                         <InputGroup className="mb-3 searchGroup">
                             <InputGroup.Text id="basic-addon1" className="searchIcon">
