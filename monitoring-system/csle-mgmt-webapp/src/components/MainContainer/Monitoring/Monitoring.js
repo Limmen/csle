@@ -15,6 +15,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import {useDebouncedCallback} from 'use-debounce';
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const Monitoring = (props) => {
     const windowLengthOptions = [
@@ -94,7 +96,6 @@ const Monitoring = (props) => {
     const [animationDuration, setAnimationDuration] = useState(evolutionSpeedOptions[0]);
     const [animation, setAnimation] = useState(false);
     const animationDurationFactor = 50000
-    const ip = "localhost"
     const [grafanaStatus, setGrafanaStatus] = useState(null);
     const [cAdvisorStatus, setCAdvisorStatus] = useState(null);
     const [prometheusStatus, setPrometheusStatus] = useState(null);
@@ -103,6 +104,9 @@ const Monitoring = (props) => {
     const [searchString, setSearchString] = useState("");
     const [openFlowSwitchesOptions, setOpenFlowSwitchesOptions] = useState([]);
     const [selectedOpenFlowSwitch, setSelectedOpenFlowSwitch] = useState(null);
+    const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
 
     // const ip = "172.31.212.92"
 
@@ -309,8 +313,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setGrafanaStatus(response)
             })
             .catch(error => console.log("error:" + error))
@@ -326,8 +341,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setCAdvisorStatus(response)
             })
             .catch(error => console.log("error:" + error))
@@ -343,8 +369,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setNodeExporterStatus(response)
             })
             .catch(error => console.log("error:" + error))
@@ -360,8 +397,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setPrometheusStatus(response)
             })
             .catch(error => console.log("error:" + error))
@@ -377,8 +425,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const emulationExecutionIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj,
@@ -411,8 +470,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedEmulationExecution(response)
                 setLoadingSelectedEmulationExecution(false)
                 if (response !== null && response !== undefined) {
@@ -441,8 +511,19 @@ const Monitoring = (props) => {
             })
         }
     )
-        .then(res => res.json())
+        .then(res => {
+            if(res.status === 401) {
+                alert.show("Session token expired. Please login again.")
+                props.setSessionData(null)
+                navigate("/login-page");
+                return null
+            }
+            return res.json()
+        })
         .then(response => {
+            if(response === null) {
+                return
+            }
             setMonitoringData(response)
             setLoadingSelectedEmulationExecution(false)
             var openFlowSwitchesOptions = []
@@ -476,8 +557,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setGrafanaStatus(response)
             })
             .catch(error => console.log("error:" + error))
@@ -499,8 +591,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setCAdvisorStatus(response)
             })
             .catch(error => console.log("error:" + error))
@@ -521,8 +624,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setPrometheusStatus(response)
             })
             .catch(error => console.log("error:" + error))
@@ -543,8 +657,19 @@ const Monitoring = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setNodeExporterStatus(response)
             })
             .catch(error => console.log("error:" + error))

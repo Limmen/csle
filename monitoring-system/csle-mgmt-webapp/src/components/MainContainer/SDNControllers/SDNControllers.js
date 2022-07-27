@@ -12,6 +12,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const SDNControllers = (props) => {
     const [emulationIds, setEmulationIds] = useState([]);
@@ -23,6 +25,8 @@ const SDNControllers = (props) => {
     const [filteredEmulationsIds, setFilteredEmulationsIds] = useState([]);
     const [searchString, setSearchString] = useState("");
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const fetchEmulationIds = useCallback(() => {
@@ -35,8 +39,19 @@ const SDNControllers = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const emulationIds = response.map((id_obj, index) => {
                     var lbl = "ID: " + id_obj.id + ", name: " + id_obj.emulation + ", ip: " + id_obj.ip
                     return {
@@ -72,8 +87,19 @@ const SDNControllers = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedEmulation(response)
                 setLoadingSelectedEmulation(false)
             })

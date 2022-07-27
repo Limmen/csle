@@ -25,6 +25,8 @@ import Spinner from 'react-bootstrap/Spinner'
 import PolicyAndBeliefChart from "./PolicyAndBeliefChart/PolicyAndBeliefChart";
 import DeltaAlertsLineChart from "./DeltaAlertsLineChart/DeltaAlertsLineChart";
 import Select from 'react-select'
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const onLoad = (reactFlowInstance) => {
     reactFlowInstance.fitView();
@@ -71,6 +73,9 @@ const PolicyExamination = (props) => {
     const fullDomain = true
     const fullRange = true
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
+
     const rawElements = getElements({x: 0, y: 0})
     const [elements, setElements] = useState(rawElements);
     const [attackerFoundNodes, setAttackerFoundNodes] = useState([]);
@@ -97,8 +102,19 @@ const PolicyExamination = (props) => {
                 Accept: "application/vnd.github.cloak-preview"
             })
         })
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 if (response.length > 0) {
                     const tracesOptions = response.map((trace, index) => {
                         return {

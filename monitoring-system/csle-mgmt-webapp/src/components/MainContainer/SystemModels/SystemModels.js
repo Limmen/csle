@@ -19,6 +19,8 @@ import Form from 'react-bootstrap/Form';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import getSystemModelTypeStr from "../../Common/getSystemModelTypeStr";
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const SystemModels = (props) => {
     const [systemModelsIds, setSystemModelsIds] = useState([]);
@@ -39,6 +41,8 @@ const SystemModels = (props) => {
     const [searchString, setSearchString] = useState("");
 
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const resetState = () => {
@@ -166,8 +170,19 @@ const SystemModels = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const modelIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id + "_" + id_obj.system_model_type,
@@ -215,8 +230,19 @@ const SystemModels = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
                     var conditionalOptions = []
                     for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
@@ -258,8 +284,19 @@ const SystemModels = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
                     var conditionalOptions = []
                     for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
@@ -301,8 +338,19 @@ const SystemModels = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
                     var conditionalOptions = []
                     for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
@@ -345,8 +393,19 @@ const SystemModels = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))
@@ -362,8 +421,19 @@ const SystemModels = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))
@@ -379,8 +449,19 @@ const SystemModels = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))

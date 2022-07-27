@@ -16,6 +16,9 @@ import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
+
 
 const Jobs = (props) => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
@@ -50,6 +53,8 @@ const Jobs = (props) => {
     const [showOnlyRunningSystemIdentificationJobs, setShowOnlyRunningSystemIdentificationJobs] = useState(false);
 
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const fetchTrainingJobsIds = useCallback(() => {
@@ -62,8 +67,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const trainingJobsIds = response.map((id_obj, index) => {
                     var lbl = ""
                     if (id_obj.running) {
@@ -103,8 +119,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const dataCollectionJobIds = response.map((id_obj, index) => {
                     var lbl = ""
                     if (id_obj.running) {
@@ -144,8 +171,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const systemIdentificationJobsIds = response.map((id_obj, index) => {
                     var lbl = ""
                     if (id_obj.running) {
@@ -193,8 +231,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setTrainingJobsLoading(true)
                 fetchTrainingJobsIds()
             })
@@ -211,8 +260,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setTrainingJobsLoading(true)
                 fetchTrainingJobsIds()
             })
@@ -340,8 +400,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSystemIdentificationJobsLoading(true)
                 fetchSystemIdentificationJobsIds()
             })
@@ -358,8 +429,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSystemIdentificationJobsLoading(true)
                 fetchSystemIdentificationJobsIds()
             })
@@ -488,8 +570,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setTrainingJobsLoading(true)
                 fetchTrainingJobsIds()
             })
@@ -506,8 +599,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedTrainingJob(response)
                 setLoadingSelectedTrainingJob(false)
             })
@@ -531,8 +635,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSystemIdentificationJobsLoading(true)
                 fetchSystemIdentificationJobsIds()
             })
@@ -550,8 +665,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedSystemIdentificationJob(response)
                 setLoadingSelectedSystemIdentificationJob(false)
             })
@@ -574,8 +700,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setTrainingJobsLoading()
                 fetchTrainingJobsIds()
             })
@@ -598,8 +735,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSystemIdentificationJobsLoading(true)
                 fetchSystemIdentificationJobsIds()
             })
@@ -831,8 +979,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setDataCollectionJobsLoading(true)
                 fetchDataCollectionJobIds()
             })
@@ -849,8 +1008,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setDataCollectionJobsLoading()
                 fetchDataCollectionJobIds()
             })
@@ -979,8 +1149,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setDataCollectionJobsLoading()
                 fetchDataCollectionJobIds()
             })
@@ -998,8 +1179,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedDataCollectionJob(response)
                 setLoadingSelectedDataCollectionJob(false)
             })
@@ -1023,8 +1215,19 @@ const Jobs = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setDataCollectionJobsLoading(true)
                 fetchDataCollectionJobIds()
             })

@@ -15,6 +15,8 @@ import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const Emulations = (props) => {
     const [emulationIds, setEmulationIds] = useState([]);
@@ -27,6 +29,8 @@ const Emulations = (props) => {
     const [showOnlyRunningEmulations, setShowOnlyRunningEmulations] = useState(false);
     const [searchString, setSearchString] = useState("");
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const fetchEmulationIds = useCallback(() => {
@@ -39,8 +43,19 @@ const Emulations = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const emulationIds = response.map((id_obj, index) => {
                     var lbl = ""
                     if (!id_obj.running) {
@@ -81,8 +96,19 @@ const Emulations = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchEmulationIds()
             })
             .catch(error => console.log("error:" + error))
@@ -99,8 +125,19 @@ const Emulations = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setLoadingSelectedEmulation(true)
                 var id_obj={
                     value: emulation_id,
@@ -121,8 +158,19 @@ const Emulations = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setLoadingSelectedEmulation(true)
                 var id_obj={
                     value: emulation_id,
@@ -143,8 +191,19 @@ const Emulations = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedEmulation(response)
                 setLoadingSelectedEmulation(false)
             })
@@ -161,8 +220,19 @@ const Emulations = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchEmulationIds()
             })
             .catch(error => console.log("error:" + error))

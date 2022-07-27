@@ -51,70 +51,72 @@ function App() {
                                 </Route>
                                 <Route path="emulations-page" index element={
                                     <ProtectedRoute>
-                                        <Emulations sessionData={sessionData}/>
+                                        <Emulations sessionData={sessionData}
+                                                    setSessionData={setSessionData}
+                                        />
                                     </ProtectedRoute>}>
                                 </Route>
                                 <Route path="simulations-page" index element={
                                     <ProtectedRoute>
-                                        <Simulations sessionData={sessionData}/>
+                                        <Simulations sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>}>
                                 </Route>
                                 <Route path="monitoring-page" index element={
                                     <ProtectedRoute>
-                                        <Monitoring sessionData={sessionData}/>
+                                        <Monitoring sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>}>
                                 </Route>
                                 <Route path="traces-page" index element={
                                     <ProtectedRoute>
-                                        <Traces sessionData={sessionData}/>
+                                        <Traces sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="emulation-statistics-page" index element={
                                     <ProtectedRoute>
-                                        <EmulationStatistics sessionData={sessionData}/>
+                                        <EmulationStatistics sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="system-models-page" index element={
                                     <ProtectedRoute>
-                                        <SystemModels sessionData={sessionData}/>
+                                        <SystemModels sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="policy-examination-page" index element={
                                     <ProtectedRoute>
-                                        <PolicyExamination sessionData={sessionData}/>
+                                        <PolicyExamination sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="images-page" index element={
                                     <ProtectedRoute>
-                                        <ContainerImages sessionData={sessionData}/>
+                                        <ContainerImages sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="training-page" index element={
                                     <ProtectedRoute>
-                                        <TrainingResults sessionData={sessionData}/>
+                                        <TrainingResults sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="policies-page" index element={
                                     <ProtectedRoute>
-                                        <Policies sessionData={sessionData}/>
+                                        <Policies sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="jobs-page" index element={
                                     <ProtectedRoute>
-                                        <Jobs sessionData={sessionData}/>
+                                        <Jobs sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
                                 <Route path="sdn-controllers-page" index element={
                                     <ProtectedRoute>
-                                        <SDNControllers sessionData={sessionData}/>
+                                        <SDNControllers sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>

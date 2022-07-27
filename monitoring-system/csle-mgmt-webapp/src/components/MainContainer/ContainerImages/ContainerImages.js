@@ -11,6 +11,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import {useDebouncedCallback} from 'use-debounce';
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const ContainerImages = (props) => {
     const [images, setImages] = useState([]);
@@ -19,6 +21,8 @@ const ContainerImages = (props) => {
     const [loading, setLoading] = useState([]);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const fetchImages = useCallback(() => {
@@ -31,8 +35,19 @@ const ContainerImages = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setImages(response);
                 setFilteredImages(response);
                 setLoading(false)

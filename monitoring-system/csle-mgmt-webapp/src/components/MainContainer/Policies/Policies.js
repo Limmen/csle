@@ -21,6 +21,8 @@ import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 const Policies = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
@@ -74,6 +76,8 @@ const Policies = (props) => {
     const [loadingAlphaVecPolicies, setLoadingAlphaVecPolicies] = useState(true);
     const [loadingFnnWSoftmaxPolicies, setLoadingFnnWSoftmaxPolicies] = useState(true);
     const ip = "localhost"
+    const alert = useAlert();
+    const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const fetchMultiThresholdPoliciesIds = useCallback(() => {
@@ -86,8 +90,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const multiThresholdPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
@@ -119,8 +134,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const ppoPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
@@ -152,8 +178,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const dqnPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
@@ -185,8 +222,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const tabularPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
@@ -218,8 +266,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const vectorPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
@@ -251,8 +310,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const alphavecPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
@@ -284,8 +354,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 const fnnWSoftmaxPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
@@ -335,8 +416,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchPPOPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -353,8 +445,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedPpoPolicy(response)
                 setLoadingPpoPolicy(false)
             })
@@ -371,8 +474,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchPPOPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -492,8 +606,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchFnnWSoftmaxPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -511,8 +636,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedFnnWSoftmaxPolicy(response)
                 setLoadingFnnWSoftmaxPolicy(false)
             })
@@ -529,8 +665,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchFnnWSoftmaxPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -551,8 +698,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchDQNPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -767,8 +925,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedDQNPolicy(response)
                 setLoadingDQNPolicy(false)
             })
@@ -785,8 +954,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchDQNPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -807,8 +987,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchTabularPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -826,8 +1017,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedTabularPolicy(response)
                 setLoadingTabularPolicy(false)
             })
@@ -844,8 +1046,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchTabularPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -964,8 +1177,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchVectorPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -983,8 +1207,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedVectorPolicy(response)
                 setLoadingVectorPolicy(false)
             })
@@ -1001,8 +1236,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchVectorPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -1122,8 +1368,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchAlphaVecPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -1141,8 +1398,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedAlphaVecPolicy(response)
                 setLoadingAlphaVecPolicy(false)
             })
@@ -1159,8 +1427,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchAlphaVecPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -1281,8 +1560,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchMultiThresholdPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
@@ -1300,8 +1590,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 setSelectedMultiThresholdPolicy(response)
                 setLoadingMultiThresholdPolicy(false)
             })
@@ -1318,8 +1619,19 @@ const Policies = (props) => {
                 })
             }
         )
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
             .then(response => {
+                if(response === null) {
+                    return
+                }
                 fetchMultiThresholdPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
