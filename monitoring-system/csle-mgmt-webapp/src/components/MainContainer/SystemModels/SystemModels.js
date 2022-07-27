@@ -18,7 +18,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import getSystemModelTypeStr from "../../../Common/getSystemModelTypeStr";
+import getSystemModelTypeStr from "../../Common/getSystemModelTypeStr";
 
 const SystemModels = () => {
     const [systemModelsIds, setSystemModelsIds] = useState([]);

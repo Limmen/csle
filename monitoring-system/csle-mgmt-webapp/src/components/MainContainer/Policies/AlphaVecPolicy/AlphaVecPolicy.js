@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './VectorPolicy.css';
+import './AlphaVecPolicy.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -7,19 +7,27 @@ import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
-import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
-import getPlayerTypeStr from '../../../../Common/getPlayerTypeStr'
+import getAgentTypeStr from '../../../Common/getAgentTypeStr'
+import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 
-const VectorPolicy = (props) => {
+const AlphaVecPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [actionsOpen, setActionsOpen] = useState(false);
-    const [policyOpen, setPolicyOpen] = useState(false);
+    const [alphaVectorsOpen, setAlphaVectorsOpen] = useState(false);
 
-    const renderRemoveVectroPolicy = (props) => (
+    const renderRemoveAlphaVecPolicy = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove Vector policy
+            Remove Alpha-vector policy
         </Tooltip>
     );
+
+    const PolicyRow = (props) => {
+        return (
+            props.row.map((entry, index) => {
+                return (<td>{entry}</td>)
+            })
+        )
+    }
 
     return (<Card key={props.policy.id} ref={props.wrapper}>
         <Card.Header>
@@ -37,10 +45,10 @@ const VectorPolicy = (props) => {
                         className="removeButton"
                         placement="left"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveVectroPolicy}
+                        overlay={renderRemoveAlphaVecPolicy}
                     >
                         <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => props.removeVectorPolicy(props.policy)}>
+                                onClick={() => props.removeAlphaVecPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -119,7 +127,8 @@ const VectorPolicy = (props) => {
                                     <tbody>
                                     {props.policy.actions.map((action, index) => {
                                         return <tr key={action + "-" + index}>
-                                            <td>{action}</td>
+                                            <td>{action.id}</td>
+                                            <td>{action.descr}</td>
                                         </tr>
                                     })}
                                     </tbody>
@@ -132,31 +141,31 @@ const VectorPolicy = (props) => {
                 <Card className="subCard">
                     <Card.Header>
                         <Button
-                            onClick={() => setPolicyOpen(!policyOpen)}
-                            aria-controls="policyBody"
-                            aria-expanded={policyOpen}
+                            onClick={() => setAlphaVectorsOpen(!alphaVectorsOpen)}
+                            aria-controls="alphaVectorsBody"
+                            aria-expanded={alphaVectorsOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Policy </h5>
+                            <h5 className="semiTitle"> Alpha Vectors </h5>
                         </Button>
                     </Card.Header>
-                    <Collapse in={policyOpen}>
+                    <Collapse in={alphaVectorsOpen}>
                         <div id="actionsBody" className="cardBodyHidden">
                             <div className="table-responsive">
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
-                                        <th>Action</th>
-                                        <th>Probability</th>
+                                        <th>Vector ID</th>
+                                        <th>Vector Elements</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {props.policy.policy_vector.map((action_prob, index) => {
-                                        return(
-                                        <tr key={action_prob + "-" + index}>
+                                    {props.policy.alpha_vectors.map((vec, index) => {
+                                        return <tr key={vec + "-" + index}>
                                             <td>{index}</td>
-                                            <td>{action_prob}</td>
-                                        </tr>)})}
+                                            <td>{vec}</td>
+                                        </tr>
+                                    })}
                                     </tbody>
                                 </Table>
                             </div>
@@ -164,11 +173,12 @@ const VectorPolicy = (props) => {
                     </Collapse>
                 </Card>
 
+
             </Card.Body>
         </Accordion.Collapse>
     </Card>)
 }
 
-VectorPolicy.propTypes = {};
-VectorPolicy.defaultProps = {};
-export default VectorPolicy;
+AlphaVecPolicy.propTypes = {};
+AlphaVecPolicy.defaultProps = {};
+export default AlphaVecPolicy;

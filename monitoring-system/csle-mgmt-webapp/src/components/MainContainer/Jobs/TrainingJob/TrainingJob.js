@@ -9,7 +9,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import MetricPlot from "../../TrainingResults/Experiment/MetricPlot/MetricPlot";
 import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
-import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
+import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 
 const TrainingJob = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);

@@ -1,8 +1,9 @@
-import './Management.css';
+import './MainContainer.css';
 import Header from "./Header/Header";
 import {Outlet} from "react-router-dom";
+import Footer from "./Footer/Footer";
 
-function Management() {
+function MainContainer() {
   return (
       <div className="Container index container-fluid">
         <Header></Header>
@@ -11,10 +12,11 @@ function Management() {
               <Outlet/>
           </div>
         </div>
+          <Footer/>
       </div>
   );
 }
 
-Management.propTypes = {};
-Management.defaultProps = {};
-export default Management;
+MainContainer.propTypes = {};
+MainContainer.defaultProps = {};
+export default MainContainer;

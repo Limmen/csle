@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './PPOPolicy.css';
+import './TabularPolicy.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -7,21 +7,28 @@ import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
-import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
-import getPlayerTypeStr from '../../../../Common/getPlayerTypeStr'
+import getAgentTypeStr from '../../../Common/getAgentTypeStr'
+import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 
-const PPOPolicy = (props) => {
+const TabularPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
-    const [hParamsOpen, setHParamsOpen] = useState(false);
-    const [neuralNetworkDetailsOpen, setNeuralNetworkDetailsOpen] = useState(false);
     const [actionsOpen, setActionsOpen] = useState(false);
+    const [policyOpen, setPolicyOpen] = useState(false);
+    const [valueFunOpen, setValueFunOpen] = useState(false);
 
-
-    const renderRemovePPOPolicy = (props) => (
+    const renderRemoveTabularPolicy = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove PPO policy
+            Remove Tabular policy
         </Tooltip>
     );
+
+    const PolicyRow = (props) => {
+        return (
+            props.row.map((entry, index) => {
+                return (<td key={entry + "-" + index} >{entry}</td>)
+            })
+        )
+    }
 
     return (<Card key={props.policy.id} ref={props.wrapper}>
         <Card.Header>
@@ -39,10 +46,10 @@ const PPOPolicy = (props) => {
                         className="removeButton"
                         placement="left"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRemovePPOPolicy}
+                        overlay={renderRemoveTabularPolicy}
                     >
                         <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => props.removePPOPolicy(props.policy)}>
+                                onClick={() => props.removeTabularPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -90,86 +97,6 @@ const PPOPolicy = (props) => {
                                         <td>Player type</td>
                                         <td>{getPlayerTypeStr(props.policy.player_type)}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Save path</td>
-                                        <td>{props.policy.save_path}</td>
-                                    </tr>
-                                    </tbody>
-                                </Table>
-                            </div>
-                        </div>
-                    </Collapse>
-                </Card>
-
-                <Card className="subCard">
-                    <Card.Header>
-                        <Button
-                            onClick={() => setHParamsOpen(!hParamsOpen)}
-                            aria-controls="hyperparametersBody"
-                            aria-expanded={hParamsOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle"> Hyperparameters </h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={hParamsOpen}>
-                        <div id="hyperparametersOpen" className="cardBodyHidden">
-                            <div className="table-responsive">
-                                <Table striped bordered hover>
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {Object.keys(props.policy.experiment_config.hparams).map((hparamName, index) => {
-                                        return <tr key={hparamName + "-" + index}>
-                                            <td>{hparamName}</td>
-                                            <td>{props.policy.experiment_config.hparams[hparamName].descr}</td>
-                                            <td>{props.policy.experiment_config.hparams[hparamName].value}</td>
-                                        </tr>
-                                    })}
-                                    </tbody>
-                                </Table>
-                            </div>
-                        </div>
-                    </Collapse>
-                </Card>
-
-                <Card className="subCard">
-                    <Card.Header>
-                        <Button
-                            onClick={() => setNeuralNetworkDetailsOpen(!neuralNetworkDetailsOpen)}
-                            aria-controls="neuralNetworkDetailsBody"
-                            aria-expanded={neuralNetworkDetailsOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle"> Neural network architecture </h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={neuralNetworkDetailsOpen}>
-                        <div id="neuralNetworkDetailsBody" className="cardBodyHidden">
-                            <div className="table-responsive">
-                                <Table striped bordered hover>
-                                    <thead>
-                                    <tr>
-                                        <th>Property</th>
-                                        <th> Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Num hidden layers:</td>
-                                        <td>{props.policy.policy_kwargs.net_arch.length}</td>
-                                    </tr>
-                                    {props.policy.policy_kwargs.net_arch.map((layer, index) => {
-                                        return (<tr key={layer + "-" + index}>
-                                            <td>Num neurons for hidden layer: {index}</td>
-                                            <td>{layer}</td>
-                                        </tr>)
-                                    })}
                                     </tbody>
                                 </Table>
                             </div>
@@ -212,11 +139,83 @@ const PPOPolicy = (props) => {
                     </Collapse>
                 </Card>
 
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setPolicyOpen(!policyOpen)}
+                            aria-controls="policyBody"
+                            aria-expanded={policyOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Policy </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={policyOpen}>
+                        <div id="actionsBody" className="cardBodyHidden">
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>  State</th>
+                                        {props.policy.lookup_table[0].map((action, index) => {
+                                            return (<th key={action + "-" + index}>Action {index}</th>)
+                                        })}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {props.policy.lookup_table.map((row, index) => {
+                                        return(
+                                        <tr key={row + "-" + index}>
+                                            <td>{index}</td>
+                                            <PolicyRow row={row} idx={index}/>
+                                        </tr>)})}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setValueFunOpen(!valueFunOpen)}
+                            aria-controls="valueFunBody"
+                            aria-expanded={valueFunOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Value function </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={valueFunOpen}>
+                        <div id="actionsBody" className="cardBodyHidden">
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>State</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {props.policy.value_function.map((row, index) => {
+                                        return(
+                                            <tr key={row + "-" + index}>
+                                                <td>{index}</td>
+                                                <td>{row}</td>
+                                            </tr>)})}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
             </Card.Body>
         </Accordion.Collapse>
     </Card>)
 }
 
-PPOPolicy.propTypes = {};
-PPOPolicy.defaultProps = {};
-export default PPOPolicy;
+TabularPolicy.propTypes = {};
+TabularPolicy.defaultProps = {};
+export default TabularPolicy;

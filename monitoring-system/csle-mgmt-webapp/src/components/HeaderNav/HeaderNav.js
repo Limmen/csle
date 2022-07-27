@@ -1,6 +1,6 @@
 import './HeaderNav.css';
-import Footer from "./Management/Footer/Footer";
-import Management from "./Management/Management";
+import Footer from "../MainContainer/Footer/Footer";
+import MainContainer from "../MainContainer/Management";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -36,7 +36,7 @@ function HeaderNav() {
                       </Navbar.Collapse>
                   </Container>
               </Navbar>
-              <Management/>
+              <MainContainer/>
           </div>
         </div>
         <Footer/>

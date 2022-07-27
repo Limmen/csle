@@ -1,6 +1,6 @@
 import React from 'react';
 import './ConditionalHistogramDistribution.css';
-import getSystemModelTypeStr from '../../../../Common/getSystemModelTypeStr'
+import getSystemModelTypeStr from '../../../Common/getSystemModelTypeStr'
 import {
     CartesianGrid,
     Label,
