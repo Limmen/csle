@@ -177,7 +177,7 @@ const DataCollectionJob = (props) => {
                 delay={{show: 0, hide: 0}}
                 overlay={renderStopDataCollectionJobTooltip}
             >
-                <Button variant="warning" className="startButton"
+                <Button variant="warning" className="startButton" size="sm"
                         onClick={() => props.stopDataCollectionJob(props.job)}>
                     <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                 </Button>

@@ -95,7 +95,7 @@ const SystemIdentificationJob = (props) => {
                 delay={{show: 0, hide: 0}}
                 overlay={renderStopSystemIdentificationJobTooltip}
             >
-                <Button variant="warning" className="startButton"
+                <Button variant="warning" className="startButton" size="sm"
                         onClick={() => props.stopSystemIdentificationJob(props.job)}>
                     <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                 </Button>
