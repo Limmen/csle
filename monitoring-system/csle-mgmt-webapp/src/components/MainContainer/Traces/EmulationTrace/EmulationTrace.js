@@ -104,6 +104,28 @@ const EmulationTrace = (props) => {
         return getIpString(ips)
     }
 
+    const RenderActions = (props) => {
+        if(!props.sessionData.admin){
+            return (<></>)
+        }
+        return (
+            <h5 className="semiTitle">
+                Actions:
+                <OverlayTrigger
+                    className="removeButton"
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveEmulationTraceTooltip}
+                >
+                    <Button variant="danger" className="removeButton" size="sm"
+                            onClick={() => props.removeEmulationTrace(props.emulationTrace)}>
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            </h5>
+        )
+    }
+
     return (<Card key={props.emulationTrace.id} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.emulationTrace.id} className="mgHeader">
@@ -113,21 +135,8 @@ const EmulationTrace = (props) => {
         </Card.Header>
         <Accordion.Collapse eventKey={props.emulationTrace.id}>
             <Card.Body>
-                <h5 className="semiTitle">
-                    Actions:
-                    <OverlayTrigger
-                        className="removeButton"
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveEmulationTraceTooltip}
-                    >
-                        <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => props.removeEmulationTrace(props.emulationTrace)}>
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </h5>
-
+                <RenderActions sessionData={props.sessionData} removeEmulationTrace={props.removeEmulationTrace}
+                               emulationTrace={props.emulationTrace} />
                 <Card className="subCard">
                     <Card.Header>
                         <Button

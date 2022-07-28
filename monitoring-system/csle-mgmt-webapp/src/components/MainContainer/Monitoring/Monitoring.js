@@ -953,6 +953,18 @@ const Monitoring = (props) => {
 
 
     const GrafanaLink = (props) => {
+        if(!props.sessionData.admin){
+            if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
+                return (
+                    <span className="grafanaStatus">Grafana status: stopped
+                    </span>)
+            } else {
+                return (
+                    <a className="grafanaStatus" href={props.grafanaStatus.url}>Grafana (running)
+                    </a>
+                )
+            }
+        }
         if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
             return (
                 <span className="grafanaStatus">Grafana status: stopped
@@ -984,6 +996,18 @@ const Monitoring = (props) => {
     }
 
     const PrometheusLink = (props) => {
+        if(!props.sessionData.admin) {
+            if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
+                return (
+                    <span className="grafanaStatus">Prometheus status: stopped
+                </span>)
+            } else {
+                return (
+                    <a className="grafanaStatus" href={props.prometheusStatus.url}>Prometheus (running)
+                    </a>
+                )
+            }
+        }
         if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
             return (
                 <span className="grafanaStatus">Prometheus status: stopped
@@ -1015,6 +1039,18 @@ const Monitoring = (props) => {
     }
 
     const NodeExporterLink = (props) => {
+        if(!props.sessionData.admin) {
+            if (props.nodeExporterStatus == null || props.nodeExporterStatus.running === false) {
+                return (
+                    <span className="grafanaStatus">Node exporter status: stopped
+                </span>)
+            } else {
+                return (
+                    <a className="grafanaStatus" href={props.nodeExporterStatus.url}>Node exporter (running)
+                    </a>
+                )
+            }
+        }
         if (props.nodeExporterStatus == null || props.nodeExporterStatus.running === false) {
             return (
                 <span className="grafanaStatus">Node exporter status: stopped
@@ -1046,6 +1082,18 @@ const Monitoring = (props) => {
     }
 
     const CadvisorLink = (props) => {
+        if(!props.sessionData.admin) {
+            if (props.cAdvisorStatus == null || props.cAdvisorStatus.running === false) {
+                return (
+                    <span className="grafanaStatus">cAdvisor status: stopped
+                </span>)
+            } else {
+                return (
+                    <a className="grafanaStatus" href={props.cAdvisorStatus.url}>cAdvisor (running)
+                    </a>
+                )
+            }
+        }
         if (props.cAdvisorStatus == null || props.cAdvisorStatus.running === false) {
             return (
                 <span className="grafanaStatus">cAdvisor status: stopped
@@ -1123,10 +1171,14 @@ const Monitoring = (props) => {
             />
             <div className="row">
                 <div className="col-sm-12">
-                    <GrafanaLink className="grafanaStatus" grafanaStatus={grafanaStatus}/>
-                    <PrometheusLink className="grafanaStatus" prometheusStatus={prometheusStatus}/>
-                    <NodeExporterLink className="grafanaStatus" nodeExporterStatus={nodeExporterStatus}/>
-                    <CadvisorLink className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}/>
+                    <GrafanaLink className="grafanaStatus" grafanaStatus={grafanaStatus}
+                                 sessionData={props.sessionData}/>
+                    <PrometheusLink className="grafanaStatus" prometheusStatus={prometheusStatus}
+                                    sessionData={props.sessionData}/>
+                    <NodeExporterLink className="grafanaStatus" nodeExporterStatus={nodeExporterStatus}
+                                      sessionData={props.sessionData}/>
+                    <CadvisorLink className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
+                                  sessionData={props.sessionData}/>
                 </div>
             </div>
         </div>

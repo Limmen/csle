@@ -291,6 +291,24 @@ const TrainingResults = (props) => {
         })
     }
 
+    const DeleteAllExperimentsOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllExperimentsTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllExperimentsConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
     const SelectExperimentOrSpinner = (props) => {
         if (!props.loading && props.experimentIds.length === 0) {
             return (
@@ -356,15 +374,7 @@ const TrainingResults = (props) => {
 
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllExperimentsTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllExperimentsConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllExperimentsOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
@@ -497,6 +507,7 @@ const TrainingResults = (props) => {
                         <SelectExperimentOrSpinner loading={loading}
                                                    experimentIds={filteredExperimentsIds}
                                                    selectedExperimentId={selectedExperimentId}
+                                                   sessionData={props.sessionData}
                         />
                     </h4>
                 </div>

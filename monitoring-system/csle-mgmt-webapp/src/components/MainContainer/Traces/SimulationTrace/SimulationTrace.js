@@ -15,6 +15,28 @@ const SimulationTrace = (props) => {
         </Tooltip>
     );
 
+    const RenderActions = (props) => {
+        if(!props.sessionData.admin){
+            return (<></>)
+        }
+        return (
+            <h5 className="semiTitle">
+                Actions:
+                <OverlayTrigger
+                    className="removeButton"
+                    placement="left"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveSimulationTraceTooltip}
+                >
+                    <Button variant="danger" className="removeButton" size="sm"
+                            onClick={() => props.removeSimulationTrace(props.simulationTrace)}>
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            </h5>
+        )
+    }
+
     return (<Card key={props.simulationTrace.id} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.simulationTrace.id} className="mgHeader">
@@ -24,20 +46,8 @@ const SimulationTrace = (props) => {
         </Card.Header>
         <Accordion.Collapse eventKey={props.simulationTrace.id}>
             <Card.Body>
-                <h5 className="semiTitle">
-                    Actions:
-                    <OverlayTrigger
-                        className="removeButton"
-                        placement="left"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveSimulationTraceTooltip}
-                    >
-                        <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => props.removeSimulationTrace(props.simulationTrace)}>
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </h5>
+                <RenderActions sessionData={props.sessionData} removeSimulationTrace={props.removeSimulationTrace}
+                               simulationTrace={props.simulationTrace}/>
                 <div className="table-responsive">
                     <Table striped bordered hover>
                         <thead>

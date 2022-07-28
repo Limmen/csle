@@ -1620,6 +1620,24 @@ const Jobs = (props) => {
         setLoadingSelectedSystemIdentificationJob(true)
     }
 
+    const DeleteAllTrainingJobsOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllTrainingJobsTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllTrainingJobsConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
     const SelectTrainingJobOrSpinner = (props) => {
         if (!props.trainingJobsLoading && props.trainingJobsIds.length === 0) {
             return (
@@ -1687,20 +1705,29 @@ const Jobs = (props) => {
                     <TrainingJobsInfoModal show={showTrainingJobsInfoModal}
                                            onHide={() => setShowTrainingJobsInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllTrainingJobsTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllTrainingJobsConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllTrainingJobsOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
+    const DeleteAllDataCollectionJobsOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllDataCollectionJobsTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllDataCollectionJobsConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
     const SelectDataCollectionJobOrSpinner = (props) => {
         if (!props.dataCollectionJobsLoading && props.dataCollectionJobsIds.length === 0) {
@@ -1768,19 +1795,30 @@ const Jobs = (props) => {
                     <DataCollectionJobsInfoModal show={showDataCollectionJobsInfoModal}
                                                  onHide={() => setShowDataCollectionJobsInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllDataCollectionJobsTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllDataCollectionJobsConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllDataCollectionJobsOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
+
+    const DeleteAllSystemIdentificationJobsOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllSystemIdentificationJobsTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllSystemIdentificationJobsConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
 
     const SelectSystemIdentificationJobOrSpinner = (props) => {
         if (!props.systemIdentificationJobsLoading && props.systemIdentificationJobsIds.length === 0) {
@@ -1848,15 +1886,7 @@ const Jobs = (props) => {
                     <SystemIdentificationJobsInfoModal show={showSystemIdentificationJobsInfoModal}
                                                        onHide={() => setShowSystemIdentificationJobsInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllSystemIdentificationJobsTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllSystemIdentificationJobsConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllSystemIdentificationJobsOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
@@ -2064,6 +2094,7 @@ const Jobs = (props) => {
                         <SelectTrainingJobOrSpinner trainingJobsLoading={trainingJobsLoading}
                                                     trainingJobsIds={filteredTrainingJobsIds}
                                                     selectedTrainingJobId={selectedTrainingJobId}
+                                                    sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -2110,6 +2141,7 @@ const Jobs = (props) => {
                         <SelectDataCollectionJobOrSpinner dataCollectionJobsLoading={dataCollectionJobsLoading}
                                                           dataCollectionJobsIds={filteredDataCollectionJobsIds}
                                                           selectedDataCollectionJobId={selectedDataCollectionJobId}
+                                                          sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -2156,6 +2188,7 @@ const Jobs = (props) => {
                             systemIdentificationJobsLoading={systemIdentificationJobsLoading}
                             systemIdentificationJobsIds={filteredSystemIdentificationJobsIds}
                             selectedSystemIdentificationJobId={selectedSystemIdentificationJobId}
+                            sessionData={props.sessionData}
                         />
                     </h4>
                 </div>

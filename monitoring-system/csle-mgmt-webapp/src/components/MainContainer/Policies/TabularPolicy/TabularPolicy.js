@@ -30,16 +30,9 @@ const TabularPolicy = (props) => {
         )
     }
 
-    return (<Card key={props.policy.id} ref={props.wrapper}>
-        <Card.Header>
-            <Accordion.Toggle as={Button} variant="link" eventKey={props.policy.id} className="mgHeader">
-                <span
-                    className="subnetTitle">ID: {props.policy.id}, Simulation: {props.policy.simulation_name},
-                    Average reward: {props.policy.avg_R}</span>
-            </Accordion.Toggle>
-        </Card.Header>
-        <Accordion.Collapse eventKey={props.policy.id}>
-            <Card.Body>
+    const Actions = (props) => {
+        if (props.sessionData.admin) {
+            return (
                 <h5 className="semiTitle">
                     Actions:
                     <OverlayTrigger
@@ -54,6 +47,24 @@ const TabularPolicy = (props) => {
                         </Button>
                     </OverlayTrigger>
                 </h5>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+    return (<Card key={props.policy.id} ref={props.wrapper}>
+        <Card.Header>
+            <Accordion.Toggle as={Button} variant="link" eventKey={props.policy.id} className="mgHeader">
+                <span
+                    className="subnetTitle">ID: {props.policy.id}, Simulation: {props.policy.simulation_name},
+                    Average reward: {props.policy.avg_R}</span>
+            </Accordion.Toggle>
+        </Card.Header>
+        <Accordion.Collapse eventKey={props.policy.id}>
+            <Card.Body>
+                <Actions sessionData={props.sessionData} removeTabularPolicy={props.removeTabularPolicy}
+                         policy={props.policy}/>
 
                 <Card className="subCard">
                     <Card.Header>

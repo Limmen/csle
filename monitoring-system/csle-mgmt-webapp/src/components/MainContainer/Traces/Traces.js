@@ -684,6 +684,25 @@ const Traces = (props) => {
         setLoadingSelectedSimulationTrace(true)
     }
 
+    const DeleteAllEmulationTracesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllEmulationTracesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllEmulationTracesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+
     const SelectEmulationTraceOrSpinner = (props) => {
         if (!props.loadingEmulationTraces && props.emulationTracesIds.length === 0) {
             return (
@@ -744,21 +763,29 @@ const Traces = (props) => {
                         </Button>
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllEmulationTracesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllEmulationTracesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllEmulationTracesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
+    const DeleteAllSimulationTracesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllSimulationTracesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllSimulationTracesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
     const SelectSimulationTraceOrSpinner = (props) => {
         if (!props.loadingSimulationTraces && props.simulationTracesIds.length === 0) {
@@ -821,15 +848,7 @@ const Traces = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllSimulationTracesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllSimulationTracesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllSimulationTracesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
@@ -914,6 +933,7 @@ const Traces = (props) => {
                         <EmulationTrace emulationTrace={props.selectedEmulationTrace}
                                         wrapper={wrapper} key={props.selectedEmulationTrace.id}
                                         removeEmulationTrace={removeEmulationTraceConfirm}
+                                        sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -947,6 +967,7 @@ const Traces = (props) => {
                         <SimulationTrace simulationTrace={props.selectedSimulationTrace}
                                          wrapper={wrapper} key={props.selectedSimulationTrace.id}
                                          removeSimulationTrace={removeSimulationTraceConfirm}
+                                         sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -964,6 +985,7 @@ const Traces = (props) => {
                         <SelectEmulationTraceOrSpinner loadingEmulationTraces={loadingEmulationTraces}
                                                        emulationTracesIds={filteredEmulationTracesIds}
                                                        selectedEmulationTraceId={selectedEmulationTraceId}
+                                                       sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -989,13 +1011,16 @@ const Traces = (props) => {
             </div>
             <EmulationTraceAccordion selectedEmulationTrace={selectedEmulationTrace}
                                      loadingSelectedEmulationTrace={loadingSelectedEmulationTrace}
+                                     sessionData={props.sessionData}
             />
             <div className="row simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block">
                         <SelectSimulationTraceOrSpinner loadingSimulationTraces={loadingSimulationTraces}
                                                         simulationTracesIds={filteredSimulationTracesIds}
-                                                        selectedSimulationTraceId={selectedSimulationTraceId}/>
+                                                        selectedSimulationTraceId={selectedSimulationTraceId}
+                                                        sessionData={props.sessionData}
+                        />
                     </h4>
                 </div>
                 <div className="col-sm-3">
@@ -1019,7 +1044,9 @@ const Traces = (props) => {
                 </div>
             </div>
             <SimulationTraceAccordion selectedSimulationTrace={selectedSimulationTrace}
-                                      loadingSelectedSimulationTrace={loadingSelectedSimulationTrace}/>
+                                      loadingSelectedSimulationTrace={loadingSelectedSimulationTrace}
+                                      sessionData={props.sessionData}
+            />
         </div>
     );
 }

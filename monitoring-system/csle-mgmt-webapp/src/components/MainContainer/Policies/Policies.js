@@ -1974,6 +1974,24 @@ const Policies = (props) => {
         setLoadingAlphaVecPolicy(true)
     }
 
+    const DeleteAllMultiThresholdPoliciesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllMultiThresholdPoliciesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllMultiThresholdPoliciesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
     const SelectMultiThresholdPolicyOrSpinner = (props) => {
         if (!props.loadingMultiThresholdPolicies && props.multiThresholdPoliciesIds.length === 0) {
             return (
@@ -2038,20 +2056,29 @@ const Policies = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllMultiThresholdPoliciesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllMultiThresholdPoliciesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllMultiThresholdPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
+    const DeleteAllPPOPoliciesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllPPOPoliciesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllPPOPoliciesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
     const SelectPpoPolicyOrSpinner = (props) => {
         if (!props.loadingPPOPolicies && props.ppoPoliciesIds.length === 0) {
@@ -2118,20 +2145,29 @@ const Policies = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllPPOPoliciesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllPPOPoliciesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllPPOPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
+    const DeleteAllFNNWSoftmaxPoliciesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllFnnWSoftmaxPoliciesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllFnnWSoftmaxPoliciesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
     const SelectFnnWSoftmaxPolicyOrSpinner = (props) => {
         if (!props.loadingFnnWSoftmaxPolicies && props.fnnWSoftmaxPoliciesIds.length === 0) {
@@ -2198,17 +2234,27 @@ const Policies = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllFnnWSoftmaxPoliciesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllFnnWSoftmaxPoliciesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllFNNWSoftmaxPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
+        }
+    }
+
+    const DeleteAllDQNPoliciesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllDQNPoliciesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllDQNPoliciesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
         }
     }
 
@@ -2277,17 +2323,27 @@ const Policies = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllDQNPoliciesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllDQNPoliciesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllDQNPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
+        }
+    }
+
+    const DeleteAllTabularPoliciesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllTabularPoliciesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllTabularPoliciesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
         }
     }
 
@@ -2356,20 +2412,29 @@ const Policies = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllTabularPoliciesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllTabularPoliciesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllTabularPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
+    const DeleteAllVectorPoliciesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllVectorPoliciesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllVectorPoliciesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
     const SelectVectorPolicyOrSpinner = (props) => {
         if (!props.loadingVectorPolicies && props.vectorPoliciesIds.length === 0) {
@@ -2436,17 +2501,27 @@ const Policies = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllVectorPoliciesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllVectorPoliciesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllVectorPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
+        }
+    }
+
+    const DeleteAllAlphaVecPoliciesOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllAlphaVecPoliciesTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllAlphaVecPoliciesConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
         }
     }
 
@@ -2515,15 +2590,7 @@ const Policies = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllAlphaVecPoliciesTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllAlphaVecPoliciesConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllAlphaVecPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
@@ -3025,6 +3092,7 @@ const Policies = (props) => {
                             loadingMultiThresholdPolicies={loadingMultiThresholdPolicies}
                             multiThresholdPoliciesIds={filteredMultiThresholdPoliciesIds}
                             selectedMultiThresholdPolicyId={selectedMultiThresholdPolicyId}
+                            sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -3049,7 +3117,9 @@ const Policies = (props) => {
                 </div>
             </div>
             <MultiThresholdPolicyAccordion loadingMultiThresholdPolicy={loadingMultiThresholdPolicy}
-                                           selectedMultiThresholdPolicy={selectedMultiThresholdPolicy}/>
+                                           selectedMultiThresholdPolicy={selectedMultiThresholdPolicy}
+                                           sessionData={props.sessionData}
+            />
 
             <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
@@ -3057,6 +3127,7 @@ const Policies = (props) => {
                         <SelectPpoPolicyOrSpinner loadingPPOPolicies={loadingPPOPolicies}
                                                   ppoPoliciesIds={filteredPPOPoliciesIds}
                                                   selectedPpoPolicyId={selectedPpoPolicyId}
+                                                  sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -3081,7 +3152,9 @@ const Policies = (props) => {
                 </div>
             </div>
 
-            <PPOPolicyAccordion loadingPpoPolicy={loadingPpoPolicy} selectedPpoPolicy={selectedPpoPolicy}/>
+            <PPOPolicyAccordion loadingPpoPolicy={loadingPpoPolicy} selectedPpoPolicy={selectedPpoPolicy}
+                                sessionData={props.sessionData}
+            />
 
 
             <div className="row ppoPolicies simulationTracesHeader">
@@ -3090,6 +3163,7 @@ const Policies = (props) => {
                         <SelectTabularPolicyOrSpinner loadingTabularPolicies={loadingTabularPolicies}
                                                       tabularPoliciesIds={filteredTabulaPoliciesIds}
                                                       selectedTabularPolicyId={selectedTabularPolicyId}
+                                                      sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -3115,7 +3189,8 @@ const Policies = (props) => {
             </div>
 
             <TabularPolicyAccordion loadingTabularPolicy={loadingTabularPolicy}
-                                    selectedTabularPolicy={selectedTabularPolicy}/>
+                                    selectedTabularPolicy={selectedTabularPolicy}
+                                    sessionData={props.sessionData}/>
 
 
             <div className="row ppoPolicies simulationTracesHeader">
@@ -3124,6 +3199,7 @@ const Policies = (props) => {
                         <SelectAlphaVecPolicyOrSpinner loadingAlphaVecPolicies={loadingAlphaVecPolicies}
                                                        alphaVecPoliciesIds={filteredAlphaVecPoliciesIds}
                                                        selectedAlphaVecPolicyId={selectedAlphaVecPolicyId}
+                                                       sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -3149,7 +3225,9 @@ const Policies = (props) => {
             </div>
 
             <AlphaVecPolicyAccordion loadingAlphaVecPolicy={loadingAlphaVecPolicy}
-                                     selectedAlphaVecPolicy={selectedAlphaVecPolicy}/>
+                                     selectedAlphaVecPolicy={selectedAlphaVecPolicy}
+                                     sessionData={props.sessionData}
+            />
 
 
             <div className="row dqnPolicies simulationTracesHeader">
@@ -3158,6 +3236,7 @@ const Policies = (props) => {
                         <SelectDQNPolicyOrSpinner loadingDQNPolicies={loadingDQNPolicies}
                                                   dqnPoliciesIds={filteredDQNPoliciesIds}
                                                   selectedDQNPolicyId={selectedDQNPolicyId}
+                                                  sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -3182,7 +3261,9 @@ const Policies = (props) => {
                 </div>
             </div>
 
-            <DQNPolicyAccordion loadingDQNPolicy={loadingDQNPolicy} selectedDQNPolicy={selectedDQNPolicy}/>
+            <DQNPolicyAccordion loadingDQNPolicy={loadingDQNPolicy} selectedDQNPolicy={selectedDQNPolicy}
+                                sessionData={props.sessionData}
+            />
 
             <div className="row fnnWSoftmaxPolicies simulationTracesHeader">
                 <div className="col-sm-7">
@@ -3190,6 +3271,7 @@ const Policies = (props) => {
                         <SelectFnnWSoftmaxPolicyOrSpinner loadingFnnWSoftmaxPolicies={loadingFnnWSoftmaxPolicies}
                                                           fnnWSoftmaxPoliciesIds={filteredFnnWSoftmaxPoliciesIds}
                                                           selectedFnnWSoftmaxPolicyId={selectedFnnWSoftmaxPolicyId}
+                                                          sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -3215,7 +3297,8 @@ const Policies = (props) => {
             </div>
 
             <FnnWSoftmaxPolicyAccordion loadingFnnWSoftmaxPolicy={loadingFnnWSoftmaxPolicy}
-                                        selectedFnnWSoftmaxPolicy={selectedFnnWSoftmaxPolicy}/>
+                                        selectedFnnWSoftmaxPolicy={selectedFnnWSoftmaxPolicy}
+                                        sessionData={props.sessionData}/>
 
 
             <div className="row ppoPolicies simulationTracesHeader">
@@ -3224,6 +3307,7 @@ const Policies = (props) => {
                         <SelectVectorPolicyOrSpinner loadingVectorPolicies={loadingVectorPolicies}
                                                      vectorPoliciesIds={filteredVectorPoliciesIds}
                                                      selectedVectorPolicyId={selectedVectorPolicyId}
+                                                     sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -3249,7 +3333,8 @@ const Policies = (props) => {
             </div>
 
             <VectorPolicyAccordion loadingVectorPolicy={loadingVectorPolicy}
-                                   selectedVectorPolicy={selectedVectorPolicy}/>
+                                   selectedVectorPolicy={selectedVectorPolicy}
+                                   sessionData={props.sessionData}/>
 
         </div>
     );

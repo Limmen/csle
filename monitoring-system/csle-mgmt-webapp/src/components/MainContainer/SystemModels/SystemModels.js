@@ -612,6 +612,26 @@ const SystemModels = (props) => {
         }
     }
 
+    const DeleteSelectedModelOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    className="removeButton"
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveModelTooltip}
+                >
+                    <Button variant="danger" className="removeButton" size="sm"
+                            onClick={() => removeModelConfirm(selectedSystemModel)}>
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
     const SelectSystemModelDropdownOrSpinner = (props) => {
         if (!props.loading && props.systemModelsIds.length === 0) {
             return (
@@ -660,17 +680,7 @@ const SystemModels = (props) => {
                         </Button>
                     </OverlayTrigger>
 
-                    <OverlayTrigger
-                        className="removeButton"
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveModelTooltip}
-                    >
-                        <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => removeModelConfirm(selectedSystemModel)}>
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteSelectedModelOrEmpty sessionData={props.sessionData}/>
 
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                     <div className="conditionalDist inline-block">
@@ -999,6 +1009,7 @@ const SystemModels = (props) => {
                         <SelectSystemModelDropdownOrSpinner systemModelsIds={filteredSystemModelsIds}
                                                             selectedSystemModelId={selectedSystemModelId}
                                                             loading={loading}
+                                                            sessionData={props.sessionData}
                         />
                     </h4>
                 </div>

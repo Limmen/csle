@@ -254,6 +254,57 @@ const DataCollectionJob = (props) => {
 
     }
 
+    const Actions = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <h5 className="semiTitle">
+                    Actions:
+                    {startOrStopButton()}
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveDataCollectionJobTooltip}
+                    >
+                        <Button variant="danger" className="removeButton" size="sm"
+                                onClick={() => props.removeDataCollectionJob(props.job)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </h5>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+    const Logs = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={getLogs}
+                            aria-controls="logsOpenBody"
+                            aria-expanded={logsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Logs: {props.job.log_file_path} </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={logsOpen}>
+                        <div id="logsOpenBody" className="cardBodyHidden">
+                            <SpinnerOrLogs loadingLogs={loadingLogs} logs={logs}/>
+                            <p className="extraMarginTop"></p>
+                        </div>
+                    </Collapse>
+                </Card>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
     return (<Card key={props.job.id} ref={props.wrapper}>
             <Card.Header>
                 <Accordion.Toggle as={Button} variant="link" eventKey={props.job.id} className="mgHeader">
@@ -276,21 +327,8 @@ const DataCollectionJob = (props) => {
             </Card.Header>
             <Accordion.Collapse eventKey={props.job.id}>
                 <Card.Body>
-                    <h5 className="semiTitle">
-                        Actions:
-                        {startOrStopButton()}
-                        <OverlayTrigger
-                            className="removeButton"
-                            placement="top"
-                            delay={{show: 0, hide: 0}}
-                            overlay={renderRemoveDataCollectionJobTooltip}
-                        >
-                            <Button variant="danger" className="removeButton" size="sm"
-                                    onClick={() => props.removeDataCollectionJob(props.job)}>
-                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                            </Button>
-                        </OverlayTrigger>
-                    </h5>
+                    <Actions sessionData={props.sessionData} job={props.job}
+                             removeDataCollectionJob={props.removeDataCollectionJob}/>
 
                     <Card className="subCard">
                         <Card.Header>
@@ -575,24 +613,7 @@ const DataCollectionJob = (props) => {
                         </Collapse>
                     </Card>
 
-                    <Card className="subCard">
-                        <Card.Header>
-                            <Button
-                                onClick={getLogs}
-                                aria-controls="logsOpenBody"
-                                aria-expanded={logsOpen}
-                                variant="link"
-                            >
-                                <h5 className="semiTitle"> Logs: {props.job.log_file_path} </h5>
-                            </Button>
-                        </Card.Header>
-                        <Collapse in={logsOpen}>
-                            <div id="logsOpenBody" className="cardBodyHidden">
-                                <SpinnerOrLogs loadingLogs={loadingLogs} logs={logs}/>
-                                <p className="extraMarginTop"></p>
-                            </div>
-                        </Collapse>
-                    </Card>
+                    <Logs sessionData={props.sessionData} job={props.job}/>
 
                 </Card.Body>
             </Accordion.Collapse>

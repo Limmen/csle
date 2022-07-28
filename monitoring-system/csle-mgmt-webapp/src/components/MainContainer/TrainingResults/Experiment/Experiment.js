@@ -132,16 +132,9 @@ const Experiment = (props) => {
 
     }
 
-
-    return (<Card key={props.experiment.id} ref={props.wrapper}>
-        <Card.Header>
-            <Accordion.Toggle as={Button} variant="link" eventKey={props.experiment.id} className="mgHeader">
-                <span
-                    className="subnetTitle">ID: {props.experiment.id}, Simulation: {props.experiment.simulation_name}</span>
-            </Accordion.Toggle>
-        </Card.Header>
-        <Accordion.Collapse eventKey={props.experiment.id}>
-            <Card.Body>
+    const Actions = (props) => {
+        if (props.sessionData.admin) {
+            return (
                 <h5 className="semiTitle">
                     Actions:
 
@@ -157,6 +150,51 @@ const Experiment = (props) => {
                         </Button>
                     </OverlayTrigger>
                 </h5>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+    const Logs = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={getLogs}
+                            aria-controls="logsOpenBody"
+                            aria-expanded={logsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Logs: {props.experiment.log_file_path} </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={logsOpen}>
+                        <div id="logsOpenBody" className="cardBodyHidden">
+                            <SpinnerOrLogs loadingLogs={loadingLogs} logs={logs}/>
+                            <p className="extraMarginTop"></p>
+                        </div>
+                    </Collapse>
+                </Card>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+
+    return (<Card key={props.experiment.id} ref={props.wrapper}>
+        <Card.Header>
+            <Accordion.Toggle as={Button} variant="link" eventKey={props.experiment.id} className="mgHeader">
+                <span
+                    className="subnetTitle">ID: {props.experiment.id}, Simulation: {props.experiment.simulation_name}</span>
+            </Accordion.Toggle>
+        </Card.Header>
+        <Accordion.Collapse eventKey={props.experiment.id}>
+            <Card.Body>
+                <Actions sessionData={props.sessionData} removeExperiment={props.removeExperiment}
+                         experiment={props.experiment}/>
 
                 <Card className="subCard">
                     <Card.Header>
@@ -435,24 +473,7 @@ const Experiment = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card className="subCard">
-                    <Card.Header>
-                        <Button
-                            onClick={getLogs}
-                            aria-controls="logsOpenBody"
-                            aria-expanded={logsOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle"> Logs: {props.experiment.log_file_path} </h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={logsOpen}>
-                        <div id="logsOpenBody" className="cardBodyHidden">
-                            <SpinnerOrLogs loadingLogs={loadingLogs} logs={logs}/>
-                            <p className="extraMarginTop"></p>
-                        </div>
-                    </Collapse>
-                </Card>
+                <Logs sessionData={props.sessionData} experiment={props.experiment}/>
             </Card.Body>
         </Accordion.Collapse>
     </Card>)

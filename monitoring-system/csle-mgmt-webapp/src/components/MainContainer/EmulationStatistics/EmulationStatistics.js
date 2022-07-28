@@ -367,6 +367,26 @@ const EmulationStatistics = (props) => {
         350
     );
 
+    const DeleteSelectedStatisticOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    className="removeButton"
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveStatisticTooltip}
+                >
+                    <Button variant="danger" className="removeButton" size="sm"
+                            onClick={() => removeStatisticConfirm(selectedEmulationStatistic)}>
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
     const SelectEmulationStatisticDropdownOrSpinner = (props) => {
         if (!props.loading && props.emulationStatisticsIds.length === 0) {
             return (
@@ -415,17 +435,7 @@ const EmulationStatistics = (props) => {
                         </Button>
                     </OverlayTrigger>
 
-                    <OverlayTrigger
-                        className="removeButton"
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveStatisticTooltip}
-                    >
-                        <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => removeStatisticConfirm(selectedEmulationStatistic)}>
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteSelectedStatisticOrEmpty sessionData={props.sessionData}/>
 
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                     <div className="conditionalDist inline-block">
@@ -859,6 +869,7 @@ const EmulationStatistics = (props) => {
                             emulationStatisticsIds={filteredEmulationStatisticIds}
                             selectedEmulationStatisticId={selectedEmulationStatisticId}
                             loading={loading}
+                            sessionData={props.sessionData}
                         />
                     </h4>
                 </div>

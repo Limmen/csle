@@ -15,11 +15,34 @@ const VectorPolicy = (props) => {
     const [actionsOpen, setActionsOpen] = useState(false);
     const [policyOpen, setPolicyOpen] = useState(false);
 
-    const renderRemoveVectroPolicy = (props) => (
+    const renderRemoveVectorPolicy = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Remove Vector policy
         </Tooltip>
     );
+
+    const Actions = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <h5 className="semiTitle">
+                    Actions:
+                    <OverlayTrigger
+                        className="removeButton"
+                        placement="left"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRemoveVectorPolicy}
+                    >
+                        <Button variant="danger" className="removeButton" size="sm"
+                                onClick={() => props.removeVectorPolicy(props.policy)}>
+                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </h5>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
     return (<Card key={props.policy.id} ref={props.wrapper}>
         <Card.Header>
@@ -31,20 +54,8 @@ const VectorPolicy = (props) => {
         </Card.Header>
         <Accordion.Collapse eventKey={props.policy.id}>
             <Card.Body>
-                <h5 className="semiTitle">
-                    Actions:
-                    <OverlayTrigger
-                        className="removeButton"
-                        placement="left"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveVectroPolicy}
-                    >
-                        <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => props.removeVectorPolicy(props.policy)}>
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </h5>
+                <Actions sessionData={props.sessionData} policy={props.policy}
+                         removeVectorPolicy={props.removeVectorPolicy}/>
 
                 <Card className="subCard">
                     <Card.Header>
