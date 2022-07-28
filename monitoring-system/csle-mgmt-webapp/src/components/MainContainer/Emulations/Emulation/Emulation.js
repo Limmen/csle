@@ -211,6 +211,9 @@ const Emulation = (props) => {
     }
 
     const RenderActions = (props) => {
+        if(!props.sessionData.admin){
+            return (<></>)
+        }
         if(!props.execution){
             return (
                 <h5 className="semiTitle">
@@ -337,7 +340,9 @@ const Emulation = (props) => {
             <Card.Body>
 
                 <RenderActions execution={props.execution} removeEmulation={props.removeEmulation}
-                               removeExecution={props.removeExecution} execution_ip_octet={props.execution_ip_octet}/>
+                               removeExecution={props.removeExecution} execution_ip_octet={props.execution_ip_octet}
+                               sessionData={props.sessionData}
+                />
                 <Card className="subCard">
                     <Card.Header>
                         <Button
