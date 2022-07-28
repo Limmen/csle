@@ -635,6 +635,24 @@ const Emulations = (props) => {
         }
     }
 
+    const DeleteAllEmulationsOrEmpty = (props) => {
+        if(props.sessionData.admin) {
+         return (
+             <OverlayTrigger
+                 placement="top"
+                 delay={{show: 0, hide: 0}}
+                 overlay={renderRemoveEmulationsTooltip}
+             >
+                 <Button variant="danger" onClick={removeAllEmulationsConfirm} size="sm">
+                     <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                 </Button>
+             </OverlayTrigger>
+         )
+        } else {
+            return (<>)
+        }
+    }
+
     const SelectEmulationOrSpinner = (props) => {
         if (!props.loading && props.emulationIds.length === 0) {
             return (
@@ -697,7 +715,7 @@ const Emulations = (props) => {
                         </Button>
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-
+                    <DeleteAllEmulationsOrEmpty sessionData={props.sessionData}/>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
