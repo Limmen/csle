@@ -636,8 +636,6 @@ const Emulations = (props) => {
     }
 
     const DeleteAllEmulationsOrEmpty = (props) => {
-        console.log("sessionData:")
-        console.log(props.sessionData)
         if (props.sessionData.admin) {
             return (
                 <OverlayTrigger
@@ -718,15 +716,6 @@ const Emulations = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
                     <DeleteAllEmulationsOrEmpty sessionData={props.sessionData}/>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveEmulationsTooltip}
-                    >
-                        <Button variant="danger" onClick={removeAllEmulationsConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
                 </div>
             )
         }
