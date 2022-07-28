@@ -636,6 +636,8 @@ const Emulations = (props) => {
     }
 
     const DeleteAllEmulationsOrEmpty = (props) => {
+        console.log("sessionData:")
+        console.log(props.sessionData)
         if (props.sessionData.admin) {
             return (
                 <OverlayTrigger
