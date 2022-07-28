@@ -21,7 +21,10 @@ def emulation_statistics():
 
     :return: A list of emulation statistics or a list of ids of the statistics or deletes the statistics
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
@@ -71,7 +74,10 @@ def emulation_statistic(statistics_id: int):
 
     :return: The given statistic or deletes the statistic
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 

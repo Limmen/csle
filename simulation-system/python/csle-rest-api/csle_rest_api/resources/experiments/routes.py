@@ -21,7 +21,10 @@ def experiments():
 
     :return: A list of experiments or a list of ids of the experiments or deletes the experiments
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
@@ -72,7 +75,10 @@ def experiment(experiment_id: int):
 
     :return: The given experiment or deletes the experiment
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 

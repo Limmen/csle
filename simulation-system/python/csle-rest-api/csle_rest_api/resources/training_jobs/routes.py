@@ -26,7 +26,10 @@ def training_jobs():
 
     :return: A list of training-jobs or a list of ids of the jobs or deletes the jobs
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
@@ -86,7 +89,10 @@ def training_policy(job_id: int):
 
     :return: The given policy or deletes the policy
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 

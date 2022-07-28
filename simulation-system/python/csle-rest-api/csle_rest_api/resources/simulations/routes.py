@@ -23,7 +23,10 @@ def simulations():
 
     :return: Returns a list of simulations, a list of simulation ids, or deletes all simulations
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
@@ -77,7 +80,10 @@ def get_simulation(simulation_id: int):
     :param simulation_id: the id of the simulation
     :return: the simulation or deletes the simulation
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 

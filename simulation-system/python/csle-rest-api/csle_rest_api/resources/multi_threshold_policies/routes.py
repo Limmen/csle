@@ -22,7 +22,10 @@ def multi_threshold_policies():
 
     :return: A list of multi-threshold-policies or a list of ids of the policies or deletes the policies
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 

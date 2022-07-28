@@ -22,7 +22,12 @@ def emulation_simulation_traces():
 
     :return: A list of emulation traces or a list of ids of the traces or deletes the traces
     """
-
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole dataset
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)

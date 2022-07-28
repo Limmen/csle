@@ -15,42 +15,34 @@ sdn_controllers_bp = Blueprint(
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}")
 
 
-@sdn_controllers_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@sdn_controllers_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def sdn_controllers():
     """
     The /sdn-controllers resource.
 
     :return: A list of sdn-controllers or a list of ids of the policies or deletes the policies
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
-    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-        # Check if ids query parameter is True, then only return the ids and not the whole dataset
-        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
-        if ids is not None and ids:
-            return sdn_controllers_ids()
+    # Check if ids query parameter is True, then only return the ids and not the whole dataset
+    ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+    if ids is not None and ids:
+        return sdn_controllers_ids()
 
-        emulations = MetastoreFacade.list_emulations()
-        rc_emulations = ContainerManager.list_running_emulations()
-        response_dicts = []
-        for em in emulations:
-            if em.sdn_controller_config is not None:
-                if em.name in rc_emulations:
-                    em.running = True
-                response_dicts.append(em.to_dict())
-        response = jsonify(response_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response, constants.HTTPS.OK_STATUS_CODE
-    elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-        policies = MetastoreFacade.list_sdn_controllers()
-        for policy in policies:
-            MetastoreFacade.remove_ppo_policy(ppo_policy=policy)
-        response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response, constants.HTTPS.OK_STATUS_CODE
+    emulations = MetastoreFacade.list_emulations()
+    rc_emulations = ContainerManager.list_running_emulations()
+    response_dicts = []
+    for em in emulations:
+        if em.sdn_controller_config is not None:
+            if em.name in rc_emulations:
+                em.running = True
+            response_dicts.append(em.to_dict())
+    response = jsonify(response_dicts)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 def sdn_controllers_ids():
