@@ -1,0 +1,27 @@
+
+{
+  "admin_username": "admin",
+  "admin_password": "admin",
+  "agent_username": "agent",
+  "agent_password": "agent",
+  "database_user": "csle",
+  "database_password": "csle",
+  "database_host": "127.0.0.1",
+  "database_name": "csle",
+  "node_exporter_port": 9100,
+  "grafana_port": 3000,
+  "monitor_port": 7777,
+  "proxy_port": 7777,
+  "cadvisor_port": 8080,
+  "prometheus_port": 9090,
+  "node_exporter_pid_file": "/var/log/csle/node_exporter.pid",
+  "monitor_pid_file": "/var/log/csle/monitor.pid",
+  "proxy_pid_file": "/var/log/csle/proxy.pid",
+  "node_exporter_log_file": "/var/log/csle/node_exporter.log",
+  "docker_stats_manager_outfile": "/var/log/csle/statsmanager.out",
+  "docker_stats_manager_pidfile": "/var/log/csle/statsmanager.pid",
+  "prometheus_pid_file": "/var/log/csle/prometheus.pid",
+  "prometheus_log_file": "/var/log/csle/prometheus.log",
+  "prometheus_config_file": "$CSLE_HOME/monitoring-system/prometheus.yml",
+  "default_log_dir": "/tmp/csle/"
+}

@@ -5,6 +5,14 @@ Constants for csle-common
 import re
 
 
+class CONFIG_FILE:
+    """
+    Constants related to the config file
+    """
+    CSLE_HOME_ENV_PARAM = "CSLE_HOME"
+    CONFIG_FILE_NAME = "config.json"
+
+
 class CONTAINER_IMAGES:
     """
     String constants representing container images names
@@ -803,7 +811,7 @@ class COMMANDS:
     SEARCH_PROMETHEUS = "prometheus"
     PROMETHEUS_PID_FILE = "/var/log/csle/prometheus.pid"
     PROMETHEUS_LOG_FILE = "/var/log/csle/prometheus.log"
-    PROMETHEUS_CONFIG_FILE = "$CSLE_HOME/monitoring-system/prometheus.yml"
+    PROMETHEUS_CONFIG_FILE = f"${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/monitoring-system/prometheus.yml"
     PROMETHEUS_PORT = 9090
     START_PROMETHEUS = f"nohup prometheus --config.file={PROMETHEUS_CONFIG_FILE} " \
                        "--storage.tsdb.retention.size=10GB " \
@@ -829,10 +837,10 @@ class COMMANDS:
     NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
     START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
-    BUILD_MONITOR = "cd $CSLE_HOME/monitoring-system/csle-mgmt-webapp && npm run build"
-    START_MONITOR = "nohup python $CSLE_HOME/monitoring-system/csle-mgmt-webapp" \
+    BUILD_MONITOR = f"cd ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/monitoring-system/csle-mgmt-webapp && npm run build"
+    START_MONITOR = f"nohup python ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/monitoring-system/csle-mgmt-webapp" \
                     "/server/server.py &"
-    START_PROXY = "nohup python $CSLE_HOME/monitoring-system/csle-mgmt-webapp" \
+    START_PROXY = f"nohup python ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/monitoring-system/csle-mgmt-webapp" \
                     "/server/proxy.py &"
     GET_LATEST_PID = "$!"
     SAVE_PID = "echo {} > {}"
@@ -1575,5 +1583,3 @@ class OPENFLOW:
     OPENFLOW_V_1_3 = "OpenFlow13"
     OPENFLOW_V_1_4 = "OpenFlow14"
     OPENFLOW_V_1_5 = "OpenFlow15"
-
-

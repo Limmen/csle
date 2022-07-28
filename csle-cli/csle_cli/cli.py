@@ -1768,6 +1768,9 @@ def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:
                 fg="yellow", bold=True)
 
 
+# Set config parameters
+
+
 # Adds the commands to the group
 commands.add_command(ls)
 commands.add_command(rm)
@@ -1786,8 +1789,3 @@ commands.add_command(trainingjob)
 commands.add_command(systemidentificationjob)
 commands.add_command(install)
 commands.add_command(uninstall)
-
-
-# # Script entrypoint
-# if __name__ == '__main__':
-#     commands()
