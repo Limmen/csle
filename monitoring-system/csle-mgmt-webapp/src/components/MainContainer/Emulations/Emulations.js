@@ -795,6 +795,7 @@ const Emulations = (props) => {
                         <SelectEmulationOrSpinner loading={loading}
                                                   emulationIds={filteredEmulationsIds}
                                                   selectedEmulationId={selectedEmulationId}
+                                                  sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
