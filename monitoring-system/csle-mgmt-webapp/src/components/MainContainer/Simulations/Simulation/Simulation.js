@@ -72,18 +72,9 @@ const Simulation = (props) => {
         </Tooltip>
     );
 
-    const player_ids = props.simulation.players_config.player_configs.map((player, index) => (player.id))
-    const filtered_action_spaces = props.simulation.joint_action_space_config.action_spaces.filter(action_space => (player_ids.includes(action_space.player_id)))
-
-    return (<Card key={props.simulation.name} ref={props.wrapper}>
-        <Card.Header>
-            <Accordion.Toggle as={Button} variant="link" eventKey={props.simulation.name} className="mgHeader">
-                <span className="subnetTitle">ID: {props.simulation.id}, name: {props.simulation.name}</span>
-                # players: {player_ids.length}
-            </Accordion.Toggle>
-        </Card.Header>
-        <Accordion.Collapse eventKey={props.simulation.name}>
-            <Card.Body>
+    const ActionsOrEmpty = (props) => {
+        if(props.sessionData.admin) {
+            return (
                 <h5 className="semiTitle">
                     Actions:
                     <OverlayTrigger
@@ -98,7 +89,25 @@ const Simulation = (props) => {
                         </Button>
                     </OverlayTrigger>
                 </h5>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
+    const player_ids = props.simulation.players_config.player_configs.map((player, index) => (player.id))
+    const filtered_action_spaces = props.simulation.joint_action_space_config.action_spaces.filter(action_space => (player_ids.includes(action_space.player_id)))
+
+    return (<Card key={props.simulation.name} ref={props.wrapper}>
+        <Card.Header>
+            <Accordion.Toggle as={Button} variant="link" eventKey={props.simulation.name} className="mgHeader">
+                <span className="subnetTitle">ID: {props.simulation.id}, name: {props.simulation.name}</span>
+                # players: {player_ids.length}
+            </Accordion.Toggle>
+        </Card.Header>
+        <Accordion.Collapse eventKey={props.simulation.name}>
+            <Card.Body>
+                <ActionsOrEmpty removeSimulation={props.removeSimulation} sessionData={props.sessionData}/>
                 <Card className="subCard">
                     <Card.Header>
                         <Button

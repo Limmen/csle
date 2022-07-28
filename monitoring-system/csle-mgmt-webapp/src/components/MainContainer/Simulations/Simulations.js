@@ -393,6 +393,7 @@ const Simulations = (props) => {
                         <Simulation simulation={props.selectedSimulation} wrapper={wrapper}
                                     key={props.selectedSimulation.name}
                                     removeSimulation={removeSimulationConfirm}
+                                    sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -404,6 +405,24 @@ const Simulations = (props) => {
         setSelectedSimulationId(selectedId)
         fetchSimulation(selectedId)
         setLoadingSelectedSimulation(true)
+    }
+
+    const DeleteAllSimulationsOrEmpty = (props) => {
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllSimulationsTooltop}
+                >
+                    <Button variant="danger" onClick={removeAllSimulationsConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
     }
 
     const SelectSimulationOrSpinner = (props) => {
@@ -471,15 +490,7 @@ const Simulations = (props) => {
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
 
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAllSimulationsTooltop}
-                    >
-                        <Button variant="danger" onClick={removeAllSimulationsConfirm} size="sm">
-                            <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
+                    <DeleteAllSimulationsOrEmpty sessionData={props.sessionData}/>
 
                 </div>
             )
@@ -497,6 +508,7 @@ const Simulations = (props) => {
                         <SelectSimulationOrSpinner loading={loading}
                                                    simulationIds={filteredSimulationIds}
                                                    selectedSimulationId={selectedSimulationId}
+                                                   sessionData={props.sessionData}
                         />
                     </h4>
                 </div>
@@ -521,7 +533,9 @@ const Simulations = (props) => {
                 </div>
             </div>
             <SimulationAccordion loadingSelectedSimulation={loadingSelectedSimulation}
-                                 selectedSimulation={selectedSimulation}/>
+                                 selectedSimulation={selectedSimulation}
+                                 sessionData={props.sessionData}
+            />
         </div>
     );
 }
