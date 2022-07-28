@@ -13,10 +13,10 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
-import { confirmAlert } from 'react-confirm-alert';
+import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { useNavigate } from "react-router-dom";
-import { useAlert } from "react-alert";
+import {useNavigate} from "react-router-dom";
+import {useAlert} from "react-alert";
 
 const Emulations = (props) => {
     const [emulationIds, setEmulationIds] = useState([]);
@@ -44,7 +44,7 @@ const Emulations = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
                     navigate("/login-page");
@@ -53,7 +53,7 @@ const Emulations = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 const emulationIds = response.map((id_obj, index) => {
@@ -97,7 +97,7 @@ const Emulations = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
                     navigate("/login-page");
@@ -106,7 +106,7 @@ const Emulations = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 fetchEmulationIds()
@@ -126,7 +126,7 @@ const Emulations = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
                     navigate("/login-page");
@@ -135,11 +135,11 @@ const Emulations = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 setLoadingSelectedEmulation(true)
-                var id_obj={
+                var id_obj = {
                     value: emulation_id,
                     label: "-"
                 }
@@ -159,7 +159,7 @@ const Emulations = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
                     navigate("/login-page");
@@ -168,11 +168,11 @@ const Emulations = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 setLoadingSelectedEmulation(true)
-                var id_obj={
+                var id_obj = {
                     value: emulation_id,
                     label: "-"
                 }
@@ -192,7 +192,7 @@ const Emulations = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
                     navigate("/login-page");
@@ -201,7 +201,7 @@ const Emulations = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 setSelectedEmulation(response)
@@ -221,7 +221,7 @@ const Emulations = (props) => {
             }
         )
             .then(res => {
-                if(res.status === 401) {
+                if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
                     navigate("/login-page");
@@ -230,7 +230,7 @@ const Emulations = (props) => {
                 return res.json()
             })
             .then(response => {
-                if(response === null) {
+                if (response === null) {
                     return
                 }
                 fetchEmulationIds()
@@ -295,7 +295,7 @@ const Emulations = (props) => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -343,8 +343,8 @@ const Emulations = (props) => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
-                if(emulation.running) {
+            customUI: ({onClose}) => {
+                if (emulation.running) {
                     return (
                         <div id="react-confirm-alert" onClick={onClose}>
                             <div className="react-confirm-alert-overlay">
@@ -422,7 +422,7 @@ const Emulations = (props) => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -472,7 +472,7 @@ const Emulations = (props) => {
             closeOnClickOutside: true,
             keyCodeForClose: [8, 32],
             overlayClassName: "remove-confirm",
-            customUI: ({ onClose }) => {
+            customUI: ({onClose}) => {
                 return (
                     <div id="react-confirm-alert" onClick={onClose}>
                         <div className="react-confirm-alert-overlay">
@@ -576,7 +576,7 @@ const Emulations = (props) => {
     );
 
     const GetExecutions = (props) => {
-        if(props.executions.length > 0){
+        if (props.executions.length > 0) {
             return (
                 <div>
                     <h3 className="executionsTitle">
@@ -636,20 +636,20 @@ const Emulations = (props) => {
     }
 
     const DeleteAllEmulationsOrEmpty = (props) => {
-        if(props.sessionData.admin) {
-         return (
-             <OverlayTrigger
-                 placement="top"
-                 delay={{show: 0, hide: 0}}
-                 overlay={renderRemoveEmulationsTooltip}
-             >
-                 <Button variant="danger" onClick={removeAllEmulationsConfirm} size="sm">
-                     <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                 </Button>
-             </OverlayTrigger>
-         )
+        if (props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveEmulationsTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllEmulationsConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
         } else {
-            return (<>)
+            return (<></>)
         }
     }
 
