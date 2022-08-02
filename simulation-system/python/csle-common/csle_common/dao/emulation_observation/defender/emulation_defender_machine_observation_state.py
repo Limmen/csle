@@ -167,3 +167,30 @@ class EmulationDefenderMachineObservationState:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attribute of the DTO
+        """
+        num_attributes = 2
+        if self.host_metrics is not None:
+            num_attributes = num_attributes + self.host_metrics.num_attributes()
+        if self.docker_stats is not None:
+            num_attributes = num_attributes + self.docker_stats.num_attributes()
+        if len(self.ports) > 0:
+            num_attributes = num_attributes + \
+                             len(self.ports)*self.ports[0].num_attributes()
+        if len(self.ssh_connections) > 0:
+            num_attributes = num_attributes + \
+                             len(self.ports)*self.ssh_connections[0].num_attributes()
+        return num_attributes
+
+    @staticmethod
+    def schema() -> "EmulationDefenderMachineObservationState":
+        """
+        :return: get the schema of the DTO
+        """
+        return EmulationDefenderMachineObservationState(ips=[""], log_sink_config=LogSinkConfig.schema(),
+                                                        host_metrics=HostMetrics.schema(),
+                                                        docker_stats=DockerStats.schema())

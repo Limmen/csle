@@ -70,3 +70,10 @@ class NmapHop:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    @staticmethod
+    def schema() -> "NmapHop":
+        """
+        :return: get the schema of the DTO
+        """
+        return NmapHop(ttl=1, ipaddr="", rtt=0.5, host="")

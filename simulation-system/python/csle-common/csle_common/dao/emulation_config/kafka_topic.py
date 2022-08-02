@@ -86,3 +86,10 @@ class KafkaTopic:
         :return: a copy of the DTO
         """
         return KafkaTopic.from_dict(self.to_dict())
+
+    @staticmethod
+    def schema() -> "KafkaTopic":
+        """
+        :return: get the schema of the DTO
+        """
+        return KafkaTopic(name="", num_partitions=1, num_replicas=1, attributes=[""], retention_time_hours=1)

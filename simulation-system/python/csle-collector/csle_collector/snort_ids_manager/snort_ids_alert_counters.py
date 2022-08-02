@@ -254,3 +254,16 @@ class SnortIdsAlertCounters:
         labels = constants.LOG_SINK.SNORT_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attributes of the DTO
+        """
+        return 10 + len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))
+
+    @staticmethod
+    def schema() -> "SnortIdsAlertCounters":
+        """
+        :return: get the schema of the DTO
+        """
+        return SnortIdsAlertCounters()

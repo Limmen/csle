@@ -176,6 +176,35 @@ class EmulationTrace:
             dto = EmulationTrace.from_json_str(json_str=json_str)
             return dto
 
+    def num_attributes_per_time_step(self) -> int:
+        """
+        :return: approximately the number of attributes recorded per time-step of the trace
+        """
+        num_attributes = 2
+        num_attributes = num_attributes + (1+len(self.attacker_observation_states))*\
+                         self.initial_attacker_observation_state.num_attributes()
+        num_attributes = num_attributes + (1+len(self.defender_observation_states))* \
+                         self.initial_defender_observation_state.num_attributes()
+        if len(self.defender_actions) > 0:
+            num_attributes = num_attributes + len(self.defender_actions)* self.defender_actions[0].num_attributes()
+        if len(self.attacker_actions) > 0:
+            num_attributes = num_attributes + len(self.attacker_actions)* self.attacker_actions[0].num_attributes()
+        return num_attributes
+
+    @staticmethod
+    def get_schema():
+        """
+        :return: the schema of the DTO
+        """
+        dto = EmulationTrace(initial_attacker_observation_state=EmulationAttackerObservationState.schema(),
+                             initial_defender_observation_state=EmulationDefenderObservationState.schema(),
+                             emulation_name="")
+        dto.attacker_observation_states = [EmulationAttackerObservationState.schema()]
+        dto.defender_observation_states = [EmulationDefenderObservationState.schema()]
+        dto.attacker_actions = [EmulationAttackerAction.schema()]
+        dto.defender_actions = [EmulationDefenderAction.schema()]
+        return dto
+
 
 class NpEncoder(json.JSONEncoder):
     """

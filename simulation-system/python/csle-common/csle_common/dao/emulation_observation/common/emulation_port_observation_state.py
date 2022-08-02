@@ -139,3 +139,17 @@ class EmulationPortObservationState:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attribute of the DTO
+        """
+        return 9
+
+    @staticmethod
+    def schema() -> "EmulationPortObservationState":
+        """
+        :return: get the schema of the DTO
+        """
+        return EmulationPortObservationState(port=-1, open=True, service = -1, protocol = TransportProtocol.TCP,
+                                             http_enum="", http_grep="", vulscan="", version="", fingerprint="")

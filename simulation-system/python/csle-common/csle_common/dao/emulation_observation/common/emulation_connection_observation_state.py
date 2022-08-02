@@ -147,3 +147,18 @@ class EmulationConnectionObservationState:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attribute of the DTO
+        """
+        return 9 + self.credential.num_attributes()
+
+    @staticmethod
+    def schema() -> "EmulationConnectionObservationState":
+        """
+        :return: get the schema of the DTO
+        """
+        return EmulationConnectionObservationState(conn=None, credential=Credential.schema(), root=False, service="",
+                                                   port=-1, tunnel_thread=None, tunnel_port=-1,
+                                                   interactive_shell=False, proxy=None, ip="")

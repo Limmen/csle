@@ -106,3 +106,10 @@ class Flag:
         :return: a copy of the DTO
         """
         return Flag.from_dict(self.to_dict())
+
+    @staticmethod
+    def schema() -> "Flag":
+        """
+        :return: get the schema of the DTO
+        """
+        return Flag(name="", dir="", id=-1, path="", requires_root=True, score=-1)

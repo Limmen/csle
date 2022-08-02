@@ -107,3 +107,16 @@ class Credential:
         :return: a copy of the DTO
         """
         return Credential.from_dict(self.to_dict())
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attribute of the DTO
+        """
+        return 6
+
+    @staticmethod
+    def schema() -> "Credential":
+        """
+        :return: get the schema of the DTO
+        """
+        return Credential(username="", pw="", port=-1, protocol=TransportProtocol.TCP, service="", root=False)

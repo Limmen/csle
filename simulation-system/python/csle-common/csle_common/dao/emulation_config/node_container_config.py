@@ -144,3 +144,11 @@ class NodeContainerConfig:
             ip=x[0], ip_first_octet=ip_first_octet), x[1].create_execution_config(ip_first_octet=ip_first_octet)),
                                            config.ips_and_networks))
         return config
+
+    @staticmethod
+    def schema() -> "NodeContainerConfig":
+        """
+        :return: get the schema of the DTO
+        """
+        return NodeContainerConfig(name="", ips_and_networks=[("", ContainerNetwork.schema())], version="", level="",
+                                   restart_policy="", suffix="", os="", execution_ip_first_octet=-1)

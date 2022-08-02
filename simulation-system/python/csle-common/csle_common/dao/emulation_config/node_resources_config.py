@@ -10,7 +10,7 @@ class NodeResourcesConfig:
 
     def __init__(self, container_name: str,
                  num_cpus: int, available_memory_gb :int,
-                 ips_and_network_configs = List[Tuple[str, NodeNetworkConfig]]):
+                 ips_and_network_configs : List[Tuple[str, NodeNetworkConfig]]):
         """
         Initializes the DTO
 
@@ -108,3 +108,11 @@ class NodeResourcesConfig:
         config.ips_and_network_configs = list(map(lambda x: (GeneralUtil.replace_first_octet_of_ip(
             ip=x[0], ip_first_octet=ip_first_octet), x[1]), config.ips_and_network_configs))
         return config
+
+    @staticmethod
+    def schema() -> "NodeResourcesConfig":
+        """
+        :return: get the schema of the DTO
+        """
+        return NodeResourcesConfig(container_name="", num_cpus=1, available_memory_gb=1,
+                                   ips_and_network_configs=[("", NodeNetworkConfig.schema())])

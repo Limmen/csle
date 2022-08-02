@@ -273,7 +273,8 @@ CREATE TABLE IF NOT EXISTS traces_datasets (
     size_in_gb int NOT NULL,
     compressed_size_in_gb int NOT NULL,
     citation TEXT,
-    num_files int NOT NULL
+    num_files int NOT NULL,
+    file_format VARCHAR(128) NOT NULL
     );
 GRANT ALL ON traces_datasets TO csle;
 GRANT USAGE, SELECT ON SEQUENCE traces_datasets_id_seq TO csle;

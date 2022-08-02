@@ -130,3 +130,11 @@ class LogSinkConfig:
         config.firewall_config = config.firewall_config.create_execution_config(ip_first_octet=ip_first_octet)
         return config
 
+    @staticmethod
+    def schema() -> "LogSinkConfig":
+        """
+        :return: get the schema of the DTO
+        """
+        return LogSinkConfig(container=NodeContainerConfig.schema(), resources=NodeResourcesConfig.schema(),
+                             firewall_config=NodeFirewallConfig.schema(), topics=[KafkaTopic.schema()])
+

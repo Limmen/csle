@@ -8,6 +8,7 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_action_result.nmap_host_result import NmapHostResult
 from csle_common.dao.emulation_action_result.nmap_trace import NmapTrace
+from csle_common.dao.emulation_config.flag import Flag
 
 
 class EmulationAttackerMachineObservationState:
@@ -32,7 +33,7 @@ class EmulationAttackerMachineObservationState:
         self.backdoor_credentials: List[Credential] = []
         self.logged_in = False
         self.root = False
-        self.flags_found = set()
+        self.flags_found: Set[Flag] = set()
         self.filesystem_searched = False
         self.untried_credentials = False
         self.ssh_connections :List[EmulationConnectionObservationState] = []
@@ -64,7 +65,6 @@ class EmulationAttackerMachineObservationState:
         self.cve_2010_0426_tried = False
         self.cve_2015_5602_tried = False
         self.reachable : Set[str] = set()
-
 
     def __str__(self) -> str:
         """
@@ -362,3 +362,61 @@ class EmulationAttackerMachineObservationState:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+
+    def num_attributes(self) -> int:
+        """
+        :return: number of attributes of the DTO
+        """
+        attributes_per_emulation_port_obs_state = 0
+        attributes_per_emulation_vuln_obs_state = 0
+        attributes_per_credential = 0
+        attributes_per_connection_obs_state = 0
+        if len(self.ports) > 0:
+            attributes_per_emulation_port_obs_state = self.ports[0].num_attributes()
+        if len(self.cve_vulns) > 0:
+            attributes_per_emulation_vuln_obs_state = self.cve_vulns[0].num_attributes()
+        if len(self.cve_vulns) == 0 and len(self.osvdb_vulns) > 0:
+            attributes_per_emulation_vuln_obs_state = self.osvdb_vulns[0].num_attributes()
+        if len(self.shell_access_credentials) > 0:
+            attributes_per_credential = self.shell_access_credentials[0].num_attributes()
+        if len(self.ssh_connections) > 0:
+            attributes_per_connection_obs_state = self.ssh_connections[0].num_attributes()
+        if len(self.ssh_connections) == 0 and len(self.ftp_connections) > 0:
+            attributes_per_connection_obs_state = self.ftp_connections[0].num_attributes()
+        if len(self.ssh_connections) == 0 and len(self.ftp_connections) == 0 and len(self.telnet_connections) > 0:
+            attributes_per_connection_obs_state = self.telnet_connections[0].num_attributes()
+
+        return len(self.ports)*attributes_per_emulation_port_obs_state + \
+                                 len(self.cve_vulns)*attributes_per_emulation_vuln_obs_state + \
+                                 len(self.osvdb_vulns)*attributes_per_emulation_vuln_obs_state + \
+                                 len(self.shell_access_credentials)*attributes_per_credential + \
+                                 len(self.backdoor_credentials)*attributes_per_credential + \
+                                 len(self.ssh_connections)*attributes_per_connection_obs_state + \
+                                 len(self.ftp_connections)*attributes_per_connection_obs_state + \
+                                 len(self.telnet_connections)*attributes_per_connection_obs_state + \
+                                 len(self.logged_in_services) + len(self.hostnames) + len(self.root_services) + \
+                                 len(self.hostnames) + len(self.reachable) + len(self.flags_found) + 29
+
+    @staticmethod
+    def schema() -> "EmulationAttackerMachineObservationState":
+        """
+        :return: get the schema of the DTO
+        """
+        dto = EmulationAttackerMachineObservationState(ips=[""])
+        dto.ports = [EmulationPortObservationState.schema()]
+        dto.cve_vulns=[EmulationVulnerabilityObservationState.schema()]
+        dto.osvdb_vulns=[EmulationVulnerabilityObservationState.schema()]
+        dto.shell_access_credentials = [Credential.schema()]
+        dto.backdoor_credentials=[Credential.schema()]
+        dto.flags_found.add(Flag.schema())
+        dto.ssh_connections = [EmulationConnectionObservationState.schema()]
+        dto.ftp_connections = [EmulationConnectionObservationState.schema()]
+        dto.telnet_connections = [EmulationConnectionObservationState.schema()]
+        dto.logged_in_services = [""]
+        dto.root_services = [""]
+        dto.hostnames = [""]
+        dto.trace = NmapTrace.schema()
+        dto.reachable.add("")
+        return dto
+

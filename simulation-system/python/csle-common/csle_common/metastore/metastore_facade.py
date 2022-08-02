@@ -3099,7 +3099,6 @@ class MetastoreFacade:
         traces_dataset.id = traces_dataset_record[0]
         return traces_dataset
 
-
     @staticmethod
     def list_traces_datasets_ids() -> List[Dict]:
         """
@@ -3189,14 +3188,15 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f"(name, description, data_schema, download_count, file_path, url, date_added, num_traces, "
-                            f"num_attributes_per_time_step, size_in_gb, compressed_size_in_gb, citation, num_files) "
-                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                            f"num_attributes_per_time_step, size_in_gb, compressed_size_in_gb, citation, num_files, "
+                            f"file_format) "
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
                             (traces_dataset.name, traces_dataset.description, traces_dataset.data_schema,
                              traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
                              traces_dataset.date_added, traces_dataset.num_traces,
                              traces_dataset.num_attributes_per_time_step,
                              traces_dataset.size_in_gb, traces_dataset.compressed_size_in_gb,
-                             traces_dataset.citation, traces_dataset.num_files))
+                             traces_dataset.citation, traces_dataset.num_files, traces_dataset.file_format))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"traces dataset saved successfully")
@@ -3221,14 +3221,14 @@ class MetastoreFacade:
                             f"{constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f" SET name=%s, description=%s, data_schema=%s, download_count=%s, file_path=%s, "
                             f"url=%s, date_added=%s, num_traces=%s, num_attributes_per_time_step=%s, size_in_gb=%s, "
-                            f"compressed_size_in_gb=%s, citation=%s, num_files=%s "
+                            f"compressed_size_in_gb=%s, citation=%s, num_files=%s, file_format=%s "
                             f"WHERE {constants.METADATA_STORE.TRACES_DATASETS_TABLE}.id = %s",
                             (traces_dataset.name, traces_dataset.description, traces_dataset.data_schema,
                              traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
                              traces_dataset.date_added, traces_dataset.num_traces,
                              traces_dataset.num_attributes_per_time_step, traces_dataset.size_in_gb,
                              traces_dataset.compressed_size_in_gb, traces_dataset.citation,
-                             traces_dataset.num_files, id))
+                             traces_dataset.num_files, traces_dataset.file_format, id))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Traces dataset with {id} updated successfully")
 

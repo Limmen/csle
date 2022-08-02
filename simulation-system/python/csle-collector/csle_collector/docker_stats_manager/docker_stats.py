@@ -277,3 +277,16 @@ class DockerStats:
             "net_tx", "pids"
         ]
         return values, labels
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attributes of the DTO
+        """
+        return 13
+
+    @staticmethod
+    def schema() -> "DockerStats":
+        """
+        :return: get the schema of the DTO
+        """
+        return DockerStats()

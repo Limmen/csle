@@ -194,3 +194,16 @@ class HostMetrics:
                   "num_login_events", "num_processes", "num_users"]
         return deltas, labels
 
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attributes of the DTO
+        """
+        return 8
+
+    @staticmethod
+    def schema() -> "HostMetrics":
+        """
+        :return: get the schema of the DTO
+        """
+        return HostMetrics()
+

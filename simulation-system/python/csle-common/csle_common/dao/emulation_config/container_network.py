@@ -99,3 +99,10 @@ class ContainerNetwork:
         config.subnet_prefix = GeneralUtil.replace_first_octet_of_ip(ip=config.subnet_mask,
                                                                      ip_first_octet=ip_first_octet)
         return config
+
+    @staticmethod
+    def schema() -> "ContainerNetwork":
+        """
+        :return: get the schema of the DTO
+        """
+        return ContainerNetwork(name="", subnet_mask="", bitmask="", subnet_prefix="", interface="")

@@ -154,3 +154,18 @@ class EmulationDefenderAction:
         """
         return EmulationDefenderAction.from_dict(self.to_dict())
 
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attributes of the DTO
+        """
+        return 11
+
+    @staticmethod
+    def schema() -> "EmulationDefenderAction":
+        """
+        :return: get the schema of the DTO
+        """
+        return EmulationDefenderAction(id=EmulationDefenderActionId.STOP, name="", cmds=[""],
+                                       type=EmulationDefenderActionType.STOP, descr="", ips=[""], index=-1,
+                                       action_outcome=EmulationDefenderActionOutcome.GAME_END, alt_cmds=[""],
+                                       execution_time=0.0, ts=0.0)

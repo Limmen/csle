@@ -63,3 +63,10 @@ class NmapTrace:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    @staticmethod
+    def schema() -> "NmapTrace":
+        """
+        :return: get the schema of the DTO
+        """
+        return NmapTrace(hops=[NmapHop.schema()])

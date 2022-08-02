@@ -6,6 +6,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id impo
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
 from csle_common.util.general_util import GeneralUtil
 
+
 class EmulationAttackerAction:
     """
     Class representing an action of the attacker in the emulation
@@ -252,3 +253,18 @@ class EmulationAttackerAction:
                               config.ips))
         return config
 
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attributes of the DTO
+        """
+        return 13
+
+    @staticmethod
+    def schema() -> "EmulationAttackerAction":
+        """
+        :return: get the schema of the DTO
+        """
+        return EmulationAttackerAction(id=EmulationAttackerActionId.STOP, name="", cmds=[""],
+                                       type=EmulationAttackerActionType.STOP, descr="", ips=[""], index=-1,
+                                       action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING,
+                                       vulnerability="", alt_cmds=[""], backdoor=False, execution_time=0.0, ts=0.0)

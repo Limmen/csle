@@ -245,3 +245,16 @@ class OSSECIdsAlertCounters:
         labels = constants.LOG_SINK.OSSEC_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attributes of the DTO
+        """
+        return 22 + len(set(constants.OSSEC.OSSEC_IDS_ALERT_GROUP_ID.values()))
+
+    @staticmethod
+    def schema() -> "OSSECIdsAlertCounters":
+        """
+        :return: get the schema of the DTO
+        """
+        return OSSECIdsAlertCounters()

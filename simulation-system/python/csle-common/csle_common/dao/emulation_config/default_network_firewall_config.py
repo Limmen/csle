@@ -104,3 +104,11 @@ class DefaultNetworkFirewallConfig:
             config.default_gw = GeneralUtil.replace_first_octet_of_ip(ip=config.default_gw, ip_first_octet=ip_first_octet)
         config.network = config.network.create_execution_config(ip_first_octet=ip_first_octet)
         return config
+
+    @staticmethod
+    def schema() -> "DefaultNetworkFirewallConfig":
+        """
+        :return: get the schema of the DTO
+        """
+        return DefaultNetworkFirewallConfig(ip="", default_gw="", default_input="", default_output="",
+                                            default_forward="", network=ContainerNetwork.schema())

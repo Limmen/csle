@@ -8,7 +8,7 @@ class TracesDataset:
 
     def __init__(self, name: str, description: str, download_count: int, file_path: str, url: str, date_added,
                  num_traces: int, num_attributes_per_time_step: int, size_in_gb: int, compressed_size_in_gb: int,
-                 citation: str, num_files: int, data_schema: str):
+                 citation: str, num_files: int, data_schema: str, file_format: str):
         """
         Initializes the DTO
 
@@ -39,6 +39,7 @@ class TracesDataset:
         self.citation = citation
         self.num_files = num_files
         self.data_schema = data_schema
+        self.file_format = file_format
         self.id = -1
 
     def to_dict(self) -> Dict[str, Any]:
@@ -60,6 +61,7 @@ class TracesDataset:
         d["num_files"] = self.num_files
         d["citation"] = self.citation
         d["data_schema"] = self.data_schema
+        d["file_format"] = self.file_format
         return d
 
     @staticmethod
@@ -75,7 +77,7 @@ class TracesDataset:
             url=d["url"], date_added=d["date_added"], num_traces=d["num_traces"],
             num_attributes_per_time_step=d["num_attributes_per_time_step"], size_in_gb=d["size_in_gb"],
             compressed_size_in_gb=d["compressed_size_in_gb"], citation=d["citation"], num_files=d["num_files"],
-            data_schema=d["data_schema"]
+            data_schema=d["data_schema"], file_format=d["file_format"]
         )
         if "id" in d:
             obj.id = d["id"]
@@ -89,7 +91,8 @@ class TracesDataset:
                f"file_path: {self.file_path}, url: {self.url}, date_added: {self.date_added}, " \
                f"num_traces: {self.num_traces}, num_attributes_per_time_step: {self.num_attributes_per_time_step}," \
                f"size_in_gb: {self.size_in_gb}, compressed_size_in_gb: {self.compressed_size_in_gb}, " \
-               f"citation: {self.citation}, num_files: {self.num_files}, data_schema: {self.data_schema}"
+               f"citation: {self.citation}, num_files: {self.num_files}, data_schema: {self.data_schema}," \
+               f"file_format: {self.file_format}"
 
     def to_json_str(self) -> str:
         """

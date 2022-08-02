@@ -1,4 +1,4 @@
-from typing import List, Set, Dict, Any
+from typing import List, Set, Dict, Any, Tuple
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
     import EmulationAttackerMachineObservationState
@@ -21,7 +21,7 @@ class EmulationAttackerObservationState:
         """
         self.machines : List[EmulationAttackerMachineObservationState] = []
         self.catched_flags = catched_flags
-        self.actions_tried : Set[int, int, str] = set()
+        self.actions_tried : Set[Tuple[int, int, str]] = set()
         self.agent_reachable : Set[str] = agent_reachable
         if agent_reachable is None:
             self.agent_reachable = set()
@@ -222,3 +222,23 @@ class EmulationAttackerObservationState:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def num_attributes(self):
+        """
+        :return: number of attributes of the DTO
+        """
+        num_attributes = 3
+        if len(self.machines) > 0:
+            num_attributes = num_attributes + len(self.machines)*self.machines[0].num_attributes()
+        return num_attributes
+
+    @staticmethod
+    def schema() -> "EmulationAttackerObservationState":
+        """
+        :return: get the schema of the DTO
+        """
+        dto = EmulationAttackerObservationState(catched_flags=0, agent_reachable=set())
+        dto.agent_reachable.add("")
+        dto.actions_tried.add((-1,-1,""))
+        dto.machines = [EmulationAttackerMachineObservationState.schema()]
+        return dto

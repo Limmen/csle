@@ -107,3 +107,16 @@ class ClientPopulationMetrics:
         deltas = [int(stats_prime.num_clients- self.num_clients), float(stats_prime.rate-self.rate)]
         labels = ["num_clients", "rate"]
         return deltas, labels
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attributes of the DTO
+        """
+        return 4
+
+    @staticmethod
+    def schema() -> "ClientPopulationMetrics":
+        """
+        :return: get the schema of the DTO
+        """
+        return ClientPopulationMetrics()

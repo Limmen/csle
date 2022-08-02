@@ -237,3 +237,10 @@ class NodeNetworkConfig:
         :return: a copy of the DTO
         """
         return NodeNetworkConfig.from_dict(self.to_dict())
+
+    @staticmethod
+    def schema() -> "NodeNetworkConfig":
+        """
+        :return: get the schema of the DTO
+        """
+        return NodeNetworkConfig()

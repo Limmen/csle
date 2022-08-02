@@ -11,9 +11,7 @@ class NodeFirewallConfig:
     def __init__(self, ips_gw_default_policy_networks: List[DefaultNetworkFirewallConfig],
                  hostname: str, output_accept: Set[str], input_accept: Set[str],
                  forward_accept: Set[str], output_drop: Set[str], input_drop: Set[str],
-                 forward_drop: Set[str],
-                 routes: Set[str]
-                 ):
+                 forward_drop: Set[str], routes: Set[str]):
         """
         Initializes the DTO
 
@@ -154,3 +152,20 @@ class NodeFirewallConfig:
         config.ips_gw_default_policy_networks = list(map(lambda x: x.create_execution_config(
             ip_first_octet=ip_first_octet), config.ips_gw_default_policy_networks))
         return config
+
+    @staticmethod
+    def schema() -> "NodeFirewallConfig":
+        """
+        :return: get the schema of the DTO
+        """
+        dto = NodeFirewallConfig(ips_gw_default_policy_networks=[DefaultNetworkFirewallConfig.schema()], hostname="",
+                                 output_accept=set(), input_accept=set(), forward_accept=set(), output_drop=set(),
+                                 input_drop=set(), forward_drop=set(), routes=set())
+        dto.output_accept.add("")
+        dto.input_accept.add("")
+        dto.forward_accept.add("")
+        dto.output_drop.add("")
+        dto.input_drop.add("")
+        dto.forward_drop.add("")
+        dto.routes.add("")
+        return dto

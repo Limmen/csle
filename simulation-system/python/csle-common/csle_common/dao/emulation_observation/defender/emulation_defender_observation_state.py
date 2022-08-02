@@ -314,3 +314,38 @@ class EmulationDefenderObservationState:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
+
+    def num_attributes(self) -> int:
+        """
+        :return: The number of attribute of the DTO
+        """
+        num_attributes = 0
+        if self.client_population_metrics is not None:
+            num_attributes = num_attributes + self.client_population_metrics.num_attributes()
+        if self.docker_stats is not None:
+            num_attributes = num_attributes + self.docker_stats.num_attributes()
+        if self.snort_ids_alert_counters is not None:
+            num_attributes = num_attributes + self.snort_ids_alert_counters.num_attributes()
+        if self.ossec_ids_alert_counters is not None:
+            num_attributes = num_attributes + self.ossec_ids_alert_counters.num_attributes()
+        if self.aggregated_host_metrics is not None:
+            num_attributes = num_attributes + self.aggregated_host_metrics.num_attributes()
+        if len(self.defender_actions) > 0:
+            num_attributes = num_attributes + len(self.defender_actions)*self.defender_actions[0].num_attributes()
+        if len(self.attacker_actions) > 0:
+            num_attributes = num_attributes + len(self.attacker_actions)*self.attacker_actions[0].num_attributes()
+        return num_attributes
+
+    @staticmethod
+    def schema() -> "EmulationDefenderObservationState":
+        """
+        :return: get the schema of the DTO
+        """
+        return EmulationDefenderObservationState(log_sink_config=LogSinkConfig.schema(),
+                                                 client_population_metrics=ClientPopulationMetrics.schema(),
+                                                 docker_stats=DockerStats.schema(),
+                                                 snort_ids_alert_counters=SnortIdsAlertCounters.schema(),
+                                                 ossec_ids_alert_counters=OSSECIdsAlertCounters.schema(),
+                                                 aggregated_host_metrics=HostMetrics.schema(),
+                                                 defender_actions=[EmulationDefenderAction.schema()],
+                                                 attacker_actions=[EmulationAttackerAction.schema()])
