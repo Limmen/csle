@@ -3099,6 +3099,21 @@ class MetastoreFacade:
         traces_dataset.id = traces_dataset_record[0]
         return traces_dataset
 
+
+    @staticmethod
+    def list_traces_datasets_ids() -> List[Dict]:
+        """
+        :return: A list of traces datasets ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE}")
+                records = cur.fetchall()
+                return records
+
     @staticmethod
     def list_traces_datasets() -> List[TracesDataset]:
         """

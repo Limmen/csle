@@ -46,6 +46,7 @@ from csle_rest_api.resources.emulation_simulation_traces.routes import emulation
 from csle_rest_api.resources.sdn_controllers.routes import sdn_controllers_bp
 from csle_rest_api.resources.file.routes import file_bp
 from csle_rest_api.resources.login.routes import login_bp
+from csle_rest_api.resources.traces_datasets.routes import traces_datasets_bp
 import csle_rest_api.constants.constants as api_constants
 
 
@@ -180,7 +181,10 @@ def create_app(static_folder: str):
                                       f"{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}")
     app.register_blueprint(sdn_controllers_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
-                                      f"{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}")
+                                      f"{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}"),
+    app.register_blueprint(traces_datasets_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}")
 
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def root():
@@ -191,7 +195,7 @@ def create_app(static_folder: str):
 
 def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, host: str = "0.0.0.0") -> None:
     """
-    Creates the flasp app and serves it
+    Creates the flask app and serves it
 
     :param static_folder: path to the folder to server static resources
     :param port: the port for serving

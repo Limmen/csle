@@ -976,6 +976,41 @@ def create_app(static_folder: str, proxy_server: str):
         return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}',
                     json=post_json_data, headers=headers).content
 
+
+    @app.route(f'/{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def traces_datasets_proxy():
+        """
+        Proxy for the /traces-datasets resource
+
+        :return: the /traces-datasets resource
+        """
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}?ids=true').content
+        else:
+            if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}').content
+            elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}').content
+
+    @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
+               f'<traces_dataset_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def traces_dataset_proxy(traces_dataset_id: int):
+        """
+        Proxy for the /traces-datasets/<traces_dataset_id-dataset-id> resource
+
+        :return: the /traces-datasets/<traces_dataset_id> resource
+        """
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{traces_dataset_id}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+            return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE}'
+                          f'{constants.COMMANDS.SLASH_DELIM}{traces_dataset_id}').content
+
     return app
 
 
