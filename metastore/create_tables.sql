@@ -270,8 +270,8 @@ CREATE TABLE IF NOT EXISTS traces_datasets (
     date_added DATE NOT NULL,
     num_traces int NOT NULL,
     num_attributes_per_time_step int NOT NULL,
-    size_in_gb int NOT NULL,
-    compressed_size_in_gb int NOT NULL,
+    size_in_gb DOUBLE PRECISION NOT NULL,
+    compressed_size_in_gb DOUBLE PRECISION NOT NULL,
     citation TEXT,
     num_files int NOT NULL,
     file_format VARCHAR(128) NOT NULL

@@ -1,9 +1,11 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple, Union
 import json
 import os
 import numpy as np
 import csle_common.constants.constants as constants
+import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state \
     import EmulationAttackerObservationState
@@ -204,6 +206,570 @@ class EmulationTrace:
         dto.attacker_actions = [EmulationAttackerAction.schema()]
         dto.defender_actions = [EmulationDefenderAction.schema()]
         return dto
+
+    def to_csv_record(self, max_time_steps: int, max_nodes : int, max_ports : int, max_vulns : int,
+                      null_value: int = -1) -> Tuple[List[str], List[Union[str, int, float]]]:
+        """
+        Converts the trace into a csv row
+
+        :param max_time_steps: the maximum number of time-steps to include in the row
+        :param max_nodes: the maximum number of nodes to include metrics from
+        :param max_ports: the maximum number of ports to include metrics from
+        :param max_vulns: the maximum number of vulnerabilities to include metrics from
+        :param null_value: the default null value if a metric is missing
+        :return: the list of labels and values of the csv row
+        """
+        # lookup tables for vuln names, service names, protocol names
+        labels = []
+        values = []
+        intrusion_started = False
+        attacker_observations = [self.initial_attacker_observation_state] + self.attacker_observation_states
+        defender_observations = [self.initial_defender_observation_state] + self.defender_observation_states
+        for t in range(max_time_steps):
+            labels.append(f"{t}_intrusion")
+            if len(attacker_observations) > t:
+                if not intrusion_started and self.attacker_actions[t].id != EmulationAttackerActionId.CONTINUE:
+                    intrusion_started = True
+                values.append(int(intrusion_started))
+            else:
+                values.append(null_value)
+
+            labels.append(f"{t}_attacker_action_id")
+            if (len(self.attacker_actions)+1) > t:
+                if t > 0:
+                    values.append(self.attacker_actions[t-1].id)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_attacker_action_name")
+            if (len(self.attacker_actions)+1) > t:
+                if t > 0:
+                    values.append(self.attacker_actions[t-1].name)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_attacker_action_type")
+            if (len(self.attacker_actions)+1) > t:
+                if t > 0:
+                    values.append(self.attacker_actions[t-1].type)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_attacker_action_ips")
+            if (len(self.attacker_actions)+1) > t:
+                if t > 0:
+                    values.append("-".join(self.attacker_actions[t-1].ips))
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_attacker_action_index")
+            if (len(self.attacker_actions)+1) > t:
+                if t > 0:
+                    values.append(self.attacker_actions[t-1].index)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_attacker_action_outcome")
+            if (len(self.attacker_actions)+1) > t:
+                if t > 0:
+                    values.append(self.attacker_actions[t-1].action_outcome)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_attacker_action_execution_time")
+            if (len(self.attacker_actions)+1) > t:
+                if t > 0:
+                    values.append(self.attacker_actions[t-1].execution_time)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_action_id")
+            if (len(self.defender_actions)+1) > t:
+                if t > 0:
+                    values.append(self.defender_actions[t-1].id)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_action_name")
+            if (len(self.defender_actions)+1) > t:
+                if t > 0:
+                    values.append(self.defender_actions[t-1].name)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_action_type")
+            if (len(self.defender_actions)+1) > t:
+                if t > 0:
+                    values.append(self.defender_actions[t-1].type)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_action_ips")
+            if (len(self.defender_actions)+1) > t:
+                if t > 0:
+                    values.append("-".join(self.defender_actions[t-1].ips))
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_action_index")
+            if (len(self.defender_actions)+1) > t:
+                if t > 0:
+                    values.append(self.defender_actions[t-1].index)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_action_outcome")
+            if (len(self.defender_actions)+1) > t:
+                if t > 0:
+                    values.append(self.defender_actions[t-1].action_outcome)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_action_execution_time")
+            if (len(self.defender_actions)+1) > t:
+                if t > 0:
+                    values.append(self.defender_actions[t-1].execution_time)
+                else:
+                    values.append(null_value)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_attacker_num_catched_flags")
+            if len(attacker_observations) > t:
+                values.append(attacker_observations[t].catched_flags)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_clients")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_client_population_metrics.num_clients)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_clients_arrival_rate")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_client_population_metrics.rate)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_pids")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.pids)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_cpu_percent")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.cpu_percent)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_mem_current")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.mem_current)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_mem_total")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.mem_total)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_mem_percent")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.mem_percent)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_blk_read")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.blk_read)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_blk_write")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.blk_write)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_net_rx")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.net_rx)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_net_tx")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_docker_stats.net_tx)
+            else:
+                values.append(null_value)
+            for i in range(4):
+                labels.append(f"{t}_defender_num_snort_priority_{i}_alerts")
+                if len(defender_observations) > t:
+                    values.append(defender_observations[t].avg_snort_ids_alert_counters.priority_alerts[i])
+                else:
+                    values.append(null_value)
+            for i in range(len(set(collector_constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))):
+                labels.append(f"{t}_defender_num_snort_class_{i}_alerts")
+                if len(defender_observations) > t:
+                    values.append(defender_observations[t].avg_snort_ids_alert_counters.class_alerts[i])
+                else:
+                    values.append(null_value)
+            labels.append(f"{t}_defender_num_snort_severe_alerts")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_snort_ids_alert_counters.severe_alerts)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_snort_warning_alerts")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_snort_ids_alert_counters.warning_alerts)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_snort_total_alerts")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_snort_ids_alert_counters.total_alerts)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_snort_alerts_weighted_by_priority")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_snort_ids_alert_counters.alerts_weighted_by_priority)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_ossec_severe_alerts")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_ossec_ids_alert_counters.severe_alerts)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_ossec_warning_alerts")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_ossec_ids_alert_counters.warning_alerts)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_ossec_total_alerts")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_ossec_ids_alert_counters.total_alerts)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_ossec_alerts_weighted_by_level")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_ossec_ids_alert_counters.alerts_weighted_by_level)
+            else:
+                values.append(null_value)
+            for i in range(16):
+                labels.append(f"{t}_defender_num_ossec_level_{i}_alerts")
+                if len(defender_observations) > t:
+                    values.append(defender_observations[t].avg_ossec_ids_alert_counters.level_alerts[i])
+                else:
+                    values.append(null_value)
+            for i in range(len(set(collector_constants.OSSEC.OSSEC_IDS_ALERT_GROUP_ID.values()))):
+                labels.append(f"{t}_defender_num_ossec_group_{i}_alerts")
+                if len(defender_observations) > t:
+                    values.append(defender_observations[t].avg_ossec_ids_alert_counters.group_alerts[i])
+                else:
+                    values.append(null_value)
+            labels.append(f"{t}_defender_num_logged_in_users")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_aggregated_host_metrics.num_logged_in_users)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_failed_login_attempts")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_aggregated_host_metrics.num_failed_login_attempts)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_open_connections")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_aggregated_host_metrics.num_open_connections)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_login_events")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_aggregated_host_metrics.num_login_events)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_processes")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_aggregated_host_metrics.num_processes)
+            else:
+                values.append(null_value)
+            labels.append(f"{t}_defender_num_users")
+            if len(defender_observations) > t:
+                values.append(defender_observations[t].avg_aggregated_host_metrics.num_users)
+            else:
+                values.append(null_value)
+
+            for i in range(max_nodes):
+                labels.append(f"{t}_node_{i}_ip")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].ips[0])
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_os")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].os)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_discovered")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(1)
+                else:
+                    values.append(null_value)
+                for j in range(max_ports):
+                    labels.append(f"{t}_attacker_node_{i}_port_{j}_port_number")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].ports) > j:
+                        values.append(int(attacker_observations[t].machines[i].ports[j].port))
+                    else:
+                        values.append(null_value)
+                    labels.append(f"{t}_attacker_node_{i}_port_{j}_open")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].ports) > j:
+                        values.append(int(attacker_observations[t].machines[i].ports[j].open))
+                    else:
+                        values.append(null_value)
+                    labels.append(f"{t}_attacker_node_{i}_port_{j}_service")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].ports) > j:
+                        values.append(int(attacker_observations[t].machines[i].ports[j].service))
+                    else:
+                        values.append(null_value)
+                    labels.append(f"{t}_attacker_node_{i}_port_{j}_protocol")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].ports) > j:
+                        values.append(int(attacker_observations[t].machines[i].ports[j].protocol))
+                    else:
+                        values.append(null_value)
+                for k in range(max_vulns):
+                    labels.append(f"{t}_attacker_node_{i}_vuln_{k}_name")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].cve_vulns) > k:
+                        values.append(attacker_observations[t].machines[i].cve_vulns[k].name)
+                    else:
+                        values.append(null_value)
+                    labels.append(f"{t}_attacker_node_{i}_vuln_{k}_port_number")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].cve_vulns) > k:
+                        values.append(int(attacker_observations[t].machines[i].cve_vulns[k].port))
+                    else:
+                        values.append(null_value)
+                    labels.append(f"{t}_attacker_node_{i}_vuln_{k}_protocol")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].cve_vulns) > k:
+                        values.append(int(attacker_observations[t].machines[i].cve_vulns[k].protocol))
+                    else:
+                        values.append(null_value)
+                    labels.append(f"{t}_attacker_node_{i}_vuln_{k}_cvss")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].cve_vulns) > k:
+                        values.append(attacker_observations[t].machines[i].cve_vulns[k].cvss)
+                    else:
+                        values.append(null_value)
+                    labels.append(f"{t}_attacker_node_{i}_vuln_{k}_osvdbid")
+                    if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
+                            and len(attacker_observations[t].machines[i].cve_vulns) > k:
+                        values.append(int(attacker_observations[t].machines[i].cve_vulns[k].osvdb_id))
+                    else:
+                        values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_shell_access")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].shell_access))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_logged_in")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].logged_in))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_root")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].root))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_num_flags_found")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(len(attacker_observations[t].machines[i].flags_found))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_file_system_searched")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].filesystem_searched))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_untried_credentials")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].untried_credentials))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_telnet_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].telnet_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_ssh_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].ssh_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_ftp_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].ftp_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_cassandra_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].cassandra_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_irc_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].irc_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_mongo_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].mongo_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_mysql_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].mysql_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_smtp_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].smtp_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_postgres_brute_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].postgres_brute_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_tools_installed")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].tools_installed))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_backdoor_installed")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].backdoor_installed))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_backdoor_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].backdoor_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_dvwa_sql_injection_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].dvwa_sql_injection_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_cve_2015_3306_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].cve_2015_3306_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_cve_2015_1427_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].cve_2015_1427_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_cve_2016_10033_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].cve_2016_10033_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_cve_2010_0426_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].cve_2010_0426_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_attacker_node_{i}_cve_2015_5602_tried")
+                if len(attacker_observations) > t and len(attacker_observations[t].machines) > i:
+                    values.append(int(attacker_observations[t].machines[i].cve_2015_5602_tried))
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_num_pids")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.pids)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_cpu_percent")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.cpu_percent)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_mem_current")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.mem_current)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_mem_total")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.mem_total)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_mem_percent")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.mem_percent)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_blk_read")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.blk_read)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_blk_write")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.blk_write)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_net_rx")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.net_rx)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_net_tx")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].docker_stats.net_tx)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_num_logged_in_users")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].host_metrics.num_logged_in_users)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_num_failed_login_attempts")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].host_metrics.num_failed_login_attempts)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_num_open_connections")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].host_metrics.num_open_connections)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_num_login_events")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].host_metrics.num_login_events)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_num_processes")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].host_metrics.num_processes)
+                else:
+                    values.append(null_value)
+                labels.append(f"{t}_node_{i}_defender_num_users")
+                if len(defender_observations) > t and len(defender_observations[t].machines) > i:
+                    values.append(defender_observations[t].machines[i].host_metrics.num_users)
+                else:
+                    values.append(null_value)
+        assert len(values) == len(labels)
+        return values, labels
 
 
 class NpEncoder(json.JSONEncoder):

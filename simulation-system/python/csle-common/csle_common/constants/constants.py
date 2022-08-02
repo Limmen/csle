@@ -750,6 +750,7 @@ class COMMANDS:
     CHMOD_777 = "chmod 777"
     SLASH_DELIM = "/"
     COLON_DELIM = ":"
+    NEW_LINE_DELIM = "\n"
     DASH_DELIM = "-"
     UNDERSCORE_DELIM = "_"
     STAR_DELIM = "*"
@@ -1593,3 +1594,13 @@ class OPENFLOW:
     OPENFLOW_V_1_3 = "OpenFlow13"
     OPENFLOW_V_1_4 = "OpenFlow14"
     OPENFLOW_V_1_5 = "OpenFlow15"
+
+
+class DATASETS:
+    METADATA_FILE_NAME = "readme.txt"
+    JSON_FILE_FORMAT = "json"
+    FILE_FORMAT_PROPERTY = "file_format"
+    NUM_TRACES_PROPERTY = "num_traces"
+    NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY = "num_attributes_per_time_step"
+    SCHEMA_PROPERTY = "schema"
+    NUM_TRACES_PER_FILE_PROPERTY = "num_traces_per_file"
