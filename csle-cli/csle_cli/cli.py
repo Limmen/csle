@@ -16,6 +16,18 @@ def commands() -> None:
     pass
 
 
+@click.command("init", help="initializes CSLE and sets up management accounts")
+def init() -> None:
+    """
+    Initializes CSLE and sets up management accounts
+
+    :return: None
+    """
+    from csle_common.util.management_util import ManagementUtil
+    ManagementUtil.create_default_management_admin_account()
+    ManagementUtil.create_default_management_guest_account()
+
+
 def attacker_shell(s: "EmulationEnvState") -> None:
     """
     An interactive shell for executing attacker actions in an emulation environment
@@ -752,7 +764,6 @@ def trainingjob(id: int) -> None:
     training_job = MetastoreFacade.get_training_job_config(id=id)
     TrainingJobManager.run_training_job(job_config=training_job)
 
-
 def systemidentificationjob_shell_complete(ctx, param, incomplete):
     from csle_common.metastore.metastore_facade import MetastoreFacade
     sys_id_jobs = MetastoreFacade.list_system_identification_jobs()
@@ -769,10 +780,35 @@ def systemidentificationjob(id: int) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
+    from csle_system_identification.job_controllers.system_identification_job_manager \
+        import SystemIdentificationJobManager
 
-    sys_id_job = MetastoreFacade.get_data_collection_job_config(id=id)
-    DataCollectionJobManager.run_data_collection_job(job_config=sys_id_job)
+    sys_id_job = MetastoreFacade.get_system_identification_job_config(id=id)
+    SystemIdentificationJobManager.run_system_identification_job(job_config=sys_id_job)
+
+
+def datacollectionjob_shell_complete(ctx, param, incomplete):
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    data_collection_jobs = MetastoreFacade.list_data_collection_jobs()
+    data_collection_jobs_ids = list(map(lambda x: x.id, data_collection_jobs))
+    return data_collection_jobs_ids
+
+
+@click.argument('id', default=None, type=int, shell_complete=datacollectionjob_shell_complete)
+@click.command("datacollectionjob", help="id")
+def datacollectionjob(id: int) -> None:
+    """
+    Starts a data collection job with the given id
+
+    :param id: the id of the training job to start
+    :return: None
+    """
+    from csle_common.metastore.metastore_facade import MetastoreFacade
+    from csle_system_identification.job_controllers.data_collection_job_manager \
+        import DataCollectionJobManager
+
+    data_collection_job = MetastoreFacade.get_data_collection_job_config(id=id)
+    DataCollectionJobManager.run_data_collection_job(job_config=data_collection_job)
 
 
 def start_docker_stats_manager() -> None:
@@ -895,7 +931,7 @@ def run_image(image: str, name: str, create_network : bool = True) -> bool:
     try:
         EmulationEnvManager.run_container(image=image, name=name, create_network=create_network)
         return True
-    except Exception as e:
+    except Exception as _:
         return False
 
 
@@ -1789,3 +1825,4 @@ commands.add_command(trainingjob)
 commands.add_command(systemidentificationjob)
 commands.add_command(install)
 commands.add_command(uninstall)
+commands.add_command(init)

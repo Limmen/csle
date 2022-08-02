@@ -38,6 +38,8 @@ class GeneralUtil:
                 config_dict = json.loads(json_str)
                 constants.CSLE_ADMIN.USER = config_dict["admin_username"]
                 constants.CSLE_ADMIN.PW = config_dict["admin_password"]
+                constants.CSLE_GUEST.USER = config_dict["guest_username"]
+                constants.CSLE_GUEST.PW = config_dict["guest_password"]
                 constants.AGENT.USER = config_dict["agent_username"]
                 constants.AGENT.PW = config_dict["agent_password"]
 

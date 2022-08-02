@@ -256,3 +256,24 @@ CREATE TABLE IF NOT EXISTS session_tokens (
     username VARCHAR(128) UNIQUE references management_users(username)
 );
 GRANT ALL ON session_tokens TO csle;
+
+
+-- Create table that stores the traces datasets metadata --
+CREATE TABLE IF NOT EXISTS traces_datasets (
+    id serial PRIMARY KEY,
+    name VARCHAR(128) UNIQUE NOT NULL,
+    description TEXT,
+    data_schema TEXT,
+    download_count int NOT NULL,
+    file_path VARCHAR(1024),
+    url VARCHAR(1024),
+    date_added DATE NOT NULL,
+    num_traces int NOT NULL,
+    num_attributes_per_time_step int NOT NULL,
+    size_in_gb int NOT NULL,
+    compressed_size_in_gb int NOT NULL,
+    citation TEXT,
+    num_files int NOT NULL
+    );
+GRANT ALL ON traces_datasets TO csle;
+GRANT USAGE, SELECT ON SEQUENCE traces_datasets_id_seq TO csle;

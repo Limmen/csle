@@ -2,6 +2,8 @@
 {
   "admin_username": "admin",
   "admin_password": "admin",
+  "guest_username": "guest",
+  "guest_password": "guest",
   "agent_username": "agent",
   "agent_password": "agent",
   "database_user": "csle",

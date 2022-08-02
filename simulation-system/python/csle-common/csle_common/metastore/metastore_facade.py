@@ -28,6 +28,7 @@ from csle_common.dao.training.vector_policy import VectorPolicy
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.dao.management.session_token import SessionToken
+from csle_common.dao.datasets.traces_dataset import TracesDataset
 
 
 class MetastoreFacade:
@@ -3078,3 +3079,161 @@ class MetastoreFacade:
                 if record is not None:
                     record = MetastoreFacade._convert_session_token_record_to_dto(session_token_record=record)
                 return record
+
+    @staticmethod
+    def _convert_traces_dataset_record_to_dto(traces_dataset_record) -> TracesDataset:
+        """
+        Converts a traces dataset record fetched from the metastore into a DTO
+
+        :param traces_dataset_record: the record to convert
+        :return: the DTO representing the record
+        """
+        traces_dataset = TracesDataset(name=traces_dataset_record[1], description=traces_dataset_record[2],
+                                       data_schema=traces_dataset_record[3], download_count=traces_dataset_record[4],
+                                       file_path=traces_dataset_record[5], url=traces_dataset_record[6],
+                                       date_added=traces_dataset_record[7], num_traces=traces_dataset_record[8],
+                                       num_attributes_per_time_step=traces_dataset_record[9],
+                                       size_in_gb=traces_dataset_record[10],
+                                       compressed_size_in_gb=traces_dataset_record[11],
+                                       citation=traces_dataset_record[12], num_files=traces_dataset_record[13])
+        traces_dataset.id = traces_dataset_record[0]
+        return traces_dataset
+
+    @staticmethod
+    def list_traces_datasets() -> List[TracesDataset]:
+        """
+        :return: A list of traces datasets in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_traces_dataset_record_to_dto(x),
+                                   records))
+                return records
+
+
+    @staticmethod
+    def get_traces_dataset_metadata(id: int) -> Union[None, TracesDataset]:
+        """
+        Function for fetching the metadata of a given dataset name
+
+        :param id: the id of the dataset to get the metadata of
+        :return: The traces dataset and its metadata or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_traces_dataset_record_to_dto(
+                        traces_dataset_record=record)
+                return record
+
+    @staticmethod
+    def get_traces_dataset_metadata_by_name(dataset_name: str) -> Union[None, TracesDataset]:
+        """
+        Function for fetching the metadata of a given dataset name
+
+        :param dataset_name: the dataset name to lookup the metadata for
+        :return: The traces dataset and its metadata or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
+                            f"WHERE name = %s", (dataset_name,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_traces_dataset_record_to_dto(
+                        traces_dataset_record=record)
+                return record
+
+    @staticmethod
+    def save_traces_dataset(traces_dataset: TracesDataset) -> Union[Any, int]:
+        """
+        Saves a traces dataset to the metastore
+
+        :param traces_dataset: the traces dataset to save
+        :return: idg of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a traces dataset in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
+                            f"(name, description, data_schema, download_count, file_path, url, date_added, num_traces, "
+                            f"num_attributes_per_time_step, size_in_gb, compressed_size_in_gb, citation, num_files) "
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                            (traces_dataset.name, traces_dataset.description, traces_dataset.data_schema,
+                             traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
+                             traces_dataset.date_added, traces_dataset.num_traces,
+                             traces_dataset.num_attributes_per_time_step,
+                             traces_dataset.size_in_gb, traces_dataset.compressed_size_in_gb,
+                             traces_dataset.citation, traces_dataset.num_files))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"traces dataset saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_traces_dataset(traces_dataset: TracesDataset, id: int) -> None:
+        """
+        Updates a traces dataset in the metastore
+
+        :param traces_dataset: the traces dataset to update
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating traces dataset with id: {id} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
+                            f" SET name=%s, description=%s, data_schema=%s, download_count=%s, file_path=%s, "
+                            f"url=%s, date_added=%s, num_traces=%s, num_attributes_per_time_step=%s, size_in_gb=%s, "
+                            f"compressed_size_in_gb=%s, citation=%s, num_files=%s "
+                            f"WHERE {constants.METADATA_STORE.TRACES_DATASETS_TABLE}.id = %s",
+                            (traces_dataset.name, traces_dataset.description, traces_dataset.data_schema,
+                             traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
+                             traces_dataset.date_added, traces_dataset.num_traces,
+                             traces_dataset.num_attributes_per_time_step, traces_dataset.size_in_gb,
+                             traces_dataset.compressed_size_in_gb, traces_dataset.citation,
+                             traces_dataset.num_files, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Traces dataset with {id} updated successfully")
+
+    @staticmethod
+    def remove_traces_dataset(traces_dataset: TracesDataset) -> None:
+        """
+        Removes a traces dataset from the metastore
+
+        :param traces_dataset: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing traces dataset with "
+                                             f"id:{traces_dataset.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE} WHERE id = %s",
+                            (traces_dataset.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Traces dataset with "
+                                                     f"id {traces_dataset.id} deleted successfully")

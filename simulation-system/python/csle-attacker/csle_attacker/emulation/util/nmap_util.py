@@ -770,7 +770,7 @@ class PivotNMAPScanThread(threading.Thread):
             try:
                 EmulationUtil.execute_ssh_cmds(cmds = ["ls"], conn=c.conn)
                 ssh_connections_alive.append(c)
-            except Exception as e:
+            except Exception as _:
                 new_conn = ConnectionUtil.reconnect_ssh(c)
                 ssh_connections_alive.append(new_conn)
         self.machine.ssh_connections = ssh_connections_alive

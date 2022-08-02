@@ -1134,10 +1134,18 @@ class AGENT:
 
 class CSLE_ADMIN:
     """
-    Constants related to the csle admin account
+    Constants related to the default csle admin account
     """
     USER = "csle_admin"
     PW = "csle@admin-pw_191"
+
+
+class CSLE_GUEST:
+    """
+    Constants related to the default csle guest account
+    """
+    USER = "csle_guest"
+    PW = "csle@guest-pw_191"
 
 
 class SYSTEM_IDENTIFICATION:
@@ -1440,6 +1448,7 @@ class METADATA_STORE:
     GP_SYSTEM_MODELS_TABLE = "gp_system_models"
     MANAGEMENT_USERS_TABLE = "management_users"
     SESSION_TOKENS_TABLE = "session_tokens"
+    TRACES_DATASETS_TABLE = "traces_datasets"
 
 
 class CONTAINER_POOLS:

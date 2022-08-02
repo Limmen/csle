@@ -6,11 +6,18 @@ The command-line-interface (CLI) tool for CSLE.
 
 To see the available commands, run:
 
+
 ```bash
 csle --help
 ```
 
 Examples:
+
+- Initialize management accounts
+
+```bash
+csle init
+```
 
 - List available containers, emulations, images, and networks:
 
@@ -76,6 +83,24 @@ csle install emulations | simulations | derived_images | base_images | <emulatio
 
 ```bash
 csle uninstall emulations | simulations | derived_images | base_images | <emulation_name> | <simulation_name> | <derived_image_name> | <base_image_name> | metastore | all
+```
+
+- Start trainnig job with a given id
+
+```bash
+csle trainingjob <id>
+```
+
+- Start system identification job with a given id
+
+```bash
+csle systemidentificationjob <id>
+```
+
+- Start data collection job with a given id
+
+```bash
+csle datacollectionjob <id>
 ```
 
 
