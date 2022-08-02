@@ -49,13 +49,15 @@ class ExportUtil:
         return round((float(total)/1000000000),2)
 
     @staticmethod
-    def export_emulation_traces_to_disk_json(num_traces_per_file: int, output_dir: str, zip_file_output: str) -> None:
+    def export_emulation_traces_to_disk_json(num_traces_per_file: int, output_dir: str, zip_file_output: str,
+                                             max_num_traces: int) -> None:
         """
         Exports emulation traces from the metastore to disk
 
         :param num_traces_per_file: the number of traces per file in the output directory
         :param output_dir: the output directory
         :param zip_file_output: the compressed zip file path
+        :param max_num_traces: maximum number of traces
         :return: None
         """
         Logger.__call__().get_logger().info(f"Exporting emulation traces to disk, output dir: {output_dir}, "
@@ -64,6 +66,8 @@ class ExportUtil:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         emulation_traces_ids = MetastoreFacade.list_emulation_traces_ids()
+        if len(emulation_traces_ids) > max_num_traces:
+            emulation_traces_ids = emulation_traces_ids[0:max_num_traces]
         traces = []
         file_id = 1
         file_name = f"{file_id}.json"
