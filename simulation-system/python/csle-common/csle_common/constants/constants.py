@@ -1410,6 +1410,7 @@ class METADATA_STORE:
     USER = "csle"
     PASSWORD = "csle"
     HOST = "127.0.0.1"
+    EMULATIONS_PROPERTY = "emulations"
     DB_NAME_PROPERTY = "dbname"
     PW_PROPERTY = "password"
     HOST_PROPERTY = "host"
