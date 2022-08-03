@@ -3098,7 +3098,8 @@ class MetastoreFacade:
                                        size_in_gb=traces_dataset_record[10],
                                        compressed_size_in_gb=traces_dataset_record[11],
                                        citation=traces_dataset_record[12], num_files=traces_dataset_record[13],
-                                       file_format=traces_dataset_record[14])
+                                       file_format=traces_dataset_record[14], added_by=traces_dataset_record[15],
+                                       columns=traces_dataset_record[16])
         traces_dataset.id = traces_dataset_record[0]
         return traces_dataset
 
@@ -3193,14 +3194,15 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f"(name, description, data_schema, download_count, file_path, url, date_added, num_traces, "
                             f"num_attributes_per_time_step, size_in_gb, compressed_size_in_gb, citation, num_files, "
-                            f"file_format) "
-                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                            f"file_format, added_by, columns) "
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
                             (traces_dataset.name, traces_dataset.description, schema_json_str,
                              traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
                              traces_dataset.date_added, traces_dataset.num_traces,
                              traces_dataset.num_attributes_per_time_step,
                              traces_dataset.size_in_gb, traces_dataset.compressed_size_in_gb,
-                             traces_dataset.citation, traces_dataset.num_files, traces_dataset.file_format))
+                             traces_dataset.citation, traces_dataset.num_files, traces_dataset.file_format,
+                             traces_dataset.added_by, traces_dataset.columns))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"traces dataset saved successfully")
@@ -3226,14 +3228,16 @@ class MetastoreFacade:
                             f"{constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f" SET name=%s, description=%s, data_schema=%s, download_count=%s, file_path=%s, "
                             f"url=%s, date_added=%s, num_traces=%s, num_attributes_per_time_step=%s, size_in_gb=%s, "
-                            f"compressed_size_in_gb=%s, citation=%s, num_files=%s, file_format=%s "
+                            f"compressed_size_in_gb=%s, citation=%s, num_files=%s, file_format=%s, added_by=%s, "
+                            f"columns=%s "
                             f"WHERE {constants.METADATA_STORE.TRACES_DATASETS_TABLE}.id = %s",
                             (traces_dataset.name, traces_dataset.description, schema_json_str,
                              traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
                              traces_dataset.date_added, traces_dataset.num_traces,
                              traces_dataset.num_attributes_per_time_step, traces_dataset.size_in_gb,
                              traces_dataset.compressed_size_in_gb, traces_dataset.citation,
-                             traces_dataset.num_files, traces_dataset.file_format, id))
+                             traces_dataset.num_files, traces_dataset.file_format, traces_dataset.added_by,
+                             traces_dataset.columns, id))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Traces dataset with {id} updated successfully")
 

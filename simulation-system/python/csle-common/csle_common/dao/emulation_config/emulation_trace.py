@@ -569,7 +569,8 @@ class EmulationTrace:
                         values.append(null_value)
                     labels.append(f"{t}_attacker_node_{i}_vuln_{k}_osvdbid")
                     if len(attacker_observations) > t and len(attacker_observations[t].machines) > i \
-                            and len(attacker_observations[t].machines[i].cve_vulns) > k:
+                            and len(attacker_observations[t].machines[i].cve_vulns) > k \
+                            and attacker_observations[t].machines[i].cve_vulns[k].osvdb_id is not None:
                         values.append(int(attacker_observations[t].machines[i].cve_vulns[k].osvdb_id))
                     else:
                         values.append(null_value)

@@ -8,7 +8,8 @@ class TracesDataset:
 
     def __init__(self, name: str, description: str, download_count: int, file_path: str, url: str, date_added,
                  num_traces: int, num_attributes_per_time_step: int, size_in_gb: float, compressed_size_in_gb: float,
-                 citation: str, num_files: int, data_schema: Dict[str, Any], file_format: str):
+                 citation: str, num_files: int, data_schema: Dict[str, Any], file_format: str, added_by: str,
+                 columns: str):
         """
         Initializes the DTO
 
@@ -25,6 +26,8 @@ class TracesDataset:
         :param citation: the citation information
         :param num_files: the number of files
         :param data_schema: the schema of the dataset
+        :param added_by: the name of the person that added the dataset
+        :param columns: the columns of the dataset if in tabular format
         """
         self.name = name
         self.description = description
@@ -40,6 +43,8 @@ class TracesDataset:
         self.num_files = num_files
         self.data_schema = data_schema
         self.file_format = file_format
+        self.added_by = added_by
+        self.columns = columns
         self.id = -1
 
     def to_dict(self) -> Dict[str, Any]:
@@ -62,6 +67,8 @@ class TracesDataset:
         d["citation"] = self.citation
         d["data_schema"] = self.data_schema
         d["file_format"] = self.file_format
+        d["added_by"] = self.added_by
+        d["columns"] = self.columns
         return d
 
     @staticmethod
@@ -77,7 +84,8 @@ class TracesDataset:
             url=d["url"], date_added=d["date_added"], num_traces=d["num_traces"],
             num_attributes_per_time_step=d["num_attributes_per_time_step"], size_in_gb=d["size_in_gb"],
             compressed_size_in_gb=d["compressed_size_in_gb"], citation=d["citation"], num_files=d["num_files"],
-            data_schema=d["data_schema"], file_format=d["file_format"]
+            data_schema=d["data_schema"], file_format=d["file_format"], added_by=d["added_by"],
+            columns=d["columns"]
         )
         if "id" in d:
             obj.id = d["id"]
@@ -92,7 +100,7 @@ class TracesDataset:
                f"num_traces: {self.num_traces}, num_attributes_per_time_step: {self.num_attributes_per_time_step}," \
                f"size_in_gb: {self.size_in_gb}, compressed_size_in_gb: {self.compressed_size_in_gb}, " \
                f"citation: {self.citation}, num_files: {self.num_files}, data_schema: {self.data_schema}," \
-               f"file_format: {self.file_format}"
+               f"file_format: {self.file_format}, added_by: {self.added_by}, columns: {self.columns}"
 
     def to_json_str(self) -> str:
         """

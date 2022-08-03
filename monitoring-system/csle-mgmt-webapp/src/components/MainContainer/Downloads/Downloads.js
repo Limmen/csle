@@ -272,6 +272,26 @@ const Downloads = (props) => {
         </Tooltip>
     );
 
+    const FileFormatCellDatasetTrace = (props) => {
+        if (props.tracesDataset.file_format === "json") {
+            return (
+                <td>
+                    {props.tracesDataset.file_format},
+                    <Button className="downloadLink" variant="link"
+                            onClick={() => fileDownload(JSON.stringify(props.tracesDataset.data_schema), "schema.json")}>
+                        schema.json
+                    </Button>
+                </td>
+            )
+        } else {
+            return (
+                <td>
+                    {props.tracesDataset.file_format}, columns: {props.tracesDatasets.columns}
+                </td>
+            )
+        }
+    }
+
     const DeleteAllTracesDatasetsOrEmpty = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
@@ -318,7 +338,7 @@ const Downloads = (props) => {
                                     <th>Date added</th>
                                     <th>Description</th>
                                     <th>Citation</th>
-                                    <th>Schema</th>
+                                    <th>Added by</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -332,7 +352,7 @@ const Downloads = (props) => {
                                             </a>
                                         </td>
                                         <td>{tracesDataset.download_count}</td>
-                                        <td>{tracesDataset.file_format}</td>
+                                        <FileFormatCellDatasetTrace tracesDataset={tracesDataset}/>
                                         <td>{tracesDataset.num_traces}</td>
                                         <td>{tracesDataset.num_files}</td>
                                         <td>Uncompressed: {tracesDataset.size_in_gb},
@@ -340,12 +360,7 @@ const Downloads = (props) => {
                                         <td>{tracesDataset.date_added}</td>
                                         <td>{tracesDataset.description}</td>
                                         <td>{tracesDataset.citation}</td>
-                                        <td>
-                                            <Button className="downloadLink" variant="link"
-                                                    onClick={() => fileDownload(JSON.stringify(tracesDataset.data_schema), "schema.json")}>
-                                                schema.json
-                                            </Button>
-                                        </td>
+                                        <td>{tracesDataset.added_by}</td>
                                         <td>
                                             <Button variant="danger"
                                                     onClick={() => removeTracesDatasetConfirm(tracesDataset)} size="sm">
@@ -373,7 +388,7 @@ const Downloads = (props) => {
                                     <th>Date added</th>
                                     <th>Description</th>
                                     <th>Citation</th>
-                                    <th>Schema</th>
+                                    <th>Added by</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -386,7 +401,7 @@ const Downloads = (props) => {
                                             </a>
                                         </td>
                                         <td>{tracesDataset.download_count}</td>
-                                        <td>{tracesDataset.file_format}</td>
+                                        <FileFormatCellDatasetTrace tracesDataset={tracesDataset}/>
                                         <td>{tracesDataset.num_traces}</td>
                                         <td>{tracesDataset.num_files}</td>
                                         <td>Uncompressed: {tracesDataset.size_in_gb},
@@ -394,12 +409,7 @@ const Downloads = (props) => {
                                         <td>{tracesDataset.date_added}</td>
                                         <td>{tracesDataset.description}</td>
                                         <td>{tracesDataset.citation}</td>
-                                        <td>
-                                            <Button className="downloadLink" variant="link"
-                                                    onClick={() => fileDownload(JSON.stringify(tracesDataset.data_schema), "schema.json")}>
-                                                schema.json
-                                            </Button>
-                                        </td>
+                                        <td>{tracesDataset.added_by}</td>
                                     </tr>
                                 )}
                                 </tbody>

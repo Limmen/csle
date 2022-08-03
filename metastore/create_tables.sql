@@ -257,13 +257,12 @@ CREATE TABLE IF NOT EXISTS session_tokens (
 );
 GRANT ALL ON session_tokens TO csle;
 
-
 -- Create table that stores the traces datasets metadata --
 CREATE TABLE IF NOT EXISTS traces_datasets (
     id serial PRIMARY KEY,
     name VARCHAR(128) UNIQUE NOT NULL,
     description TEXT,
-    data_schema json NOT NULL,
+    data_schema json,
     download_count int NOT NULL,
     file_path VARCHAR(1024),
     url VARCHAR(1024),
@@ -274,7 +273,9 @@ CREATE TABLE IF NOT EXISTS traces_datasets (
     compressed_size_in_gb DOUBLE PRECISION NOT NULL,
     citation TEXT,
     num_files int NOT NULL,
-    file_format VARCHAR(128) NOT NULL
-    );
+    file_format VARCHAR(128) NOT NULL,
+    added_by VARCHAR(1024) NOT NULL,
+    columns TEXT
+);
 GRANT ALL ON traces_datasets TO csle;
 GRANT USAGE, SELECT ON SEQUENCE traces_datasets_id_seq TO csle;

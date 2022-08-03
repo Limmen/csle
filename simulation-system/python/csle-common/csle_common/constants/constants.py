@@ -1604,3 +1604,5 @@ class DATASETS:
     NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY = "num_attributes_per_time_step"
     SCHEMA_PROPERTY = "schema"
     NUM_TRACES_PER_FILE_PROPERTY = "num_traces_per_file"
+    ADDED_BY_PROPERTY = "added_by"
+    COLUMNS_PROPERTY = "columns"
