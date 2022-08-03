@@ -1450,6 +1450,7 @@ class METADATA_STORE:
     MANAGEMENT_USERS_TABLE = "management_users"
     SESSION_TOKENS_TABLE = "session_tokens"
     TRACES_DATASETS_TABLE = "traces_datasets"
+    STATISTICS_DATASETS_TABLE = "statistics_datasets"
 
 
 class CONTAINER_POOLS:
@@ -1606,3 +1607,8 @@ class DATASETS:
     NUM_TRACES_PER_FILE_PROPERTY = "num_traces_per_file"
     ADDED_BY_PROPERTY = "added_by"
     COLUMNS_PROPERTY = "columns"
+    NUM_MEASUREMENTS_PROPERTY = "num_measurements"
+    NUM_CONDITIONS_PROPERTY = "num_conditions"
+    NUM_METRICS_PROPERTY = "num_metrics"
+    CONDITIONS_PROPERTY = "conditions"
+    METRICS_PROPERTY = "metrics"

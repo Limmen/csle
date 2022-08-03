@@ -279,3 +279,27 @@ CREATE TABLE IF NOT EXISTS traces_datasets (
 );
 GRANT ALL ON traces_datasets TO csle;
 GRANT USAGE, SELECT ON SEQUENCE traces_datasets_id_seq TO csle;
+
+-- Create table that stores the statistics datasets metadata --
+CREATE TABLE IF NOT EXISTS statistics_datasets (
+    id serial PRIMARY KEY,
+    name VARCHAR(128) UNIQUE NOT NULL,
+    description TEXT,
+    download_count int NOT NULL,
+    file_path VARCHAR(1024),
+    url VARCHAR(1024),
+    date_added TIMESTAMP NOT NULL,
+    num_measurements int NOT NULL,
+    num_metrics int NOT NULL,
+    size_in_gb DOUBLE PRECISION NOT NULL,
+    compressed_size_in_gb DOUBLE PRECISION NOT NULL,
+    citation TEXT,
+    num_files int NOT NULL,
+    file_format VARCHAR(128) NOT NULL,
+    added_by VARCHAR(1024) NOT NULL,
+    conditions TEXT NOT NULL,
+    metrics TEXT NOT NULL,
+    num_conditions int NOT NULL
+);
+GRANT ALL ON statistics_datasets TO csle;
+GRANT USAGE, SELECT ON SEQUENCE statistics_datasets_id_seq TO csle;

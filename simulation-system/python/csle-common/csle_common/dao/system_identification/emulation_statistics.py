@@ -43,6 +43,11 @@ class EmulationStatistics:
         self.initial_mins = {}
         self.initial_maxs = {}
         self.conditionals_kl_divergences = {}
+        self.num_metrics = 0
+        self.num_measurements = 0
+        self.num_conditions = 0
+        self.conditions = []
+        self.metrics = []
 
     @staticmethod
     def initialize_counters(d: Dict[str, Dict[int,int]], labels: List[str]) -> Dict[str, Dict[int,int]]:
@@ -192,6 +197,9 @@ class EmulationStatistics:
 
         :return: None
         """
+        self.num_measurements = 0
+        self.conditions = list(self.conditionals_counts.keys())
+        self.num_conditions = len(self.conditions)
         for condition in self.conditionals_counts.keys():
             self.means[condition] = {}
             self.stds[condition]= {}
@@ -202,6 +210,7 @@ class EmulationStatistics:
                 self.conditionals_probs[condition][metric] = {}
                 observations = []
                 total_counts = sum(self.conditionals_counts[condition][metric].values())
+                self.num_measurements = self.num_measurements + total_counts
                 for value in self.conditionals_counts[condition][metric].keys():
                     self.conditionals_probs[condition][metric][value] = \
                         self.conditionals_counts[condition][metric][value]/total_counts
@@ -217,7 +226,8 @@ class EmulationStatistics:
                     self.stds[condition][metric] = round(float(np.std(observations)), 2)
                     self.mins[condition][metric] = round(float(np.min(observations)), 2)
                     self.maxs[condition][metric] = round(float(np.max(observations)), 2)
-
+        self.num_metrics = len(self.initial_distributions_counts.keys())
+        self.metrics = list(self.initial_distributions_counts.keys())
         for metric in self.initial_distributions_counts.keys():
             self.initial_distributions_probs[metric] = {}
             total_counts = sum(self.initial_distributions_counts[metric].values())
@@ -271,7 +281,9 @@ class EmulationStatistics:
         return f"conditionals:{self.conditionals_counts}, initial distributions: {self.initial_distributions_counts}" \
                f"emulation_name: {self.emulation_name}, description: {self.descr}, means: {self.means}, " \
                f"maxs: {self.maxs}, mins: {self.mins}, stds: {self.stds}, " \
-               f"conditionals_kl_divergences: {self.conditionals_kl_divergences}"
+               f"conditionals_kl_divergences: {self.conditionals_kl_divergences}, " \
+               f"num_measurements: {self.num_measurements}, num_metrics: {self.num_metrics}, metrics: {self.metrics}," \
+               f"conditions: {self.conditions}, num_conditions: {self.num_conditions}"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationStatistics":
@@ -309,6 +321,16 @@ class EmulationStatistics:
             obj.initial_mins = d["initial_mins"]
         if "initial_maxs" in d:
             obj.initial_maxs = d["initial_maxs"]
+        if "num_metrics" in d:
+            obj.num_metrics = d["num_metrics"]
+        if "num_measurements" in d:
+            obj.num_measurements = d["num_measurements"]
+        if "metrics" in d:
+            obj.metrics = d["metrics"]
+        if "conditions" in d:
+            obj.conditions = d["conditions"]
+        if "num_conditions" in d:
+            obj.num_conditions = d["num_conditions"]
         obj.conditionals_kl_divergences = d["conditionals_kl_divergences"]
         return obj
 
@@ -333,6 +355,11 @@ class EmulationStatistics:
         d["initial_maxs"] = self.initial_maxs
         d["initial_mins"] = self.initial_mins
         d["conditionals_kl_divergences"] = self.conditionals_kl_divergences
+        d["num_metrics"] = self.num_metrics
+        d["num_conditions"] = self.num_conditions
+        d["num_measurements"] = self.num_measurements
+        d["metrics"] = self.metrics
+        d["conditions"] = self.conditions
         return d
 
 
@@ -378,3 +405,47 @@ class EmulationStatistics:
             for k,v in v.items():
                 num_samples += v
         return num_samples
+
+    def merge(self, second_statistic: "EmulationStatistics") -> None:
+        """
+        Merges the statistic with another statistic by adding the counts
+
+        :param second_statistic: the statistic to merge with
+        :return: None
+        """
+        for condition in self.conditionals_counts.keys():
+            for metric in self.conditionals_counts[condition].keys():
+                for value in self.conditionals_counts[condition][metric].keys():
+                    if (condition in second_statistic.conditionals_counts
+                            and metric in second_statistic.conditionals_counts[condition]
+                            and value in second_statistic.conditionals_counts[condition][metric]):
+                        self.conditionals_counts[condition][metric][value] = \
+                            self.conditionals_counts[condition][metric][value] + \
+                            second_statistic.conditionals_counts[condition][metric][value]
+
+        for condition in second_statistic.conditionals_counts.keys():
+            if condition not in self.conditionals_counts:
+                self.conditionals_counts[condition] = {}
+            for metric in second_statistic.conditionals_counts[condition].keys():
+                if metric not in self.conditionals_counts[condition]:
+                    self.conditionals_counts[condition][metric] = {}
+                for value in second_statistic.conditionals_counts[condition][metric].keys():
+                    if value not in self.conditionals_counts[condition][metric]:
+                        self.conditionals_counts[condition][metric][value] = \
+                            second_statistic.conditionals_counts[condition][metric][value]
+
+        for metric in self.initial_distributions_counts.keys():
+            for value in self.initial_distributions_counts[metric].keys():
+                if (metric in second_statistic.initial_distributions_counts
+                        and value in second_statistic.initial_distributions_counts[metric]):
+                    self.initial_distributions_counts[metric][value] = \
+                        self.initial_distributions_counts[metric][value] + \
+                        second_statistic.initial_distributions_counts[metric][value]
+
+        for metric in second_statistic.initial_distributions_counts.keys():
+            if metric not in self.initial_distributions_counts:
+                self.initial_distributions_counts[metric] = {}
+            for value in second_statistic.initial_distributions_counts[metric].keys():
+                if value not in self.initial_distributions_counts[metric]:
+                    self.initial_distributions_counts[metric][value] = \
+                        second_statistic.initial_distributions_counts[metric][value]

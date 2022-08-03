@@ -131,7 +131,6 @@ class ExportUtil:
         :return: num_files, dir_size_uncompressed_gb, file_format, num_traces, schema, num_traces_per_file,
                  num_attributes_per_time_step, added_by, columns
         """
-        metadata_dict = None
         file_format = "unknown"
         added_by = "unknown"
         num_traces = -1
@@ -228,5 +227,84 @@ class ExportUtil:
         ExportUtil.zipdir(dir_path=output_dir, file_path=zip_file_output)
         Logger.__call__().get_logger().info(f"Export of emulation traces to disk complete, "
                                             f"output dir:{output_dir}, output zip file: {zip_file_output}")
+
+    @staticmethod
+    def export_emulation_statistics_to_disk_json(output_dir: str, zip_file_output: str, statistics_id: int,
+                                                 added_by: str = "unknown") -> None:
+        """
+        Exports emulation traces from the metastore to disk
+
+        :param output_dir: the output directory
+        :param zip_file_output: the compressed zip file path
+        :param added_by: the person who added the dataset
+        :param statistics_id: the id of the statistics to fetch
+        :return: None
+        """
+        Logger.__call__().get_logger().info(f"Exporting emulation traces to disk (json), output dir: {output_dir}, "
+                                            f"output zip file: {zip_file_output}")
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        emulation_statistic = MetastoreFacade.get_emulation_statistic(id=statistics_id)
+        file_name = f"statistics.json"
+        Logger.__call__().get_logger().info(f"Exporting statistics with id {statistics_id} to file: {file_name}")
+        emulation_statistic.compute_descriptive_statistics_and_distributions()
+        num_measurements = emulation_statistic.num_measurements
+        num_metrics = emulation_statistic.num_metrics
+        metrics = ",".join(emulation_statistic.metrics)
+        conditions = ",".join(emulation_statistic.conditions)
+        num_conditions = emulation_statistic.num_conditions
+        statistics_dict = emulation_statistic.to_dict()
+        statistics_dict = json.dumps(statistics_dict, indent=4, sort_keys=True)
+        with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
+            f.write(statistics_dict)
+        file_format = "json"
+        with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'w',
+                     encoding='utf-8') as f:
+            metadata_dict = {}
+            metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY] = file_format
+            metadata_dict[constants.DATASETS.NUM_MEASUREMENTS_PROPERTY] = num_measurements
+            metadata_dict[constants.DATASETS.NUM_CONDITIONS_PROPERTY] = num_conditions
+            metadata_dict[constants.DATASETS.NUM_METRICS_PROPERTY] = num_metrics
+            metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY] = added_by
+            metadata_dict[constants.DATASETS.CONDITIONS_PROPERTY] = conditions
+            metadata_dict[constants.DATASETS.METRICS_PROPERTY] = metrics
+            f.write(json.dumps(metadata_dict, indent=4, sort_keys=True))
+        ExportUtil.zipdir(dir_path=output_dir, file_path=zip_file_output)
+        Logger.__call__().get_logger().info(f"Export of emulation statistics to disk complete, "
+                                            f"output dir:{output_dir}, output zip file: {zip_file_output}")
+    @staticmethod
+    def extract_emulation_statistics_dataset_metadata(dir_path: str, zip_file_path: str) \
+            -> Tuple[int, float, float, str, str, int, int, str, str, int]:
+        """
+        Extracts metadata of a traces dataset stored on disk
+
+        :param dir_path: the path to the directory where the traces dataset is stored
+        :param zip_file_path: the path to the compressed zipfile of the dataset
+        :return: num_files,  dir_size_uncompressed_gb, size_compressed_gb, file_format, added_by, num_measurements,
+                 num_metrics, metrics, conditions, num_conditions
+        """
+        file_format = "unknown"
+        added_by = "unknown"
+        num_measurements = 0
+        num_metrics = 0
+        metrics = ""
+        conditions = ""
+        with io.open(f"{dir_path}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'r',
+                     encoding='utf-8') as f:
+            metadata_dict = json.loads(f.read())
+        if metadata_dict is not None:
+            file_format = metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY]
+            added_by = metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY]
+            num_measurements = metadata_dict[constants.DATASETS.NUM_MEASUREMENTS_PROPERTY]
+            num_metrics = metadata_dict[constants.DATASETS.NUM_METRICS_PROPERTY]
+            metrics = metadata_dict[constants.DATASETS.METRICS_PROPERTY]
+            conditions = metadata_dict[constants.DATASETS.CONDITIONS_PROPERTY]
+            num_conditions = metadata_dict[constants.DATASETS.NUM_CONDITIONS_PROPERTY]
+
+        num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))])-1
+        size_compressed_gb = round(float(os.path.getsize(zip_file_path))/1000000000,2)
+        dir_size_uncompressed_gb = ExportUtil.get_dir_size_gb(dir_path=dir_path)
+        return num_files,  dir_size_uncompressed_gb, size_compressed_gb, file_format, added_by, num_measurements, \
+               num_metrics, metrics, conditions, num_conditions
 
 

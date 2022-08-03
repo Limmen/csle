@@ -23,6 +23,11 @@ const Downloads = (props) => {
     const [filteredTracesDatasets, setFilteredTracesDatasets] = useState([]);
     const [searchStringTracesDatasets, setSearchStringTracesDatasets] = useState("");
     const [loadingTracesDatasets, setLoadingTracesDatasets] = useState(true);
+    const [showStatisticsDatasetsInfoModal, setShowStatisticsDatasetsInfoModal] = useState(false);
+    const [statisticsDatasets, setStatisticsDatasets] = useState([]);
+    const [filteredStatisticsDatasets, setFilteredStatisticsDatasets] = useState([]);
+    const [searchStringStatisticsDatasets, setSearchStringStatisticsDatasets] = useState("");
+    const [loadingStatisticsDatasets, setLoadingStatisticsDatasets] = useState(true);
     const ip = "localhost"
     const alert = useAlert();
     const navigate = useNavigate();
@@ -105,11 +110,6 @@ const Downloads = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    useEffect(() => {
-        setLoadingTracesDatasets(true);
-        fetchTracesDatasets()
-    }, [fetchTracesDatasets]);
-
 
     const refreshTracesDatasets = () => {
         setLoadingTracesDatasets(true)
@@ -121,9 +121,9 @@ const Downloads = (props) => {
         removeAllTracesDatasetsRequest()
     }
 
-    const removeTraceDataset = (traceDataset) => {
+    const removeTracesDataset = (tracesDataset) => {
         setLoadingTracesDatasets(true)
-        removeTracesDatasetRequest(traceDataset)
+        removeTracesDatasetRequest(tracesDataset)
     }
 
     const renderRefreshTracesDatasetsTooltip = (props) => (
@@ -216,15 +216,15 @@ const Downloads = (props) => {
         })
     }
 
-    const removeTracesDatasetConfirm = (traceDataset) => {
+    const removeTracesDatasetConfirm = (tracesDataset) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the trace dataset with name' + traceDataset.name + "? this action " +
+            message: 'Are you sure you want to delete the trace dataset with name' + tracesDataset.name + "? this action " +
                 "cannot be undone",
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeTraceDataset(traceDataset)
+                    onClick: () => removeTracesDataset(tracesDataset)
                 },
                 {
                     label: 'No'
@@ -241,12 +241,12 @@ const Downloads = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the trace dataset {traceDataset.name}? this action
+                                    Are you sure you want to delete the trace dataset {tracesDataset.name}? this action
                                     cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeTraceDataset(traceDataset)
+                                                    removeTracesDataset(tracesDataset)
                                                     onClose()
                                                 }}
                                         >
@@ -442,13 +442,432 @@ const Downloads = (props) => {
         350
     );
 
+    const fetchStatisticsDatasets = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/statistics-datasets',
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                return res.json()
+            })
+            .then(response => {
+                setStatisticsDatasets(response);
+                setFilteredStatisticsDatasets(response);
+                setLoadingStatisticsDatasets(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+
+    const removeAllStatisticsDatasetsRequest = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/statistics-datasets' + "?token=" + props.sessionData.token,
+            {
+                method: "DELETE",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                fetchStatisticsDatasets()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const removeStatisticsDatasetRequest = useCallback((statisticsDataset) => {
+        fetch(
+            `http://` + ip + ':7777/statistics-datasets/' + statisticsDataset.id + "?token=" + props.sessionData.token,
+            {
+                method: "DELETE",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                fetchStatisticsDatasets()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+
+    const refreshStatisticsDatasets = () => {
+        setLoadingStatisticsDatasets(true)
+        fetchStatisticsDatasets()
+    }
+
+    const removeAllStatisticsDatasets = () => {
+        setLoadingStatisticsDatasets(true)
+        removeAllStatisticsDatasetsRequest()
+    }
+
+    const removeStatisticsDataset = (statisticsDataset) => {
+        setLoadingStatisticsDatasets(true)
+        removeStatisticsDatasetRequest(statisticsDataset)
+    }
+
+    const renderRefreshStatisticsDatasetsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Reload statistics datasets from the backend
+        </Tooltip>
+    );
+
+    const renderInfoStatisticsDatasetsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            More information about the statistics datasets.
+        </Tooltip>
+    );
+
+    const InfoModalStatisticsDatasets = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Statistics datasets
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4>Statistics datasets</h4>
+                    <p className="modalText">
+                        Statistics datasets contain sequences of measurements from a security scenario playing out in
+                        an emulated IT infrastructure. A sequence contains a set of time-steps. Each time-step in the
+                        sequence
+                        includes various measurements, e.g. attacker actions, defender actions, system metrics, and log
+                        files.
+                    </p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={props.onHide}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const removeAllStatisticsDatasetsConfirm = () => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete all statistics datasets? this action cannot be undone',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeAllStatisticsDatasets()
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({onClose}) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete all statistics datasets? this action cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeAllStatisticsDatasets()
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete them.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const removeStatisticsDatasetConfirm = (statisticsDataset) => {
+        confirmAlert({
+            title: 'Confirm deletion',
+            message: 'Are you sure you want to delete the statistics dataset with name' + statisticsDataset.name + "? this action " +
+                "cannot be undone",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => removeStatisticsDataset(statisticsDataset)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({onClose}) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to delete the statistics dataset {statisticsDataset.name}? this action
+                                    cannot be undone
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    removeStatisticsDataset(statisticsDataset)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, delete it.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
+    }
+
+    const renderRemoveAllStatisticsDatasetsTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Remove all statistics datasets.
+        </Tooltip>
+    );
+
+    const DeleteAllStatisticsDatasetsOrEmpty = (props) => {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+            return (
+                <OverlayTrigger
+                    placement="top"
+                    delay={{show: 0, hide: 0}}
+                    overlay={renderRemoveAllStatisticsDatasetsTooltip}
+                >
+                    <Button variant="danger" onClick={removeAllStatisticsDatasetsConfirm} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </OverlayTrigger>
+            )
+        } else {
+            return (<></>)
+        }
+    }
+
+
+    const SpinnerOrStatisticsDatasetsTable = (props) => {
+        if (props.loading) {
+            return (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            if (props.statisticsDatasets === null || props.statisticsDatasets === undefined || props.statisticsDatasets.length === 0) {
+                return (
+                    <p className="downloadLink"> No statistics datasets are available</p>
+                )
+            } else {
+                if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+                    return (
+                        <div className="table-responsive">
+                            <Table bordered hover>
+                                <thead>
+                                <tr className="statisticsDatasetsTable">
+                                    <th>Download Link</th>
+                                    <th>Download count</th>
+                                    <th>File format</th>
+                                    <th>Counts</th>
+                                    <th>Conditions</th>
+                                    <th>Metrics</th>
+                                    <th>Size (GB)</th>
+                                    <th>Date added</th>
+                                    <th>Description</th>
+                                    <th>Citation</th>
+                                    <th>Added by</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.statisticsDatasets.map((statisticsDataset, index) =>
+                                    <tr className="statisticsDatasetsTable" key={statisticsDataset.id + "-" + index}>
+                                        <td>
+                                            <a href={"/statistics-datasets/" + statisticsDataset.id + "?download=true"}
+                                               download>
+                                                {statisticsDataset.name}
+                                            </a>
+                                        </td>
+                                        <td>{statisticsDataset.download_count}</td>
+                                        <td>{statisticsDataset.file_format}</td>
+                                        <td>
+                                            Measurements: {statisticsDataset.num_measurements},
+                                            Metrics: {statisticsDataset.num_metrics},
+                                            Conditions: {statisticsDataset.num_conditions},
+                                            Files: {statisticsDataset.num_files}
+                                        </td>
+                                        <td>
+                                            {statisticsDataset.conditions}
+                                        </td>
+                                        <td>
+                                            {statisticsDataset.metrics}
+                                        </td>
+                                        <td>Uncompressed: {statisticsDataset.size_in_gb},
+                                            compressed: {statisticsDataset.compressed_size_in_gb}</td>
+                                        <td>{statisticsDataset.date_added}</td>
+                                        <td>{statisticsDataset.description}</td>
+                                        <td>{statisticsDataset.citation}</td>
+                                        <td>{statisticsDataset.added_by}</td>
+                                        <td>
+                                            <Button variant="danger"
+                                                    onClick={() => removeStatisticsDatasetConfirm(statisticsDataset)} size="sm">
+                                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div className="table-responsive">
+                            <Table bordered hover>
+                                <thead>
+                                <tr className="statisticsDatasetsTable">
+                                    <th>Download Link</th>
+                                    <th>Download count</th>
+                                    <th>File format</th>
+                                    <th>Counts</th>
+                                    <th>Conditions</th>
+                                    <th>Metrics</th>
+                                    <th>Size (GB)</th>
+                                    <th>Date added</th>
+                                    <th>Description</th>
+                                    <th>Citation</th>
+                                    <th>Added by</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {props.statisticsDatasets.map((statisticsDataset, index) =>
+                                    <tr className="statisticsDatasetsTable" key={statisticsDataset.id + "-" + index}>
+                                        <td>
+                                            <a href={"/statistics-datasets/" + statisticsDataset.id + "?download=true"}
+                                               download>
+                                                {statisticsDataset.name}
+                                            </a>
+                                        </td>
+                                        <td>{statisticsDataset.download_count}</td>
+                                        <td>{statisticsDataset.file_format}</td>
+                                        <td>
+                                            Measurements: {statisticsDataset.num_measurements},
+                                            Metrics: {statisticsDataset.num_metrics},
+                                            Conditions: {statisticsDataset.num_conditions},
+                                            Files: {statisticsDataset.num_files}
+                                        </td>
+                                        <td>
+                                            {statisticsDataset.conditions}
+                                        </td>
+                                        <td>
+                                            {statisticsDataset.metrics}
+                                        </td>
+                                        <td>Uncompressed: {statisticsDataset.size_in_gb},
+                                            compressed: {statisticsDataset.compressed_size_in_gb}</td>
+                                        <td>{statisticsDataset.date_added}</td>
+                                        <td>{statisticsDataset.description}</td>
+                                        <td>{statisticsDataset.citation}</td>
+                                        <td>{statisticsDataset.added_by}</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    )
+                }
+            }
+        }
+    }
+
+    const searchFilterStatisticsDatasets = (statisticsDataset, searchVal) => {
+        return (searchVal === "" ||
+            statisticsDataset.name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    }
+
+    const searchChangeStatisticsDatasets = (event) => {
+        var searchVal = event.target.value
+        const fStatisticsDatasets = statisticsDatasets.filter(statisticsDataset => {
+            return searchFilterStatisticsDatasets(statisticsDataset, searchVal)
+        });
+        setFilteredStatisticsDatasets(fStatisticsDatasets)
+        setSearchStringStatisticsDatasets(searchVal)
+    }
+
+    const searchHandlerStatisticsDatasets = useDebouncedCallback(
+        (event) => {
+            searchChangeStatisticsDatasets(event)
+        },
+        350
+    );
+
+    useEffect(() => {
+        setLoadingTracesDatasets(true);
+        fetchTracesDatasets()
+        setLoadingStatisticsDatasets(true);
+        fetchStatisticsDatasets()
+    }, [fetchTracesDatasets, fetchTracesDatasets]);
+
     return (
         <div className="Downloads">
             <div className="row">
                 <div className="col-sm-3">
                 </div>
                 <div className="col-sm-3">
-                    <h3> Traces Datasets
+                    <h3> Traces datasets
                         <OverlayTrigger
                             placement="right"
                             delay={{show: 0, hide: 0}}
@@ -496,6 +915,61 @@ const Downloads = (props) => {
             <SpinnerOrTracesDatasetsTable tracesDatasets={filteredTracesDatasets} loading={loadingTracesDatasets}
                                           sessionData={props.sessionData}
             />
+
+
+            <div className="row">
+                <div className="col-sm-3">
+                </div>
+                <div className="col-sm-3">
+                    <h3> Statistics datasets
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderRefreshStatisticsDatasetsTooltip}
+                        >
+                            <Button variant="button" onClick={refreshStatisticsDatasets}>
+                                <i className="fa fa-refresh refreshButton3" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderInfoStatisticsDatasetsTooltip}
+                            className="overLayInfo"
+                        >
+                            <Button variant="button" onClick={() => setShowStatisticsDatasetsInfoModal(true)}
+                                    className="infoButton3">
+                                <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
+                            </Button>
+                        </OverlayTrigger>
+                        <InfoModalStatisticsDatasets show={showStatisticsDatasetsInfoModal}
+                                                 onHide={() => setShowStatisticsDatasetsInfoModal(false)}/>
+                        <DeleteAllStatisticsDatasetsOrEmpty sessionData={props.sessionData}/>
+                    </h3>
+                </div>
+                <div className="col-sm-4">
+                    <Form className="searchForm">
+                        <InputGroup className="mb-3 searchGroup">
+                            <InputGroup.Text id="basic-addon1" className="searchIcon">
+                                <i className="fa fa-search" aria-hidden="true"/>
+                            </InputGroup.Text>
+                            <FormControl
+                                size="lg"
+                                className="searchBar"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="basic-addon1"
+                                onChange={searchHandlerStatisticsDatasets}
+                            />
+                        </InputGroup>
+                    </Form>
+                </div>
+                <div className="col-sm-2"></div>
+            </div>
+
+            <SpinnerOrStatisticsDatasetsTable statisticsDatasets={filteredStatisticsDatasets}
+                                              loading={loadingStatisticsDatasets}
+                                              sessionData={props.sessionData}/>
         </div>
     );
 }

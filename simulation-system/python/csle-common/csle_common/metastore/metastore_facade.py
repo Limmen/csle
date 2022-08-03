@@ -29,6 +29,7 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.dao.management.session_token import SessionToken
 from csle_common.dao.datasets.traces_dataset import TracesDataset
+from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
 
 
 class MetastoreFacade:
@@ -3088,8 +3089,10 @@ class MetastoreFacade:
         :param traces_dataset_record: the record to convert
         :return: the DTO representing the record
         """
-        data_schema_json_str = json.dumps(traces_dataset_record[3], indent=4, sort_keys=True)
-        data_schema = json.loads(data_schema_json_str)
+        data_schema = {}
+        if traces_dataset_record[3] is not None and traces_dataset_record[3] != "":
+            data_schema_json_str = json.dumps(traces_dataset_record[3], indent=4, sort_keys=True)
+            data_schema = json.loads(data_schema_json_str)
         traces_dataset = TracesDataset(name=traces_dataset_record[1], description=traces_dataset_record[2],
                                        data_schema=data_schema, download_count=traces_dataset_record[4],
                                        file_path=traces_dataset_record[5], url=traces_dataset_record[6],
@@ -3190,7 +3193,9 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
+                schema_json_str = ""
+                if traces_dataset.data_schema is not None and traces_dataset.data_schema != "":
+                    schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f"(name, description, data_schema, download_count, file_path, url, date_added, num_traces, "
                             f"num_attributes_per_time_step, size_in_gb, compressed_size_in_gb, citation, num_files, "
@@ -3223,7 +3228,9 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
+                schema_json_str = ""
+                if traces_dataset.data_schema is not None and traces_dataset.data_schema != "":
+                    schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f" SET name=%s, description=%s, data_schema=%s, download_count=%s, file_path=%s, "
@@ -3261,3 +3268,184 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Traces dataset with "
                                                      f"id {traces_dataset.id} deleted successfully")
+
+    @staticmethod
+    def _convert_statistics_dataset_record_to_dto(statistics_dataset_record) -> StatisticsDataset:
+        """
+        Converts a statistics dataset record fetched from the metastore into a DTO
+
+        :param statistics_dataset_record: the record to convert
+        :return: the DTO representing the record
+        """
+        statistics_dataset = StatisticsDataset(
+            name=statistics_dataset_record[1], description=statistics_dataset_record[2],
+            download_count=statistics_dataset_record[3],
+            file_path=statistics_dataset_record[4], url=statistics_dataset_record[5],
+            date_added=statistics_dataset_record[6], num_measurements=statistics_dataset_record[7],
+            num_metrics=statistics_dataset_record[8], size_in_gb=statistics_dataset_record[9],
+            compressed_size_in_gb=statistics_dataset_record[10],
+            citation=statistics_dataset_record[11], num_files=statistics_dataset_record[12],
+            file_format=statistics_dataset_record[13], added_by=statistics_dataset_record[14],
+            conditions=statistics_dataset_record[15], metrics=statistics_dataset_record[16],
+            num_conditions=statistics_dataset_record[17])
+        statistics_dataset.id = statistics_dataset_record[0]
+        return statistics_dataset
+
+    @staticmethod
+    def list_statistics_datasets_ids() -> List[Dict]:
+        """
+        :return: A list of statistics datasets ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def list_statistics_datasets() -> List[StatisticsDataset]:
+        """
+        :return: A list of statistics datasets in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_statistics_dataset_record_to_dto(x),
+                                   records))
+                return records
+
+
+    @staticmethod
+    def get_statistics_dataset_metadata(id: int) -> Union[None, StatisticsDataset]:
+        """
+        Function for fetching the metadata of a given dataset name
+
+        :param id: the id of the dataset to get the metadata of
+        :return: The statistics dataset and its metadata or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_statistics_dataset_record_to_dto(
+                        statistics_dataset_record=record)
+                return record
+
+    @staticmethod
+    def get_statistics_dataset_metadata_by_name(dataset_name: str) -> Union[None, StatisticsDataset]:
+        """
+        Function for fetching the metadata of a given dataset name
+
+        :param dataset_name: the dataset name to lookup the metadata for
+        :return: The statistics dataset and its metadata or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
+                            f"WHERE name = %s", (dataset_name,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_statistics_dataset_record_to_dto(
+                        statistics_dataset_record=record)
+                return record
+
+    @staticmethod
+    def save_statistics_dataset(statistics_dataset: StatisticsDataset) -> Union[Any, int]:
+        """
+        Saves a statistics dataset to the metastore
+
+        :param statistics_dataset: the statistics dataset to save
+        :return: idg of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Saving a statistics dataset in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
+                            f"(name, description, download_count, file_path, url, date_added, num_measurements, "
+                            f"num_metrics, size_in_gb, compressed_size_in_gb, citation, num_files, "
+                            f"file_format, added_by, conditions, metrics, num_conditions) "
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                            (statistics_dataset.name, statistics_dataset.description,
+                             statistics_dataset.download_count, statistics_dataset.file_path, statistics_dataset.url,
+                             statistics_dataset.date_added, statistics_dataset.num_measurements,
+                             statistics_dataset.num_metrics,
+                             statistics_dataset.size_in_gb, statistics_dataset.compressed_size_in_gb,
+                             statistics_dataset.citation, statistics_dataset.num_files, statistics_dataset.file_format,
+                             statistics_dataset.added_by, statistics_dataset.conditions, statistics_dataset.metrics,
+                             statistics_dataset.num_conditions))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"statistics dataset saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_statistics_dataset(statistics_dataset: StatisticsDataset, id: int) -> None:
+        """
+        Updates a statistics dataset in the metastore
+
+        :param statistics_dataset: the statistics dataset to update
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating statistics dataset with id: {id} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} "
+                            f" SET name=%s, description=%s, download_count=%s, file_path=%s, "
+                            f"url=%s, date_added=%s, num_measurements=%s, num_metrics=%s, size_in_gb=%s, "
+                            f"compressed_size_in_gb=%s, citation=%s, num_files=%s, file_format=%s, added_by=%s, "
+                            f"conditions=%s, metrics=%s, num_conditions=%s "
+                            f"WHERE {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}.id = %s",
+                            (statistics_dataset.name, statistics_dataset.description,
+                             statistics_dataset.download_count, statistics_dataset.file_path, statistics_dataset.url,
+                             statistics_dataset.date_added, statistics_dataset.num_measurements,
+                             statistics_dataset.num_metrics, statistics_dataset.size_in_gb,
+                             statistics_dataset.compressed_size_in_gb, statistics_dataset.citation,
+                             statistics_dataset.num_files, statistics_dataset.file_format, statistics_dataset.added_by,
+                             statistics_dataset.conditions, statistics_dataset.metrics,
+                             statistics_dataset.num_conditions, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Statistics dataset with {id} updated successfully")
+
+    @staticmethod
+    def remove_statistics_dataset(statistics_dataset: StatisticsDataset) -> None:
+        """
+        Removes a statistics dataset from the metastore
+
+        :param statistics_dataset: the job to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing statistics dataset with "
+                                             f"id:{statistics_dataset.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE} WHERE id = %s",
+                            (statistics_dataset.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Statistics dataset with "
+                                                     f"id {statistics_dataset.id} deleted successfully")
