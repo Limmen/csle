@@ -122,7 +122,8 @@ function App() {
                                 </Route>
                                 <Route path="about-page" index element={<About/>}>
                                 </Route>
-                                <Route path="downloads-page" index element={<Downloads/>}>
+                                <Route path="downloads-page" index element={<Downloads sessionData={sessionData}
+                                                                                       setSessionData={setSessionData}/>}>
                                 </Route>
                                 <Route path="login-page" index element={<Login setSessionData={setSessionData}
                                                                                sessionData={sessionData}/>}>

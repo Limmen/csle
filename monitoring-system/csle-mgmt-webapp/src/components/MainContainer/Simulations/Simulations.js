@@ -186,7 +186,7 @@ const Simulations = (props) => {
         </Tooltip>
     );
 
-    const renderRemoveAllSimulationsTooltop = (props) => (
+    const renderRemoveAllSimulationsTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Remove all simulations.
         </Tooltip>
@@ -413,7 +413,7 @@ const Simulations = (props) => {
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveAllSimulationsTooltop}
+                    overlay={renderRemoveAllSimulationsTooltip}
                 >
                     <Button variant="danger" onClick={removeAllSimulationsConfirm} size="sm">
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
