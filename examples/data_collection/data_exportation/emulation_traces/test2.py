@@ -19,9 +19,13 @@ if __name__ == '__main__':
     #     if num_attributes_per_time_step == -1:
     #         num_attributes_per_time_step = tr.num_attributes_per_time_step()
     #     if schema is None:
-    #         schema = tr.schema().to_dict()
+    #         schema = {
+    #             constants.METADATA_STORE.TRACES_PROPERTY : [
+    #                 tr.schema().to_dict()
+    #             ]
+    #         }
     # traces_dict = {
-    #     constants.METADATA_STORE.EMULATIONS_PROPERTY : traces
+    #     constants.METADATA_STORE.TRACES_PROPERTY : traces
     # }
     # traces_str = json.dumps(traces_dict, indent=4, sort_keys=True)
     # # with io.open(f"/home/kim/20.json", 'w', encoding='utf-8') as f:

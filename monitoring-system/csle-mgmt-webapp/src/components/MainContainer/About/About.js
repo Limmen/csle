@@ -21,7 +21,7 @@ const About = () => {
                         process that is based on reinforcement learning.
                         <br></br>
                         <br></br>
-                        The framework consists of libraries, a command-line interfaces, a rest-api, storage systems, and a management system.
+                        The framework consists of libraries, a command-line interface, a rest-api, storage systems, and a management system.
                         The user interface you are viewing right now is the management system. This interface allows the user to
                         start/stop digital twins (see the <a href="/emulations-page">emulations page</a>),
                         to start/stop simulations (see the <a href="/simulations-page">simulations page</a>),
@@ -84,7 +84,7 @@ const About = () => {
                     <p className="aboutText">
                         The framework is written in a combination of Python, Scala, Erlang, and JavaScript.
                         The emulation system is based on Docker and the telemetry system is based on gRPC and Kafka.
-                        The code and the API documentation will be freely available under the CC license when the framework is released.
+                        The code and the API documentation will be freely available under the CC BY-SA 4.0 license when the framework is released.
                     </p>
                 </div>
                 <div className="col-sm-2"></div>

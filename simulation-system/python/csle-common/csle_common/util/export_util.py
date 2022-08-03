@@ -80,7 +80,11 @@ class ExportUtil:
             if num_attributes_per_time_step == -1:
                 num_attributes_per_time_step = tr.num_attributes_per_time_step()
             if schema is None:
-                schema = tr.schema().to_dict()
+                schema = {
+                    constants.METADATA_STORE.TRACES_PROPERTY : [
+                        tr.schema().to_dict()
+                    ]
+                }
 
             traces.append(tr.to_dict())
             if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids)-1)):
