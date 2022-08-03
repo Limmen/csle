@@ -286,7 +286,7 @@ const Downloads = (props) => {
         } else {
             return (
                 <td>
-                    {props.tracesDataset.file_format}, columns: {props.tracesDatasets.columns}
+                    {props.tracesDataset.file_format}, columns: {props.tracesDataset.columns}
                 </td>
             )
         }

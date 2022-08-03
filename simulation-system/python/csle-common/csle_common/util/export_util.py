@@ -219,7 +219,7 @@ class ExportUtil:
             metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY] = file_format
             metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY] = num_traces
             metadata_dict[constants.DATASETS.NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY] = num_attributes_per_time_step
-            metadata_dict[constants.DATASETS.SCHEMA_PROPERTY] = ""
+            metadata_dict[constants.DATASETS.SCHEMA_PROPERTY] = {}
             metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY] = num_traces_per_file
             metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY] = added_by
             metadata_dict[constants.DATASETS.COLUMNS_PROPERTY] = ",".join(columns)
