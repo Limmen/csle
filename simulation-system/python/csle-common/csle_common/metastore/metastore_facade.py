@@ -3088,14 +3088,17 @@ class MetastoreFacade:
         :param traces_dataset_record: the record to convert
         :return: the DTO representing the record
         """
+        data_schema_json_str = json.dumps(traces_dataset_record[3], indent=4, sort_keys=True)
+        data_schema = json.loads(data_schema_json_str)
         traces_dataset = TracesDataset(name=traces_dataset_record[1], description=traces_dataset_record[2],
-                                       data_schema=traces_dataset_record[3], download_count=traces_dataset_record[4],
+                                       data_schema=data_schema, download_count=traces_dataset_record[4],
                                        file_path=traces_dataset_record[5], url=traces_dataset_record[6],
                                        date_added=traces_dataset_record[7], num_traces=traces_dataset_record[8],
                                        num_attributes_per_time_step=traces_dataset_record[9],
                                        size_in_gb=traces_dataset_record[10],
                                        compressed_size_in_gb=traces_dataset_record[11],
-                                       citation=traces_dataset_record[12], num_files=traces_dataset_record[13])
+                                       citation=traces_dataset_record[12], num_files=traces_dataset_record[13],
+                                       file_format=traces_dataset_record[14])
         traces_dataset.id = traces_dataset_record[0]
         return traces_dataset
 
@@ -3186,12 +3189,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f"(name, description, data_schema, download_count, file_path, url, date_added, num_traces, "
                             f"num_attributes_per_time_step, size_in_gb, compressed_size_in_gb, citation, num_files, "
                             f"file_format) "
                             f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
-                            (traces_dataset.name, traces_dataset.description, traces_dataset.data_schema,
+                            (traces_dataset.name, traces_dataset.description, schema_json_str,
                              traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
                              traces_dataset.date_added, traces_dataset.num_traces,
                              traces_dataset.num_attributes_per_time_step,
@@ -3217,13 +3221,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f" SET name=%s, description=%s, data_schema=%s, download_count=%s, file_path=%s, "
                             f"url=%s, date_added=%s, num_traces=%s, num_attributes_per_time_step=%s, size_in_gb=%s, "
                             f"compressed_size_in_gb=%s, citation=%s, num_files=%s, file_format=%s "
                             f"WHERE {constants.METADATA_STORE.TRACES_DATASETS_TABLE}.id = %s",
-                            (traces_dataset.name, traces_dataset.description, traces_dataset.data_schema,
+                            (traces_dataset.name, traces_dataset.description, schema_json_str,
                              traces_dataset.download_count, traces_dataset.file_path, traces_dataset.url,
                              traces_dataset.date_added, traces_dataset.num_traces,
                              traces_dataset.num_attributes_per_time_step, traces_dataset.size_in_gb,

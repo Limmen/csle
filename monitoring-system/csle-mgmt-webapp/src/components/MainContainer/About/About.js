@@ -12,8 +12,8 @@ const About = () => {
                 <div className="col-sm-2"></div>
                 <div className="col-sm-8">
                     <p className="aboutText">
-                        The Cyber Security Learning Environment (CSLE) is a framework for developing, testing, and
-                        deploying autonomous agents that manage security tasks. It includes three components:
+                        The Cyber Security Learning Environment (CSLE) is a framework for learning, testing, and
+                        deploying policies for autonomous security management. It includes three components:
                         a digital twin (emulation) of the target system,
                         which continuously collects data and evaluates learned policies; a
                         system identification process, which periodically estimates system

@@ -6,6 +6,7 @@ class MGMT_WEBAPP:
     """
     ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin"
     IDS_QUERY_PARAM = "ids"
+    DOWNLOAD_QUERY_PARAM = "download"
     TOKEN_QUERY_PARAM = "token"
     STOP_QUERY_PARAM = "stop"
     EMULATION_QUERY_PARAM = "emulation"

@@ -263,7 +263,7 @@ CREATE TABLE IF NOT EXISTS traces_datasets (
     id serial PRIMARY KEY,
     name VARCHAR(128) UNIQUE NOT NULL,
     description TEXT,
-    data_schema TEXT,
+    data_schema json NOT NULL,
     download_count int NOT NULL,
     file_path VARCHAR(1024),
     url VARCHAR(1024),

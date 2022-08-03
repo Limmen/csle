@@ -126,7 +126,7 @@ class ExportUtil:
         :return: num_files, dir_size_uncompressed_gb, file_format, num_traces, schema, num_traces_per_file,
                  num_attributes_per_time_step
         """
-        metadata = None
+        metadata_dict = None
         file_format = "unknown"
         num_traces = -1
         schema = ""
@@ -134,22 +134,15 @@ class ExportUtil:
         num_attributes_per_time_step = -1
         with io.open(f"{dir_path}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'r',
                      encoding='utf-8') as f:
-            metadata = f.read()
-        if metadata is not None:
-            metadata_properties = metadata.split(constants.COMMANDS.NEW_LINE_DELIM)
-            for property_pair in metadata_properties:
-                property_value_pair = property_pair.split(constants.COMMANDS.COLON_DELIM)
-                if property_value_pair[0] == constants.DATASETS.SCHEMA_PROPERTY:
-                    schema = property_value_pair[1]
-                elif property_value_pair[0] == constants.DATASETS.NUM_TRACES_PROPERTY:
-                    num_traces = property_value_pair[1]
-                elif property_value_pair[0] == constants.DATASETS.NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY:
-                    num_attributes_per_time_step = property_value_pair[1]
-                elif property_value_pair[0] == constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY:
-                    num_traces_per_file = property_value_pair[1]
-                elif property_value_pair[0] == constants.DATASETS.FILE_FORMAT_PROPERTY:
-                    file_format = property_value_pair[1]
-        num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))])
+            metadata_dict = json.loads(f.read())
+        if metadata_dict is not None:
+            schema = metadata_dict[constants.DATASETS.SCHEMA_PROPERTY]
+            num_traces = metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY]
+            num_attributes_per_time_step = metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY]
+            num_traces_per_file = metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY]
+            file_format = metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY]
+
+        num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))])-1
         size_compressed_gb = round(float(os.path.getsize(zip_file_path))/1000000000,2)
         dir_size_uncompressed_gb = ExportUtil.get_dir_size_gb(dir_path=dir_path)
         return num_files,  dir_size_uncompressed_gb, size_compressed_gb, file_format, num_traces, schema, \

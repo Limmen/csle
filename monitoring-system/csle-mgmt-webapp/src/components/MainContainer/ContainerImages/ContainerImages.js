@@ -162,7 +162,7 @@ const ContainerImages = (props) => {
     );
 
     return (
-        <div className="Monitoring">
+        <div className="ContainerImages">
             <h3 className="managementTitle"> Management of Container Images </h3>
             <div className="row">
                 <div className="col-sm-3">
@@ -172,7 +172,7 @@ const ContainerImages = (props) => {
                         <OverlayTrigger
                             placement="right"
                             delay={{show: 0, hide: 0}}
-                            overlay={renderRefreshTooltip()}
+                            overlay={renderRefreshTooltip}
                         >
                             <Button variant="button" onClick={refresh}>
                                 <i className="fa fa-refresh refreshButton3" aria-hidden="true"/>

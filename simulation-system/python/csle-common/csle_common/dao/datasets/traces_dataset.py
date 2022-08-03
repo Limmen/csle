@@ -8,7 +8,7 @@ class TracesDataset:
 
     def __init__(self, name: str, description: str, download_count: int, file_path: str, url: str, date_added,
                  num_traces: int, num_attributes_per_time_step: int, size_in_gb: float, compressed_size_in_gb: float,
-                 citation: str, num_files: int, data_schema: str, file_format: str):
+                 citation: str, num_files: int, data_schema: Dict[str, Any], file_format: str):
         """
         Initializes the DTO
 

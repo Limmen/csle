@@ -1,10 +1,12 @@
 """
 Routes and sub-resources for the /traces-datasets resource
 """
-from flask import Blueprint, jsonify, request
+import os
+from flask import Blueprint, jsonify, request, send_from_directory
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.datasets.traces_dataset import TracesDataset
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -22,12 +24,11 @@ def trace_datasets():
 
     :return: A list of traces datasets or a list of ids of the traces datasets or deletes the datasets
     """
-    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-    if authorized is not None:
-        return authorized
+        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+        if authorized is not None:
+            return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole dataset
@@ -65,29 +66,50 @@ def trace_datasets_ids():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@traces_datasets_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+@traces_datasets_bp.route("/<traces_dataset_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def trace_dataset(traces_dataset_id: int):
     """
     The /traces-datasets/id resource.
 
     :param traces_dataset_id: the id of the trace
-
     :return: The given trace or delets the trace
     """
-    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-    if authorized is not None:
-        return authorized
+        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+        if authorized is not None:
+            return authorized
 
     traces_dataset = MetastoreFacade.get_traces_dataset_metadata(id=traces_dataset_id)
     response = jsonify({})
     if traces_dataset is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            response = jsonify(traces_dataset.to_dict())
+            # Check if download query parameter is True, then return the file
+            download = request.args.get(api_constants.MGMT_WEBAPP.DOWNLOAD_QUERY_PARAM)
+            if download is not None and download:
+                return download_dataset_file(traces_dataset)
+            else:
+                response = jsonify(traces_dataset.to_dict())
         else:
             MetastoreFacade.remove_traces_dataset(traces_dataset)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
+
+
+def download_dataset_file(traces_dataset: TracesDataset):
+    if traces_dataset.file_path is not None and traces_dataset.file_path != "":
+        dir_filename = os.path.split(traces_dataset.file_path)
+        dir = dir_filename[0]
+        filename = dir_filename[1]
+        print(f"downloading, dir:{dir}, filename:{filename}")
+        try:
+            return send_from_directory(dir, filename, as_attachment=True)
+        except FileNotFoundError:
+            response = jsonify({})
+            return response, constants.HTTPS.NOT_FOUND_STATUS_CODE
+    else:
+        response = jsonify({})
+        return response, constants.HTTPS.NOT_FOUND_STATUS_CODE
+
+
