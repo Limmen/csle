@@ -1419,7 +1419,7 @@ class METADATA_STORE:
     USER = "csle"
     PASSWORD = "csle"
     HOST = "127.0.0.1"
-    EMULATIONS_PROPERTY = "emulations"
+    TRACES_PROPERTY = "traces"
     DB_NAME_PROPERTY = "dbname"
     PW_PROPERTY = "password"
     HOST_PROPERTY = "host"
@@ -1597,7 +1597,7 @@ class OPENFLOW:
 
 
 class DATASETS:
-    METADATA_FILE_NAME = "readme.txt"
+    METADATA_FILE_NAME = "readme.json"
     JSON_FILE_FORMAT = "json"
     FILE_FORMAT_PROPERTY = "file_format"
     NUM_TRACES_PROPERTY = "num_traces"

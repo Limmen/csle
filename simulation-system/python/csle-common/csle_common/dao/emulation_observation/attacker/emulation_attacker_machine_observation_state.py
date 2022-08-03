@@ -33,7 +33,7 @@ class EmulationAttackerMachineObservationState:
         self.backdoor_credentials: List[Credential] = []
         self.logged_in = False
         self.root = False
-        self.flags_found: Set[Flag] = set()
+        self.flags_found: Set[str] = set()
         self.filesystem_searched = False
         self.untried_credentials = False
         self.ssh_connections :List[EmulationConnectionObservationState] = []
@@ -409,7 +409,7 @@ class EmulationAttackerMachineObservationState:
         dto.osvdb_vulns=[EmulationVulnerabilityObservationState.schema()]
         dto.shell_access_credentials = [Credential.schema()]
         dto.backdoor_credentials=[Credential.schema()]
-        dto.flags_found.add(Flag.schema())
+        dto.flags_found.add("")
         dto.ssh_connections = [EmulationConnectionObservationState.schema()]
         dto.ftp_connections = [EmulationConnectionObservationState.schema()]
         dto.telnet_connections = [EmulationConnectionObservationState.schema()]

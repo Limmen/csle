@@ -194,7 +194,7 @@ class EmulationTrace:
         return num_attributes
 
     @staticmethod
-    def get_schema():
+    def schema():
         """
         :return: the schema of the DTO
         """

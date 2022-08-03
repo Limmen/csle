@@ -135,7 +135,7 @@ running commands can read and write to this directory.
      chmod -R 777 /var/log/csle     
      ```
 
-5. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
+4. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
       ```bash
       sudo apt-get install postgresql
@@ -168,7 +168,7 @@ running commands can read and write to this directory.
      ```
    and then rebuild it with the commands above.
 
-6. **Install the simulation system**
+5. **Install the simulation system**
     - Install Python 3.8 or higher:
         - Using conda:
           ```bash
@@ -246,7 +246,7 @@ running commands can read and write to this directory.
      cd ../../../
      ```
 
-7. **Install the CLI tool**
+6. **Install the CLI tool**
     - Install the CLI tool and make it executable as a script:
       ```bash
       cd csle-cli
@@ -266,7 +266,7 @@ running commands can read and write to this directory.
       _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish 
     ```
 
-8. **Install the emulation system**
+7. **Install the emulation system**
     - Add Docker's official GPG key:
       ```bash
       sudo mkdir -p /etc/apt/keyrings
@@ -303,7 +303,7 @@ running commands can read and write to this directory.
       make build
       ```   
 
-9. **Install the monitoring system**
+8. **Install the monitoring system**
     - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm
       installed, to install node and npm execute:
        ```bash
@@ -312,8 +312,24 @@ running commands can read and write to this directory.
        nvm install node # Install node
        npm install -g npm # Update npm
        node -v # Verify version of node
-       npm -v # Verify version of npm
+       npm -v # Verify version of npm       
        ```
+    - To serve the webapp withe TLS you need nginx as a reverse proxy, install and start nginx with the following commands:
+      ```bash
+      sudo apt install nginx
+      sudo service nginx start
+      ```
+    - Configure nginx by editing `/etc/nginx/sites-available/default` and modifying location `/` inside the server object 
+      by adding the following:
+      ```bash
+      location / {
+          proxy_pass http://localhost:7777/;
+          proxy_buffering off;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-Host $host;
+          proxy_set_header X-Forwarded-Port $server_port;
+      }
+      ```
     - Install the monitoring system and associated tools:
     ```bash
       cd monitoring-system

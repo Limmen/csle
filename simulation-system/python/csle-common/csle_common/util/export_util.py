@@ -80,13 +80,13 @@ class ExportUtil:
             if num_attributes_per_time_step == -1:
                 num_attributes_per_time_step = tr.num_attributes_per_time_step()
             if schema is None:
-                schema = json.dumps(tr.get_schema().to_dict(), indent=4, sort_keys=True)
+                schema = tr.schema().to_dict()
 
             traces.append(tr.to_dict())
             if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids)-1)):
                 Logger.__call__().get_logger().info(f"Exporting traces {last_export+1}-{i} to file: {file_name}")
                 traces_dict = {
-                    constants.METADATA_STORE.EMULATIONS_PROPERTY : traces
+                    constants.METADATA_STORE.TRACES_PROPERTY : traces
                 }
                 traces_str = json.dumps(traces_dict, indent=4, sort_keys=True)
                 with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
@@ -99,14 +99,13 @@ class ExportUtil:
         num_traces = len(emulation_traces_ids)
         with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'w',
                      encoding='utf-8') as f:
-            metadata_str = f"{constants.DATASETS.FILE_FORMAT_PROPERTY}{constants.COMMANDS.COLON_DELIM}{file_format}\n" \
-                       f"{constants.DATASETS.NUM_TRACES_PROPERTY}{constants.COMMANDS.COLON_DELIM}{num_traces}\n" \
-                       f"{constants.DATASETS.NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY}{constants.COMMANDS.COLON_DELIM}" \
-                           f"{num_attributes_per_time_step}\n" \
-                       f"{constants.DATASETS.SCHEMA_PROPERTY}{constants.COMMANDS.COLON_DELIM}{schema}\n" \
-                       f"{constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY}{constants.COMMANDS.COLON_DELIM}" \
-                           f"{num_traces_per_file}"
-            f.write(metadata_str)
+            metadata_dict = {}
+            metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY] = file_format
+            metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY] = num_traces
+            metadata_dict[constants.DATASETS.NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY] = num_attributes_per_time_step
+            metadata_dict[constants.DATASETS.SCHEMA_PROPERTY] = schema
+            metadata_dict[constants.DATASETS.NUM_TRACES_PER_FILE_PROPERTY] = num_traces_per_file
+            f.write(json.dumps(metadata_dict, indent=4, sort_keys=True))
         ExportUtil.zipdir(dir_path=output_dir, file_path=zip_file_output)
         Logger.__call__().get_logger().info(f"Export of emulation traces to disk complete, "
                                             f"output dir:{output_dir}, output zip file: {zip_file_output}")

@@ -1,3 +1,11 @@
 .aboutText {
     font-size: 14px;
 }
+
+.publicationsTitle {
+    margin-top: 20px
+}
+
+.boldSpan {
+    font-weight: bolder;
+}
