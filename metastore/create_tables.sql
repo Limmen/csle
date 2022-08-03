@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS traces_datasets (
     download_count int NOT NULL,
     file_path VARCHAR(1024),
     url VARCHAR(1024),
-    date_added DATE NOT NULL,
+    date_added TIMESTAMP NOT NULL,
     num_traces int NOT NULL,
     num_attributes_per_time_step int NOT NULL,
     size_in_gb DOUBLE PRECISION NOT NULL,

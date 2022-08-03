@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Dict, Any
 import io
 import json
 import os
@@ -117,7 +117,7 @@ class ExportUtil:
 
     @staticmethod
     def extract_emulation_traces_dataset_metadata(dir_path: str, zip_file_path: str) \
-            -> Tuple[int, float, float, str, int, str, int, int]:
+            -> Tuple[int, float, float, str, int, Dict[str, Any], int, int]:
         """
         Extracts metadata of a traces dataset stored on disk
 

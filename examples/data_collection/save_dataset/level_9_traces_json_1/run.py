@@ -11,6 +11,7 @@ if __name__ == '__main__':
     name = "emulation_traces_level_9_22_aug_2022"
     url = "-"
     date_added = datetime.datetime.now()
+    print(f"date added: {date_added}")
     citation = "-"
     num_files,  dir_size_uncompressed_gb, size_compressed_gb, file_format, num_traces, schema, num_traces_per_file, \
     num_attributes_per_time_step = \

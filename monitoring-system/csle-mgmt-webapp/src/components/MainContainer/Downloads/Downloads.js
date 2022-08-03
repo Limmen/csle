@@ -38,8 +38,6 @@ const Downloads = (props) => {
         )
             .then(res => {return res.json()})
             .then(response => {
-                console.log("traces datasets:")
-                console.log(response)
                 setTracesDatasets(response);
                 setFilteredTracesDatasets(response);
                 setLoadingTracesDatasets(false)
@@ -58,9 +56,15 @@ const Downloads = (props) => {
                 })
             }
         )
-            .then(res => {return res})
-            .then(response => {
-                console.log("file response:")
+            .then(res => {return res.blob()})
+            .then(blob => {
+                const href = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = href;
+                link.setAttribute('download', 'dataset.zip');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -145,10 +149,9 @@ const Downloads = (props) => {
                         {props.tracesDatasets.map((tracesDataset, index) =>
                             <tr className="tracesDatasetsTable" key={tracesDataset.id + "-" + index}>
                                 <td>
-                                    <Button className="downloadLink" variant="link"
-                                            onClick={() => fetchTracesDatasetsFile(tracesDataset)}>
+                                    <a href={"/traces-datasets/" + tracesDataset.id + "?download=true"} download>
                                         {tracesDataset.name}
-                                    </Button>
+                                    </a>
                                 </td>
                                 <td>{tracesDataset.download_count}</td>
                                 <td>{tracesDataset.file_format}</td>

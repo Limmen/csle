@@ -98,11 +98,18 @@ def trace_dataset(traces_dataset_id: int):
 
 
 def download_dataset_file(traces_dataset: TracesDataset):
+    """
+    Downloads a dataset file
+
+    :param traces_dataset: the dataset file to download
+    :return: the HTTP response
+    """
     if traces_dataset.file_path is not None and traces_dataset.file_path != "":
         dir_filename = os.path.split(traces_dataset.file_path)
         dir = dir_filename[0]
         filename = dir_filename[1]
-        print(f"downloading, dir:{dir}, filename:{filename}")
+        traces_dataset.download_count = traces_dataset.download_count+1
+        MetastoreFacade.update_traces_dataset(traces_dataset=traces_dataset, id=traces_dataset.id)
         try:
             return send_from_directory(dir, filename, as_attachment=True)
         except FileNotFoundError:
