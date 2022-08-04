@@ -32,7 +32,7 @@ class SSHUtil:
         :param cmd: the command to execute
         :param conn: the ssh connection
         :param wait_for_completion: boolean flag whether to wait for completion or not
-        :param retry: retries
+        :param retries: number of retries
         :return: outdata, errdata, total_time
         """
         exp = None
@@ -59,4 +59,5 @@ class SSHUtil:
                 return outdata, errdata, total_time
             except Exception as e:
                 exp = e
+                time.sleep(10)
         raise ConnectionError(f"Connection failed: {str(exp)} {repr(exp)}")
