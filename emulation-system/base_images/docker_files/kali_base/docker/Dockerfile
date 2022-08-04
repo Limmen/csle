@@ -9,7 +9,7 @@ RUN apt-get -y install apt-utils  \
                        exploitdb nikto traceroute finger git sshpass lftp recon-ng netdiscover hping3 ncat masscan \
                        iptables proxychains zip unzip arptables irssi irssi-scripts screen postgresql-client-common \
                        snmp postgresql-client smbclient tcpdump netcat-traditional traceroute sysstat iproute2  \
-                       iperf3 lsof
+                       lsof
 
 #RUN apt-get -y install man-db
 #&& DEBIAN_FRONTEND=noninteractive apt -yqq install kali-linux-headless

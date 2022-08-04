@@ -104,7 +104,7 @@ cases.
 
 ## Installation
 
-Follow the instructions below to install CSLE.
+Follow the instructions below to install CSLE on a Ubuntu server.
 
 ### Install from source
 
@@ -266,7 +266,8 @@ running commands can read and write to this directory.
     - Install the CLI tool and make it executable as a script:
       ```bash
       cd csle-cli
-      pip install -e .      
+      pip install -e .
+      cd ../../../     
       ```
     - Setup auto-completion in BASH by generating the following file:
       ```bash
