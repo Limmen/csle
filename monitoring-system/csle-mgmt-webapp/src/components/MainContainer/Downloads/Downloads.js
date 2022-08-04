@@ -387,13 +387,17 @@ const Downloads = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <td>
-                    <Button variant="button" onClick={() => setShowTracesDatasetInfoModal(true)}
+                    <Button variant="button" onClick={() => {
+                        setModalSelectedTracesDataset(props.tracesDataset)
+                        setShowTracesDatasetInfoModal(true)
+                    }
+                    }
                             className="infoButton3">
                         <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
                     </Button>
                     <InfoModalTracesDataset show={showTracesDatasetInfoModal}
                                             onHide={() => setShowTracesDatasetInfoModal(false)}
-                                            tracesDataset={props.tracesDataset}
+                                            tracesDataset={modalSelectedTracesDataset}
                     />
                     <Button variant="danger"
                             onClick={() => removeTracesDatasetConfirm(props.tracesDataset)} size="sm">
@@ -920,6 +924,17 @@ const Downloads = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <td>
+                    <Button variant="button" onClick={() => {
+                        setModalSelectedStatisticsDataset(props.statisticsDataset)
+                        setShowStatisticsDatasetInfoModal(true)
+                    }}
+                            className="infoButton3">
+                        <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
+                    </Button>
+                    <InfoModalStatisticsDataset show={showStatisticsDatasetInfoModal}
+                                                onHide={() => setShowStatisticsDatasetInfoModal(false)}
+                                                statisticsDataset={modalSelectedStatisticsDataset}
+                    />
                     <Button variant="danger"
                             onClick={() => removeStatisticsDatasetConfirm(props.statisticsDataset)}
                             size="sm">
