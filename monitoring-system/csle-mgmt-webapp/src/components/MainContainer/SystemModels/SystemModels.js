@@ -484,8 +484,8 @@ const SystemModels = (props) => {
     const removeModelConfirm = (model) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the system model with ID: ' + parseInt(model.id.split("_")[0]) +
-                "? this action cannot be undone",
+            message: ('Are you sure you want to delete the system model with ID: ' + model.id +
+                "? this action cannot be undone"),
             buttons: [
                 {
                     label: 'Yes',
@@ -506,7 +506,7 @@ const SystemModels = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the system model with ID {parseInt(model.id.split("_")[0])}?
+                                    Are you sure you want to delete the system model with ID {model.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"

@@ -812,7 +812,7 @@ class COMMANDS:
     SEARCH_PROMETHEUS = "prometheus"
     PROMETHEUS_PID_FILE = "/var/log/csle/prometheus.pid"
     PROMETHEUS_LOG_FILE = "/var/log/csle/prometheus.log"
-    PROMETHEUS_CONFIG_FILE = f"${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/monitoring-system/prometheus.yml"
+    PROMETHEUS_CONFIG_FILE = f"${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/monitoring-system/prometheus/prometheus.yml"
     PROMETHEUS_PORT = 9090
     START_PROMETHEUS = f"nohup prometheus --config.file={PROMETHEUS_CONFIG_FILE} " \
                        "--storage.tsdb.retention.size=10GB " \

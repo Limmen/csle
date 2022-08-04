@@ -267,6 +267,13 @@ running commands can read and write to this directory.
       cd ../../../
       ```
 
+    - Install simulation envs (see [README](simulation-system/envs/README.MD) for more information)
+      ```bash
+      cd simulation-system/envs
+      make install
+      cd ../../
+      ```
+
 8. **Install the CLI tool**
     - Install the CLI tool and make it executable as a script:
       ```bash
@@ -355,10 +362,37 @@ running commands can read and write to this directory.
            proxy_set_header X-Forwarded-Port $server_port;
        }
        ```
-    - Restart nginx:
-      ```bash
-      sudo service nginx restart
-      ```
+     - Restart nginx:
+       ```bash
+       sudo service nginx restart
+       ```
+     - If you have HTTPS enabled on the REST API and have certificates you can configure them in NGINX as follows 
+       by editing `/etc/nginx/sites-available/default`:
+       ```bash
+       server {                                                                                                                                                                                      
+            listen 80 default_server;                                                                                                                                                             
+            listen [::]:80 default_server;                                                                                                                                                        
+            server_name _;                                                                                                                                                                        
+            return 301 https://$host$request_uri;                                                                                                                                                 
+        }
+        
+        server {                                                                                                                                                                                      
+            listen 443 ssl default_server;                                                                                                                                                        
+            listen [::]:443 ssl default_server;                                                                                                                                                   
+            ssl_certificate /var/log/csle/certs/csle.dev.crt;                                                                                                                                     
+            ssl_certificate_key /var/log/csle/certs/csle_private.key;                                                                                                                             
+            root /var/www/html;                                                                                                                                                                   
+            index index.html index.htm index.nginx-debian.html;                                                                                                                                   
+            server_name csle.dev;                                                                                                                                                                 
+            location / {                                                                                                                                                                          
+            proxy_pass http://localhost:7777/;                                                                                                                                            
+            proxy_buffering off;                                                                                                                                                          
+            proxy_set_header X-Real-IP $remote_addr;                                                                                                                                      
+            proxy_set_header X-Forwarded-Host $host;                                                                                                                                      
+            proxy_set_header X-Forwarded-Port $server_port;                                                                                                                               
+            }                                                                                                                                                                                     
+        }
+       ```
      - Install the monitoring system and associated tools:
      ```bash
        cd monitoring-system

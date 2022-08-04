@@ -1050,7 +1050,7 @@ def create_app(static_folder: str, proxy_server: str):
 
 
 def start_proxy_server(static_folder: str, port: int = 7777, proxy_server: str = "http://172.31.212.92:7777/",
-                       num_threads: int = 100, host: str = "0.0.0.0") -> None:
+                       num_threads: int = 100, host: str = "0.0.0.0", https: bool = False) -> None:
     """
     Creates the flask app and serves it
 
@@ -1059,8 +1059,12 @@ def start_proxy_server(static_folder: str, port: int = 7777, proxy_server: str =
     :param num_threads: number of threads for serving
     :param host: the host string for serving
     :param proxy_server: the proxy server
+    :param https: boolean flag whether to use https or not
 
     :return: None
     """
     app = create_app(static_folder=static_folder, proxy_server=proxy_server)
-    serve(app, host=host, port=port, threads=num_threads)
+    if not https:
+        serve(app, host=host, port=port, threads=num_threads)
+    else:
+        serve(app, host=host, port=port, threads=num_threads, url_scheme='https')

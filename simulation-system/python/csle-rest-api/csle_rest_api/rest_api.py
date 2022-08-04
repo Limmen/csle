@@ -197,7 +197,8 @@ def create_app(static_folder: str):
     return app
 
 
-def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, host: str = "0.0.0.0") -> None:
+def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, host: str = "0.0.0.0",
+                 https: bool = False) -> None:
     """
     Creates the flask app and serves it
 
@@ -205,9 +206,13 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
     :param port: the port for serving
     :param num_threads: number of threads for serving
     :param host: the host string for serving
+    :param https: boolean flag whether to use https or not
 
     :return: None
     """
     app = create_app(static_folder=static_folder)
-    serve(app, host=host, port=port, threads=num_threads)
+    if not https:
+        serve(app, host=host, port=port, threads=num_threads)
+    else:
+        serve(app, host=host, port=port, threads=num_threads, url_scheme='https')
 
