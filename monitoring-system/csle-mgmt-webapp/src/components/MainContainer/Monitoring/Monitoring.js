@@ -953,7 +953,7 @@ const Monitoring = (props) => {
 
 
     const GrafanaLink = (props) => {
-        if(!props.sessionData.admin){
+        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin){
             if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
                 return (
                     <span className="grafanaStatus">Grafana status: stopped
@@ -996,7 +996,7 @@ const Monitoring = (props) => {
     }
 
     const PrometheusLink = (props) => {
-        if(!props.sessionData.admin) {
+        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
             if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
                 return (
                     <span className="grafanaStatus">Prometheus status: stopped
@@ -1039,7 +1039,7 @@ const Monitoring = (props) => {
     }
 
     const NodeExporterLink = (props) => {
-        if(!props.sessionData.admin) {
+        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
             if (props.nodeExporterStatus == null || props.nodeExporterStatus.running === false) {
                 return (
                     <span className="grafanaStatus">Node exporter status: stopped
@@ -1082,7 +1082,7 @@ const Monitoring = (props) => {
     }
 
     const CadvisorLink = (props) => {
-        if(!props.sessionData.admin) {
+        if(props.sessionData === null || props.sessionData === undefined || !props.sessionData.admin) {
             if (props.cAdvisorStatus == null || props.cAdvisorStatus.running === false) {
                 return (
                     <span className="grafanaStatus">cAdvisor status: stopped

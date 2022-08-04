@@ -589,7 +589,9 @@ const Emulations = (props) => {
                                        removeEmulation={removeEmulationConfirm} execution={true}
                                        removeExecution={removeExecutionConfirm}
                                        startOrStopEmulation={startOrStopEmulationConfirm}
-                                       execution_ip_octet={exec.ip_first_octet}/>
+                                       execution_ip_octet={exec.ip_first_octet}
+                                       sessionData={props.sessionData}
+                            />
                         </Accordion>
                     )
                     }
@@ -630,7 +632,7 @@ const Emulations = (props) => {
                                    sessionData={props.sessionData}
                         />
                     </Accordion>
-                    <GetExecutions executions={props.selectedEmulation.executions}/>
+                    <GetExecutions executions={props.selectedEmulation.executions} sessionData={props.sessionData}/>
                 </div>
             )
         }
