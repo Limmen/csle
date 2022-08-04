@@ -1010,7 +1010,7 @@ const Policies = (props) => {
             (`http://` + ip + ':7777/tabular-policies/' + tabular_policy_id.value
             + "?token=" + props.sessionData.token),
             {
-                method: "DELETE",
+                method: "GET",
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -1200,7 +1200,7 @@ const Policies = (props) => {
             (`http://` + ip + ':7777/vector-policies/' + vector_policy_id.value
             + "?token=" + props.sessionData.token),
             {
-                method: "DELETE",
+                method: "GET",
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
