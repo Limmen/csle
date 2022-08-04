@@ -53,6 +53,49 @@ const TabularPolicy = (props) => {
         }
     }
 
+    const ValueFunctionOrEmpty = (props) => {
+        if(props.policy.value_function !== null && props.policy.value_function !== undefined) {
+            return (
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setValueFunOpen(!valueFunOpen)}
+                            aria-controls="valueFunBody"
+                            aria-expanded={valueFunOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Value function </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={valueFunOpen}>
+                        <div id="actionsBody" className="cardBodyHidden">
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>State</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {props.policy.value_function.map((row, index) => {
+                                        return(
+                                            <tr key={row + "-" + index}>
+                                                <td>{index}</td>
+                                                <td>{row}</td>
+                                            </tr>)})}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+            )
+        } else {
+            return <></>
+        }
+    }
+
     return (<Card key={props.policy.id} ref={props.wrapper}>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.policy.id} className="mgHeader">
@@ -187,40 +230,7 @@ const TabularPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-                <Card className="subCard">
-                    <Card.Header>
-                        <Button
-                            onClick={() => setValueFunOpen(!valueFunOpen)}
-                            aria-controls="valueFunBody"
-                            aria-expanded={valueFunOpen}
-                            variant="link"
-                        >
-                            <h5 className="semiTitle"> Value function </h5>
-                        </Button>
-                    </Card.Header>
-                    <Collapse in={valueFunOpen}>
-                        <div id="actionsBody" className="cardBodyHidden">
-                            <div className="table-responsive">
-                                <Table striped bordered hover>
-                                    <thead>
-                                    <tr>
-                                        <th>State</th>
-                                        <th>Value</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {props.policy.value_function.map((row, index) => {
-                                        return(
-                                            <tr key={row + "-" + index}>
-                                                <td>{index}</td>
-                                                <td>{row}</td>
-                                            </tr>)})}
-                                    </tbody>
-                                </Table>
-                            </div>
-                        </div>
-                    </Collapse>
-                </Card>
+                <ValueFunctionOrEmpty policy={props.policy}/>
 
             </Card.Body>
         </Accordion.Collapse>
