@@ -1974,7 +1974,7 @@ const Policies = (props) => {
     }
 
     const DeleteAllMultiThresholdPoliciesOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -2062,7 +2062,7 @@ const Policies = (props) => {
     }
 
     const DeleteAllPPOPoliciesOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -2151,7 +2151,7 @@ const Policies = (props) => {
     }
 
     const DeleteAllFNNWSoftmaxPoliciesOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -2240,7 +2240,7 @@ const Policies = (props) => {
     }
 
     const DeleteAllDQNPoliciesOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -2329,7 +2329,7 @@ const Policies = (props) => {
     }
 
     const DeleteAllTabularPoliciesOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -2418,7 +2418,7 @@ const Policies = (props) => {
     }
 
     const DeleteAllVectorPoliciesOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -2507,7 +2507,7 @@ const Policies = (props) => {
     }
 
     const DeleteAllAlphaVecPoliciesOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -2624,6 +2624,7 @@ const Policies = (props) => {
                         <MultiThresholdPolicy policy={selectedMultiThresholdPolicy} wrapper={wrapper}
                                               key={selectedMultiThresholdPolicy.id}
                                               removeMultiThresholdPolicy={removeMultiThresholdPolicyConfirm}
+                                              sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -2654,7 +2655,7 @@ const Policies = (props) => {
                     </h3>
                     <Accordion defaultActiveKey="0">
                         <PPOPolicy policy={selectedPpoPolicy} wrapper={wrapper} key={selectedPpoPolicy.id}
-                                   removePPOPolicy={removePPOPolicyConfirm}
+                                   removePPOPolicy={removePPOPolicyConfirm} sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -2687,6 +2688,7 @@ const Policies = (props) => {
                         <FnnWSoftmaxPolicy policy={props.selectedFnnWSoftmaxPolicy} wrapper={wrapper}
                                            key={props.selectedFnnWSoftmaxPolicy.id}
                                            removeFnnWSoftmaxPolicy={removeFnnWSoftmaxPolicyConfirm}
+                                           sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -2718,6 +2720,7 @@ const Policies = (props) => {
                     <Accordion defaultActiveKey="0">
                         <DQNPolicy policy={selectedDQNPolicy} wrapper={wrapper} key={selectedDQNPolicy.id}
                                    removeDQNPolicy={removeDQNPolicyConfirm}
+                                   sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -2749,6 +2752,7 @@ const Policies = (props) => {
                     <Accordion defaultActiveKey="0">
                         <TabularPolicy policy={selectedTabularPolicy} wrapper={wrapper} key={selectedTabularPolicy.id}
                                        removeTabularPolicy={removeTabularPolicyConfirm}
+                                       sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -2780,6 +2784,7 @@ const Policies = (props) => {
                     <Accordion defaultActiveKey="0">
                         <VectorPolicy policy={selectedVectorPolicy} wrapper={wrapper} key={selectedVectorPolicy.id}
                                       removeVectorPolicy={removeVectorPolicyConfirm}
+                                      sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -2812,6 +2817,7 @@ const Policies = (props) => {
                         <AlphaVecPolicy policy={selectedAlphaVecPolicy} wrapper={wrapper}
                                         key={selectedAlphaVecPolicy.id}
                                         removeAlphaVecPolicy={removeAlphaVecPolicyConfirm}
+                                        sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>

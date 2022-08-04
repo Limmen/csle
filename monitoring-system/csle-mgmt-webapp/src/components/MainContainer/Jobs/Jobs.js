@@ -1621,7 +1621,7 @@ const Jobs = (props) => {
     }
 
     const DeleteAllTrainingJobsOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -1712,7 +1712,7 @@ const Jobs = (props) => {
     }
 
     const DeleteAllDataCollectionJobsOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
@@ -1802,7 +1802,7 @@ const Jobs = (props) => {
     }
 
     const DeleteAllSystemIdentificationJobsOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"

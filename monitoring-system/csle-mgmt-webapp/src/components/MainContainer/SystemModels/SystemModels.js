@@ -611,7 +611,7 @@ const SystemModels = (props) => {
     }
 
     const DeleteSelectedModelOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     className="removeButton"

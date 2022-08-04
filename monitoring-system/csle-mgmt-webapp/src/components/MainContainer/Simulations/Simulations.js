@@ -407,7 +407,7 @@ const Simulations = (props) => {
     }
 
     const DeleteAllSimulationsOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"

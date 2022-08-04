@@ -367,7 +367,7 @@ const EmulationStatistics = (props) => {
     );
 
     const DeleteSelectedStatisticOrEmpty = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     className="removeButton"

@@ -30,7 +30,7 @@ const AlphaVecPolicy = (props) => {
     }
 
     const Actions = (props) => {
-        if (props.sessionData.admin) {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <h5 className="semiTitle">
                     Actions:
