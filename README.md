@@ -108,7 +108,18 @@ Follow the instructions below to install CSLE.
 
 ### Install from source
 
-1. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
+1. **Install build tools and version management tools**
+
+```bash
+apt install make
+apt install git
+apt install bzip2
+wget https://repo.anaconda.com/archive/Anaconda3-5.0.0-Linux-x86_64.sh
+chmod u+rwx Anaconda3-5.0.0-Linux-x86_64.sh
+./Anaconda3-5.0.0-Linux-x86_64.sh
+```
+
+2. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
 
 ```bash
 git clone https://github.com/Limmen/clse
@@ -124,18 +135,18 @@ running commands can read and write to this directory.
 Logs of CSLE will be stored in `/tmp/csle`, create this directory and set the permissions so that the user used for
 running commands can read and write to this directory.
 
-2. **Create log directory**
+3. **Create log directory**
    - ```bash
      mkdir /tmp/csle     
      ```
 
-3. **Create PID file directory**
+4. **Create PID file directory**
    - ```bash
      mkdir /var/log/csle
      chmod -R 777 /var/log/csle     
      ```
 
-4. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
+5. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
       ```bash
       sudo apt-get install postgresql
@@ -168,7 +179,7 @@ running commands can read and write to this directory.
      ```
    and then rebuild it with the commands above.
 
-5. **Install the simulation system**
+6. **Install the simulation system**
     - Install Python 3.8 or higher:
         - Using conda:
           ```bash
@@ -178,6 +189,10 @@ running commands can read and write to this directory.
           ```bash
            sudo apt install python3.8
           ```
+    - Activate the conda environment
+    ```bash
+    source activate python38
+    ```
 
     - Install `csle-collector` (see ([README](simulation-system/csle-collector/README.md)) for more information)
       ```bash
@@ -197,6 +212,7 @@ running commands can read and write to this directory.
       ```bash
       cd simulation-system/python/csle-attacker/
       pip install -e .
+      cd ../../../
       ```
 
     - Install `csle-defender` (see ([README](simulation-system/csle-defender/README.md)) for more information)
@@ -214,59 +230,58 @@ running commands can read and write to this directory.
       cd ../../../
       ```
 
-   - Install `csle-system-identification` (see ([README](simulation-system/csle-system-identification/README.MD)) for more
-     information)
-     ```bash
-     cd simulation-system/python/csle-system-identification/
-     pip install -e .
-     cd ../../../
-     ```
+    - Install `csle-system-identification` (see ([README](simulation-system/csle-system-identification/README.MD)) for more
+      information)
+      ```bash
+      cd simulation-system/python/csle-system-identification/
+      pip install -e .
+      cd ../../../
+      ```
 
-   - Install `csle-agents` (see ([README](simulation-system/csle-agents/README.MD)) for more
-     information)
-     ```bash
-     cd simulation-system/python/csle-agents/
-     pip install -e .
-     cd ../../../
-     ```
+    - Install `csle-agents` (see ([README](simulation-system/csle-agents/README.MD)) for more
+      information)
+      ```bash
+      cd simulation-system/python/csle-agents/
+      pip install -e .
+      cd ../../../
+      ```
 
-   - Install `csle-ryu` (see ([README](simulation-system/csle-ryu/README.MD)) for more
-     information)
-     ```bash
-     cd simulation-system/python/csle-ryu/
-     pip install -e .
-     cd ../../../
-     ```
+    - Install `csle-ryu` (see ([README](simulation-system/csle-ryu/README.MD)) for more
+      information)
+      ```bash
+      cd simulation-system/python/csle-ryu/
+      pip install -e .
+      cd ../../../
+      ```
 
-   - Install `csle-rest-api` (see ([README](simulation-system/csle-rest-api/README.MD)) for more
-     information)
-     ```bash
-     cd simulation-system/python/csle-rest-api/
-     pip install -e .
-     cd ../../../
-     ```
+    - Install `csle-rest-api` (see ([README](simulation-system/csle-rest-api/README.MD)) for more
+      information)
+      ```bash
+      cd simulation-system/python/csle-rest-api/
+      pip install -e .
+      cd ../../../
+      ```
 
-6. **Install the CLI tool**
+7. **Install the CLI tool**
     - Install the CLI tool and make it executable as a script:
       ```bash
       cd csle-cli
       pip install -e .      
       ```
-    - Setup auto-completion in BASH
-            - Setup auto-completion by generating the following file:
-            ```bash
-            _CSLE_COMPLETE=bash_source csle > ~/.csle-complete.bash
-            ```
-            - Enable the auto-completion by adding the following line to ~/.bashrc
-            ```bash
-             . ~/.csle-complete.bash
-            ```
+    - Setup auto-completion in BASH by generating the following file:
+      ```bash
+      _CSLE_COMPLETE=bash_source csle > ~/.csle-complete.bash
+      ```
+      and then adding the following line to ~/.bashrc
+      ```bash
+      . ~/.csle-complete.bash
+      ```
     - Setup auto-completion in Fish:
-    ```
+      ```bash
       _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish 
-    ```
+      ```
 
-7. **Install the emulation system**
+8. **Install the emulation system**
     - Add Docker's official GPG key:
       ```bash
       sudo mkdir -p /etc/apt/keyrings
@@ -303,7 +318,7 @@ running commands can read and write to this directory.
       make build
       ```   
 
-8. **Install the monitoring system**
+9. **Install the monitoring system**
     - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm
       installed, to install node and npm execute:
        ```bash
