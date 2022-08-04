@@ -119,7 +119,11 @@ chmod u+rwx Anaconda3-5.0.0-Linux-x86_64.sh
 ./Anaconda3-5.0.0-Linux-x86_64.sh
 ```
 
-2. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
+2. **Setup the configuration**
+
+- Setup your configuration (e.g define username and passwords) by editing the config file `csle/config.json`
+
+3. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
 
 ```bash
 git clone https://github.com/Limmen/clse
@@ -135,18 +139,19 @@ running commands can read and write to this directory.
 Logs of CSLE will be stored in `/tmp/csle`, create this directory and set the permissions so that the user used for
 running commands can read and write to this directory.
 
-3. **Create log directory**
+4. **Create log directory**
    - ```bash
      mkdir /tmp/csle     
      ```
 
-4. **Create PID file directory**
+5. **Create PID file directory**
    - ```bash
      mkdir /var/log/csle
+     mkdir /var/log/csle/datasets
      chmod -R 777 /var/log/csle     
      ```
 
-5. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
+6. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
       ```bash
       sudo apt-get install postgresql
@@ -179,7 +184,7 @@ running commands can read and write to this directory.
      ```
    and then rebuild it with the commands above.
 
-6. **Install the simulation system**
+7. **Install the simulation system**
     - Install Python 3.8 or higher:
         - Using conda:
           ```bash
@@ -262,7 +267,7 @@ running commands can read and write to this directory.
       cd ../../../
       ```
 
-7. **Install the CLI tool**
+8. **Install the CLI tool**
     - Install the CLI tool and make it executable as a script:
       ```bash
       cd csle-cli
@@ -282,7 +287,7 @@ running commands can read and write to this directory.
       _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish 
       ```
 
-8. **Install the emulation system**
+9. **Install the emulation system**
     - Add Docker's official GPG key:
       ```bash
       sudo mkdir -p /etc/apt/keyrings
@@ -301,83 +306,91 @@ running commands can read and write to this directory.
       ```bash
       cd emulation-system/base_images
       make build
+      cd ../../
       ```
     - Install derived images (see ([README](emulation-system/derived_images/README.MD)) for more information)
       ```bash
       cd emulation-system/derived_images
       make build
+      cd ../../
       ```
     - Install emulation envs (see [README](emulation-system/envs/README.MD) for more information)
       ```bash
       cd emulation-system/envs
       make install
+      cd ../../
       ```
     - Alternatively you can install everything at once (assuming you have already installed Docker and the metastore)
       by running the commands:
       ```bash
       cd emulation-system
       make build
+      cd ../
       ```   
 
-9. **Install the monitoring system**
-    - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm
-      installed, to install node and npm execute:
+10. **Install the monitoring system**
+     - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm
+       installed, to install node and npm execute:
+        ```bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # install nvm
+        nvm -v # Verify nvm installation
+        nvm install node # Install node
+        npm install -g npm # Update npm
+        node -v # Verify version of node
+        npm -v # Verify version of npm       
+        ```
+     - To serve the webapp withe TLS you need nginx as a reverse proxy, install and start nginx with the following commands:
        ```bash
-       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # install nvm
-       command -v nvm # Verify nvm installation
-       nvm install node # Install node
-       npm install -g npm # Update npm
-       node -v # Verify version of node
-       npm -v # Verify version of npm       
+       sudo apt install nginx
+       sudo service nginx start
        ```
-    - To serve the webapp withe TLS you need nginx as a reverse proxy, install and start nginx with the following commands:
+     - Configure nginx by editing `/etc/nginx/sites-available/default` and modifying location `/` inside the server object 
+       by adding the following:
+       ```bash
+       location / {
+           proxy_pass http://localhost:7777/;
+           proxy_buffering off;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-Host $host;
+           proxy_set_header X-Forwarded-Port $server_port;
+       }
+       ```
+    - Restart nginx:
       ```bash
-      sudo apt install nginx
-      sudo service nginx start
+      sudo service nginx restart
       ```
-    - Configure nginx by editing `/etc/nginx/sites-available/default` and modifying location `/` inside the server object 
-      by adding the following:
-      ```bash
-      location / {
-          proxy_pass http://localhost:7777/;
-          proxy_buffering off;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-Host $host;
-          proxy_set_header X-Forwarded-Port $server_port;
-      }
-      ```
-    - Install the monitoring system and associated tools:
-    ```bash
-      cd monitoring-system
-      chmod u+x install.sh
-      ./install.sh
-    ```
-    - Add prometheus binary to the path
-      ```bash
-       export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
-       ```
-      or for fish shell:
-      ```bash
-       fish_add_path /path/to/csle/monitoring-system/prometheus/
-       ```
-   To have the binary permanently in $PATH, add the following line to the
-   .bashrc: `export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
-    - Add node_exporter binary to the path
-      ```bash
-       export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH
-       ```
-      or for fish shell:
-      ```bash
-       fish_add_path /path/to/csle/monitoring-system/node_exporter/
-       ```
-   To have the binary permanently in $PATH, add the following line to the
-   .bashrc: `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
-    - Run the monitoring system (for more instructions see [README](monitoring system/README.MD)):
-    ```bash
-      cd monitoring-system
-      chmod u+x run_all.sh
-      ./run_all.sh
-    ```
+     - Install the monitoring system and associated tools:
+     ```bash
+       cd monitoring-system
+       chmod u+x install.sh
+       ./install.sh
+     ```
+     - Add prometheus binary to the path
+       ```bash
+        export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
+        ```
+       or for fish shell:
+       ```bash
+        fish_add_path /path/to/csle/monitoring-system/prometheus/
+        ```
+    To have the binary permanently in $PATH, add the following line to the
+    .bashrc: `export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
+     - Add node_exporter binary to the path
+       ```bash
+        export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH
+        ```
+       or for fish shell:
+       ```bash
+        fish_add_path /path/to/csle/monitoring-system/node_exporter/
+        ```
+    To have the binary permanently in $PATH, add the following line to the
+    .bashrc: `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
+     - Run the monitoring system (for more instructions see [README](monitoring system/README.MD)):
+     ```bash
+       cd monitoring-system
+       chmod u+x run_all.sh
+       ./run_all.sh
+     ```
 
 ## Uninstall
 
