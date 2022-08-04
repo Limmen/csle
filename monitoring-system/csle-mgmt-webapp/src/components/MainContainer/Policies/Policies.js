@@ -2439,7 +2439,7 @@ const Policies = (props) => {
         if (!props.loadingVectorPolicies && props.vectorPoliciesIds.length === 0) {
             return (
                 <div>
-                    <span className="emptyText">No Vector policies are available</span>
+                    <span className="emptyText">No vector policies are available</span>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}

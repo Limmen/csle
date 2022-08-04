@@ -99,6 +99,7 @@ n
         :return: None
         """
         OSSECIDSManager._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
@@ -130,6 +131,7 @@ n
         :return: None
         """
         OSSECIDSManager._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
@@ -155,6 +157,7 @@ n
         """
         statuses = []
         OSSECIDSManager._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
@@ -181,6 +184,7 @@ n
         """
         ids_log_data_list = []
         OSSECIDSManager._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:

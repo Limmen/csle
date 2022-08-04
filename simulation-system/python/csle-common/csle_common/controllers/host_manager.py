@@ -72,6 +72,7 @@ class HostManager:
         :return: None
         """
         HostManager._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             # Open a gRPC session
@@ -97,6 +98,7 @@ class HostManager:
         :return: None
         """
         HostManager._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             # Open a gRPC session
@@ -119,6 +121,7 @@ class HostManager:
         """
         statuses = []
         HostManager._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             # Open a gRPC session
@@ -146,6 +149,7 @@ class HostManager:
         """
         host_metrics_data_list = []
         HostManager._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             # Open a gRPC session
