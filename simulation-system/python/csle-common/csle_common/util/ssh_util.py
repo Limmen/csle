@@ -24,7 +24,7 @@ class SSHUtil:
         return results
 
     @staticmethod
-    def execute_ssh_cmd(cmd: str, conn, wait_for_completion :bool = True) -> Tuple[bytes, bytes, float]:
+    def execute_ssh_cmd(cmd: str, conn, wait_for_completion :bool = True, retries: int = 2) -> Tuple[bytes, bytes, float]:
         """
         Executes an action on the emulation over a ssh connection,
         this is a synchronous operation that waits for the completion of the action before returning
@@ -32,24 +32,31 @@ class SSHUtil:
         :param cmd: the command to execute
         :param conn: the ssh connection
         :param wait_for_completion: boolean flag whether to wait for completion or not
+        :param retry: retries
         :return: outdata, errdata, total_time
         """
-        transport_conn = conn.get_transport()
-        session = transport_conn.open_session(timeout=60)
-        start = time.time()
-        session.exec_command(cmd)
-        outdata, errdata = b'', b''
-        # Wait for completion
-        while True:
-            # Reading from output streams
-            while session.recv_ready():
-                outdata += session.recv(1000)
-            while session.recv_stderr_ready():
-                errdata += session.recv_stderr(1000)
+        exp = None
+        for i in range(retries):
+            try:
+                transport_conn = conn.get_transport()
+                session = transport_conn.open_session(timeout=128)
+                start = time.time()
+                session.exec_command(cmd)
+                outdata, errdata = b'', b''
+                # Wait for completion
+                while True:
+                    # Reading from output streams
+                    while session.recv_ready():
+                        outdata += session.recv(1000)
+                    while session.recv_stderr_ready():
+                        errdata += session.recv_stderr(1000)
 
-            # Check for completion
-            if session.exit_status_ready() or not wait_for_completion:
-                break
-        end = time.time()
-        total_time = end - start
-        return outdata, errdata, total_time
+                    # Check for completion
+                    if session.exit_status_ready() or not wait_for_completion:
+                        break
+                end = time.time()
+                total_time = end - start
+                return outdata, errdata, total_time
+            except Exception as e:
+                exp = e
+        raise ConnectionError(f"Connection failed: {str(exp)} {repr(exp)}")

@@ -169,6 +169,7 @@ class EmulationEnvManager:
         SnortIDSManager.start_snort_ids(emulation_env_config=emulation_env_config)
         time.sleep(10)
         SnortIDSManager.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
@@ -176,10 +177,12 @@ class EmulationEnvManager:
         OSSECIDSManager.start_ossec_ids(emulation_env_config=emulation_env_config)
         time.sleep(10)
         OSSECIDSManager.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
         HostManager.start_host_monitor_thread(emulation_env_config=emulation_env_config)
+        time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
