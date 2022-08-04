@@ -468,17 +468,16 @@ const SystemModels = (props) => {
 
     const removeModel = (model) => {
         setLoading(true)
+        if(getSystemModelTypeStr(model.model_type) === "gaussian_mixture") {
+            removeGaussianMixtureSystemModelRequest(model.id)
+        }
+        if(getSystemModelTypeStr(model.model_type) === "empirical") {
+            removeEmpiricalSystemModelRequest(model.id)
+        }
+        if(getSystemModelTypeStr(model.model_type) === "gp") {
+            removeGpSystemModelRequest(model.id)
+        }
         resetState()
-        if(model.type == "gaussian_mixture") {
-            removeGaussianMixtureSystemModelRequest(parseInt(model.id.split("_")[0]))
-        }
-        if(model.type == "empirical") {
-            removeEmpiricalSystemModelRequest(parseInt(model.id.split("_")[0]))
-        }
-        if(model.type == "gp") {
-            removeGpSystemModelRequest(parseInt(model.id.split("_")[0]))
-        }
-        setSelectedSystemModel(null)
     }
 
     const removeModelConfirm = (model) => {
