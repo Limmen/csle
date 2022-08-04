@@ -1901,19 +1901,18 @@ const Jobs = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Training jobs
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Training jobs</h4>
                     <p className="modalText">
                         A training job represents an ongoing execution of training policies.
                         The list of training jobs enables real-time monitoring of jobs.
                     </p>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -1928,19 +1927,18 @@ const Jobs = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         System identification jobs
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>System identification jobs</h4>
                     <p className="modalText">
                         A system identification job represents an ongoing process for estimating a system model
                         for an emulation.
                     </p>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -1955,18 +1953,17 @@ const Jobs = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Data Collection Jobs
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Data Collection jobs</h4>
                     <p className="modalText">
                         A data collection job represents an ongoing execution of data collection.
                     </p>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

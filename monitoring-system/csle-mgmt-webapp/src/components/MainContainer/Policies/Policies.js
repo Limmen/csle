@@ -1911,12 +1911,11 @@ const Policies = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Trained policies
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Policies
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Policies</h4>
                     <p className="modalText">
                         Trained policies are typically in the form of deep neural networks but can also be in tabular
                         representations or in special parameterizations such as Gaussian policies or threshold policies.
@@ -1925,8 +1924,8 @@ const Policies = (props) => {
                         <img src={NeuralNetworkPolicies} alt="neural network policies"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

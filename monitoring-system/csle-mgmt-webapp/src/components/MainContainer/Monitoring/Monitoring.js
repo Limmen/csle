@@ -282,12 +282,11 @@ const Monitoring = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Real-time monitoring of emulated infrastructures
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Monitoring setup</h4>
                     <p className="modalText">
                         Host and network metrics are collected at each emulated host and sent periodically to a
                         distributed Kafka queue.
@@ -296,8 +295,8 @@ const Monitoring = (props) => {
                         <img src={DataCollection} alt="Markov chain"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

@@ -733,12 +733,11 @@ const Emulations = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Emulations
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Emulation of Computer Infrastructures</h4>
                     <p className="modalText">
                         An emulated infrastructure consists of a a cluster of machines that
                         runs a virtualization layer provided by Docker containers
@@ -753,8 +752,8 @@ const Emulations = (props) => {
                         <img src={ConfigSpace} alt="Emulated infrastructures"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

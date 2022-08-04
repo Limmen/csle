@@ -863,12 +863,11 @@ const Traces = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Traces
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Collection of emulation and simulation traces</h4>
                     <p className="modalText">
                         Simulation traces are collected from the simulation system. At every time-step of the
                         simulation,
@@ -881,8 +880,8 @@ const Traces = (props) => {
                         <img src={TraceImg} alt="Markov chain"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

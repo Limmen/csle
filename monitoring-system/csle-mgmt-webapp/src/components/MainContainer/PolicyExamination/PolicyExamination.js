@@ -278,12 +278,11 @@ const PolicyExamination = (props) => {
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Interactive examination of learned security policies
+                <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                    Examination of learned security policies
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h4>Examination of learned security policies</h4>
                 <p className="modalText">
                     The policy examination page allows a user to traverse episodes of
                     Markov decision processes in a controlled manner and to track
@@ -298,8 +297,8 @@ const PolicyExamination = (props) => {
                         learned security policies"/>
                 </div>
             </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
+            <Modal.Footer className="modalFooter">
+                <Button onClick={props.onHide} size="sm">Close</Button>
             </Modal.Footer>
         </Modal>);
     }

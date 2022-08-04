@@ -347,12 +347,11 @@ const Simulations = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Simulations
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Simulation of emulated infrastructures</h4>
                     <p className="modalText">
                         A simulation is defined as a Markov decision process or stochastic game, which models
                         how a discrete-time dynamical system is evolved and can be controlled.
@@ -361,8 +360,8 @@ const Simulations = (props) => {
                         <img src={MarkovChain} alt="Markov chain"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

@@ -87,12 +87,11 @@ const SystemModels = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Emulation statistics
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        System identification: estimating system models
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>System identification: estimating system models</h4>
                     <p className="modalText">
                         System identification (model learning) is the process of
                         building mathematical models of of dynamical systems from
@@ -107,8 +106,8 @@ const SystemModels = (props) => {
                         <img src={SystemIdentification} alt="Markov chain"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import Accordion from 'react-bootstrap/Accordion';
 import Spinner from 'react-bootstrap/Spinner'
 import InputGroup from 'react-bootstrap/InputGroup';
 import Table from 'react-bootstrap/Table'
@@ -19,11 +18,15 @@ import {useAlert} from "react-alert";
 
 const Downloads = (props) => {
     const [showTracesDatasetsInfoModal, setShowTracesDatasetsInfoModal] = useState(false);
+    const [showTracesDatasetInfoModal, setShowTracesDatasetInfoModal] = useState(false);
+    const [modalSelectedTracesDataset, setModalSelectedTracesDataset] = useState(null);
     const [tracesDatasets, setTracesDatasets] = useState([]);
     const [filteredTracesDatasets, setFilteredTracesDatasets] = useState([]);
     const [searchStringTracesDatasets, setSearchStringTracesDatasets] = useState("");
     const [loadingTracesDatasets, setLoadingTracesDatasets] = useState(true);
     const [showStatisticsDatasetsInfoModal, setShowStatisticsDatasetsInfoModal] = useState(false);
+    const [showStatisticsDatasetInfoModal, setShowStatisticsDatasetInfoModal] = useState(false);
+    const [modalSelectedStatisticsDataset, setModalSelectedStatisticsDataset] = useState(null);
     const [statisticsDatasets, setStatisticsDatasets] = useState([]);
     const [filteredStatisticsDatasets, setFilteredStatisticsDatasets] = useState([]);
     const [searchStringStatisticsDatasets, setSearchStringStatisticsDatasets] = useState("");
@@ -147,12 +150,11 @@ const Downloads = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Traces datasets
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Traces datasets</h4>
                     <p className="modalText">
                         Traces datasets contain sequences of measurements from a security scenario playing out in
                         an emulated IT infrastructure. A sequence contains a set of time-steps. Each time-step in the
@@ -161,8 +163,117 @@ const Downloads = (props) => {
                         files.
                     </p>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const InfoModalTracesDataset = (props) => {
+        if(props.tracesDataset === null || props.tracesDataset === undefined) {
+            return (<Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        .
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>)
+        }
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        {props.tracesDataset.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="table-responsive">
+                        <Table bordered hover>
+                            <thead>
+                            <tr className="tracesDatasetsTable">
+                                <th>
+                                    Attribute
+                                </th>
+                                <th>
+                                    Value
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Download link</td>
+                                <td>
+                                    <a href={"/traces-datasets/" + props.tracesDataset.id + "?download=true"}
+                                       download>
+                                        {props.tracesDataset.name}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Download count</td>
+                                <td>{props.tracesDataset.download_count}</td>
+                            </tr>
+                            <tr>
+                                <td>File format</td>
+                                <FileFormatCellDatasetTrace tracesDataset={props.tracesDataset}/>
+                            </tr>
+                            <tr>
+                                <td>Number of traces</td>
+                                <td>{props.tracesDataset.num_traces}</td>
+                            </tr>
+                            <tr>
+                                <td>Number of files</td>
+                                <td>{props.tracesDataset.num_files}</td>
+                            </tr>
+                            <tr>
+                                <td>Size (GB)</td>
+                                <td>
+                                    Uncompressed: {props.tracesDataset.size_in_gb},
+                                    compressed: {props.tracesDataset.compressed_size_in_gb}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Date added</td>
+                                <td>
+                                    {props.tracesDataset.date_added}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td>
+                                    {props.tracesDataset.description}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Citation</td>
+                                <td>{props.tracesDataset.citation}</td>
+                            </tr>
+                            <tr>
+                                <td>Added by</td>
+                                <td>{props.tracesDataset.added_by}</td>
+                            </tr>
+                            </tbody>
+                        </Table>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -272,6 +383,41 @@ const Downloads = (props) => {
         </Tooltip>
     );
 
+    const ActionsCellTracesDataset = (props) => {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+            return (
+                <td>
+                    <Button variant="button" onClick={() => setShowTracesDatasetInfoModal(true)}
+                            className="infoButton3">
+                        <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
+                    </Button>
+                    <InfoModalTracesDataset show={showTracesDatasetInfoModal}
+                                            onHide={() => setShowTracesDatasetInfoModal(false)}
+                                            tracesDataset={props.tracesDataset}
+                    />
+                    <Button variant="danger"
+                            onClick={() => removeTracesDatasetConfirm(props.tracesDataset)} size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </td>)
+        } else {
+            return (<td>
+                <Button variant="button" onClick={() => {
+                    setModalSelectedTracesDataset(props.tracesDataset)
+                    setShowTracesDatasetInfoModal(true)
+                }
+                }
+                        className="infoButton3">
+                    <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
+                </Button>
+                <InfoModalTracesDataset show={showTracesDatasetInfoModal}
+                                        onHide={() => setShowTracesDatasetInfoModal(false)}
+                                        tracesDataset={modalSelectedTracesDataset}
+                />
+            </td>)
+        }
+    }
+
     const FileFormatCellDatasetTrace = (props) => {
         if (props.tracesDataset.file_format === "json") {
             return (
@@ -323,100 +469,44 @@ const Downloads = (props) => {
                     <p className="downloadLink"> No traces datasets are available</p>
                 )
             } else {
-                if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
-                    return (
-                        <div className="table-responsive">
-                            <Table bordered hover>
-                                <thead>
-                                <tr className="tracesDatasetsTable">
-                                    <th>Download Link</th>
-                                    <th>Download count</th>
-                                    <th>File format</th>
-                                    <th>Number of traces</th>
-                                    <th>Number of files</th>
-                                    <th>Size (GB)</th>
-                                    <th>Date added</th>
-                                    <th>Description</th>
-                                    <th>Citation</th>
-                                    <th>Added by</th>
-                                    <th></th>
+                return (
+                    <div className="table-responsive">
+                        <Table bordered hover>
+                            <thead>
+                            <tr className="tracesDatasetsTable">
+                                <th>Download Link</th>
+                                <th>Download count</th>
+                                <th>Number of traces</th>
+                                <th>Size (GB)</th>
+                                <th>Date added</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {props.tracesDatasets.map((tracesDataset, index) =>
+                                <tr className="tracesDatasetsTable" key={tracesDataset.id + "-" + index}>
+                                    <td>
+                                        <a href={"/traces-datasets/" + tracesDataset.id + "?download=true"}
+                                           download>
+                                            {tracesDataset.name}
+                                        </a>
+                                    </td>
+                                    <td>{tracesDataset.download_count}</td>
+                                    <td>{tracesDataset.num_traces}</td>
+                                    <td>Uncompressed: {tracesDataset.size_in_gb},
+                                        compressed: {tracesDataset.compressed_size_in_gb}</td>
+                                    <td>{tracesDataset.date_added}</td>
+                                    <ActionsCellTracesDataset
+                                        sessionData={props.sessionData}
+                                        tracesDataset={tracesDataset}
+                                        className={"actionsTracesDataset-" + index + "-" + tracesDataset.id}
+                                    />
                                 </tr>
-                                </thead>
-                                <tbody>
-                                {props.tracesDatasets.map((tracesDataset, index) =>
-                                    <tr className="tracesDatasetsTable" key={tracesDataset.id + "-" + index}>
-                                        <td>
-                                            <a href={"/traces-datasets/" + tracesDataset.id + "?download=true"}
-                                               download>
-                                                {tracesDataset.name}
-                                            </a>
-                                        </td>
-                                        <td>{tracesDataset.download_count}</td>
-                                        <FileFormatCellDatasetTrace tracesDataset={tracesDataset}/>
-                                        <td>{tracesDataset.num_traces}</td>
-                                        <td>{tracesDataset.num_files}</td>
-                                        <td>Uncompressed: {tracesDataset.size_in_gb},
-                                            compressed: {tracesDataset.compressed_size_in_gb}</td>
-                                        <td>{tracesDataset.date_added}</td>
-                                        <td>{tracesDataset.description}</td>
-                                        <td>{tracesDataset.citation}</td>
-                                        <td>{tracesDataset.added_by}</td>
-                                        <td>
-                                            <Button variant="danger"
-                                                    onClick={() => removeTracesDatasetConfirm(tracesDataset)} size="sm">
-                                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )}
-                                </tbody>
-                            </Table>
-                        </div>
-                    )
-                } else {
-                    return (
-                        <div className="table-responsive">
-                            <Table bordered hover>
-                                <thead>
-                                <tr className="tracesDatasetsTable">
-                                    <th>Download Link</th>
-                                    <th>Download count</th>
-                                    <th>File format</th>
-                                    <th>Number of traces</th>
-                                    <th>Number of files</th>
-                                    <th>Size (GB)</th>
-                                    <th>Date added</th>
-                                    <th>Description</th>
-                                    <th>Citation</th>
-                                    <th>Added by</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {props.tracesDatasets.map((tracesDataset, index) =>
-                                    <tr className="tracesDatasetsTable" key={tracesDataset.id + "-" + index}>
-                                        <td>
-                                            <a href={"/traces-datasets/" + tracesDataset.id + "?download=true"}
-                                               download>
-                                                {tracesDataset.name}
-                                            </a>
-                                        </td>
-                                        <td>{tracesDataset.download_count}</td>
-                                        <FileFormatCellDatasetTrace tracesDataset={tracesDataset}/>
-                                        <td>{tracesDataset.num_traces}</td>
-                                        <td>{tracesDataset.num_files}</td>
-                                        <td>Uncompressed: {tracesDataset.size_in_gb},
-                                            compressed: {tracesDataset.compressed_size_in_gb}</td>
-                                        <td>{tracesDataset.date_added}</td>
-                                        <td>{tracesDataset.description}</td>
-                                        <td>{tracesDataset.citation}</td>
-                                        <td>{tracesDataset.added_by}</td>
-                                    </tr>
-                                )}
-                                </tbody>
-                            </Table>
-                        </div>
-                    )
-                }
+                            )}
+                            </tbody>
+                        </Table>
+                    </div>
+                )
             }
         }
     }
@@ -557,12 +647,11 @@ const Downloads = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Statistics datasets
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Statistics datasets</h4>
                     <p className="modalText">
                         Statistics datasets contain sequences of measurements from a security scenario playing out in
                         an emulated IT infrastructure. A sequence contains a set of time-steps. Each time-step in the
@@ -571,8 +660,8 @@ const Downloads = (props) => {
                         files.
                     </p>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -602,7 +691,8 @@ const Downloads = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete all statistics datasets? this action cannot be undone
+                                    Are you sure you want to delete all statistics datasets? this action cannot be
+                                    undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
@@ -651,7 +741,8 @@ const Downloads = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the statistics dataset {statisticsDataset.name}? this action
+                                    Are you sure you want to delete the statistics dataset {statisticsDataset.name}?
+                                    this action
                                     cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
@@ -700,6 +791,158 @@ const Downloads = (props) => {
         }
     }
 
+    const InfoModalStatisticsDataset = (props) => {
+        if(props.statisticsDataset === null || props.statisticsDataset === undefined) {
+            return (<Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        .
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>)
+        }
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        {props.statisticsDataset.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="table-responsive">
+                        <Table bordered hover>
+                            <thead>
+                            <tr className="statisticsDatasetsTable">
+                                <th>
+                                    Attribute
+                                </th>
+                                <th>
+                                    Value
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Download link</td>
+                                <td>
+                                    <a href={"/statistics-datasets/" + props.statisticsDataset.id + "?download=true"}
+                                       download>
+                                        {props.statisticsDataset.name}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Download count</td>
+                                <td>{props.statisticsDataset.download_count}</td>
+                            </tr>
+                            <tr>
+                                <td>File format</td>
+                                <td>{props.statisticsDataset.file_format}</td>
+                            </tr>
+                            <tr>
+                                <td>Number of measurements</td>
+                                <td>{props.statisticsDataset.num_measurements}</td>
+                            </tr>
+                            <tr>
+                                <td>Number of metrics</td>
+                                <td>{props.statisticsDataset.num_metrics}</td>
+                            </tr>
+                            <tr>
+                                <td>Number of conditions</td>
+                                <td>{props.statisticsDataset.num_conditions}</td>
+                            </tr>
+                            <tr>
+                                <td>Number of files</td>
+                                <td>{props.statisticsDataset.num_files}</td>
+                            </tr>
+                            <tr>
+                                <td>Size (GB)</td>
+                                <td>
+                                    Uncompressed: {props.statisticsDataset.size_in_gb},
+                                    compressed: {props.statisticsDataset.compressed_size_in_gb}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Date added</td>
+                                <td>
+                                    {props.statisticsDataset.date_added}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td>
+                                    {props.statisticsDataset.description}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Citation</td>
+                                <td>{props.statisticsDataset.citation}</td>
+                            </tr>
+                            <tr>
+                                <td>Added by</td>
+                                <td>{props.statisticsDataset.added_by}</td>
+                            </tr>
+                            <tr>
+                                <td>Metrics</td>
+                                <td>{props.statisticsDataset.metrics}</td>
+                            </tr>
+                            <tr>
+                                <td>Conditions</td>
+                                <td>{props.statisticsDataset.conditions}</td>
+                            </tr>
+                            </tbody>
+                        </Table>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const ActionsCellStatisticsDataset = (props) => {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+            return (
+                <td>
+                    <Button variant="danger"
+                            onClick={() => removeStatisticsDatasetConfirm(props.statisticsDataset)}
+                            size="sm">
+                        <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
+                    </Button>
+                </td>)
+        } else {
+            return (<td>
+                <Button variant="button" onClick={() => {
+                    setModalSelectedStatisticsDataset(props.statisticsDataset)
+                    setShowStatisticsDatasetInfoModal(true)
+                }}
+                        className="infoButton3">
+                    <i className="infoButton3 fa fa-info-circle" aria-hidden="true"/>
+                </Button>
+                <InfoModalStatisticsDataset show={showStatisticsDatasetInfoModal}
+                                            onHide={() => setShowStatisticsDatasetInfoModal(false)}
+                                            statisticsDataset={modalSelectedStatisticsDataset}
+                />
+            </td>)
+        }
+    }
+
 
     const SpinnerOrStatisticsDatasetsTable = (props) => {
         if (props.loading) {
@@ -713,122 +956,46 @@ const Downloads = (props) => {
                     <p className="downloadLink"> No statistics datasets are available</p>
                 )
             } else {
-                if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
-                    return (
-                        <div className="table-responsive">
-                            <Table bordered hover>
-                                <thead>
-                                <tr className="statisticsDatasetsTable">
-                                    <th>Download Link</th>
-                                    <th>Download count</th>
-                                    <th>File format</th>
-                                    <th>Counts</th>
-                                    <th>Conditions</th>
-                                    <th>Metrics</th>
-                                    <th>Size (GB)</th>
-                                    <th>Date added</th>
-                                    <th>Description</th>
-                                    <th>Citation</th>
-                                    <th>Added by</th>
-                                    <th></th>
+                return (
+                    <div className="table-responsive">
+                        <Table bordered hover>
+                            <thead>
+                            <tr className="statisticsDatasetsTable">
+                                <th>Download Link</th>
+                                <th>Download count</th>
+                                <th>Counts</th>
+                                <th>Size (GB)</th>
+                                <th>Date added</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {props.statisticsDatasets.map((statisticsDataset, index) =>
+                                <tr className="statisticsDatasetsTable" key={statisticsDataset.id + "-" + index}>
+                                    <td>
+                                        <a href={"/statistics-datasets/" + statisticsDataset.id + "?download=true"}
+                                           download>
+                                            {statisticsDataset.name}
+                                        </a>
+                                    </td>
+                                    <td>{statisticsDataset.download_count}</td>
+                                    <td>
+                                        Measurements: {statisticsDataset.num_measurements},
+                                        Metrics: {statisticsDataset.num_metrics},
+                                        Conditions: {statisticsDataset.num_conditions},
+                                        Files: {statisticsDataset.num_files}
+                                    </td>
+                                    <td>Uncompressed: {statisticsDataset.size_in_gb},
+                                        compressed: {statisticsDataset.compressed_size_in_gb}</td>
+                                    <td>{statisticsDataset.date_added}</td>
+                                    <ActionsCellStatisticsDataset sessionData={props.sessionData}
+                                                              statisticsDataset={statisticsDataset}/>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                {props.statisticsDatasets.map((statisticsDataset, index) =>
-                                    <tr className="statisticsDatasetsTable" key={statisticsDataset.id + "-" + index}>
-                                        <td>
-                                            <a href={"/statistics-datasets/" + statisticsDataset.id + "?download=true"}
-                                               download>
-                                                {statisticsDataset.name}
-                                            </a>
-                                        </td>
-                                        <td>{statisticsDataset.download_count}</td>
-                                        <td>{statisticsDataset.file_format}</td>
-                                        <td>
-                                            Measurements: {statisticsDataset.num_measurements},
-                                            Metrics: {statisticsDataset.num_metrics},
-                                            Conditions: {statisticsDataset.num_conditions},
-                                            Files: {statisticsDataset.num_files}
-                                        </td>
-                                        <td>
-                                            {statisticsDataset.conditions}
-                                        </td>
-                                        <td>
-                                            {statisticsDataset.metrics}
-                                        </td>
-                                        <td>Uncompressed: {statisticsDataset.size_in_gb},
-                                            compressed: {statisticsDataset.compressed_size_in_gb}</td>
-                                        <td>{statisticsDataset.date_added}</td>
-                                        <td>{statisticsDataset.description}</td>
-                                        <td>{statisticsDataset.citation}</td>
-                                        <td>{statisticsDataset.added_by}</td>
-                                        <td>
-                                            <Button variant="danger"
-                                                    onClick={() => removeStatisticsDatasetConfirm(statisticsDataset)} size="sm">
-                                                <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )}
-                                </tbody>
-                            </Table>
-                        </div>
-                    )
-                } else {
-                    return (
-                        <div className="table-responsive">
-                            <Table bordered hover>
-                                <thead>
-                                <tr className="statisticsDatasetsTable">
-                                    <th>Download Link</th>
-                                    <th>Download count</th>
-                                    <th>File format</th>
-                                    <th>Counts</th>
-                                    <th>Conditions</th>
-                                    <th>Metrics</th>
-                                    <th>Size (GB)</th>
-                                    <th>Date added</th>
-                                    <th>Description</th>
-                                    <th>Citation</th>
-                                    <th>Added by</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {props.statisticsDatasets.map((statisticsDataset, index) =>
-                                    <tr className="statisticsDatasetsTable" key={statisticsDataset.id + "-" + index}>
-                                        <td>
-                                            <a href={"/statistics-datasets/" + statisticsDataset.id + "?download=true"}
-                                               download>
-                                                {statisticsDataset.name}
-                                            </a>
-                                        </td>
-                                        <td>{statisticsDataset.download_count}</td>
-                                        <td>{statisticsDataset.file_format}</td>
-                                        <td>
-                                            Measurements: {statisticsDataset.num_measurements},
-                                            Metrics: {statisticsDataset.num_metrics},
-                                            Conditions: {statisticsDataset.num_conditions},
-                                            Files: {statisticsDataset.num_files}
-                                        </td>
-                                        <td>
-                                            {statisticsDataset.conditions}
-                                        </td>
-                                        <td>
-                                            {statisticsDataset.metrics}
-                                        </td>
-                                        <td>Uncompressed: {statisticsDataset.size_in_gb},
-                                            compressed: {statisticsDataset.compressed_size_in_gb}</td>
-                                        <td>{statisticsDataset.date_added}</td>
-                                        <td>{statisticsDataset.description}</td>
-                                        <td>{statisticsDataset.citation}</td>
-                                        <td>{statisticsDataset.added_by}</td>
-                                    </tr>
-                                )}
-                                </tbody>
-                            </Table>
-                        </div>
-                    )
-                }
+                            )}
+                            </tbody>
+                        </Table>
+                    </div>
+                )
             }
         }
     }
@@ -943,7 +1110,7 @@ const Downloads = (props) => {
                             </Button>
                         </OverlayTrigger>
                         <InfoModalStatisticsDatasets show={showStatisticsDatasetsInfoModal}
-                                                 onHide={() => setShowStatisticsDatasetsInfoModal(false)}/>
+                                                     onHide={() => setShowStatisticsDatasetsInfoModal(false)}/>
                         <DeleteAllStatisticsDatasetsOrEmpty sessionData={props.sessionData}/>
                     </h3>
                 </div>

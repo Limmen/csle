@@ -270,12 +270,11 @@ const SDNControllers = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Emulations
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        SDN Controllers
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>SDN Controllers</h4>
                     <p className="modalText">
                         The SDN controller defines the control plane in a software-defined network (SDN) and provides
                         a southbound API to the data plane, which is defined by a set of programmable switches
@@ -283,8 +282,8 @@ const SDNControllers = (props) => {
                         use the SDN.
                     </p>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

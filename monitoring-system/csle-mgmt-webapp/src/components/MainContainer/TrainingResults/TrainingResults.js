@@ -444,7 +444,7 @@ const TrainingResults = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Policy training
                     </Modal.Title>
                 </Modal.Header>
@@ -458,7 +458,7 @@ const TrainingResults = (props) => {
                         <img src={TrainingEnv} alt="Emulated infrastructures"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="modalFooter">
                     <Button onClick={props.onHide}>Close</Button>
                 </Modal.Footer>
             </Modal>

@@ -89,12 +89,11 @@ const EmulationStatistics = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Emulation statistics
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Emulation statistics</h4>
                     <p className="modalText">
                         The emulation statistics are collected by measuring log files and other metrics from
                         the emulated infrastructure under different system conditions, e.g. intrusion and no intrsion,
@@ -104,8 +103,8 @@ const EmulationStatistics = (props) => {
                         <img src={DataCollection} alt="Data collection from the emulation"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );

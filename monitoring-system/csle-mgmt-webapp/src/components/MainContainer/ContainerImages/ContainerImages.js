@@ -86,12 +86,11 @@ const ContainerImages = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
                         Container images
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Containers</h4>
                     <p className="modalText">
                         Emulation environments are built using Docker containers which encapsulate
                         functionalities of emulated hosts and can be connected in complex networks.
@@ -102,8 +101,8 @@ const ContainerImages = (props) => {
                         <img src={Docker} alt="Docker" width="700"/>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
                 </Modal.Footer>
             </Modal>
         );
