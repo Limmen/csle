@@ -43,10 +43,15 @@ class DockerStatsUtil:
         cpu_delta = cpu_total - previous_cpu
         cpu_system = float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE])
         system_delta = cpu_system - previous_system
-        online_cpus = stats_dict[constants.DOCKER_STATS.CPU_STATS].get(
-            constants.DOCKER_STATS.ONLINE_CPUS,
-            len(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
-                    constants.DOCKER_STATS.PERCPU_USAGE]))
+        online_cpus = 1
+        if constants.DOCKER_STATS.ONLINE_CPUS in stats_dict[constants.DOCKER_STATS.CPU_STATS]:
+            online_cpus = stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.ONLINE_CPUS]
+        else:
+            if constants.DOCKER_STATS.CPU_USAGE in stats_dict[constants.DOCKER_STATS.CPU_STATS]:
+                if constants.DOCKER_STATS.PERCPU_USAGE in stats_dict[
+                    constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]:
+                    online_cpus = len(stats_dict[constants.DOCKER_STATS.CPU_STATS][
+                                          constants.DOCKER_STATS.CPU_USAGE][constants.DOCKER_STATS.PERCPU_USAGE])
         if system_delta > 0.0:
             cpu_percent = (cpu_delta / system_delta) * online_cpus * 100.0
         return cpu_percent, cpu_system, cpu_total
