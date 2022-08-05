@@ -35,12 +35,14 @@ def read_login():
         pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode("utf-8")
         if user_account.password == pw_hash:
             response_code = constants.HTTPS.OK_STATUS_CODE
-            existing_token = MetastoreFacade.get_session_token_by_username(username=username)
-            if existing_token is not None:
-                MetastoreFacade.remove_session_token(session_token=existing_token)
+            new_token = MetastoreFacade.get_session_token_by_username(username=username)
             ts = time.time()
-            new_token = SessionToken(token=token, username=username, timestamp=ts)
-            MetastoreFacade.save_session_token(session_token=new_token)
+            if new_token is None:
+                new_token = SessionToken(token=token, username=username, timestamp=ts)
+                MetastoreFacade.save_session_token(session_token=new_token)
+            else:
+                new_token.timestamp = ts
+                MetastoreFacade.update_session_token(session_token=new_token, token=token)
             data_dict = {
                 api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: token,
                 api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin,

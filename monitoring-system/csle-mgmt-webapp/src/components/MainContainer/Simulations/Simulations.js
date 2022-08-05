@@ -483,7 +483,7 @@ const Simulations = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                        <Button variant="button infoButton2" onClick={() => setShowInfoModal(true)}>
                             <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
