@@ -36,6 +36,7 @@ class DockerStatsThread(threading.Thread):
         :param time_step_len_seconds: the length of a time-step before sending stats to Kafka
         """
         threading.Thread.__init__(self)
+        logging.warning(f"TEEEEST START THREAD")
         self.container_names_and_ips = container_names_and_ips
         self.emulation = emulation
         self.execution_first_ip_octet = execution_first_ip_octet
@@ -90,6 +91,7 @@ class DockerStatsThread(threading.Thread):
 
                 for stream, container in self.streams:
                     stats_dict = next(stream)
+                    logging.warning(f"stats_dict: {stats_dict}")
                     parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
                     if parsed_stats.container_name not in self.stats_queues:
                         self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
