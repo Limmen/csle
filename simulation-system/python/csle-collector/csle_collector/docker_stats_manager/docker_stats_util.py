@@ -125,10 +125,11 @@ class DockerStatsUtil:
         mem_current = round(mem_current/1000000, 1)
         mem_total = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.LIMIT]
         mem_total = round(mem_total/1000000, 1)
-        try:
-            cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total, cpu_system)
-        except KeyError:
-            cpu_percent = DockerStatsUtil.calculate_cpu_percent(stats_dict)
+        cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total, cpu_system)
+        # try:
+        #     cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total, cpu_system)
+        # except KeyError:
+        #     cpu_percent = DockerStatsUtil.calculate_cpu_percent(stats_dict)
 
         parsed_stats_dict = {
             constants.DOCKER_STATS.PIDS: stats_dict[constants.DOCKER_STATS.PIDS_STATS][constants.DOCKER_STATS.CURRENT],
