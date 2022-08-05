@@ -103,7 +103,7 @@ const SystemModels = (props) => {
                         After learning the model, we use it to simulate the system.
                     </p>
                     <div className="text-center">
-                        <img src={SystemIdentification} alt="Markov chain"/>
+                        <img src={SystemIdentification} alt="System identification" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

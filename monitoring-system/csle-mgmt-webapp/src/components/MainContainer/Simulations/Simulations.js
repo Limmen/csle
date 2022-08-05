@@ -357,7 +357,7 @@ const Simulations = (props) => {
                         how a discrete-time dynamical system is evolved and can be controlled.
                     </p>
                     <div className="text-center">
-                        <img src={MarkovChain} alt="Markov chain"/>
+                        <img src={MarkovChain} alt="Markov chain" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

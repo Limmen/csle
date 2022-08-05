@@ -292,7 +292,7 @@ const Monitoring = (props) => {
                         distributed Kafka queue.
                     </p>
                     <div className="text-center">
-                        <img src={DataCollection} alt="Markov chain"/>
+                        <img src={DataCollection} alt="Markov chain" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

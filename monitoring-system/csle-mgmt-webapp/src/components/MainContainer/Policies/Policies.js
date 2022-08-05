@@ -1921,7 +1921,7 @@ const Policies = (props) => {
                         representations or in special parameterizations such as Gaussian policies or threshold policies.
                     </p>
                     <div className="text-center">
-                        <img src={NeuralNetworkPolicies} alt="neural network policies"/>
+                        <img src={NeuralNetworkPolicies} alt="neural network policies" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

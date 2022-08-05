@@ -455,7 +455,7 @@ const TrainingResults = (props) => {
                         Different reinforcement learning algorithms can be used, e.g. PPO, T-SPSA, DQN, etc.
                     </p>
                     <div className="text-center">
-                        <img src={TrainingEnv} alt="Emulated infrastructures"/>
+                        <img src={TrainingEnv} alt="TrainingEnv" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

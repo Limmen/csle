@@ -98,7 +98,7 @@ const ContainerImages = (props) => {
                         by combining images in novel topologies and configurations.
                     </p>
                     <div className="text-center">
-                        <img src={Docker} alt="Docker" width="700"/>
+                        <img src={Docker} alt="Docker" width="700" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

@@ -42,7 +42,7 @@ def read_login():
                 MetastoreFacade.save_session_token(session_token=new_token)
             else:
                 new_token.timestamp = ts
-                MetastoreFacade.update_session_token(session_token=new_token, token=token)
+                MetastoreFacade.update_session_token(session_token=new_token, token=new_token.token)
             data_dict = {
                 api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: token,
                 api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin,

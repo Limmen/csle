@@ -419,7 +419,7 @@ const Emulation = (props) => {
                     </Card.Header>
                     <Collapse in={topologyOpen}>
                         <div id="topologyBody" className="cardBodyHidden">
-                            <img src={`data:image/jpeg;base64,${emulation.image}`} className="topologyImg"
+                            <img src={`data:image/jpeg;base64,${emulation.image}`} className="topologyImg img-fluid"
                                  alt="Topology"/>
                         </div>
                     </Collapse>

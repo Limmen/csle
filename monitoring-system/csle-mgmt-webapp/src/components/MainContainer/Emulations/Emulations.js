@@ -749,7 +749,7 @@ const Emulations = (props) => {
                         the topology, resource constraints, vulnerabilities, services, users, etc.
                     </p>
                     <div className="text-center">
-                        <img src={ConfigSpace} alt="Emulated infrastructures"/>
+                        <img src={ConfigSpace} alt="Emulated infrastructures" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

@@ -294,7 +294,7 @@ const PolicyExamination = (props) => {
                 </p>
                 <div className="text-center">
                     <img src={PolicyExaminationSystem} alt="A system for interactive examination of
-                        learned security policies"/>
+                        learned security policies" className="img-fluid"/>
                 </div>
             </Modal.Body>
             <Modal.Footer className="modalFooter">

@@ -100,7 +100,7 @@ const EmulationStatistics = (props) => {
                         high load and low load etc.
                     </p>
                     <div className="text-center">
-                        <img src={DataCollection} alt="Data collection from the emulation"/>
+                        <img src={DataCollection} alt="Data collection from the emulation" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

@@ -877,7 +877,7 @@ const Traces = (props) => {
                         data from the emulation.
                     </p>
                     <div className="text-center">
-                        <img src={TraceImg} alt="Markov chain"/>
+                        <img src={TraceImg} alt="Traces" className="img-fluid"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

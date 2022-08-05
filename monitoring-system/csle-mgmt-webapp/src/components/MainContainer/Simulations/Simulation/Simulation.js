@@ -162,7 +162,7 @@ const Simulation = (props) => {
                                     </tbody>
                                 </Table>
                             </div>
-                            <img src={`data:image/jpeg;base64,${props.simulation.image}`} className="simulationImg"
+                            <img src={`data:image/jpeg;base64,${props.simulation.image}`} className="simulationImg img-fluid"
                                  alt="Image of the simulation"/>
                         </div>
                     </Collapse>
