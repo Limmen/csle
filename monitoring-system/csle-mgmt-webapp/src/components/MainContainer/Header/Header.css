@@ -38,3 +38,15 @@
 .dropdown-item {
     font-size: 13px;
 }
+
+@media only screen and (max-width: 500px) and (min-width: 300px) {
+    .jumbotron {
+        height:120px;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .jumbotron {
+        height:195px;
+    }
+}

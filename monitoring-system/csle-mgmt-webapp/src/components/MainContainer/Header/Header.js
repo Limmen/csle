@@ -156,7 +156,7 @@ const Header = () => {
                                    role="button" aria-haspopup="true" aria-expanded="false"
                                    id="navbarDropdown"
                                 >
-                                    Management System</a>
+                                    Management</a>
                             </OverlayTrigger>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <OverlayTrigger
