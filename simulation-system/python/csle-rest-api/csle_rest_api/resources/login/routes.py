@@ -22,7 +22,7 @@ def read_login():
     """
     The /login resource
 
-    :return: Reads a given login and returns its contents
+    :return: Authenticates the login information and returns the result
     """
     token = secrets.token_urlsafe(32)
     username = json.loads(request.data)[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
@@ -37,10 +37,12 @@ def read_login():
             response_code = constants.HTTPS.OK_STATUS_CODE
             new_token = MetastoreFacade.get_session_token_by_username(username=username)
             ts = time.time()
+            print(f"password correct, existing token: {new_token}")
             if new_token is None:
                 new_token = SessionToken(token=token, username=username, timestamp=ts)
                 MetastoreFacade.save_session_token(session_token=new_token)
             else:
+                print(f"updating token: {new_token.token}")
                 new_token.timestamp = ts
                 MetastoreFacade.update_session_token(session_token=new_token, token=new_token.token)
             data_dict = {
