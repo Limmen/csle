@@ -372,7 +372,7 @@ const EmulationStatistics = (props) => {
                 <OverlayTrigger
                     className="removeButton"
                     placement="top"
-                    delay={{show: 0, hide: 0}}
+                    delay={{show: 100, hide: 400}}
                     overlay={renderRemoveStatisticTooltip}
                 >
                     <Button variant="danger" className="removeButton" size="sm"
@@ -678,6 +678,9 @@ const EmulationStatistics = (props) => {
                             <Collapse in={initialCountsOpen}>
                                 <div id="initialCountsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
+                                        <h3 className="chartsTitle">
+                                            {"Initial counts of::" + props.selectedMetric.value} (downsampled to 100 samples)
+                                        </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.initial_distributions_counts}
                                             selectedConditionals={[]}
@@ -707,6 +710,9 @@ const EmulationStatistics = (props) => {
                             <Collapse in={deltaProbsOpen}>
                                 <div id="deltaProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
+                                        <h3 className="chartsTitle">
+                                            {"Delta probabilities: " + props.selectedMetric.value} (downsampled to 100 samples)
+                                        </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.conditionals_probs}
                                             selectedConditionals={getFirstTwoConditionals()}
@@ -738,6 +744,9 @@ const EmulationStatistics = (props) => {
                             <Collapse in={initialProbsOpen}>
                                 <div id="initialProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
+                                        <h3 className="chartsTitle">
+                                            {"Initial counts of::" + props.selectedMetric.value} (downsampled to 100 samples)
+                                        </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.initial_distributions_probs}
                                             selectedConditionals={[]}
