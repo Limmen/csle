@@ -39,9 +39,6 @@ const SnortAlertsChart = React.memo((props) => {
                         data={data}
                         margin={margin}
                     >
-                        <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="15">Snort IDS Alerts</tspan>
-                        </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain}>
                             <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>

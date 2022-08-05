@@ -91,9 +91,6 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 data={data}
                                 margin={margin}
                             >
-                                <text x={950} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="15">Metric: {conds[0].metric_name} (Downsampled to {num_samples} samples)</tspan>
-                                </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="val" type="number" domain={domain}>
                                     <Label value="value" offset={-20} position="insideBottom" className="largeFont"/>

@@ -30,13 +30,15 @@ const OpenFlowSwitchesStats = React.memo((props) => {
         return (
             <div className="aggregatedMetrics">
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Received bytes</h3>
                         <ReceivedBytesChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Transmitted bytes</h3>
                         <TransmittedBytesChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -45,13 +47,15 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                 </div>
 
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Received packets</h3>
                         <ReceivedPacketsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Transmitted packets</h3>
                         <TransmittedPacketsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -60,13 +64,15 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                 </div>
 
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Number of Received errors</h3>
                         <ReceivedErrorsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Number of Transmitted errors</h3>
                         <TransmittedErrorsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -75,13 +81,15 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                 </div>
 
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Number of Received dropped frames</h3>
                         <ReceivedDroppedChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Number of Transmitted dropped frames</h3>
                         <TransmittedDroppedChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -90,13 +98,15 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                 </div>
 
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Number of frame collisions</h3>
                         <NumCollisionsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Received overrun errors</h3>
                         <ReceivedOverrunErrorsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -105,13 +115,15 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                 </div>
 
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Number of Received CRC errors</h3>
                         <ReceivedCRCErrorsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Received frame errors</h3>
                         <ReceivedFrameErrorsChart
                             stats={props.portStats}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -120,13 +132,15 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                 </div>
 
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Avg Flow Duration (s)</h3>
                         <FlowDurationChart
                             stats={props.flowStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Avg Flow Priority</h3>
                         <FlowPriorityChart
                             stats={props.flowStats}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -134,13 +148,14 @@ const OpenFlowSwitchesStats = React.memo((props) => {
                     </div>
                 </div>
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Num flows</h3>
                         <NumFlowsChart
                             stats={props.aggFlowStats}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
                     </div>
                 </div>
             </div>

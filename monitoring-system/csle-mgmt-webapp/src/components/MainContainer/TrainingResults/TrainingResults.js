@@ -341,7 +341,7 @@ const TrainingResults = (props) => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Selected training run:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "600px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedExperimentId}

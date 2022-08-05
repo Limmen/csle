@@ -44,7 +44,7 @@ const TransitionProbabilities = (props) => {
         return (
             <div>
                 <h5 className="semiTitle">
-                    Transition probabilities
+                    Transition probabilities P(s'|a1,a2,s,l)
                 </h5>
                 <h5 className="semiTitle">
                     a1:

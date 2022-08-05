@@ -115,9 +115,6 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 data={data3}
                                 margin={margin}
                             >
-                                <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="15">{props.title2} (downsampled to {num_samples} samples)</tspan>
-                                </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
                                     <Label value="Value" offset={-20} position="insideBottom" className="largeFont"/>
@@ -156,9 +153,6 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                                 data={data2}
                                 margin={margin}
                             >
-                                <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                                    <tspan fontSize="15">{props.title1} (downsampled to {num_samples} samples)</tspan>
-                                </text>
                                 <CartesianGrid strokeDasharray="3 3"/>
                                 <XAxis dataKey="value" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
                                     <Label value="Value" offset={-20} position="insideBottom" className="largeFont"/>

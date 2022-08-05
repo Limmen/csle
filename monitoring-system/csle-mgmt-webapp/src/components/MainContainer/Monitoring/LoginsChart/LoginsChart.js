@@ -39,9 +39,6 @@ const LoginsChart = React.memo((props) => {
                         data={data}
                         margin={margin}
                     >
-                        <text x={500} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="15">Login events</tspan>
-                        </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="t" type="number" domain={domain}>
                             <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>

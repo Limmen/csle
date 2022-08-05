@@ -36,7 +36,7 @@ const RewardFunction = (props) => {
         return (
             <div className="rewardFun">
                 <h5 className="semiTitle">
-                    Reward function:
+                    Reward function r(a1,a2,s,l):
                 </h5>
                 <h5 className="semiTitle">
                     a1:

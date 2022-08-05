@@ -202,7 +202,7 @@ const PolicyExamination = (props) => {
         } else {
             return (
                 <div className="conditionalDist inline-block selectEmulation">
-                    <div className="conditionalDist inline-block" style={{width: "400px"}}>
+                    <div className="conditionalDist inline-block" style={{width: "300px"}}>
                         <Select
                             style={{display: 'inline-block'}}
                             value={props.activeTrace}
@@ -350,7 +350,7 @@ const PolicyExamination = (props) => {
                                               animation={animation} animationDuration={animationDuration}
                                               animationDurationFactor={animiationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 attackersView">
                         <h4 className="cardTitle">
                             The Attacker's View
                         </h4>

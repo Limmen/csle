@@ -19,7 +19,8 @@ h1 {
 }
 
 .searchForm {
-  font-size:10px
+  font-size:10px;
+  width:97%
 }
 
 .searchGroup {

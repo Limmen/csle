@@ -22,13 +22,15 @@ const ContainerMetrics = React.memo((props) => {
         return (
             <div className="aggregatedMetrics">
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Avg memory and CPU utilization</h3>
                         <CpuAndMemoryUtilizationChart
                             stats={props.dockerMetrics}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Avg network load</h3>
                         <NetworkChart
                             stats={props.dockerMetrics}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -36,13 +38,15 @@ const ContainerMetrics = React.memo((props) => {
                     </div>
                 </div>
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Filesystem I/O</h3>
                         <BlockIOChart
                             stats={props.dockerMetrics}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Number of processes</h3>
                         <PidsChart
                             stats={props.dockerMetrics}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -50,13 +54,15 @@ const ContainerMetrics = React.memo((props) => {
                     </div>
                 </div>
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Login events</h3>
                         <LoginsChart
                             stats={props.hostMetrics}
                             animation={props.animation} animationDuration={props.animationDuration}
                             animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Connections and user sessions</h3>
                         <ConnectionsChart
                             stats={props.hostMetrics}
                             animation={props.animation} animationDuration={props.animationDuration}
@@ -64,12 +70,13 @@ const ContainerMetrics = React.memo((props) => {
                     </div>
                 </div>
                 <div className="row chartsRow">
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">OSSEC HIDS Alerts</h3>
                         <OssecAlertsChart stats={props.ossecAlerts}
                                           animation={props.animation} animationDuration={props.animationDuration}
                                           animationDurationFactor={props.animationDurationFactor}/>
                     </div>
-                    <div className="col-sm-6">
+                    <div className="col-sm-6 chartsCol">
                     </div>
                 </div>
             </div>

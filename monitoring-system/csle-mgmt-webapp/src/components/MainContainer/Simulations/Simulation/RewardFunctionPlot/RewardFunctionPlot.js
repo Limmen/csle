@@ -42,9 +42,6 @@ const RewardFunctionPlot = React.memo((props) => {
                         data={data}
                         margin={margin}
                     >
-                        <text x={900} y={20} fill="black" textAnchor="middle" dominantBaseline="central">
-                            <tspan fontSize="15">{props.title}</tspan>
-                        </text>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis dataKey="state" type="number" domain={domain} tick={{transform: 'translate(0,5)'}}>
                             <Label value="s" offset={-20} position="insideBottom" className="largeFont"/>

@@ -11,8 +11,18 @@
     font-size: 14px;
 }
 
+.chartsTitle {
+    margin-top:30px
+}
+
 .chartsRow {
     margin-bottom: 70px;
+}
+
+@media only screen and (max-width: 400px) {
+    .chartsCol {
+        margin-bottom: 70px;
+    }
 }
 
 .dropdownText {

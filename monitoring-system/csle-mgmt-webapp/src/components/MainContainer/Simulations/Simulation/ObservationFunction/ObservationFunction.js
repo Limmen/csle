@@ -75,6 +75,7 @@ const ObservationFunction = (props) => {
                 <div className="row">
                     {Object.keys(props.simulation.observation_function_config.component_observation_tensors).map((componentObs, index) =>
                         <div className="col-sm-12 obsFunctionHistogram" key={componentObs + "-" + index}>
+                            <h3 className="chartsTitle">{componentObs + " Z(o|a1,a2,s)"}</h3>
                             <ObservationFunctionHistogram
                                 data={props.simulation.observation_function_config.component_observation_tensors[componentObs][a1O.value.id][a2O.value.id][sO.value.id]}
                                 title={componentObs + " Z(o|a1,a2,s)"} componentObs={componentObs}

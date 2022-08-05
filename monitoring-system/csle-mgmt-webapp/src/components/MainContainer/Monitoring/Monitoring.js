@@ -888,9 +888,9 @@ const Monitoring = (props) => {
                     <h4>
                         Metrics for Container:
                         <div className="conditionalDist inline-block selectEmulation">
-                            <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                            <div className="conditionalDist inline-block" style={{width: "300px"}}>
                                 <Select
-                                    style={{display: 'inline-block', width: "1000px"}}
+                                    style={{display: 'inline-block', width: "300px"}}
                                     value={props.selectedContainer}
                                     defaultValue={props.selectedContainer}
                                     options={props.containerOptions}
@@ -921,7 +921,7 @@ const Monitoring = (props) => {
                     <h4>
                         Metrics for OpenFlow switch with datapath ID:
                         <div className="conditionalDist inline-block selectEmulation">
-                            <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                            <div className="conditionalDist inline-block" style={{width: "300px"}}>
                                 <Select
                                     style={{display: 'inline-block', width: "1000px"}}
                                     value={props.selectedSwitch}

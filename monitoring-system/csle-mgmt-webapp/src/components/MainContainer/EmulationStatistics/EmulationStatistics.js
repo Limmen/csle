@@ -475,7 +475,7 @@ const EmulationStatistics = (props) => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Conditionals:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "500px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedConditionals}
@@ -646,6 +646,9 @@ const EmulationStatistics = (props) => {
                             <Collapse in={deltaCountsOpen}>
                                 <div id="deltaCountsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
+                                        <h3 className="chartsTitle">
+                                            {"Delta counts: " + props.selectedMetric.value} (downsampled to 100 samples)
+                                        </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.conditionals_counts}
                                             selectedConditionals={getFirstTwoConditionals()}

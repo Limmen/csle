@@ -742,7 +742,7 @@ const SystemModels = (props) => {
                         <div className="conditionalDist inline-block conditionalLabel">
                             Conditionals:
                         </div>
-                        <div className="conditionalDist inline-block" style={{width: "400px"}}>
+                        <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
                                 value={props.selectedConditionals}
@@ -915,6 +915,9 @@ const SystemModels = (props) => {
                             <Collapse in={deltaProbsOpen}>
                                 <div id="deltaProbsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
+                                        <h3 className="chartsTitle">
+                                            Metric: {props.selectedMetric.value} (Downsampled to 100 samples)
+                                        </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedSystemModel}
                                             selectedConditionals={getFirstTwoConditionals()}
