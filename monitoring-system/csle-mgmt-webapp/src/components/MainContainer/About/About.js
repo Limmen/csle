@@ -75,7 +75,7 @@ const About = () => {
                 </div>
                 <div className="col-sm-2"></div>
             </div>
-            <img src={Arch} alt="CSLE Architecture" height="30%" width="30%"/>
+            <img src={Arch} alt="CSLE Architecture" className="img-fluid archImg"/>
 
             <h3 className="publicationsTitle"> Code and API Documentation</h3>
             <div className="row">

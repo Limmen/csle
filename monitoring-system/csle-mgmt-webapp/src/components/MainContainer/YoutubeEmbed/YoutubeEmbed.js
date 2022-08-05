@@ -2,7 +2,7 @@ import React from "react";
 import './YoutubeEmbed.css';
 
 const YoutubeEmbed = (props) => (
-    <div className="video-responsive">
+    <div className="video-responsive su-youtube">
         <iframe
             width="853"
             height="480"
