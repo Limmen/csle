@@ -657,11 +657,8 @@ const Downloads = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <p className="modalText">
-                        Statistics datasets contain sequences of measurements from a security scenario playing out in
-                        an emulated IT infrastructure. A sequence contains a set of time-steps. Each time-step in the
-                        sequence
-                        includes various measurements, e.g. attacker actions, defender actions, system metrics, and log
-                        files.
+                        Statistics datasets contain average statistics from running a large number of security
+                        scenarios an emulated IT infrastructure and measuring the various parameters.
                     </p>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">

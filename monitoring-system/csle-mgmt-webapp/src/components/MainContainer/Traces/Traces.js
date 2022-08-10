@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal'
 import EmulationTrace from "./EmulationTrace/EmulationTrace";
 import SimulationTrace from "./SimulationTrace/SimulationTrace";
 import TraceImg from './TracesLoop.png'
+import MarkovImg from './../Simulations/Markov.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form'
@@ -20,7 +21,8 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
 const Traces = (props) => {
-    const [showInfoModal, setShowInfoModal] = useState(false);
+    const [showSimulationTracesInfoModal, setShowSimulationTracesInfoModal] = useState(false);
+    const [showEmulationTracesInfoModal, setShowEmulationTracesInfoModal] = useState(false);
     const [simulationTraces, setSimulationTraces] = useState([]);
     const [selectedEmulationTraceId, setSelectedEmulationTraceId] = useState(null);
     const [selectedSimulationTraceId, setSelectedSimulationTraceId] = useState(null);
@@ -758,11 +760,13 @@ const Traces = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button className="infoButton5" variant="button" onClick={() => setShowInfoModal(true)}>
+                        <Button className="infoButton5" variant="button" onClick={() => setShowEmulationTracesInfoModal(true)}>
                             <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <EmulationTracesInfoModal
+                        show={showEmulationTracesInfoModal}
+                        onHide={() => setShowEmulationTracesInfoModal(false)}/>
                     <DeleteAllEmulationTracesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
@@ -842,11 +846,11 @@ const Traces = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)}>
+                        <Button variant="button" onClick={() => setShowSimulationTracesInfoModal(true)}>
                             <i className="fa fa-info-circle infoButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <SimulationTracesInfoModal show={showSimulationTracesInfoModal} onHide={() => setShowSimulationTracesInfoModal(false)}/>
 
                     <DeleteAllSimulationTracesOrEmpty sessionData={props.sessionData}/>
                 </div>
@@ -854,7 +858,7 @@ const Traces = (props) => {
         }
     }
 
-    const InfoModal = (props) => {
+    const SimulationTracesInfoModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -864,7 +868,7 @@ const Traces = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-                        Traces
+                        Simulation Traces
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -872,6 +876,33 @@ const Traces = (props) => {
                         Simulation traces are collected from the simulation system. At every time-step of the
                         simulation,
                         the simulated observations, player actions, rewards, states, and beliefs are recorded.
+                    </p>
+                    <div className="text-center">
+                        <img src={MarkovImg} alt="Traces" className="img-fluid"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const EmulationTracesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Simulation Traces
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
                         Emulation traces are collected from the emulation system. At every time-step of an emulation
                         episode, observations, actions, rewards, states and beliefs are measured or computed based on
                         data from the emulation.
@@ -885,26 +916,6 @@ const Traces = (props) => {
                 </Modal.Footer>
             </Modal>
         );
-    }
-
-    const EmulationTracesAccordions = (props) => {
-        if (props.loadingEmulationTraces) {
-            return (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>)
-        } else {
-            return (
-                <Accordion defaultActiveKey="0">
-                    {props.emulationTraces.map((emulationTrace, index) =>
-                        <EmulationTrace emulationTrace={emulationTrace}
-                                        wrapper={wrapper} key={emulationTrace.id + "-" + index}
-                                        removeEmulationTrace={removeEmulationTraceConfirm}
-                        />
-                    )}
-                </Accordion>
-            )
-        }
     }
 
     const EmulationTraceAccordion = (props) => {
