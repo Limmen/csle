@@ -8,6 +8,9 @@ import Accordion from 'react-bootstrap/Accordion';
 import Tooltip from 'react-bootstrap/Tooltip';
 import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
 import NeuralNetworkPolicies from './NeuralNetworkPolicies.png'
+import ThresholdPolicyImg from './ThresholdPolicy.png'
+import TabularPolicyImg from './TabularPolicyImg.png'
+import PWLCValueFun from './PWLCValueFun.png'
 import PPOPolicy from "./PPOPolicy/PPOPolicy";
 import DQNPolicy from "./DQNPolicy/DQNPolicy";
 import FnnWSoftmaxPolicy from "./FnnWSoftmaxPolicy/FnnWSoftmaxPolicy";
@@ -25,7 +28,13 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
 const Policies = (props) => {
-    const [showInfoModal, setShowInfoModal] = useState(false);
+    const [showMultiThresholdPoliciesInfoModal, setShowMultiThresholdPoliciesInfoModal] = useState(false);
+    const [showPPOPoliciesInfoModal, setShowPPOPoliciesInfoModal] = useState(false);
+    const [showTabularPoliciesInfoModal, setShowTabularPoliciesInfoModal] = useState(false);
+    const [showAlphaVectorPoliciesInfoModal, setShowAlphaVectorPoliciesInfoModal] = useState(false);
+    const [showDQNPoliciesInfoModal, setShowDQNPoliciesInfoModal] = useState(false);
+    const [showFNNPoliciesInfoModal, setShowFNNPoliciesInfoModal] = useState(false);
+    const [showVectorPoliciesInfoModal, setShowVectorPoliciesInfoModal] = useState(false);
     const [multiThresholdPoliciesIds, setMultiThresholdPoliciesIds] = useState([]);
     const [filteredMultiThresholdPoliciesIds, setFilteredMultiThresholdPoliciesIds] = useState([]);
     const [multiThresholdPoliciesSearchString, setMultiThresholdPoliciesSearchString] = useState("");
@@ -1902,7 +1911,7 @@ const Policies = (props) => {
         </Tooltip>
     );
 
-    const InfoModal = (props) => {
+    const MultiThresholdPoliciesInfoModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -1912,17 +1921,193 @@ const Policies = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-                        Policies
+                        Multi-Threshold Policies
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p className="modalText">
-                        Trained policies are typically in the form of deep neural networks but can also be in tabular
-                        representations or in special parameterizations such as Gaussian policies or threshold policies.
+                        A threshold policy is a polic parameterized by a set of thresholds that determine when
+                        to take different actions. The thresholds can be based on the state of an MDP if the state is observed
+                        or based on a belief state of a POMDP if the state is not observed.
                     </p>
                     <div className="text-center">
-                        <img src={NeuralNetworkPolicies} alt="neural network policies" className="img-fluid"/>
+                        <img src={ThresholdPolicyImg} alt="threshold policy" className="img-fluid"/>
                     </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const PPOPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        PPO Policies
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Policies trained with PPO are neural network policies where the input to the network
+                        is either a state or an observation and the output is either an action or a distribution
+                        over actions.
+                    </p>
+                    <div className="text-center">
+                        <img src={NeuralNetworkPolicies} alt="threshold policy" className="img-fluid"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const TabularPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Tabular policies.
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Tabular policies are produced by tabular reinforcement learning algorithms such as
+                        Q-learning, Sarsa, and TD-learning. A tabular policy consists of a table of mappings between
+                        states and actions.
+                    </p>
+                    <div className="text-center">
+                        <img src={TabularPolicyImg} alt="tabular" className="img-fluid"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const AlphaVectorPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Alpha-vector policies.
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Alpha-vector policies are greedy policies with respect to piece-wise linear and convex value functions
+                        for POMDPs.
+                    </p>
+                    <div className="text-center">
+                        <img src={PWLCValueFun} alt="piece-wise linar and convex value function" className="img-fluid"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const DQNPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        DQN Policies
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Policies trained with DQN are neural network policies where the input to the network
+                        is either a state or an observation and the output is either an action or a distribution
+                        over actions.
+                    </p>
+                    <div className="text-center">
+                        <img src={NeuralNetworkPolicies} alt="threshold policy" className="img-fluid"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const FNNPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        FNN Policies
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Feed-forward neural network policies are neural networks where the input to the network
+                        is either a state or an observation and the output is either an action or a distribution
+                        over actions.
+                    </p>
+                    <div className="text-center">
+                        <img src={NeuralNetworkPolicies} alt="threshold policy" className="img-fluid"/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const VectorPoliciesInfoModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Vector policies.
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="modalText">
+                        Vector policies are policies in the form of a single vector, e.g. obtained
+                        through linear programming methods.
+                    </p>
                 </Modal.Body>
                 <Modal.Footer className="modalFooter">
                     <Button onClick={props.onHide} size="sm">Close</Button>
@@ -2049,11 +2234,11 @@ const Policies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowMultiThresholdPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <MultiThresholdPoliciesInfoModal show={showMultiThresholdPoliciesInfoModal} onHide={() => setShowMultiThresholdPoliciesInfoModal(false)}/>
 
                     <DeleteAllMultiThresholdPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
@@ -2138,11 +2323,11 @@ const Policies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowPPOPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <PPOPoliciesInfoModal show={showPPOPoliciesInfoModal} onHide={() => setShowPPOPoliciesInfoModal(false)}/>
 
                     <DeleteAllPPOPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
@@ -2227,11 +2412,11 @@ const Policies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowFNNPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <FNNPoliciesInfoModal show={showFNNPoliciesInfoModal} onHide={() => setShowFNNPoliciesInfoModal(false)}/>
 
                     <DeleteAllFNNWSoftmaxPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
@@ -2316,11 +2501,12 @@ const Policies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowDQNPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <DQNPoliciesInfoModal show={showDQNPoliciesInfoModal}
+                                                     onHide={() => setShowDQNPoliciesInfoModal(false)}/>
 
                     <DeleteAllDQNPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
@@ -2405,11 +2591,13 @@ const Policies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowTabularPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <TabularPoliciesInfoModal
+                        show={showTabularPoliciesInfoModal}
+                        onHide={() => setShowTabularPoliciesInfoModal(false)}/>
 
                     <DeleteAllTabularPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
@@ -2494,11 +2682,11 @@ const Policies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowVectorPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <VectorPoliciesInfoModal show={showVectorPoliciesInfoModal} onHide={() => setShowVectorPoliciesInfoModal(false)}/>
 
                     <DeleteAllVectorPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
@@ -2583,11 +2771,12 @@ const Policies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowAlphaVectorPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
+                    <AlphaVectorPoliciesInfoModal show={showAlphaVectorPoliciesInfoModal}
+                                                     onHide={() => setShowAlphaVectorPoliciesInfoModal(false)}/>
 
                     <DeleteAllAlphaVecPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>

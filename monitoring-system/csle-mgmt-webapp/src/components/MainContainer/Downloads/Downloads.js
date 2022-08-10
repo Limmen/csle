@@ -492,7 +492,7 @@ const Downloads = (props) => {
                                     <td>
                                         <a href={"/traces-datasets/" + tracesDataset.id + "?download=true"}
                                            download>
-                                            {tracesDataset.name}
+                                            {tracesDataset.name}.{tracesDataset.file_format}
                                         </a>
                                     </td>
                                     <td>{tracesDataset.download_count}</td>
@@ -987,7 +987,7 @@ const Downloads = (props) => {
                                     <td>
                                         <a href={"/statistics-datasets/" + statisticsDataset.id + "?download=true"}
                                            download>
-                                            {statisticsDataset.name}
+                                            {statisticsDataset.name}.{statisticsDataset.file_format}
                                         </a>
                                     </td>
                                     <td>{statisticsDataset.download_count}</td>
