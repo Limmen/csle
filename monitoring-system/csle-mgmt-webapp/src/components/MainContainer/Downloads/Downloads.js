@@ -221,7 +221,7 @@ const Downloads = (props) => {
                                 <td>
                                     <a href={"/traces-datasets/" + props.tracesDataset.id + "?download=true"}
                                        download>
-                                        {props.tracesDataset.name}
+                                        {props.tracesDataset.name}.{props.tracesDataset.file_format}
                                     </a>
                                 </td>
                             </tr>
@@ -843,7 +843,7 @@ const Downloads = (props) => {
                                 <td>
                                     <a href={"/statistics-datasets/" + props.statisticsDataset.id + "?download=true"}
                                        download>
-                                        {props.statisticsDataset.name}
+                                        {props.statisticsDataset.name}.{props.statisticsDataset.file_format}
                                     </a>
                                 </td>
                             </tr>
