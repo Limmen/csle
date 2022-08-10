@@ -53,7 +53,7 @@ class GeneralUtil:
                 constants.COMMANDS.PROXY_PORT = config_dict["proxy_port"]
                 constants.COMMANDS.CADVISOR_PORT = config_dict["cadvisor_port"]
                 constants.COMMANDS.PROMETHEUS_PORT = config_dict["prometheus_port"]
-                constants.COMMANDS.NODE_EXPORTER_PORT = config_dict["node_exporter_pid_file"]
+                constants.COMMANDS.NODE_EXPORTER_PID_FILE = config_dict["node_exporter_pid_file"]
                 constants.COMMANDS.MONITOR_PID_FILE = config_dict["monitor_pid_file"]
                 constants.COMMANDS.PROXY_PID_FILE = config_dict["proxy_pid_file"]
                 constants.COMMANDS.NODE_EXPORTER_LOG_FILE = config_dict["node_exporter_log_file"]
