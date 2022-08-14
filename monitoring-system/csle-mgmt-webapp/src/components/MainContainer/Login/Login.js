@@ -4,6 +4,9 @@ import './Login.css';
 import getBoolStr from "../../Common/getBoolStr";
 import Button from 'react-bootstrap/Button'
 
+/**
+ * The component representing the /login-page
+ */
 const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");

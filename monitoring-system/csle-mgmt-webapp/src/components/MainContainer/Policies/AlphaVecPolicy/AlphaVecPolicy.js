@@ -10,6 +10,10 @@ import Collapse from 'react-bootstrap/Collapse'
 import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 
+
+/**
+ * Component representing the /policies/id page for an alphavector policy
+ */
 const AlphaVecPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [actionsOpen, setActionsOpen] = useState(false);

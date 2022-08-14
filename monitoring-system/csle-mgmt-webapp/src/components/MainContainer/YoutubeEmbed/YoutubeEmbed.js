@@ -1,6 +1,9 @@
 import React from "react";
 import './YoutubeEmbed.css';
 
+/**
+ * Component for embedding a youtube video on a page
+ */
 const YoutubeEmbed = (props) => (
     <div className="video-responsive su-youtube">
         <iframe

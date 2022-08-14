@@ -18,6 +18,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+/**
+ * Component representing the /training-results-page
+ */
 const TrainingResults = (props) => {
     const [experimentsIds, setExperimentsIds] = useState([]);
     const [selectedExperimentId, setSelectedExperimentId] = useState(null);

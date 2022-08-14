@@ -11,6 +11,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a plot showing the client arrivals over time
+ */
 const ClientsArrivalRateChart = React.memo((props) => {
         const width = 500
         const height = 200

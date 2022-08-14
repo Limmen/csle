@@ -12,6 +12,9 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
 
+/**
+ * Component representing the /simulations/<id> resource
+ */
 const Simulation = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [playersOpen, setPlayersOpen] = useState(false);
@@ -71,6 +74,18 @@ const Simulation = (props) => {
             Remove simulation
         </Tooltip>
     );
+
+    const SimulationImageOrEmpty = (props) => {
+        if (props.simulation.image === null || props.simulation.image === undefined) {
+            return (<></>)
+        } else {
+            return (
+                <img src={`data:image/jpeg;base64,${props.simulation.image}`}
+                     className="simulationImg img-fluid"
+                     alt="Image of the simulation"/>
+            )
+        }
+    }
 
     const ActionsOrEmpty = (props) => {
         if(props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
@@ -153,7 +168,7 @@ const Simulation = (props) => {
                                     <tr>
                                         <td>Configuration</td>
                                         <td>
-                                            <Button variant="link"
+                                            <Button variant="link" className="linkDownload"
                                                     onClick={() => fileDownload(JSON.stringify(props.simulation), "config.json")}>
                                                 config.json
                                             </Button>
@@ -162,8 +177,7 @@ const Simulation = (props) => {
                                     </tbody>
                                 </Table>
                             </div>
-                            <img src={`data:image/jpeg;base64,${props.simulation.image}`} className="simulationImg img-fluid"
-                                 alt="Image of the simulation"/>
+                            <SimulationImageOrEmpty simulation={props.simulation}/>
                         </div>
                     </Collapse>
                 </Card>

@@ -11,6 +11,9 @@ import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+/**
+ * The component representing the /jobs/<id> resource for data collection jobs
+ */
 const DataCollectionJob = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [attackerActionSequenceOpen, setAttackerActionSequenceOpen] = useState(false);

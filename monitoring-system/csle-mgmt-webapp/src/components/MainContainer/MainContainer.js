@@ -3,6 +3,9 @@ import Header from "./Header/Header";
 import {Outlet} from "react-router-dom";
 import Footer from "./Footer/Footer";
 
+/**
+ * Container component containing the main components of the page
+ */
 function MainContainer() {
   return (
       <div className="Container index container-fluid">

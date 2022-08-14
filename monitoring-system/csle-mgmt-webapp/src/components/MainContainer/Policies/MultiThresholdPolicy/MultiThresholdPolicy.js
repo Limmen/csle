@@ -10,6 +10,10 @@ import Collapse from 'react-bootstrap/Collapse'
 import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 
+
+/**
+ * Component representing the /policies/id page for a multi-threshold policy
+ */
 const MultiThresholdPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [thresholdsOpen, setThresholdsOpen] = useState(false);

@@ -12,6 +12,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a plot showing the CPU and memory utilization
+ */
 const CpuAndMemoryUtilizationChart = React.memo((props) => {
         const width = 500
         const height = 200

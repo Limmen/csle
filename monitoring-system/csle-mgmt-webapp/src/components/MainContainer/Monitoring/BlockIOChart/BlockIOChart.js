@@ -11,6 +11,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a plot showing the block IO usage over time
+ */
 const BlockIOChart = React.memo((props) => {
         const width = 500
         const height = 200

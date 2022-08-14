@@ -11,6 +11,9 @@ import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 
 
+/**
+ * Component representing the /policies/id page for an feed-forward neural network policy with softmax
+ */
 const FnnWSoftmaxPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [hParamsOpen, setHParamsOpen] = useState(false);

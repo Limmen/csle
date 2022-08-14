@@ -16,6 +16,9 @@ import getDateStr from "../../../Common/getDateStr";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+/**
+ * Component representing the /training-results/id resource
+ */
 const Experiment = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [hyperparametersOpen, setHyperparametersOpen] = useState(false);

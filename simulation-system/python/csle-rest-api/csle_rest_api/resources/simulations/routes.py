@@ -88,6 +88,9 @@ def get_simulation(simulation_id: int):
         return authorized
 
     simulation = MetastoreFacade.get_simulation(simulation_id)
+    sim_name_img = MetastoreFacade.get_simulation_image(simulation_name=simulation.name)
+    sim_name, img = sim_name_img
+    simulation.image = base64.b64encode(img).decode()
     response = jsonify({})
     if simulation is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:

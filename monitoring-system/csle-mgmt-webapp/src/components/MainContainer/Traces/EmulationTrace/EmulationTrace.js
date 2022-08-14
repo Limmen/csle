@@ -8,6 +8,9 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import './EmulationTrace.css';
 import Collapse from 'react-bootstrap/Collapse'
 
+/**
+ * Component representing the /emulation-traces/id resource
+ */
 const EmulationTrace = (props) => {
     const [attackerActionsOpen, setAttackerActionsOpen] = useState(false);
     const [defenderActionsOpen, setDefenderActionsOpen] = useState(false);

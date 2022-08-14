@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+/**
+ * Utility functions for managing user sessions
+ */
 export default function useSession() {
     const getSessionData = () => {
         const sessionDataString = localStorage.getItem('csleSession');

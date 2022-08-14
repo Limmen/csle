@@ -11,6 +11,10 @@ import {
     YAxis
 } from "recharts";
 
+
+/**
+ * Component containing a plot showing the average number of dropped packets over time
+ */
 const ReceivedDroppedChart = React.memo((props) => {
         const width = 500
         const height = 200

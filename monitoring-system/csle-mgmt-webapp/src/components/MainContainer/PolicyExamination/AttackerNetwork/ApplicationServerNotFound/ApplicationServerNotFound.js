@@ -3,6 +3,10 @@ import {Handle} from 'react-flow-renderer';
 import './ApplicationServerNotFound.css';
 import ibm_tower from './ibm_tower_small.png';
 
+/**
+ * Component representing an application server not discovered by the attacker
+ * in the network animation in the policy examination page
+ */
 const ApplicationServerNotFound = ({ data }) => {
     return (
         <div className="appServerNotFound">

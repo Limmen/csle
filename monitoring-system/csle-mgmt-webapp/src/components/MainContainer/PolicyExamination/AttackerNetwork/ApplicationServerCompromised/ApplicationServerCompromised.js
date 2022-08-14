@@ -3,6 +3,9 @@ import {Handle} from 'react-flow-renderer';
 import './ApplicationServerCompromised.css';
 import ibm_tower from './ibm_tower_small_compromised.png';
 
+/**
+ * Component representing a compromised application server in the network animation in the policy examination page
+ */
 const ApplicationServerCompromised = ({ data }) => {
     return (
         <div className="appServerCompromised">

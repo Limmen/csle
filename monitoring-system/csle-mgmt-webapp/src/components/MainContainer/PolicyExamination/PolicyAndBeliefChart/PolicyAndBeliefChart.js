@@ -13,6 +13,9 @@ import {
     ReferenceLine
 } from "recharts";
 
+/**
+ * Component representing the policy belief chart in the policy examination page
+ */
 const PolicyAndBeliefChart = React.memo((props) => {
         const width = 2000
         const height = 310

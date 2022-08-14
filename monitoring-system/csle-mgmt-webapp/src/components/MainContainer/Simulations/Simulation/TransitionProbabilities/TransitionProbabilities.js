@@ -3,7 +3,9 @@ import './TransitionProbabilities.css';
 import StateTransitionHistogram from "../StateTransitionHistogram/StateTransitionHistogram";
 import Select from 'react-select'
 
-
+/**
+ * Component containing a chart showing the transition probabilities
+ */
 const TransitionProbabilities = (props) => {
     var initialA1 = 0
     var initialA2 = 0

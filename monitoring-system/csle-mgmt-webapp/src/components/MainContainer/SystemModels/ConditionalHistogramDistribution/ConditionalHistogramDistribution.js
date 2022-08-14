@@ -13,6 +13,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a conditional distribution for a system model
+ */
 const getConditionals  = (systemModel, selectedConditionals, selectedMetric) => {
     var conds = []
     for (let i = 0; i < systemModel.conditional_metric_distributions.length; i++) {

@@ -12,6 +12,9 @@ import LoginsChart from "../LoginsChart/LoginsChart";
 import ConnectionsChart from "../ConnectionsChart/ConnectionsChart";
 import PidsChart from "../PidsChart/PidsChart";
 
+/**
+ * Component containing plots of aggregate metrics
+ */
 const AggregateMetrics = React.memo((props) => {
     if(!props.loading && (props.snortIdsMetrics === null || props.aggregatedHostMetrics === null
         || props.aggregatedDockerStats === null || props.clientMetrics === null)) {

@@ -3,6 +3,9 @@ import {Handle} from 'react-flow-renderer';
 import './IDS.css';
 import ids from './ids-0.png';
 
+/**
+ * Component representing an IDS in the network animation in the policy examination page
+ */
 const IDS = ({ data }) => {
     return (
         <div className="ids">

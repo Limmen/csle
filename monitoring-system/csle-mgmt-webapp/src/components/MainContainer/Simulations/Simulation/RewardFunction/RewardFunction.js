@@ -4,6 +4,9 @@ import RewardFunctionPlot from "../RewardFunctionPlot/RewardFunctionPlot";
 import Select from 'react-select'
 
 
+/**
+ * Component containing a chart showing the reward function
+ */
 const RewardFunction = (props) => {
     var initialA1 = 0
     var initialA2 = 0

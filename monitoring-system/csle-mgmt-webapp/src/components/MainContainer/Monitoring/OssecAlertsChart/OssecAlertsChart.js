@@ -11,6 +11,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a plot showing the number of OSSEC alerts over time
+ */
 const OssecAlertsChart = React.memo((props) => {
         const width = 500
         const height = 200

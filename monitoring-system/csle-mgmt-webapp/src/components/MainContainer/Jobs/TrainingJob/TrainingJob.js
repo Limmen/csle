@@ -13,6 +13,9 @@ import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+/**
+ * The component representing the /jobs/<id> resource for training jobs
+ */
 const TrainingJob = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [hyperparametersOpen, setHyperparametersOpen] = useState(false);

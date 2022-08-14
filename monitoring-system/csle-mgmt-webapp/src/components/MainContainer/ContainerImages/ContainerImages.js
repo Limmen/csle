@@ -14,6 +14,9 @@ import {useDebouncedCallback} from 'use-debounce';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+/**
+ * Component representing the /images-page
+ */
 const ContainerImages = (props) => {
     const [images, setImages] = useState([]);
     const [filteredImages, setFilteredImages] = useState([]);

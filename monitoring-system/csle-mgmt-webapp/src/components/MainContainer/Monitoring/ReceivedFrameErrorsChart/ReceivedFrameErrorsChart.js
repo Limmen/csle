@@ -11,6 +11,10 @@ import {
     YAxis
 } from "recharts";
 
+
+/**
+ * Component containing a plot showing the average number of received frame errors over time
+ */
 const ReceivedFrameErrorsChart = React.memo((props) => {
         const width = 500
         const height = 200

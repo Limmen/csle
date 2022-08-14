@@ -3,6 +3,9 @@ import {Handle} from 'react-flow-renderer';
 import './ApplicationServer.css';
 import ibm_tower from './ibm_tower_small.png';
 
+/**
+ * Component representing an application server in the network animation in the policy examination page
+ */
 const ApplicationServer = ({ data }) => {
     return (
         <div className="appServer">

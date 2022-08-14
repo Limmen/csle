@@ -9,6 +9,9 @@ import LoginsChart from "../LoginsChart/LoginsChart";
 import ConnectionsChart from "../ConnectionsChart/ConnectionsChart";
 import OssecAlertsChart from "../OssecAlertsChart/OssecAlertsChart";
 
+/**
+ * Component containing a plot showing a number of container-specific plots
+ */
 const ContainerMetrics = React.memo((props) => {
     if(!props.loading && (props.dockerMetrics === null || props.hostMetrics === null)) {
         return (<></>)

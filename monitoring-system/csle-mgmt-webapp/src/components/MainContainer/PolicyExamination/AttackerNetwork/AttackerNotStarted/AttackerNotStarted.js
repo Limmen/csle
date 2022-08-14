@@ -9,6 +9,10 @@ const attackerStyles = {
     padding: 0,
 };
 
+/**
+ * Component representing an attacker that has not started an intrusion
+ * in the network animation in the policy examination page
+ */
 const AttackerNotStarted = ({ data }) => {
     return (
         <div style={attackerStyles}>

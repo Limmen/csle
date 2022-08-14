@@ -13,6 +13,9 @@ import {
     ReferenceLine
 } from "recharts";
 
+/**
+ * Component representing the delta alerts chart in the policy examination page
+ */
 const DeltaAlertsLineChart = React.memo((props) => {
         const width = 5000
         const height = 310

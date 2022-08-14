@@ -12,6 +12,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a chart showing the observation function historgram
+ */
 const ObservationFunctionHistogram = React.memo((props) => {
         const width = 500
         const height = 400

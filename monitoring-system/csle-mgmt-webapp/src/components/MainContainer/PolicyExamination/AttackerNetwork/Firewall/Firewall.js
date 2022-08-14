@@ -3,6 +3,10 @@ import {Handle} from 'react-flow-renderer';
 import './Firewall.css';
 import firewall from './firewall.png';
 
+
+/**
+ * Component representing a firewall in the network animation in the policy examination page
+ */
 const Firewall = ({ data }) => {
     return (
         <div className="firewall">

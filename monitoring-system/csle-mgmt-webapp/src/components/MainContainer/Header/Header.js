@@ -4,6 +4,10 @@ import {NavLink, useLocation} from "react-router-dom";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
+
+/**
+ * The header component that is present on every page
+ */
 const Header = () => {
     const location = useLocation();
     const dropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",

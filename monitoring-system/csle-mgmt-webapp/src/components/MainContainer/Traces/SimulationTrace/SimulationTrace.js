@@ -7,6 +7,9 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import './SimulationTrace.css';
 
+/**
+ * Component representing the /simulations/id resource
+ */
 const SimulationTrace = (props) => {
 
     const renderRemoveSimulationTraceTooltip = (props) => (

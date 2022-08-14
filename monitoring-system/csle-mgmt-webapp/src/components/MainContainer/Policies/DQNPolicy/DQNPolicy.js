@@ -11,6 +11,9 @@ import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 
 
+/**
+ * Component representing the /policies/id page for a DQN policy
+ */
 const DQNPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [hParamsOpen, setHParamsOpen] = useState(false);

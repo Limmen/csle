@@ -3,6 +3,9 @@ import './Footer.css';
 import CDISLogo from "./cdis_logo.png";
 import KTHLogo from "./kth_logo.png";
 
+/**
+ * The footer component that is present on every page
+ */
 const Footer = () => (
   <div className="Footer">
       <footer className="footer">

@@ -11,6 +11,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a plot showing the average number of transmitted errors over time
+ */
 const TransmittedErrorsChart = React.memo((props) => {
         const width = 500
         const height = 200

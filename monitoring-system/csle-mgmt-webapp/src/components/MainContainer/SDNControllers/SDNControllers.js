@@ -15,6 +15,10 @@ import {useDebouncedCallback} from 'use-debounce';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+
+/**
+ * Component representing the /sdn-controllers-page
+ */
 const SDNControllers = (props) => {
     const [emulationIds, setEmulationIds] = useState([]);
     const [selectedEmulationId, setSelectedEmulationId] = useState(null);

@@ -9,6 +9,9 @@ const defenderStyles = {
     padding: 0,
 };
 
+/**
+ * Component representing a defender in the network animation in the policy examination page
+ */
 const Defender = ({ data }) => {
     return (
         <div style={defenderStyles}>

@@ -21,7 +21,9 @@ import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import useSession from "./components/MainContainer/SessionManagement/useSession";
 import { useAlert } from "react-alert";
 
-
+/**
+ * Container component containing the main components of the page and defining the routes
+ */
 function App() {
     const {sessionData, setSessionData} = useSession();
     const alert = useAlert();

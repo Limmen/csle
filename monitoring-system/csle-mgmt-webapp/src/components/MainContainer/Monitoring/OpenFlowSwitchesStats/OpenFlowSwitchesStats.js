@@ -17,6 +17,10 @@ import FlowDurationChart from "../FlowDurationChart/FlowDurationChart";
 import FlowPriorityChart from "../FlowPriorityChart/FlowPriorityChart";
 import NumFlowsChart from "../NumFlowsChart/NumFlowsChart";
 
+
+/**
+ * Component containing various plots related to openflow switch statistics
+ */
 const OpenFlowSwitchesStats = React.memo((props) => {
     if(!props.loading && (props.flowStats === null || props.portStats === null)) {
         return (<></>)

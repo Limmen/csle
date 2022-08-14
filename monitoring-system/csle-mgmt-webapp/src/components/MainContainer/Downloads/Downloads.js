@@ -16,6 +16,9 @@ import {useNavigate} from "react-router-dom";
 import fileDownload from 'react-file-download'
 import {useAlert} from "react-alert";
 
+/**
+ *  Component representing the /downloads-page
+ */
 const Downloads = (props) => {
     const [showTracesDatasetsInfoModal, setShowTracesDatasetsInfoModal] = useState(false);
     const [showTracesDatasetInfoModal, setShowTracesDatasetInfoModal] = useState(false);

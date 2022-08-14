@@ -11,6 +11,9 @@ const clientStyles = {
     position: 'relative'
 };
 
+/**
+ * Component representing a client in the network animation in the policy examination page
+ */
 const Client = ({ data }) => {
     return (
         <div style={clientStyles} className="clientPopulation">

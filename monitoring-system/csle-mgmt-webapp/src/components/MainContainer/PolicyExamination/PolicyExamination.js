@@ -28,11 +28,15 @@ import Select from 'react-select'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
-const onLoad = (reactFlowInstance) => {
-    reactFlowInstance.fitView();
-}
 
+/**
+ * Component representing the /policy-examination-page
+ */
 const PolicyExamination = (props) => {
+
+    const onLoad = (reactFlowInstance) => {
+        reactFlowInstance.fitView();
+    }
 
     const evolutionSpeedOptions = [
         {

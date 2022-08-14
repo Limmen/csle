@@ -11,6 +11,10 @@ import {
     YAxis
 } from "recharts";
 
+
+/**
+ * Component containing a plot showing the average number of received bytes over time
+ */
 const ReceivedBytesChart = React.memo((props) => {
         const width = 500
         const height = 200

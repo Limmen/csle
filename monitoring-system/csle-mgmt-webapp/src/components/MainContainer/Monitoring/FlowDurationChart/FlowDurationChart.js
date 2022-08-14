@@ -11,6 +11,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a plot showing average flow duration over time
+ */
 const FlowDurationChart = React.memo((props) => {
         const width = 500
         const height = 200

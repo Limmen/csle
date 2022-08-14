@@ -12,6 +12,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a chart showing the state transition distribution
+ */
 const StateTransitionHistogram = React.memo((props) => {
         const width = 500
         const height = 400

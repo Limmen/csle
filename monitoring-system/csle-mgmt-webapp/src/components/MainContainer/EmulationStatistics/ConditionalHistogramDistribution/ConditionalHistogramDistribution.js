@@ -13,6 +13,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component representing a conditional histogram distribution
+ */
 const ConditionalHistogramDistribution = React.memo((props) => {
         const width = 500
         const colors  = ["#8884d8", "#82ca9d"]

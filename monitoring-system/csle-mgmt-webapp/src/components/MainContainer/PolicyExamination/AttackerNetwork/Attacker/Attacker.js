@@ -9,6 +9,9 @@ const attackerStyles = {
     padding: 0,
 };
 
+/**
+ * Component representing an attacker in the network animation in the policy examination page
+ */
 const Attacker = ({ data }) => {
     return (
         <div style={attackerStyles}>

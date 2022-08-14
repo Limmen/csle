@@ -3,7 +3,9 @@ import './ObservationFunction.css';
 import ObservationFunctionHistogram from "../ObservationFunctionHistogram/ObservationFunctionHistogram";
 import Select from 'react-select'
 
-
+/**
+ * Component containing a chart showing the observation function
+ */
 const ObservationFunction = (props) => {
     var initialA1 = 0
     var initialA2 = 0

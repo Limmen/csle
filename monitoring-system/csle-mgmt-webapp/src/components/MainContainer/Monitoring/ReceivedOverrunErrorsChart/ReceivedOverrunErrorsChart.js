@@ -11,6 +11,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a plot showing the average number of overrun errors over time
+ */
 const ReceivedOverrunErrorsChart = React.memo((props) => {
         const width = 500
         const height = 200

@@ -22,6 +22,10 @@ import getSystemModelTypeStr from "../../Common/getSystemModelTypeStr";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+
+/**
+ * Component representing the /system-models-page
+ */
 const SystemModels = (props) => {
     const [systemModelsIds, setSystemModelsIds] = useState([]);
     const [filteredSystemModelsIds, setFilteredSystemModelsIds] = useState([]);

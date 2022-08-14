@@ -10,6 +10,9 @@ import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 
+/**
+ * Component representing the /emulations/<id> resource
+ */
 const Emulation = (props) => {
     const [loading, setLoading] = useState(false);
     const [emulation, setEmulation] = useState(props.emulation);
@@ -450,7 +453,7 @@ const Emulation = (props) => {
                                 {emulation.containers_config.containers.map((container, index) =>
                                     <tr key={container.full_name_str + "-" + index}>
                                         <td>{container.full_name_str}</td>
-                                        <td>{getIps(container.ips_and_networks)}</td>
+                                        <td>{getIps(container.ips_and_networks).join(", ")}</td>
                                         <td>{container.os}</td>
                                     </tr>
                                 )}

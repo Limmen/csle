@@ -1,8 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import './SDNController.css';
 import Card from 'react-bootstrap/Card';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import fileDownload from 'react-file-download'
@@ -10,6 +8,9 @@ import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 
+/**
+ * Component representing the /sdn-controllers/id resource
+ */
 const SDNController = (props) => {
     const [loading, setLoading] = useState(false);
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);

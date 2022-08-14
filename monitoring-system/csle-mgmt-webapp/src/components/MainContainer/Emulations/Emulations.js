@@ -18,6 +18,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
 
+/**
+ * Component representing the /emulations-page
+ */
 const Emulations = (props) => {
     const [emulationIds, setEmulationIds] = useState([]);
     const [selectedEmulationId, setSelectedEmulationId] = useState(null);

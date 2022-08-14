@@ -3,6 +3,9 @@ import './About.css';
 import Arch from './arch.png'
 import YoutubeEmbed from "../YoutubeEmbed/YoutubeEmbed";
 
+/**
+ * Component representing the /about-page
+ */
 const About = () => {
 
     return (

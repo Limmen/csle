@@ -11,6 +11,10 @@ import {
     YAxis
 } from "recharts";
 
+
+/**
+ * Component containing a plot showing the number of collisions over time
+ */
 const NumCollisionsChart = React.memo((props) => {
         const width = 500
         const height = 200

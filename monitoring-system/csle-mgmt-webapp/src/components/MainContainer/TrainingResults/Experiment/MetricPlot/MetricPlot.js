@@ -12,6 +12,9 @@ import {
     YAxis
 } from "recharts";
 
+/**
+ * Component containing a metric plot shown as part of an experiment
+ */
 const MetricPlot = React.memo((props) => {
         const width = 500
         const height = 400

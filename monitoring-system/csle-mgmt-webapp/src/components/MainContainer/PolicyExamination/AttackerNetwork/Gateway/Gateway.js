@@ -9,6 +9,9 @@ const gatewayStyles = {
     padding: 0,
 };
 
+/**
+ * Component representing a gateway in the network animation in the policy examination page
+ */
 const Gateway = ({ data }) => {
     return (
         <div style={gatewayStyles}>

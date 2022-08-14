@@ -3,6 +3,10 @@ import {Handle} from 'react-flow-renderer';
 import './SwitchNotFound.css';
 import gb_switch from './gb_switch.png';
 
+/**
+ * Component representing a switch that has not been found by the attacker
+ * in the network animation in the policy examination page
+ */
 const SwitchNotFound = ({ data }) => {
     return (
         <div className="switchNotFound">

@@ -27,6 +27,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 
+/**
+ * Component representing the /policies page
+ */
 const Policies = (props) => {
     const [showMultiThresholdPoliciesInfoModal, setShowMultiThresholdPoliciesInfoModal] = useState(false);
     const [showPPOPoliciesInfoModal, setShowPPOPoliciesInfoModal] = useState(false);
