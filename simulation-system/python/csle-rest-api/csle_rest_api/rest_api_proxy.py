@@ -34,13 +34,17 @@ def create_app(static_folder: str, proxy_server: str):
 
     # Register blueprints (sub-applications) to serve static resources
     app.register_blueprint(emulations_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}")
     app.register_blueprint(simulations_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SIMULATIONS_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.SIMULATIONS_PAGE_RESOURCE}")
     app.register_blueprint(traces_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE}")
     app.register_blueprint(monitoring_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE}")
     app.register_blueprint(emulation_statistics_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}")
@@ -57,9 +61,11 @@ def create_app(static_folder: str, proxy_server: str):
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.DOWNLOADS_PAGE_RESOURCE}")
     app.register_blueprint(images_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE}")
     app.register_blueprint(jobs_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.JOBS_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.JOBS_PAGE_RESOURCE}")
     app.register_blueprint(policies_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.POLICIES_PAGE_RESOURCE}")
@@ -80,8 +86,9 @@ def create_app(static_folder: str, proxy_server: str):
 
     # Specify proxy routes
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
-               f'{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+               f'{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def emulations_proxy():
         """
         Proxy for the /emulations resource
@@ -98,9 +105,10 @@ def create_app(static_folder: str, proxy_server: str):
                 return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
-               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-                                                                           api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+               f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+                        api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def emulation_proxy(emulation_id: int):
         """
         Proxy for the /emulations/emulation_id resource
@@ -119,8 +127,9 @@ def create_app(static_folder: str, proxy_server: str):
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
-               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+               f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def executions_of_emulation_proxy(emulation_id: int):
         """
         Proxy for the /emulations/emulation_id/executions resource
@@ -395,7 +404,8 @@ def create_app(static_folder: str, proxy_server: str):
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
                 return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}').content
 
-    @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
+    @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
+               f'{constants.COMMANDS.SLASH_DELIM}<policy_id>',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
     def ppo_policy_proxy(policy_id: int):
         """
@@ -869,12 +879,15 @@ def create_app(static_folder: str, proxy_server: str):
         """
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}'
+                       f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}?ids=true').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
+                return get(f'{proxy_server}'
+                           f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
+                return delete(f'{proxy_server}'
+                              f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
