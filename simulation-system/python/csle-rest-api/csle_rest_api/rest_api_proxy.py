@@ -95,14 +95,17 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulations resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>',
@@ -115,15 +118,18 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation/emulation_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
             return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
-                          f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}').content
+                          f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'

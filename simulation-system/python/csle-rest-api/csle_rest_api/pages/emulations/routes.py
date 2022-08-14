@@ -17,6 +17,10 @@ emulations_page_bp = Blueprint(api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURC
                                static_folder="../../../../../../monitoring-system/csle-mgmt-webapp/build")
 
 
+def get_bp():
+    pass
+
+
 @emulations_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def emulations_page():
     """
