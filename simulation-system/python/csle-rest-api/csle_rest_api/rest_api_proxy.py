@@ -142,14 +142,17 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulations/emulation_id/executions resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
-                       f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}').content
+                       f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
-                       f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}').content
+                       f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
@@ -161,16 +164,19 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulations/emulation_id/executions/execution_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
                        f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-                       f'{execution_id}').content
+                       f'{execution_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
                        f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-                       f'{execution_id}').content
+                       f'{execution_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
@@ -184,11 +190,14 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulations/emulation_id/executions/execution_id/monitor/minutes resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         res =  get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
                    f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                    f'{execution_id}{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
-                   f'{constants.COMMANDS.SLASH_DELIM}{minutes}').content
+                   f'{constants.COMMANDS.SLASH_DELIM}{minutes}?token={token}').content
         return res
 
 
@@ -203,11 +212,14 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulations/emulation_id/executions/execution_id/switches resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}'
                    f'{constants.COMMANDS.SLASH_DELIM}{emulation_id}{constants.COMMANDS.SLASH_DELIM}'
                    f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                    f'{execution_id}{constants.COMMANDS.SLASH_DELIM}'
-                   f'{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}').content
+                   f'{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -217,14 +229,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /alpha-vec-policies
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
@@ -235,12 +253,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /alpha-vec-policies/policy_id
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
@@ -250,10 +271,13 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /cadvisor resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}').content
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
@@ -263,10 +287,13 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /prometheus
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}').content
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
@@ -276,10 +303,13 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /nodeexporter resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
@@ -289,10 +319,13 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /grafana resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}').content
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -302,14 +335,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /data-collection-jobs resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}'
+                       f'?ids=true&oken={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>',
@@ -320,12 +359,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /data-collections-jobs/job_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -335,14 +377,17 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /dqn-policies resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}?ids=true').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<policy_id>',
@@ -353,12 +398,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /dqn-policies/policy-id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -368,14 +416,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /fnn-w-softmax-policies resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
@@ -386,12 +440,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /fnn-w-softmax-policies/policy_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -401,14 +458,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /ppo-policies resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
                f'{constants.COMMANDS.SLASH_DELIM}<policy_id>',
@@ -419,12 +482,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /ppo-policies/policy_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -435,13 +501,18 @@ def create_app(static_folder: str, proxy_server: str):
         :return: the /tabular-policies resource
         """
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
@@ -452,12 +523,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /tabular-policies/policy_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -467,14 +541,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /vector-policies resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
@@ -485,12 +565,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /vector-policies/policy_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -500,14 +583,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /multi-threshold-policies resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<policy_id>',
@@ -518,12 +607,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /multi-threshold-policies/policy_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{policy_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -533,14 +625,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /training-jobs resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<job_id>',
@@ -551,12 +649,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /training-jobs/job_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}',
@@ -567,14 +668,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /system-identification-jobs resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}{constants.COMMANDS.SLASH_DELIM}<job_id>',
@@ -585,12 +692,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /system-identification-jobs/job_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{job_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -600,14 +710,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-executions resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -618,14 +734,17 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-executions/execution_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
         if emulation is not None:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
                        f'{constants.COMMANDS.SLASH_DELIM}{execution_id}?'
-                       f'{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}={emulation}').content
+                       f'{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}={emulation}&token={token}').content
         else:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{execution_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{execution_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}',
@@ -636,14 +755,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-simulation-traces resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -655,12 +780,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-simulation-traces/trace_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -670,14 +798,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-statistics resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -689,12 +823,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-statistics/statistics_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{statistics_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{statistics_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{statistics_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{statistics_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}',
@@ -705,14 +842,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-traces resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -724,12 +867,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /emulation-traces/trace_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}',
@@ -740,14 +886,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /simulation-traces resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -759,12 +911,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /simulation-traces/trace_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{trace_id}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -774,14 +929,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /experiments resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -793,12 +954,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /experiments/experiment_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{experiment_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{experiment_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{experiment_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{experiment_id}?token={token}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.FILE_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
     def fileproxy():
@@ -807,6 +971,9 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /file resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         post_json_data = json.loads(request.data)
         headers = {api_constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE,
                    api_constants.MGMT_WEBAPP.ACCEPT_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE}
@@ -821,11 +988,14 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /images resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}?ids=true&token={token}').content
         else:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -835,11 +1005,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /sdn-controllers resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE}?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -849,14 +1023,19 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /simulations resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -868,12 +1047,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /simulations/simulation_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{simulation_id}?token={token}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -883,17 +1065,23 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /system-models resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return get(f'{proxy_server}'
-                       f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}?ids=true').content
+                       f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
                 return get(f'{proxy_server}'
-                           f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
+                           f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
                 return delete(f'{proxy_server}'
-                              f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}').content
+                              f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -905,12 +1093,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /gaussian-mixture-system-models/system_model_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}?token={token}').content
 
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}',
@@ -921,14 +1112,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /system-models resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -940,12 +1137,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /empirical-system-models/system_model_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}'
-                          f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+                          f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}?token={token}').content
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -955,14 +1155,20 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /system-models resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}?ids=true').content
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}'
+                       f'?ids=true&token={token}').content
         else:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}').content
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}'
+                           f'?token={token}').content
             elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}').content
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}'
+                              f'?token={token}').content
 
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
@@ -974,12 +1180,15 @@ def create_app(static_folder: str, proxy_server: str):
 
         :return: the /gp-system-models/system_model_id resource
         """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}'
-                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+                       f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}?token={token}').content
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}'
-                          f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}').content
+                          f'{constants.COMMANDS.SLASH_DELIM}{system_model_id}?token={token}').content
 
 
     @app.route(f'/{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
