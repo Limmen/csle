@@ -23,6 +23,8 @@ class ENV_METRICS:
     """
     INTRUSION_LENGTH = "intrusion_length"
     INTRUSION_START = "intrusion_start"
+    WEIGHTED_INTRUSION_PREDICTION_DISTANCE = "weighted_intrusion_prediction_distance"
+    START_POINT_CORRECT = "start_point_correct"
     INTRUSION_END = "intrusion_end"
     RETURN = "R"
     TIME_HORIZON = "T"

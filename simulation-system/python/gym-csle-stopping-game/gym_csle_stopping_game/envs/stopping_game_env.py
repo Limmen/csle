@@ -263,12 +263,6 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        # print(f"step trace, t: {self.state.t} "
-        #       f"o: {o}, a1: {a1}, a2: {a2}, returning: o:{(defender_obs, attacker_obs)}, r:{(r,-r)}, "
-        #       f"info: {info}, pi2:{pi2}, old_state: {old_state}, s_prime:{self.state.s}, "
-        #       f"b:{self.state.b}, l:{self.state.l} no_intrusion_prob: {self.config.Z[a1][a2][0][o]}, "
-        #       f"intrusion_prob: {self.config.Z[a1][a2][1][o]}, intrusion mean: {self.mean(self.config.Z[a1][a2][1])}, "
-        #       f"no intrusion mean: {self.mean(self.config.Z[a1][a2][0])}")
         return (defender_obs, attacker_obs), (r,-r), done, info
 
     def mean(self, prob_vector):
@@ -276,6 +270,19 @@ class StoppingGameEnv(BaseEnv):
         for i in range(len(prob_vector)):
             m += prob_vector[i]*i
         return m
+
+    def weighted_intrusion_prediction_distance(self, intrusion_start: int, first_stop: int):
+        """
+        Computes the weighted intrusion start time prediction distance (Wang, Hammar, Stadler, 2022)
+
+        :param intrusion_start: the intrusion start time
+        :param first_stop: the predicted start time
+        :return: the weighted distance
+        """
+        if first_stop <= intrusion_start:
+            return 1-(10/10)
+        else:
+            return 1-(min(10, (first_stop - (intrusion_start+1)))/2)/10
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
@@ -303,6 +310,11 @@ class StoppingGameEnv(BaseEnv):
         intrusion_end = len(self.trace.attacker_actions)
         info[env_constants.ENV_METRICS.INTRUSION_START] = intrusion_start
         info[env_constants.ENV_METRICS.INTRUSION_END] = intrusion_end
+        info[env_constants.ENV_METRICS.START_POINT_CORRECT] = int(intrusion_start ==
+                                                                  (info[f"{env_constants.ENV_METRICS.STOP}_1"]+1))
+        info[env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = \
+            self.weighted_intrusion_prediction_distance(intrusion_start=intrusion_start,
+                                                        first_stop=info[f"{env_constants.ENV_METRICS.STOP}_1"])
         info[env_constants.ENV_METRICS.INTRUSION_LENGTH] = intrusion_end - intrusion_start
         upper_bound_return = 0
         defender_baseline_stop_on_first_alert_return = 0

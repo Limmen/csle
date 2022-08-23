@@ -348,7 +348,7 @@ class StoppingGameUtil:
             elif len(Z.shape) == 2:
                 observation_probs.append(Z[s_prime][o])
         o = np.random.choice(np.arange(0, len(O)), p=observation_probs)
-        return o
+        return int(o)
 
     @staticmethod
     def bayes_filter(s_prime: int, o: int, a1: int, b: np.ndarray, pi2: np.ndarray, l: int,

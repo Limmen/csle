@@ -69,5 +69,8 @@ class GeneralUtil:
                 Logger.__call__().get_logger().info(f"Successfully initialized configuration "
                                                     f"from configuration file: {config_file_path}")
         except Exception as e:
-            Logger.__call__().get_logger().info(f"Failed to read configuration file from: {config_file_path}. "
-                                                f"Exception: {str(e)}, {repr(e)}")
+            try:
+                Logger.__call__().get_logger().info(f"Failed to read configuration file from: {config_file_path}. "
+                                                    f"Exception: {str(e)}, {repr(e)}")
+            except Exception as e2:
+                pass

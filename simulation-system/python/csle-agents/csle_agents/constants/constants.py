@@ -7,6 +7,10 @@ class COMMON:
     """
     Common string constants among all agents
     """
+    WEIGHTED_INTRUSION_PREDICTION_DISTANCE = "weighted_intrusion_prediction_distance"
+    RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE = "running_average_weighted_intrusion_prediction_distance"
+    START_POINT_CORRECT = "start_point_correct"
+    RUNNING_AVERAGE_START_POINT_CORRECT = "running_average_start_point_correct"
     NUM_CACHED_SIMULATION_TRACES = 3
     AVERAGE_RETURN = "average_return"
     RUNNING_AVERAGE_RETURN = "running_average_return"

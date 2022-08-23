@@ -1010,7 +1010,7 @@ class MetastoreFacade:
         return experiment_execution
 
     @staticmethod
-    def get_experiment_execution(id: int) -> Union[None, EmulationTrace]:
+    def get_experiment_execution(id: int) -> Union[None, ExperimentExecution]:
         """
         Function for fetching an experiment execution with a given id from the metastore
 

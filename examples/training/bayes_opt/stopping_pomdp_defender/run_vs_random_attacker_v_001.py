@@ -62,7 +62,7 @@ if __name__ == '__main__':
     agent = BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                        experiment_config=experiment_config)
     simulation_env_config.simulation_env_input_config.stopping_game_config.R = list(StoppingGameUtil.reward_tensor(
-        R_INT=-1, R_COST=0, R_SLA=0, R_ST=0, L=1))
+        R_INT=-1, R_COST=-10, R_SLA=0, R_ST=0, L=1))
     simulation_env_config.simulation_env_input_config.stopping_game_config.L = 1
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)

@@ -61,6 +61,10 @@ class TSPSAAgent(BaseAgent):
         exp_result = ExperimentResult()
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.WEIGHTED_INTRUSION_PREDICTION_DISTANCE)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE)
+        exp_result.plot_metrics.append(agents_constants.COMMON.START_POINT_CORRECT)
+        exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_START_POINT_CORRECT)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_LENGTH)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH)
         exp_result.plot_metrics.append(env_constants.ENV_METRICS.INTRUSION_START)
@@ -80,6 +84,11 @@ class TSPSAAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THETAS] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = []
+            exp_result.all_metrics[seed][
+                agents_constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.START_POINT_CORRECT] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_START_POINT_CORRECT] = []
             exp_result.all_metrics[seed][agents_constants.T_SPSA.THRESHOLDS] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
                 for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
@@ -303,6 +312,23 @@ class TSPSAAgent(BaseAgent):
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
+            # Log prediction distance
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE].append(
+                round(avg_metrics[env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE], 3))
+            exp_result.all_metrics[seed][
+                agents_constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE].append(
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+
+            exp_result.all_metrics[seed][env_constants.ENV_METRICS.START_POINT_CORRECT].append(
+                round(avg_metrics[env_constants.ENV_METRICS.START_POINT_CORRECT], 3))
+            exp_result.all_metrics[seed][
+                agents_constants.COMMON.RUNNING_AVERAGE_START_POINT_CORRECT].append(
+                ExperimentUtil.running_average(
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.START_POINT_CORRECT],
+                    self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+
             # Log stopping times
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START].append(
                 round(avg_metrics[env_constants.ENV_METRICS.INTRUSION_START], 3))
@@ -359,6 +385,11 @@ class TSPSAAgent(BaseAgent):
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
+                    f"w_dist: "
+                    f"{exp_result.all_metrics[seed][env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE][-1]},"
+                    f"spc:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.START_POINT_CORRECT][-1]}, "
+                    f"stop_1:{exp_result.all_metrics[seed]['stop_1'][-1]}, "
+                    f"int_start:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_START][-1]}, "
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
 
