@@ -292,10 +292,14 @@ class BayesOptAgent(BaseAgent):
                 policy=candidate_policy,
                 max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
             J_candidate = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            optimizer.register(params=theta_candidate, target=J_candidate)
+            try:
+                optimizer.register(params=theta_candidate, target=J_candidate)
+                J = optimizer.max[agents_constants.BAYESIAN_OPTIMIZATION.TARGET]
+            except Exception as e:
+                print(f"Exception, candidate:{theta_candidate}")
+                continue
 
             # Log average return
-            J = optimizer.max[agents_constants.BAYESIAN_OPTIMIZATION.TARGET]
             policy = MultiThresholdStoppingPolicy(
                 theta=list(BayesOptAgent.get_theta_vector_from_param_dict(
                     optimizer.max[agents_constants.BAYESIAN_OPTIMIZATION.PARAMS])),

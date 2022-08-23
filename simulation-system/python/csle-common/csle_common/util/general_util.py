@@ -29,7 +29,10 @@ class GeneralUtil:
 
         :return: None
         """
-        csle_home = os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM]
+        if constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM in os.environ:
+            csle_home = os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM]
+        else:
+            csle_home = "/home/kim/csle"
         config_file_path = f"{csle_home}{constants.COMMANDS.SLASH_DELIM}" \
                            f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
         try:
