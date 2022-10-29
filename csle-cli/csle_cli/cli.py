@@ -1336,7 +1336,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_emulation_executions()
     list_simulations()
     list_csle_gym_envs()
-    click.secho("CSLE Monitoring System:", fg="magenta", bold=True)
+    click.secho("CSLE monitoring system:", fg="magenta", bold=True)
     list_prometheus()
     list_node_exporter()
     list_cadvisor()
