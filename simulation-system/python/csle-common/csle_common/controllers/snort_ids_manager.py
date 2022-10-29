@@ -49,7 +49,7 @@ class SnortIDSManager:
                     cmd = constants.COMMANDS.STOP_IDS
                     o, e, _ = EmulationUtil.execute_ssh_cmd(
                         cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-                    time.sleep(1)
+                    time.sleep(2)
                     cmd = constants.COMMANDS.START_IDS
                     Logger.__call__().get_logger().info(f"Starting Snort IDS on {c.get_ips()[0]}")
                     o, e, _ = EmulationUtil.execute_ssh_cmd(

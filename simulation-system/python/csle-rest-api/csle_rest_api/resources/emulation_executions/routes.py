@@ -106,7 +106,6 @@ def emulation_execution_info(execution_id: int):
 
     :return: Runtime information about the given execution
     """
-    print("Emulation Execution Info")
     authorized = rest_api_util.check_if_user_is_authorized(request=request)
     if authorized is not None:
         return authorized
