@@ -51,7 +51,8 @@ class ExportUtil:
 
     @staticmethod
     def export_emulation_traces_to_disk_json(num_traces_per_file: int, output_dir: str, zip_file_output: str,
-                                             max_num_traces: int, added_by: str = "unknown") -> None:
+                                             max_num_traces: int, added_by: str = "unknown", offset: int = 0,
+                                             file_start_id: int = 1) -> None:
         """
         Exports emulation traces from the metastore to disk
 
@@ -60,6 +61,8 @@ class ExportUtil:
         :param zip_file_output: the compressed zip file path
         :param max_num_traces: maximum number of traces
         :param added_by: the person who added the dataset
+        :param offset: the trace id offset
+        :param file_start_id: the id of the first file to write
         :return: None
         """
         Logger.__call__().get_logger().info(f"Exporting emulation traces to disk (json), output dir: {output_dir}, "
@@ -68,17 +71,19 @@ class ExportUtil:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         emulation_traces_ids = MetastoreFacade.list_emulation_traces_ids()
+        emulation_traces_ids = emulation_traces_ids[offset:]
         if len(emulation_traces_ids) > max_num_traces:
             emulation_traces_ids = emulation_traces_ids[0:max_num_traces]
         traces = []
-        file_id = 1
+        file_id = file_start_id
         file_name = f"{file_id}.json"
         columns = ""
         last_export = 0
         num_attributes_per_time_step = -1
         schema = None
         for i, id_obj in enumerate(emulation_traces_ids):
-            Logger.__call__().get_logger().info(f"Reading trace {i}/{len(emulation_traces_ids)} from the metastore")
+            Logger.__call__().get_logger().info(f"Reading trace {i}/{len(emulation_traces_ids)} from the metastore, "
+                                                f"trace id: {id_obj[0]}")
             tr = MetastoreFacade.get_emulation_trace(id=id_obj[0])
             if num_attributes_per_time_step == -1:
                 num_attributes_per_time_step = tr.num_attributes_per_time_step()
