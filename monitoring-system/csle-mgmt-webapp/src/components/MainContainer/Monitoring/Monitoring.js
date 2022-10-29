@@ -542,13 +542,6 @@ const Monitoring = (props) => {
         })
         .catch(error => console.log("error:" + error)), []);
 
-
-    useEffect(() => {
-        setLoading(true)
-        fetchEmulationExecutionIds();
-    }, []);
-
-
     const fetchGrafanaStatus = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/grafana' + "?token=" + props.sessionData.token,
@@ -576,12 +569,6 @@ const Monitoring = (props) => {
             })
             .catch(error => console.log("error:" + error))
     }, []);
-
-    useEffect(() => {
-        setLoading(true)
-        fetchGrafanaStatus()
-    }, [fetchGrafanaStatus]);
-
 
     const fetchCadvisorStatus = useCallback(() => {
         fetch(
@@ -611,11 +598,6 @@ const Monitoring = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    useEffect(() => {
-        setLoading(true)
-        fetchCadvisorStatus()
-    }, [fetchCadvisorStatus]);
-
     const fetchPrometheusStatus = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/prometheus' + "?token=" + props.sessionData.token,
@@ -644,11 +626,6 @@ const Monitoring = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    useEffect(() => {
-        setLoading(true)
-        fetchPrometheusStatus()
-    }, [fetchPrometheusStatus]);
-
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
             `http://` + ip + ':7777/node-exporter' + "?token=" + props.sessionData.token,
@@ -676,12 +653,6 @@ const Monitoring = (props) => {
             })
             .catch(error => console.log("error:" + error))
     }, []);
-
-    useEffect(() => {
-        setLoading(true)
-        fetchNodeExporterStatus()
-    }, [fetchNodeExporterStatus]);
-
 
     const startOrStopGrafana = () => {
         startOrStopGrafanaRequest()
@@ -1125,6 +1096,16 @@ const Monitoring = (props) => {
             )
         }
     }
+
+    useEffect(() => {
+        setLoading(true)
+        fetchEmulationExecutionIds()
+        fetchGrafanaStatus()
+        fetchCadvisorStatus()
+        fetchPrometheusStatus()
+        fetchNodeExporterStatus()
+    }, [fetchEmulationExecutionIds, fetchGrafanaStatus, fetchCadvisorStatus, fetchPrometheusStatus,
+        fetchNodeExporterStatus]);
 
     return (
         <div className="container-fluid">

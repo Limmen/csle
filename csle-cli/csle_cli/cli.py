@@ -1535,8 +1535,9 @@ def list_networks() -> None:
 
     click.secho("CSLE networks:", fg="magenta", bold=True)
     active_networks_names = ContainerManager.list_all_networks()
-    emulations = MetastoreFacade.list_emulations()
-    for em in emulations:
+    executions = MetastoreFacade.list_emulation_executions()
+    for exec in executions:
+        em = exec.emulation_env_config
         for net in em.containers_config.networks:
             active = net.name in active_networks_names
             if active:
