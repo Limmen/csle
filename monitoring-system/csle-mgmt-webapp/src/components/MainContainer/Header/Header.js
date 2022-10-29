@@ -12,7 +12,7 @@ const Header = () => {
     const location = useLocation();
     const dropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",
         "/emulation-statistics-page", "/system-models-page", "/policy-examination-page", "/images-page",
-        "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page"]
+        "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page", "/control-plane-page"]
 
     const renderManagementTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -89,6 +89,12 @@ const Header = () => {
     const renderSdnControllersTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Management of SDN controllers
+        </Tooltip>
+    );
+
+    const renderControlPlaneTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Control plane for emulations
         </Tooltip>
     );
 
@@ -258,6 +264,14 @@ const Header = () => {
                                     overlay={renderSdnControllersTooltip}>
                                     <NavLink className="dropdown-item" to={"sdn-controllers-page"}>
                                         SDN Controllers
+                                    </NavLink>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{show: 0, hide: 0}}
+                                    overlay={renderControlPlaneTooltip}>
+                                    <NavLink className="dropdown-item" to={"control-plane-page"}>
+                                        Control plane
                                     </NavLink>
                                 </OverlayTrigger>
                             </div>

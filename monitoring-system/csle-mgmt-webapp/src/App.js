@@ -15,6 +15,7 @@ import About from "./components/MainContainer/About/About";
 import Login from "./components/MainContainer/Login/Login";
 import Policies from "./components/MainContainer/Policies/Policies";
 import Jobs from "./components/MainContainer/Jobs/Jobs";
+import ControlPlane from "./components/MainContainer/ControlPlane/ControlPlane";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
 import Downloads from "./components/MainContainer/Downloads/Downloads";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
@@ -119,6 +120,12 @@ function App() {
                                 <Route path="sdn-controllers-page" index element={
                                     <ProtectedRoute>
                                         <SDNControllers sessionData={sessionData} setSessionData={setSessionData}/>
+                                    </ProtectedRoute>
+                                }>
+                                </Route>
+                                <Route path="control-plane-page" index element={
+                                    <ProtectedRoute>
+                                        <ControlPlane sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>

@@ -6,6 +6,7 @@ import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.container_manager import ContainerManager
+from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -61,7 +62,8 @@ def emulation_execution_ids():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@emulation_executions_bp.route("/<execution_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def emulation_execution(execution_id: int):
     """
     The /emulation-executions/id resource.
@@ -89,5 +91,41 @@ def emulation_execution(execution_id: int):
                 all_executions_with_the_given_id_dicts.append(exec.to_dict())
 
         response = jsonify(all_executions_with_the_given_id_dicts)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def emulation_execution_info(execution_id: int):
+    """
+    The /emulation-executions/id/info resource.
+
+    :param execution_id: the id of the execution
+
+    :return: Runtime information about the given execution
+    """
+    print("Emulation Execution Info")
+    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        execution_info = EmulationEnvManager.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response
+    else:
+        all_executions_with_the_given_id_dicts = []
+        all_executions = MetastoreFacade.list_emulation_executions()
+        for exec in all_executions:
+            if exec.ip_first_octet == execution_id:
+                execution_info = EmulationEnvManager.get_execution_info(execution=exec)
+                all_executions_with_the_given_id_dicts.append(execution_info)
+        response = jsonify({})
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE

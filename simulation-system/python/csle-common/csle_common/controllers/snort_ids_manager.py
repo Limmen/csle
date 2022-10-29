@@ -2,6 +2,7 @@ from typing import List
 import grpc
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.snort_managers_info import SnortManagersInfo
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as csle_collector_constants
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
@@ -12,6 +13,9 @@ from csle_common.logging.log import Logger
 
 
 class SnortIDSManager:
+    """
+    Class managing operations related to Snort IDS Managers
+    """
 
     @staticmethod
     def grpc_server_on(channel) -> bool:
@@ -103,15 +107,16 @@ n
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    # Open a gRPC session
-                    with grpc.insecure_channel(
-                            f'{c.get_ips()[0]}:'
-                            f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
-                        stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
-                        ids_monitor_dto = csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status(stub)
-                        if not ids_monitor_dto.running:
-                            Logger.__call__().get_logger().info(
-                                f"Snort IDS monitor thread is not running on {c.get_ips()[0]}, starting it.")
+                    ids_monitor_dto = SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                        port=emulation_env_config.log_sink_config.default_grpc_port, ip=c.get_ips()[0])
+                    if not ids_monitor_dto.running:
+                        Logger.__call__().get_logger().info(
+                            f"Snort IDS monitor thread is not running on {c.get_ips()[0]}, starting it.")
+                        # Open a gRPC session
+                        with grpc.insecure_channel(
+                                f'{c.get_ips()[0]}:'
+                                f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
+                            stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                             csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor(
                                 stub=stub, kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0],
                                 kafka_port=emulation_env_config.log_sink_config.kafka_port,
@@ -138,34 +143,50 @@ n
                             f'{c.get_ips()[0]}:'
                             f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
                         stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
-                        ids_monitor_dto = csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status(stub)
                         Logger.__call__().get_logger().info(
                             f"Stopping the Snort IDS monitor thread on {c.get_ips()[0]}.")
                         csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor(stub=stub)
 
     @staticmethod
-    def get_snort_ids_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
+    def get_snort_ids_monitor_thread_status(emulation_env_config: EmulationEnvConfig,
+                                            start_if_stopped: bool = True) -> \
             List[csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO]:
         """
         A method that sends a request to the SnortIDSManager on every container to get the status of the IDS monitor thread
 
         :param emulation_env_config: the emulation config
+        :param start_if_stopped: whether to start the IDS monitor if it is stopped
         :return: List of monitor thread statuses
         """
         statuses = []
-        SnortIDSManager._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        if start_if_stopped:
+            SnortIDSManager._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    # Open a gRPC session
-                    with grpc.insecure_channel(
-                            f'{c.get_ips()[0]}:'
-                            f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
-                        stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
-                        status = csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status(stub=stub)
-                        statuses.append(status)
+                    status = SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                        port=emulation_env_config.log_sink_config.default_grpc_port, ip=c.get_ips()[0])
+                    statuses.append(status)
         return statuses
+
+    @staticmethod
+    def get_snort_ids_monitor_thread_status_by_ip_and_port(port: int, ip: str) \
+            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
+        """
+        A method that sends a request to the SnortIDSManager with a specific port and ip
+        to get the status of the IDS monitor thread
+
+        :param port: the port of the SnortIDSManager
+        :param ip: the ip of the SnortIDSManager
+        :return: the status of the SnortIDSManager
+        """
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
+            status = \
+                csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status(
+                    stub=stub)
+            return status
 
     @staticmethod
     def get_snort_ids_log_data(emulation_env_config: EmulationEnvConfig, timestamp: float) \
@@ -194,3 +215,49 @@ n
                             log_file_path=csle_collector_constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE)
                         ids_log_data_list.append(ids_log_data)
         return ids_log_data_list
+
+    @staticmethod
+    def get_snort_ids_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
+        """
+        A method that extracts the IPS of the snort IDS managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of IP addresses
+        """
+        ips = []
+        for c in emulation_env_config.containers_config.containers:
+            for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
+                if ids_image in c.name:
+                    try:
+                        SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                            port=emulation_env_config.log_sink_config.default_grpc_port, ip=c.get_ips()[0])
+                        ips.append(c.get_ips()[0])
+                    except Exception as e:
+                        pass
+        return ips
+
+    @staticmethod
+    def get_snort_managers_info(emulation_env_config: EmulationEnvConfig) -> SnortManagersInfo:
+        """
+        Extracts the information of the Snort managers for a given emulation
+
+        :param emulation_env_config: the configuration of the emulation
+        :return: a DTO with the status of the Snort managers
+        """
+        snort_ids_managers_ips = SnortIDSManager.get_snort_ids_managers_ips(emulation_env_config=emulation_env_config)
+        snort_statuses = []
+        running = False
+        for ip in snort_ids_managers_ips:
+            status = SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                port=emulation_env_config.log_sink_config.default_grpc_port, ip=ip)
+            if not running and status.running:
+                running = True
+            snort_statuses.append(status)
+        execution_id = emulation_env_config.execution_id
+        emulation_name = emulation_env_config.name
+        snort_manager_info_dto = SnortManagersInfo(running=running, ips=snort_ids_managers_ips,
+                                                   execution_id=execution_id,
+                                                   emulation_name=emulation_name, snort_statuses=snort_statuses)
+        return snort_manager_info_dto
+
+

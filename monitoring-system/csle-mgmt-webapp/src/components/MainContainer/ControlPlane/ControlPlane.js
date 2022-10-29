@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, createRef} from 'react';
 import "rc-slider/assets/index.css";
 import './ControlPlane.css';
 import Select from 'react-select'
@@ -11,6 +11,8 @@ import ControlPlaneImg from './ControlPlane.png'
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
+import ExecutionControlPlane from "./ExecutionControlPlane/ExecutionControlPlane";
+import Accordion from 'react-bootstrap/Accordion';
 import {useDebouncedCallback} from 'use-debounce';
 import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
@@ -24,8 +26,10 @@ const ControlPlane = (props) => {
     const [emulationExecutionContainerOptions, setEmulationExecutionContainerOptions] = useState([]);
     const [selectedEmulationExecutionId, setSelectedEmulationExecutionId] = useState(null);
     const [selectedEmulationExecution, setSelectedEmulationExecution] = useState(null);
+    const [selectedEmulationExecutionInfo, setSelectedEmulationExecutionInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingSelectedEmulationExecution, setLoadingSelectedEmulationExecution] = useState(true);
+    const [loadingSelectedEmulationExecutionInfo, setLoadingSelectedEmulationExecutionInfo] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [searchString, setSearchString] = useState("");
     const ip = "localhost"
@@ -43,13 +47,17 @@ const ControlPlane = (props) => {
     const updateEmulationExecutionId = (emulationExecutionId) => {
         setSelectedEmulationExecutionId(emulationExecutionId)
         fetchSelectedExecution(emulationExecutionId)
+        fetchExecutionInfo(emulationExecutionId)
         setLoadingSelectedEmulationExecution(true)
+        setLoadingSelectedEmulationExecutionInfo(true)
     }
 
     const refresh = () => {
         setLoading(true)
         setLoadingSelectedEmulationExecution(true)
+        setLoadingSelectedEmulationExecutionInfo(true)
         setSelectedEmulationExecution(null)
+        setSelectedEmulationExecutionInfo(null)
         fetchEmulationExecutionIds()
     }
 
@@ -72,6 +80,36 @@ const ControlPlane = (props) => {
         },
         350
     );
+
+    const fetchExecutionInfo = useCallback((id_obj) => fetch(
+        (`http://` + ip + ':7777/emulation-executions/' + id_obj.value.id + "/info?emulation="
+            + id_obj.value.emulation + "&token=" + props.sessionData.token),
+        {
+            method: "GET",
+            headers: new Headers({
+                Accept: "application/vnd.github.cloak-preview"
+            })
+        }
+    )
+        .then(res => {
+            if (res.status === 401) {
+                alert.show("Session token expired. Please login again.")
+                props.setSessionData(null)
+                navigate("/login-page");
+                return null
+            }
+            return res.json()
+        })
+        .then(response => {
+            if (response === null) {
+                return
+            }
+            console.log("execution info:")
+            console.log(response)
+            setSelectedEmulationExecutionInfo(response)
+            setLoadingSelectedEmulationExecutionInfo(false)
+        })
+        .catch(error => console.log("error:" + error)), []);
 
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -146,9 +184,12 @@ const ControlPlane = (props) => {
                 if (emulationExecutionIds.length > 0) {
                     setSelectedEmulationExecutionId(emulationExecutionIds[0])
                     fetchSelectedExecution(emulationExecutionIds[0])
+                    fetchExecutionInfo(emulationExecutionIds[0])
                     setLoadingSelectedEmulationExecution(true)
+                    setLoadingSelectedEmulationExecutionInfo(true)
                 } else {
                     setLoadingSelectedEmulationExecution(false)
+                    setLoadingSelectedEmulationExecutionInfo(false)
                     setSelectedEmulationExecution(null)
                 }
             })
@@ -195,12 +236,16 @@ const ControlPlane = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const wrapper = createRef();
+
     useEffect(() => {
         setLoading(true)
-    }, []);
+        fetchEmulationExecutionIds()
+    }, [fetchEmulationExecutionIds]);
 
     const SelectedExecutionView = (props) => {
-        if (props.loadingSelectedEmulationExecution || props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined) {
+        if (props.loadingSelectedEmulationExecution || props.loadingSelectedEmulationExecutionInfo
+            || props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined) {
             if (props.loadingSelectedEmulationExecution) {
                 return (
                     <h3>
@@ -217,9 +262,17 @@ const ControlPlane = (props) => {
         } else {
             return (
                 <div>
-                    <div className="row">
-                        TODO
-                    </div>
+                    <h3 className="emulationConfigTitle">
+                        Control of selected execution:
+                    </h3>
+                    <Accordion defaultActiveKey="0">
+                        <ExecutionControlPlane
+                            execution={props.selectedEmulationExecution} wrapper={wrapper}
+                            key={props.selectedEmulationExecution.name}
+                            sessionData={props.sessionData}
+                            info={props.selectedEmulationExecutionInfo}
+                        />
+                    </Accordion>
                 </div>
             )
         }
@@ -322,21 +375,11 @@ const ControlPlane = (props) => {
                 </div>
             </div>
             <SelectedExecutionView loadingSelectedEmulationExecution={loadingSelectedEmulationExecution}
+                                   loadingSelectedEmulationExecutionInfo={loadingSelectedEmulationExecutionInfo}
                                    selectedEmulationExecution={selectedEmulationExecution}
+                                   selectedEmulationExecutionInfo={selectedEmulationExecutionInfo}
                                    emulationExecutionContainerOptions={emulationExecutionContainerOptions}
             />
-            <div className="row">
-                <div className="col-sm-12">
-                    <GrafanaLink className="grafanaStatus" grafanaStatus={grafanaStatus}
-                                 sessionData={props.sessionData}/>
-                    <PrometheusLink className="grafanaStatus" prometheusStatus={prometheusStatus}
-                                    sessionData={props.sessionData}/>
-                    <NodeExporterLink className="grafanaStatus" nodeExporterStatus={nodeExporterStatus}
-                                      sessionData={props.sessionData}/>
-                    <CadvisorLink className="grafanaStatus" cAdvisorStatus={cAdvisorStatus}
-                                  sessionData={props.sessionData}/>
-                </div>
-            </div>
         </div>
     );
 }

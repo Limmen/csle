@@ -24,6 +24,7 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 
 
 class EmulationEnvManager:
@@ -618,3 +619,25 @@ class EmulationEnvManager:
                     cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {c1.get_full_name()} {constants.COMMANDS.PING} " \
                           f"{ip} -c 5 &"
                     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+    @staticmethod
+    def get_execution_info(execution: EmulationExecution) -> EmulationExecutionInfo:
+        """
+        Gets runtime information about an execution
+
+        :param emulation_env_config: the emulation for which executions should be stopped
+        :return: execution information
+        """
+        emulation_name = execution.emulation_name
+        execution_id = execution.ip_first_octet
+        snort_ids_managers_info = \
+            SnortIDSManager.get_snort_managers_info(emulation_env_config=execution.emulation_env_config)
+        ossec_ids_managers_info = \
+            OSSECIDSManager.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config)
+        kafka_managers_info = \
+            LogSinkManager.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config)
+        execution_info = EmulationExecutionInfo(emulation_name=emulation_name, execution_id=execution_id,
+                                                snort_managers_info=snort_ids_managers_info,
+                                                ossec_managers_info=ossec_ids_managers_info,
+                                                kafka_managers_info=kafka_managers_info)
+        return execution_info
