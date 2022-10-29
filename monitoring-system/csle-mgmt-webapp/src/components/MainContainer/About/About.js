@@ -107,6 +107,13 @@ const About = () => {
                 <div className="col-sm-2"></div>
                 <div className="col-sm-8">
                     <p className="aboutText">
+                        <a href="https://limmen.dev/assets/papers/CNSM22_preprint_8_sep_Hammar_Stadler.pdf">
+                            <span className="boldSpan aboutText">
+                                An Online Framework for Adapting Security Policies in Dynamic IT Environments, (Hammar & Stadler 2022). </span>
+                                International Conference on Network and Service Management (CNSM 2022).
+                        </a>
+                    </p>
+                    <p className="aboutText">
                         <a href="https://ieeexplore.ieee.org/document/9779345">
                             <span className="boldSpan aboutText">Intrusion Prevention through Optimal Stopping, (Hammar & Stadler 2022). </span>
                             IEEE Transactions on Network and Service Management (TNSM).

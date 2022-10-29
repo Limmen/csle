@@ -647,6 +647,18 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 }
 ```
 
+- **An Online Framework for Adapting Security Policies in Dynamic IT Environments
+  Preprint: https://limmen.dev/assets/papers/CNSM22_preprint_8_sep_Hammar_Stadler.pdf**
+
+```bash
+@inproceedings{hammar_stadler_cnsm22,
+  author = {Hammar, Kim and Stadler, Rolf},
+  title = {An Online Framework for Adapting Security Policies in Dynamic IT Environments},
+  booktitle = {International Conference on Network and Service Management (CNSM 2022)},
+  year      = {2022}
+}
+```
+
 ## See also
 
 - [gym-idsgame](https://github.com/Limmen/gym-idsgame)
