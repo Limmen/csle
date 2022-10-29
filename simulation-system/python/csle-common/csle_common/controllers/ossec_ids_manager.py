@@ -216,6 +216,26 @@ n
         return ips
 
     @staticmethod
+    def get_ossec_ids_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:
+        """
+        A method that extracts the ports of the OSSEC IDS managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of ports
+        """
+        ports = []
+        for c in emulation_env_config.containers_config.containers:
+            for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
+                if ids_image in c.name:
+                    try:
+                        OSSECIDSManager.get_ossec_ids_monitor_thread_status_by_ip_and_port(
+                            port=emulation_env_config.log_sink_config.third_grpc_port, ip = c.get_ips()[0])
+                        ports.append(emulation_env_config.log_sink_config.third_grpc_port)
+                    except Exception as e:
+                        pass
+        return ports
+
+    @staticmethod
     def get_ossec_ids_monitor_thread_status_by_ip_and_port(port: int, ip: str) \
             -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
         """
@@ -241,6 +261,8 @@ n
         :return: a DTO with the status of the OSSEC IDS managers
         """
         ossec_ids_managers_ips = OSSECIDSManager.get_ossec_ids_managers_ips(emulation_env_config=emulation_env_config)
+        ossec_ids_managers_ports = \
+            OSSECIDSManager.get_ossec_ids_managers_ports(emulation_env_config=emulation_env_config)
         ossec_statuses = []
         running = False
 
@@ -252,7 +274,7 @@ n
             ossec_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
-        ossec_manager_info_dto = OSSECIDSManagersInfo(running=running, ips=ossec_ids_managers_ips,
-                                                   execution_id=execution_id,
-                                                   emulation_name=emulation_name, ossec_ids_statuses=ossec_statuses)
+        ossec_manager_info_dto = OSSECIDSManagersInfo(
+            running=running, ips=ossec_ids_managers_ips, execution_id=execution_id,
+            emulation_name=emulation_name, ossec_ids_statuses=ossec_statuses, ports=ossec_ids_managers_ports)
         return ossec_manager_info_dto

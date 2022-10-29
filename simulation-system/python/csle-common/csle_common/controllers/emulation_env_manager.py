@@ -636,8 +636,17 @@ class EmulationEnvManager:
             OSSECIDSManager.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config)
         kafka_managers_info = \
             LogSinkManager.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config)
+        host_managers_info = \
+            HostManager.get_host_managers_info(emulation_env_config=execution.emulation_env_config)
+        client_managers_info = \
+            TrafficManager.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
+        docker_stats_managers_info = \
+            ContainerManager.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config)
         execution_info = EmulationExecutionInfo(emulation_name=emulation_name, execution_id=execution_id,
                                                 snort_managers_info=snort_ids_managers_info,
                                                 ossec_managers_info=ossec_ids_managers_info,
-                                                kafka_managers_info=kafka_managers_info)
+                                                kafka_managers_info=kafka_managers_info,
+                                                host_managers_info=host_managers_info,
+                                                client_managers_info=client_managers_info,
+                                                docker_stats_managers_info=docker_stats_managers_info)
         return execution_info

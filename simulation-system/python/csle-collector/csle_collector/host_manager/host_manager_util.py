@@ -1,9 +1,11 @@
+from typing import Dict, Any
 import datetime
 import subprocess
 import csle_collector.constants.constants as constants
 from csle_collector.host_manager.failed_login_attempt import FailedLoginAttempt
 from csle_collector.host_manager.successful_login import SuccessfulLogin
 from csle_collector.host_manager.host_metrics import HostMetrics
+import csle_collector.host_manager.host_manager_pb2
 
 
 class HostManagerUtil:
@@ -194,4 +196,68 @@ class HostManagerUtil:
             num_users=num_users
         )
         return host_metrics
+
+    @staticmethod
+    def host_monitor_dto_to_dict(host_monitor_dto: csle_collector.host_manager.host_manager_pb2.HostMonitorDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a HostMonitorDTO to a dict
+
+        :param host_monitor_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["running"] = host_monitor_dto.running
+        return d
+
+    @staticmethod
+    def host_monitor_dto_from_dict(d: Dict[str, Any]) -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+        """
+        Converts a dict representation of a HostMonitorDTO to a DTO
+
+        :param d: the dict to convert
+        :return: the converted DTO
+        """
+        host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostMonitorDTO()
+        host_monitor_dto.running = d["running"]
+        return host_monitor_dto
+
+    @staticmethod
+    def host_metrics_dto_to_dict(host_metrics_dto: csle_collector.host_manager.host_manager_pb2.HostMetricsDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a HostMetricsDTO to a dict
+
+        :param host_metrics_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["num_logged_in_users"] = host_metrics_dto.num_logged_in_users
+        d["num_failed_login_attempts"] = host_metrics_dto.num_failed_login_attempts
+        d["num_open_connections"] = host_metrics_dto.num_open_connections
+        d["num_login_events"] = host_metrics_dto.num_login_events
+        d["num_processes"] = host_metrics_dto.num_processes
+        d["num_users"] = host_metrics_dto.num_users
+        d["ip"] = host_metrics_dto.ip
+        d["timestamp"] = host_metrics_dto.timestamp
+        return d
+
+    @staticmethod
+    def host_metrics_dto_from_dict(d: Dict[str, Any]) -> csle_collector.host_manager.host_manager_pb2.HostMetricsDTO:
+        """
+        Converts a dict representation of a HostMetricsDTO to a DTO
+
+        :param d: the dict to convert
+        :return: the converted DTO
+        """
+        host_metrics_dto = csle_collector.host_manager.host_manager_pb2.HostMetricsDTO()
+        host_metrics_dto.num_logged_in_users = d["num_logged_in_users"]
+        host_metrics_dto.num_failed_login_attempts = d["num_failed_login_attempts"]
+        host_metrics_dto.num_open_connections = d["num_open_connections"]
+        host_metrics_dto.num_login_events = d["num_login_events"]
+        host_metrics_dto.num_processes = d["num_processes"]
+        host_metrics_dto.num_users = d["num_users"]
+        host_metrics_dto.ip = d["ip"]
+        host_metrics_dto.timestamp = d["timestamp"]
+        return host_metrics_dto
 

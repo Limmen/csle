@@ -2,6 +2,7 @@ from typing import List, Tuple
 import grpc
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
 import csle_common.constants.constants as constants
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
@@ -75,14 +76,15 @@ class HostManager:
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
-            # Open a gRPC session
-            with grpc.insecure_channel(
-                    f'{c.get_ips()[0]}:{emulation_env_config.log_sink_config.secondary_grpc_port}') as channel:
-                stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-                host_monitor_dto = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub)
-                if not host_monitor_dto.running:
-                    Logger.__call__().get_logger().info(
-                        f"Host monitor thread is not running on {c.get_ips()[0]}, starting it.")
+            host_monitor_dto = HostManager.get_host_monitor_thread_status_by_port_and_ip(
+                ip=c.get_ips()[0], port=emulation_env_config.log_sink_config.secondary_grpc_port)
+            if not host_monitor_dto.running:
+                Logger.__call__().get_logger().info(
+                    f"Host monitor thread is not running on {c.get_ips()[0]}, starting it.")
+                # Open a gRPC session
+                with grpc.insecure_channel(
+                        f'{c.get_ips()[0]}:{emulation_env_config.log_sink_config.secondary_grpc_port}') as channel:
+                    stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                     csle_collector.host_manager.query_host_manager.start_host_monitor(
                         stub=stub, kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0],
                         kafka_port=emulation_env_config.log_sink_config.kafka_port,
@@ -106,7 +108,6 @@ class HostManager:
                     f'{c.get_ips()[0]}:'
                     f'{emulation_env_config.log_sink_config.secondary_grpc_port}') as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-                host_monitor_dto = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub)
                 Logger.__call__().get_logger().info(f"Stopping the Host monitor thread on {c.get_ips()[0]}.")
                 csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=stub)
 
@@ -122,17 +123,28 @@ class HostManager:
         statuses = []
         HostManager._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
         time.sleep(10)
-
         for c in emulation_env_config.containers_config.containers:
-            # Open a gRPC session
-            with grpc.insecure_channel(
-                    f'{c.get_ips()[0]}:'
-                    f'{emulation_env_config.log_sink_config.secondary_grpc_port}') as channel:
-                stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-                status = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub=stub)
-                statuses.append((status, c.get_ips()[0]))
+            status = HostManager.get_host_monitor_thread_status_by_port_and_ip(
+                ip=c.get_ips()[0], port=emulation_env_config.log_sink_config.secondary_grpc_port)
+            statuses.append((status, c.get_ips()[0]))
         return statuses
 
+    @staticmethod
+    def get_host_monitor_thread_status_by_port_and_ip(ip: str, port: int) -> \
+            csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+        """
+        A method that sends a request to the HostManager on a specific container
+        to get the status of the Host monitor thread
+
+        :param emulation_env_config: the emulation config
+        :return: the status of the host manager
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ip}:{port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            status = csle_collector.host_manager.query_host_manager.get_host_monitor_status(stub=stub)
+            return status
 
     @staticmethod
     def get_host_log_data(emulation_env_config: EmulationEnvConfig, failed_auth_last_ts: float,
@@ -161,3 +173,64 @@ class HostManager:
                     stub=stub, failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
                 host_metrics_data_list.append(host_metrics_data)
         return host_metrics_data_list
+
+    @staticmethod
+    def get_host_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
+        """
+        A method that extracts the ips of the Host managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of IP addresses
+        """
+        ips = []
+        for c in emulation_env_config.containers_config.containers:
+            try:
+                HostManager.get_host_monitor_thread_status_by_port_and_ip(
+                    port=emulation_env_config.log_sink_config.secondary_grpc_port, ip = c.get_ips()[0])
+                ips.append(c.get_ips()[0])
+            except Exception as e:
+                pass
+        return ips
+
+    @staticmethod
+    def get_host_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:
+        """
+        A method that extracts the ports of the Host managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of ports
+        """
+        ports = []
+        for c in emulation_env_config.containers_config.containers:
+            try:
+                HostManager.get_host_monitor_thread_status_by_port_and_ip(
+                    port=emulation_env_config.log_sink_config.secondary_grpc_port, ip = c.get_ips()[0])
+                ports.append(emulation_env_config.log_sink_config.secondary_grpc_port)
+            except Exception as e:
+                pass
+        return ports
+
+    @staticmethod
+    def get_host_managers_info(emulation_env_config: EmulationEnvConfig) -> HostManagersInfo:
+        """
+        Extracts the information of the Host managers for a given emulation
+
+        :param emulation_env_config: the configuration of the emulation
+        :return: a DTO with the status of the Host managers
+        """
+        host_managers_ips = HostManager.get_host_managers_ips(emulation_env_config=emulation_env_config)
+        host_managers_ports = HostManager.get_host_managers_ports(emulation_env_config=emulation_env_config)
+        host_managers_statuses = []
+        running = False
+        for ip in host_managers_ips:
+            status = HostManager.get_host_monitor_thread_status_by_port_and_ip(
+                port=emulation_env_config.log_sink_config.secondary_grpc_port, ip=ip)
+            if not running and status.running:
+                running = True
+            host_managers_statuses.append(status)
+        execution_id = emulation_env_config.execution_id
+        emulation_name = emulation_env_config.name
+        host_manager_info_dto = HostManagersInfo(
+            running=running, ips=host_managers_ips, execution_id=execution_id, emulation_name=emulation_name,
+            host_managers_statuses=host_managers_statuses, ports=host_managers_ports)
+        return host_manager_info_dto

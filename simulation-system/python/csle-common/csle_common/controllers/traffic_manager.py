@@ -1,3 +1,4 @@
+from typing import List
 import time
 import grpc
 import csle_collector.client_manager.client_manager_pb2_grpc
@@ -5,6 +6,7 @@ import csle_collector.client_manager.client_manager_pb2
 import csle_collector.client_manager.query_clients
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
 from csle_common.logging.log import Logger
@@ -69,12 +71,15 @@ class TrafficManager:
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
             time.sleep(5)
 
+        client_dto = TrafficManager.get_clients_dto_by_ip_and_port(
+            ip=emulation_env_config.traffic_config.client_population_config.ip,
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
+
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.traffic_config.client_population_config.ip}:'
                 f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
             stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
-            client_dto = csle_collector.client_manager.query_clients.get_clients(stub)
 
             # Stop the producer
             if client_dto.client_process_active:
@@ -147,12 +152,16 @@ class TrafficManager:
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
             time.sleep(5)
 
+        client_dto = TrafficManager.get_clients_dto_by_ip_and_port(
+            ip=emulation_env_config.traffic_config.client_population_config.ip,
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port
+        )
+
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.traffic_config.client_population_config.ip}:'
                 f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
             stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
-            client_dto = csle_collector.client_manager.query_clients.get_clients(stub)
 
             # Stop the client population if it is already running
             if client_dto.client_process_active:
@@ -220,13 +229,28 @@ class TrafficManager:
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
             time.sleep(5)
 
+        client_dto = TrafficManager.get_clients_dto_by_ip_and_port(
+            ip=emulation_env_config.traffic_config.client_population_config.ip,
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
+        return client_dto
+
+
+    @staticmethod
+    def get_clients_dto_by_ip_and_port(ip: str, port: int) -> \
+            csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+        """
+        A method that sends a request to the ClientManager on a specific container
+        to get the status of the Host monitor thread
+
+        :param emulation_env_config: the emulation config
+        :return: the status of the host manager
+        """
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.traffic_config.client_population_config.ip}:'
-                f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                f'{ip}:{port}') as channel:
             stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
-            client_dto = csle_collector.client_manager.query_clients.get_clients(stub)
-            return client_dto
+            status = csle_collector.client_manager.query_clients.get_clients(stub=stub)
+            return status
 
     @staticmethod
     def stop_internal_traffic_generators(emulation_env_config: EmulationEnvConfig) -> None:
@@ -373,3 +397,49 @@ class TrafficManager:
 
             # Disconnect
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
+
+    @staticmethod
+    def get_client_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
+        """
+        A method that extracts the IPS of the Client managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of IP addresses
+        """
+        return [emulation_env_config.traffic_config.client_population_config.ip]
+
+    @staticmethod
+    def get_client_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:
+        """
+        A method that extracts the ports of the Client managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of ports
+        """
+        return [emulation_env_config.traffic_config.client_population_config.client_manager_port]
+
+    @staticmethod
+    def get_client_managers_info(emulation_env_config: EmulationEnvConfig) -> ClientManagersInfo:
+        """
+        Extracts the information of the Client managers for a given emulation
+
+        :param emulation_env_config: the configuration of the emulation
+        :return: a DTO with the status of the Client managers
+        """
+        client_managers_ips = TrafficManager.get_client_managers_ips(emulation_env_config=emulation_env_config)
+        client_managers_ports = TrafficManager.get_client_managers_ports(emulation_env_config=emulation_env_config)
+        client_statuses = []
+        running = False
+        for ip in client_managers_ips:
+            status = TrafficManager.get_clients_dto_by_ip_and_port(
+                ip=emulation_env_config.traffic_config.client_population_config.ip,
+                port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
+            if not running and status.client_process_active and status.producer_active:
+                running = True
+            client_statuses.append(status)
+        execution_id = emulation_env_config.execution_id
+        emulation_name = emulation_env_config.name
+        client_manager_info_dto = ClientManagersInfo(
+            running=running, ips=client_managers_ips, execution_id=execution_id,
+            emulation_name=emulation_name, client_managers_statuses=client_statuses,  ports=client_managers_ports)
+        return client_manager_info_dto

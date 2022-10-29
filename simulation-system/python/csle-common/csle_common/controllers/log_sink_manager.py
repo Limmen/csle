@@ -179,12 +179,22 @@ class LogSinkManager:
     @staticmethod
     def get_kafka_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
         """
-        A method that extracts the IPS of the snort IDS managers in a given emulation
+        A method that extracts the IPS of the Kafka managers in a given emulation
 
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
         return [emulation_env_config.log_sink_config.container.get_ips()[0]]
+
+    @staticmethod
+    def get_kafka_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:
+        """
+        A method that extracts the IPS of the Kafka managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of IP addresses
+        """
+        return [emulation_env_config.log_sink_config.default_grpc_port]
 
     @staticmethod
     def get_kafka_managers_info(emulation_env_config: EmulationEnvConfig) -> KafkaManagersInfo:
@@ -195,6 +205,7 @@ class LogSinkManager:
         :return: a DTO with the status of the Kafka managers
         """
         kafka_managers_ips = LogSinkManager.get_kafka_managers_ips(emulation_env_config=emulation_env_config)
+        kafka_managers_ports = LogSinkManager.get_kafka_managers_ports(emulation_env_config=emulation_env_config)
         kafka_statuses = []
         running = False
         for ip in kafka_managers_ips:
@@ -208,5 +219,6 @@ class LogSinkManager:
         kafka_manager_info_dto = KafkaManagersInfo(running=running, ips=kafka_managers_ips,
                                                    execution_id=execution_id,
                                                    emulation_name=emulation_name,
-                                                   kafka_managers_statuses=kafka_statuses)
+                                                   kafka_managers_statuses=kafka_statuses,
+                                                   ports = kafka_managers_ports)
         return kafka_manager_info_dto

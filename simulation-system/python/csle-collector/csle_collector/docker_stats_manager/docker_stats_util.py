@@ -1,6 +1,7 @@
-from typing import Tuple, Union
+from typing import Tuple, Union, Dict, Any
 import csle_collector.constants.constants as constants
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
+import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 
 
 class DockerStatsUtil:
@@ -149,3 +150,40 @@ class DockerStatsUtil:
             constants.DOCKER_STATS.CONTAINER_NAME: container
         }
         return DockerStats.from_dict(parsed_stats_dict)
+
+    @staticmethod
+    def docker_stats_monitor_dto_to_dict(
+            docker_stats_monitor_dto: csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO) \
+            -> Dict[str, Any]:
+        """
+        Converts a docker_stats_monitor_dto to a dict
+
+        :param docker_stats_monitor_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["num_monitors"] = docker_stats_monitor_dto.num_monitors
+        emulations = []
+        for em in docker_stats_monitor_dto.emulations:
+            emulations.append(str(em))
+        d["emulations"] = emulations
+        executions = []
+        for exec in docker_stats_monitor_dto.emulation_executions:
+            executions.append(int(exec))
+        d["emulation_executions"] = executions
+        return d
+
+    @staticmethod
+    def docker_stats_monitor_dto_from_dict(d: Dict[str, Any]) \
+            -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
+        """
+        Converts a dict representation of a DockerStatsMonitorDTO to a DTO
+
+        :param d: the dict to convert
+        :return: the converted DTO
+        """
+        docker_stats_monitor_dto = csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO()
+        docker_stats_monitor_dto.num_monitors = d["num_monitors"]
+        docker_stats_monitor_dto.emulations = d["emulations"]
+        docker_stats_monitor_dto.emulation_executions = d["emulation_executions"]
+        return docker_stats_monitor_dto

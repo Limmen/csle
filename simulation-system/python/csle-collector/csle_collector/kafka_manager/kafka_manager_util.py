@@ -26,7 +26,7 @@ class KafkaManagerUtil:
     @staticmethod
     def kafka_dto_from_dict(d: Dict[str, Any]) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
-        Converts a dict representation of a OSSECIDSMonitorDTO to a DTO
+        Converts a dict representation of a KafkaDTO to a DTO
 
         :param d: the dict to convert
         :return: the converted DTO

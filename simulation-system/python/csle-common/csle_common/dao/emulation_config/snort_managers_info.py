@@ -9,19 +9,22 @@ class SnortManagersInfo:
     DTO containing the status of the snort managers for a given emulation execution
     """
 
-    def __init__(self, running: bool, ips: List[str], emulation_name: str, execution_id: int,
+    def __init__(self, running: bool, ips: List[str], ports: List[int],
+                 emulation_name: str, execution_id: int,
                  snort_statuses: List[csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO]):
         """
         Initializes the DTO
 
         :param running: boolean that indicates whether the at least one snort manager is running or not
         :param ips: the list of IPs of the running snort managers
+        :param ports: the list of ports of the running snort managers
         :param emulation_name: the name of the corresponding emulation
         :param execution_id: the ID of the corresponding emulation execution
         :param snort_statuses: a list of statuses of the Snort managers
         """
         self.running = running
         self.ips = ips
+        self.ports = ports
         self.emulation_name = emulation_name
         self.execution_id = execution_id
         self.snort_statuses = snort_statuses
@@ -33,7 +36,8 @@ class SnortManagersInfo:
         return f"running: {self.running}, ips: {list(map(lambda x: str(x), self.ips))}, " \
                f"emulation_name: {self.emulation_name}, " \
                f"execution_id: {self.execution_id}, " \
-               f"snort_statuses: {list(map(lambda x: str(x), self.snort_statuses))}"
+               f"snort_statuses: {list(map(lambda x: str(x), self.snort_statuses))}," \
+               f" ports: {list(map(lambda x: str(x), self.ports))}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -42,6 +46,7 @@ class SnortManagersInfo:
         d = {}
         d["running"] = self.running
         d["ips"] = self.ips
+        d["ports"] = self.ports
         d["emulation_name"] = self.emulation_name
         d["execution_id"] = self.execution_id
         d["snort_statuses"] = list(map(
@@ -56,7 +61,8 @@ class SnortManagersInfo:
 
         :return: a dto representation of the object
         """
-        dto = SnortManagersInfo(running=d["running"], ips=d["ips"], emulation_name=d["emulation_name"],
+        dto = SnortManagersInfo(running=d["running"], ips=d["ips"], ports=d["ports"],
+                                emulation_name=d["emulation_name"],
                                 execution_id=d["execution_id"], snort_statuses=list(map(
                 lambda x: snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict(x),
                 d["snort_statuses"])))

@@ -18,6 +18,7 @@ from csle_common.dao.emulation_config.ovs_config import OVSConfig
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 
 
 class ContainerManager:
@@ -407,7 +408,6 @@ class ContainerManager:
             csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name, execution_first_ip_octet = execution.ip_first_octet)
 
-
     @staticmethod
     def get_docker_stats_manager_status(log_sink_config: LogSinkConfig) \
             -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
@@ -419,14 +419,26 @@ class ContainerManager:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{log_sink_config.default_grpc_port}') as channel:
+        docker_stats_monitor_dto = ContainerManager.get_docker_stats_manager_status_by_ip_and_port(ip=ip,
+                                                                        port=log_sink_config.default_grpc_port)
+        return docker_stats_monitor_dto
+
+    @staticmethod
+    def get_docker_stats_manager_status_by_ip_and_port(ip: str, port: int) \
+            -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
+        """
+        Sends a request to get the status of the docker stats manager
+
+        :param ip: ip of the host where the stats manager is running
+        :param port: port that the host manager is listening to
+        :return: None
+        """
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             docker_stats_monitor_dto = \
                 csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(
                     stub=stub)
             return docker_stats_monitor_dto
-
-
 
     @staticmethod
     def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: LogSinkConfig,
@@ -597,4 +609,54 @@ class ContainerManager:
             ContainerManager.rm_all_networks()
         else:
             raise ValueError("Command: {} not recognized".format(cmd))
+
+
+    @staticmethod
+    def get_docker_stats_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
+        """
+        A method that extracts the IPS of the Docker stats managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of IP addresses
+        """
+        hostname = socket.gethostname()
+        return [socket.gethostbyname(hostname)]
+
+    @staticmethod
+    def get_docker_stats_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:
+        """
+        A method that extracts the ports of the Docker stats managers in a given emulation
+
+        :param emulation_env_config: the emulation env config
+        :return: the list of ports
+        """
+        return [emulation_env_config.log_sink_config.default_grpc_port]
+
+    @staticmethod
+    def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig) -> DockerStatsManagersInfo:
+        """
+        Extracts the information of the Docker stats managers for a given emulation
+
+        :param emulation_env_config: the configuration of the emulation
+        :return: a DTO with the status of the Docker stats managers
+        """
+        docker_stats_managers_ips = ContainerManager.get_docker_stats_managers_ips(
+            emulation_env_config=emulation_env_config)
+        docker_stats_managers_ports = ContainerManager.get_docker_stats_managers_ports(
+            emulation_env_config=emulation_env_config)
+        docker_stats_statuses = []
+        running = False
+        for ip in docker_stats_managers_ips:
+            status = ContainerManager.get_docker_stats_manager_status_by_ip_and_port(
+                port=emulation_env_config.log_sink_config.default_grpc_port, ip=ip)
+            if emulation_env_config.name in status.emulations \
+                    and emulation_env_config.execution_id in status.emulation_executions:
+                running = True
+            docker_stats_statuses.append(status)
+        execution_id = emulation_env_config.execution_id
+        emulation_name = emulation_env_config.name
+        docker_stats_manager_info_dto = DockerStatsManagersInfo(
+            running=running, ips=docker_stats_managers_ips, execution_id=execution_id, emulation_name=emulation_name,
+            docker_stats_managers_statuses=docker_stats_statuses, ports=docker_stats_managers_ports)
+        return docker_stats_manager_info_dto
 
