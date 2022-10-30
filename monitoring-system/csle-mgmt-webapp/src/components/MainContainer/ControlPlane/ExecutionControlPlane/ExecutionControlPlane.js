@@ -44,8 +44,15 @@ const ExecutionControlPlane = (props) => {
         </Tooltip>)
     }
 
-    const startOrStop = () => {
+    const startOrStop = (start, stop, entity) => {
         console.log("startOrStop")
+        console.log(entity)
+        console.log(start)
+        console.log(stop)
+        if(entity == "client_manager") {
+            props.startOrStopClientPopulation(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+        }
     }
 
     const SpinnerOrButton = (props) => {
@@ -66,7 +73,7 @@ const ExecutionControlPlane = (props) => {
                         overlay={renderStopTooltip}
                     >
                         <Button variant="warning" className="startButton" size="sm"
-                                onClick={() => startOrStop()}>
+                                onClick={() => startOrStop(false, true, props.entity)}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -79,7 +86,7 @@ const ExecutionControlPlane = (props) => {
                         overlay={renderStartTooltip}
                     >
                         <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStop()}>
+                                onClick={() => startOrStop(true, false, props.entity)}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -132,7 +139,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>{getIps(container.ips_and_networks).join(", ")}</td>
                                             <td className="containerRunningStatus"> Running</td>
                                             <td>
-                                                <SpinnerOrButton loading={false} running={true}/>
+                                                <SpinnerOrButton loading={false} running={true} entity={"container"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -144,7 +151,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>{getIps(container.ips_and_networks).join(", ")}</td>
                                             <td className="containerStoppedStatus">Stopped</td>
                                             <td>
-                                                <SpinnerOrButton loading={false} running={false}/>
+                                                <SpinnerOrButton loading={false} running={false} entity={"container"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -238,7 +245,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.num_clients}</td>
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
-                                                <SpinnerOrButton loading={false} running={true}/>
+                                                <SpinnerOrButton loading={false} running={true} entity={"client_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -281,7 +288,8 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.num_monitors}</td>
                                             {activeStatus(status.num_monitors > 0)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.num_monitors > 0}/>
+                                                <SpinnerOrButton loading={false} running={status.num_monitors > 0}
+                                                                 entity={"docker_stats_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -322,7 +330,8 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.host_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={activeStatus(status.running)}/>
+                                                <SpinnerOrButton loading={false} running={activeStatus(status.running)}
+                                                                 entity={"host_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -365,7 +374,8 @@ const ExecutionControlPlane = (props) => {
                                             <td>{getTopicsString(status.topics)}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.running}/>
+                                                <SpinnerOrButton loading={false} running={status.running}
+                                                                 entity={"kafka_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -406,7 +416,8 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.ossec_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.running}/>
+                                                <SpinnerOrButton loading={false} running={status.running}
+                                                                 entity={"ossec_ids_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -447,7 +458,8 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.snort_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.running}/>
+                                                <SpinnerOrButton loading={false} running={status.running}
+                                                                 entity={"snort_ids_manager"}/>
                                             </td>
                                         </tr>
                                     )}

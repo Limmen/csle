@@ -109,6 +109,34 @@ const ControlPlane = (props) => {
         })
         .catch(error => console.log("error:" + error)), []);
 
+    const startOrStopClientPopulation = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/client-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                console.log("started client population")
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             More information about the control plane
@@ -272,6 +300,7 @@ const ControlPlane = (props) => {
                             key={props.selectedEmulationExecution.name}
                             sessionData={props.sessionData}
                             info={props.selectedEmulationExecutionInfo}
+                            startOrStopClientPopulation={props.startOrStopClientPopulation}
                         />
                     </Accordion>
                 </div>
@@ -380,6 +409,7 @@ const ControlPlane = (props) => {
                                    selectedEmulationExecution={selectedEmulationExecution}
                                    selectedEmulationExecutionInfo={selectedEmulationExecutionInfo}
                                    emulationExecutionContainerOptions={emulationExecutionContainerOptions}
+                                   startOrStopClientPopulation={startOrStopClientPopulation}
             />
         </div>
     );
