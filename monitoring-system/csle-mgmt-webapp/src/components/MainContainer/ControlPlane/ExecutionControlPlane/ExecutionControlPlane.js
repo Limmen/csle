@@ -7,12 +7,14 @@ import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import getIps from "../../../Common/getIps";
 import getTopicsString from "../../../Common/getTopicsString";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import Spinner from 'react-bootstrap/Spinner'
 
 /**
  * Component representing the /emulation-executions/<id>/control resource
  */
 const ExecutionControlPlane = (props) => {
-    const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [runningContainersOpen, setRunningContainersOpen] = useState(false);
     const [activeNetworksOpen, setActiveNetworksOpen] = useState(false);
     const [clientManagersOpen, setClientManagersOpen] = useState(false);
@@ -29,6 +31,62 @@ const ExecutionControlPlane = (props) => {
             return (<td className="containerStoppedStatus">Inactive</td>)
         }
     }
+
+    const renderStopTooltip = (props) => {
+        return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Stop
+        </Tooltip>)
+    }
+
+    const renderStartTooltip = (props) => {
+        return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Start
+        </Tooltip>)
+    }
+
+    const startOrStop = () => {
+        console.log("startOrStop")
+    }
+
+    const SpinnerOrButton = (props) => {
+        if (props.loading) {
+            <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+            />
+        } else {
+            if (props.running) {
+                return (
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderStopTooltip}
+                    >
+                        <Button variant="warning" className="startButton" size="sm"
+                                onClick={() => startOrStop()}>
+                            <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                )
+            } else {
+                return (
+                    <OverlayTrigger
+                        placement="right"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderStartTooltip}
+                    >
+                        <Button variant="success" className="startButton" size="sm"
+                                onClick={() => startOrStop()}>
+                            <i className="fa fa-play startStopIcon" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                )
+            }
+        }
+    };
 
     return (<Card key={props.execution.name} ref={props.wrapper}>
         <Card.Header>
@@ -60,8 +118,9 @@ const ExecutionControlPlane = (props) => {
                                         <th>Name</th>
                                         <th>Image</th>
                                         <th>Os</th>
-                                        <th>Ips</th>
+                                        <th>IPs</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -72,6 +131,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{container.os}</td>
                                             <td>{getIps(container.ips_and_networks).join(", ")}</td>
                                             <td className="containerRunningStatus"> Running</td>
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={true}/>
+                                            </td>
                                         </tr>
                                     )}
                                     {props.info.stopped_containers.map((container, index) =>
@@ -81,6 +143,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{container.os}</td>
                                             <td>{getIps(container.ips_and_networks).join(", ")}</td>
                                             <td className="containerStoppedStatus">Stopped</td>
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={false}/>
+                                            </td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -160,6 +225,7 @@ const ExecutionControlPlane = (props) => {
                                         <th>Producer status</th>
                                         <th># Clients</th>
                                         <th>Time-step length (s)</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -171,6 +237,9 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.producer_active)}
                                             <td>{status.num_clients}</td>
                                             <td>{status.clients_time_step_len_seconds}</td>
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={true}/>
+                                            </td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -201,6 +270,7 @@ const ExecutionControlPlane = (props) => {
                                         <th>Port</th>
                                         <th># Monitors</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -210,6 +280,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.docker_stats_managers_info.ports[index]}</td>
                                             <td>{status.num_monitors}</td>
                                             {activeStatus(status.num_monitors > 0)}
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={status.num_monitors > 0}/>
+                                            </td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -239,6 +312,7 @@ const ExecutionControlPlane = (props) => {
                                         <th>IP</th>
                                         <th>Port</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -247,6 +321,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.host_managers_info.ips[index]}</td>
                                             <td>{props.info.host_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={activeStatus(status.running)}/>
+                                            </td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -277,6 +354,7 @@ const ExecutionControlPlane = (props) => {
                                         <th>Port</th>
                                         <th>Topics</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -286,6 +364,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.kafka_managers_info.ports[index]}</td>
                                             <td>{getTopicsString(status.topics)}</td>
                                             {activeStatus(status.running)}
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={status.running}/>
+                                            </td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -315,6 +396,7 @@ const ExecutionControlPlane = (props) => {
                                         <th>IP</th>
                                         <th>Port</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -323,6 +405,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.ossec_managers_info.ips[index]}</td>
                                             <td>{props.info.ossec_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={status.running}/>
+                                            </td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -352,6 +437,7 @@ const ExecutionControlPlane = (props) => {
                                         <th>IP</th>
                                         <th>Port</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -360,6 +446,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.snort_managers_info.ips[index]}</td>
                                             <td>{props.info.snort_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
+                                            <td>
+                                                <SpinnerOrButton loading={false} running={status.running}/>
+                                            </td>
                                         </tr>
                                     )}
                                     </tbody>
