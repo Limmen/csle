@@ -101,6 +101,7 @@ const ControlPlane = (props) => {
             return res.json()
         })
         .then(response => {
+            console.log(response)
             if (response === null) {
                 return
             }
@@ -119,6 +120,43 @@ const ControlPlane = (props) => {
                     Accept: "application/vnd.github.cloak-preview"
                 }),
                 body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+
+    const startOrStopContainer = useCallback((id, emulation, start, stop, containerName) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/container?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop, container_name: containerName})
             }
         )
             .then(res => {
@@ -495,6 +533,7 @@ const ControlPlane = (props) => {
                             startOrStopSnortManager={props.startOrStopSnortManager}
                             startOrStopOSSECManager={props.startOrStopOSSECManager}
                             startOrStopHostManager={props.startOrStopHostManager}
+                            startOrStopContainer={props.startOrStopContainer}
                         />
                     </Accordion>
                 </div>
@@ -609,6 +648,7 @@ const ControlPlane = (props) => {
                                    startOrStopSnortManager={startOrStopSnortManager}
                                    startOrStopOSSECManager={startOrStopOSSECManager}
                                    startOrStopHostManager={startOrStopHostManager}
+                                   startOrStopContainer={startOrStopContainer}
             />
         </div>
     );

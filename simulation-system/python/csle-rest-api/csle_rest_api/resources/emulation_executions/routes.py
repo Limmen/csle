@@ -387,3 +387,49 @@ def start_stop_host_manager(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_container(execution_id: int):
+    """
+    The /emulation-executions/id/container resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stops a container of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+
+    # Extract container name
+    container_name = json.loads(request.data)[api_constants.MGMT_WEBAPP.CONTAINER_NAME_PROPERTY]
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping container: {container_name} on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            ContainerManager.stop_container(container_name)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting container: {container_name}, on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            ContainerManager.start_container(container_name)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE

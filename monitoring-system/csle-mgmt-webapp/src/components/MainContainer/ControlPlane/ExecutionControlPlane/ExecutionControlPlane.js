@@ -66,35 +66,41 @@ const ExecutionControlPlane = (props) => {
 
     const startOrStop = (start, stop, entity) => {
         addLoadingEntity(entity)
-        if(entity == "client_manager") {
+        if(entity === "client_manager") {
             props.startOrStopClientPopulation(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
+            return
         }
-        if(entity == "host_manager") {
+        if(entity === "host_manager") {
             props.startOrStopHostManager(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
+            return
         }
-        if(entity == "docker_stats_manager") {
+        if(entity === "docker_stats_manager") {
             props.startOrStopDockerStatsManager(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
+            return
         }
-        if(entity == "kafka_manager") {
+        if(entity === "kafka_manager") {
             props.startOrStopKafkaManager(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
+            return
         }
-        if(entity == "snort_ids_manager") {
+        if(entity === "snort_ids_manager") {
             props.startOrStopSnortManager(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
+            return
         }
-        if(entity == "ossec_ids_manager") {
+        if(entity === "ossec_ids_manager") {
             props.startOrStopOSSECManager(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
+            return
         }
+        props.startOrStopContainer(props.execution.ip_first_octet, props.execution.emulation_name, start, stop, entity)
     }
 
     const SpinnerOrButton = (props) => {
         if (props.loading) {
-            console.log("returning spinner")
             return (<Spinner
                 as="span"
                 animation="grow"
@@ -179,7 +185,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes(container.full_name_str)}
-                                                    running={true} entity={"container"}/>
+                                                    running={true} entity={container.full_name_str}/>
                                             </td>
                                         </tr>
                                     )}
@@ -193,7 +199,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes(container.full_name_str)}
-                                                    running={false} entity={"container"}/>
+                                                    running={false} entity={container.full_name_str}/>
                                             </td>
                                         </tr>
                                     )}

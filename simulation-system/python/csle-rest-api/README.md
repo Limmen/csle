@@ -96,6 +96,7 @@ A REST API for the CSLE management platform.
 | `/emulation-executions/<execution_id>/snort-ids-manager?token=<valid_token>&emulation=<emulation>` | Start/stop Snort manager of an emulation execution             | `POST`                                  |
 | `/emulation-executions/<execution_id>/ossec-ids-manager?token=<valid_token>&emulation=<emulation>` | Start/stop OSSEC IDS manager of an emulation execution         | `POST`                                  |
 | `/emulation-executions/<execution_id>/host-manager?token=<valid_token>&emulation=<emulation>`      | Start/stop Host managers of an emulation execution             | `POST`                                  |
+| `/emulation-executions/<execution_id>/container?token=<valid_token>&emulation=<emulation>`         | Start/stop container of an emulation execution                  | `POST`                                  |
 
 ## Author & Maintainer
 
