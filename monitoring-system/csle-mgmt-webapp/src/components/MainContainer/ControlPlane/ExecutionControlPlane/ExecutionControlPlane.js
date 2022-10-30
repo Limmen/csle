@@ -45,12 +45,28 @@ const ExecutionControlPlane = (props) => {
     }
 
     const startOrStop = (start, stop, entity) => {
-        console.log("startOrStop")
-        console.log(entity)
-        console.log(start)
-        console.log(stop)
         if(entity == "client_manager") {
             props.startOrStopClientPopulation(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+        }
+        if(entity == "host_manager") {
+            props.startOrStopHostManager(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+        }
+        if(entity == "docker_stats_manager") {
+            props.startOrStopDockerStatsManager(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+        }
+        if(entity == "kafka_manager") {
+            props.startOrStopKafkaManager(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+        }
+        if(entity == "snort_ids_manager") {
+            props.startOrStopSnortManager(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+        }
+        if(entity == "ossec_ids_manager") {
+            props.startOrStopOSSECManager(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
         }
     }

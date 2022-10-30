@@ -131,7 +131,136 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
-                console.log("started client population")
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopDockerStatsManager = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/docker-stats-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopKafkaManager = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/kafka-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopSnortManager = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/snort-ids-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopOSSECManager = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/ossec-ids-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopHostManager = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/host-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -301,6 +430,11 @@ const ControlPlane = (props) => {
                             sessionData={props.sessionData}
                             info={props.selectedEmulationExecutionInfo}
                             startOrStopClientPopulation={props.startOrStopClientPopulation}
+                            startOrStopDockerStatsManager={props.startOrStopDockerStatsManager}
+                            startOrStopKafkaManager={props.startOrStopKafkaManager}
+                            startOrStopSnortManager={props.startOrStopSnortManager}
+                            startOrStopOSSECManager={props.startOrStopOSSECManager}
+                            startOrStopHostManager={props.startOrStopHostManager}
                         />
                     </Accordion>
                 </div>
@@ -410,6 +544,11 @@ const ControlPlane = (props) => {
                                    selectedEmulationExecutionInfo={selectedEmulationExecutionInfo}
                                    emulationExecutionContainerOptions={emulationExecutionContainerOptions}
                                    startOrStopClientPopulation={startOrStopClientPopulation}
+                                   startOrStopDockerStatsManager={startOrStopDockerStatsManager}
+                                   startOrStopKafkaManager={startOrStopKafkaManager}
+                                   startOrStopSnortManager={startOrStopSnortManager}
+                                   startOrStopOSSECManager={startOrStopOSSECManager}
+                                   startOrStopHostManager={startOrStopHostManager}
             />
         </div>
     );
