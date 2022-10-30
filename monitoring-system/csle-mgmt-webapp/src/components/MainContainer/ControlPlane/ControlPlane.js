@@ -131,6 +131,16 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -157,6 +167,16 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -183,6 +203,16 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -209,6 +239,16 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -235,6 +275,16 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -261,6 +311,16 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
             })
             .catch(error => console.log("error:" + error))
     }, []);

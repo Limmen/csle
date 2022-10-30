@@ -23,6 +23,7 @@ const ExecutionControlPlane = (props) => {
     const [kafkaManagersOpen, setKafkaManagersOpen] = useState(false);
     const [ossecIdsManagersOpen, setOssecIdsManagersOpen] = useState(false);
     const [snortManagersOpen, setSnortManagersOpen] = useState(false);
+    const [loadingEntities, setLoadingEntities] = useState([]);
 
     const activeStatus = (active) => {
         if (active) {
@@ -44,7 +45,27 @@ const ExecutionControlPlane = (props) => {
         </Tooltip>)
     }
 
+    const addLoadingEntity = (entity) => {
+        var newLoadingEntities= []
+        for (let i = 0; i < loadingEntities.length; i++) {
+            newLoadingEntities.push(loadingEntities[i])
+        }
+        newLoadingEntities.push(entity)
+        setLoadingEntities(newLoadingEntities)
+    }
+
+    const removeLoadingEntity = (entity) => {
+        var newLoadingEntities= []
+        for (let i = 0; i < loadingEntities.length; i++) {
+            if(loadingEntities[i] !== entity) {
+                newLoadingEntities.push(loadingEntities[i])
+            }
+        }
+        setLoadingEntities(newLoadingEntities)
+    }
+
     const startOrStop = (start, stop, entity) => {
+        addLoadingEntity(entity)
         if(entity == "client_manager") {
             props.startOrStopClientPopulation(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
@@ -73,13 +94,14 @@ const ExecutionControlPlane = (props) => {
 
     const SpinnerOrButton = (props) => {
         if (props.loading) {
-            <Spinner
+            console.log("returning spinner")
+            return (<Spinner
                 as="span"
                 animation="grow"
                 size="sm"
                 role="status"
                 aria-hidden="true"
-            />
+            />)
         } else {
             if (props.running) {
                 return (
@@ -155,7 +177,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{getIps(container.ips_and_networks).join(", ")}</td>
                                             <td className="containerRunningStatus"> Running</td>
                                             <td>
-                                                <SpinnerOrButton loading={false} running={true} entity={"container"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes(container.full_name_str)}
+                                                    running={true} entity={"container"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -167,7 +191,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>{getIps(container.ips_and_networks).join(", ")}</td>
                                             <td className="containerStoppedStatus">Stopped</td>
                                             <td>
-                                                <SpinnerOrButton loading={false} running={false} entity={"container"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes(container.full_name_str)}
+                                                    running={false} entity={"container"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -261,7 +287,10 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.num_clients}</td>
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
-                                                <SpinnerOrButton loading={false} running={true} entity={"client_manager"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("client_manager")}
+                                                    running={status.producer_active && status.client_process_active}
+                                                    entity={"client_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -304,8 +333,10 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.num_monitors}</td>
                                             {activeStatus(status.num_monitors > 0)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.num_monitors > 0}
-                                                                 entity={"docker_stats_manager"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("docker_stats_manager")}
+                                                    running={status.num_monitors > 0}
+                                                    entity={"docker_stats_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -346,8 +377,10 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.host_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={activeStatus(status.running)}
-                                                                 entity={"host_manager"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("host_manager")}
+                                                    running={status.running}
+                                                    entity={"host_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -390,8 +423,10 @@ const ExecutionControlPlane = (props) => {
                                             <td>{getTopicsString(status.topics)}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.running}
-                                                                 entity={"kafka_manager"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("kafka_manager")}
+                                                    running={status.running}
+                                                    entity={"kafka_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -432,8 +467,10 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.ossec_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.running}
-                                                                 entity={"ossec_ids_manager"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("ossec_ids_manager")}
+                                                    running={status.running}
+                                                    entity={"ossec_ids_manager"}/>
                                             </td>
                                         </tr>
                                     )}
@@ -474,8 +511,10 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.snort_managers_info.ports[index]}</td>
                                             {activeStatus(status.running)}
                                             <td>
-                                                <SpinnerOrButton loading={false} running={status.running}
-                                                                 entity={"snort_ids_manager"}/>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("snort_ids_manager")}
+                                                    running={status.running}
+                                                    entity={"snort_ids_manager"}/>
                                             </td>
                                         </tr>
                                     )}

@@ -36,8 +36,9 @@ const About = () => {
                         to manage system models (see the <a href="/system-models-page">models page</a> and the <a href="/emulation-statistics-page">statistics page</a>),
                         to inspect execution traces (see the <a href="/traces-page">traces page</a>),
                         to manage SDN controllers of runnign emulations (see the <a href="/sdn-controllers-page">SDN controllers page</a>),
-                        to monitor executions (see the <a href="/monitor">monitoring page</a>), and to
-                        download public datasets (see the <a href="/downloads-page">downloads page</a>).
+                        to monitor executions (see the <a href="/monitor">monitoring page</a>),
+                        to control executions of emulations (see the <a href="/control-plane-page">control plane page</a>)
+                        and to download public datasets (see the <a href="/downloads-page">downloads page</a>).
                     </p>
                 </div>
                 <div className="col-sm-2"></div>
