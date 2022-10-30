@@ -145,17 +145,29 @@ const Emulation = (props) => {
         </Tooltip>
     );
 
-    const renderRemoveAndCleanExecutionTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop and remove execution
-        </Tooltip>
-    );
+    const renderRemoveAndCleanExecutionTooltip = (props) => {
+        if (props.execution) {
+            return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+                Stop and remove execution
+            </Tooltip>)
+        } else {
+            return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+                Stop and remove all executions of the emulation
+            </Tooltip>)
+        }
+    }
 
-    const renderStopEmulationTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Stop emulation
-        </Tooltip>
-    );
+    const renderStopEmulationTooltip = (props) => {
+        if (props.execution) {
+            return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+                Stop execution
+            </Tooltip>)
+        } else {
+            return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+                Stop all executions of the emulation
+            </Tooltip>)
+        }
+    }
 
     const SdnControllerConfig = (props) => {
         if (props.emulation.sdn_controller_config === null || props.emulation.sdn_controller_config === undefined) {

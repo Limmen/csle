@@ -238,13 +238,16 @@ const ControlPlane = (props) => {
 
     useEffect(() => {
         setLoading(true)
+        setLoadingSelectedEmulationExecution(true)
+        setLoadingSelectedEmulationExecutionInfo(true)
         fetchEmulationExecutionIds()
     }, [fetchEmulationExecutionIds]);
 
     const SelectedExecutionView = (props) => {
-        if (props.loadingSelectedEmulationExecution || props.loadingSelectedEmulationExecutionInfo
-            || props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined) {
-            if (props.loadingSelectedEmulationExecution) {
+        if (props.loading || props.loadingSelectedEmulationExecution || props.loadingSelectedEmulationExecutionInfo
+            || props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined ||
+            props.selectedEmulationExecutionInfo === undefined || props.selectedEmulationExecutionInfo === null) {
+            if (props.loadingSelectedEmulationExecution || props.loadingSelectedEmulationExecutionInfo) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching execution... </span>
