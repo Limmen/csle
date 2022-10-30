@@ -13,7 +13,7 @@ class NodeContainerConfig:
                  version: str, level: str, restart_policy: str,
                  suffix: str, os: str, execution_ip_first_octet: int = -1):
         """
-        Intializes the DTO
+        Initializes the DTO
 
         :param name: the name of the node container
         :param ips_and_networks: the list of ips and networks that the container is connected to

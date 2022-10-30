@@ -113,7 +113,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
     def createTopic(self, request: csle_collector.kafka_manager.kafka_manager_pb2.CreateTopicMsg,
                    context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
-        Starts/Restarts the Poisson process that generates clients
+        Creates a new Kafka topic
 
         :param request: the gRPC request
         :param context: the gRPC context

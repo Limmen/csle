@@ -7,6 +7,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import './EmulationTrace.css';
 import Collapse from 'react-bootstrap/Collapse'
+import getIpString from "../../../Common/getIpString";
 
 /**
  * Component representing the /emulation-traces/id resource
@@ -22,14 +23,6 @@ const EmulationTrace = (props) => {
             Remove emulation trace
         </Tooltip>
     );
-
-    const getIpString = (ips) => {
-        var ipsStr = ""
-        for (let i = 0; i < ips.length; i++) {
-            ipsStr = ipsStr + ips[i] + ","
-        }
-        return ipsStr
-    }
 
     const getAttackerActionOutcome = (actionOutcomeId) => {
         if (actionOutcomeId === 0) {

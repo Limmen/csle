@@ -10,6 +10,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import getIpString from "../../../Common/getIpString";
 
 /**
  * The component representing the /jobs/<id> resource for data collection jobs
@@ -56,14 +57,6 @@ const DataCollectionJob = (props) => {
         } else {
             return (<circle r="15" cx="15" cy="15" fill="red"></circle>)
         }
-    }
-
-    const getIpString = (ips) => {
-        var ipsStr = ""
-        for (let i = 0; i < ips.length; i++) {
-            ipsStr = ipsStr + ips[i] + ","
-        }
-        return ipsStr
     }
 
     const fetchLogs = useCallback(() => {

@@ -9,6 +9,7 @@ import fileDownload from 'react-file-download'
 import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
+import getIps from "../../../Common/getIps";
 
 /**
  * Component representing the /emulations/<id> resource
@@ -62,14 +63,6 @@ const Emulation = (props) => {
             network_names.push(networks[i].name)
         }
         return network_names.join(", ")
-    }
-
-    const getIps = (ips_and_networks) => {
-        const ips = []
-        for (let i = 0; i < ips_and_networks.length; i++) {
-            ips.push(ips_and_networks[i][0])
-        }
-        return ips
     }
 
     const getArrivalProcessStr = (process) => {

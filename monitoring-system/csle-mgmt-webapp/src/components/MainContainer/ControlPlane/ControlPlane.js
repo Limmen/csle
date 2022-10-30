@@ -104,8 +104,6 @@ const ControlPlane = (props) => {
             if (response === null) {
                 return
             }
-            console.log("execution info:")
-            console.log(response)
             setSelectedEmulationExecutionInfo(response)
             setLoadingSelectedEmulationExecutionInfo(false)
         })
@@ -263,7 +261,7 @@ const ControlPlane = (props) => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Control of selected execution:
+                        Selected execution:
                     </h3>
                     <Accordion defaultActiveKey="0">
                         <ExecutionControlPlane

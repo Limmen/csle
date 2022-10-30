@@ -19,6 +19,7 @@ import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 
 
 class ContainerManager:
@@ -258,11 +259,50 @@ class ContainerManager:
         return container_name_image_ip
 
     @staticmethod
+    def list_all_running_containers_in_emulation(emulation_env_config: EmulationEnvConfig) \
+            -> Tuple[List[NodeContainerConfig], List[NodeContainerConfig]]:
+        """
+        Extracts the running containers and the stopped containers of a given emulation
+
+        :param emulation_env_config: the emulation configuration
+        :return: the list of running containers and the list of stopped containers
+        """
+        running_emulation_containers = []
+        stopped_emulation_containers = []
+        running_containers = ContainerManager.list_all_running_containers()
+        running_containers_names = list(map(lambda x: x[0], running_containers))
+        for c in emulation_env_config.containers_config.containers:
+            if c.full_name_str in running_containers_names:
+                running_emulation_containers.append(c)
+            else:
+                stopped_emulation_containers.append(c)
+        return running_emulation_containers, stopped_emulation_containers
+
+    @staticmethod
+    def list_all_active_networks_for_emulation(emulation_env_config: EmulationEnvConfig) \
+            -> Tuple[List[ContainerNetwork], List[ContainerNetwork]]:
+        """
+        Extracts the active networks of a given emulation
+
+        :param emulation_env_config: the emulation configuration
+        :return: the list of active networks and inactive networks of an emulation
+        """
+        active_emulation_networks = []
+        inactive_emulation_networks = []
+        active_networks_names = ContainerManager.list_all_networks()
+        for net in emulation_env_config.containers_config.networks:
+            if net.name in active_networks_names:
+                active_emulation_networks.append(net)
+            else:
+                inactive_emulation_networks.append(net)
+        return active_emulation_networks, inactive_emulation_networks
+
+    @staticmethod
     def is_emulation_running(emulation_env_config: EmulationEnvConfig) -> bool:
         """
         Checks if a given emulation config is running or not
 
-        :param emulation_env_config: the emulation environment configuraiton
+        :param emulation_env_config: the emulation environment configuration
         :return: True if running otherwise False
         """
         running_emulations = ContainerManager.list_running_emulations()

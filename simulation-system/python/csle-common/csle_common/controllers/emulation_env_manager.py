@@ -642,11 +642,19 @@ class EmulationEnvManager:
             TrafficManager.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
         docker_stats_managers_info = \
             ContainerManager.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config)
+        running_containers, stopped_containers = ContainerManager.list_all_running_containers_in_emulation(
+            emulation_env_config=execution.emulation_env_config)
+        active_networks, inactive_networks = ContainerManager.list_all_active_networks_for_emulation(
+            emulation_env_config=execution.emulation_env_config)
         execution_info = EmulationExecutionInfo(emulation_name=emulation_name, execution_id=execution_id,
                                                 snort_managers_info=snort_ids_managers_info,
                                                 ossec_managers_info=ossec_ids_managers_info,
                                                 kafka_managers_info=kafka_managers_info,
                                                 host_managers_info=host_managers_info,
                                                 client_managers_info=client_managers_info,
-                                                docker_stats_managers_info=docker_stats_managers_info)
+                                                docker_stats_managers_info=docker_stats_managers_info,
+                                                running_containers=running_containers,
+                                                stopped_containers=stopped_containers,
+                                                active_networks=active_networks,
+                                                inactive_networks=inactive_networks)
         return execution_info

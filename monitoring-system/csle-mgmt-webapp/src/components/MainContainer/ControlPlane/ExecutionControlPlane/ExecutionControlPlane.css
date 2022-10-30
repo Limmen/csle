@@ -1,0 +1,7 @@
+.containerRunningStatus{
+    color: green;
+}
+
+.containerStoppedStatus{
+    color: red;
+}
