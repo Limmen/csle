@@ -11,7 +11,8 @@ RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host dnsutils git \
         swi-prolog openjdk-8-jdk sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip snort arptables \
         irssi irssi-scripts screen postgresql-client-common snmp mongodb-clients postgresql-client smbclient fail2ban \
-        rsyslog netcat traceroute sysstat iproute2 iperf3 libpcap-dev libpcre3-dev libdumbnet-dev flex bison lsof
+        rsyslog netcat traceroute sysstat iproute2 iperf3 libpcap-dev libpcre3-dev libdumbnet-dev flex bison lsof  \
+        default-jre default-jdk
 
 # Add users script
 ADD docker_files/common/make_root_users.sh /make_root_users.sh
