@@ -12,24 +12,10 @@ from csle_common.dao.emulation_config.client_population_process_type import Clie
 from csle_common.logging.log import Logger
 
 
-class TrafficManager:
+class TrafficController:
     """
     Class managing traffic generators in the emulation environments
     """
-
-    @staticmethod
-    def grpc_server_on(channel) -> bool:
-        """
-        Utility function to test if a given gRPC channel is working or not
-
-        :param channel: the channel to test
-        :return: True if working, False if timeout
-        """
-        try:
-            grpc.channel_ready_future(channel).result(timeout=15)
-            return True
-        except grpc.FutureTimeoutError:
-            return False
 
     @staticmethod
     def stop_client_population(emulation_env_config: EmulationEnvConfig) -> None:
@@ -71,7 +57,7 @@ class TrafficManager:
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
             time.sleep(5)
 
-        client_dto = TrafficManager.get_clients_dto_by_ip_and_port(
+        client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.ip,
             port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
 
@@ -152,7 +138,7 @@ class TrafficManager:
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
             time.sleep(5)
 
-        client_dto = TrafficManager.get_clients_dto_by_ip_and_port(
+        client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.ip,
             port=emulation_env_config.traffic_config.client_population_config.client_manager_port
         )
@@ -194,9 +180,9 @@ class TrafficManager:
 
             # Start the producer thread
             csle_collector.client_manager.query_clients.start_producer(
-                stub=stub, ip=emulation_env_config.log_sink_config.container.get_ips()[0],
-                port=emulation_env_config.log_sink_config.kafka_port,
-                time_step_len_seconds=emulation_env_config.log_sink_config.time_step_len_seconds)
+                stub=stub, ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                port=emulation_env_config.kafka_config.kafka_port,
+                time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
     @staticmethod
     def get_num_active_clients(emulation_env_config : EmulationEnvConfig) \
@@ -229,7 +215,7 @@ class TrafficManager:
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
             time.sleep(5)
 
-        client_dto = TrafficManager.get_clients_dto_by_ip_and_port(
+        client_dto = TrafficController.get_clients_dto_by_ip_and_port(
             ip=emulation_env_config.traffic_config.client_population_config.ip,
             port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
         return client_dto
@@ -426,12 +412,12 @@ class TrafficManager:
         :param emulation_env_config: the configuration of the emulation
         :return: a DTO with the status of the Client managers
         """
-        client_managers_ips = TrafficManager.get_client_managers_ips(emulation_env_config=emulation_env_config)
-        client_managers_ports = TrafficManager.get_client_managers_ports(emulation_env_config=emulation_env_config)
+        client_managers_ips = TrafficController.get_client_managers_ips(emulation_env_config=emulation_env_config)
+        client_managers_ports = TrafficController.get_client_managers_ports(emulation_env_config=emulation_env_config)
         client_statuses = []
         running = False
         for ip in client_managers_ips:
-            status = TrafficManager.get_clients_dto_by_ip_and_port(
+            status = TrafficController.get_clients_dto_by_ip_and_port(
                 ip=emulation_env_config.traffic_config.client_population_config.ip,
                 port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
             if not running and status.client_process_active and status.producer_active:

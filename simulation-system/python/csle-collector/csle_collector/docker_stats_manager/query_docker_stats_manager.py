@@ -20,8 +20,8 @@ def get_docker_stats_manager_status(
 
 def start_docker_stats_monitor(
         stub: csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub,
-        emulation: str, execution_first_ip_octet: int, sink_ip: str, stats_queue_maxsize : int,
-        time_step_len_seconds: int, sink_port: int,
+        emulation: str, execution_first_ip_octet: int, kafka_ip: str, stats_queue_maxsize : int,
+        time_step_len_seconds: int, kafka_port: int,
         containers: List[csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp]) \
         -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
     """
@@ -30,18 +30,18 @@ def start_docker_stats_monitor(
     :param stub: the stub to send the remote gRPC to the server
     :param emulation: the name of the emulation
     :param execution_first_ip_octet: the first octet of the ip of the execution
-    :param sink_ip: the ip of the Kafka server to push stats to
+    :param kafka_ip: the ip of the Kafka server to push stats to
     :param stats_queue_maxsize: the maximum size of the queue
     :param the length of the period between pushing data to Kafka
-    :param sink_port: the port of the Kafka server
+    :param kafka_port: the port of the Kafka server
     :param containers: list of names and ips of  containers to monitor
     :return: a DockerStatsManagerDTO describing the status of the server
     """
     start_docker_stats_monitor_msg = \
         csle_collector.docker_stats_manager.docker_stats_manager_pb2.StartDockerStatsMonitorMsg(
             emulation=emulation, execution_first_ip_octet=execution_first_ip_octet,
-            sink_ip=sink_ip, stats_queue_maxsize=stats_queue_maxsize,
-            time_step_len_seconds=time_step_len_seconds, sink_port=sink_port, containers=containers
+            sink_ip=kafka_ip, stats_queue_maxsize=stats_queue_maxsize,
+            time_step_len_seconds=time_step_len_seconds, sink_port=kafka_port, containers=containers
         )
     docker_stats_manager_dto = stub.startDockerStatsMonitor(start_docker_stats_monitor_msg)
     return docker_stats_manager_dto

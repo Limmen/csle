@@ -34,7 +34,7 @@ class DockerHostStatsConsumerThread(threading.Thread):
             collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"docker_host_stats_consumer_thread_{self.host_ip}_{self.ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
-        self.consumer.subscribe([collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME])
+        self.consumer.subscribe([collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME])
 
     def run(self) -> None:
         """

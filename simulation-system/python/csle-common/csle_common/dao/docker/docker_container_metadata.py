@@ -9,7 +9,7 @@ class DockerContainerMetadata:
     def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
                  name2: str, level: str, hostname: str, image_name : str, net: str,
-                 dir: str, config_path : str, container_handle : str, emulation: str, log_sink: str):
+                 dir: str, config_path : str, container_handle : str, emulation: str, kafka_container: str):
         """
         Intializes the DTO
 
@@ -34,7 +34,7 @@ class DockerContainerMetadata:
         :param config_path: the container configuration ṕath of the container
         :param container_handle: the py-docker container handle
         :param emulation: the emulation name
-        :param log_sink: the log_sink name
+        :param kafka_container: the kafka container name
         """
         self.name = name
         self.status = status
@@ -57,7 +57,7 @@ class DockerContainerMetadata:
         self.config_path = config_path
         self.container_handle = container_handle
         self.emulation = emulation
-        self.log_sink = log_sink
+        self.kafka_container = kafka_container
 
 
     @staticmethod
@@ -90,7 +90,7 @@ class DockerContainerMetadata:
             config_path=d["config_path"],
             container_handle=d["container_handle"],
             emulation=d["emulation"],
-            log_sink=d["log_sink"]
+            kafka_container=d["kafka_container"]
         )
         return obj
 
@@ -118,7 +118,7 @@ class DockerContainerMetadata:
         d["net"] = self.net
         d["config_path"] = self.config_path
         d["emulation"] = self.emulation
-        d["log_sink"] = self.log_sink
+        d["kafka_container"] = self.kafka_container
         return d
 
 
@@ -131,7 +131,8 @@ class DockerContainerMetadata:
                f"created: {self.created}, ip: {self.ip}, network_id: {self.network_id}, gateway: {self.gateway}," \
                f"mac: {self.mac}, ip_prefix_len: {self.ip_prefix_len}, name2: {self.name2}," \
                f"level: {self.level}, hostname: {self.hostname}, image_name: {self.image_name}, net: {self.net}, " \
-               f"dir: {self.dir}, config_path: {self.config_path}, emulation: {self.emulation}, log_sink:{self.log_sink}"
+               f"dir: {self.dir}, config_path: {self.config_path}, emulation: {self.emulation}, " \
+               f"kafka_container:{self.kafka_container}"
 
     def to_json_str(self) -> str:
         """

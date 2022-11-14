@@ -34,7 +34,7 @@ class SnortIdsLogConsumerThread(threading.Thread):
             collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"ids_log_consumer_thread_{self.ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
-        self.consumer.subscribe([collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME])
+        self.consumer.subscribe([collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME])
 
     def run(self) -> None:
         """

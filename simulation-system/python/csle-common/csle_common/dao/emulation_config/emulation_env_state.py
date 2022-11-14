@@ -56,7 +56,7 @@ class EmulationEnvState:
         defender_machines = []
         for c in self.emulation_env_config.containers_config.containers:
             defender_machines.append(EmulationDefenderMachineObservationState.from_container(
-                c, log_sink_config=self.emulation_env_config.log_sink_config))
+                c, kafka_config=self.emulation_env_config.kafka_config))
         self.defender_obs_state.machines = defender_machines
         self.defender_obs_state.start_monitoring_threads()
 
@@ -92,7 +92,7 @@ class EmulationEnvState:
                     self.defender_cached_ssh_connections[(c.ip, c.credential.username, c.port)] = c
         else:
             self.defender_obs_state = EmulationDefenderObservationState(
-                log_sink_config=self.emulation_env_config.log_sink_config)
+                kafka_config=self.emulation_env_config.kafka_config)
 
     def cleanup(self) -> None:
         """

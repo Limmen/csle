@@ -213,9 +213,9 @@ class HOST_METRICS:
     LIST_NUMBER_OF_PROCESSES = "ps -e | wc -l"
 
 
-class LOG_SINK:
+class KAFKA_CONFIG:
     """
-    Constants related to the log sink
+    Constants related to the kafka container configuration
     """
     NETWORK_ID_THIRD_OCTET=253
     NETWORK_ID_FOURTH_OCTET=253

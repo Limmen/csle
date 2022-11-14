@@ -171,7 +171,7 @@ class ProducerThread(threading.Thread):
                 ts = time.time()
                 num_clients = len(self.arrival_thread.client_threads)
                 rate = self.arrival_thread.rate
-                self.producer.produce(constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
+                self.producer.produce(constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME,
                                       f"{ts},{self.ip},{num_clients},{rate}")
                 self.producer.poll(0)
 

@@ -150,11 +150,11 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
-    from csle_common.controllers.traffic_manager import TrafficManager
-    from csle_common.controllers.snort_ids_manager import SnortIDSManager
-    from csle_common.controllers.log_sink_manager import LogSinkManager
-    from csle_common.controllers.host_manager import HostManager
+    from csle_common.controllers.container_controller import ContainerController
+    from csle_common.controllers.traffic_controller import TrafficController
+    from csle_common.controllers.snort_ids_controller import SnortIDSController
+    from csle_common.controllers.kafka_controller import KafkaController
+    from csle_common.controllers.host_controller import HostController
 
     emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
@@ -165,7 +165,7 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
             click.secho(f"IP ID: {exec.ip_first_octet}, emulation name: {exec.emulation_name}")
         if clients:
             for exec in executions:
-                clients_dto = TrafficManager.get_num_active_clients(emulation_env_config=exec.emulation_env_config)
+                clients_dto = TrafficController.get_num_active_clients(emulation_env_config=exec.emulation_env_config)
                 click.secho(f"Client population status for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
                 click.secho(f"Active clients: {clients_dto.num_clients}", bold=False)
@@ -181,7 +181,7 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
                 click.secho(f"Producer time-step length: {clients_dto.producer_time_step_len_seconds} seconds", bold=False)
         if snortids:
             for exec in executions:
-                snort_ids_monitors_statuses = SnortIDSManager.get_snort_ids_monitor_thread_status(
+                snort_ids_monitors_statuses = SnortIDSController.get_snort_ids_monitor_thread_status(
                     emulation_env_config=exec.emulation_env_config)
                 for snort_ids_monitor_status in snort_ids_monitors_statuses:
                     click.secho(f"Snort IDS monitor status for execution {exec.ip_first_octet} of {emulation}",
@@ -192,7 +192,7 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
                         click.secho("Snort IDS monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
         if kafka:
             for exec in executions:
-                kafka_dto = LogSinkManager.get_kafka_status(emulation_env_config=exec.emulation_env_config)
+                kafka_dto = KafkaController.get_kafka_status(emulation_env_config=exec.emulation_env_config)
                 click.secho(f"Kafka manager status for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
                 if kafka_dto.running:
@@ -204,8 +204,8 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
                     click.secho(f"{topic}", bold=False)
         if stats:
             for exec in executions:
-                stats_manager_dto = ContainerManager.get_docker_stats_manager_status(
-                    log_sink_config=exec.emulation_env_config.log_sink_config)
+                stats_manager_dto = ContainerController.get_docker_stats_manager_status(
+                    kafka_config=exec.emulation_env_config.kafka_config)
                 click.secho(f"Docker stats manager status for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
                 click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
@@ -214,8 +214,8 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
             for exec in executions:
                 click.secho(f"Host manager statuses for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
-                host_manager_dtos = HostManager.get_host_monitor_thread_status(emulation_env_config=exec.
-                                                                               emulation_env_config)
+                host_manager_dtos = HostController.get_host_monitor_thread_status(emulation_env_config=exec.
+                                                                                  emulation_env_config)
                 for ip_hmd in host_manager_dtos:
                     hmd, ip = ip_hmd
                     if not hmd.running:
@@ -264,7 +264,7 @@ def start_traffic(emulation : str, id: int, mu: float, lamb: float, t: int,
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
     if execution is not None:
         emulation_env_config = execution.emulation_env_config
@@ -282,7 +282,7 @@ def start_traffic(emulation : str, id: int, mu: float, lamb: float, t: int,
             emulation_env_config.traffic_config.client_population_config.period_scaling_factor = psf
         click.secho(f"Starting client population with "
                     f"config:{emulation_env_config.traffic_config.client_population_config}")
-        EmulationEnvManager.start_custom_traffic(emulation_env_config=emulation_env_config)
+        EmulationEnvController.start_custom_traffic(emulation_env_config=emulation_env_config)
     else:
         click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
 
@@ -312,11 +312,11 @@ def stop_traffic(emulation : str, id: int) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     emulation_execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
     if emulation_execution is not None:
-        EmulationEnvManager.stop_custom_traffic(emulation_env_config=emulation_execution.emulation_env_config)
+        EmulationEnvController.stop_custom_traffic(emulation_env_config=emulation_execution.emulation_env_config)
     else:
         click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
 
@@ -365,9 +365,9 @@ def shell_shell_complete(ctx, param, incomplete) -> List[str]:
     :param incomplete: the command incomplete flag
     :return: a list of completion suggestions
     """
-    from csle_common.controllers.container_manager import ContainerManager
-    running_containers = ContainerManager.list_all_running_containers()
-    stopped_containers = ContainerManager.list_all_stopped_containers()
+    from csle_common.controllers.container_controller import ContainerController
+    running_containers = ContainerController.list_all_running_containers()
+    stopped_containers = ContainerController.list_all_stopped_containers()
     containers = running_containers + stopped_containers
     containers = list(map(lambda x: x[0], containers))
     return containers
@@ -381,9 +381,9 @@ def shell(container: str) -> None:
     :param container: the name of the container
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
-    running_containers= ContainerManager.list_all_running_containers()
+    running_containers= ContainerController.list_all_running_containers()
     container_found = False
     for rc in running_containers:
         if rc[0] == container:
@@ -482,13 +482,13 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
     :param no_clients: a boolean parameter that is True if the client_population should be skipped
     :return: None
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Starting emulation {emulation_env_config.name}", bold=False)
-    emulation_execution = EmulationEnvManager.create_execution(emulation_env_config=emulation_env_config)
-    EmulationEnvManager.run_containers(emulation_execution=emulation_execution)
-    EmulationEnvManager.apply_emulation_env_config(emulation_execution=emulation_execution,
-                                                   no_traffic=no_traffic, no_clients=no_clients)
+    emulation_execution = EmulationEnvController.create_execution(emulation_env_config=emulation_env_config)
+    EmulationEnvController.run_containers(emulation_execution=emulation_execution)
+    EmulationEnvController.apply_emulation_env_config(emulation_execution=emulation_execution,
+                                                      no_traffic=no_traffic, no_clients=no_clients)
 
 
 def separate_running_and_stopped_emulations(emulations : List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
@@ -498,9 +498,9 @@ def separate_running_and_stopped_emulations(emulations : List["EmulationEnvConfi
     :param emulations: the list of emulations
     :return: running_emulations, stopped_emulations
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
-    rc_emulations = ContainerManager.list_running_emulations()
+    rc_emulations = ContainerController.list_running_emulations()
     stopped_emulations = []
     running_emulations = []
     for em in emulations:
@@ -518,10 +518,10 @@ def stop_all_executions_of_emulation(emulation_env_config: "EmulationEnvConfig")
     :param emulation_env_config: the configuration of the emulation to stop
     :return: None
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Stopping all executions of emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.stop_all_executions_of_emulation(emulation_env_config=emulation_env_config)
+    EmulationEnvController.stop_all_executions_of_emulation(emulation_env_config=emulation_env_config)
 
 
 def stop_emulation_execution(emulation_env_config: "EmulationEnvConfig", execution_id: int) -> None:
@@ -532,11 +532,11 @@ def stop_emulation_execution(emulation_env_config: "EmulationEnvConfig", executi
     :param execution_id: id of the execution to stop
     :return: None
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Stopping execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.stop_execution_of_emulation(emulation_env_config=emulation_env_config,
-                                                    execution_id=execution_id)
+    EmulationEnvController.stop_execution_of_emulation(emulation_env_config=emulation_env_config,
+                                                       execution_id=execution_id)
 
 
 def clean_emulation_statistics() -> None:
@@ -558,10 +558,10 @@ def clean_emulation_executions() -> None:
 
     :return: None
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Stopping and cleaning all emulation executions", bold=False)
-    EmulationEnvManager.clean_all_executions()
+    EmulationEnvController.clean_all_executions()
 
 
 def stop_emulation_executions() -> None:
@@ -570,10 +570,10 @@ def stop_emulation_executions() -> None:
 
     :return: None
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Stopping all emulation executions", bold=False)
-    EmulationEnvManager.stop_all_executions()
+    EmulationEnvController.stop_all_executions()
 
 
 def clean_emulation_traces() -> None:
@@ -609,10 +609,10 @@ def clean_all_emulation_executions(emulation_env_config: "EmulationEnvConfig") -
     :param emulation_env_config: the configuration of the emulation
     :return: None
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.clean_all_emulation_executions(emulation_env_config=emulation_env_config)
+    EmulationEnvController.clean_all_emulation_executions(emulation_env_config=emulation_env_config)
 
 
 def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execution_id: int) -> None:
@@ -623,10 +623,10 @@ def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execut
     :param emulation_env_config: the configuration of the emulation
     :return: None
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Cleaning execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
-    EmulationEnvManager.clean_emulation_execution(emulation_env_config, execution_id)
+    EmulationEnvController.clean_emulation_execution(emulation_env_config, execution_id)
 
 
 def materialize_emulation(emulation_env_config: "EmulationEnvConfig", path: str) -> None:
@@ -657,11 +657,11 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     :return: a list of completion suggestions
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(
         emulations=MetastoreFacade.list_emulations())
     emulations = running_emulations
-    running_containers = ContainerManager.list_all_running_containers()
+    running_containers = ContainerController.list_all_running_containers()
     containers = running_containers
     containers = list(map(lambda x: x[0], containers))
     return ["prometheus", "node_exporter", "cadvisor", "grafana", "monitor", "proxy",
@@ -680,12 +680,12 @@ def stop(entity: str, id: int = -1) -> None:
     :param id: id when stopping a specific emulation execution
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     from csle_common.controllers.monitor_tools_controller import MonitorToolsController
     from csle_common.metastore.metastore_facade import MetastoreFacade
 
     if entity == "all":
-        ContainerManager.stop_all_running_containers()
+        ContainerController.stop_all_running_containers()
         for emulation in MetastoreFacade.list_emulations():
             stop_all_executions_of_emulation(emulation_env_config=emulation)
     elif entity == "node_exporter":
@@ -705,7 +705,7 @@ def stop(entity: str, id: int = -1) -> None:
     elif entity == "emulation_executions":
         stop_emulation_executions()
     else:
-        container_stopped = ContainerManager.stop_container(name=entity)
+        container_stopped = ContainerController.stop_container(name=entity)
         if not container_stopped:
             emulation = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation is not None:
@@ -838,14 +838,14 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     """
 
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(
         emulations=MetastoreFacade.list_emulations())
     emulations = stopped_emulations
-    stopped_containers = ContainerManager.list_all_stopped_containers()
+    stopped_containers = ContainerController.list_all_stopped_containers()
     containers = stopped_containers
     containers = list(map(lambda x: x[0], containers))
-    image_names=ContainerManager.list_all_images()
+    image_names=ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
     return ["prometheus", "node_exporter", "grafana", "cadvisor", "monitor", "proxy"
             "all",
@@ -875,13 +875,13 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     from csle_common.controllers.monitor_tools_controller import MonitorToolsController
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
     from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 
     if entity == "all":
-        ContainerManager.start_all_stopped_containers()
+        ContainerController.start_all_stopped_containers()
     elif entity == "statsmanager":
         start_docker_stats_manager()
     elif entity == "node_exporter":
@@ -904,7 +904,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
     elif entity == "proxy":
         MonitorToolsController.start_proxy()
     else:
-        container_started = ContainerManager.start_container(name=entity)
+        container_started = ContainerController.start_container(name=entity)
         if not container_started:
             emulation_env_config = MetastoreFacade.get_emulation_by_name(name=entity)
             if emulation_env_config is not None:
@@ -927,9 +927,9 @@ def run_image(image: str, name: str, create_network : bool = True) -> bool:
     :param create_network: whether to create a virtual network or not
     :return: True if it was started successfully, False otherwise
     """
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
     try:
-        EmulationEnvManager.run_container(image=image, name=name, create_network=create_network)
+        EmulationEnvController.run_container(image=image, name=name, create_network=create_network)
         return True
     except Exception as _:
         return False
@@ -945,13 +945,13 @@ def rm_shell_complete(ctx, param, incomplete) -> List[str]:
     :return: a list of completion suggestions
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
-    running_containers = ContainerManager.list_all_running_containers()
-    stopped_containers = ContainerManager.list_all_stopped_containers()
+    running_containers = ContainerController.list_all_running_containers()
+    stopped_containers = ContainerController.list_all_stopped_containers()
     containers = running_containers + stopped_containers
     containers = list(map(lambda x: x[0], containers))
-    image_names=ContainerManager.list_all_images()
+    image_names=ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
     return ["network-name", "container-name", "image-name", "networks", "images", "containers"] + emulations + \
            containers + image_names
@@ -966,14 +966,14 @@ def rm(entity : str) -> None:
     :param entity: the container(s), network(s), or images(s) to remove
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     if entity == "containers":
-        ContainerManager.rm_all_stopped_containers()
+        ContainerController.rm_all_stopped_containers()
     elif entity == "images":
-        ContainerManager.rm_all_images()
+        ContainerController.rm_all_images()
     elif entity == "networks":
-        ContainerManager.rm_all_networks()
+        ContainerController.rm_all_networks()
     else:
         rm_name(name=entity)
 
@@ -988,10 +988,10 @@ def clean_shell_complete(ctx, param, incomplete) -> List[str]:
     :return: a list of completion suggestions
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
-    running_containers = ContainerManager.list_all_running_containers()
-    stopped_containers = ContainerManager.list_all_stopped_containers()
+    running_containers = ContainerController.list_all_running_containers()
+    stopped_containers = ContainerController.list_all_stopped_containers()
     containers = running_containers + stopped_containers
     containers = list(map(lambda x: x[0], containers))
     return ["all", "containers", "emulations", "emulation_traces", "simulation_traces", "emulation_statistics",
@@ -1010,16 +1010,16 @@ def clean(entity : str, id: int = -1) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     if entity == "all":
-        ContainerManager.stop_all_running_containers()
-        ContainerManager.rm_all_stopped_containers()
+        ContainerController.stop_all_running_containers()
+        ContainerController.rm_all_stopped_containers()
         for emulation in MetastoreFacade.list_emulations():
             clean_all_emulation_executions(emulation_env_config=emulation)
     elif entity == "containers":
-        ContainerManager.stop_all_running_containers()
-        ContainerManager.rm_all_stopped_containers()
+        ContainerController.stop_all_running_containers()
+        ContainerController.rm_all_stopped_containers()
     elif entity == "emulations":
         for emulation in MetastoreFacade.list_emulations():
             clean_all_emulation_executions(emulation_env_config=emulation)
@@ -1045,10 +1045,10 @@ def install_shell_complete(ctx, param, incomplete) -> List[str]:
     :return: a list of completion suggestions
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
-    image_names=ContainerManager.list_all_images()
+    image_names=ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
     return ["emulations", "simulations", "derived_images",
             "base_images", "metastore", "all"] + emulations + image_names + simulations
@@ -1108,10 +1108,10 @@ def uninstall_shell_complete(ctx, param, incomplete) -> List[str]:
     :return: a list of completion suggestions
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
-    image_names=ContainerManager.list_all_images()
+    image_names=ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
     return ["emulations", "simulations", "derived_images", "base_images",
             "metastore", "all"] + emulations + image_names + simulations
@@ -1173,16 +1173,16 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     :return: a list of completion suggestions
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
-    running_containers = ContainerManager.list_all_running_containers()
-    stopped_containers = ContainerManager.list_all_stopped_containers()
+    running_containers = ContainerController.list_all_running_containers()
+    stopped_containers = ContainerController.list_all_stopped_containers()
     containers = running_containers + stopped_containers
     containers = list(map(lambda x: x[0], containers))
-    image_names=ContainerManager.list_all_images()
+    image_names=ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
-    active_networks_names = ContainerManager.list_all_networks()
+    active_networks_names = ContainerController.list_all_networks()
     return ["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
             "cadvisor", "monitor", "proxy", "statsmanager", "--all", "--running", "--stopped"] + emulations + containers \
            + image_names + active_networks_names + simulations
@@ -1205,7 +1205,7 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     if entity == "all":
         list_all(all=all, running=running, stopped=stopped)
@@ -1257,7 +1257,7 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
                 else:
                     net = get_network(name=entity)
                     if net is not None:
-                        active_networks_names = ContainerManager.list_all_networks()
+                        active_networks_names = ContainerController.list_all_networks()
                         active = net.name in active_networks_names
                         print_network(net=net, active=active)
                     else:
@@ -1353,7 +1353,7 @@ def list_statsmanager() -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
     from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 
     if MonitorToolsController.is_statsmanager_running():
@@ -1362,8 +1362,8 @@ def list_statsmanager() -> None:
         docker_stats_monitor_status = None
         for em in emulations:
             if em.name in running_emulations:
-                docker_stats_monitor_status = ContainerManager.get_docker_stats_manager_status(
-                    log_sink_config=em.log_sink_config)
+                docker_stats_monitor_status = ContainerController.get_docker_stats_manager_status(
+                    kafka_config=em.kafka_config)
                 break
         active_monitor_threads = 0
         active_emulations = []
@@ -1531,10 +1531,10 @@ def list_networks() -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     click.secho("CSLE networks:", fg="magenta", bold=True)
-    active_networks_names = ContainerManager.list_all_networks()
+    active_networks_names = ContainerController.list_all_networks()
     executions = MetastoreFacade.list_emulation_executions()
     for exec in executions:
         em = exec.emulation_env_config
@@ -1552,9 +1552,9 @@ def get_network(name: str) -> Union[None, "ContainerNetwork"]:
     :return: None if the network was not found and otherwise returns the network
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
-    active_networks_names = ContainerManager.list_all_networks()
+    active_networks_names = ContainerController.list_all_networks()
     emulations = MetastoreFacade.list_emulations()
     for em in emulations:
         for net in em.containers_config.networks:
@@ -1570,9 +1570,9 @@ def get_running_container(name: str) -> Union[None, Tuple[str, str, str]]:
     :param name: the name of the container to get
     :return: None if the container was not found and otherwise returns the container
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
-    running_containers = ContainerManager.list_all_running_containers()
+    running_containers = ContainerController.list_all_running_containers()
     for c in running_containers:
         if name == c[0]:
             return c
@@ -1586,9 +1586,9 @@ def get_stopped_container(name: str) -> Union[None, Tuple[str, str, str]]:
     :param name: the name of the container to stop
     :return: None if the container was not found and true otherwise
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
-    stopped_containers = ContainerManager.list_all_stopped_containers()
+    stopped_containers = ContainerController.list_all_stopped_containers()
     for c in stopped_containers:
         if name == c[0]:
             return c
@@ -1601,11 +1601,11 @@ def list_all_containers() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     click.secho("CSLE Docker containers:", fg="magenta", bold=True)
-    running_containers = ContainerManager.list_all_running_containers()
-    stopped_containers = ContainerManager.list_all_stopped_containers()
+    running_containers = ContainerController.list_all_running_containers()
+    stopped_containers = ContainerController.list_all_stopped_containers()
     containers = running_containers + stopped_containers
     for c in containers:
         if c in running_containers:
@@ -1620,10 +1620,10 @@ def list_running_containers() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     click.secho("CSLE running Docker containers:", fg="magenta", bold=True)
-    containers = ContainerManager.list_all_running_containers()
+    containers = ContainerController.list_all_running_containers()
     for c in containers:
         print_running_container(c)
 
@@ -1634,10 +1634,10 @@ def list_stopped_containers() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     click.secho("CSLE stopped Docker containers:", fg="magenta", bold=True)
-    containers = ContainerManager.list_all_stopped_containers()
+    containers = ContainerController.list_all_stopped_containers()
     for c in containers:
         print_stopped_container(c)
 
@@ -1648,10 +1648,10 @@ def list_images() -> None:
 
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
     click.secho("CSLE Docker images:", fg="magenta", bold=True)
-    image_names=ContainerManager.list_all_images()
+    image_names=ContainerController.list_all_images()
     for img in image_names:
         print_img(img)
 
@@ -1662,9 +1662,9 @@ def get_image(name: str) -> Union[None, Tuple[str,str,str,str,str]]:
     :param name: the name of the image to get
     :return: None or the image if it was found
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
-    image_names=ContainerManager.list_all_images()
+    image_names=ContainerController.list_all_images()
     for img in image_names:
         if img == name:
             return img
@@ -1678,13 +1678,13 @@ def rm_name(name: str) -> None:
     :param name: the name of the image, network, or container to remove
     :return: None
     """
-    from csle_common.controllers.container_manager import ContainerManager
+    from csle_common.controllers.container_controller import ContainerController
 
-    container_removed = ContainerManager.rm_container(name)
+    container_removed = ContainerController.rm_container(name)
     if not container_removed:
-        network_removed = ContainerManager.rm_network(name)
+        network_removed = ContainerController.rm_network(name)
         if not network_removed:
-            image_removed = ContainerManager.rm_image(name)
+            image_removed = ContainerController.rm_image(name)
             if not image_removed:
                 emulation_removed = remove_emulation(name=name)
                 if not emulation_removed:
@@ -1699,12 +1699,12 @@ def clean_name(name: str) -> None:
     :return: None
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.container_manager import ContainerManager
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.container_controller import ContainerController
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
-    container_stopped = ContainerManager.stop_container(name=name)
+    container_stopped = ContainerController.stop_container(name=name)
     if container_stopped:
-        ContainerManager.rm_container(container_name=name)
+        ContainerController.rm_container(container_name=name)
     else:
         em = MetastoreFacade.get_emulation_by_name(name=name)
         if em is not None:
@@ -1713,7 +1713,7 @@ def clean_name(name: str) -> None:
             try:
                 executions = MetastoreFacade.list_emulation_executions_by_id(id=int(name))
                 for exec in executions:
-                    EmulationEnvManager.clean_emulation_execution(
+                    EmulationEnvController.clean_emulation_execution(
                         emulation_env_config=exec.emulation_env_config, execution_id=exec.ip_first_octet)
             except:
                 click.secho(f"name: {name} not recognized", fg="red", bold=True)
@@ -1727,14 +1727,14 @@ def remove_emulation(name: str) -> bool:
     :return: True if the emulation was removed, false otherwise
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+    from csle_common.controllers.emulation_env_controller import EmulationEnvController
 
     click.secho(f"Removing emulation {name}", bold=False)
     emulations = MetastoreFacade.list_emulations()
     for emulation in emulations:
         if emulation.name == name:
             clean_all_emulation_executions(emulation)
-            EmulationEnvManager.uninstall_emulation(config=emulation)
+            EmulationEnvController.uninstall_emulation(config=emulation)
             return True
     return False
 
@@ -1780,11 +1780,11 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
         users = ",".join(list(map(lambda x: x[0], user.users)))
         click.secho(f"{users} {user.ip}", bold=False)
     click.secho(f"Log sink configuration:", fg="yellow", bold=True)
-    click.secho(f"{emulation_env_config.log_sink_config.container.name} "
-                f"{','.join(emulation_env_config.log_sink_config.container.get_ips())}", bold=False)
-    click.secho(f"{emulation_env_config.log_sink_config.resources.container_name}: "
-                f"CPUs:{emulation_env_config.log_sink_config.resources.num_cpus}, "
-                f"memory: {emulation_env_config.log_sink_config.resources.available_memory_gb}GB", bold=False)
+    click.secho(f"{emulation_env_config.kafka_config.container.name} "
+                f"{','.join(emulation_env_config.kafka_config.container.get_ips())}", bold=False)
+    click.secho(f"{emulation_env_config.kafka_config.resources.container_name}: "
+                f"CPUs:{emulation_env_config.kafka_config.resources.num_cpus}, "
+                f"memory: {emulation_env_config.kafka_config.resources.available_memory_gb}GB", bold=False)
 
 
 def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:

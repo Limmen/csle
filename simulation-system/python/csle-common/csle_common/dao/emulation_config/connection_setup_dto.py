@@ -2,7 +2,7 @@ from typing import List
 from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.credential import Credential
-from csle_common.controllers.forward_tunnel_thread import ForwardTunnelThread
+from csle_common.tunneling.forward_tunnel_thread import ForwardTunnelThread
 
 
 class ConnectionSetupDTO:

@@ -71,7 +71,7 @@ class EmulationUtil:
         record = action.to_kafka_record()
         if emulation_env_config.producer is None:
             emulation_env_config.create_producer()
-        emulation_env_config.producer.produce(collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME, record)
+        emulation_env_config.producer.produce(collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME, record)
         emulation_env_config.producer.poll(0)
         emulation_env_config.producer.flush()
 

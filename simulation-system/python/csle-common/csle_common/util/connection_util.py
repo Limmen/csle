@@ -11,7 +11,7 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
     import EmulationAttackerMachineObservationState
-from csle_common.controllers.forward_tunnel_thread import ForwardTunnelThread
+from csle_common.tunneling.forward_tunnel_thread import ForwardTunnelThread
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.connection_setup_dto import ConnectionSetupDTO

@@ -22,7 +22,7 @@ from csle_common.dao.emulation_config.docker_stats_managers_info import DockerSt
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 
 
-class ContainerManager:
+class ContainerController:
     """
     A class for managing Docker containers and virtual networks
     """
@@ -205,7 +205,7 @@ class ContainerManager:
 
         :return: a list of the networks
         """
-        networks, network_ids = ContainerManager.list_docker_networks()
+        networks, network_ids = ContainerController.list_docker_networks()
         return networks
 
 
@@ -269,7 +269,7 @@ class ContainerManager:
         """
         running_emulation_containers = []
         stopped_emulation_containers = []
-        running_containers = ContainerManager.list_all_running_containers()
+        running_containers = ContainerController.list_all_running_containers()
         running_containers_names = list(map(lambda x: x[0], running_containers))
         for c in emulation_env_config.containers_config.containers:
             if c.full_name_str in running_containers_names:
@@ -289,7 +289,7 @@ class ContainerManager:
         """
         active_emulation_networks = []
         inactive_emulation_networks = []
-        active_networks_names = ContainerManager.list_all_networks()
+        active_networks_names = ContainerController.list_all_networks()
         for net in emulation_env_config.containers_config.networks:
             if net.name in active_networks_names:
                 active_emulation_networks.append(net)
@@ -305,7 +305,7 @@ class ContainerManager:
         :param emulation_env_config: the emulation environment configuration
         :return: True if running otherwise False
         """
-        running_emulations = ContainerManager.list_running_emulations()
+        running_emulations = ContainerController.list_running_emulations()
         return emulation_env_config.name in running_emulations
 
     @staticmethod
@@ -351,10 +351,10 @@ class ContainerManager:
         """
         for c in containers_config.containers:
             for ip_net in c.ips_and_networks:
-                networks = ContainerManager.get_network_references()
+                networks = ContainerController.get_network_references()
                 networks = list(map(lambda x: x.name, networks))
                 ip, net = ip_net
-                ContainerManager.create_network_from_dto(network_dto=net, existing_network_names=networks)
+                ContainerController.create_network_from_dto(network_dto=net, existing_network_names=networks)
 
     @staticmethod
     def connect_containers_to_networks(containers_config: ContainersConfig) -> None:
@@ -382,14 +382,14 @@ class ContainerManager:
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
-    def connect_logsink_to_network(log_sink_config: KafkaConfig) -> None:
+    def connect_kafka_container_to_network(kafka_config: KafkaConfig) -> None:
         """
-        Connect a running logsink to neworks
+        Connect a running kafka container to networks
 
-        :param log_sink_config: the log_sink config
+        :param kafka_config: the kafka config
         :return: None
         """
-        c = log_sink_config.container
+        c = kafka_config.container
         container_name = c.get_full_name()
         # Disconnect from none
         cmd = f"docker network disconnect none {container_name}"
@@ -415,7 +415,7 @@ class ContainerManager:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.kafka_config.kafka_manager_port}') as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             container_ip_dtos = []
             for c in execution.emulation_env_config.containers_config.containers:
@@ -426,10 +426,10 @@ class ContainerManager:
 
             csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name,
-                sink_ip=execution.emulation_env_config.log_sink_config.container.get_ips()[0],
+                kafka_ip=execution.emulation_env_config.kafka_config.container.get_ips()[0],
                 stats_queue_maxsize=1000,
-                time_step_len_seconds=execution.emulation_env_config.log_sink_config.time_step_len_seconds,
-                sink_port=execution.emulation_env_config.log_sink_config.kafka_port,
+                time_step_len_seconds=execution.emulation_env_config.kafka_config.time_step_len_seconds,
+                kafka_port=execution.emulation_env_config.kafka_config.kafka_port,
                 containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
@@ -442,25 +442,25 @@ class ContainerManager:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.kafka_manager_port}') \
+        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.kafka_config.kafka_manager_port}') \
                 as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name, execution_first_ip_octet = execution.ip_first_octet)
 
     @staticmethod
-    def get_docker_stats_manager_status(log_sink_config: KafkaConfig) \
+    def get_docker_stats_manager_status(kafka_config: KafkaConfig) \
             -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
         """
         Sends a request to get the status of the docker stats manager
 
-        :param log_sink_config: configuration of the log sink
+        :param kafka_config: the kafka configuration
         :return: None
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        docker_stats_monitor_dto = ContainerManager.get_docker_stats_manager_status_by_ip_and_port(ip=ip,
-                                                                                                   port=log_sink_config.kafka_manager_port)
+        docker_stats_monitor_dto = ContainerController.get_docker_stats_manager_status_by_ip_and_port(ip=ip,
+                                                                                                      port=kafka_config.kafka_manager_port)
         return docker_stats_monitor_dto
 
     @staticmethod
@@ -481,18 +481,18 @@ class ContainerManager:
             return docker_stats_monitor_dto
 
     @staticmethod
-    def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: KafkaConfig,
+    def connect_containers_to_logsink(containers_config: ContainersConfig, kafka_config: KafkaConfig,
                                       ovs_config: OVSConfig) -> None:
         """
         Connects running containers to the log sink
 
         :param containers_config: the containers configuration
-        :param log_sink_config: the configuration of the logsink
+        :param kafka_config: the configuration of the logsink
         :param ovs_config: the OVS config
         :return: None
         """
-        log_sink_ip, logsink_net = log_sink_config.container.ips_and_networks[0]
-        log_sink_network_prefix = ".".join(log_sink_ip.split(".")[0:-1])
+        kafka_server_ip, kafka_network = kafka_config.container.ips_and_networks[0]
+        kafka_network_prefix = ".".join(kafka_server_ip.split(".")[0:-1])
         for c in containers_config.containers:
             ovs = False
             for ovs_image in constants.CONTAINER_IMAGES.OVS_IMAGES:
@@ -502,11 +502,11 @@ class ContainerManager:
                 container_name = c.get_full_name()
 
                 ip_suffix = c.ips_and_networks[0][0].split(".")[-1]
-                c_ip = log_sink_network_prefix + "." + ip_suffix
-                cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c_ip} {logsink_net.name} " \
+                c_ip = kafka_network_prefix + "." + ip_suffix
+                cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {c_ip} {kafka_network.name} " \
                       f"{container_name}"
                 Logger.__call__().get_logger().info(
-                    f"Connecting container:{container_name} to network:{logsink_net.name} with ip: {c_ip}")
+                    f"Connecting container:{container_name} to network:{kafka_network.name} with ip: {c_ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
@@ -517,8 +517,8 @@ class ContainerManager:
         :param existing_network_names: list of network names, if not None, check if network exists befeore creating
         :return: None
         """
-        ContainerManager.create_network(name=network_dto.name, subnetmask=network_dto.subnet_mask,
-                                        existing_network_names=existing_network_names)
+        ContainerController.create_network(name=network_dto.name, subnetmask=network_dto.subnet_mask,
+                                           existing_network_names=existing_network_names)
 
     @staticmethod
     def create_network(name: str, subnetmask: str, driver: str = "bridge", existing_network_names : List = None) -> None:
@@ -597,7 +597,7 @@ class ContainerManager:
         networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
         for net in networks:
             Logger.__call__().get_logger().info(f"Removing network:{net.name}")
-            ContainerManager.remove_network(name = net.name)
+            ContainerController.remove_network(name = net.name)
 
 
     @staticmethod
@@ -612,7 +612,7 @@ class ContainerManager:
         networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
         for net in networks:
             if net == name:
-                ContainerManager.remove_network(name = net.name)
+                ContainerController.remove_network(name = net.name)
                 return True
         return False
 
@@ -626,27 +626,27 @@ class ContainerManager:
         """
 
         if cmd == constants.MANAGEMENT.LIST_STOPPED:
-            names = ContainerManager.list_all_stopped_containers()
+            names = ContainerController.list_all_stopped_containers()
             Logger.__call__().get_logger().info(names)
         elif cmd == constants.MANAGEMENT.LIST_RUNNING:
-            names = ContainerManager.list_all_running_containers()
+            names = ContainerController.list_all_running_containers()
             Logger.__call__().get_logger().info(names)
         elif cmd == constants.MANAGEMENT.LIST_IMAGES:
-            names = ContainerManager.list_all_images()
+            names = ContainerController.list_all_images()
             Logger.__call__().get_logger().info(names)
         elif cmd == constants.MANAGEMENT.STOP_RUNNING:
-            ContainerManager.stop_all_running_containers()
+            ContainerController.stop_all_running_containers()
         elif cmd == constants.MANAGEMENT.RM_STOPPED:
-            ContainerManager.rm_all_stopped_containers()
+            ContainerController.rm_all_stopped_containers()
         elif cmd == constants.MANAGEMENT.RM_IMAGES:
-            ContainerManager.rm_all_images()
+            ContainerController.rm_all_images()
         elif cmd == constants.MANAGEMENT.START_STOPPED:
-            ContainerManager.start_all_stopped_containers()
+            ContainerController.start_all_stopped_containers()
         elif cmd == constants.MANAGEMENT.LIST_NETWORKS:
-            networks = ContainerManager.list_all_networks()
+            networks = ContainerController.list_all_networks()
             Logger.__call__().get_logger().info(networks)
         elif cmd == constants.MANAGEMENT.RM_NETWORKS:
-            ContainerManager.rm_all_networks()
+            ContainerController.rm_all_networks()
         else:
             raise ValueError("Command: {} not recognized".format(cmd))
 
@@ -670,7 +670,7 @@ class ContainerManager:
         :param emulation_env_config: the emulation env config
         :return: the list of ports
         """
-        return [emulation_env_config.log_sink_config.kafka_manager_port]
+        return [emulation_env_config.kafka_config.kafka_manager_port]
 
     @staticmethod
     def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig) -> DockerStatsManagersInfo:
@@ -680,15 +680,15 @@ class ContainerManager:
         :param emulation_env_config: the configuration of the emulation
         :return: a DTO with the status of the Docker stats managers
         """
-        docker_stats_managers_ips = ContainerManager.get_docker_stats_managers_ips(
+        docker_stats_managers_ips = ContainerController.get_docker_stats_managers_ips(
             emulation_env_config=emulation_env_config)
-        docker_stats_managers_ports = ContainerManager.get_docker_stats_managers_ports(
+        docker_stats_managers_ports = ContainerController.get_docker_stats_managers_ports(
             emulation_env_config=emulation_env_config)
         docker_stats_statuses = []
         running = False
         for ip in docker_stats_managers_ips:
-            status = ContainerManager.get_docker_stats_manager_status_by_ip_and_port(
-                port=emulation_env_config.log_sink_config.kafka_manager_port, ip=ip)
+            status = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
+                port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
             if emulation_env_config.name in status.emulations \
                     and emulation_env_config.execution_id in status.emulation_executions:
                 running = True

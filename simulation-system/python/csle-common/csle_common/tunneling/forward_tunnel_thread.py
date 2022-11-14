@@ -1,7 +1,7 @@
 import threading
 import time
 from csle_common.controllers.forward_ssh_server import ForwardSSHServer
-from csle_common.controllers.forward_ssh_handler import ForwardSSHHandler
+from csle_common.controllers.forward_ssh_controller import ForwardSSHHandler
 
 
 class ForwardTunnelThread(threading.Thread):

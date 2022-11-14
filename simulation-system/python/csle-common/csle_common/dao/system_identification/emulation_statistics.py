@@ -25,12 +25,12 @@ class EmulationStatistics:
         self.emulation_name = emulation_name
         self.descr = descr
         self.initial_distributions_counts = self.initialize_counters(
-            d={}, labels=collector_constants.LOG_SINK.ALL_INITIAL_LABELS)
+            d={}, labels=collector_constants.KAFKA_CONFIG.ALL_INITIAL_LABELS)
         self.conditionals_counts = {}
         self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL] = \
-            EmulationStatistics.initialize_counters(d={}, labels=collector_constants.LOG_SINK.ALL_DELTA_LABELS)
+            EmulationStatistics.initialize_counters(d={}, labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_LABELS)
         self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL] = \
-            EmulationStatistics.initialize_counters(d={}, labels=collector_constants.LOG_SINK.ALL_DELTA_LABELS)
+            EmulationStatistics.initialize_counters(d={}, labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_LABELS)
         self.id = -1
         self.means = {}
         self.stds = {}
@@ -145,7 +145,7 @@ class EmulationStatistics:
         # Action conditionals
         if f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}" not in self.conditionals_counts:
             self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"] = \
-                EmulationStatistics.initialize_counters(d={}, labels=collector_constants.LOG_SINK.ALL_DELTA_LABELS)
+                EmulationStatistics.initialize_counters(d={}, labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_LABELS)
         self.update_counters(d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"], s=s, s_prime=s_prime)
 
     def update_initial_statistics(self, s: EmulationEnvState) -> None:
@@ -155,14 +155,14 @@ class EmulationStatistics:
         :param s: the initial state
         :return: None
         """
-        snort_alert_labels = collector_constants.LOG_SINK.SNORT_IDS_ALERTS_LABELS
+        snort_alert_labels = collector_constants.KAFKA_CONFIG.SNORT_IDS_ALERTS_LABELS
         for i in range(len(snort_alert_labels)):
             if 0 in self.initial_distributions_counts[snort_alert_labels[i]]:
                 self.initial_distributions_counts[snort_alert_labels[i]][0] += 1
             else:
                 self.initial_distributions_counts[snort_alert_labels[i]][0] = 1
 
-        ossec_alert_labels = collector_constants.LOG_SINK.OSSEC_IDS_ALERTS_LABELS
+        ossec_alert_labels = collector_constants.KAFKA_CONFIG.OSSEC_IDS_ALERTS_LABELS
         for i in range(len(ossec_alert_labels)):
             if 0 in self.initial_distributions_counts[ossec_alert_labels[i]]:
                 self.initial_distributions_counts[ossec_alert_labels[i]][0] += 1

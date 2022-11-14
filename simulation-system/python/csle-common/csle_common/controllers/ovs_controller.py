@@ -7,7 +7,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.util.emulation_util import EmulationUtil
 
 
-class OVSManager:
+class OVSController:
     """
     Class that contains functionality for interacting and managing OVS bridges in CSLE
     """
@@ -18,7 +18,6 @@ class OVSManager:
         Sets up OVS switches on containers
 
         :param containers_config: the containers configuration
-        :param log_sink_config: the log sink config
         :return: None
         """
         for c in containers_config.containers:

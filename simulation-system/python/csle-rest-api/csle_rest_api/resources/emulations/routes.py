@@ -7,9 +7,9 @@ import json
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.controllers.container_manager import ContainerManager
-from csle_common.controllers.emulation_env_manager import EmulationEnvManager
-from csle_common.util.read_emulation_statistics import ReadEmulationStatistics
+from csle_common.controllers.container_controller import ContainerController
+from csle_common.controllers.emulation_env_controller import EmulationEnvController
+from csle_common.util.read_emulation_statistics_util import ReadEmulationStatisticsUtil
 import csle_ryu.constants.constants as ryu_constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -39,7 +39,7 @@ def emulations():
 
     all_emulations = MetastoreFacade.list_emulations()
     all_images = MetastoreFacade.list_emulation_images()
-    rc_emulations = ContainerManager.list_running_emulations()
+    rc_emulations = ContainerController.list_running_emulations()
     emulations_dicts = []
     for em in all_emulations:
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
@@ -61,8 +61,8 @@ def emulations():
             emulations_dicts.append(em_dict)
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             if em.name in rc_emulations:
-                EmulationEnvManager.clean_all_emulation_executions(em)
-            EmulationEnvManager.uninstall_emulation(config=em)
+                EmulationEnvController.clean_all_emulation_executions(em)
+            EmulationEnvController.uninstall_emulation(config=em)
     response = jsonify(emulations_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -75,7 +75,7 @@ def emulation_ids():
     :return: HTTP response with list of emulation ids
     """
     emulation_ids = MetastoreFacade.list_emulations_ids()
-    rc_emulations = ContainerManager.list_running_emulations()
+    rc_emulations = ContainerController.list_running_emulations()
     response_dicts = []
     for tup in emulation_ids:
         running = False
@@ -107,7 +107,7 @@ def emulation_by_id(emulation_id: int):
         return authorized
 
     em = MetastoreFacade.get_emulation(id=emulation_id)
-    rc_emulations = ContainerManager.list_running_emulations()
+    rc_emulations = ContainerController.list_running_emulations()
     em_dict = {}
     if em is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET or \
@@ -125,18 +125,18 @@ def emulation_by_id(emulation_id: int):
             em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(map(lambda x: x.to_dict(), executions))
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
                 if em.running:
-                    EmulationEnvManager.clean_all_emulation_executions(emulation_env_config=em)
+                    EmulationEnvController.clean_all_emulation_executions(emulation_env_config=em)
                     em.running = False
                 else:
-                    emulation_execution = EmulationEnvManager.create_execution(emulation_env_config=em)
-                    EmulationEnvManager.run_containers(emulation_execution=emulation_execution)
-                    EmulationEnvManager.apply_emulation_env_config(emulation_execution=emulation_execution,
-                                                                   no_traffic=True)
+                    emulation_execution = EmulationEnvController.create_execution(emulation_env_config=em)
+                    EmulationEnvController.run_containers(emulation_execution=emulation_execution)
+                    EmulationEnvController.apply_emulation_env_config(emulation_execution=emulation_execution,
+                                                                      no_traffic=True)
                     em.running = True
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             if em.name in rc_emulations:
-                EmulationEnvManager.clean_all_emulation_executions(em)
-            EmulationEnvManager.uninstall_emulation(config=em)
+                EmulationEnvController.clean_all_emulation_executions(em)
+            EmulationEnvController.uninstall_emulation(config=em)
             em_dict = {}
     response = jsonify(em_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -193,8 +193,8 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             response = jsonify(execution.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-            EmulationEnvManager.clean_emulation_execution(emulation_env_config=execution.emulation_env_config,
-                                                          execution_id=execution.ip_first_octet)
+            EmulationEnvController.clean_emulation_execution(emulation_env_config=execution.emulation_env_config,
+                                                             execution_id=execution.ip_first_octet)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
 
@@ -226,8 +226,8 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
     if execution is None:
         time_series = None
     else:
-        time_series = ReadEmulationStatistics.read_all(emulation_env_config=execution.emulation_env_config,
-                                                       time_window_minutes=minutes).to_dict()
+        time_series = ReadEmulationStatisticsUtil.read_all(emulation_env_config=execution.emulation_env_config,
+                                                           time_window_minutes=minutes).to_dict()
     response = jsonify(time_series)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE

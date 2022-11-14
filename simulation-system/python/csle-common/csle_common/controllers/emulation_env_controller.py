@@ -6,20 +6,20 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
-from csle_common.controllers.container_manager import ContainerManager
-from csle_common.controllers.snort_ids_manager import SnortIDSManager
-from csle_common.controllers.ossec_ids_manager import OSSECIDSManager
-from csle_common.controllers.host_manager import HostManager
-from csle_common.controllers.log_sink_manager import LogSinkManager
+from csle_common.controllers.container_controller import ContainerController
+from csle_common.controllers.snort_ids_controller import SnortIDSController
+from csle_common.controllers.ossec_ids_controller import OSSECIDSController
+from csle_common.controllers.host_controller import HostController
+from csle_common.controllers.kafka_controller import KafkaController
 from csle_common.controllers.sdn_controller_manager import SDNControllerManager
-from csle_common.controllers.users_manager import UsersManager
-from csle_common.controllers.vulnerabilities_manager import VulnerabilitiesManager
-from csle_common.controllers.flags_manager import FlagsManager
-from csle_common.controllers.traffic_manager import TrafficManager
-from csle_common.controllers.topology_manager import TopologyManager
-from csle_common.controllers.ovs_manager import OVSManager
+from csle_common.controllers.users_controller import UsersController
+from csle_common.controllers.vulnerabilities_controller import VulnerabilitiesController
+from csle_common.controllers.flags_controller import FlagsController
+from csle_common.controllers.traffic_controller import TrafficController
+from csle_common.controllers.topology_controller import TopologyController
+from csle_common.controllers.ovs_controller import OVSController
 from csle_common.controllers.monitor_tools_controller import MonitorToolsController
-from csle_common.controllers.resource_constraints_manager import ResourceConstraintsManager
+from csle_common.controllers.resource_constraints_controller import ResourceConstraintsController
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
@@ -27,7 +27,7 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 
 
-class EmulationEnvManager:
+class EmulationEnvController:
     """
     Class managing emulation environments
     """
@@ -43,8 +43,8 @@ class EmulationEnvManager:
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
             emulation_name=emulation_env_config.name)
         for exec in executions:
-            EmulationEnvManager.stop_containers(execution=exec)
-            ContainerManager.stop_docker_stats_thread(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec)
+            ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
     def stop_execution_of_emulation(emulation_env_config: EmulationEnvConfig, execution_id: int) -> None:
@@ -57,8 +57,8 @@ class EmulationEnvManager:
         """
         execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_env_config.name,
                                                             ip_first_octet=execution_id)
-        EmulationEnvManager.stop_containers(execution=execution)
-        ContainerManager.stop_docker_stats_thread(execution=execution)
+        EmulationEnvController.stop_containers(execution=execution)
+        ContainerController.stop_docker_stats_thread(execution=execution)
 
     @staticmethod
     def stop_all_executions() -> None:
@@ -69,8 +69,8 @@ class EmulationEnvManager:
         """
         executions = MetastoreFacade.list_emulation_executions()
         for exec in executions:
-            EmulationEnvManager.stop_containers(execution=exec)
-            ContainerManager.stop_docker_stats_thread(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec)
+            ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
     def apply_emulation_env_config(emulation_execution: EmulationExecution, no_traffic: bool = False,
@@ -93,15 +93,15 @@ class EmulationEnvManager:
         emulation_env_config = emulation_execution.emulation_env_config
         Logger.__call__().get_logger().info(f"-- Configuring the emulation: {emulation_env_config.name} --")
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
-        ContainerManager.create_networks(containers_config=emulation_env_config.containers_config)
+        ContainerController.create_networks(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
-        ContainerManager.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
+        ContainerController.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
-        EmulationEnvManager.apply_log_sink_config(emulation_env_config=emulation_env_config)
+        EmulationEnvController.apply_kafka_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
@@ -114,23 +114,23 @@ class EmulationEnvManager:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
-        ResourceConstraintsManager.apply_resource_constraints(emulation_env_config=emulation_env_config)
+        ResourceConstraintsController.apply_resource_constraints(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
-        OVSManager.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
+        OVSController.create_virtual_switches_on_container(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: tests connections with Ping --")
-        EmulationEnvManager.ping_all(emulation_env_config=emulation_env_config)
+        EmulationEnvController.ping_all(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
-        OVSManager.apply_ovs_config(emulation_env_config=emulation_env_config)
+        OVSController.apply_ovs_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: tests connections with Ping --")
-        EmulationEnvManager.ping_all(emulation_env_config=emulation_env_config)
+        EmulationEnvController.ping_all(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start Kafka producer at "
@@ -139,57 +139,57 @@ class EmulationEnvManager:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating users --")
-        UsersManager.create_users(emulation_env_config=emulation_env_config)
+        UsersController.create_users(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating vulnerabilities --")
-        VulnerabilitiesManager.create_vulns(emulation_env_config=emulation_env_config)
+        VulnerabilitiesController.create_vulns(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating flags --")
-        FlagsManager.create_flags(emulation_env_config=emulation_env_config)
+        FlagsController.create_flags(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
-        TopologyManager.create_topology(emulation_env_config=emulation_env_config)
+        TopologyController.create_topology(emulation_env_config=emulation_env_config)
 
         if not no_traffic:
             current_step += 1
             Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "
                                                 f"on internal nodes --")
-            TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
+            TrafficController.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
 
         if not no_clients:
             current_step += 1
             Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
-            TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
+            TrafficController.start_client_population(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
                                             f"{current_step}/{steps}: Starting the Snort Intrusion Detection System --")
-        SnortIDSManager.start_snort_ids(emulation_env_config=emulation_env_config)
+        SnortIDSController.start_snort_ids(emulation_env_config=emulation_env_config)
         time.sleep(10)
-        SnortIDSManager.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
+        SnortIDSController.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
                                             f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
-        OSSECIDSManager.start_ossec_ids(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config)
         time.sleep(10)
-        OSSECIDSManager.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
-        HostManager.start_host_monitor_thread(emulation_env_config=emulation_env_config)
+        HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
         MonitorToolsController.start_docker_stats_manager(port=50051)
         time.sleep(10)
-        ContainerManager.start_docker_stats_thread(execution=emulation_execution)
+        ContainerController.start_docker_stats_thread(execution=emulation_execution)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
@@ -212,31 +212,31 @@ class EmulationEnvManager:
         time.sleep(2)
 
     @staticmethod
-    def apply_log_sink_config(emulation_env_config: EmulationEnvConfig) -> None:
+    def apply_kafka_config(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Applies the log sink config
+        Applies the kafka config
 
         :param emulation_env_config: the emulation env config
         :return: None
         """
         steps = 3
         current_step = 1
-        Logger.__call__().get_logger().info(f"-- Configuring the logsink --")
+        Logger.__call__().get_logger().info(f"-- Configuring the kafka --")
         Logger.__call__().get_logger().info(
-            f"-- Log sink configuration step {current_step}/{steps}: Connect log sink container to network --")
-        ContainerManager.connect_logsink_to_network(log_sink_config=emulation_env_config.log_sink_config)
+            f"-- Kafka configuration step {current_step}/{steps}: Connect kafka container to network --")
+        ContainerController.connect_kafka_container_to_network(kafka_config=emulation_env_config.kafka_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(
             f"-- Log sink configuration step {current_step}/{steps}: Restarting the Kafka server --")
-        LogSinkManager.stop_kafka_server(emulation_env_config=emulation_env_config)
+        KafkaController.stop_kafka_server(emulation_env_config=emulation_env_config)
         time.sleep(20)
-        LogSinkManager.start_kafka_server(emulation_env_config=emulation_env_config)
+        KafkaController.start_kafka_server(emulation_env_config=emulation_env_config)
         time.sleep(20)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Create topics --")
-        LogSinkManager.create_topics(emulation_env_config=emulation_env_config)
+        KafkaController.create_topics(emulation_env_config=emulation_env_config)
 
     @staticmethod
     def start_custom_traffic(emulation_env_config : EmulationEnvConfig, no_traffic: bool = True) -> None:
@@ -248,8 +248,8 @@ class EmulationEnvManager:
         :return: None
         """
         if not no_traffic:
-            TrafficManager.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
-        TrafficManager.start_client_population(emulation_env_config=emulation_env_config)
+            TrafficController.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
+        TrafficController.start_client_population(emulation_env_config=emulation_env_config)
 
     @staticmethod
     def stop_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
@@ -259,21 +259,21 @@ class EmulationEnvManager:
         :param emulation_env_config: the configuration for connecting to the emulation
         :return: None
         """
-        TrafficManager.stop_internal_traffic_generators(emulation_env_config=emulation_env_config)
-        TrafficManager.stop_client_population(emulation_env_config=emulation_env_config)
+        TrafficController.stop_internal_traffic_generators(emulation_env_config=emulation_env_config)
+        TrafficController.stop_client_population(emulation_env_config=emulation_env_config)
 
     @staticmethod
-    def delete_networks_of_log_sink(log_sink_config: KafkaConfig) -> None:
+    def delete_networks_of_kafka_container(kafka_config: KafkaConfig) -> None:
         """
-        Deletes the docker networks of a log sink
+        Deletes the docker networks of a kafka container
 
-        :param log_sink_config: the log sink config
+        :param kafka_config: the kafka config
         :return: None
         """
-        c = log_sink_config.container
+        c = kafka_config.container
         for ip_net in c.ips_and_networks:
             ip, net = ip_net
-            ContainerManager.remove_network(name=net.name)
+            ContainerController.remove_network(name=net.name)
 
     @staticmethod
     def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig) -> None:
@@ -286,12 +286,12 @@ class EmulationEnvManager:
         for c in emulation_env_config.containers_config.containers:
             for ip_net in c.ips_and_networks:
                 ip, net = ip_net
-                ContainerManager.remove_network(name=net.name)
+                ContainerController.remove_network(name=net.name)
 
-        c = emulation_env_config.log_sink_config.container
+        c = emulation_env_config.kafka_config.container
         for ip_net in c.ips_and_networks:
             ip, net = ip_net
-            ContainerManager.remove_network(name=net.name)
+            ContainerController.remove_network(name=net.name)
 
     @staticmethod
     def create_execution(emulation_env_config: EmulationEnvConfig) -> EmulationExecution:
@@ -350,8 +350,8 @@ class EmulationEnvManager:
             subprocess.call(cmd, shell=True)
 
         # Start the logsink container
-        c = emulation_env_config.log_sink_config.container
-        container_resources : NodeResourcesConfig = emulation_env_config.log_sink_config.resources
+        c = emulation_env_config.kafka_config.container
+        container_resources : NodeResourcesConfig = emulation_env_config.kafka_config.resources
         name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
@@ -397,9 +397,9 @@ class EmulationEnvManager:
             host_id= random.randint(2, 254)
             net_name = f"csle_custom_net_{name}_{net_id}"
             ip = f"55.{net_id}.{sub_net_id}.{host_id}"
-            ContainerManager.create_network(name=net_name,
-                                            subnetmask=f"55.{net_id}.0.0/16",
-                                            existing_network_names=[])
+            ContainerController.create_network(name=net_name,
+                                               subnetmask=f"55.{net_id}.0.0/16",
+                                               existing_network_names=[])
             cmd = f"docker container run -dt --name csle-{name}-001 " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm " \
@@ -433,7 +433,7 @@ class EmulationEnvManager:
             subprocess.call(cmd, shell=True)
 
         # Stop the logsink container
-        c = emulation_env_config.log_sink_config.container
+        c = emulation_env_config.kafka_config.container
         name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Stopping container:{name}")
         cmd = f"docker stop {name}"
@@ -458,13 +458,13 @@ class EmulationEnvManager:
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
             emulation_name=emulation_env_config.name)
         for exec in executions:
-            EmulationEnvManager.stop_containers(execution=exec)
-            EmulationEnvManager.rm_containers(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec)
+            EmulationEnvController.rm_containers(execution=exec)
             try:
-                ContainerManager.stop_docker_stats_thread(execution=exec)
+                ContainerController.stop_docker_stats_thread(execution=exec)
             except Exception as e:
                 pass
-            EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+            EmulationEnvController.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
@@ -478,13 +478,13 @@ class EmulationEnvManager:
         """
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                             emulation_name=emulation_env_config.name)
-        EmulationEnvManager.stop_containers(execution=execution)
-        EmulationEnvManager.rm_containers(execution=execution)
+        EmulationEnvController.stop_containers(execution=execution)
+        EmulationEnvController.rm_containers(execution=execution)
         try:
-            ContainerManager.stop_docker_stats_thread(execution=execution)
+            ContainerController.stop_docker_stats_thread(execution=execution)
         except Exception as e:
             pass
-        EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=execution.emulation_env_config)
+        EmulationEnvController.delete_networks_of_emulation_env_config(emulation_env_config=execution.emulation_env_config)
         MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
 
     @staticmethod
@@ -497,13 +497,13 @@ class EmulationEnvManager:
         """
         executions = MetastoreFacade.list_emulation_executions()
         for exec in executions:
-            EmulationEnvManager.stop_containers(execution=exec)
-            EmulationEnvManager.rm_containers(execution=exec)
+            EmulationEnvController.stop_containers(execution=exec)
+            EmulationEnvController.rm_containers(execution=exec)
             try:
-                ContainerManager.stop_docker_stats_thread(execution=exec)
+                ContainerController.stop_docker_stats_thread(execution=exec)
             except Exception as e:
                 pass
-            EmulationEnvManager.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+            EmulationEnvController.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
@@ -523,7 +523,7 @@ class EmulationEnvManager:
             subprocess.call(cmd, shell=True)
 
         # Remove the logsink container
-        c = execution.emulation_env_config.log_sink_config.container
+        c = execution.emulation_env_config.kafka_config.container
         name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Removing container:{name}")
         cmd = f"docker rm {name}"
@@ -577,7 +577,7 @@ class EmulationEnvManager:
         :param emulations: the list of emulations
         :return: running_emulations, stopped_emulations
         """
-        rc_emulations = ContainerManager.list_running_emulations()
+        rc_emulations = ContainerController.list_running_emulations()
         stopped_emulations = []
         running_emulations = []
         for em in emulations:
@@ -631,20 +631,20 @@ class EmulationEnvManager:
         emulation_name = execution.emulation_name
         execution_id = execution.ip_first_octet
         snort_ids_managers_info = \
-            SnortIDSManager.get_snort_managers_info(emulation_env_config=execution.emulation_env_config)
+            SnortIDSController.get_snort_managers_info(emulation_env_config=execution.emulation_env_config)
         ossec_ids_managers_info = \
-            OSSECIDSManager.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config)
+            OSSECIDSController.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config)
         kafka_managers_info = \
-            LogSinkManager.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config)
+            KafkaController.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config)
         host_managers_info = \
-            HostManager.get_host_managers_info(emulation_env_config=execution.emulation_env_config)
+            HostController.get_host_managers_info(emulation_env_config=execution.emulation_env_config)
         client_managers_info = \
-            TrafficManager.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
+            TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
         docker_stats_managers_info = \
-            ContainerManager.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config)
-        running_containers, stopped_containers = ContainerManager.list_all_running_containers_in_emulation(
+            ContainerController.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config)
+        running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
             emulation_env_config=execution.emulation_env_config)
-        active_networks, inactive_networks = ContainerManager.list_all_active_networks_for_emulation(
+        active_networks, inactive_networks = ContainerController.list_all_active_networks_for_emulation(
             emulation_env_config=execution.emulation_env_config)
         execution_info = EmulationExecutionInfo(emulation_name=emulation_name, execution_id=execution_id,
                                                 snort_managers_info=snort_ids_managers_info,

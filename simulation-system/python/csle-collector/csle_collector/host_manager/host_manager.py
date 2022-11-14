@@ -54,7 +54,7 @@ class HostMonitorThread(threading.Thread):
             host_metrics = HostManagerUtil.read_host_metrics(failed_auth_last_ts=self.failed_auth_last_ts,
                                                              login_last_ts=self.login_last_ts)
             record = host_metrics.to_kafka_record(ip=self.ip)
-            self.producer.produce(constants.LOG_SINK.HOST_METRICS_TOPIC_NAME, record)
+            self.producer.produce(constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME, record)
             self.producer.poll(0)
             self.failed_auth_last_ts = HostManagerUtil.read_latest_ts_auth()
             self.login_last_ts = HostManagerUtil.read_latest_ts_login()

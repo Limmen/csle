@@ -251,7 +251,7 @@ class SnortIdsAlertCounters:
                      int(counters_prime.severe_alerts),
                      int(counters_prime.alerts_weighted_by_priority)
                  ] + deltas_priority + deltas_class
-        labels = constants.LOG_SINK.SNORT_IDS_ALERTS_LABELS
+        labels = constants.KAFKA_CONFIG.SNORT_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels
 

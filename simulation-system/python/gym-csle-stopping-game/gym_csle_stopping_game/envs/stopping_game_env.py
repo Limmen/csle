@@ -405,7 +405,7 @@ class StoppingGameEnv(BaseEnv):
                     s=s,
                     emulation_env_config=emulation_env_config, attacker_action=attacker_action,
                     defender_action=defender_action, trace=emulation_trace,
-                    sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds)
+                    sleep_time=emulation_env_config.kafka_config.time_step_len_seconds)
                 o_components = [s.defender_obs_state.snort_ids_alert_counters.severe_alerts,
                                 s.defender_obs_state.snort_ids_alert_counters.warning_alerts,
                                 s.defender_obs_state.aggregated_host_metrics.num_failed_login_attempts]

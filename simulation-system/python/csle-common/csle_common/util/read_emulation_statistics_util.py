@@ -21,7 +21,7 @@ from csle_common.dao.emulation_config.emulation_metrics_time_series import Emula
 from csle_common.logging.log import Logger
 
 
-class ReadEmulationStatistics:
+class ReadEmulationStatisticsUtil:
 
     @staticmethod
     def read_all(emulation_env_config: EmulationEnvConfig, time_window_minutes : int = 100) \
@@ -64,26 +64,26 @@ class ReadEmulationStatistics:
             host_metrics[c.get_full_name()] = []
             ossec_host_ids_metrics[c.get_full_name()] = []
 
-        topic_names = [collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME,
-                       collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME,
-                       collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME,
-                       collector_constants.LOG_SINK.OPENFLOW_FLOW_STATS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.OPENFLOW_PORT_STATS_TOPIC_NAME,
-                       collector_constants.LOG_SINK.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
-                       collector_constants.LOG_SINK.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
-                       collector_constants.LOG_SINK.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME
+        topic_names = [collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.DEFENDER_ACTIONS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME
                        ]
 
         start_consume_ts = time.time()
         kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
-                f"{emulation_env_config.log_sink_config.container.get_ips()[0]}:"
-                                           f"{emulation_env_config.log_sink_config.kafka_port}",
+                f"{emulation_env_config.kafka_config.container.get_ips()[0]}:"
+                                           f"{emulation_env_config.kafka_config.kafka_port}",
             collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"attacker_actions_consumer_thread_{start_consume_ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: collector_constants.KAFKA.EARLIEST_OFFSET}
         consumer = Consumer(**kafka_conf)
@@ -116,59 +116,59 @@ class ReadEmulationStatistics:
                         raise KafkaException(msg.error())
                 else:
                     topic = msg.topic()
-                    if topic == collector_constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME:
+                    if topic == collector_constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME:
                         agg_docker_stats.append(DockerStats.from_kafka_record(record=msg.value().decode()))
-                    elif topic == collector_constants.LOG_SINK.HOST_METRICS_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME:
                         metrics = HostMetrics.from_kafka_record(record=msg.value().decode())
                         c = emulation_env_config.containers_config.get_container_from_ip(metrics.ip)
                         host_metrics[c.get_full_name()].append(metrics)
                         host_metrics_counter += 1
                         total_host_metrics.append(metrics)
-                    elif topic == collector_constants.LOG_SINK.OSSEC_IDS_LOG_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME:
                         metrics = OSSECIdsAlertCounters.from_kafka_record(record=msg.value().decode())
                         c = emulation_env_config.containers_config.get_container_from_ip(metrics.ip)
                         ossec_host_ids_metrics[c.get_full_name()].append(metrics)
                         ossec_host_metrics_counter += 1
                         total_ossec_metrics.append(metrics)
-                    elif topic == collector_constants.LOG_SINK.ATTACKER_ACTIONS_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME:
                         attacker_actions.append(EmulationAttackerAction.from_kafka_record(record=msg.value().decode()))
-                    elif topic == collector_constants.LOG_SINK.DEFENDER_ACTIONS_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.DEFENDER_ACTIONS_TOPIC_NAME:
                         defender_actions.append(EmulationDefenderAction.from_kafka_record(record=msg.value().decode()))
-                    elif topic == collector_constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME:
                         stats = DockerStats.from_kafka_record(record=msg.value().decode())
                         c = emulation_env_config.containers_config.get_container_from_ip(stats.ip)
                         docker_host_stats[c.get_full_name()].append(stats)
-                    elif topic == collector_constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME:
                         snort_ids_metrics.append(SnortIdsAlertCounters.from_kafka_record(record=msg.value().decode()))
-                    elif topic == collector_constants.LOG_SINK.CLIENT_POPULATION_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME:
                         client_metrics.append(ClientPopulationMetrics.from_kafka_record(record=msg.value().decode()))
-                    elif topic == collector_constants.LOG_SINK.OPENFLOW_FLOW_STATS_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME:
                         flow_metrics_record = FlowStatistic.from_kafka_record(record=msg.value().decode())
                         openflow_flow_stats.append(flow_metrics_record)
                         if str(flow_metrics_record.datapath_id) not in openflow_flow_metrics_per_switch:
                             openflow_flow_metrics_per_switch[str(flow_metrics_record.datapath_id)] = []
                         openflow_flow_metrics_per_switch[str(flow_metrics_record.datapath_id)].append(flow_metrics_record)
-                    elif topic == collector_constants.LOG_SINK.OPENFLOW_PORT_STATS_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME:
                         port_metrics_record = PortStatistic.from_kafka_record(record=msg.value().decode())
                         openflow_port_stats.append(port_metrics_record)
                         if str(port_metrics_record.datapath_id) not in openflow_port_metrics_per_switch:
                             openflow_port_metrics_per_switch[str(port_metrics_record.datapath_id)] = []
                         openflow_port_metrics_per_switch[str(port_metrics_record.datapath_id)].append(
                                 port_metrics_record)
-                    elif topic == collector_constants.LOG_SINK.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME:
                         avg_flow_statistics_record = AvgFlowStatistic.from_kafka_record(record=msg.value().decode())
                         avg_openflow_flow_stats.append(avg_flow_statistics_record)
                         if str(avg_flow_statistics_record.datapath_id) not in openflow_flow_avg_metrics_per_switch:
                             openflow_flow_avg_metrics_per_switch[str(avg_flow_statistics_record.datapath_id)] = []
                         openflow_flow_avg_metrics_per_switch[str(avg_flow_statistics_record.datapath_id)].append(avg_flow_statistics_record)
-                    elif topic == collector_constants.LOG_SINK.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME:
                         avg_port_statistics_record = AvgPortStatistic.from_kafka_record(record=msg.value().decode())
                         avg_openflow_port_stats.append(avg_port_statistics_record)
                         if str(avg_port_statistics_record.datapath_id) not in openflow_port_avg_metrics_per_switch:
                             openflow_port_avg_metrics_per_switch[str(avg_port_statistics_record.datapath_id)] = []
                         openflow_port_avg_metrics_per_switch[str(avg_port_statistics_record.datapath_id)].append(
                             avg_port_statistics_record)
-                    elif topic == collector_constants.LOG_SINK.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME:
+                    elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME:
                         agg_flow_statistics_record = AggFlowStatistic.from_kafka_record(record=msg.value().decode())
                         agg_openflow_flow_stats.append(agg_flow_statistics_record)
                         if str(agg_flow_statistics_record.datapath_id) not in agg_openflow_flow_metrics_per_switch:
@@ -176,13 +176,13 @@ class ReadEmulationStatistics:
                         agg_openflow_flow_metrics_per_switch[str(agg_flow_statistics_record.datapath_id)].append(
                             agg_flow_statistics_record)
                     if host_metrics_counter >= len(emulation_env_config.containers_config.containers):
-                        agg_host_metrics_dto = ReadEmulationStatistics.average_host_metrics(
+                        agg_host_metrics_dto = ReadEmulationStatisticsUtil.average_host_metrics(
                             host_metrics=total_host_metrics)
                         aggregated_host_metrics.append(agg_host_metrics_dto)
                         host_metrics_counter = 0
                         total_host_metrics = []
                     if ossec_host_metrics_counter >= num_ossec_containers:
-                        agg_ossec_metrics_dto = ReadEmulationStatistics.average_ossec_metrics(
+                        agg_ossec_metrics_dto = ReadEmulationStatisticsUtil.average_ossec_metrics(
                             ossec_metrics=total_ossec_metrics)
                         aggregated_ossec_metrics.append(agg_ossec_metrics_dto)
                         ossec_host_metrics_counter = 0

@@ -52,7 +52,7 @@ class SnortIDSMonitorThread(threading.Thread):
             time.sleep(self.time_step_len_seconds)
             alert_counters = SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
             record = alert_counters.to_kafka_record(ip = self.ip)
-            self.producer.produce(constants.LOG_SINK.SNORT_IDS_LOG_TOPIC_NAME, record)
+            self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME, record)
             self.producer.poll(0)
             self.latest_ts = time.time()
 

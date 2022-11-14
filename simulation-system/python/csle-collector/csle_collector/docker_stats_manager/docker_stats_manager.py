@@ -78,12 +78,12 @@ class DockerStatsThread(threading.Thread):
                 if time.time()-start >= self.time_step_len_seconds:
                     aggregated_stats, avg_stats_dict = self.compute_averages()
                     record = aggregated_stats.to_kafka_record(ip=self.ip)
-                    self.producer.produce(constants.LOG_SINK.DOCKER_STATS_TOPIC_NAME, record)
+                    self.producer.produce(constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME, record)
                     self.producer.poll(0)
                     for k,v in avg_stats_dict.items():
                         ip = self.get_ip(k)
                         record = v.to_kafka_record(ip=ip)
-                        self.producer.produce(constants.LOG_SINK.DOCKER_HOST_STATS_TOPIC_NAME, record)
+                        self.producer.produce(constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME, record)
                         self.producer.poll(0)
                     self.stats_queues = {}
                     start = time.time()

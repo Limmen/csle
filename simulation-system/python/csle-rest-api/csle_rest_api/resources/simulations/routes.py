@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.controllers.simulation_env_manager import SimulationEnvManager
+from csle_common.controllers.simulation_env_controller import SimulationEnvController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -44,7 +44,7 @@ def simulations():
                 if sim_name == sim.name:
                     sim.image = base64.b64encode(img).decode()
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-            SimulationEnvManager.uninstall_simulation(sim)
+            SimulationEnvController.uninstall_simulation(sim)
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         simulations_dicts = list(map(lambda x: x.to_dict(), all_simulations))
@@ -96,7 +96,7 @@ def get_simulation(simulation_id: int):
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             response = jsonify(simulation.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-            SimulationEnvManager.uninstall_simulation(simulation)
+            SimulationEnvController.uninstall_simulation(simulation)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
 

@@ -2,7 +2,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.metastore.metastore_facade import MetastoreFacade
 
 
-class SimulationEnvManager:
+class SimulationEnvController:
     """
     Class managing operations related to simulation environments
     """

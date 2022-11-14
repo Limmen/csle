@@ -24,7 +24,7 @@ class EmulationDefenderObservationState:
     Represents the defender's agent's current belief state of the emulation
     """
 
-    def __init__(self, log_sink_config : KafkaConfig,
+    def __init__(self, kafka_config : KafkaConfig,
                  client_population_metrics : ClientPopulationMetrics = None, docker_stats: DockerStats = None,
                  snort_ids_alert_counters : SnortIdsAlertCounters = None,
                  ossec_ids_alert_counters : OSSECIdsAlertCounters= None,
@@ -34,7 +34,7 @@ class EmulationDefenderObservationState:
         """
         Initializes the DTO
 
-        :param log_sink_config: the log sink config
+        :param kafka_config: the log sink config
         :param client_population_metrics: the client population metrics
         :param docker_stats: the docker stats
         :param snort_ids_alert_counters: the snort ids alert counters
@@ -43,7 +43,7 @@ class EmulationDefenderObservationState:
         :param attacker_actions: the list of attacker actions
         :param aggregated_host_metrics: the aggregated host metrics
         """
-        self.log_sink_config = log_sink_config
+        self.kafka_config = kafka_config
         self.machines : List[EmulationDefenderMachineObservationState] = []
         self.actions_tried = set()
         self.client_population_metrics = client_population_metrics
@@ -88,36 +88,36 @@ class EmulationDefenderObservationState:
         """
         self.aggregated_host_metrics_thread = AggregatedHostMetricsThread(
             host_metrics=self.aggregated_host_metrics,
-            sleep_time=self.log_sink_config.time_step_len_seconds,
+            sleep_time=self.kafka_config.time_step_len_seconds,
             machines=self.machines
         )
         self.docker_stats_consumer_thread = DockerStatsConsumerThread(
-            kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port,
+            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port,
             docker_stats=self.docker_stats)
         self.client_population_consumer_thread = ClientPopulationConsumerThread(
-            kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port,
+            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port,
             client_population_metrics=self.client_population_metrics
         )
         self.snort_ids_log_consumer_thread = SnortIdsLogConsumerThread(
-            kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port,
+            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port,
             snort_ids_alert_counters=self.snort_ids_alert_counters
         )
         self.ossec_ids_log_consumer_thread = OSSECIdsLogConsumerThread(
-            kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port,
+            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port,
             ossec_ids_alert_counters=self.ossec_ids_alert_counters
         )
         self.attacker_actions_consumer_thread = AttackerActionsConsumerThread(
-            kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port,
+            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port,
             attacker_actions=self.attacker_actions
         )
         self.defender_actions_consumer_thread = DefenderActionsConsumerThread(
-            kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port,
+            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port,
             defender_actions=self.defender_actions
         )
         self.aggregated_host_metrics_thread.start()
@@ -138,7 +138,7 @@ class EmulationDefenderObservationState:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = EmulationDefenderObservationState(log_sink_config=d["log_sink_config"])
+        obj = EmulationDefenderObservationState(kafka_config=d["kafka_config"])
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(d=x), d["machines"]))
         obj.actions_tried = set(list(map(lambda x: tuple(x), d["actions_tried"])))
         obj.client_population_metrics = ClientPopulationMetrics.from_dict(d["client_population_metrics"])
@@ -148,7 +148,7 @@ class EmulationDefenderObservationState:
         obj.aggregated_host_metrics = HostMetrics.from_dict(d["aggregated_host_metrics"])
         obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
         obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"]))
-        obj.log_sink_config = KafkaConfig.from_dict(d["log_sink_config"])
+        obj.kafka_config = KafkaConfig.from_dict(d["kafka_config"])
         obj.avg_aggregated_host_metrics = HostMetrics.from_dict(d["avg_aggregated_host_metrics"])
         obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
         obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
@@ -167,7 +167,7 @@ class EmulationDefenderObservationState:
         d["docker_stats"] = self.docker_stats.to_dict()
         d["snort_ids_alert_counters"] = self.snort_ids_alert_counters.to_dict()
         d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict()
-        d["log_sink_config"] = self.log_sink_config.to_dict()
+        d["kafka_config"] = self.kafka_config.to_dict()
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
         d["aggregated_host_metrics"] = self.aggregated_host_metrics.to_dict()
@@ -257,7 +257,7 @@ class EmulationDefenderObservationState:
         :return: a copy of the object
         """
         c = EmulationDefenderObservationState(
-            log_sink_config=self.log_sink_config,
+            kafka_config=self.kafka_config,
             client_population_metrics=self.client_population_metrics.copy(), docker_stats=self.docker_stats.copy(),
             snort_ids_alert_counters=self.snort_ids_alert_counters.copy(),
             ossec_ids_alert_counters=self.ossec_ids_alert_counters.copy(),
@@ -341,7 +341,7 @@ class EmulationDefenderObservationState:
         """
         :return: get the schema of the DTO
         """
-        return EmulationDefenderObservationState(log_sink_config=KafkaConfig.schema(),
+        return EmulationDefenderObservationState(kafka_config=KafkaConfig.schema(),
                                                  client_population_metrics=ClientPopulationMetrics.schema(),
                                                  docker_stats=DockerStats.schema(),
                                                  snort_ids_alert_counters=SnortIdsAlertCounters.schema(),

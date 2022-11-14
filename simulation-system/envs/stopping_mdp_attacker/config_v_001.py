@@ -3,7 +3,7 @@ import argparse
 import os
 import numpy as np
 import csle_common.constants.constants as constants
-from csle_common.controllers.simulation_env_manager import SimulationEnvManager
+from csle_common.controllers.simulation_env_controller import SimulationEnvController
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.simulation_config.players_config import PlayersConfig
@@ -375,10 +375,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config = default_config(name="csle-stopping-mdp-attacker-001", version="0.0.1")
     if args.install:
-        SimulationEnvManager.install_simulation(config=config)
+        SimulationEnvController.install_simulation(config=config)
         img_path = ExperimentUtil.default_simulation_picture_path()
         if os.path.exists(img_path):
             image_data = ExperimentUtil.read_env_picture(img_path)
-            SimulationEnvManager.save_simulation_image(img=image_data, simulation=config.name)
+            SimulationEnvController.save_simulation_image(img=image_data, simulation=config.name)
     if args.uninstall:
-        SimulationEnvManager.uninstall_simulation(config=config)
+        SimulationEnvController.uninstall_simulation(config=config)

@@ -4,7 +4,7 @@ from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
 
-class FlagsManager:
+class FlagsController:
     """
     Class managing flags in the emulation environments
     """

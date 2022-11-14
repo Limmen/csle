@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.controllers.container_manager import ContainerManager
+from csle_common.controllers.container_controller import ContainerController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -33,7 +33,7 @@ def sdn_controllers():
         return sdn_controllers_ids()
 
     emulations = MetastoreFacade.list_emulations()
-    rc_emulations = ContainerManager.list_running_emulations()
+    rc_emulations = ContainerController.list_running_emulations()
     response_dicts = []
     for em in emulations:
         if em.sdn_controller_config is not None:
@@ -50,7 +50,7 @@ def sdn_controllers_ids():
     :return: An HTTP response with all sdn controllers ids
     """
     emulations = MetastoreFacade.list_emulations()
-    rc_emulations = ContainerManager.list_running_emulations()
+    rc_emulations = ContainerController.list_running_emulations()
     response_dicts = []
     for em in emulations:
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)

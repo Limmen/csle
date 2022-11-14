@@ -42,7 +42,7 @@ from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_system_identification.constants.constants as system_identification_constants
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.training.policy import Policy
-from csle_common.util.read_emulation_statistics import ReadEmulationStatistics
+from csle_common.util.read_emulation_statistics_util import ReadEmulationStatisticsUtil
 from csle_common.dao.emulation_config.static_emulation_attacker_type import StaticEmulationAttackerType
 from csle_common.dao.emulation_config.emulation_statistics_windowed import EmulationStatisticsWindowed
 from scipy.stats import poisson

@@ -16,21 +16,21 @@ class EmulationDefenderMachineObservationState:
     Represents the defender's belief state of a component in the emulation
     """
 
-    def __init__(self, ips : List[str], log_sink_config: KafkaConfig,
+    def __init__(self, ips : List[str], kafka_config: KafkaConfig,
                  host_metrics : HostMetrics = None, docker_stats: DockerStats = None):
         """
         Initializes the DTO
 
         :param ips: the ip of the machine
-        :param log_sink_config: the log sink config
+        :param kafka_config: the kafka config
         :param host_metrics: the host metrics object
-        :param docker_stats: the docker stats objecty
+        :param docker_stats: the docker stats object
         """
         self.ips = ips
         self.os="unknown"
         self.ports : List[EmulationPortObservationState] = []
         self.ssh_connections :List[EmulationConnectionObservationState] = []
-        self.log_sink_config = log_sink_config
+        self.kafka_config = kafka_config
         self.host_metrics = host_metrics
         if self.host_metrics is None:
             self.host_metrics = HostMetrics()
@@ -47,25 +47,25 @@ class EmulationDefenderMachineObservationState:
         :return: None
         """
         self.host_metrics_consumer_thread = HostMetricsConsumerThread(
-            host_ip=self.ips[0],  kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port, host_metrics=self.host_metrics)
+            host_ip=self.ips[0],  kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port, host_metrics=self.host_metrics)
         self.docker_stats_consumer_thread = DockerHostStatsConsumerThread(
-            host_ip=self.ips[0],  kafka_server_ip=self.log_sink_config.container.get_ips()[0],
-            kafka_port=self.log_sink_config.kafka_port, docker_stats=self.docker_stats
+            host_ip=self.ips[0],  kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port, docker_stats=self.docker_stats
         )
         self.host_metrics_consumer_thread.start()
         self.docker_stats_consumer_thread.start()
 
     @staticmethod
-    def from_container(container: NodeContainerConfig, log_sink_config: KafkaConfig):
+    def from_container(container: NodeContainerConfig, kafka_config: KafkaConfig):
         """
         Creates an instance from a container configuration
 
         :param container: the container to create the instance from
-        :param log_sink_config: the log sink config
-        :return: the c reated instance
+        :param kafka_config: the kafka config
+        :return: the created instance
         """
-        obj = EmulationDefenderMachineObservationState(ips=container.get_ips(), log_sink_config=log_sink_config,
+        obj = EmulationDefenderMachineObservationState(ips=container.get_ips(), kafka_config=kafka_config,
                                                        host_metrics=None, docker_stats=None)
         obj.os = container.os
         return obj
@@ -79,7 +79,7 @@ class EmulationDefenderMachineObservationState:
         :return: the object instance
         """
         obj = EmulationDefenderMachineObservationState(
-            ips=d["ips"], log_sink_config=KafkaConfig.from_dict(d["log_sink_config"]),
+            ips=d["ips"], kafka_config=KafkaConfig.from_dict(d["kafka_config"]),
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
             docker_stats=DockerStats.from_dict(d["docker_stats"]))
         obj.os = d["os"]
@@ -98,7 +98,7 @@ class EmulationDefenderMachineObservationState:
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
         d["host_metrics"] = self.host_metrics.to_dict()
         d["docker_stats"] = self.docker_stats.to_dict()
-        d["log_sink_config"] = self.log_sink_config.to_dict()
+        d["kafka_config"] = self.kafka_config.to_dict()
         return d
 
     def __str__(self) -> str:
@@ -137,7 +137,7 @@ class EmulationDefenderMachineObservationState:
         :return: a copy of the object
         """
         m_copy = EmulationDefenderMachineObservationState(
-            ips=self.ips, log_sink_config=self.log_sink_config, host_metrics=self.host_metrics.copy(),
+            ips=self.ips, kafka_config=self.kafka_config, host_metrics=self.host_metrics.copy(),
             docker_stats=self.docker_stats.copy())
         m_copy.os = self.os
         m_copy.ports = list(map(lambda x: x.copy(), self.ports))
@@ -191,6 +191,6 @@ class EmulationDefenderMachineObservationState:
         """
         :return: get the schema of the DTO
         """
-        return EmulationDefenderMachineObservationState(ips=[""], log_sink_config=KafkaConfig.schema(),
+        return EmulationDefenderMachineObservationState(ips=[""], kafka_config=KafkaConfig.schema(),
                                                         host_metrics=HostMetrics.schema(),
                                                         docker_stats=DockerStats.schema())

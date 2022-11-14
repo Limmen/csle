@@ -20,7 +20,7 @@ from csle_common.domain_randomization.topology_generator import TopologyGenerato
 from csle_common.domain_randomization.resource_constraints_generator import ResourceConstraintsGenerator
 from csle_common.domain_randomization.traffic_generator import TrafficGenerator
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.controllers.emulation_env_manager import EmulationEnvManager
+from csle_common.controllers.emulation_env_controller import EmulationEnvController
 import csle_common.constants.constants as constants
 
 
@@ -94,7 +94,7 @@ class EmulationEnvConfigGenerator:
         emulation_env_config = EmulationEnvConfig(
             name=name, topology_config=topology, containers_config = containers, vuln_config=vulnerabilities,
             users_config = users, flags_config = flags, traffic_config = traffic, resources_config=resources,
-            services_config=None, log_sink_config=None)
+            services_config=None, kafka_config=None)
         return emulation_env_config
 
     @staticmethod
@@ -344,7 +344,7 @@ class EmulationEnvConfigGenerator:
         container_env_config.num_users = random.randint(container_env_config.min_num_users,
                                                         container_env_config.max_num_users)
         emulation_env_config = EmulationEnvConfigGenerator.generate(container_env_config, name=name)
-        EmulationEnvManager.install_emulation(config=emulation_env_config)
+        EmulationEnvController.install_emulation(config=emulation_env_config)
         return emulation_env_config
 
 

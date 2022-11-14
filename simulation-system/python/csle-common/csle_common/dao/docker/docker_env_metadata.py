@@ -10,7 +10,7 @@ class DockerEnvMetadata:
     """
 
     def __init__(self, containers: List[DockerContainerMetadata], name: str, subnet_prefix: str,
-                 subnet_mask : str, level: str, config: EmulationEnvConfig, log_sink_config: KafkaConfig):
+                 subnet_mask : str, level: str, config: EmulationEnvConfig, kafka_config: KafkaConfig):
         """
         Initializes the DTO
 
@@ -20,7 +20,7 @@ class DockerEnvMetadata:
         :param subnet_mask: the subnet mask
         :param level: the level of the environment
         :param config: the configuration of the environment
-        :param logsink_config: the configuration of the log sink
+        :param kafka_config: the kafka configuration
         """
         self.containers = containers
         self.name = name
@@ -28,7 +28,7 @@ class DockerEnvMetadata:
         self.subnet_mask = subnet_mask
         self.level = level
         self.config = config
-        self.log_sink_config = log_sink_config
+        self.kafka_config = kafka_config
 
 
     @staticmethod
@@ -42,7 +42,7 @@ class DockerEnvMetadata:
         obj = DockerEnvMetadata(
             containers=list(map(lambda x: DockerContainerMetadata.from_dict(x), d["containers"])),
             name=d["name"], subnet_prefix=d["subnet_prefix"], subnet_mask=d["subnet_mask"],
-            level=d["level"], config=d["config"], log_sink_config=KafkaConfig.from_dict(d["log_sink_config"])
+            level=d["level"], config=d["config"], kafka_config=KafkaConfig.from_dict(d["kafka_config"])
         )
         return obj
 
@@ -61,10 +61,10 @@ class DockerEnvMetadata:
             d["config"] = self.config.to_dict()
         else:
             d["config"] = {}
-        if self.log_sink_config is not None:
-            d["log_sink_config"] = self.log_sink_config.to_dict()
+        if self.kafka_config is not None:
+            d["kafka_config"] = self.kafka_config.to_dict()
         else:
-            d["log_sink_config"] = {}
+            d["kafka_config"] = {}
         return d
 
     def to_json_str(self) -> str:

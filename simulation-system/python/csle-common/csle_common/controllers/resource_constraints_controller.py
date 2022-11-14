@@ -4,7 +4,7 @@ from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
 
-class ResourceConstraintsManager:
+class ResourceConstraintsController:
     """
     Class managing resource constraints in the emulation environments
     """
@@ -18,7 +18,7 @@ class ResourceConstraintsManager:
         :return: None
         """
         resource_constraints = emulation_env_config.resources_config.node_resources_configurations
-        resource_constraints = resource_constraints + [emulation_env_config.log_sink_config.resources]
+        resource_constraints = resource_constraints + [emulation_env_config.kafka_config.resources]
         if emulation_env_config.sdn_controller_config is not None:
             resource_constraints = resource_constraints + [emulation_env_config.sdn_controller_config.resources]
         for node_resource_config in resource_constraints:

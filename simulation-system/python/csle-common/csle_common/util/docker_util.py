@@ -79,7 +79,7 @@ class DockerUtil:
 
             p_env = DockerEnvMetadata(containers=em_containers, name=em, subnet_prefix=subnet_mask,
                                       subnet_mask=subnet_mask, level= em_containers[0].level, config=config,
-                                      log_sink_config=None)
+                                      kafka_config=None)
             parsed_envs.append(p_env)
         return parsed_envs
 
@@ -106,15 +106,15 @@ class DockerUtil:
                 config_path = None
                 dir_path = None
                 emulation = None
-                log_sink = None
+                kafka_config = None
                 if constants.DOCKER.CFG in labels:
                     config_path = labels[constants.DOCKER.CFG]
                 if constants.DOCKER.CONTAINER_CONFIG_DIR in labels:
                     dir_path = labels[constants.DOCKER.CONTAINER_CONFIG_DIR]
                 if constants.DOCKER.EMULATION in labels:
                     emulation = labels[constants.DOCKER.EMULATION]
-                if constants.DOCKER.LOGSINK in labels:
-                    log_sink = labels[constants.DOCKER.LOGSINK]
+                if constants.DOCKER.KAFKA_CONFIG in labels:
+                    kafka_config = labels[constants.DOCKER.KAFKA_CONFIG]
 
                 ip = ""
                 network_id = -1
@@ -145,6 +145,6 @@ class DockerUtil:
                     hostname=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.HOSTNAME_INFO],
                     image_name=inspect_info[constants.DOCKER.CONFIG]["Image"],
                     net=net, dir=dir_path, config_path=config_path,
-                    container_handle=c, emulation=emulation, log_sink=log_sink)
+                    container_handle=c, emulation=emulation, kafka_container=kafka_config)
                 parsed_containers.append(parsed_c)
         return parsed_containers

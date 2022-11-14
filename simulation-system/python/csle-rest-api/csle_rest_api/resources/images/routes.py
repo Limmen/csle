@@ -4,7 +4,7 @@ Routes and sub-resources for the /images resource
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
-from csle_common.controllers.container_manager import ContainerManager
+from csle_common.controllers.container_controller import ContainerController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -25,7 +25,7 @@ def images():
     if authorized is not None:
         return authorized
 
-    images=ContainerManager.list_all_images()
+    images=ContainerController.list_all_images()
     images_dicts = []
     for img in images:
         images_dicts.append(

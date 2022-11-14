@@ -242,7 +242,7 @@ class OSSECIdsAlertCounters:
                      int(counters_prime.severe_alerts),
                      int(counters_prime.alerts_weighted_by_level)
                  ] + deltas_level + deltas_group
-        labels = constants.LOG_SINK.OSSEC_IDS_ALERTS_LABELS
+        labels = constants.KAFKA_CONFIG.OSSEC_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels
 

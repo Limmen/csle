@@ -3,7 +3,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.util.emulation_util import EmulationUtil
 
 
-class UsersManager:
+class UsersController:
     """
     Class managing users in the emulation environments
     """

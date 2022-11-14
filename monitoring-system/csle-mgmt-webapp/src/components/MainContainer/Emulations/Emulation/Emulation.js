@@ -813,14 +813,14 @@ const Emulation = (props) => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr key={emulation.log_sink_config.container.full_name_str}>
-                                    <td>{emulation.log_sink_config.container.full_name_str}</td>
-                                    <td>{getIps(emulation.log_sink_config.container.ips_and_networks)}</td>
-                                    <td>{emulation.log_sink_config.container.os}</td>
-                                    <td>{emulation.log_sink_config.kafka_port}</td>
-                                    <td>{emulation.log_sink_config.default_grpc_port}</td>
-                                    <td>{emulation.log_sink_config.resources.available_memory_gb}GB</td>
-                                    <td>{emulation.log_sink_config.resources.num_cpus}</td>
+                                <tr key={emulation.kafka_config.container.full_name_str}>
+                                    <td>{emulation.kafka_config.container.full_name_str}</td>
+                                    <td>{getIps(emulation.kafka_config.container.ips_and_networks)}</td>
+                                    <td>{emulation.kafka_config.container.os}</td>
+                                    <td>{emulation.kafka_config.kafka_port}</td>
+                                    <td>{emulation.kafka_config.default_grpc_port}</td>
+                                    <td>{emulation.kafka_config.resources.available_memory_gb}GB</td>
+                                    <td>{emulation.kafka_config.resources.num_cpus}</td>
                                 </tr>
                                 </tbody>
                             </Table>
@@ -852,7 +852,7 @@ const Emulation = (props) => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {emulation.log_sink_config.topics.map((topic, index) =>
+                                {emulation.kafka_config.topics.map((topic, index) =>
                                     <tr key={topic.name + "-" + index}>
                                         <td>{topic.name}</td>
                                         <td>{topic.num_partitions}</td>

@@ -8,7 +8,7 @@ from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actio
     import EmulationDefenderStoppingActions
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.controllers.container_manager import ContainerManager
+from csle_common.controllers.container_controller import ContainerController
 from csle_system_identification.emulator import Emulator
 
 
@@ -78,7 +78,7 @@ def run() -> None:
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name="csle-level9-001")
     emulation_env_config = executions[0].emulation_env_config
     assert emulation_env_config is not None
-    assert ContainerManager.is_emulation_running(emulation_env_config=emulation_env_config) is True
+    assert ContainerController.is_emulation_running(emulation_env_config=emulation_env_config) is True
     # attacker_sequence = novice_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
     # attacker_sequence = experienced_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
     attacker_sequence = expert_attacker_sequence(wait_steps=0, emulation_env_config=emulation_env_config)
@@ -88,7 +88,7 @@ def run() -> None:
     em_statistic = None
     Emulator.run_action_sequences(emulation_env_config=emulation_env_config, attacker_sequence=attacker_sequence,
                                   defender_sequence=defender_sequence, repeat_times= 5000,
-                                  sleep_time=emulation_env_config.log_sink_config.time_step_len_seconds,
+                                  sleep_time=emulation_env_config.kafka_config.time_step_len_seconds,
                                   descr="Intrusion data collected against novice attacker",
                                   save_emulation_traces_every=1,
                                   emulation_traces_to_save_with_data_collection_job=1,

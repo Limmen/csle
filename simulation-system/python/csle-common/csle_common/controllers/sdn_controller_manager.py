@@ -114,7 +114,7 @@ class SDNControllerManager:
                            f"{emulation_env_config.sdn_controller_config.controller_web_api_port}"
                            f"{ryu_constants.RYU.START_PRODUCER_HTTP_RESOURCE}",
                            data = json.dumps({ryu_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
-                                       emulation_env_config.log_sink_config.container.get_ips()[0],
+                                       emulation_env_config.kafka_config.container.get_ips()[0],
                                    ryu_constants.KAFKA.TIME_STEP_LEN_SECONDS:
                                        emulation_env_config.sdn_controller_config.time_step_len_seconds}))
         assert response.status_code == 200

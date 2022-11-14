@@ -12,24 +12,10 @@ from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
 
-class SnortIDSManager:
+class SnortIDSController:
     """
     Class managing operations related to Snort IDS Managers
     """
-
-    @staticmethod
-    def grpc_server_on(channel) -> bool:
-        """
-        Utility function to test if a given gRPC channel is working or not
-
-        :param channel: the channel to test
-        :return: True if working, False if timeout
-        """
-        try:
-            grpc.channel_ready_future(channel).result(timeout=15)
-            return True
-        except grpc.FutureTimeoutError:
-            return False
 
     @staticmethod
     def start_snort_ids(emulation_env_config: EmulationEnvConfig):
@@ -88,7 +74,7 @@ class SnortIDSManager:
 
                         # Start the ids_manager
                         cmd = constants.COMMANDS.START_SNORT_IDS_MANAGER.format(
-                            emulation_env_config.log_sink_config.kafka_manager_port)
+                            emulation_env_config.kafka_config.kafka_manager_port)
                         o, e, _ = EmulationUtil.execute_ssh_cmd(
                             cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
                         time.sleep(5)
@@ -102,26 +88,26 @@ n
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        SnortIDSManager._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    ids_monitor_dto = SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
-                        port=emulation_env_config.log_sink_config.kafka_manager_port, ip=c.get_ips()[0])
+                    ids_monitor_dto = SnortIDSController.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                        port=emulation_env_config.kafka_config.kafka_manager_port, ip=c.get_ips()[0])
                     if not ids_monitor_dto.running:
                         Logger.__call__().get_logger().info(
                             f"Snort IDS monitor thread is not running on {c.get_ips()[0]}, starting it.")
                         # Open a gRPC session
                         with grpc.insecure_channel(
                                 f'{c.get_ips()[0]}:'
-                                f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
+                                f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
                             stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                             csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor(
-                                stub=stub, kafka_ip=emulation_env_config.log_sink_config.container.get_ips()[0],
-                                kafka_port=emulation_env_config.log_sink_config.kafka_port,
+                                stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                                kafka_port=emulation_env_config.kafka_config.kafka_port,
                                 log_file_path=csle_collector_constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE,
-                                time_step_len_seconds=emulation_env_config.log_sink_config.time_step_len_seconds)
+                                time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
 
     @staticmethod
@@ -133,7 +119,7 @@ n
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        SnortIDSManager._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
@@ -141,7 +127,7 @@ n
                     # Open a gRPC session
                     with grpc.insecure_channel(
                             f'{c.get_ips()[0]}:'
-                            f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
+                            f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
                         stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                         Logger.__call__().get_logger().info(
                             f"Stopping the Snort IDS monitor thread on {c.get_ips()[0]}.")
@@ -160,13 +146,13 @@ n
         """
         statuses = []
         if start_if_stopped:
-            SnortIDSManager._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+            SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    status = SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
-                        port=emulation_env_config.log_sink_config.kafka_manager_port, ip=c.get_ips()[0])
+                    status = SnortIDSController.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                        port=emulation_env_config.kafka_config.kafka_manager_port, ip=c.get_ips()[0])
                     statuses.append(status)
         return statuses
 
@@ -200,7 +186,7 @@ n
         :return: List of monitor thread statuses
         """
         ids_log_data_list = []
-        SnortIDSManager._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
@@ -208,7 +194,7 @@ n
                     # Open a gRPC session
                     with grpc.insecure_channel(
                             f'{c.get_ips()[0]}:'
-                            f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
+                            f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
                         stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                         ids_log_data = csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts(
                             stub=stub, timestamp=timestamp,
@@ -229,8 +215,8 @@ n
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     try:
-                        SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
-                            port=emulation_env_config.log_sink_config.kafka_manager_port, ip=c.get_ips()[0])
+                        SnortIDSController.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                            port=emulation_env_config.kafka_config.kafka_manager_port, ip=c.get_ips()[0])
                         ips.append(c.get_ips()[0])
                     except Exception as e:
                         pass
@@ -249,9 +235,9 @@ n
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     try:
-                        SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
-                            port=emulation_env_config.log_sink_config.kafka_manager_port, ip=c.get_ips()[0])
-                        ports.append(emulation_env_config.log_sink_config.kafka_manager_port)
+                        SnortIDSController.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                            port=emulation_env_config.kafka_config.kafka_manager_port, ip=c.get_ips()[0])
+                        ports.append(emulation_env_config.kafka_config.kafka_manager_port)
                     except Exception as e:
                         pass
         return ports
@@ -264,14 +250,14 @@ n
         :param emulation_env_config: the configuration of the emulation
         :return: a DTO with the status of the Snort managers
         """
-        snort_ids_managers_ips = SnortIDSManager.get_snort_ids_managers_ips(emulation_env_config=emulation_env_config)
+        snort_ids_managers_ips = SnortIDSController.get_snort_ids_managers_ips(emulation_env_config=emulation_env_config)
         snort_ids_managers_ports = \
-            SnortIDSManager.get_snort_ids_managers_ports(emulation_env_config=emulation_env_config)
+            SnortIDSController.get_snort_ids_managers_ports(emulation_env_config=emulation_env_config)
         snort_statuses = []
         running = False
         for ip in snort_ids_managers_ips:
-            status = SnortIDSManager.get_snort_ids_monitor_thread_status_by_ip_and_port(
-                port=emulation_env_config.log_sink_config.kafka_manager_port, ip=ip)
+            status = SnortIDSController.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
             if not running and status.running:
                 running = True
             snort_statuses.append(status)

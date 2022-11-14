@@ -23,10 +23,10 @@ message ContainerIp {
 message StartDockerStatsMonitorMsg {
   string emulation = 1;
   int32 execution_first_ip_octet = 2;
-  string sink_ip = 3;
+  string kafka_ip = 3;
   int32 stats_queue_maxsize = 4;
   int32 time_step_len_seconds = 5;
-  int32 sink_port = 6;
+  int32 kafka_port = 6;
   repeated ContainerIp containers = 7;
 }
 

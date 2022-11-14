@@ -28,7 +28,7 @@ class EmulationEnvConfig:
     def __init__(self, name: str, containers_config: ContainersConfig, users_config: UsersConfig,
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
-                 resources_config: ResourcesConfig, log_sink_config: KafkaConfig, services_config: ServicesConfig,
+                 resources_config: ResourcesConfig, kafka_config: KafkaConfig, services_config: ServicesConfig,
                  descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]],
                  ovs_config: OVSConfig, sdn_controller_config: Optional[SDNControllerConfig],
                  level: int, version: str, execution_id : int):
@@ -61,7 +61,7 @@ class EmulationEnvConfig:
         self.topology_config = topology_config
         self.traffic_config = traffic_config
         self.resources_config = resources_config
-        self.log_sink_config = log_sink_config
+        self.kafka_config = kafka_config
         self.services_config = services_config
         self.connections = {}
         self.producer = None
@@ -96,7 +96,7 @@ class EmulationEnvConfig:
             topology_config=TopologyConfig.from_dict(d["topology_config"]),
             traffic_config=TrafficConfig.from_dict(d["traffic_config"]),
             resources_config=ResourcesConfig.from_dict(d["resources_config"]),
-            log_sink_config=KafkaConfig.from_dict(d["log_sink_config"]),
+            kafka_config=KafkaConfig.from_dict(d["kafka_config"]),
             services_config=ServicesConfig.from_dict(d["services_config"]),
             descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
             ovs_config=OVSConfig.from_dict(d["ovs_config"]),
@@ -121,7 +121,7 @@ class EmulationEnvConfig:
         d["topology_config"] = self.topology_config.to_dict()
         d["traffic_config"] = self.traffic_config.to_dict()
         d["resources_config"] = self.resources_config.to_dict()
-        d["log_sink_config"] = self.log_sink_config.to_dict()
+        d["kafka_config"] = self.kafka_config.to_dict()
         d["services_config"] = self.services_config.to_dict()
         d["hostname"] = self.hostname
         d["running"] = self.running
@@ -215,7 +215,7 @@ class EmulationEnvConfig:
         """
         conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
-                f"{self.log_sink_config.container.get_ips()[0]}:{self.log_sink_config.kafka_port}",
+                f"{self.kafka_config.container.get_ips()[0]}:{self.kafka_config.kafka_port}",
             collector_constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**conf)
 
@@ -265,7 +265,7 @@ class EmulationEnvConfig:
         return f"name: {self.name}, containers_config: {self.containers_config}, users_config: {self.users_config}, " \
                f"flags_config: {self.flags_config}, vuln_config: {self.vuln_config}, " \
                f"topology_config: {self.topology_config}, traffic_config: {self.traffic_config}, " \
-               f"resources_config: {self.resources_config}, log_sink_config:{self.log_sink_config}, " \
+               f"resources_config: {self.resources_config}, kafka_config:{self.kafka_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
                f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}," \
                f"ovs_config: {self.ovs_config}, sdn_controller_config: {self.sdn_controller_config}"
@@ -325,7 +325,7 @@ class EmulationEnvConfig:
         config.topology_config = config.topology_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.traffic_config = config.traffic_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.resources_config = config.resources_config.create_execution_config(ip_first_octet=ip_first_octet)
-        config.log_sink_config = config.log_sink_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.kafka_config = config.kafka_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
         if config.sdn_controller_config is not None:

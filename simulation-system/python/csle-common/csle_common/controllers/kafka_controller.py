@@ -11,21 +11,7 @@ from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
 
-class LogSinkManager:
-
-    @staticmethod
-    def grpc_server_on(channel) -> bool:
-        """
-        Utility function to test if a given gRPC channel is working or not
-
-        :param channel: the channel to test
-        :return: True if working, False if timeout
-        """
-        try:
-            grpc.channel_ready_future(channel).result(timeout=15)
-            return True
-        except grpc.FutureTimeoutError:
-            return False
+class KafkaController:
 
     @staticmethod
     def _start_kafka_manager_if_not_running(emulation_env_config: EmulationEnvConfig) -> None:
@@ -38,7 +24,7 @@ class LogSinkManager:
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
-                                    ip=emulation_env_config.log_sink_config.container.get_ips()[0],
+                                    ip=emulation_env_config.kafka_config.container.get_ips()[0],
                                     create_producer=False)
 
         # Check if kafka_manager is already running
@@ -46,7 +32,7 @@ class LogSinkManager:
               + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
-            conn=emulation_env_config.get_connection(ip=emulation_env_config.log_sink_config.container.get_ips()[0]))
+            conn=emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
         t = constants.COMMANDS.SEARCH_KAFKA_MANAGER
 
         if not constants.COMMANDS.SEARCH_KAFKA_MANAGER in str(o):
@@ -58,15 +44,15 @@ class LogSinkManager:
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
                 conn=
-                emulation_env_config.get_connection(ip=emulation_env_config.log_sink_config.container.get_ips()[0]))
+                emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
 
             # Start the kafka_manager
             cmd = constants.COMMANDS.START_KAFKA_MANAGER.format(
-                emulation_env_config.log_sink_config.kafka_manager_port)
+                emulation_env_config.kafka_config.kafka_manager_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
                 conn=
-                emulation_env_config.get_connection(ip=emulation_env_config.log_sink_config.container.get_ips()[0]))
+                emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
             time.sleep(5)
 
     @staticmethod
@@ -78,22 +64,22 @@ class LogSinkManager:
         :return: None
         """
         Logger.__call__().get_logger().info(
-            f"creating kafka topics on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
-        LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
-        kafka_dto = LogSinkManager.get_kafka_status_by_port_and_ip(
-            ip=emulation_env_config.log_sink_config.container.get_ips()[0],
-            port=emulation_env_config.log_sink_config.kafka_manager_port)
+            f"creating kafka topics on container: {emulation_env_config.kafka_config.container.get_ips()[0]}")
+        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+        kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
+            ip=emulation_env_config.kafka_config.container.get_ips()[0],
+            port=emulation_env_config.kafka_config.kafka_manager_port)
         if not kafka_dto.running:
             Logger.__call__().get_logger().info(f"Kafka server is not running, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{emulation_env_config.log_sink_config.container.get_ips()[0]}:'
-                    f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
+                    f'{emulation_env_config.kafka_config.container.get_ips()[0]}:'
+                    f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
                 stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
                 csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
                 time.sleep(20)
 
-                for topic in emulation_env_config.log_sink_config.topics:
+                for topic in emulation_env_config.kafka_config.topics:
                     Logger.__call__().get_logger().info(f"Creating topic: {topic.name}")
                     csle_collector.kafka_manager.query_kafka_server.create_topic(
                         stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas,
@@ -109,10 +95,10 @@ class LogSinkManager:
         :param emulation_env_config: the emulation config
         :return: a KafkaDTO with the status of the server
         """
-        LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
-        kafka_dto = LogSinkManager.get_kafka_status_by_port_and_ip(
-            ip=emulation_env_config.log_sink_config.container.get_ips()[0],
-            port=emulation_env_config.log_sink_config.kafka_manager_port)
+        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+        kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
+            ip=emulation_env_config.kafka_config.container.get_ips()[0],
+            port=emulation_env_config.kafka_config.kafka_manager_port)
         return kafka_dto
 
     @staticmethod
@@ -143,13 +129,13 @@ class LogSinkManager:
         :return: a KafkaDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Stopping kafka server on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
-        LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+            f"Stopping kafka server on container: {emulation_env_config.kafka_config.container.get_ips()[0]}")
+        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.log_sink_config.container.get_ips()[0]}:'
-                f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
+                f'{emulation_env_config.kafka_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub)
             return kafka_dto
@@ -165,13 +151,13 @@ class LogSinkManager:
         :return: a KafkaDTO with the status of the server
         """
         Logger.__call__().get_logger().info(
-            f"Starting kafka server on container: {emulation_env_config.log_sink_config.container.get_ips()[0]}")
-        LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+            f"Starting kafka server on container: {emulation_env_config.kafka_config.container.get_ips()[0]}")
+        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{emulation_env_config.log_sink_config.container.get_ips()[0]}:'
-                f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
+                f'{emulation_env_config.kafka_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
             return kafka_dto
@@ -184,7 +170,7 @@ class LogSinkManager:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
-        return [emulation_env_config.log_sink_config.container.get_ips()[0]]
+        return [emulation_env_config.kafka_config.container.get_ips()[0]]
 
     @staticmethod
     def get_kafka_managers_ports(emulation_env_config: EmulationEnvConfig) -> List[int]:
@@ -194,7 +180,7 @@ class LogSinkManager:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
-        return [emulation_env_config.log_sink_config.kafka_manager_port]
+        return [emulation_env_config.kafka_config.kafka_manager_port]
 
     @staticmethod
     def get_kafka_managers_info(emulation_env_config: EmulationEnvConfig) -> KafkaManagersInfo:
@@ -204,13 +190,13 @@ class LogSinkManager:
         :param emulation_env_config: the configuration of the emulation
         :return: a DTO with the status of the Kafka managers
         """
-        kafka_managers_ips = LogSinkManager.get_kafka_managers_ips(emulation_env_config=emulation_env_config)
-        kafka_managers_ports = LogSinkManager.get_kafka_managers_ports(emulation_env_config=emulation_env_config)
+        kafka_managers_ips = KafkaController.get_kafka_managers_ips(emulation_env_config=emulation_env_config)
+        kafka_managers_ports = KafkaController.get_kafka_managers_ports(emulation_env_config=emulation_env_config)
         kafka_statuses = []
         running = False
         for ip in kafka_managers_ips:
-            status = LogSinkManager.get_kafka_status_by_port_and_ip(
-                port=emulation_env_config.log_sink_config.kafka_manager_port, ip=ip)
+            status = KafkaController.get_kafka_status_by_port_and_ip(
+                port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
             if not running and status.running:
                 running = True
             kafka_statuses.append(status)

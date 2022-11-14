@@ -5,9 +5,9 @@ from csle_common.dao.emulation_config.vulnerability_type import VulnType
 from csle_common.logging.log import Logger
 
 
-class VulnerabilitiesManager:
+class VulnerabilitiesController:
     """
-    Class managing users in the emulation environments
+    Class managing vulnerabilities in the emulation environments
     """
 
     @staticmethod

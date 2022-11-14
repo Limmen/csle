@@ -4,7 +4,7 @@ from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
 
-class TopologyManager:
+class TopologyController:
     """
     Class managing topologies in the emulation environments
     """
@@ -19,7 +19,7 @@ class TopologyManager:
         """
         Logger.__call__().get_logger().info("Creating topology")
         topology_configs = emulation_env_config.topology_config.node_configs
-        topology_configs = topology_configs + [emulation_env_config.log_sink_config.firewall_config]
+        topology_configs = topology_configs + [emulation_env_config.kafka_config.firewall_config]
         if emulation_env_config.sdn_controller_config is not None:
             topology_configs = topology_configs + [emulation_env_config.sdn_controller_config.firewall_config]
         for node in topology_configs:
