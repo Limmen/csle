@@ -18,7 +18,7 @@ from csle_common.dao.jobs.system_identification_job_config import SystemIdentifi
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
 from csle_common.dao.system_identification.gp_system_model import GPSystemModel
-from csle_common.util.np_encoder import NpEncoder
+from csle_common.dao.encoding.np_encoder import NpEncoder
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.alpha_vectors_policy import AlphaVectorsPolicy

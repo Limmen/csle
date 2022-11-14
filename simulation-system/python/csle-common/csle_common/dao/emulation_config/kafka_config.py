@@ -78,7 +78,7 @@ class KafkaConfig:
         return f"container: {self.container}, " \
                f"kafka server port :{self.kafka_port}, version: {self.version}, resources: {self.resources}, " \
                f"topics: {','.join(list(map(lambda x: str(x), self.topics)))}, " \
-               f"kafka_manager_port:{self.kafka_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \               
+               f"kafka_manager_port:{self.kafka_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
                f"firewall_config: {self.firewall_config}"
 
     def to_json_str(self) -> str:

@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 import json
 import os
 import csle_common.constants.constants as constants
-from csle_common.util.np_encoder import NpEncoder
+from csle_common.dao.encoding.np_encoder import NpEncoder
 
 
 class SimulationTrace:

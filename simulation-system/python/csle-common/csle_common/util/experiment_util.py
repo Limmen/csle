@@ -15,7 +15,7 @@ import scipy.stats
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
-from csle_common.util.np_encoder import NpEncoder
+from csle_common.dao.encoding.np_encoder import NpEncoder
 import csle_common.constants.constants as constants
 
 
