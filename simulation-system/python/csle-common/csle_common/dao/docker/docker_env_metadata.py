@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
 from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 
 
 class DockerEnvMetadata:
@@ -10,7 +10,7 @@ class DockerEnvMetadata:
     """
 
     def __init__(self, containers: List[DockerContainerMetadata], name: str, subnet_prefix: str,
-                 subnet_mask : str, level: str, config: EmulationEnvConfig, log_sink_config: LogSinkConfig):
+                 subnet_mask : str, level: str, config: EmulationEnvConfig, log_sink_config: KafkaConfig):
         """
         Initializes the DTO
 
@@ -42,7 +42,7 @@ class DockerEnvMetadata:
         obj = DockerEnvMetadata(
             containers=list(map(lambda x: DockerContainerMetadata.from_dict(x), d["containers"])),
             name=d["name"], subnet_prefix=d["subnet_prefix"], subnet_mask=d["subnet_mask"],
-            level=d["level"], config=d["config"], log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"])
+            level=d["level"], config=d["config"], log_sink_config=KafkaConfig.from_dict(d["log_sink_config"])
         )
         return obj
 

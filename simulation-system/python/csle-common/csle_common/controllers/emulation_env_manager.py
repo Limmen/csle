@@ -4,7 +4,7 @@ import subprocess
 import random
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.controllers.container_manager import ContainerManager
 from csle_common.controllers.snort_ids_manager import SnortIDSManager
@@ -263,7 +263,7 @@ class EmulationEnvManager:
         TrafficManager.stop_client_population(emulation_env_config=emulation_env_config)
 
     @staticmethod
-    def delete_networks_of_log_sink(log_sink_config: LogSinkConfig) -> None:
+    def delete_networks_of_log_sink(log_sink_config: KafkaConfig) -> None:
         """
         Deletes the docker networks of a log sink
 

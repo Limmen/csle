@@ -4,7 +4,7 @@ from csle_common.dao.emulation_observation.defender.emulation_defender_machine_o
     import EmulationDefenderMachineObservationState
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
-from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.consumer_threads.docker_stats_consumer_thread import DockerStatsConsumerThread
 from csle_common.consumer_threads.snort_ids_log_consumer_thread import SnortIdsLogConsumerThread
 from csle_common.consumer_threads.ossec_ids_log_consumer_thread import OSSECIdsLogConsumerThread
@@ -24,7 +24,7 @@ class EmulationDefenderObservationState:
     Represents the defender's agent's current belief state of the emulation
     """
 
-    def __init__(self, log_sink_config : LogSinkConfig,
+    def __init__(self, log_sink_config : KafkaConfig,
                  client_population_metrics : ClientPopulationMetrics = None, docker_stats: DockerStats = None,
                  snort_ids_alert_counters : SnortIdsAlertCounters = None,
                  ossec_ids_alert_counters : OSSECIdsAlertCounters= None,
@@ -148,7 +148,7 @@ class EmulationDefenderObservationState:
         obj.aggregated_host_metrics = HostMetrics.from_dict(d["aggregated_host_metrics"])
         obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
         obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"]))
-        obj.log_sink_config = LogSinkConfig.from_dict(d["log_sink_config"])
+        obj.log_sink_config = KafkaConfig.from_dict(d["log_sink_config"])
         obj.avg_aggregated_host_metrics = HostMetrics.from_dict(d["avg_aggregated_host_metrics"])
         obj.avg_docker_stats = DockerStats.from_dict(d["avg_docker_stats"])
         obj.avg_client_population_metrics = ClientPopulationMetrics.from_dict(d["avg_client_population_metrics"])
@@ -341,7 +341,7 @@ class EmulationDefenderObservationState:
         """
         :return: get the schema of the DTO
         """
-        return EmulationDefenderObservationState(log_sink_config=LogSinkConfig.schema(),
+        return EmulationDefenderObservationState(log_sink_config=KafkaConfig.schema(),
                                                  client_population_metrics=ClientPopulationMetrics.schema(),
                                                  docker_stats=DockerStats.schema(),
                                                  snort_ids_alert_counters=SnortIdsAlertCounters.schema(),

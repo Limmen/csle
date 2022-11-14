@@ -6,7 +6,7 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.consumer_threads.host_metrics_consumer_thread import HostMetricsConsumerThread
 from csle_common.consumer_threads.docker_host_stats_consumer_thread import DockerHostStatsConsumerThread
-from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_collector.host_manager.host_metrics import HostMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 
@@ -16,7 +16,7 @@ class EmulationDefenderMachineObservationState:
     Represents the defender's belief state of a component in the emulation
     """
 
-    def __init__(self, ips : List[str], log_sink_config: LogSinkConfig,
+    def __init__(self, ips : List[str], log_sink_config: KafkaConfig,
                  host_metrics : HostMetrics = None, docker_stats: DockerStats = None):
         """
         Initializes the DTO
@@ -57,7 +57,7 @@ class EmulationDefenderMachineObservationState:
         self.docker_stats_consumer_thread.start()
 
     @staticmethod
-    def from_container(container: NodeContainerConfig, log_sink_config: LogSinkConfig):
+    def from_container(container: NodeContainerConfig, log_sink_config: KafkaConfig):
         """
         Creates an instance from a container configuration
 
@@ -79,7 +79,7 @@ class EmulationDefenderMachineObservationState:
         :return: the object instance
         """
         obj = EmulationDefenderMachineObservationState(
-            ips=d["ips"], log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
+            ips=d["ips"], log_sink_config=KafkaConfig.from_dict(d["log_sink_config"]),
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
             docker_stats=DockerStats.from_dict(d["docker_stats"]))
         obj.os = d["os"]
@@ -191,6 +191,6 @@ class EmulationDefenderMachineObservationState:
         """
         :return: get the schema of the DTO
         """
-        return EmulationDefenderMachineObservationState(ips=[""], log_sink_config=LogSinkConfig.schema(),
+        return EmulationDefenderMachineObservationState(ips=[""], log_sink_config=KafkaConfig.schema(),
                                                         host_metrics=HostMetrics.schema(),
                                                         docker_stats=DockerStats.schema())

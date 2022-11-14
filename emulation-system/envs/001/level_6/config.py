@@ -26,7 +26,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.controllers.emulation_env_manager import EmulationEnvManager
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
 from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
-from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.dao.emulation_config.flag import Flag
@@ -3814,7 +3814,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
     return traffic_conf
 
 
-def default_log_sink_config(network_id: int, level: int, version: str) -> LogSinkConfig:
+def default_log_sink_config(network_id: int, level: int, version: str) -> KafkaConfig:
     """
     Generates the default log sink configuration
 
@@ -3971,9 +3971,9 @@ def default_log_sink_config(network_id: int, level: int, version: str) -> LogSin
         )
     ]
 
-    config = LogSinkConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
-                           version=version, kafka_port=9092, default_grpc_port=50051,
-                           secondary_grpc_port = 50049, time_step_len_seconds=15, third_grpc_port=50048)
+    config = KafkaConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
+                         version=version, kafka_port=9092, kafka_manager_port=50051,
+                         secondary_grpc_port = 50049, time_step_len_seconds=15, third_grpc_port=50048)
     return config
 
 def default_users_config(network_id: int) -> UsersConfig:

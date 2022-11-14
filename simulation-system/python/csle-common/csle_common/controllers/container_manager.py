@@ -13,7 +13,7 @@ from csle_common.util.docker_util import DockerUtil
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
-from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
@@ -382,7 +382,7 @@ class ContainerManager:
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
-    def connect_logsink_to_network(log_sink_config: LogSinkConfig) -> None:
+    def connect_logsink_to_network(log_sink_config: KafkaConfig) -> None:
         """
         Connect a running logsink to neworks
 
@@ -415,7 +415,7 @@ class ContainerManager:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.default_grpc_port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             container_ip_dtos = []
             for c in execution.emulation_env_config.containers_config.containers:
@@ -442,14 +442,14 @@ class ContainerManager:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.default_grpc_port}') \
+        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.log_sink_config.kafka_manager_port}') \
                 as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name, execution_first_ip_octet = execution.ip_first_octet)
 
     @staticmethod
-    def get_docker_stats_manager_status(log_sink_config: LogSinkConfig) \
+    def get_docker_stats_manager_status(log_sink_config: KafkaConfig) \
             -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
         """
         Sends a request to get the status of the docker stats manager
@@ -460,7 +460,7 @@ class ContainerManager:
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
         docker_stats_monitor_dto = ContainerManager.get_docker_stats_manager_status_by_ip_and_port(ip=ip,
-                                                                        port=log_sink_config.default_grpc_port)
+                                                                                                   port=log_sink_config.kafka_manager_port)
         return docker_stats_monitor_dto
 
     @staticmethod
@@ -481,7 +481,7 @@ class ContainerManager:
             return docker_stats_monitor_dto
 
     @staticmethod
-    def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: LogSinkConfig,
+    def connect_containers_to_logsink(containers_config: ContainersConfig, log_sink_config: KafkaConfig,
                                       ovs_config: OVSConfig) -> None:
         """
         Connects running containers to the log sink
@@ -670,7 +670,7 @@ class ContainerManager:
         :param emulation_env_config: the emulation env config
         :return: the list of ports
         """
-        return [emulation_env_config.log_sink_config.default_grpc_port]
+        return [emulation_env_config.log_sink_config.kafka_manager_port]
 
     @staticmethod
     def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig) -> DockerStatsManagersInfo:
@@ -688,7 +688,7 @@ class ContainerManager:
         running = False
         for ip in docker_stats_managers_ips:
             status = ContainerManager.get_docker_stats_manager_status_by_ip_and_port(
-                port=emulation_env_config.log_sink_config.default_grpc_port, ip=ip)
+                port=emulation_env_config.log_sink_config.kafka_manager_port, ip=ip)
             if emulation_env_config.name in status.emulations \
                     and emulation_env_config.execution_id in status.emulation_executions:
                 running = True

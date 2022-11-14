@@ -10,7 +10,7 @@ from csle_common.dao.emulation_config.vulnerabilities_config import Vulnerabilit
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
-from csle_common.dao.emulation_config.log_sink_config import LogSinkConfig
+from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
@@ -28,7 +28,7 @@ class EmulationEnvConfig:
     def __init__(self, name: str, containers_config: ContainersConfig, users_config: UsersConfig,
                  flags_config: FlagsConfig,
                  vuln_config: VulnerabilitiesConfig, topology_config: TopologyConfig, traffic_config: TrafficConfig,
-                 resources_config: ResourcesConfig, log_sink_config: LogSinkConfig, services_config: ServicesConfig,
+                 resources_config: ResourcesConfig, log_sink_config: KafkaConfig, services_config: ServicesConfig,
                  descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]],
                  ovs_config: OVSConfig, sdn_controller_config: Optional[SDNControllerConfig],
                  level: int, version: str, execution_id : int):
@@ -96,7 +96,7 @@ class EmulationEnvConfig:
             topology_config=TopologyConfig.from_dict(d["topology_config"]),
             traffic_config=TrafficConfig.from_dict(d["traffic_config"]),
             resources_config=ResourcesConfig.from_dict(d["resources_config"]),
-            log_sink_config=LogSinkConfig.from_dict(d["log_sink_config"]),
+            log_sink_config=KafkaConfig.from_dict(d["log_sink_config"]),
             services_config=ServicesConfig.from_dict(d["services_config"]),
             descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
             ovs_config=OVSConfig.from_dict(d["ovs_config"]),

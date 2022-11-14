@@ -62,7 +62,7 @@ class LogSinkManager:
 
             # Start the kafka_manager
             cmd = constants.COMMANDS.START_KAFKA_MANAGER.format(
-                emulation_env_config.log_sink_config.default_grpc_port)
+                emulation_env_config.log_sink_config.kafka_manager_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
                 conn=
@@ -82,13 +82,13 @@ class LogSinkManager:
         LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
         kafka_dto = LogSinkManager.get_kafka_status_by_port_and_ip(
             ip=emulation_env_config.log_sink_config.container.get_ips()[0],
-            port=emulation_env_config.log_sink_config.default_grpc_port)
+            port=emulation_env_config.log_sink_config.kafka_manager_port)
         if not kafka_dto.running:
             Logger.__call__().get_logger().info(f"Kafka server is not running, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{emulation_env_config.log_sink_config.container.get_ips()[0]}:'
-                    f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
+                    f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
                 stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
                 csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
                 time.sleep(20)
@@ -112,7 +112,7 @@ class LogSinkManager:
         LogSinkManager._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
         kafka_dto = LogSinkManager.get_kafka_status_by_port_and_ip(
             ip=emulation_env_config.log_sink_config.container.get_ips()[0],
-            port=emulation_env_config.log_sink_config.default_grpc_port)
+            port=emulation_env_config.log_sink_config.kafka_manager_port)
         return kafka_dto
 
     @staticmethod
@@ -149,7 +149,7 @@ class LogSinkManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.log_sink_config.container.get_ips()[0]}:'
-                f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
+                f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub)
             return kafka_dto
@@ -171,7 +171,7 @@ class LogSinkManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.log_sink_config.container.get_ips()[0]}:'
-                f'{emulation_env_config.log_sink_config.default_grpc_port}') as channel:
+                f'{emulation_env_config.log_sink_config.kafka_manager_port}') as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
             return kafka_dto
@@ -194,7 +194,7 @@ class LogSinkManager:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
-        return [emulation_env_config.log_sink_config.default_grpc_port]
+        return [emulation_env_config.log_sink_config.kafka_manager_port]
 
     @staticmethod
     def get_kafka_managers_info(emulation_env_config: EmulationEnvConfig) -> KafkaManagersInfo:
@@ -210,7 +210,7 @@ class LogSinkManager:
         running = False
         for ip in kafka_managers_ips:
             status = LogSinkManager.get_kafka_status_by_port_and_ip(
-                port=emulation_env_config.log_sink_config.default_grpc_port, ip=ip)
+                port=emulation_env_config.log_sink_config.kafka_manager_port, ip=ip)
             if not running and status.running:
                 running = True
             kafka_statuses.append(status)
