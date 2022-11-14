@@ -74,7 +74,7 @@ class OSSECIDSController:
 
                         # Start the OSSEC ids_manager
                         cmd = constants.COMMANDS.START_OSSEC_IDS_MANAGER.format(
-                            emulation_env_config.kafka_config.third_grpc_port)
+                            emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port)
                         o, e, _ = EmulationUtil.execute_ssh_cmd(
                             cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
                         time.sleep(5)
@@ -95,13 +95,13 @@ n
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     ids_monitor_dto = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                        port=emulation_env_config.kafka_config.third_grpc_port, ip = c.get_ips()[0])
+                        port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = c.get_ips()[0])
                     if not ids_monitor_dto.running:
                         Logger.__call__().get_logger().info(
                             f"OSSEC IDS monitor thread is not running on {c.get_ips()[0]}, starting it.")
                         with grpc.insecure_channel(
                                 f'{c.get_ips()[0]}:'
-                                f'{emulation_env_config.kafka_config.third_grpc_port}') as channel:
+                                f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
                             stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
                             csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids_monitor(
                                 stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
@@ -128,7 +128,7 @@ n
                     # Open a gRPC session
                     with grpc.insecure_channel(
                             f'{c.get_ips()[0]}:'
-                            f'{emulation_env_config.kafka_config.third_grpc_port}') as channel:
+                            f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
                         stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
                         Logger.__call__().get_logger().info(
                             f"Stopping the OSSEC IDS monitor thread on {c.get_ips()[0]}.")
@@ -151,7 +151,7 @@ n
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                        port=emulation_env_config.kafka_config.third_grpc_port, ip = c.get_ips()[0])
+                        port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = c.get_ips()[0])
                     statuses.append(status)
         return statuses
 
@@ -176,7 +176,7 @@ n
                     # Open a gRPC session
                     with grpc.insecure_channel(
                             f'{c.get_ips()[0]}:'
-                            f'{emulation_env_config.kafka_config.third_grpc_port}') as channel:
+                            f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
                         stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
                         ids_log_data = csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_alerts(
                             stub=stub, timestamp=timestamp,
@@ -198,7 +198,7 @@ n
                 if ids_image in c.name:
                     try:
                         OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                            port=emulation_env_config.kafka_config.third_grpc_port, ip = c.get_ips()[0])
+                            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = c.get_ips()[0])
                         ips.append(c.get_ips()[0])
                     except Exception as e:
                         pass
@@ -218,8 +218,8 @@ n
                 if ids_image in c.name:
                     try:
                         OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                            port=emulation_env_config.kafka_config.third_grpc_port, ip = c.get_ips()[0])
-                        ports.append(emulation_env_config.kafka_config.third_grpc_port)
+                            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = c.get_ips()[0])
+                        ports.append(emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port)
                     except Exception as e:
                         pass
         return ports
@@ -257,7 +257,7 @@ n
 
         for ip in ossec_ids_managers_ips:
             status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                port=emulation_env_config.kafka_config.third_grpc_port, ip=ip)
+                port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
             if not running and status.running:
                 running = True
             ossec_statuses.append(status)

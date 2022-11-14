@@ -2085,8 +2085,7 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
 
     config = KafkaConfig(container=container, resources=resources, firewall_config=firewall_config,
                          topics=topics, version=version,
-                         kafka_port=9092, kafka_manager_port=50051, secondary_grpc_port = 50049,
-                         third_grpc_port=50048, time_step_len_seconds=15)
+                         kafka_port=9092, kafka_manager_port=50051, time_step_len_seconds=15)
     return config
 
 def default_users_config(network_id: int) -> UsersConfig:

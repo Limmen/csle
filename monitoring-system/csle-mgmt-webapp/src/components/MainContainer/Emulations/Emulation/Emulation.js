@@ -807,7 +807,7 @@ const Emulation = (props) => {
                                     <th>IP</th>
                                     <th>Operating system</th>
                                     <th>Kafka port</th>
-                                    <th>GRPC API port</th>
+                                    <th>Kafka Manager GRPC API port</th>
                                     <th>Memory</th>
                                     <th>CPUs</th>
                                 </tr>
@@ -818,7 +818,7 @@ const Emulation = (props) => {
                                     <td>{getIps(emulation.kafka_config.container.ips_and_networks)}</td>
                                     <td>{emulation.kafka_config.container.os}</td>
                                     <td>{emulation.kafka_config.kafka_port}</td>
-                                    <td>{emulation.kafka_config.default_grpc_port}</td>
+                                    <td>{emulation.kafka_config.kafka_manager_port}</td>
                                     <td>{emulation.kafka_config.resources.available_memory_gb}GB</td>
                                     <td>{emulation.kafka_config.resources.num_cpus}</td>
                                 </tr>

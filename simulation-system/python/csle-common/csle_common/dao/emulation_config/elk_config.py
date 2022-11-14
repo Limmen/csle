@@ -12,8 +12,7 @@ class ElkConfig:
     def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig,
                  firewall_config: NodeFirewallConfig,
                  elastic_port: int= 9200, kibana_port = 5601, logstash_port = 5044,
-                 time_step_len_seconds = 15, default_grpc_port = 50054, secondary_grpc_port = 50055,
-                 third_grpc_port = 50056, version: str = "0.0.1") -> None:
+                 time_step_len_seconds = 15, elk_manager_port = 50045, version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
@@ -22,26 +21,20 @@ class ElkConfig:
         :param elastic_port: the port that the Kafka server is listening to
         :param kibana_port: the port that the kibana web server listens to
         :param logstash_port: the port that the logstash beat interface listens to
-        :param default_grpc_port: the default port for the gRPC manager
-        :param secondary_grpc_port: the secondary grpc port to communicate with the gRPC manager
-        :param third_grpc_port: the third grpc port to communicate with the gRPC manager
+        :param elk_manager_port: the default port for the gRPC manager
         :param time_step_len_seconds: the length of a time-step (period for logging)
         :param firewall_config: the firewall configuration
         :param container: the container
         :param version: the version
-        :param secondary_grpc_port: secondary gRPC port
-        :param third_grpc_port: third gRPC port
         """
         self.elastic_port = elastic_port
         self.kibana_port = kibana_port
         self.logstash_port = logstash_port
-        self.default_grpc_port = default_grpc_port
+        self.elk_manager_port = elk_manager_port
         self.time_step_len_seconds = time_step_len_seconds
         self.version = version
         self.container = container
         self.resources = resources
-        self.secondary_grpc_port = secondary_grpc_port
-        self.third_grpc_port = third_grpc_port
         self.firewall_config = firewall_config
 
     @staticmethod
@@ -57,8 +50,8 @@ class ElkConfig:
             resources=NodeResourcesConfig.from_dict(d["resources"]),
             elastic_port=d["elastic_port"], kibana_port=d["kibana_port"], logstash_port=d["logstash_port"],
             time_step_len_seconds=d["time_step_len_seconds"],
-            default_grpc_port=d["default_grpc_port"], secondary_grpc_port=d["secondary_grpc_port"],
-            version=d["version"], third_grpc_port=d["third_grpc_port"],
+            elk_manager_port=d["elk_manager_port"],
+            version=d["version"],
             firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
         )
         return obj
@@ -73,11 +66,9 @@ class ElkConfig:
         d["elastic_port"] = self.elastic_port
         d["kibana_port"] = self.kibana_port
         d["logstash_port"] = self.logstash_port
-        d["default_grpc_port"] = self.default_grpc_port
-        d["secondary_grpc_port"] = self.secondary_grpc_port
+        d["elk_manager_port"] = self.elk_manager_port
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
-        d["third_grpc_port"] = self.third_grpc_port
         d["firewall_config"] = self.firewall_config.to_dict()
         return d
 
@@ -88,8 +79,7 @@ class ElkConfig:
         return f"container: {self.container}, " \
                f"kafka port:{self.elastic_port}, version: {self.version}, resources: {self.resources}, " \
                f"kibana port: {self.kibana_port}, logstash_port: {self.logstash_port} " \
-               f"default_grpc_port:{self.default_grpc_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
-               f"secondary_grpc_port:{self.secondary_grpc_port}, third_grpc_port: {self.third_grpc_port}," \
+               f"elk_manager_port:{self.elk_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \               
                f"firewall_config: {self.firewall_config}"
 
     def to_json_str(self) -> str:

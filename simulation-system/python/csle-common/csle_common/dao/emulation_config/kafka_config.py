@@ -14,7 +14,6 @@ class KafkaConfig:
                  firewall_config: NodeFirewallConfig,
                  topics: List[KafkaTopic],
                  kafka_port: int= 9092, time_step_len_seconds = 15, kafka_manager_port = 50051,
-                 secondary_grpc_port = 50049, third_grpc_port = 50048,
                  version: str = "0.0.1") -> None:
         """
         Initializes the DTO
@@ -28,8 +27,6 @@ class KafkaConfig:
         :param container: the container
         :param topics: list of kafka topics
         :param version: the version
-        :param secondary_grpc_port: secondary gRPC port
-        :param third_grpc_port: third gRPC port
         """
         self.kafka_port = kafka_port
         self.kafka_manager_port = kafka_manager_port
@@ -38,8 +35,6 @@ class KafkaConfig:
         self.container = container
         self.resources = resources
         self.topics = topics
-        self.secondary_grpc_port = secondary_grpc_port
-        self.third_grpc_port = third_grpc_port
         self.firewall_config = firewall_config
 
     @staticmethod
@@ -55,8 +50,8 @@ class KafkaConfig:
             resources=NodeResourcesConfig.from_dict(d["resources"]),
             topics = list(map(lambda x: KafkaTopic.from_dict(x), d["topics"])),
             kafka_port=d["kafka_port"], time_step_len_seconds=d["time_step_len_seconds"],
-            kafka_manager_port=d["default_grpc_port"], secondary_grpc_port=d["secondary_grpc_port"],
-            version=d["version"], third_grpc_port=d["third_grpc_port"],
+            kafka_manager_port=d["kafka_manager_port"],
+            version=d["version"],
             firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
         )
         return obj
@@ -70,11 +65,9 @@ class KafkaConfig:
         d["resources"] = self.resources.to_dict()
         d["kafka_port"] = self.kafka_port
         d["kafka_manager_port"] = self.kafka_manager_port
-        d["secondary_grpc_port"] = self.secondary_grpc_port
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
         d["topics"] = list(map(lambda x: x.to_dict(), self.topics))
-        d["third_grpc_port"] = self.third_grpc_port
         d["firewall_config"] = self.firewall_config.to_dict()
         return d
 
@@ -85,8 +78,7 @@ class KafkaConfig:
         return f"container: {self.container}, " \
                f"kafka server port :{self.kafka_port}, version: {self.version}, resources: {self.resources}, " \
                f"topics: {','.join(list(map(lambda x: str(x), self.topics)))}, " \
-               f"kafka_manager_port:{self.kafka_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
-               f"secondary_grpc_port:{self.secondary_grpc_port}, third_grpc_port: {self.third_grpc_port}," \
+               f"kafka_manager_port:{self.kafka_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \               
                f"firewall_config: {self.firewall_config}"
 
     def to_json_str(self) -> str:
