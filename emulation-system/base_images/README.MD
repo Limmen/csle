@@ -43,7 +43,11 @@ more specific Docker images.
      - OS: Ubuntu:20.      
 - `ovs_base` ([ovs_base](./docker_files/ovs_base)): a base image with a Open virtual Switch (OVS)
   - OS: Ubuntu:20.
+  - Inherits from `ùbuntu_20_base`
 - `ryu_base` ([ryu_base](./docker_files/ryu_base)): a base image with the Ryu SDN controller
+  - OS: Ubuntu:20.
+  - Inherits from `ùbuntu_20_base`
+- `elk_base` ([elk_base](./docker_files/elk_base)): a base image with the ELK stack
   - OS: Ubuntu:20.
 
 ## Useful commands
@@ -70,6 +74,7 @@ make blank_ubuntu_20 # Build blank_ubuntu_20
 make pengine_exploit_base # Build pengine_exploit_base
 make ovs_base # Build ovs_base
 make ryu_base # Build ryu_base
+make elk_base # Build elk_base
 
 make rm_kali_base # Remove kali_base
 make rm_ubuntu_20_base # Remove ubuntu_20_base
@@ -88,6 +93,7 @@ make rm_blank_ubuntu_20 # Remove blank_ubuntu_20
 make rm_pengine_exploit_base # Remove pengine_exploit_base
 make rm_ovs_base # Remove ovs_base
 make rm_ryu_base # Remove ryu_base
+make rm_elk_base # Remove elk_base
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

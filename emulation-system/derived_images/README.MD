@@ -107,6 +107,18 @@ generate containers for emulating various network infrastructures.
      - OS: Ubuntu:20. 
      - Inherits from `pengine_exploit_base`.
      - Services: Pengine server, SSH
+- `ovs_1` ([ovs_1](./ovs_1)): an image with a OVS virtual switch
+  - OS: Ubuntu:20.
+  - Inherits from `ovs_base`.
+  - Services: OVS switch, SSH
+- `ryu_1` ([ryu_1](./ryu_1)): an image with the Ryu SDN controller
+  - OS: Ubuntu:20.
+  - Inherits from `ryu_base`.
+  - Services: Ryu SDN controller, SSH
+- `elk_1` ([elk_1](./elk_1)): an image with the ELK stack
+  - OS: Ubuntu:20.
+  - Inherits from `elk_base`.
+  - Services: Elastic search, Kibana, Logstash, SSH  
 
 ## Useful commands
 
@@ -140,6 +152,9 @@ make telnet_3 # Build telnet_3
 make client_1 # Build client_1
 make blank_1 # Build blank_1
 make pengine_exploit_1 # Build pengine_exploit_1
+make ovs_1 # Build ovs_1
+make ryu_1 # Build ryu_1
+make elk_1 # Build elk_1
 
 make rm_samba_1 # Remove samba_1
 make rm_shellshock_1 # Remove shellshock_1
@@ -166,6 +181,9 @@ make rm_telnet_3 # Remove telnet_3
 make rm_client_1 # Remove client_1
 make rm_blank_1 # Remove blank_1
 make rm_pengine_exploit_1 # Remove pengine_exploit_1
+make rm_ovs_1 # Remove ovs_1
+make rm_ryu_1 # Remove ryu_1
+make rm_elk_1 # Remove elk_1
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images
