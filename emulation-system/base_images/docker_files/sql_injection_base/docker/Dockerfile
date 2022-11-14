@@ -43,7 +43,7 @@ ADD docker_files/common/vsftpd.conf /etc/vsftpd.conf
 RUN git clone https://github.com/Limmen/erl_pengine
 
 # Cassandra
-RUN wget --no-check-certificate http://apache.mirror.digitalpacific.com.au/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
+RUN wget --no-check-certificate https://archive.apache.org/dist/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
     tar xzvf apache-cassandra-2.1.22-bin.tar.gz &&\
     mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
 ADD docker_files/common/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
