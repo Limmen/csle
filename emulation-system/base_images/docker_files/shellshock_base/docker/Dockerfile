@@ -51,12 +51,6 @@ ADD docker_files/common/vsftpd.conf /etc/vsftpd.conf
 # Pengine Server
 RUN git clone https://github.com/Limmen/erl_pengine
 
-# Cassandra
-RUN wget --no-check-certificate https://archive.apache.org/dist/cassandra/2.1.22/apache-cassandra-2.1.22-bin.tar.gz &&\
-    tar xzvf apache-cassandra-2.1.22-bin.tar.gz &&\
-    mv /apache-cassandra-2.1.22/conf/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml.bak
-ADD docker_files/common/cassandra.yaml /apache-cassandra-2.1.22/conf/cassandra.yaml
-
 # Setup root SSH
 RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 ADD docker_files/common/sshd_config_14 /etc/ssh/sshd_config
