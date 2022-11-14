@@ -46,6 +46,10 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions 
 from csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions \
     import EmulationAttackerNetworkServiceActions
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.emulation_config.host_manager_config import HostManagerConfig
+from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
+from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
+from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
 
 
 def default_config(name: str, network_id: int = 9, level: int = 9, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -80,14 +84,21 @@ def default_config(name: str, network_id: int = 9, level: int = 9, version: str 
             "on the nodes. Conversely, the task of the defender is to harden the defense of the nodes and to detect the " \
             "attacker."
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
-    ovs_config = default_ovs_config(network_id=network_id, level=level, version=version)
-    sdn_controller_config = default_sdn_controller_config(network_id=network_id, level=level, version=version)
+    ovs_cfg = default_ovs_config(network_id=network_id, level=level, version=version)
+    sdn_controller_cfg = default_sdn_controller_config(network_id=network_id, level=level, version=version)
+    host_manager_cfg = default_host_manager_config(network_id=network_id, level=level, version=version)
+    snort_ids_manager_cfg = default_snort_ids_manager_config(network_id=network_id, level=level, version=version)
+    ossec_ids_manager_cfg = default_ossec_ids_manager_config(network_id=network_id, level=level, version=version)
+    docker_stats_manager_cfg = default_docker_stats_manager_config(network_id=network_id, level=level, version=version)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
-        kafka_config=kafka_cfg, services_config=services_cfg, descr=descr,
-        static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_config,
-        sdn_controller_config=sdn_controller_config, level=level, execution_id=-1, version=version
+        kafka_config=kafka_cfg, services_config=services_cfg,
+        descr=descr, static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_cfg,
+        sdn_controller_config=sdn_controller_cfg, host_manager_config=host_manager_cfg,
+        snort_ids_manager_config=snort_ids_manager_cfg, ossec_ids_manager_config=ossec_ids_manager_cfg,
+        docker_stats_manager_config=docker_stats_manager_cfg,
+        level=level, execution_id=-1, version=version
     )
     return emulation_env_cfg
 
@@ -4875,6 +4886,57 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
     :return: the default SDN Controller config
     """
     return None
+
+def default_host_manager_config(network_id: int, level: int, version: str) -> HostManagerConfig:
+    """
+    Generates the default host manager configuration
+
+    :param network_id: the id of the emulation network
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the host manager configuration
+    """
+    config = HostManagerConfig(version=version, time_step_len_seconds=15, host_manager_port=50049)
+    return config
+
+
+def default_snort_ids_manager_config(network_id: int, level: int, version: str) -> SnortIDSManagerConfig:
+    """
+    Generates the default Snort IDS manager configuration
+
+    :param network_id: the id of the emulation network
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the Snort IDS manager configuration
+    """
+    config = SnortIDSManagerConfig(version=version, time_step_len_seconds=15, snort_ids_manager_port=50048)
+    return config
+
+
+def default_ossec_ids_manager_config(network_id: int, level: int, version: str) -> OSSECIDSManagerConfig:
+    """
+    Generates the default OSSEC IDS manager configuration
+
+    :param network_id: the id of the emulation network
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the OSSEC IDS manager configuration
+    """
+    config = OSSECIDSManagerConfig(version=version, time_step_len_seconds=15, ossec_ids_manager_port=50047)
+    return config
+
+
+def default_docker_stats_manager_config(network_id: int, level: int, version: str) -> DockerStatsManagerConfig:
+    """
+    Generates the default docker stats manager configuration
+
+    :param network_id: the id of the emulation network
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the docker stats manager configuration
+    """
+    config = DockerStatsManagerConfig(version=version, time_step_len_seconds=15, docker_stats_manager_port=50046)
+    return config
 
 
 if __name__ == '__main__':

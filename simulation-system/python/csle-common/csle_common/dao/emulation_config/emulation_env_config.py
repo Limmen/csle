@@ -15,6 +15,10 @@ from csle_common.dao.emulation_config.services_config import ServicesConfig
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_config.host_manager_config import HostManagerConfig
+from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
+from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
+from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
 import csle_collector.constants.constants as collector_constants
@@ -31,6 +35,9 @@ class EmulationEnvConfig:
                  resources_config: ResourcesConfig, kafka_config: KafkaConfig, services_config: ServicesConfig,
                  descr: str, static_attacker_sequences: Dict[str, List[EmulationAttackerAction]],
                  ovs_config: OVSConfig, sdn_controller_config: Optional[SDNControllerConfig],
+                 host_manager_config: HostManagerConfig, snort_ids_manager_config: SnortIDSManagerConfig,
+                 ossec_ids_manager_config: OSSECIDSManagerConfig,
+                 docker_stats_manager_config: DockerStatsManagerConfig,
                  level: int, version: str, execution_id : int):
         """
         Initializes the object
@@ -48,6 +55,10 @@ class EmulationEnvConfig:
         :param static_attacker_sequences: dict with static attacker sequences
         :param ovs_config: the OVS config
         :param sdn_controller_config: the SDN controller config
+        :param host_manager_config: the host manager config
+        :param snort_ids_manager_config: the Snort IDS manager config
+        :param ossec_ids_manager_config: the OSSEC IDS manager config
+        :param docker_stats_manager_config: the Docker stats manager config
         :param level: the level of the emulation
         :param version: the version of the emulation
         :param execution_id: the execution id of the emulation
@@ -76,6 +87,10 @@ class EmulationEnvConfig:
         self.level = level
         self.execution_id = execution_id
         self.version = version
+        self.host_manager_config = host_manager_config
+        self.snort_ids_manager_config = snort_ids_manager_config
+        self.ossec_ids_manager_config = ossec_ids_manager_config
+        self.docker_stats_manager_config = docker_stats_manager_config
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -101,7 +116,11 @@ class EmulationEnvConfig:
             descr=d["descr"], static_attacker_sequences=static_attacker_sequences,
             ovs_config=OVSConfig.from_dict(d["ovs_config"]),
             sdn_controller_config=SDNControllerConfig.from_dict(d["sdn_controller_config"]),
-            level=d["level"], execution_id=d["execution_id"], version=d["version"]
+            level=d["level"], execution_id=d["execution_id"], version=d["version"],
+            host_manager_config=HostManagerConfig.from_dict(d["host_manager_config"]),
+            ossec_ids_manager_config=OSSECIDSManagerConfig.from_dict(d["ossec_ids_manager_config"]),
+            snort_ids_manager_config=SnortIDSManagerConfig.from_dict(d["snort_ids_manager_config"]),
+            docker_stats_manager_config=DockerStatsManagerConfig.from_dict(d["docker_stats_manager_config"])
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -140,6 +159,10 @@ class EmulationEnvConfig:
         for k,v in self.static_attacker_sequences.items():
             d2[k] = list(map(lambda x: x.to_dict(), v))
         d["static_attacker_sequences"] = d2
+        d["host_manager_config"] = self.host_manager_config.to_dict()
+        d["snort_ids_manager_config"] = self.snort_ids_manager_config.to_dict()
+        d["ossec_ids_manager_config"] = self.ossec_ids_manager_config.to_dict()
+        d["docker_stats_manager_config"] = self.docker_stats_manager_config.to_dict()
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "",
@@ -268,7 +291,11 @@ class EmulationEnvConfig:
                f"resources_config: {self.resources_config}, kafka_config:{self.kafka_config}, " \
                f"services_config: {self.services_config}, hostname:{self.hostname}, running: {self.running}, " \
                f"descr: {self.descr}, id:{self.id}, static_attacker_sequences: {self.static_attacker_sequences}," \
-               f"ovs_config: {self.ovs_config}, sdn_controller_config: {self.sdn_controller_config}"
+               f"ovs_config: {self.ovs_config}, sdn_controller_config: {self.sdn_controller_config}," \
+               f" host_manager_config: {self.host_manager_config}, " \
+               f"snort_ids_manager_config: {self.snort_ids_manager_config}, " \
+               f"ossec_ids_manager_config: {self.ossec_ids_manager_config}, " \
+               f"docker_stats_manager_config: {self.docker_stats_manager_config}"
 
     def get_all_ips(self) -> List[str]:
         """
@@ -328,6 +355,13 @@ class EmulationEnvConfig:
         config.kafka_config = config.kafka_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.host_manager_config = config.host_manager_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.snort_ids_manager_config = config.snort_ids_manager_config.create_execution_config(
+            ip_first_octet=ip_first_octet)
+        config.ossec_ids_manager_config = config.ossec_ids_manager_config.create_execution_config(
+            ip_first_octet=ip_first_octet)
+        config.docker_stats_manager_config = config.docker_stats_manager_config.create_execution_config(
+            ip_first_octet=ip_first_octet)
         if config.sdn_controller_config is not None:
             config.sdn_controller_config = config.sdn_controller_config.create_execution_config(
                 ip_first_octet=ip_first_octet)
