@@ -6,10 +6,10 @@ import Footer from "./Footer/Footer";
 /**
  * Container component containing the main components of the page
  */
-function MainContainer() {
+const MainContainer = (props) => {
   return (
       <div className="Container index container-fluid">
-        <Header></Header>
+        <Header sessionData={props.sessionData} setSessionData={props.setSessionData}></Header>
         <div className="row">
           <div className="col-sm-12">
               <Outlet/>

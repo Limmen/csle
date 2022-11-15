@@ -4,15 +4,33 @@ import {NavLink, useLocation} from "react-router-dom";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
-
 /**
  * The header component that is present on every page
  */
-const Header = () => {
+const Header = (props) => {
     const location = useLocation();
     const dropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",
         "/emulation-statistics-page", "/system-models-page", "/policy-examination-page", "/images-page",
         "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page", "/control-plane-page"]
+
+    const ActionsCellTracesDataset = (props) => {
+        if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
+            return (
+                <li className="nav-item navtabheader">
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderAdminTooltip}>
+                        <NavLink className="nav-link navtablabel largeFont" to={"admin-page"}>
+                            Admin
+                        </NavLink>
+                    </OverlayTrigger>
+                </li>
+            )
+        } else {
+            return (<></>)
+        }
+    }
 
     const renderManagementTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -282,16 +300,7 @@ const Header = () => {
                                 </OverlayTrigger>
                             </div>
                         </li>
-                        <li className="nav-item navtabheader">
-                            <OverlayTrigger
-                                placement="top"
-                                delay={{show: 0, hide: 0}}
-                                overlay={renderAdminTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"admin-page"}>
-                                    Admin
-                                </NavLink>
-                            </OverlayTrigger>
-                        </li>
+                        <ActionsCellTracesDataset sessionData={props.sessionData} setSessionData={props.setSessionData}/>
                     </ul>
                 </div>
             </div>

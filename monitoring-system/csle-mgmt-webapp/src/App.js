@@ -49,7 +49,8 @@ function App() {
                     <BrowserRouter>
                         <Routes>
                             <Route path="/"
-                                   element={<MainContainer/>}>
+                                   element={<MainContainer sessionData={sessionData}
+                                                           setSessionData={setSessionData}/>}>
                                 <Route index element={<Login setSessionData={setSessionData}
                                                              sessionData={sessionData}/>}>
                                 </Route>
