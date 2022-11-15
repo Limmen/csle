@@ -58,7 +58,7 @@ class NmapVuln:
         :return: True if equal otherwise False
         """
         return (self.name == other.name and
-                self.port == other.port)
+                self.port == other.kafka_port)
 
     def __str__(self) -> str:
         """

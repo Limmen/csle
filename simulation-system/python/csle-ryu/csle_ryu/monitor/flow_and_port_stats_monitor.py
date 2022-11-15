@@ -156,7 +156,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 eth_dst = flow.match['eth_dst']
             flow_statistic_dto = FlowStatistic(
                 timestamp=ts, datapath_id=ev.msg.datapath.id, in_port=in_port,
-                out_port=flow.instructions[0].actions[0].port, dst_mac_address=eth_dst, num_packets=flow.packet_count,
+                out_port=flow.instructions[0].actions[0].kafka_port, dst_mac_address=eth_dst, num_packets=flow.packet_count,
                 num_bytes=flow.byte_count, duration_nanoseconds=flow.duration_nsec, duration_seconds=flow.duration_sec,
                 hard_timeout=flow.hard_timeout, idle_timeout=flow.idle_timeout, priority=flow.priority,
                 cookie=flow.cookie

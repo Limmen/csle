@@ -39,13 +39,12 @@ class GeneralUtil:
             with io.open(config_file_path, 'r', encoding='utf-8') as f:
                 json_str = f.read()
                 config_dict = json.loads(json_str)
-                constants.CSLE_ADMIN.USER = config_dict["admin_username"]
-                constants.CSLE_ADMIN.PW = config_dict["admin_password"]
-                constants.CSLE_GUEST.USER = config_dict["guest_username"]
-                constants.CSLE_GUEST.PW = config_dict["guest_password"]
+                constants.CSLE_ADMIN.MANAGEMENT_USER = config_dict["admin_username"]
+                constants.CSLE_ADMIN.MANAGEMENT_PW = config_dict["admin_password"]
+                constants.CSLE_GUEST.MANAGEMENT_USER = config_dict["guest_username"]
+                constants.CSLE_GUEST.MANAGEMENT_PW = config_dict["guest_password"]
                 constants.AGENT.USER = config_dict["agent_username"]
                 constants.AGENT.PW = config_dict["agent_password"]
-
                 constants.METADATA_STORE.USER = config_dict["database_user"]
                 constants.METADATA_STORE.PASSWORD = config_dict["database_password"]
                 constants.METADATA_STORE.HOST = config_dict["database_host"]

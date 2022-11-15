@@ -293,6 +293,10 @@ running commands can read and write to this directory.
       ```bash
       _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish 
       ```
+   - Initialize management users
+     ```bash
+     csle init 
+     ```      
 
 9. **Install the emulation system**
     - Add Docker's official GPG key:

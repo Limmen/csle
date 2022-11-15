@@ -418,12 +418,12 @@ class ShellUtil:
                 # Check cached connections
                 for cr in s.attacker_cached_backdoor_credentials.values():
                     for ip in machine.ips:
-                        if (ip, cr.username, cr.port) in s.attacker_cached_ssh_connections:
+                        if (ip, cr.username, cr.kafka_port) in s.attacker_cached_ssh_connections:
                             conn_dto = s.attacker_cached_ssh_connections[
-                                (ip, cr.username, cr.port)]
+                                (ip, cr.username, cr.kafka_port)]
                             connection_dto = EmulationConnectionObservationState(
                                 conn=conn_dto.conn, credential=cr, root=machine.root,
-                                service=constants.SSH.SERVICE_NAME, port=cr.port, ip=ip)
+                                service=constants.SSH.SERVICE_NAME, port=cr.kafka_port, ip=ip)
                             new_m_obs.shell_access_credentials.append(cr)
                             new_m_obs.backdoor_credentials.append(cr)
                             new_m_obs.ssh_connections.append(connection_dto)

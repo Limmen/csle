@@ -23,15 +23,16 @@ class DockerStatsThread(threading.Thread):
 
     def __init__(self, container_names_and_ips: List[
         csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp],
-                 emulation: str, execution_first_ip_octet: int, sink_ip: str,
+                 emulation: str, execution_first_ip_octet: int, kafka_ip: str,
                  stats_queue_maxsize: int,
-                 time_step_len_seconds: int, sink_port: int):
+                 time_step_len_seconds: int, kafka_port: int):
         """
         Initializes the thread
 
         :param container_names_and_ips: list of container names and ips to monitor
         :param emulation: name of the emulation to monitor
-        :param sink_ip: the ip of the Kafka server to produce stats to
+        :param kafka_ip: the ip of the Kafka server to produce stats to
+        :param kafka_port: the port of the Kafka server to produce stats to
         :param stats_queue_maxsize: max length of the queue before sending to Kafka
         :param time_step_len_seconds: the length of a time-step before sending stats to Kafka
         """
@@ -52,17 +53,17 @@ class DockerStatsThread(threading.Thread):
         self.streams = streams
         self.stats_queues = {}
         self.time_step_len_seconds = time_step_len_seconds
-        self.kafka_ip = sink_ip
-        self.port = sink_port
+        self.kafka_ip = kafka_ip
+        self.kafka_port = kafka_port
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
-        self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.port}",
+        self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.kafka_port}",
                      constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         self.producer = Producer(**self.conf)
         self.stopped = False
         logging.info(f"Producer thread starting, emulation:{self.emulation}, "
                      f"execution_first_ip_octet: {execution_first_ip_octet}, kafka ip: {self.kafka_ip}, "
-                     f"kafka port:{self.port}, time_step_len_seconds: {self.time_step_len_seconds}, "
+                     f"kafka port:{self.kafka_port}, time_step_len_seconds: {self.time_step_len_seconds}, "
                      f"container and ips:{self.container_names_and_ips}")
 
     def run(self) -> None:
@@ -228,9 +229,9 @@ class DockerStatsManagerServicer(
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
 
         docker_stats_monitor_thread = DockerStatsThread(request.containers, request.emulation,
-                                                        request.execution_first_ip_octet, request.sink_ip,
+                                                        request.execution_first_ip_octet, request.kafka_ip,
                                                         request.stats_queue_maxsize, request.time_step_len_seconds,
-                                                        request.sink_port)
+                                                        request.kafka_port)
         docker_stats_monitor_thread.start()
         self.docker_stats_monitor_threads.append(docker_stats_monitor_thread)
         new_docker_stats_monitor_threads = []

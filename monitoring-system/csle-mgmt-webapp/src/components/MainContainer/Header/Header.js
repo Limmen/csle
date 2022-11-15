@@ -104,6 +104,12 @@ const Header = () => {
         </Tooltip>
     );
 
+    const renderAdminTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Administration of user accounts.
+        </Tooltip>
+    );
+
     const renderLoginTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Login page
@@ -275,6 +281,16 @@ const Header = () => {
                                     </NavLink>
                                 </OverlayTrigger>
                             </div>
+                        </li>
+                        <li className="nav-item navtabheader">
+                            <OverlayTrigger
+                                placement="top"
+                                delay={{show: 0, hide: 0}}
+                                overlay={renderAdminTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"admin-page"}>
+                                    Admin
+                                </NavLink>
+                            </OverlayTrigger>
                         </li>
                     </ul>
                 </div>

@@ -29,6 +29,7 @@ class MGMT_WEBAPP:
     POLICY_EXAMINATION_PAGE_RESOURCE = "policy-examination-page"
     SDN_CONTROLLERS_PAGE_RESOURCE = "sdn-controllers-page"
     CONTROL_PLANE_PAGE_RESOURCE = "control-plane-page"
+    ADMIN_PAGE_RESOURCE = "admin-page"
     SIMULATIONS_PAGE_RESOURCE = "simulations-page"
     SYSTEM_MODELS_PAGE_RESOURCE = "system-models-page"
     TRACES_PAGE_RESOURCE = "traces-page"

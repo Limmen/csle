@@ -1135,18 +1135,22 @@ class AGENT:
 
 class CSLE_ADMIN:
     """
-    Constants related to the default csle admin account
+    Constants related to the default csle admin account.
     """
-    USER = "csle_admin"
+    USER = "csle_admin" # Should not be a simple user/pw combination since then the automated attacker will figure it out
     PW = "csle@admin-pw_191"
+    MANAGEMENT_USER = "admin"
+    MANAGEMENT_PW = "admin"
 
 
 class CSLE_GUEST:
     """
     Constants related to the default csle guest account
     """
-    USER = "csle_guest"
+    USER = "csle_guest" # Should not be a simple user/pw combination since then the automated attacker will figure it out
     PW = "csle@guest-pw_191"
+    MANAGEMENT_USER = "guest"
+    MANAGEMENT_PW = "guest"
 
 
 class SYSTEM_IDENTIFICATION:

@@ -324,7 +324,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             request.time_step_len_seconds = 1
         producer_thread = ProducerThread(arrival_thread=self.arrival_thread,
                                          time_step_len_seconds=request.time_step_len_seconds,
-                                         ip=request.ip, port=request.port)
+                                         ip=request.ip, port=request.kafka_port)
         producer_thread.start()
         self.producer_thread = producer_thread
 

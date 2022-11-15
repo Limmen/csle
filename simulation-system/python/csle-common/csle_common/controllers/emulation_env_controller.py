@@ -100,7 +100,7 @@ class EmulationEnvController:
         ContainerController.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply log sink config --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
         EmulationEnvController.apply_kafka_config(emulation_env_config=emulation_env_config)
 
         current_step += 1

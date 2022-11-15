@@ -40,8 +40,8 @@ def start_docker_stats_monitor(
     start_docker_stats_monitor_msg = \
         csle_collector.docker_stats_manager.docker_stats_manager_pb2.StartDockerStatsMonitorMsg(
             emulation=emulation, execution_first_ip_octet=execution_first_ip_octet,
-            sink_ip=kafka_ip, stats_queue_maxsize=stats_queue_maxsize,
-            time_step_len_seconds=time_step_len_seconds, sink_port=kafka_port, containers=containers
+            kafka_ip=kafka_ip, stats_queue_maxsize=stats_queue_maxsize,
+            time_step_len_seconds=time_step_len_seconds, kafka_port=kafka_port, containers=containers
         )
     docker_stats_manager_dto = stub.startDockerStatsMonitor(start_docker_stats_monitor_msg)
     return docker_stats_manager_dto
