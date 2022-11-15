@@ -97,6 +97,7 @@ class MGMT_WEBAPP:
     SYSTEM_IDENTIFICATION_JOBS_RESOUCE = "system-identification-jobs"
     LOGS_PROPERTY = "logs"
     PATH_PROPERTY = "path"
+    USER_PROPERTY = "user"
     PORT_PROPERTY = "port"
     START_PROPERTY = "start"
     STOP_PROPERTY = "stop"

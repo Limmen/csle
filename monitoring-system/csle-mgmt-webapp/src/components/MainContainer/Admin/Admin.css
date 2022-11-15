@@ -14,3 +14,12 @@
     height:400px;
     width:510px;
 }
+
+.usersTable {
+    font-size: 12px;
+}
+
+.saveUsersBtn {
+    margin-left:20px;
+    font-size: 10px;
+}
