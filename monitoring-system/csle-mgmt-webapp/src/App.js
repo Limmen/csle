@@ -14,6 +14,7 @@ import TrainingResults from "./components/MainContainer/TrainingResults/Training
 import About from "./components/MainContainer/About/About";
 import Admin from "./components/MainContainer/Admin/Admin";
 import Login from "./components/MainContainer/Login/Login";
+import Register from "./components/MainContainer/Register/Register";
 import Policies from "./components/MainContainer/Policies/Policies";
 import Jobs from "./components/MainContainer/Jobs/Jobs";
 import ControlPlane from "./components/MainContainer/ControlPlane/ControlPlane";
@@ -138,6 +139,8 @@ function App() {
                                 </Route>
                                 <Route path="login-page" index element={<Login setSessionData={setSessionData}
                                                                                sessionData={sessionData}/>}>
+                                </Route>
+                                <Route path="register-page" index element={<Register />}>
                                 </Route>
                                 <Route path="admin-page" index element={
                                     <ProtectedRoute>

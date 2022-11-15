@@ -134,6 +134,12 @@ const Header = (props) => {
         </Tooltip>
     );
 
+    const renderRegisterTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Register page
+        </Tooltip>
+    );
+
     const renderDownloadsTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Page with download links to datasets
@@ -148,6 +154,16 @@ const Header = (props) => {
                     </h1>
 
                     <ul className="nav nav-tabs justify-content-center navtabsheader navbar-expand">
+                        <li className="nav-item navtabheader">
+                            <OverlayTrigger
+                                placement="top"
+                                delay={{show: 0, hide: 0}}
+                                overlay={renderRegisterTooltip()}>
+                                <NavLink className="nav-link navtablabel largeFont" to={"register-page"}>
+                                    Register
+                                </NavLink>
+                            </OverlayTrigger>
+                        </li>
                         <li className="nav-item navtabheader">
                             <OverlayTrigger
                                 placement="top"

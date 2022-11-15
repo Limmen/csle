@@ -96,7 +96,7 @@ def user(user_id: int):
                 new_user.password = user.password
                 new_user.salt = user.salt
             else:
-                byte_pwd = constants.CSLE_ADMIN.MANAGEMENT_PW.encode('utf-8')
+                byte_pwd = user.password.encode('utf-8')
                 salt = bcrypt.gensalt()
                 pw_hash = bcrypt.hashpw(byte_pwd, salt)
                 new_user.salt = salt.decode("utf-8")
@@ -109,3 +109,32 @@ def user(user_id: int):
             MetastoreFacade.remove_management_user(management_user=user)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@users_bp.route("/create", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def create_user():
+    """
+    The /users/create resource.
+
+    :return: creates a new user
+    """
+    response = jsonify({})
+    if request.data is not None and api_constants.MGMT_WEBAPP.USERNAME_PROPERTY in json.loads(request.data) \
+            and api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in json.loads(request.data):
+        username = json.loads(request.data)[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
+        password = json.loads(request.data)[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
+        if password == "" or username == "":
+            return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        else:
+            byte_pwd = password.encode('utf-8')
+            salt = bcrypt.gensalt()
+            pw_hash = bcrypt.hashpw(byte_pwd, salt)
+            user = ManagementUser(username=username,
+                                  password=pw_hash.decode("utf-8"), admin=False,
+                                  salt=salt.decode("utf-8"))
+            MetastoreFacade.save_management_user(management_user=user)
+            response = jsonify(user.to_dict())
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE

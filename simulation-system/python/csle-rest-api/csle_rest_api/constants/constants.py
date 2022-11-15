@@ -19,6 +19,7 @@ class MGMT_WEBAPP:
     STATIC = "static"
     ABOUT_PAGE_RESOURCE = "about-page"
     LOGIN_PAGE_RESOURCE = "login-page"
+    REGISTER_PAGE_RESOURCE = "register-page"
     EMULATION_STATISTICS_PAGE_RESOURCE = "emulation-statistics-page"
     EMULATIONS_PAGE_RESOURCE = "emulations-page"
     IMAGES_PAGE_RESOURCE = "images-page"
