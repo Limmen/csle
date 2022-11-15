@@ -30,7 +30,7 @@ def fnn_w_softmax_policies():
         return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-        # Check if ids query parameter is True, then only return the ids and not the whole dataset
+        # Check if ids query parameter is True, then only return the ids and not the whole list of FNN-w-softmax policies
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return fnn_w_softmax_policies_ids()

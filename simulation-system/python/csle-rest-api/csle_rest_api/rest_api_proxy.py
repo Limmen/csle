@@ -19,6 +19,8 @@ from csle_rest_api.pages.policies.routes import policies_page_bp
 from csle_rest_api.pages.policy_examination.routes import policy_examination_page_bp
 from csle_rest_api.pages.training.routes import training_page_bp
 from csle_rest_api.pages.sdn_controllers.routes import sdn_controllers_page_bp
+from csle_rest_api.pages.control_plane.routes import control_plane_page_bp
+from csle_rest_api.pages.admin.routes import admin_page_bp
 
 
 def create_app(static_folder: str, proxy_server: str):
@@ -78,6 +80,12 @@ def create_app(static_folder: str, proxy_server: str):
     app.register_blueprint(sdn_controllers_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE}")
+    app.register_blueprint(control_plane_page_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE}")
+    app.register_blueprint(admin_page_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.ADMIN_PAGE_RESOURCE}")
 
     # Root route
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -1273,6 +1281,50 @@ def create_app(static_folder: str, proxy_server: str):
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}'
                           f'{constants.COMMANDS.SLASH_DELIM}{statistics_dataset_id}').content
+
+
+    @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.USERS_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def users_proxy():
+        """
+        Proxy for the /users resource
+
+        :return: the /users resource
+        """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
+        ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+        if ids is not None and ids:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}'
+                       f'?ids=true&token={token}').content
+        else:
+            if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+                return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}'
+                           f'?token={token}').content
+            elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+                return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}'
+                              f'?token={token}').content
+
+    @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.USERS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<user_id>',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+    def user_proxy(user_id: int):
+        """
+        Proxy for the /users/user_id resource
+
+        :return: the /users/user_id resource
+        """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}'
+                       f'{constants.COMMANDS.SLASH_DELIM}{user_id}?token={token}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+            return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}'
+                          f'{constants.COMMANDS.SLASH_DELIM}{user_id}?token={token}').content
 
     return app
 

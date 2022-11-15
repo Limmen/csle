@@ -34,7 +34,7 @@ def emulation_executions():
     if authorized is not None:
         return authorized
 
-    # Check if ids query parameter is True, then only return the ids and not the whole dataset
+    # Check if ids query parameter is True, then only return the ids and not the whole list of emulation executions
     ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
     if ids is not None and ids:
         return emulation_execution_ids()
