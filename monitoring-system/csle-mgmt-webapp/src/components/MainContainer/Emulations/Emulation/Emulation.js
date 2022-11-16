@@ -31,12 +31,18 @@ const Emulation = (props) => {
     const [clientPopulationOpen, setClientPopulationOpen] = useState(false);
     const [trafficOpen, setTrafficOpen] = useState(false);
     const [kafkaOpen, setKafkaOpen] = useState(false);
+    const [elkOpen, setElkOpen] = useState(false);
+    const [hostManagerConfigOpen, setHostManagerConfigOpen] = useState(false);
+    const [snortManagerConfigOpen, setSnortManagerConfigOpen] = useState(false);
+    const [ossecManagerConfigOpen, setOSSECManagerConfigOpen] = useState(false);
+    const [dockerStatsManagerConfigOpen, setDockerStatsManagerConfigOpen] = useState(false);
     const [kafkaTopicsOpen, setKafkaTopicsOpen] = useState(false);
     const [firewallOpen, setFirewallOpen] = useState(false);
     const [staticAttackerSequenceOpen, setStaticAttackerSequenceOpen] = useState(false);
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
     const ip = serverIp
+    console.log(emulation)
     // const ip = "172.31.212.92"
 
     const startorStopEmulationPre = (emulation) => {
@@ -797,7 +803,7 @@ const Emulation = (props) => {
                             aria-expanded={kafkaOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle">Kafka log</h5>
+                            <h5 className="semiTitle">Kafka configuration</h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={kafkaOpen}>
@@ -863,6 +869,175 @@ const Emulation = (props) => {
                                         <td>{topic.attributes.join(",")}</td>
                                     </tr>
                                 )}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setElkOpen(!elkOpen)}
+                            aria-controls="elkBody"
+                            aria-expanded={elkOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">ELK configuration</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={elkOpen}>
+                        <div id="elkBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Container</th>
+                                    <th>IP</th>
+                                    <th>Operating system</th>
+                                    <th>Elasticsearch port</th>
+                                    <th>ELK Manager GRPC API port</th>
+                                    <th>Kibana port</th>
+                                    <th>Logstash port</th>
+                                    <th>Memory</th>
+                                    <th>CPUs</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr key={emulation.elk_config.container.full_name_str}>
+                                    <td>{emulation.elk_config.container.full_name_str}</td>
+                                    <td>{getIps(emulation.elk_config.container.ips_and_networks)}</td>
+                                    <td>{emulation.elk_config.container.os}</td>
+                                    <td>{emulation.elk_config.elastic_port}</td>
+                                    <td>{emulation.elk_config.elk_manager_port}</td>
+                                    <td>{emulation.elk_config.kibana_port}</td>
+                                    <td>{emulation.elk_config.logstash_port}</td>
+                                    <td>{emulation.elk_config.resources.available_memory_gb}GB</td>
+                                    <td>{emulation.elk_config.resources.num_cpus}</td>
+                                </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setHostManagerConfigOpen(!hostManagerConfigOpen)}
+                            aria-controls="hostManagerConfigBody"
+                            aria-expanded={hostManagerConfigOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">Host managers configuration</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={hostManagerConfigOpen}>
+                        <div id="hostManagerConfigBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Host managers GRPC API port</th>
+                                    <th>Time-step length (s)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr key={emulation.host_manager_config.host_manager_port}>
+                                    <td>{emulation.host_manager_config.host_manager_port}</td>
+                                    <td>{emulation.host_manager_config.time_step_len_seconds}</td>
+                                </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setSnortManagerConfigOpen(!snortManagerConfigOpen)}
+                            aria-controls="snortManagerConfigBody"
+                            aria-expanded={snortManagerConfigOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">Snort IDS managers configuration</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={snortManagerConfigOpen}>
+                        <div id="snortManagerConfigBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Snort IDS managers GRPC API port</th>
+                                    <th>Time-step length (s)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr key={emulation.snort_ids_manager_config.snort_ids_manager_port}>
+                                    <td>{emulation.snort_ids_manager_config.snort_ids_manager_port}</td>
+                                    <td>{emulation.snort_ids_manager_config.time_step_len_seconds}</td>
+                                </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setOSSECManagerConfigOpen(!ossecManagerConfigOpen)}
+                            aria-controls="ossecManagerConfigBody"
+                            aria-expanded={ossecManagerConfigOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">OSSEC IDS managers configuration</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={ossecManagerConfigOpen}>
+                        <div id="ossecManagerConfigBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>OSSEC IDS managers GRPC API port</th>
+                                    <th>Time-step length (s)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr key={emulation.ossec_ids_manager_config.ossec_ids_manager_port}>
+                                    <td>{emulation.ossec_ids_manager_config.ossec_ids_manager_port}</td>
+                                    <td>{emulation.ossec_ids_manager_config.time_step_len_seconds}</td>
+                                </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setDockerStatsManagerConfigOpen(!dockerStatsManagerConfigOpen)}
+                            aria-controls="dockerStatsManagerConfigBody"
+                            aria-expanded={dockerStatsManagerConfigOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">Docker stats managers configuration</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={dockerStatsManagerConfigOpen}>
+                        <div id="dockerStatsManagerConfigBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Docker stats managers GRPC API port</th>
+                                    <th>Time-step length (s)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr key={emulation.docker_stats_manager_config.docker_stats_manager_port}>
+                                    <td>{emulation.docker_stats_manager_config.docker_stats_manager_port}</td>
+                                    <td>{emulation.docker_stats_manager_config.time_step_len_seconds}</td>
+                                </tr>
                                 </tbody>
                             </Table>
                         </div>

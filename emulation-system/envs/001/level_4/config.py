@@ -1461,7 +1461,7 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
     resources = NodeResourcesConfig(
         container_name=f"{constants.CSLE.NAME}-"
                        f"{constants.CONTAINER_IMAGES.ELK_1}_1-{constants.CSLE.LEVEL}{level}",
-        num_cpus=1, available_memory_gb=4,
+        num_cpus=3, available_memory_gb=16,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
