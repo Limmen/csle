@@ -403,6 +403,10 @@ running commands can read and write to this directory.
        chmod u+x install.sh
        ./install.sh
      ```
+     - Configure the IP of the server where the monitoring system runs by editing the file:
+      ```bash
+       csle/monitoring-system/csle-mgmt-webapp/src/components/Common/serverIp.js
+      ```
      - Add prometheus binary to the path
        ```bash
         export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
