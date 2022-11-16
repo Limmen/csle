@@ -21,7 +21,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import getSystemModelTypeStr from "../../Common/getSystemModelTypeStr";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component representing the /system-models-page
@@ -44,7 +44,7 @@ const SystemModels = (props) => {
     const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
     const [searchString, setSearchString] = useState("");
 
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

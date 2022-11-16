@@ -2,6 +2,7 @@ import React, {useState, useCallback} from 'react';
 import { useAlert } from "react-alert";
 import { useNavigate } from "react-router-dom";
 import './Register.css';
+import serverIp from "../../Common/serverIp";
 
 /**
  * The component representing the /register-page
@@ -13,7 +14,7 @@ const Register = () => {
     const [lastName, setLastName] = useState("");
     const [organization, setOrganization] = useState("");
     const [email, setEmail] = useState("");
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
 

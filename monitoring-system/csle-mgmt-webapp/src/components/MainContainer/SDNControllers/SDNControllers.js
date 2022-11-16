@@ -14,7 +14,7 @@ import Select from 'react-select'
 import {useDebouncedCallback} from 'use-debounce';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component representing the /sdn-controllers-page
@@ -28,7 +28,7 @@ const SDNControllers = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [filteredEmulationsIds, setFilteredEmulationsIds] = useState([]);
     const [searchString, setSearchString] = useState("");
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

@@ -17,6 +17,7 @@ import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component representing the /emulations-page
@@ -31,7 +32,7 @@ const Emulations = (props) => {
     const [filteredEmulationsIds, setFilteredEmulationsIds] = useState([]);
     const [showOnlyRunningEmulations, setShowOnlyRunningEmulations] = useState(false);
     const [searchString, setSearchString] = useState("");
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

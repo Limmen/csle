@@ -13,6 +13,7 @@ import Form from 'react-bootstrap/Form';
 import {useDebouncedCallback} from 'use-debounce';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component representing the /images-page
@@ -23,7 +24,7 @@ const ContainerImages = (props) => {
     const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState([]);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

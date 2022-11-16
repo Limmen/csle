@@ -15,6 +15,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import {useNavigate} from "react-router-dom";
 import fileDownload from 'react-file-download'
 import {useAlert} from "react-alert";
+import serverIp from "../../Common/serverIp";
 
 /**
  *  Component representing the /downloads-page
@@ -34,7 +35,7 @@ const Downloads = (props) => {
     const [filteredStatisticsDatasets, setFilteredStatisticsDatasets] = useState([]);
     const [searchStringStatisticsDatasets, setSearchStringStatisticsDatasets] = useState("");
     const [loadingStatisticsDatasets, setLoadingStatisticsDatasets] = useState(true);
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
 

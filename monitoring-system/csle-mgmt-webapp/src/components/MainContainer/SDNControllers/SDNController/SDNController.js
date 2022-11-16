@@ -7,6 +7,7 @@ import fileDownload from 'react-file-download'
 import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
+import serverIp from "../../../Common/serverIp";
 
 /**
  * Component representing the /sdn-controllers/id resource
@@ -24,7 +25,7 @@ const SDNController = (props) => {
     const [rolesOpen, setRolesOpen] = useState(false);
     const [tablesOpen, setTablesOpen] = useState(false);
     const [portsOpen, setPortsOpen] = useState(false);
-    const ip = "localhost"
+    const ip = serverIp
     // const ip = "172.31.212.92"
 
 

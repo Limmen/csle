@@ -17,7 +17,7 @@ import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component representing the /simulations-page
@@ -31,7 +31,7 @@ const Simulations = (props) => {
     const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState(true);
     const [loadingSelectedSimulation, setLoadingSelectedSimulation] = useState(true);
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

@@ -42,6 +42,24 @@ RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
         rsyslog netcat traceroute sysstat iproute2 iperf3 libpcap-dev libpcre3-dev libdumbnet-dev flex bison lsof  \
         default-jre default-jdk
 
+
+# Add users script
+ADD docker_files/common/make_root_users.sh /make_root_users.sh
+ADD docker_files/common/root_users.txt /root_users.txt
+RUN chmod 777 /make_root_users.sh
+
+# setup root users
+RUN /make_root_users.sh
+
+# Setup root SSH
+RUN mv /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+ADD docker_files/common/sshd_config /etc/ssh/sshd_config
+RUN service ssh start
+
+# Setup password-less sudo
+RUN mv /etc/sudoers /etc/sudoers.bak
+ADD docker_files/common/sudoers /etc/sudoers
+
 ### set current package version
 
 ARG ELK_VERSION=8.3.3
@@ -195,6 +213,29 @@ RUN chmod 644 /etc/logrotate.d/elasticsearch \
 ### configure Kibana
 
 ADD docker_files/elk_base/docker/kibana.yml ${KIBANA_HOME}/config/kibana.yml
+
+# Conda
+ENV PATH="/root/miniconda3/bin:${PATH}"
+ARG PATH="/root/miniconda3/bin:${PATH}"
+RUN wget --no-check-certificate \
+    https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-4.7.12.1-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-4.7.12.1-Linux-x86_64.sh
+
+# make non-activate conda commands available
+ENV PATH=$CONDA_DIR/bin:$PATH
+# make conda activate command available from /bin/bash --login shells
+RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
+# make conda activate command available from /bin/bash --interative shells
+RUN conda init bash
+
+# Setup base environment with csle-collector
+#SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
+RUN pip install flask && \
+    pip install waitress && \
+    pip install csle-collector
+
 
 
 ###############################################################################

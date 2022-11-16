@@ -30,7 +30,6 @@ class DockerEnvMetadata:
         self.config = config
         self.kafka_config = kafka_config
 
-
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "DockerEnvMetadata":
         """

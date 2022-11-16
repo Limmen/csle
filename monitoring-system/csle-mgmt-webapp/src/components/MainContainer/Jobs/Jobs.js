@@ -18,6 +18,7 @@ import {confirmAlert} from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import serverIp from "../../Common/serverIp";
 
 /**
  * The component representing the /jobs-page
@@ -54,7 +55,7 @@ const Jobs = (props) => {
     const [filteredSystemIdentificationJobsIds, setFilteredSystemIdentificationJobsIds] = useState([]);
     const [showOnlyRunningSystemIdentificationJobs, setShowOnlyRunningSystemIdentificationJobs] = useState(false);
 
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

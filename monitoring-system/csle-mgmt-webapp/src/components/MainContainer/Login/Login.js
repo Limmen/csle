@@ -3,6 +3,7 @@ import {useAlert} from "react-alert";
 import './Login.css';
 import Button from 'react-bootstrap/Button'
 import ChangeUserDataForm from "./ChangeUserDataForm/ChangeUserDataForm";
+import serverIp from "../../Common/serverIp";
 
 /**
  * The component representing the /login-page
@@ -10,7 +11,7 @@ import ChangeUserDataForm from "./ChangeUserDataForm/ChangeUserDataForm";
 const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
 
     const loginUser = useCallback((credentials) => {

@@ -16,6 +16,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import {useDebouncedCallback} from 'use-debounce';
 import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component with a user interface to the control plane of the emulations
@@ -32,7 +33,7 @@ const ControlPlane = (props) => {
     const [loadingSelectedEmulationExecutionInfo, setLoadingSelectedEmulationExecutionInfo] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [searchString, setSearchString] = useState("");
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
 

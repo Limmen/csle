@@ -10,6 +10,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import serverIp from "../../../Common/serverIp";
 
 /**
  * The component representing the /jobs/<id> resource for system identification jobs
@@ -20,7 +21,7 @@ const SystemIdentificationJob = (props) => {
     const [loadingLogs, setLoadingLogs] = useState(false);
     const [hyperparametersOpen, setHyperparametersOpen] = useState(false);
     const [logs, setLogs] = useState(null);
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

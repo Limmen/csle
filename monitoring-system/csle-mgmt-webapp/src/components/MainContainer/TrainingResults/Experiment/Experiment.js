@@ -15,6 +15,7 @@ import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
 import getDateStr from "../../../Common/getDateStr";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import serverIp from "../../../Common/serverIp";
 
 /**
  * Component representing the /training-results/id resource
@@ -30,7 +31,7 @@ const Experiment = (props) => {
     const [loadingLogs, setLoadingLogs] = useState(false);
     const [logs, setLogs] = useState(null);
 
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

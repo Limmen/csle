@@ -2,6 +2,7 @@ import React, {useState, useCallback} from 'react';
 import {useAlert} from "react-alert";
 import './Login.css';
 import {useNavigate} from "react-router-dom";
+import serverIp from "../../../Common/serverIp";
 
 /**
  * The component representing the /login-page
@@ -16,7 +17,7 @@ const ChangeUserDataForm = (props) => {
     const [admin, setAdmin] = useState(props.sessionData.admin);
     const [userId, setUserId] = useState(props.sessionData.id);
     const [token, setToken] = useState(props.sessionData.token);
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
 

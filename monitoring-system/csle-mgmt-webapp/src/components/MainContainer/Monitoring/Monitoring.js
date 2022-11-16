@@ -17,6 +17,7 @@ import Form from 'react-bootstrap/Form';
 import {useDebouncedCallback} from 'use-debounce';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component containing various plots for monitoring a running execution of an emulation
@@ -107,7 +108,7 @@ const Monitoring = (props) => {
     const [searchString, setSearchString] = useState("");
     const [openFlowSwitchesOptions, setOpenFlowSwitchesOptions] = useState([]);
     const [selectedOpenFlowSwitch, setSelectedOpenFlowSwitch] = useState(null);
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
 

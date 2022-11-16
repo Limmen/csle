@@ -10,6 +10,8 @@ import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import getIps from "../../../Common/getIps";
+import serverIp from "../../../Common/serverIp";
+
 
 /**
  * Component representing the /emulations/<id> resource
@@ -34,7 +36,7 @@ const Emulation = (props) => {
     const [staticAttackerSequenceOpen, setStaticAttackerSequenceOpen] = useState(false);
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
-    const ip = "localhost"
+    const ip = serverIp
     // const ip = "172.31.212.92"
 
     const startorStopEmulationPre = (emulation) => {

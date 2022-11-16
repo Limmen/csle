@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, createRef} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import './Admin.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
@@ -10,6 +10,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Type } from 'react-bootstrap-table2-editor';
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component representing the /admin-page
@@ -17,7 +18,7 @@ import { Type } from 'react-bootstrap-table2-editor';
 const Admin = (props) => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const ip = "localhost";
+    const ip = serverIp;
     const alert = useAlert();
     const navigate = useNavigate();
 

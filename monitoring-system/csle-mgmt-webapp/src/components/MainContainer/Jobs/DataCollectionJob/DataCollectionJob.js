@@ -11,6 +11,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import getIpString from "../../../Common/getIpString";
+import serverIp from "../../../Common/serverIp";
 
 /**
  * The component representing the /jobs/<id> resource for data collection jobs
@@ -23,7 +24,7 @@ const DataCollectionJob = (props) => {
     const [logsOpen, setLogsOpen] = useState(false);
     const [loadingLogs, setLoadingLogs] = useState(false);
     const [logs, setLogs] = useState(null);
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

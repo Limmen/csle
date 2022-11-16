@@ -27,7 +27,7 @@ import DeltaAlertsLineChart from "./DeltaAlertsLineChart/DeltaAlertsLineChart";
 import Select from 'react-select'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
-
+import serverIp from "../../Common/serverIp";
 
 /**
  * Component representing the /policy-examination-page
@@ -76,7 +76,7 @@ const PolicyExamination = (props) => {
     const animiationDurationFactor = 50000
     const fullDomain = true
     const fullRange = true
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
 

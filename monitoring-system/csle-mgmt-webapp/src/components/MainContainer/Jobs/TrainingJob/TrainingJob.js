@@ -12,6 +12,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
+import serverIp from "../../../Common/serverIp";
 
 /**
  * The component representing the /jobs/<id> resource for training jobs
@@ -26,7 +27,7 @@ const TrainingJob = (props) => {
     const [loadingLogs, setLoadingLogs] = useState(false);
     const [logs, setLogs] = useState(null);
 
-    const ip = "localhost"
+    const ip = serverIp
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"
