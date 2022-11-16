@@ -20,6 +20,7 @@ from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_common.dao.emulation_config.elk_config import ElkConfig
 
 
 class ContainerController:
@@ -406,6 +407,30 @@ class ContainerController:
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
+    def connect_elk_container_to_network(elk_config: ElkConfig) -> None:
+        """
+        Connect a running elk container to networks
+
+        :param elk_config: the ELK config
+        :return: None
+        """
+        c = elk_config.container
+        container_name = c.get_full_name()
+        # Disconnect from none
+        cmd = f"docker network disconnect none {container_name}"
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+        # Wait a few seconds before connecting
+        time.sleep(2)
+
+        for ip_net in c.ips_and_networks:
+            ip, net = ip_net
+            cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
+                  f"{container_name}"
+            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+    @staticmethod
     def start_docker_stats_thread(execution: EmulationExecution) -> None:
         """
         Sends a request to the docker stats manager on the docker host for starting a docker stats monitor thread
@@ -481,13 +506,13 @@ class ContainerController:
             return docker_stats_monitor_dto
 
     @staticmethod
-    def connect_containers_to_logsink(containers_config: ContainersConfig, kafka_config: KafkaConfig,
-                                      ovs_config: OVSConfig) -> None:
+    def connect_containers_to_management_network(containers_config: ContainersConfig, kafka_config: KafkaConfig,
+                                                 ovs_config: OVSConfig) -> None:
         """
-        Connects running containers to the log sink
+        Connects running containers to the management network
 
         :param containers_config: the containers configuration
-        :param kafka_config: the configuration of the logsink
+        :param kafka_config: the configuration of the kafka network
         :param ovs_config: the OVS config
         :return: None
         """

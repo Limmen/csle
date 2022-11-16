@@ -19,6 +19,7 @@ from csle_common.dao.emulation_config.host_manager_config import HostManagerConf
 from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
+from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
 import csle_collector.constants.constants as collector_constants
@@ -37,7 +38,7 @@ class EmulationEnvConfig:
                  ovs_config: OVSConfig, sdn_controller_config: Optional[SDNControllerConfig],
                  host_manager_config: HostManagerConfig, snort_ids_manager_config: SnortIDSManagerConfig,
                  ossec_ids_manager_config: OSSECIDSManagerConfig,
-                 docker_stats_manager_config: DockerStatsManagerConfig,
+                 docker_stats_manager_config: DockerStatsManagerConfig, elk_config: ElkConfig,
                  level: int, version: str, execution_id : int):
         """
         Initializes the object
@@ -59,6 +60,7 @@ class EmulationEnvConfig:
         :param snort_ids_manager_config: the Snort IDS manager config
         :param ossec_ids_manager_config: the OSSEC IDS manager config
         :param docker_stats_manager_config: the Docker stats manager config
+        :param elk_config: the ELK config
         :param level: the level of the emulation
         :param version: the version of the emulation
         :param execution_id: the execution id of the emulation
@@ -91,6 +93,7 @@ class EmulationEnvConfig:
         self.snort_ids_manager_config = snort_ids_manager_config
         self.ossec_ids_manager_config = ossec_ids_manager_config
         self.docker_stats_manager_config = docker_stats_manager_config
+        self.elk_config = elk_config
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationEnvConfig":
@@ -120,7 +123,8 @@ class EmulationEnvConfig:
             host_manager_config=HostManagerConfig.from_dict(d["host_manager_config"]),
             ossec_ids_manager_config=OSSECIDSManagerConfig.from_dict(d["ossec_ids_manager_config"]),
             snort_ids_manager_config=SnortIDSManagerConfig.from_dict(d["snort_ids_manager_config"]),
-            docker_stats_manager_config=DockerStatsManagerConfig.from_dict(d["docker_stats_manager_config"])
+            docker_stats_manager_config=DockerStatsManagerConfig.from_dict(d["docker_stats_manager_config"]),
+            elk_config=ElkConfig.from_dict(d["elk_config"])
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -163,6 +167,7 @@ class EmulationEnvConfig:
         d["snort_ids_manager_config"] = self.snort_ids_manager_config.to_dict()
         d["ossec_ids_manager_config"] = self.ossec_ids_manager_config.to_dict()
         d["docker_stats_manager_config"] = self.docker_stats_manager_config.to_dict()
+        d["elk_config"] = self.elk_config.to_dict()
         return d
 
     def connect(self, ip: str = "", username: str = "", pw: str = "",
@@ -295,7 +300,7 @@ class EmulationEnvConfig:
                f" host_manager_config: {self.host_manager_config}, " \
                f"snort_ids_manager_config: {self.snort_ids_manager_config}, " \
                f"ossec_ids_manager_config: {self.ossec_ids_manager_config}, " \
-               f"docker_stats_manager_config: {self.docker_stats_manager_config}"
+               f"docker_stats_manager_config: {self.docker_stats_manager_config}, elk_config: {self.elk_config}"
 
     def get_all_ips(self) -> List[str]:
         """
@@ -361,6 +366,8 @@ class EmulationEnvConfig:
         config.ossec_ids_manager_config = config.ossec_ids_manager_config.create_execution_config(
             ip_first_octet=ip_first_octet)
         config.docker_stats_manager_config = config.docker_stats_manager_config.create_execution_config(
+            ip_first_octet=ip_first_octet)
+        config.elk_config = config.elk_config.create_execution_config(
             ip_first_octet=ip_first_octet)
         if config.sdn_controller_config is not None:
             config.sdn_controller_config = config.sdn_controller_config.create_execution_config(

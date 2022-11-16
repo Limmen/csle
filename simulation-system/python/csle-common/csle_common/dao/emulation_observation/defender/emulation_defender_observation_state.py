@@ -34,7 +34,7 @@ class EmulationDefenderObservationState:
         """
         Initializes the DTO
 
-        :param kafka_config: the log sink config
+        :param kafka_config: the kafka config
         :param client_population_metrics: the client population metrics
         :param docker_stats: the docker stats
         :param snort_ids_alert_counters: the snort ids alert counters

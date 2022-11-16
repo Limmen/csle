@@ -1779,12 +1779,18 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
     for user in emulation_env_config.users_config.users_configs:
         users = ",".join(list(map(lambda x: x[0], user.users)))
         click.secho(f"{users} {user.ip}", bold=False)
-    click.secho(f"Log sink configuration:", fg="yellow", bold=True)
+    click.secho(f"Kafka configuration:", fg="yellow", bold=True)
     click.secho(f"{emulation_env_config.kafka_config.container.name} "
                 f"{','.join(emulation_env_config.kafka_config.container.get_ips())}", bold=False)
     click.secho(f"{emulation_env_config.kafka_config.resources.container_name}: "
                 f"CPUs:{emulation_env_config.kafka_config.resources.num_cpus}, "
                 f"memory: {emulation_env_config.kafka_config.resources.available_memory_gb}GB", bold=False)
+    click.secho(f"ELK configuration:", fg="yellow", bold=True)
+    click.secho(f"{emulation_env_config.elk_config.container.name} "
+                f"{','.join(emulation_env_config.elk_config.container.get_ips())}", bold=False)
+    click.secho(f"{emulation_env_config.elk_config.resources.container_name}: "
+                f"CPUs:{emulation_env_config.elk_config.resources.num_cpus}, "
+                f"memory: {emulation_env_config.elk_config.resources.available_memory_gb}GB", bold=False)
 
 
 def print_simulation_config(simulation_config: SimulationEnvConfig) -> None:

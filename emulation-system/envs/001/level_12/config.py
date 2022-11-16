@@ -49,6 +49,7 @@ from csle_common.dao.emulation_config.host_manager_config import HostManagerConf
 from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
 from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
+from csle_common.dao.emulation_config.elk_config import ElkConfig
 
 
 def default_config(name: str, network_id: int = 12, level: int = 12, version: str = "0.0.1") -> EmulationEnvConfig:
@@ -85,6 +86,7 @@ def default_config(name: str, network_id: int = 12, level: int = 12, version: st
     snort_ids_manager_cfg = default_snort_ids_manager_config(network_id=network_id, level=level, version=version)
     ossec_ids_manager_cfg = default_ossec_ids_manager_config(network_id=network_id, level=level, version=version)
     docker_stats_manager_cfg = default_docker_stats_manager_config(network_id=network_id, level=level, version=version)
+    elk_cfg = default_elk_config(network_id=network_id, level=level, version=version)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
         vuln_config=vuln_cfg, topology_config=topology_cfg, traffic_config=traffic_cfg, resources_config=resources_cfg,
@@ -92,7 +94,7 @@ def default_config(name: str, network_id: int = 12, level: int = 12, version: st
         descr=descr, static_attacker_sequences=static_attackers_cfg, ovs_config=ovs_cfg,
         sdn_controller_config=sdn_controller_cfg, host_manager_config=host_manager_cfg,
         snort_ids_manager_config=snort_ids_manager_cfg, ossec_ids_manager_config=ossec_ids_manager_cfg,
-        docker_stats_manager_config=docker_stats_manager_cfg,
+        docker_stats_manager_config=docker_stats_manager_cfg, elk_config=elk_cfg,
         level=level, execution_id=-1, version=version
     )
     return emulation_env_cfg
@@ -2821,6 +2823,76 @@ def default_docker_stats_manager_config(network_id: int, level: int, version: st
     :return: the docker stats manager configuration
     """
     config = DockerStatsManagerConfig(version=version, time_step_len_seconds=15, docker_stats_manager_port=50046)
+    return config
+
+
+def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
+    """
+    Generates the default ELK configuration
+
+    :param network_id: the id of the emulation network
+    :param level: the level of the emulation
+    :param version: the version of the emulation
+    :return: the ELK configuration
+    """
+    container = NodeContainerConfig(
+        name=f"{constants.CONTAINER_IMAGES.ELK_1}",
+        os=constants.CONTAINER_OS.ELK_1_OS,
+        ips_and_networks=[
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}.{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+             ContainerNetwork(
+                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                 subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                             f"{network_id}.{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                             f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                 bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+             )),
+        ],
+        version=version, level=str(level),
+        restart_policy=constants.DOCKER.ON_FAILURE_3, suffix=collector_constants.ELK_CONFIG.SUFFIX)
+
+    resources = NodeResourcesConfig(
+        container_name=f"{constants.CSLE.NAME}-"
+                       f"{constants.CONTAINER_IMAGES.ELK_1}_1-{constants.CSLE.LEVEL}{level}",
+        num_cpus=1, available_memory_gb=4,
+        ips_and_network_configs=[
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+             None)])
+
+    firewall_config = NodeFirewallConfig(
+        hostname=f"{constants.CONTAINER_IMAGES.ELK_1}_1",
+        ips_gw_default_policy_networks=[
+            DefaultNetworkFirewallConfig(
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                   f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                   f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                         f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            )
+        ],
+        output_accept=set([]),
+        input_accept=set([]),
+        forward_accept=set([]),
+        output_drop=set(), input_drop=set(), forward_drop=set(), routes=set())
+
+    config =  ElkConfig(version=version, time_step_len_seconds=15, elastic_port=9200, kibana_port=5601,
+                        logstash_port=5044, elk_manager_port=50045, container=container,
+                        resources=resources, firewall_config=firewall_config)
     return config
 
 

@@ -16,9 +16,9 @@ class ElkConfig:
         """
         Initializes the DTO
 
-        :param container: the container for the Kafka server
+        :param container: the container for the ELK stack
         :param network: the network
-        :param elastic_port: the port that the Kafka server is listening to
+        :param elastic_port: the port that the Elastic db server is listening to
         :param kibana_port: the port that the kibana web server listens to
         :param logstash_port: the port that the logstash beat interface listens to
         :param elk_manager_port: the default port for the gRPC manager
@@ -77,9 +77,9 @@ class ElkConfig:
         :return: a string representation of the object
         """
         return f"container: {self.container}, " \
-               f"kafka port:{self.elastic_port}, version: {self.version}, resources: {self.resources}, " \
+               f"elastic port:{self.elastic_port}, version: {self.version}, resources: {self.resources}, " \
                f"kibana port: {self.kibana_port}, logstash_port: {self.logstash_port} " \
-               f"elk_manager_port:{self.elk_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \               
+               f"elk_manager_port:{self.elk_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
                f"firewall_config: {self.firewall_config}"
 
     def to_json_str(self) -> str:

@@ -83,7 +83,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 25
+        steps = 26
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -102,6 +102,10 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
         EmulationEnvController.apply_kafka_config(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply ELK config --")
+        EmulationEnvController.apply_elk_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
@@ -221,22 +225,37 @@ class EmulationEnvController:
         """
         steps = 3
         current_step = 1
-        Logger.__call__().get_logger().info(f"-- Configuring the kafka --")
+        Logger.__call__().get_logger().info(f"-- Configuring the kafka container --")
         Logger.__call__().get_logger().info(
             f"-- Kafka configuration step {current_step}/{steps}: Connect kafka container to network --")
         ContainerController.connect_kafka_container_to_network(kafka_config=emulation_env_config.kafka_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(
-            f"-- Log sink configuration step {current_step}/{steps}: Restarting the Kafka server --")
+            f"-- Kafka configuration step {current_step}/{steps}: Restarting the Kafka server --")
         KafkaController.stop_kafka_server(emulation_env_config=emulation_env_config)
         time.sleep(20)
         KafkaController.start_kafka_server(emulation_env_config=emulation_env_config)
         time.sleep(20)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Log sink configuration step {current_step}/{steps}: Create topics --")
+        Logger.__call__().get_logger().info(f"-- Kafka configuration step {current_step}/{steps}: Create topics --")
         KafkaController.create_topics(emulation_env_config=emulation_env_config)
+
+    @staticmethod
+    def apply_elk_config(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Applies the ELK config
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        steps = 1
+        current_step = 1
+        Logger.__call__().get_logger().info(f"-- Configuring the ELK container --")
+        Logger.__call__().get_logger().info(
+            f"-- ELK configuration step {current_step}/{steps}: Connect ELK container to network --")
+        ContainerController.connect_elk_container_to_network(elk_config=emulation_env_config.elk_config)
 
     @staticmethod
     def start_custom_traffic(emulation_env_config : EmulationEnvConfig, no_traffic: bool = True) -> None:
@@ -349,9 +368,23 @@ class EmulationEnvController:
                   f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
             subprocess.call(cmd, shell=True)
 
-        # Start the logsink container
+        # Start the kafka container
         c = emulation_env_config.kafka_config.container
         container_resources : NodeResourcesConfig = emulation_env_config.kafka_config.resources
+        name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
+        Logger.__call__().get_logger().info(f"Starting container:{name}")
+        cmd = f"docker container run -dt --name {name} " \
+              f"--hostname={c.name}{c.suffix} --label dir={path} " \
+              f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
+              f"-e TZ=Europe/Stockholm " \
+              f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
+              f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
+              f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE csle/{c.name}:{c.version}"
+        subprocess.call(cmd, shell=True)
+
+        # Start the ELK container
+        c = emulation_env_config.elk_config.container
+        container_resources : NodeResourcesConfig = emulation_env_config.elk_config.resources
         name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
@@ -432,8 +465,15 @@ class EmulationEnvController:
             cmd = f"docker stop {name}"
             subprocess.call(cmd, shell=True)
 
-        # Stop the logsink container
+        # Stop the Kafka container
         c = emulation_env_config.kafka_config.container
+        name = c.get_full_name()
+        Logger.__call__().get_logger().info(f"Stopping container:{name}")
+        cmd = f"docker stop {name}"
+        subprocess.call(cmd, shell=True)
+
+        # Stop the ELK container
+        c = emulation_env_config.elk_config.container
         name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Stopping container:{name}")
         cmd = f"docker stop {name}"
@@ -522,8 +562,15 @@ class EmulationEnvController:
             cmd = f"docker rm {name}"
             subprocess.call(cmd, shell=True)
 
-        # Remove the logsink container
+        # Remove the kafka container
         c = execution.emulation_env_config.kafka_config.container
+        name = c.get_full_name()
+        Logger.__call__().get_logger().info(f"Removing container:{name}")
+        cmd = f"docker rm {name}"
+        subprocess.call(cmd, shell=True)
+
+        # Remove the elk container
+        c = execution.emulation_env_config.elk_config.container
         name = c.get_full_name()
         Logger.__call__().get_logger().info(f"Removing container:{name}")
         cmd = f"docker rm {name}"
