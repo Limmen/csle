@@ -245,7 +245,14 @@ RUN pip install flask && \
 ADD docker_files/elk_base/docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-EXPOSE 5601 9200 9300 9600 5044
-VOLUME /var/lib/elasticsearch
+# Add Tini
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
 
-CMD [ "/usr/local/bin/start.sh" ]
+#EXPOSE 5601 9200 9300 9600 5044
+#VOLUME /var/lib/elasticsearch
+
+#CMD [ "/usr/local/bin/start.sh" ]
+
