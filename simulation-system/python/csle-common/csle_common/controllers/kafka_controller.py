@@ -69,22 +69,24 @@ class KafkaController:
         kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
             ip=emulation_env_config.kafka_config.container.get_ips()[0],
             port=emulation_env_config.kafka_config.kafka_manager_port)
-        if not kafka_dto.running:
-            Logger.__call__().get_logger().info(f"Kafka server is not running, starting it.")
-            # Open a gRPC session
-            with grpc.insecure_channel(
-                    f'{emulation_env_config.kafka_config.container.get_ips()[0]}:'
-                    f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
-                stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
+        with grpc.insecure_channel(
+                f'{emulation_env_config.kafka_config.container.get_ips()[0]}:'
+                f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
+            stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
+
+            if not kafka_dto.running:
+                # Open a gRPC session
+                Logger.__call__().get_logger().info(f"Kafka server is not running, starting it.")
+
                 csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
                 time.sleep(20)
 
-                for topic in emulation_env_config.kafka_config.topics:
-                    Logger.__call__().get_logger().info(f"Creating topic: {topic.name}")
-                    csle_collector.kafka_manager.query_kafka_server.create_topic(
-                        stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas,
-                        retention_time_hours=topic.retention_time_hours
-                    )
+            for topic in emulation_env_config.kafka_config.topics:
+                Logger.__call__().get_logger().info(f"Creating topic: {topic.name}")
+                csle_collector.kafka_manager.query_kafka_server.create_topic(
+                    stub, name=topic.name, partitions=topic.num_partitions, replicas=topic.num_replicas,
+                    retention_time_hours=topic.retention_time_hours
+                )
 
     @staticmethod
     def get_kafka_status(emulation_env_config: EmulationEnvConfig) -> \

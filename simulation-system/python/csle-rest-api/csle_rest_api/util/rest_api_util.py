@@ -16,6 +16,11 @@ def check_if_user_is_authorized(request, requires_admin: bool = False):
     # Extract token and check if user is authorized
     token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
     token_obj = MetastoreFacade.get_session_token_metadata(token=token)
+    if token_obj is None:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
     user = None
     if requires_admin:
         user = MetastoreFacade.get_management_user_by_username(username=token_obj.username)
