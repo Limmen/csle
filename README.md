@@ -338,6 +338,19 @@ running commands can read and write to this directory.
       make build
       cd ../
       ```   
+    - Set `max_map_count`. Add the line
+      ```bash
+      vm.max_map_count=262144
+      ```
+      to the file `/etc/sysctl.conf` (you can also set a higher value). 
+      Alternatively, for a non-persisten configuration, run:
+      ```bash
+       sysctl -w vm.max_map_count=262144
+      ```
+      You can check the configuration by running:
+      ```bash
+      sysctl vm.max_map_count
+      ```
 
 10. **Install the monitoring system**
      - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm

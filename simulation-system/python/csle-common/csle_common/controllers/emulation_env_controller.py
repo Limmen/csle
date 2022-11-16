@@ -11,6 +11,7 @@ from csle_common.controllers.snort_ids_controller import SnortIDSController
 from csle_common.controllers.ossec_ids_controller import OSSECIDSController
 from csle_common.controllers.host_controller import HostController
 from csle_common.controllers.kafka_controller import KafkaController
+from csle_common.controllers.elk_controller import ELKController
 from csle_common.controllers.sdn_controller_manager import SDNControllerManager
 from csle_common.controllers.users_controller import UsersController
 from csle_common.controllers.vulnerabilities_controller import VulnerabilitiesController
@@ -83,7 +84,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 26
+        steps = 27
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -105,7 +106,7 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply ELK config --")
-        EmulationEnvController.apply_elk_config(emulation_env_config=emulation_env_config)
+        EmulationEnvController.apply_pre_elk_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
@@ -185,6 +186,10 @@ class EmulationEnvController:
         time.sleep(10)
 
         current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the ELK stack --")
+        EmulationEnvController.apply_pre_elk_config(emulation_env_config=emulation_env_config)
+
+        current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
         HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config)
         time.sleep(10)
@@ -243,9 +248,9 @@ class EmulationEnvController:
         KafkaController.create_topics(emulation_env_config=emulation_env_config)
 
     @staticmethod
-    def apply_elk_config(emulation_env_config: EmulationEnvConfig) -> None:
+    def apply_pre_elk_config(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Applies the ELK config
+        Applies the ELK pre-config
 
         :param emulation_env_config: the emulation env config
         :return: None
@@ -256,6 +261,21 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(
             f"-- ELK configuration step {current_step}/{steps}: Connect ELK container to network --")
         ContainerController.connect_elk_container_to_network(elk_config=emulation_env_config.elk_config)
+
+    @staticmethod
+    def apply_elk_config(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Applies the ELK config
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        steps = 1
+        current_step = 1
+        Logger.__call__().get_logger().info(
+            f"-- ELK configuration step {current_step}/{steps}: Start the ELK stack  --")
+        ELKController.start_elk_stack(emulation_env_config=emulation_env_config)
+        time.sleep(30)
 
     @staticmethod
     def start_custom_traffic(emulation_env_config : EmulationEnvConfig, no_traffic: bool = True) -> None:

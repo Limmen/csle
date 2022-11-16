@@ -356,3 +356,19 @@ class KAFKA:
     EARLIEST_OFFSET = "earliest"
     PORT = 9092
 
+
+class ELK:
+    """
+    String constants for managing the ELK stack
+    """
+    ELK_START = "nohup /usr/local/bin/start.sh > /elk_server.log"
+    ELASTICSEARCH_STOP = "service elasticsearch stop"
+    KIBANA_STOP = "service kibana stop"
+    LOGSTASH_STOP = "service logstash stop"
+    ELASTICSEARCH_START = "service elasticsearch start"
+    KIBANA_START = "service kibana start"
+    LOGSTASH_START = "service logstash start"
+    ELASTICSEARCH_STATUS = "service elasticsearch status"
+    KIBANA_STATUS = "service kibana status"
+    LOGSTASH_STATUS = "service logstash status"
+

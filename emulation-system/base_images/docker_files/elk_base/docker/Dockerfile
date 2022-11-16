@@ -236,7 +236,29 @@ RUN pip install flask && \
     pip install waitress && \
     pip install csle-collector
 
+# Client manager
+ADD docker_files/common/client_manager.py /client_manager.py
+RUN chmod 777 /client_manager.py
 
+# Kafka manager
+ADD docker_files/common/kafka_manager.py /kafka_manager.py
+RUN chmod 777 /kafka_manager.py
+
+# Snort IDS manager
+ADD docker_files/common/snort_ids_manager.py /snort_ids_manager.py
+RUN chmod 777 /snort_ids_manager.py
+
+# OSSEC IDS manager
+ADD docker_files/common/ossec_ids_manager.py /ossec_ids_manager.py
+RUN chmod 777 /ossec_ids_manager.py
+
+# Host manager
+ADD docker_files/common/host_manager.py /host_manager.py
+RUN chmod 777 /host_manager.py
+
+# ELK manager
+ADD docker_files/common/elk_manager.py /elk_manager.py
+RUN chmod 777 /elk_manager.py
 
 ###############################################################################
 #                                   START

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service ElkManager {
+  rpc getElkStatus(GetElkStatusMsg) returns (ElkDTO) {}
+  rpc stopElk(StopElkMsg) returns (ElkDTO) {}
+  rpc startElk(StartElkMsg) returns (ElkDTO) {}
+  rpc stopElastic(StopElasticMsg) returns (ElkDTO) {}
+  rpc startElastic(StartElasticMsg) returns (ElkDTO) {}
+  rpc stopLogstash(StopLogstashMsg) returns (ElkDTO) {}
+  rpc startLogstash(StartLogstashMsg) returns (ElkDTO) {}
+  rpc stopKibana(StopKibanaMsg) returns (ElkDTO) {}
+  rpc startKibana(StartKibanaMsg) returns (ElkDTO) {}
+}
+
+// Message that the client sends to stop logstash
+message StartLogstashMsg {}
+
+// Message that the client sends to stop kibana
+message StartKibanaMsg {}
+
+// Message that the client sends to stop elasticsearch
+message StartElasticMsg {}
+
+// Message that the client sends to stop logstash
+message StopLogstashMsg {}
+
+// Message that the client sends to stop kibana
+message StopKibanaMsg {}
+
+// Message that the client sends to stop elasticsearch
+message StopElasticMsg {}
+
+// Message that the client sends to stop the ELK stack
+message StopElkMsg {}
+
+// Message that the client sends to start the ELK stack
+message StartElkMsg {}
+
+// Message that the client sends to extract the elk status
+message GetElkStatusMsg {}
+
+// Message that the server returns when requested by the client, contains info about the ELK stack
+message ElkDTO {
+  bool elasticRunning = 1;
+  bool kibanaRunning = 2;
+  bool logstashRunning = 3;
+}
+
