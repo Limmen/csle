@@ -1753,8 +1753,8 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
     for c in emulation_env_config.containers_config.containers:
         click.secho(f"{c.name} {','.join(c.get_ips())}", bold=False)
     click.secho(f"Admin login:", fg="yellow", bold=True)
-    click.secho(f"Username:{constants.CSLE_ADMIN.USER}", bold=False)
-    click.secho(f"Password:{constants.CSLE_ADMIN.PW}", bold=False)
+    click.secho(f"Username:{constants.CSLE_ADMIN.SSH_USER}", bold=False)
+    click.secho(f"Password:{constants.CSLE_ADMIN.SSH_PW}", bold=False)
     click.secho(f"Vulnerabilities:", fg="yellow", bold=True)
     for vuln in emulation_env_config.vuln_config.node_vulnerability_configs:
         click.secho(f"{vuln.vuln_type} {vuln.ip}", bold=False)

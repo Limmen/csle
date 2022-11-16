@@ -1,8 +1,8 @@
 import React, {useState, useCallback} from 'react';
-import { useAlert } from "react-alert";
+import {useAlert} from "react-alert";
 import './Login.css';
-import getBoolStr from "../../Common/getBoolStr";
 import Button from 'react-bootstrap/Button'
+import ChangeUserDataForm from "./ChangeUserDataForm/ChangeUserDataForm";
 
 /**
  * The component representing the /login-page
@@ -25,7 +25,7 @@ const Login = (props) => {
             }
         )
             .then(res => {
-                if(!res.ok) {
+                if (!res.ok) {
                     alert.show("Login failed. Wrong username and password combination.")
                     return null
                 } else {
@@ -33,20 +33,24 @@ const Login = (props) => {
                 }
             })
             .then(response => {
-                if(response !== null) {
+                if (response !== null) {
                     props.setSessionData(response)
                 }
             })
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const formSubmit = async (event) => {
+    const loginFormSubmit = async (event) => {
         event.preventDefault()
         const credentials = {
             "username": username,
             "password": password
         }
-        loginUser(credentials)
+        if (username === "" || password === "") {
+            alert.show("Username or password cannot be empty")
+        } else {
+            loginUser(credentials)
+        }
     }
 
     const logout = () => {
@@ -60,9 +64,10 @@ const Login = (props) => {
     const handlePwChange = (event) => {
         setPassword(event.target.value)
     }
-    if(!props.sessionData) {
+
+    if (!props.sessionData) {
         return (<div className="Login Auth-form-container">
-            <form className="Auth-form" onSubmit={formSubmit}>
+            <form className="Auth-form" onSubmit={loginFormSubmit}>
                 <div className="Auth-form-content">
                     <h3 className="Auth-form-title">Sign In</h3>
                     <div className="form-group mt-3">
@@ -101,8 +106,8 @@ const Login = (props) => {
                         Logout
                     </Button>
                 </h3>
-                <p className="userNameVal"><span className="loginPageUsername">Username:</span>{props.sessionData.username}</p>
-                <p className="adminRights"><span className="loginPageAdmin">Admin rights:</span>{getBoolStr(props.sessionData.admin)}</p>
+
+                <ChangeUserDataForm sessionData={props.sessionData} setSessionData={props.setSessionData} />
             </div>
         )
     }

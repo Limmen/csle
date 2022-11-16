@@ -213,7 +213,7 @@ class EmulationUtil:
         :return: None
         """
         emulation_env_config.agent_ip = ip
-        emulation_env_config.connect(ip=ip, username=constants.CSLE_ADMIN.USER, pw=constants.CSLE_ADMIN.PW,
+        emulation_env_config.connect(ip=ip, username=constants.CSLE_ADMIN.SSH_USER, pw=constants.CSLE_ADMIN.SSH_PW,
                                      create_producer=create_producer)
 
     @staticmethod

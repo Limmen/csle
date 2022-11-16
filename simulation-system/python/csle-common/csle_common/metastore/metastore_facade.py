@@ -2798,7 +2798,9 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         management_user = ManagementUser(username=management_user_record[1], password=management_user_record[2],
-                                         admin=management_user_record[3], salt=management_user_record[4])
+                                         email = management_user_record[3], first_name = management_user_record[4],
+                                         last_name = management_user_record[5], organization=management_user_record[6],
+                                         admin=management_user_record[7], salt=management_user_record[8])
         management_user.id = management_user_record[0]
         return management_user
 
@@ -2869,10 +2871,11 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
-                            f"(username, password, admin, salt) "
-                            f"VALUES (%s, %s, %s, %s) RETURNING id",
-                            (management_user.username, management_user.password, management_user.admin,
-                             management_user.salt))
+                            f"(username, password, email, first_name, last_name, organization, admin, salt) "
+                            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                            (management_user.username, management_user.password, management_user.email,
+                             management_user.first_name, management_user.last_name, management_user.organization,
+                             management_user.admin, management_user.salt))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"management user saved successfully")
@@ -2895,10 +2898,11 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.MANAGEMENT_USERS_TABLE} "
-                            f" SET username=%s, password=%s, admin=%s, salt=%s "
-                            f"WHERE {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}.id = %s",
-                            (management_user.username, management_user.password, management_user.admin,
-                             management_user.salt, id))
+                            f" SET username=%s, password=%s, email=%s, first_name=%s, last_name=%s, organization=%s, "
+                            f"admin=%s, salt=%s WHERE {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}.id = %s",
+                            (management_user.username, management_user.password, management_user.email,
+                             management_user.first_name, management_user.last_name, management_user.organization,
+                             management_user.admin, management_user.salt, id))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Management user with id: {id} updated successfully")
 

@@ -15,7 +15,6 @@ import { Type } from 'react-bootstrap-table2-editor';
  * Component representing the /admin-page
  */
 const Admin = (props) => {
-    const [userIds, setUserIds] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const ip = "localhost";
@@ -29,7 +28,23 @@ const Admin = (props) => {
         },
         {
             dataField: 'username',
-            text: 'Name'
+            text: 'Username'
+        },
+        {
+            dataField: 'first_name',
+            text: 'First name'
+        },
+        {
+            dataField: 'last_name',
+            text: 'Last name'
+        },
+        {
+            dataField: 'email',
+            text: 'E-mail'
+        },
+        {
+            dataField: 'organization',
+            text: 'Organization'
         },
         {
             dataField: 'admin',
@@ -177,11 +192,11 @@ const Admin = (props) => {
                 </button>
             </h3>
             <div className="row">
-                <div className="col-sm-2"></div>
-                <div className="col-sm-8">
+                <div className="col-sm-1"></div>
+                <div className="col-sm-10">
                     <UsersTableOrSpinner users={users} loading={loading} />
                 </div>
-                <div className="col-sm-2"></div>
+                <div className="col-sm-1"></div>
             </div>
         </div>
     );

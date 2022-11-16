@@ -46,7 +46,12 @@ def read_login():
             data_dict = {
                 api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: new_token.token,
                 api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin,
-                api_constants.MGMT_WEBAPP.USERNAME_PROPERTY: user_account.username
+                api_constants.MGMT_WEBAPP.USERNAME_PROPERTY: user_account.username,
+                api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY: user_account.first_name,
+                api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY: user_account.last_name,
+                api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY: user_account.organization,
+                api_constants.MGMT_WEBAPP.EMAIL_PROPERTY: user_account.email,
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: user_account.id,
             }
             response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

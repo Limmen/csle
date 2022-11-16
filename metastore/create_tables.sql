@@ -243,6 +243,10 @@ CREATE TABLE IF NOT EXISTS management_users (
     id serial PRIMARY KEY,
     username VARCHAR(128) UNIQUE NOT NULL,
     password VARCHAR(128) NOT NULL,
+    email varchar(254) NOT NULL,
+    first_name varchar(255) NOT NULL,
+    last_name varchar(255) NOT NULL,
+    organization varchar(255) NOT NULL,
     admin BOOLEAN NOT NULL,
     salt VARCHAR(128) NOT NULL
 );

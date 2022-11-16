@@ -25,7 +25,7 @@ class UsersController:
             users_w_home = list(filter(lambda x: x != '', users_w_home))
 
             for user in users_w_home:
-                if user != constants.CSLE_ADMIN.USER:
+                if user != constants.CSLE_ADMIN.SSH_USER:
                     cmd = "sudo deluser {}".format(user)
                     EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.ip])
                     cmd = "sudo rm -rf /home/{}".format(user)

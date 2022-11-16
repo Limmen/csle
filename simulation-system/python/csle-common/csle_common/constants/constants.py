@@ -505,6 +505,7 @@ class HTTPS:
     UNAUTHORIZED_STATUS_CODE=401
     CREATED_STATUS_CODE=201
     BAD_REQUEST_STATUS_CODE=400
+    CONFLICT_STATUS_CODE=409
     NOT_FOUND_STATUS_CODE=404
     INTERNAL_SERVER_ERROR_STATUS_CODE=500
 
@@ -1137,10 +1138,14 @@ class CSLE_ADMIN:
     """
     Constants related to the default csle admin account.
     """
-    USER = "csle_admin" # Should not be a simple user/pw combination since then the automated attacker will figure it out
-    PW = "csle@admin-pw_191"
+    SSH_USER = "csle_admin" # Should not be a simple user/pw combination since then the automated attacker will figure it out
+    SSH_PW = "csle@admin-pw_191"
     MANAGEMENT_USER = "admin"
     MANAGEMENT_PW = "admin"
+    MANAGEMENT_FIRST_NAME = "admin"
+    MANAGEMENT_LAST_NAME = "adminson"
+    MANAGEMENT_ORGANIZATION = "CSLE"
+    MANAGEMENT_EMAIL = "admin@csle.com"
 
 
 class CSLE_GUEST:
@@ -1151,6 +1156,10 @@ class CSLE_GUEST:
     PW = "csle@guest-pw_191"
     MANAGEMENT_USER = "guest"
     MANAGEMENT_PW = "guest"
+    MANAGEMENT_FIRST_NAME = "guest"
+    MANAGEMENT_LAST_NAME = "guestson"
+    MANAGEMENT_ORGANIZATION = "CSLE"
+    MANAGEMENT_EMAIL = "guest@csle.com"
 
 
 class SYSTEM_IDENTIFICATION:

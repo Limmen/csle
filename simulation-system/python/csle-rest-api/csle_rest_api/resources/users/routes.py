@@ -79,12 +79,17 @@ def user(user_id: int):
 
     :return: The given user or deletes the user
     """
-    requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
-
+    # Check if user is admin or is editing his/hers own account
     user = MetastoreFacade.get_management_user_config(id=user_id)
+    request_user = rest_api_util.check_if_user_edit_is_authorized(request=request, user=user)
+    if not isinstance(request_user, ManagementUser):
+        return request_user
+
     response = jsonify({})
     if user is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
@@ -96,11 +101,19 @@ def user(user_id: int):
                 new_user.password = user.password
                 new_user.salt = user.salt
             else:
-                byte_pwd = user.password.encode('utf-8')
+                byte_pwd = new_user.password.encode('utf-8')
                 salt = bcrypt.gensalt()
                 pw_hash = bcrypt.hashpw(byte_pwd, salt)
                 new_user.salt = salt.decode("utf-8")
                 new_user.password = pw_hash.decode("utf-8")
+
+            # A user cannot be given admin rights by a non-admin user
+            if not request_user.admin:
+                new_user.admin = False
+
+            # An admin user cannot remove its own admin rights
+            if request_user.admin and user.admin and request_user.username == user.username:
+                new_user.admin = True
             MetastoreFacade.update_management_user(management_user=new_user, id=user_id)
             new_user.salt = ""
             new_user.password = ""
@@ -119,22 +132,40 @@ def create_user():
     :return: creates a new user
     """
     response = jsonify({})
-    if request.data is not None and api_constants.MGMT_WEBAPP.USERNAME_PROPERTY in json.loads(request.data) \
-            and api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in json.loads(request.data):
-        username = json.loads(request.data)[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
-        password = json.loads(request.data)[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
-        if password == "" or username == "":
-            return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if request.data is not None:
+        json_data = json.loads(request.data)
+        if api_constants.MGMT_WEBAPP.USERNAME_PROPERTY in json_data \
+                and api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in json_data \
+                and api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY in json_data \
+                and api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY in json_data:
+            username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
+            password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
+            first_name = json_data[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY]
+            last_name = json_data[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY]
+            organization = json_data[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY]
+            email = json_data[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY]
+            if password == "" or username == "":
+                error_reason = "Password or username cannot be empty."
+                response = jsonify({"reason": error_reason})
+                return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+            else:
+                usernames = list(map(lambda x: x.username, MetastoreFacade.list_management_users()))
+                if username in usernames:
+                    error_reason = "A user with that username already exists"
+                    response = jsonify({"reason": error_reason})
+                    return response, constants.HTTPS.CONFLICT_STATUS_CODE
+                byte_pwd = password.encode('utf-8')
+                salt = bcrypt.gensalt()
+                pw_hash = bcrypt.hashpw(byte_pwd, salt)
+                user = ManagementUser(username=username,
+                                      password=pw_hash.decode("utf-8"), admin=False,
+                                      salt=salt.decode("utf-8"), first_name=first_name, last_name=last_name,
+                                      organization=organization, email=email)
+                MetastoreFacade.save_management_user(management_user=user)
+                response = jsonify(user.to_dict())
+            response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+            return response, constants.HTTPS.OK_STATUS_CODE
         else:
-            byte_pwd = password.encode('utf-8')
-            salt = bcrypt.gensalt()
-            pw_hash = bcrypt.hashpw(byte_pwd, salt)
-            user = ManagementUser(username=username,
-                                  password=pw_hash.decode("utf-8"), admin=False,
-                                  salt=salt.decode("utf-8"))
-            MetastoreFacade.save_management_user(management_user=user)
-            response = jsonify(user.to_dict())
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response, constants.HTTPS.OK_STATUS_CODE
+            return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
     else:
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
