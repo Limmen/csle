@@ -364,6 +364,185 @@ const ControlPlane = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const startOrStopElkManager = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/elk-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopElastic = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/elastic?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopLogstash = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/logstash?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopKibana = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/kibana?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopTrafficManager = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/traffic-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
 
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -535,6 +714,11 @@ const ControlPlane = (props) => {
                             startOrStopOSSECManager={props.startOrStopOSSECManager}
                             startOrStopHostManager={props.startOrStopHostManager}
                             startOrStopContainer={props.startOrStopContainer}
+                            startOrStopElkManager={props.startOrStopElkManager}
+                            startOrStopElastic={props.startOrStopElastic}
+                            startOrStopLogstash={props.startOrStopLogstash}
+                            startOrStopKibana={props.startOrStopKibana}
+                            startOrTrafficManager={props.startOrStopTrafficManager}
                         />
                     </Accordion>
                 </div>
@@ -650,6 +834,11 @@ const ControlPlane = (props) => {
                                    startOrStopOSSECManager={startOrStopOSSECManager}
                                    startOrStopHostManager={startOrStopHostManager}
                                    startOrStopContainer={startOrStopContainer}
+                                   startOrStopElkManager={startOrStopElkManager}
+                                   startOrStopElastic={startOrStopElastic}
+                                   startOrStopLogstash={startOrStopLogstash}
+                                   startOrStopKibana={startOrStopKibana}
+                                   startOrStopTrafficManager={startOrStopTrafficManager}
             />
         </div>
     );

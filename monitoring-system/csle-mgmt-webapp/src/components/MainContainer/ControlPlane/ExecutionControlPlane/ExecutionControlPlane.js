@@ -97,6 +97,26 @@ const ExecutionControlPlane = (props) => {
                 start, stop)
             return
         }
+        if(entity === "elk_manager") {
+            props.startOrStopElkManager(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+            return
+        }
+        if(entity === "elastic") {
+            props.startOrStopElastic(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+            return
+        }
+        if(entity === "logstash") {
+            props.startOrStopLogstash(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+            return
+        }
+        if(entity === "kibana") {
+            props.startOrStopKibana(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+            return
+        }
         props.startOrStopContainer(props.execution.ip_first_octet, props.execution.emulation_name, start, stop, entity)
     }
 
