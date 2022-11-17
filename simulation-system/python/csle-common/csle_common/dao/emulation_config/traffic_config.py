@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
 
@@ -17,6 +17,18 @@ class TrafficConfig:
         """
         self.node_traffic_configs = node_traffic_configs
         self.client_population_config = client_population_config
+
+    def get_node_traffic_config_by_ip(self, ip: str) -> Union[NodeTrafficConfig, None]:
+        """
+        Gets a node traffic config with a specific IP
+
+        :param ip: the ip
+        :return: the node traffic config or None
+        """
+        for node_traffic_config in self.node_traffic_configs:
+            if node_traffic_config.ip == ip:
+                return node_traffic_config
+        return None
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "TrafficConfig":

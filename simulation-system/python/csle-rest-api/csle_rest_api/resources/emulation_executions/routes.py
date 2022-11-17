@@ -544,13 +544,11 @@ def start_stop_snort_ids(execution_id: int):
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     json_data = json.loads(request.data)
     # Verify payload
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
-            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+    if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -654,15 +652,15 @@ def start_stop_ossec_ids(execution_id: int):
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
             Logger.__call__().get_logger().info(
-                f"Stopping OSSEC IDS on emulation: {execution.emulation_env_config.name}, "
+                f"Stopping OSSEC IDS with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            OSSECIDSController.stop_ossec_idses_monitor_threads(emulation_env_config=execution.emulation_env_config)
+            OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
         if start:
             Logger.__call__().get_logger().info(
-                f"Starting OSSEC IDS on emulation: {execution.emulation_env_config.name}, "
+                f"Starting OSSEC IDS with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config)
-            OSSECIDSController.start_ossec_idses_monitor_threads(emulation_env_config=execution.emulation_env_config)
+            # OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config)
+            OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
@@ -704,14 +702,14 @@ def start_stop_host_manager(execution_id: int):
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
             Logger.__call__().get_logger().info(
-                f"Stopping host managers on emulation: {execution.emulation_env_config.name}, "
+                f"Stopping host manager with IP:{ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            HostController.stop_host_managers(emulation_env_config=execution.emulation_env_config)
+            HostController.stop_host_manager(emulation_env_config=execution.emulation_env_config, ip=ip)
         if start:
             Logger.__call__().get_logger().info(
-                f"Starting host managers on emulation: {execution.emulation_env_config.name}, "
+                f"Starting host manager with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            HostController.start_host_managers(emulation_env_config=execution.emulation_env_config)
+            HostController.start_host_manager(emulation_env_config=execution.emulation_env_config, ip=ip)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
@@ -753,14 +751,14 @@ def start_stop_host_monitor_thread(execution_id: int):
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
             Logger.__call__().get_logger().info(
-                f"Stopping host monitor on emulation: {execution.emulation_env_config.name}, "
+                f"Stopping host monitor with IP:{ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            HostController.stop_host_monitor_threads(emulation_env_config=execution.emulation_env_config)
+            HostController.stop_host_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
         if start:
             Logger.__call__().get_logger().info(
-                f"Starting host monitor on emulation: {execution.emulation_env_config.name}, "
+                f"Starting host monitor with IP:{ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            HostController.start_host_monitor_threads(emulation_env_config=execution.emulation_env_config)
+            HostController.start_host_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
@@ -1099,14 +1097,17 @@ def start_stop_traffic_manager(execution_id: int):
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
             Logger.__call__().get_logger().info(
-                f"Stopping traffic manager on emulation: {execution.emulation_env_config.name}, "
+                f"Stopping traffic manager with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            TrafficController.stop_traffic_managers(emulation_env_config=execution.emulation_env_config)
+            TrafficController.stop_traffic_manager(emulation_env_config=execution.emulation_env_config,
+                node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip))
         if start:
             Logger.__call__().get_logger().info(
-                f"Starting traffic manager on emulation: {execution.emulation_env_config.name}, "
+                f"Starting traffic manager with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            TrafficController.start_traffic_managers(emulation_env_config=execution.emulation_env_config)
+            TrafficController.start_traffic_manager(
+                emulation_env_config=execution.emulation_env_config,
+                node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip))
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE

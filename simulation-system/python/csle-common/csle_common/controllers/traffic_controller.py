@@ -12,6 +12,7 @@ import csle_collector.traffic_manager.traffic_manager_util
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
+from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
@@ -35,30 +36,44 @@ class TrafficController:
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
 
             # Connect
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node_traffic_config.ip)
+            TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config, 
+                                                    node_traffic_config=node_traffic_config)
 
-            # Check if traffic_manager is already running
-            cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-                  + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                    conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
+    @staticmethod
+    def start_traffic_manager(emulation_env_config: EmulationEnvConfig, 
+                              node_traffic_config: NodeTrafficConfig) -> None:
+        """
+        Utility method for starting traffic manager on a specific container
 
-            if not constants.COMMANDS.SEARCH_TRAFFIC_MANAGER in str(o):
+        :param emulation_env_config: the emulation env config
+        :param node_traffic_config: traffic config of the container
+        :return: None
+        """        
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node_traffic_config.ip)
 
-                Logger.__call__().get_logger().info(f"Starting traffic manager on node {node_traffic_config.ip}")
+        # Check if traffic_manager is already running
+        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
 
-                # Stop old background job if running
-                cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                      constants.COMMANDS.SPACE_DELIM \
-                      + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
-                o, e, _ = EmulationUtil.execute_ssh_cmd(
-                    cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
+        if not constants.COMMANDS.SEARCH_TRAFFIC_MANAGER in str(o):
 
-                # Start the _manager
-                cmd = constants.COMMANDS.START_TRAFFIC_MANAGER.format(node_traffic_config.traffic_manager_port)
-                o, e, _ = EmulationUtil.execute_ssh_cmd(
-                    cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
-                time.sleep(5)
+            Logger.__call__().get_logger().info(f"Starting traffic manager on node {node_traffic_config.ip}")
+
+            # Stop old background job if running
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+                  constants.COMMANDS.SPACE_DELIM \
+                  + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
+            o, e, _ = EmulationUtil.execute_ssh_cmd(
+                cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
+
+            # Start the _manager
+            cmd = constants.COMMANDS.START_TRAFFIC_MANAGER.format(node_traffic_config.traffic_manager_port)
+            o, e, _ = EmulationUtil.execute_ssh_cmd(
+                cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
+            time.sleep(5)
 
     @staticmethod
     def stop_traffic_managers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -69,17 +84,28 @@ class TrafficController:
         :return: None
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
+            TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
+                                                    node_traffic_config=node_traffic_config)
 
-            # Connect
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node_traffic_config.ip)
-            Logger.__call__().get_logger().info(f"Stopping traffic manager on node {node_traffic_config.ip}")
+    @staticmethod
+    def stop_traffic_manager(emulation_env_config: EmulationEnvConfig, node_traffic_config: NodeTrafficConfig) -> None:
+        """
+        Utility method for stopping a specific traffic manager
 
-            # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
-            o, e, _ = EmulationUtil.execute_ssh_cmd(
-                cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
+        :param emulation_env_config: the emulation env config
+        :param node_traffic_config: the node traffic configuration
+        :return: None
+        """
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node_traffic_config.ip)
+        Logger.__call__().get_logger().info(f"Stopping traffic manager on node {node_traffic_config.ip}")
+
+        # Stop old background job if running
+        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+              constants.COMMANDS.SPACE_DELIM \
+              + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(
+            cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
 
     @staticmethod
     def start_client_manager(emulation_env_config: EmulationEnvConfig) -> None:
@@ -341,16 +367,31 @@ class TrafficController:
         :param emulation_env_config: the configuration of the emulation env
         :return: None
         """
-        TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            Logger.__call__().get_logger().info(f"Stopping traffic generator script, "
-                                                f"node ip:{node_traffic_config.ip}")
+            TrafficController.stop_internal_traffic_generator(emulation_env_config=emulation_env_config,
+                                                              node_traffic_config=node_traffic_config)
 
-            # Open a gRPC session
-            with grpc.insecure_channel(
-                    f'{node_traffic_config.ip}:{node_traffic_config.traffic_manager_port}') as channel:
-                stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
-                csle_collector.traffic_manager.query_traffic_manager.stop_traffic(stub)
+    @staticmethod
+    def stop_internal_traffic_generator(emulation_env_config: EmulationEnvConfig,
+                                         node_traffic_config: NodeTrafficConfig) -> None:
+        """
+        Utility function for stopping a specific internal traffic generator
+
+        :param emulation_env_config: the configuration of the emulation env
+        :param node_traffic_config: the node traffic config
+        :return: None
+        """
+        TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
+                                                node_traffic_config=node_traffic_config)
+        time.sleep(5)
+        Logger.__call__().get_logger().info(f"Stopping traffic generator script, "
+                                            f"node ip:{node_traffic_config.ip}")
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{node_traffic_config.ip}:{node_traffic_config.traffic_manager_port}') as channel:
+            stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
+            csle_collector.traffic_manager.query_traffic_manager.stop_traffic(stub)
 
     @staticmethod
     def start_internal_traffic_generators(emulation_env_config: EmulationEnvConfig) -> None:
@@ -360,16 +401,30 @@ class TrafficController:
         :param emulation_env_config: the configuration of the emulation env
         :return: None
         """
-        TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            Logger.__call__().get_logger().info(f"Starting traffic generator script, "
-                                                f"node ip:{node_traffic_config.ip}")
+            TrafficController.start_internal_traffic_generator(emulation_env_config=emulation_env_config,
+                                                               node_traffic_config=node_traffic_config)
 
-            # Open a gRPC session
-            with grpc.insecure_channel(
-                    f'{node_traffic_config.ip}:{node_traffic_config.traffic_manager_port}') as channel:
-                stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
-                csle_collector.traffic_manager.query_traffic_manager.start_traffic(stub)
+    @staticmethod
+    def start_internal_traffic_generator(emulation_env_config: EmulationEnvConfig,
+                                         node_traffic_config: NodeTrafficConfig) -> None:
+        """
+        Utility function for starting internal traffic generators
+
+        :param emulation_env_config: the configuration of the emulation env
+        :param node_traffic_config: the node traffic configuration
+        :return: None
+        """
+        TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
+        time.sleep(5)
+        Logger.__call__().get_logger().info(f"Starting traffic generator script, "
+                                            f"node ip:{node_traffic_config.ip}")
+
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{node_traffic_config.ip}:{node_traffic_config.traffic_manager_port}') as channel:
+            stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
+            csle_collector.traffic_manager.query_traffic_manager.start_traffic(stub)
 
     @staticmethod
     def create_internal_traffic_generator_scripts(emulation_env_config: EmulationEnvConfig) -> None:
