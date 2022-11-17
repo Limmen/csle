@@ -1,21 +1,23 @@
 from typing import List, Dict, Any
 from csle_common.util.general_util import GeneralUtil
 
+
 class NodeTrafficConfig:
     """
     A DTO object representing the traffic configuration of an individual container in an emulation
     """
 
-    def __init__(self, ip: str, commands: List[str]):
+    def __init__(self, ip: str, commands: List[str], traffic_manager_port : int = 50043):
         """
         Creates a NodeTrafficConfig DTO Object
 
         :param ip: the ip of the node that generate the traffic
         :param commands: the commands used to generate the traffic
+        :param traffic_manager_port: the port of the traffic manager
         """
         self.ip = ip
         self.commands = commands
-
+        self.traffic_manager_port = traffic_manager_port
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeTrafficConfig":
@@ -26,7 +28,7 @@ class NodeTrafficConfig:
         :return: the created instance
         """
         obj= NodeTrafficConfig(
-            ip=d["ip"], commands=d["commands"]
+            ip=d["ip"], commands=d["commands"], traffic_manager_port=d["traffic_manager_port"]
         )
         return obj
 
@@ -37,13 +39,14 @@ class NodeTrafficConfig:
         d = {}
         d["ip"] = self.ip
         d["commands"] = self.commands
+        d["traffic_manager_port"] = self.traffic_manager_port
         return d
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return "ip:{}, commands:{}".format(self.ip, self.commands)
+        return f"ip:{self.ip}, commands:{self.commands}, traffic_manager_port: {self.traffic_manager_port}"
 
     def to_json_str(self) -> str:
         """
