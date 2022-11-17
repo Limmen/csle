@@ -67,11 +67,10 @@ const ExecutionControlPlane = (props) => {
         setLoadingEntities(newLoadingEntities)
     }
 
-    const startOrStop = (start, stop, entity) => {
+    const startOrStop = (start, stop, entity, name, ip) => {
         addLoadingEntity(entity)
         props.startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
-            start, stop)
-        // props.startOrStopContainer(props.execution.ip_first_octet, props.execution.emulation_name, start, stop, entity)
+            start, stop, name, ip)
     }
 
     const SpinnerOrButton = (props) => {
@@ -352,26 +351,36 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.docker_stats_managers_info.docker_stats_managers_statuses.map((status, index) =>
-                                        <tr key={"docker_stats_status-" + index}>
+                                        <tr key={"docker-stats-manager-" + index}>
                                             <td>Docker Statistics Manager</td>
                                             <td>{props.info.docker_stats_managers_info.ips[index]}</td>
                                             <td>{props.info.docker_stats_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.docker_stats_managers_info.running)}
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("docker-stats-manager-"+
+                                                        props.info.docker_stats_managers_info.ips[index])}
+                                                    running={props.info.docker_stats_managers_info.running}
+                                                    entity={"docker-stats-manager"} name={"docker-stats-manager"}
+                                                    ip={props.info.docker_stats_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.docker_stats_managers_info.docker_stats_managers_statuses.map((status, index) =>
-                                        <tr key={"docker_stats_status-" + index}>
+                                        <tr key={"docker-stats-monitor-" + index}>
                                             <td>Docker Statistics Monitor Thread</td>
                                             <td>{props.info.docker_stats_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.num_monitors > 0)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("docker_stats_manager")}
+                                                    loading={loadingEntities.includes("docker-stats-monitor-"+
+                                                        props.info.docker_stats_managers_info.ips[index])}
                                                     running={status.num_monitors > 0}
-                                                    entity={"docker_stats_manager"}/>
+                                                    entity={"docker-stats-monitor"} name={"docker-stats-monitor"}
+                                                    ip={props.info.docker_stats_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -408,26 +417,36 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.host_managers_info.host_managers_statuses.map((status, index) =>
-                                        <tr key={"host_manager_status-" + index}>
+                                        <tr key={"host-monitor-" + index}>
                                             <td>Host Manager</td>
                                             <td>{props.info.host_managers_info.ips[index]}</td>
                                             <td>{props.info.host_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.host_managers_info.running)}
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("host-manager-"+
+                                                        props.info.host_managers_info.ips[index])}
+                                                    running={props.info.host_managers_info.running}
+                                                    entity={"host-manager"} name={"host-manager"}
+                                                    ip={props.info.host_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.host_managers_info.host_managers_statuses.map((status, index) =>
-                                        <tr key={"host_manager_status-" + index}>
+                                        <tr key={"host-monitor-" + index}>
                                             <td>Host monitor thread</td>
                                             <td>{props.info.host_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("host_manager")}
+                                                    loading={loadingEntities.includes("host-monitor-"+
+                                                        props.info.host_managers_info.ips[index])}
                                                     running={status.running}
-                                                    entity={"host_manager"}/>
+                                                    entity={"host-monitor"} name={"host-monitor"}
+                                                    ip={props.info.host_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -465,18 +484,25 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.kafka_managers_info.kafka_managers_statuses.map((status, index) =>
-                                        <tr key={"kafka_manager_status-" + index}>
+                                        <tr key={"kafka-manager-" + index}>
                                             <td>Kafka Manager</td>
                                             <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.info.kafka_managers_info.ports[index]}</td>
                                             <td></td>
                                             {activeStatus(props.info.kafka_managers_info.running)}
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("kafka-manager-"+
+                                                        props.info.kafka_managers_info.ips[index])}
+                                                    running={props.info.kafka_managers_info.running}
+                                                    entity={"kafka-manager"} name={"kafka-manager"}
+                                                    ip={props.info.kafka_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.kafka_managers_info.kafka_managers_statuses.map((status, index) =>
-                                        <tr key={"kafka_manager_status-" + index}>
+                                        <tr key={"kafka-" + index}>
                                             <td>Kafka</td>
                                             <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.kafka_config.kafka_port}</td>
@@ -484,9 +510,12 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("kafka_manager")}
+                                                    loading={loadingEntities.includes("kafka-"+
+                                                        props.info.kafka_managers_info.ips[index])}
                                                     running={status.running}
-                                                    entity={"kafka_manager"}/>
+                                                    entity={"kafka"} name={"kafka"}
+                                                    ip={props.info.kafka_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -523,26 +552,36 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.ossec_managers_info.ossec_ids_statuses.map((status, index) =>
-                                        <tr key={"ossec_manager_status-" + index}>
+                                        <tr key={"ossec-manager" + index}>
                                             <td>OSSEC IDS Manager</td>
                                             <td>{props.info.ossec_managers_info.ips[index]}</td>
                                             <td>{props.info.ossec_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.ossec_managers_info.running)}
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("ossec-manager-"+
+                                                        props.info.ossec_managers_info.ips[index])}
+                                                    running={props.info.ossec_managers_info.running}
+                                                    entity={"ossec-manager"} name={"ossec-manager"}
+                                                    ip={props.info.ossec_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.ossec_managers_info.ossec_ids_statuses.map((status, index) =>
-                                        <tr key={"ossec_manager_status-" + index}>
+                                        <tr key={"ossec-ids-" + index}>
                                             <td>OSSEC IDS</td>
                                             <td>{props.info.ossec_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("ossec_ids_manager")}
+                                                    loading={loadingEntities.includes("ossec-ids-"+
+                                                        props.info.ossec_managers_info.ips[index])}
                                                     running={status.running}
-                                                    entity={"ossec_ids_manager"}/>
+                                                    entity={"ossec-ids"} name={"ossec-ids"}
+                                                    ip={props.info.ossec_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -579,26 +618,36 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.snort_managers_info.snort_statuses.map((status, index) =>
-                                        <tr key={"snort_manager_status-" + index}>
+                                        <tr key={"snort-manager-" + index}>
                                             <td>Snort IDS Manager</td>
                                             <td>{props.info.snort_managers_info.ips[index]}</td>
                                             <td>{props.info.snort_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.snort_managers_info.running)}
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("snort-manager-"+
+                                                        props.info.snort_managers_info.ips[index])}
+                                                    running={props.info.snort_managers_info.running}
+                                                    entity={"snort-manager"} name={"snort-manager"}
+                                                    ip={props.info.snort_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.snort_managers_info.snort_statuses.map((status, index) =>
-                                        <tr key={"snort_manager_status-" + index}>
+                                        <tr key={"snort-ids-" + index}>
                                             <td>Snort IDS</td>
                                             <td>{props.info.snort_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("snort_ids_manager")}
+                                                    loading={loadingEntities.includes("snort-ids-"+
+                                                        props.info.snort_managers_info.ips[index])}
                                                     running={status.running}
-                                                    entity={"snort_ids_manager"}/>
+                                                    entity={"snort-ids"} name={"snort-ids"}
+                                                    ip={props.info.snort_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -636,43 +685,58 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
-                                        <tr key={"elk_manager_status-" + index}>
+                                        <tr key={"elk-manager-" + index}>
                                             <td>ELK manager</td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.info.elk_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.elk_managers_info.running)}
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("elk-manager-"+
+                                                        props.info.elk_managers_info.ips[index])}
+                                                    running={props.info.elk_managers_info.running}
+                                                    entity={"elk-manager"} name={"elk-manager"}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
-                                        <tr key={"elk_manager_status-" + index}>
+                                        <tr key={"elk-stack-" + index}>
                                             <td>ELK stack</td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.elastic_port},
                                                 {props.execution.emulation_env_config.elk_config.logstash_port},
                                                 {props.execution.emulation_env_config.elk_config.kibana_port}
                                             </td>
-                                            {activeStatus(props.info.elk_managers_info.running)}
+                                            {activeStatus((status.elasticRunning & status.kibanaRunning
+                                                & status.logstashRunning))}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("elk_manager")}
-                                                    running={props.info.elk_managers_info.running}
-                                                    entity={"elk_manager"}/>
+                                                    loading={loadingEntities.includes("elk-stack-"+
+                                                        props.info.elk_managers_info.ips[index])}
+                                                    running={(status.elasticRunning & status.kibanaRunning
+                                                        & status.logstashRunning)}
+                                                    entity={"elk-stack"} name={"elk-stack"}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
-                                        <tr key={"elk_manager_status-" + index}>
+                                        <tr key={"elastic-" + index}>
                                             <td>Elasticsearch</td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.elastic_port}</td>
                                             {activeStatus(status.elasticRunning)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("elastic")}
+                                                    loading={loadingEntities.includes("elastic-"+
+                                                        props.info.elk_managers_info.ips[index])}
                                                     running={status.elasticRunning}
-                                                    entity={"elastic"}/>
+                                                    entity={"elastic"} name={"elastic"}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -684,24 +748,30 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.logstashRunning)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("logstash")}
+                                                    loading={loadingEntities.includes("logstash-"+
+                                                        props.info.elk_managers_info.ips[index])}
                                                     running={status.logstashRunning}
-                                                    entity={"logstash"}/>
+                                                    entity={"logstash"} name={"logstash"}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
 
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
-                                        <tr key={"elk_manager_status-" + index}>
+                                        <tr key={"kibana-" + index}>
                                             <td>Kibana</td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.kibana_port}</td>
                                             {activeStatus(status.kibanaRunning)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("kibana")}
+                                                    loading={loadingEntities.includes("kibana-"+
+                                                        props.info.elk_managers_info.ips[index])}
                                                     running={status.kibanaRunning}
-                                                    entity={"kibana"}/>
+                                                    entity={"kibana"} name={"kibana"}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -738,26 +808,36 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.traffic_managers_info.traffic_managers_statuses.map((status, index) =>
-                                        <tr key={"traffic_manager_status-" + index}>
+                                        <tr key={"traffic-manager-" + index}>
                                             <td>Traffic Manager</td>
                                             <td>{props.info.traffic_managers_info.ips[index]}</td>
                                             <td>{props.info.traffic_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.traffic_managers_info.running)}
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("traffic-manager-"+
+                                                        props.info.traffic_managers_info.ips[index])}
+                                                    running={props.info.traffic_managers_info.running}
+                                                    entity={"traffic-manager"} name={"traffic-manager"}
+                                                    ip={props.info.traffic_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.traffic_managers_info.traffic_managers_statuses.map((status, index) =>
-                                        <tr key={"traffic_generator_status-" + index}>
+                                        <tr key={"traffic-generator-" + index}>
                                             <td>Traffic Generator</td>
                                             <td>{props.info.traffic_managers_info.ips[index]}</td>
                                             <td>-</td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("traffic_manager")}
+                                                    loading={loadingEntities.includes("traffic-generator-"+
+                                                        props.info.traffic_managers_info.ips[index])}
                                                     running={status.running}
-                                                    entity={"traffic_manager"}/>
+                                                    entity={"traffic-generator"} name={"traffic-generator"}
+                                                    ip={props.info.traffic_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}

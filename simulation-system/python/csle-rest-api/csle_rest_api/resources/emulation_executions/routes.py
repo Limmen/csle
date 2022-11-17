@@ -157,6 +157,10 @@ def start_stop_client_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -199,6 +203,10 @@ def start_stop_client_population(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -241,6 +249,10 @@ def start_stop_client_producer(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -283,6 +295,10 @@ def start_stop_docker_stats_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -326,6 +342,10 @@ def start_stop_docker_stats_monitor(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -368,6 +388,10 @@ def start_stop_kafka_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -409,6 +433,10 @@ def start_stop_kafka(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -451,6 +479,10 @@ def start_stop_snort_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -493,6 +525,10 @@ def start_stop_snort_ids(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -536,6 +572,10 @@ def start_stop_ossec_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -578,6 +618,10 @@ def start_stop_ossec_ids(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -621,6 +665,10 @@ def start_stop_host_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -663,6 +711,10 @@ def start_stop_host_monitor_thread(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -707,7 +759,9 @@ def start_stop_container(execution_id: int):
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
 
     # Extract container name
-    container_name = json.loads(request.data)[api_constants.MGMT_WEBAPP.CONTAINER_NAME_PROPERTY]
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    container_name = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -750,6 +804,11 @@ def start_stop_elk_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -792,6 +851,10 @@ def start_stop_elk_stack(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -834,6 +897,10 @@ def start_stop_elastic(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -877,6 +944,10 @@ def start_stop_logstash(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -919,6 +990,10 @@ def start_stop_kibana(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -961,6 +1036,10 @@ def start_stop_traffic_manager(execution_id: int):
 
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    # Extract IP
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
