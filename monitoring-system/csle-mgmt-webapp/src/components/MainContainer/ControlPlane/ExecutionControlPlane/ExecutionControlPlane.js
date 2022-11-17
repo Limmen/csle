@@ -23,6 +23,7 @@ const ExecutionControlPlane = (props) => {
     const [kafkaManagersOpen, setKafkaManagersOpen] = useState(false);
     const [ossecIdsManagersOpen, setOssecIdsManagersOpen] = useState(false);
     const [snortManagersOpen, setSnortManagersOpen] = useState(false);
+    const [elkManagersOpen, setElkManagersOpen] = useState(false);
     const [loadingEntities, setLoadingEntities] = useState([]);
 
     const activeStatus = (active) => {
@@ -275,7 +276,8 @@ const ExecutionControlPlane = (props) => {
                                     <thead>
                                     <tr>
                                         <th>IP</th>
-                                        <th>Port</th>
+                                        <th>Client manager port</th>
+                                        <th>Client manager status</th>
                                         <th>Client process status</th>
                                         <th>Producer status</th>
                                         <th># Clients</th>
@@ -288,6 +290,7 @@ const ExecutionControlPlane = (props) => {
                                         <tr key={"client_status-" + index}>
                                             <td>{props.info.client_managers_info.ips[index]}</td>
                                             <td>{props.info.client_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.client_managers_info.running)}
                                             {activeStatus(status.client_process_active)}
                                             {activeStatus(status.producer_active)}
                                             <td>{status.num_clients}</td>
@@ -325,9 +328,9 @@ const ExecutionControlPlane = (props) => {
                                     <thead>
                                     <tr>
                                         <th>IP</th>
-                                        <th>Port</th>
+                                        <th>Docker stats manager port</th>
                                         <th># Monitors</th>
-                                        <th>Status</th>
+                                        <th>Docker statistics manager status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
@@ -371,8 +374,8 @@ const ExecutionControlPlane = (props) => {
                                     <thead>
                                     <tr>
                                         <th>IP</th>
-                                        <th>Port</th>
-                                        <th>Status</th>
+                                        <th>Host manager port</th>
+                                        <th>Host manager status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
@@ -415,9 +418,11 @@ const ExecutionControlPlane = (props) => {
                                     <thead>
                                     <tr>
                                         <th>IP</th>
-                                        <th>Port</th>
+                                        <th>Kafka manager port</th>
+                                        <th>Kafka port</th>
                                         <th>Topics</th>
-                                        <th>Status</th>
+                                        <th>Kafka manager status</th>
+                                        <th>Kafka status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
@@ -426,7 +431,9 @@ const ExecutionControlPlane = (props) => {
                                         <tr key={"kafka_manager_status-" + index}>
                                             <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.info.kafka_managers_info.ports[index]}</td>
+                                            <td>{props.execution.emulation_env_config.kafka_config.kafka_port}</td>
                                             <td>{getTopicsString(status.topics)}</td>
+                                            {activeStatus(props.info.kafka_managers_info.running)}
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
@@ -461,8 +468,9 @@ const ExecutionControlPlane = (props) => {
                                     <thead>
                                     <tr>
                                         <th>IP</th>
-                                        <th>Port</th>
-                                        <th>Status</th>
+                                        <th>OSSEC IDS manager port</th>
+                                        <th>OSSEC IDS manager status</th>
+                                        <th>OSSEC IDS status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
@@ -471,6 +479,7 @@ const ExecutionControlPlane = (props) => {
                                         <tr key={"ossec_manager_status-" + index}>
                                             <td>{props.info.ossec_managers_info.ips[index]}</td>
                                             <td>{props.info.ossec_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.ossec_managers_info.running)}
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
@@ -495,7 +504,7 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={snortManagersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Snort Managers</h5>
+                            <h5 className="semiTitle"> Snort IDS Managers</h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={snortManagersOpen}>
@@ -505,8 +514,9 @@ const ExecutionControlPlane = (props) => {
                                     <thead>
                                     <tr>
                                         <th>IP</th>
-                                        <th>Port</th>
-                                        <th>Status</th>
+                                        <th>Snort IDS manager port</th>
+                                        <th>Snort IDS manager status</th>
+                                        <th>Snort IDS status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
@@ -515,12 +525,103 @@ const ExecutionControlPlane = (props) => {
                                         <tr key={"snort_manager_status-" + index}>
                                             <td>{props.info.snort_managers_info.ips[index]}</td>
                                             <td>{props.info.snort_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.snort_managers_info.running)}
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("snort_ids_manager")}
                                                     running={status.running}
                                                     entity={"snort_ids_manager"}/>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setElkManagersOpen(!elkManagersOpen)}
+                            aria-controls="elkManagersBody "
+                            aria-expanded={elkManagersOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> ELK Managers</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={elkManagersOpen}>
+                        <div id="elkManagersBody" className="cardBodyHidden">
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>IP</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
+                                        <tr key={"elk_manager_status-" + index}>
+                                            <td>ELK manager</td>
+                                            <td>{props.info.elk_managers_info.ips[index]}</td>
+                                            <td>{props.info.elk_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.elk_managers_info.running)}
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("elk_manager")}
+                                                    running={status.running}
+                                                    entity={"elk_manager"}/>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
+                                        <tr key={"elk_manager_status-" + index}>
+                                            <td>Elasticsearch</td>
+                                            <td>{props.info.elk_managers_info.ips[index]}</td>
+                                            <td>{props.execution.emulation_env_config.elk_config.elastic_port}</td>
+                                            {activeStatus(status.elasticRunning)}
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("elastic")}
+                                                    running={status.running}
+                                                    entity={"elastic"}/>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
+                                        <tr key={"elk_manager_status-" + index}>
+                                            <td>Logstash</td>
+                                            <td>{props.info.elk_managers_info.ips[index]}</td>
+                                            <td>{props.execution.emulation_env_config.elk_config.logstash_port}</td>
+                                            {activeStatus(status.logstashRunning)}
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("logstash")}
+                                                    running={status.running}
+                                                    entity={"logstash"}/>
+                                            </td>
+                                        </tr>
+                                    )}
+
+                                    {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
+                                        <tr key={"elk_manager_status-" + index}>
+                                            <td>Kibana</td>
+                                            <td>{props.info.elk_managers_info.ips[index]}</td>
+                                            <td>{props.execution.emulation_env_config.elk_config.kibana_port}</td>
+                                            {activeStatus(status.kibanaRunning)}
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("kibana")}
+                                                    running={status.running}
+                                                    entity={"kibana"}/>
                                             </td>
                                         </tr>
                                     )}
