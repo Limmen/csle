@@ -88,7 +88,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         return traffic_dto
 
 
-def serve(port : int = 50045, ip=None, hostname=None) -> None:
+def serve(port : int = 50043, ip=None, hostname=None) -> None:
     """
     Starts the gRPC server for managing traffic scripts
 
@@ -106,4 +106,4 @@ def serve(port : int = 50045, ip=None, hostname=None) -> None:
 
 # Program entrypoint
 if __name__ == '__main__':
-    serve(port=50045)
+    serve(port=50043)

@@ -163,6 +163,10 @@ RUN chmod 777 /host_manager.py
 ADD docker_files/common/elk_manager.py /elk_manager.py
 RUN chmod 777 /elk_manager.py
 
+# Traffic manager
+ADD docker_files/common/traffic_manager.py /traffic_manager.py
+RUN chmod 777 /traffic_manager.py
+
 # Setup Sysstat
 RUN mv /etc/default/sysstat /etc/default/sysstat.bak
 ADD docker_files/common/sysstat /etc/default/sysstat

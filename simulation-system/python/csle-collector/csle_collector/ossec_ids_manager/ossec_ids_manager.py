@@ -149,7 +149,7 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         )
 
 
-def serve(port : int = 50051) -> None:
+def serve(port : int = 50047) -> None:
     """
     Starts the gRPC server for managing clients
 
@@ -167,4 +167,4 @@ def serve(port : int = 50051) -> None:
 
 # Program entrypoint
 if __name__ == '__main__':
-    serve(port=50051)
+    serve(port=50047)
