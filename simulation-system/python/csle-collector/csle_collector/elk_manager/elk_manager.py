@@ -54,7 +54,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK stack server
+        :return: an ElkDTO with the state of the ELK stack server
         """
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
@@ -70,7 +70,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK stack
+        :return: an ElkDTO with the state of the ELK stack
         """
         logging.info("Stopping the ELK stack")
         logging.info("Stopping kibana")
@@ -90,7 +90,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK server
+        :return: an ElkDTO with the state of the ELK server
         """
         logging.info(f"Starting ELK")
         os.system(constants.ELK.ELK_START)
@@ -105,7 +105,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK server
+        :return: an ElkDTO with the state of the ELK server
         """
         logging.info(f"Starting Elasticsearch")
         os.system(constants.ELK.ELASTICSEARCH_START)
@@ -121,7 +121,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK server
+        :return: an ElkDTO with the state of the ELK server
         """
         logging.info(f"Starting Kibana")
         os.system(constants.ELK.KIBANA_START)
@@ -137,7 +137,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK server
+        :return: an ElkDTO with the state of the ELK server
         """
         logging.info(f"Starting Logstash")
         os.system(constants.ELK.LOGSTASH_START)
@@ -153,7 +153,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK server
+        :return: an ElkDTO with the state of the ELK server
         """
         logging.info(f"Stops Elasticsearch")
         os.system(constants.ELK.ELASTICSEARCH_STOP)
@@ -169,7 +169,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK server
+        :return: an ElkDTO with the state of the ELK server
         """
         logging.info(f"Stops Kibana")
         os.system(constants.ELK.KIBANA_STOP)
@@ -185,7 +185,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :param request: the gRPC request
         :param context: the gRPC context
-        :return: a clients DTO with the state of the ELK server
+        :return: an ElkDTO with the state of the ELK server
         """
         logging.info(f"Stopping Logstash")
         os.system(constants.ELK.LOGSTASH_STOP)
@@ -196,7 +196,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
 def serve(port : int = 50045, ip=None, hostname=None) -> None:
     """
-    Starts the gRPC server for managing clients
+    Starts the gRPC server for managing the ELK stack
 
     :param port: the port that the server will listen to
     :return: None

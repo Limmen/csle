@@ -4,7 +4,7 @@ import csle_collector.elk_manager.elk_manager_pb2
 
 class ElkManagerUtil:
     """
-    Class with utility functions related to the Elk Manager
+    Class with utility functions related to the ELK Manager
     """
 
     @staticmethod
@@ -13,7 +13,7 @@ class ElkManagerUtil:
         Converts an ElkDTO to a dict
 
         :param elk_dto: the dto to convert
-        :return: a dict frepresentation of the DTO
+        :return: a dict representation of the DTO
         """
         d = {}
         d["kibanaRunning"] = elk_dto.kibanaRunning

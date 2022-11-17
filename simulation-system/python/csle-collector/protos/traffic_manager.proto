@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+// Interface exported by the server
+service TrafficManager {
+  rpc getTrafficStatus(GetTrafficStatusMsg) returns (TrafficDTO) {}
+  rpc stopTraffic(StopTrafficMsg) returns (TrafficDTO) {}
+  rpc startTraffic(StartTrafficMsg) returns (TrafficDTO) {}
+}
+
+// Message that the client sends to stop the traffic generator
+message StopTrafficMsg {}
+
+// Message that the client sends to start the traffic generator
+message StartTrafficMsg {}
+
+// Message that the client sends to extract the status of the traffic generator
+message GetTrafficStatusMsg {}
+
+// Message that the server returns when requested by the client, contains info about the traffic generator
+message TrafficDTO {
+  bool running = 1;
+}
+
