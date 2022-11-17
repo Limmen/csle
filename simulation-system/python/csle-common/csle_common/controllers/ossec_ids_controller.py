@@ -254,12 +254,16 @@ n
             OSSECIDSController.get_ossec_ids_managers_ports(emulation_env_config=emulation_env_config)
         ossec_statuses = []
         running = False
-
+        status = None
         for ip in ossec_ids_managers_ips:
-            status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
-            if not running and status.running:
-                running = True
+            try:
+                status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
+                    port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
+                if not running and status.running:
+                    running = True
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"Could not fetch OSSEC IDS manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             ossec_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

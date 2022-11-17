@@ -196,11 +196,16 @@ class KafkaController:
         kafka_managers_ports = KafkaController.get_kafka_managers_ports(emulation_env_config=emulation_env_config)
         kafka_statuses = []
         running = False
+        status = None
         for ip in kafka_managers_ips:
-            status = KafkaController.get_kafka_status_by_port_and_ip(
-                port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
-            if not running and status.running:
-                running = True
+            try:
+                status = KafkaController.get_kafka_status_by_port_and_ip(
+                    port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
+                if not running and status.running:
+                    running = True
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"Could not fetch Kafka manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             kafka_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

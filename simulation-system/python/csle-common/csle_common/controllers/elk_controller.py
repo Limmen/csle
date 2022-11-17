@@ -288,11 +288,16 @@ class ELKController:
         elk_managers_ports = ELKController.get_elk_managers_ports(emulation_env_config=emulation_env_config)
         elk_statuses = []
         running = False
+        status = None
         for ip in elk_managers_ips:
-            status = ELKController.get_elk_status_by_port_and_ip(
-                port=emulation_env_config.elk_config.elk_manager_port, ip=ip)
-            if not running and status.running:
-                running = True
+            try:
+                status = ELKController.get_elk_status_by_port_and_ip(
+                    port=emulation_env_config.elk_config.elk_manager_port, ip=ip)
+                if not running and status.running:
+                    running = True
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"Could not fetch Kafka manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             elk_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

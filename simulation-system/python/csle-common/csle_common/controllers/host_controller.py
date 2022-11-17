@@ -211,11 +211,16 @@ class HostController:
         host_managers_ports = HostController.get_host_managers_ports(emulation_env_config=emulation_env_config)
         host_managers_statuses = []
         running = False
+        status = None
         for ip in host_managers_ips:
-            status = HostController.get_host_monitor_thread_status_by_port_and_ip(
-                port=emulation_env_config.host_manager_config.host_manager_port, ip=ip)
-            if not running and status.running:
-                running = True
+            try:
+                status = HostController.get_host_monitor_thread_status_by_port_and_ip(
+                    port=emulation_env_config.host_manager_config.host_manager_port, ip=ip)
+                if not running and status.running:
+                    running = True
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"Could not fetch Host manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             host_managers_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

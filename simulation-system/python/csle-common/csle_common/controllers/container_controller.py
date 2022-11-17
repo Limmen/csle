@@ -711,12 +711,17 @@ class ContainerController:
             emulation_env_config=emulation_env_config)
         docker_stats_statuses = []
         running = False
+        status = None
         for ip in docker_stats_managers_ips:
-            status = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
-                port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
-            if emulation_env_config.name in status.emulations \
-                    and emulation_env_config.execution_id in status.emulation_executions:
-                running = True
+            try:
+                status = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
+                    port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
+                if emulation_env_config.name in status.emulations \
+                        and emulation_env_config.execution_id in status.emulation_executions:
+                    running = True
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"Could not fetch Docker stats manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             docker_stats_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

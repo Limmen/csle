@@ -88,7 +88,8 @@ class EmulationEnvController:
         if no_traffic:
             steps = steps-1
         if no_clients:
-            steps = steps-1
+            emulation_execution.emulation_env_config.traffic_config.client_population_config = \
+                emulation_execution.emulation_env_config.traffic_config.client_population_config.no_clients()
 
         current_step = 1
         emulation_env_config = emulation_execution.emulation_env_config
@@ -164,10 +165,9 @@ class EmulationEnvController:
                                                 f"on internal nodes --")
             TrafficController.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
 
-        if not no_clients:
-            current_step += 1
-            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
-            TrafficController.start_client_population(emulation_env_config=emulation_env_config)
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
+        TrafficController.start_client_population(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
@@ -709,6 +709,8 @@ class EmulationEnvController:
             TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
         docker_stats_managers_info = \
             ContainerController.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config)
+        elk_managers_info = \
+            ELKController.get_elk_managers_info(emulation_env_config=execution.emulation_env_config)
         running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
             emulation_env_config=execution.emulation_env_config)
         active_networks, inactive_networks = ContainerController.list_all_active_networks_for_emulation(
@@ -723,5 +725,6 @@ class EmulationEnvController:
                                                 running_containers=running_containers,
                                                 stopped_containers=stopped_containers,
                                                 active_networks=active_networks,
-                                                inactive_networks=inactive_networks)
+                                                inactive_networks=inactive_networks,
+                                                elk_managers_info=elk_managers_info)
         return execution_info

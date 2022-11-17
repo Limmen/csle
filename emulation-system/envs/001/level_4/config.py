@@ -996,7 +996,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         )],
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.SINE_MODULATED_POISSON,
-        lamb=20, mu=4, client_manager_port=50051, num_commands=2, client_time_step_len_seconds=30,
+        lamb=20, mu=4, client_manager_port=50044, num_commands=2, client_time_step_len_seconds=30,
         time_scaling_factor=0.04, period_scaling_factor=160)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
@@ -1461,7 +1461,7 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
     resources = NodeResourcesConfig(
         container_name=f"{constants.CSLE.NAME}-"
                        f"{constants.CONTAINER_IMAGES.ELK_1}_1-{constants.CSLE.LEVEL}{level}",
-        num_cpus=3, available_memory_gb=16,
+        num_cpus=2, available_memory_gb=16,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."

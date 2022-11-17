@@ -256,11 +256,16 @@ n
             SnortIDSController.get_snort_ids_managers_ports(emulation_env_config=emulation_env_config)
         snort_statuses = []
         running = False
+        status = None
         for ip in snort_ids_managers_ips:
-            status = SnortIDSController.get_snort_ids_monitor_thread_status_by_ip_and_port(
-                port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=ip)
-            if not running and status.running:
-                running = True
+            try:
+                status = SnortIDSController.get_snort_ids_monitor_thread_status_by_ip_and_port(
+                    port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=ip)
+                if not running and status.running:
+                    running = True
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"Could not fetch Snort IDS manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             snort_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

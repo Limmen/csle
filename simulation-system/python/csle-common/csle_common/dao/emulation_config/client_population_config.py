@@ -54,6 +54,19 @@ class ClientPopulationConfig:
         )
         return obj
 
+    def no_clients(self) -> "ClientPopulationConfig":
+        """
+        :return: A version of the config with no clients
+        """
+        return ClientPopulationConfig(
+            ip = self.ip,
+            networks=self.networks,
+            client_process_type=self.client_process_type,
+            lamb=0, mu=0, client_manager_port=self.client_manager_port,
+            num_commands=0, client_time_step_len_seconds=self.client_time_step_len_seconds,
+            period_scaling_factor = self.period_scaling_factor, time_scaling_factor=self.time_scaling_factor
+        )
+
     def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object

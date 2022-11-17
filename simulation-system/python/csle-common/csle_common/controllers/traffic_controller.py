@@ -120,7 +120,6 @@ class TrafficController:
             cmd=cmd,
             conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
-        t = constants.COMMANDS.SEARCH_CLIENT_MANAGER
 
         if not constants.COMMANDS.SEARCH_CLIENT_MANAGER in str(o):
 
@@ -132,6 +131,8 @@ class TrafficController:
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
 
             # Start the client_manager
+            Logger.__call__().get_logger().info(f"Starting the client manager on container: "
+                                                f"{emulation_env_config.traffic_config.client_population_config.ip}")
             cmd = constants.COMMANDS.START_CLIENT_MANAGER.format(
                 emulation_env_config.traffic_config.client_population_config.client_manager_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
@@ -416,12 +417,17 @@ class TrafficController:
         client_managers_ports = TrafficController.get_client_managers_ports(emulation_env_config=emulation_env_config)
         client_statuses = []
         running = False
+        status = None
         for ip in client_managers_ips:
-            status = TrafficController.get_clients_dto_by_ip_and_port(
-                ip=emulation_env_config.traffic_config.client_population_config.ip,
-                port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
-            if not running and status.client_process_active and status.producer_active:
-                running = True
+            try:
+                status = TrafficController.get_clients_dto_by_ip_and_port(
+                    ip=ip,
+                    port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
+                if not running and status.client_process_active and status.producer_active:
+                    running = True
+            except Exception as e:
+                Logger.__call__().get_logger().warning(
+                    f"Could not fetch client manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             client_statuses.append(status)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
