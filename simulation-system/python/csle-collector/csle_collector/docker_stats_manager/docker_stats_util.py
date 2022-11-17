@@ -187,3 +187,13 @@ class DockerStatsUtil:
         docker_stats_monitor_dto.emulations = d["emulations"]
         docker_stats_monitor_dto.emulation_executions = d["emulation_executions"]
         return docker_stats_monitor_dto
+
+    @staticmethod
+    def docker_stats_monitor_dto_empty() \
+            -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
+        """
+        :return: an empty DockerStatsMonitorDTO
+        """
+        docker_stats_monitor_dto = csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO()
+        docker_stats_monitor_dto.num_monitors = 0
+        return docker_stats_monitor_dto

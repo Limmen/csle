@@ -246,3 +246,55 @@ class SnortIdsManagerUtil:
         snort_ids_log_dto.severe_alerts = d["severe_alerts"]
         snort_ids_log_dto.alerts_weighted_by_priority = d["alerts_weighted_by_priority"]
         return snort_ids_log_dto
+
+    @staticmethod
+    def snort_ids_log_dto_empty() \
+            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO:
+        """
+        :return: an empty SnortIdsLogDTO
+        """
+        snort_ids_log_dto = csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO()
+        snort_ids_log_dto.timestamp = 0.0
+        snort_ids_log_dto.ip = ""
+        snort_ids_log_dto.attempted_admin_alerts = 0
+        snort_ids_log_dto.attempted_user_alerts = 0
+        snort_ids_log_dto.inappropriate_content_alerts = 0
+        snort_ids_log_dto.policy_violation_alerts = 0
+        snort_ids_log_dto.shellcode_detect_alerts = 0
+        snort_ids_log_dto.successful_admin_alerts = 0
+        snort_ids_log_dto.successful_user_alerts = 0
+        snort_ids_log_dto.trojan_activity_alerts = 0
+        snort_ids_log_dto.unsuccessful_user_alerts = 0
+        snort_ids_log_dto.web_application_attack_alerts = 0
+        snort_ids_log_dto.attempted_dos_alerts = 0
+        snort_ids_log_dto.attempted_recon_alerts = 0
+        snort_ids_log_dto.bad_unknown_alerts = 0
+        snort_ids_log_dto.default_login_attempt_alerts =0
+        snort_ids_log_dto.denial_of_service_alerts = 0
+        snort_ids_log_dto.misc_attack_alerts = 0
+        snort_ids_log_dto.non_standard_protocol_alerts = 0
+        snort_ids_log_dto.rpc_portman_decode_alerts = 0
+        snort_ids_log_dto.successful_dos_alerts = 0
+        snort_ids_log_dto.successful_recon_largescale_alerts = 0
+        snort_ids_log_dto.successful_recon_limited_alerts = 0
+        snort_ids_log_dto.suspicious_filename_detect_alerts = 0
+        snort_ids_log_dto.suspicious_login_alerts = 0
+        snort_ids_log_dto.system_call_detect_alerts = 0
+        snort_ids_log_dto.unusual_client_port_connection_alerts = 0
+        snort_ids_log_dto.web_application_activity_alerts = 0
+        snort_ids_log_dto.icmp_event_alerts = 0
+        snort_ids_log_dto.misc_activity_alerts = 0
+        snort_ids_log_dto.network_scan_alerts = 0
+        snort_ids_log_dto.not_suspicious_alerts = 0
+        snort_ids_log_dto.protocol_command_decode_alerts = 0
+        snort_ids_log_dto.unknown_alerts = 0
+        snort_ids_log_dto.tcp_connection_alerts = 0
+        snort_ids_log_dto.priority_1_alerts = 0
+        snort_ids_log_dto.priority_2_alerts = 0
+        snort_ids_log_dto.priority_3_alerts = 0
+        snort_ids_log_dto.priority_4_alerts = 0
+        snort_ids_log_dto.total_alerts = 0
+        snort_ids_log_dto.warning_alerts = 0
+        snort_ids_log_dto.severe_alerts = 0
+        snort_ids_log_dto.alerts_weighted_by_priority = 0
+        return snort_ids_log_dto

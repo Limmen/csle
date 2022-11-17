@@ -7,6 +7,7 @@ import csle_common.constants.constants as constants
 import csle_collector.elk_manager.elk_manager_pb2_grpc
 import csle_collector.elk_manager.elk_manager_pb2
 import csle_collector.elk_manager.query_elk_server
+import csle_collector.elk_manager.elk_manager_util
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
@@ -316,17 +317,21 @@ class ELKController:
         elk_managers_ips = ELKController.get_elk_managers_ips(emulation_env_config=emulation_env_config)
         elk_managers_ports = ELKController.get_elk_managers_ports(emulation_env_config=emulation_env_config)
         elk_statuses = []
-        running = True
+        running = False
         status = None
         for ip in elk_managers_ips:
             try:
                 status = ELKController.get_elk_status_by_port_and_ip(
                     port=emulation_env_config.elk_config.elk_manager_port, ip=ip)
+                running = True
             except Exception as e:
                 running = False
-                Logger.__call__().get_logger().warning(
+                Logger.__call__().get_logger().debug(
                     f"Could not fetch Elk manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
-            elk_statuses.append(status)
+            if status is not None:
+                elk_statuses.append(status)
+            else:
+                elk_statuses.append(csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty())
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         elk_manager_info_dto = ELKManagersInfo(running=running, ips=elk_managers_ips,

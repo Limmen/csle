@@ -110,7 +110,7 @@ const ControlPlane = (props) => {
         })
         .catch(error => console.log("error:" + error)), []);
 
-    const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, ip) => {
+    const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, node_ip) => {
         fetch(
             `http://` + ip + ':7777/emulation-executions/' + id + "/" + entity + "?emulation="
             + emulation + "&token=" + props.sessionData.token,
@@ -119,7 +119,7 @@ const ControlPlane = (props) => {
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
-                body: JSON.stringify({start: start, stop: stop, name: name, ip: ip})
+                body: JSON.stringify({start: start, stop: stop, name: name, ip: node_ip})
             }
         )
             .then(res => {

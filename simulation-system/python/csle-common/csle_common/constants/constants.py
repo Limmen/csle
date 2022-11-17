@@ -782,14 +782,14 @@ class COMMANDS:
     ARPTABLES_APPEND_INPUT = "sudo arptables -A INPUT"
     ARPTABLES_APPEND_OUTPUT = "sudo arptables -A OUTPUT"
     ARPTABLES_APPEND_FORWARD = "sudo arptables -A FORWARD"
-    START_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l " \
+    START_SNORT_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l " \
                 "/var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile"
     CHANGE_PERMISSION_LOG_DIRS = "sudo chmod -R 777 /var"
     UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
     SNORT_PID = "/var/run//snort_eth1:eth0.pid"
     SNORT_DUMP_STATS="kill -SIGUSR1 {}"
     SNORT_ROTATE_STATS="kill -SIGUSR2 {}"
-    STOP_IDS = "kill -9 $(pgrep snort)"
+    STOP_SNORT_IDS = "kill -9 $(pgrep snort)"
     PS_AUX = "ps -aux"
     PS_AXR = "ps -axr"
     GREP = "grep"

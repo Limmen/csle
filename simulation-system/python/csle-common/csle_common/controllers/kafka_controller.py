@@ -7,6 +7,7 @@ import csle_common.constants.constants as constants
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.kafka_manager.query_kafka_server
+import csle_collector.kafka_manager.kafka_manager_util
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
@@ -230,12 +231,15 @@ class KafkaController:
             try:
                 status = KafkaController.get_kafka_status_by_port_and_ip(
                     port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
-                if not running and status.running:
-                    running = True
+                running = True
             except Exception as e:
-                Logger.__call__().get_logger().warning(
+                Logger.__call__().get_logger().debug(
                     f"Could not fetch Kafka manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
-            kafka_statuses.append(status)
+            if status is not None:
+                kafka_statuses.append(status)
+            else:
+                kafka_statuses.append(
+                    csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty())
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         kafka_manager_info_dto = KafkaManagersInfo(running=running, ips=kafka_managers_ips,

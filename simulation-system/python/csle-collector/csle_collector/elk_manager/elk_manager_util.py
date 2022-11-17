@@ -34,3 +34,14 @@ class ElkManagerUtil:
         elk_dto.elasticRunning = d["elasticRunning"]
         elk_dto.logstashRunning = d["logstashRunning"]
         return elk_dto
+
+    @staticmethod
+    def elk_dto_empty() -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+        """
+        :return: an empty ElkDTO
+        """
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO()
+        elk_dto.kibanaRunning = False
+        elk_dto.elasticRunning = False
+        elk_dto.logstashRunning = False
+        return elk_dto

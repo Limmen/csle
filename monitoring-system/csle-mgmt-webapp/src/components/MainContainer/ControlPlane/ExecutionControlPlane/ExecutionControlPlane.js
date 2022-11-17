@@ -26,7 +26,6 @@ const ExecutionControlPlane = (props) => {
     const [elkManagersOpen, setElkManagersOpen] = useState(false);
     const [trafficManagersOpen, setTrafficManagersOpen] = useState(false);
     const [loadingEntities, setLoadingEntities] = useState([]);
-    console.log(props.info)
 
     const activeStatus = (active) => {
         if (active) {
@@ -68,9 +67,9 @@ const ExecutionControlPlane = (props) => {
     }
 
     const startOrStop = (start, stop, entity, name, ip) => {
-        addLoadingEntity(entity)
+        addLoadingEntity(entity + "-" + ip)
         props.startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
-            start, stop, name, ip)
+            start, stop, entity, name, ip)
     }
 
     const SpinnerOrButton = (props) => {
@@ -104,7 +103,7 @@ const ExecutionControlPlane = (props) => {
                         overlay={renderStartTooltip}
                     >
                         <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStop(true, false, props.entity)}>
+                                onClick={() => startOrStop(true, false, props.entity, props.name, props.ip)}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>

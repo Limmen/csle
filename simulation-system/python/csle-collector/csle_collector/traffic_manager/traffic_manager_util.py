@@ -30,3 +30,12 @@ class TrafficManagerUtil:
         traffic_dto = csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO()
         traffic_dto.running = d["running"]
         return traffic_dto
+
+    @staticmethod
+    def traffic_dto_empty() -> csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO:
+        """
+        :return: an empty TrafficDTO
+        """
+        traffic_dto = csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO()
+        traffic_dto.running = False
+        return traffic_dto

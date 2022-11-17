@@ -181,7 +181,7 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
                 click.secho(f"Producer time-step length: {clients_dto.producer_time_step_len_seconds} seconds", bold=False)
         if snortids:
             for exec in executions:
-                snort_ids_monitors_statuses = SnortIDSController.get_snort_ids_monitor_thread_status(
+                snort_ids_monitors_statuses = SnortIDSController.get_snort_idses_monitor_threads_statuses(
                     emulation_env_config=exec.emulation_env_config)
                 for snort_ids_monitor_status in snort_ids_monitors_statuses:
                     click.secho(f"Snort IDS monitor status for execution {exec.ip_first_octet} of {emulation}",

@@ -7,6 +7,7 @@ import csle_common.constants.constants as constants
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
 import csle_collector.host_manager.query_host_manager
+import csle_collector.host_manager.host_manager_util
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.logging.log import Logger
 
@@ -26,31 +27,43 @@ class HostController:
         """
         for c in emulation_env_config.containers_config.containers:
             # Connect
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+            HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
-            # Check if host_manager is already running
-            cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-                  + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
+    @staticmethod
+    def start_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        Utility method for starting the host manager on a specific container
+
+        :param emulation_env_config: the emulation env config
+        :param ip: the ip of the container
+        :return: None
+        """
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
+
+        # Check if host_manager is already running
+        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
+              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                conn=emulation_env_config.get_connection(ip=ip))
+
+        if not constants.COMMANDS.SEARCH_HOST_MANAGER in str(o):
+
+            Logger.__call__().get_logger().info(f"Starting host manager on node {ip}")
+
+            # Stop old background job if running
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+                  constants.COMMANDS.SPACE_DELIM \
+                  + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                    conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
+                                                    conn=emulation_env_config.get_connection(ip=ip))
 
-            if not constants.COMMANDS.SEARCH_HOST_MANAGER in str(o):
-
-                Logger.__call__().get_logger().info(f"Starting host manager on node {c.get_ips()[0]}")
-
-                # Stop old background job if running
-                cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                      constants.COMMANDS.SPACE_DELIM \
-                      + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
-                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                        conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-
-                # Start the host_manager
-                cmd = constants.COMMANDS.START_HOST_MANAGER.format(
-                    emulation_env_config.host_manager_config.host_manager_port)
-                o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                        conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-                time.sleep(5)
+            # Start the host_manager
+            cmd = constants.COMMANDS.START_HOST_MANAGER.format(
+                emulation_env_config.host_manager_config.host_manager_port)
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                    conn=emulation_env_config.get_connection(ip=ip))
+            time.sleep(5)
 
     @staticmethod
     def stop_host_managers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -61,20 +74,31 @@ class HostController:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            # Connect
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
-
-            Logger.__call__().get_logger().info(f"Stopping host manager on node {c.get_ips()[0]}")
-
-            # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
-                                                    conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
+            HostController.stop_host_manager(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
     @staticmethod
-    def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        Utility method for stopping the host manager on a specific container
+
+        :param emulation_env_config: the emulation env config
+        :param ip: the ip of the container
+        :return: None
+        """
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
+
+        Logger.__call__().get_logger().info(f"Stopping host manager on node {ip}")
+
+        # Stop old background job if running
+        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+              constants.COMMANDS.SPACE_DELIM \
+              + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                conn=emulation_env_config.get_connection(ip=ip))
+
+    @staticmethod
+    def start_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the HostManager on every container
         to start the Host manager and the monitor thread
@@ -82,44 +106,66 @@ class HostController:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        HostController.start_host_managers(emulation_env_config=emulation_env_config)
-        time.sleep(10)
-
         for c in emulation_env_config.containers_config.containers:
-            host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
-                ip=c.get_ips()[0], port=emulation_env_config.host_manager_config.host_manager_port)
-            if not host_monitor_dto.running:
-                Logger.__call__().get_logger().info(
-                    f"Host monitor thread is not running on {c.get_ips()[0]}, starting it.")
-                # Open a gRPC session
-                with grpc.insecure_channel(
-                        f'{c.get_ips()[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
-                    stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-                    csle_collector.host_manager.query_host_manager.start_host_monitor(
-                        stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
-                        kafka_port=emulation_env_config.kafka_config.kafka_port,
-                        time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
-
+            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,ip=c.get_ips()[0])
 
     @staticmethod
-    def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        A method that sends a request to the HostManager on a specific IP
+        to start the Host manager and the monitor thread
+
+        :param emulation_env_config: the emulation env config
+        :param ip: IP of the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        time.sleep(10)
+
+        host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
+            ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
+        if not host_monitor_dto.running:
+            Logger.__call__().get_logger().info(
+                f"Host monitor thread is not running on {ip}, starting it.")
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+                csle_collector.host_manager.query_host_manager.start_host_monitor(
+                    stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                    kafka_port=emulation_env_config.kafka_config.kafka_port,
+                    time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
+
+    @staticmethod
+    def stop_host_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the HostManager on every container to stop the monitor threads
 
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        HostController.start_host_managers(emulation_env_config=emulation_env_config)
+        for c in emulation_env_config.containers_config.containers:
+            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,ip=c.get_ips()[0])
+
+    @staticmethod
+    def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        A method that sends a request to the HostManager on a specific container to stop the monitor threads
+
+        :param emulation_env_config: the emulation env config
+        :param ip: the IP of the container
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
         time.sleep(10)
 
-        for c in emulation_env_config.containers_config.containers:
-            # Open a gRPC session
-            with grpc.insecure_channel(
-                    f'{c.get_ips()[0]}:'
-                    f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
-                stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
-                Logger.__call__().get_logger().info(f"Stopping the Host monitor thread on {c.get_ips()[0]}.")
-                csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=stub)
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ip}:'
+                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            Logger.__call__().get_logger().info(f"Stopping the Host monitor thread on {ip}.")
+            csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=stub)
 
     @staticmethod
     def get_host_monitor_thread_status(emulation_env_config: EmulationEnvConfig) -> \
@@ -157,8 +203,8 @@ class HostController:
             return status
 
     @staticmethod
-    def get_host_log_data(emulation_env_config: EmulationEnvConfig, failed_auth_last_ts: float,
-                          login_last_ts: float) \
+    def get_hosts_log_data(emulation_env_config: EmulationEnvConfig, failed_auth_last_ts: float,
+                           login_last_ts: float) \
             -> List[csle_collector.host_manager.host_manager_pb2.HostMetricsDTO]:
         """
         A method that sends a request to the HostManager on every container to get contents of the Hostmetrics
@@ -237,12 +283,15 @@ class HostController:
             try:
                 status = HostController.get_host_monitor_thread_status_by_port_and_ip(
                     port=emulation_env_config.host_manager_config.host_manager_port, ip=ip)
-                if not running and status.running:
-                    running = True
+                running = True
             except Exception as e:
-                Logger.__call__().get_logger().warning(
+                Logger.__call__().get_logger().debug(
                     f"Could not fetch Host manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
-            host_managers_statuses.append(status)
+            if status is not None:
+                host_managers_statuses.append(status)
+            else:
+                host_managers_statuses.append(
+                    csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty())
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         host_manager_info_dto = HostManagersInfo(

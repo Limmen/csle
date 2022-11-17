@@ -242,3 +242,48 @@ class OSSecManagerUtil:
         ossec_ids_log_dto.apache_alerts = d["apache_alerts"]
         ossec_ids_log_dto.syslog_alerts = d["syslog_alerts"]
         return ossec_ids_log_dto
+
+
+    @staticmethod
+    def ossec_ids_log_dto_empty() \
+            -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO:
+        """
+        :return: an empty OSSECIdsLogDTO
+        """
+        ossec_ids_log_dto = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO()
+        ossec_ids_log_dto.timestamp = 0.0
+        ossec_ids_log_dto.ip = ""
+        ossec_ids_log_dto.attempted_admin_alerts = 0
+        ossec_ids_log_dto.total_alerts = 0
+        ossec_ids_log_dto.warning_alerts = 0
+        ossec_ids_log_dto.severe_alerts = 0
+        ossec_ids_log_dto.alerts_weighted_by_level = 0
+        ossec_ids_log_dto.level_0_alerts = 0
+        ossec_ids_log_dto.level_1_alerts = 0
+        ossec_ids_log_dto.level_2_alerts = 0
+        ossec_ids_log_dto.level_3_alerts = 0
+        ossec_ids_log_dto.level_4_alerts = 0
+        ossec_ids_log_dto.level_5_alerts = 0
+        ossec_ids_log_dto.level_6_alerts = 0
+        ossec_ids_log_dto.level_7_alerts = 0
+        ossec_ids_log_dto.level_8_alerts = 0
+        ossec_ids_log_dto.level_9_alerts = 0
+        ossec_ids_log_dto.level_10_alerts = 0
+        ossec_ids_log_dto.level_11_alerts = 0
+        ossec_ids_log_dto.level_12_alerts = 0
+        ossec_ids_log_dto.level_13_alerts = 0
+        ossec_ids_log_dto.level_14_alerts = 0
+        ossec_ids_log_dto.level_15_alerts = 0
+        ossec_ids_log_dto.invalid_login_alerts = 0
+        ossec_ids_log_dto.authentication_success_alerts = 0
+        ossec_ids_log_dto.authentication_failed_alerts = 0
+        ossec_ids_log_dto.connection_attempt_alerts = 0
+        ossec_ids_log_dto.attacks_alerts = 0
+        ossec_ids_log_dto.adduser_alerts = 0
+        ossec_ids_log_dto.sshd_alerts = 0
+        ossec_ids_log_dto.ids_alerts = 0
+        ossec_ids_log_dto.firewall_alerts = 0
+        ossec_ids_log_dto.squid_alerts = 0
+        ossec_ids_log_dto.apache_alerts = 0
+        ossec_ids_log_dto.syslog_alerts = 0
+        return ossec_ids_log_dto

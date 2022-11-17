@@ -35,3 +35,12 @@ class KafkaManagerUtil:
         kafka_dto.running = d["running"]
         kafka_dto.topics = d["topics"]
         return kafka_dto
+
+    @staticmethod
+    def kafka_dto_empty() -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
+        """
+        :return: an empty KafkaDTO
+        """
+        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO()
+        kafka_dto.running = False
+        return kafka_dto

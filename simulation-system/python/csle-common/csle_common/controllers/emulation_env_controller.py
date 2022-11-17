@@ -186,9 +186,9 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
                                             f"{current_step}/{steps}: Starting the Snort Intrusion Detection System --")
-        SnortIDSController.start_snort_ids(emulation_env_config=emulation_env_config)
+        SnortIDSController.start_snort_idses(emulation_env_config=emulation_env_config)
         time.sleep(10)
-        SnortIDSController.start_snort_ids_monitor_thread(emulation_env_config=emulation_env_config)
+        SnortIDSController.start_snort_idses_monitor_threads(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1
@@ -196,7 +196,7 @@ class EmulationEnvController:
                                             f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
         OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config)
         time.sleep(10)
-        OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_idses_monitor_threads(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1
@@ -205,7 +205,7 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")
-        HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config)
+        HostController.start_host_monitor_threads(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         current_step += 1

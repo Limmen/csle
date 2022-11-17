@@ -4,9 +4,11 @@ import grpc
 import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.client_manager.query_clients
+import csle_collector.client_manager.client_manager_util
 import csle_collector.traffic_manager.traffic_manager_pb2_grpc
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.traffic_manager.query_traffic_manager
+import csle_collector.traffic_manager.traffic_manager_util
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
@@ -490,12 +492,15 @@ class TrafficController:
                 status = TrafficController.get_clients_dto_by_ip_and_port(
                     ip=ip,
                     port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
-                if not running and status.client_process_active and status.producer_active:
-                    running = True
+                running = True
             except Exception as e:
-                Logger.__call__().get_logger().warning(
+                Logger.__call__().get_logger().debug(
                     f"Could not fetch client manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
-            client_statuses.append(status)
+            if status is not None:
+                client_statuses.append(status)
+            else:
+                client_statuses.append(
+                    csle_collector.client_manager.client_manager_util.ClientManagerUtil.clients_dto_empty())
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         client_manager_info_dto = ClientManagersInfo(
@@ -574,12 +579,15 @@ class TrafficController:
                 try:
                     status = TrafficController.get_traffic_manager_status_by_port_and_ip(
                         port=node_traffic_config.traffic_manager_port, ip=node_traffic_config.ip)
-                    if not running and status.running:
-                        running = True
+                    running = True
                 except Exception as e:
-                    Logger.__call__().get_logger().warning(
+                    Logger.__call__().get_logger().debug(
                         f"Could not fetch traffic manager status on IP:{node_traffic_config}, error: {str(e)}, {repr(e)}")
-                traffic_managers_statuses.append(status)
+                if status is not None:
+                    traffic_managers_statuses.append(status)
+                else:
+                    traffic_managers_statuses.append(
+                        csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_empty())
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         traffic_manager_info_dto = TrafficManagersInfo(

@@ -9,6 +9,7 @@ import socket
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
+import csle_collector.docker_stats_manager.docker_stats_util
 from csle_common.util.docker_util import DockerUtil
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
@@ -440,7 +441,9 @@ class ContainerController:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.kafka_config.kafka_manager_port}') as channel:
+        with grpc.insecure_channel(
+                f'{ip}:'
+                f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}') as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             container_ip_dtos = []
             for c in execution.emulation_env_config.containers_config.containers:
@@ -453,7 +456,7 @@ class ContainerController:
                 stub=stub, emulation=execution.emulation_name,
                 kafka_ip=execution.emulation_env_config.kafka_config.container.get_ips()[0],
                 stats_queue_maxsize=1000,
-                time_step_len_seconds=execution.emulation_env_config.kafka_config.time_step_len_seconds,
+                time_step_len_seconds=execution.emulation_env_config.docker_stats_manager_config.time_step_len_seconds,
                 kafka_port=execution.emulation_env_config.kafka_config.kafka_port,
                 containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
@@ -467,7 +470,9 @@ class ContainerController:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        with grpc.insecure_channel(f'{ip}:{execution.emulation_env_config.kafka_config.kafka_manager_port}') \
+        with grpc.insecure_channel(
+                f'{ip}:'
+                f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}') \
                 as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
@@ -695,7 +700,7 @@ class ContainerController:
         :param emulation_env_config: the emulation env config
         :return: the list of ports
         """
-        return [emulation_env_config.kafka_config.kafka_manager_port]
+        return [emulation_env_config.docker_stats_manager_config.docker_stats_manager_port]
 
     @staticmethod
     def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig) -> DockerStatsManagersInfo:
@@ -715,14 +720,16 @@ class ContainerController:
         for ip in docker_stats_managers_ips:
             try:
                 status = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
-                    port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
-                if emulation_env_config.name in status.emulations \
-                        and emulation_env_config.execution_id in status.emulation_executions:
-                    running = True
+                    port=emulation_env_config.docker_stats_manager_config.docker_stats_manager_port, ip=ip)
+                running = True
             except Exception as e:
-                Logger.__call__().get_logger().warning(
+                Logger.__call__().get_logger().debug(
                     f"Could not fetch Docker stats manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
-            docker_stats_statuses.append(status)
+            if status is not None:
+                docker_stats_statuses.append(status)
+            else:
+                docker_stats_statuses.append(
+                    csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_empty())
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         docker_stats_manager_info_dto = DockerStatsManagersInfo(
