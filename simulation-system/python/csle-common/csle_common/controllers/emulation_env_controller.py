@@ -161,7 +161,7 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting traffic managers --")
-        TrafficController._start_traffic_managers_if_not_running(emulation_env_config=emulation_env_config)
+        TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "

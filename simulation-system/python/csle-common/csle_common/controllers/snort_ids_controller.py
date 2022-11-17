@@ -43,9 +43,9 @@ class SnortIDSController:
                     continue
 
     @staticmethod
-    def _start_snort_ids_manager_if_not_running(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_snort_managers(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Utility method for checking if the snort ids manager is running and starting it if it is not running
+        Utility funciton for starting snort IDS managers
 
         :param emulation_env_config: the emulation env config
         :return: None
@@ -53,6 +53,7 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
+
                     # Connect
                     EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
@@ -64,6 +65,8 @@ class SnortIDSController:
                     t = constants.COMMANDS.SEARCH_SNORT_IDS_MANAGER
 
                     if not constants.COMMANDS.SEARCH_SNORT_IDS_MANAGER in str(o):
+
+                        Logger.__call__().get_logger().info(f"Starting Snort IDS manager on node {c.get_ips()[0]}")
 
                         # Stop old background job if running
                         cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -80,6 +83,29 @@ class SnortIDSController:
                         time.sleep(5)
 
     @staticmethod
+    def stop_snort_managers(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Utility funciton for stopping snort IDS managers
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
+                if ids_image in c.name:
+                    # Connect
+                    EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+                    Logger.__call__().get_logger().info(f"Stopping Snort IDS manager on node {c.get_ips()[0]}")
+
+                    cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+                          constants.COMMANDS.SPACE_DELIM \
+                          + constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(
+                        cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
+
+                    time.sleep(5)
+
+    @staticmethod
     def start_snort_ids_monitor_thread(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the SnortIDSManager on every container that runs
@@ -88,7 +114,7 @@ n
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
@@ -120,7 +146,7 @@ n
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
@@ -147,7 +173,7 @@ n
         """
         statuses = []
         if start_if_stopped:
-            SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+            SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
@@ -187,7 +213,7 @@ n
         :return: List of monitor thread statuses
         """
         ids_log_data_list = []
-        SnortIDSController._start_snort_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:

@@ -112,6 +112,42 @@ const ControlPlane = (props) => {
 
     const startOrStopClientPopulation = useCallback((id, emulation, start, stop) => {
         fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/client-population?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopClientManager = useCallback((id, emulation, start, stop) => {
+        fetch(
             `http://` + ip + ':7777/emulation-executions/' + id + "/client-manager?emulation="
             + emulation + "&token=" + props.sessionData.token,
             {
@@ -219,9 +255,81 @@ const ControlPlane = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const startOrStopDockerStatsMonitor = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/docker-stats-monitor?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const startOrStopKafkaManager = useCallback((id, emulation, start, stop) => {
         fetch(
             `http://` + ip + ':7777/emulation-executions/' + id + "/kafka-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopKafka = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/kafka?emulation="
             + emulation + "&token=" + props.sessionData.token,
             {
                 method: "POST",
@@ -291,6 +399,42 @@ const ControlPlane = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const startOrStopSnort = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/snort-ids?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const startOrStopOSSECManager = useCallback((id, emulation, start, stop) => {
         fetch(
             `http://` + ip + ':7777/emulation-executions/' + id + "/ossec-ids-manager?emulation="
@@ -327,9 +471,81 @@ const ControlPlane = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
+    const startOrStopOSSECIds = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/ossec-ids?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
     const startOrStopHostManager = useCallback((id, emulation, start, stop) => {
         fetch(
             `http://` + ip + ':7777/emulation-executions/' + id + "/host-manager?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                var id_obj = {
+                    value: {
+                        id: id,
+                        emulation: emulation
+                    }
+                }
+                fetchSelectedExecution(id_obj)
+                fetchExecutionInfo(id_obj)
+                setLoadingSelectedEmulationExecution(true)
+                setLoadingSelectedEmulationExecutionInfo(true)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const startOrStopHostMonitor = useCallback((id, emulation, start, stop) => {
+        fetch(
+            `http://` + ip + ':7777/emulation-executions/' + id + "/host-monitor?emulation="
             + emulation + "&token=" + props.sessionData.token,
             {
                 method: "POST",

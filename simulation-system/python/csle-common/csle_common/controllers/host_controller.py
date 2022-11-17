@@ -17,7 +17,7 @@ class HostController:
     """
 
     @staticmethod
-    def _start_host_managers_if_not_running(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_host_managers(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Utility method for checking if the host manager is running and starting it if it is not running
 
@@ -53,6 +53,27 @@ class HostController:
                 time.sleep(5)
 
     @staticmethod
+    def stop_host_managers(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Utility method for stopping host managers
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            # Connect
+            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+            Logger.__call__().get_logger().info(f"Stopping host manager on node {c.get_ips()[0]}")
+
+            # Stop old background job if running
+            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+                  constants.COMMANDS.SPACE_DELIM \
+                  + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                    conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
+
+    @staticmethod
     def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the HostManager on every container
@@ -61,7 +82,7 @@ class HostController:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        HostController._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        HostController.start_host_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
@@ -88,7 +109,7 @@ class HostController:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        HostController._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        HostController.start_host_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
@@ -110,7 +131,7 @@ class HostController:
         :return: List of monitor thread statuses
         """
         statuses = []
-        HostController._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        HostController.start_host_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
         for c in emulation_env_config.containers_config.containers:
             status = HostController.get_host_monitor_thread_status_by_port_and_ip(
@@ -149,7 +170,7 @@ class HostController:
         :return: List of monitor thread statuses
         """
         host_metrics_data_list = []
-        HostController._start_host_managers_if_not_running(emulation_env_config=emulation_env_config)
+        HostController.start_host_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:

@@ -16,7 +16,7 @@ class ELKController:
     @staticmethod
     def start_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Utility method for checking if the elk manager is running and starting it if it is not running
+        Utility method for starting the ELK manager
 
         :param emulation_env_config: the emulation env config
         :return: None
@@ -36,6 +36,9 @@ class ELKController:
         t = constants.COMMANDS.SEARCH_ELK_MANAGER
 
         if not constants.COMMANDS.SEARCH_ELK_MANAGER in str(o):
+
+            Logger.__call__().get_logger().info(f"Starting elk manager on node: "
+                                                f"{emulation_env_config.elk_config.container.get_ips()[0]}")
 
             # Stop old background job if running
             cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -58,7 +61,7 @@ class ELKController:
     @staticmethod
     def stop_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Utility method for checking if the elk manager is running and starting it if it is not running
+        Utility method for stopping the ELK manager
 
         :param emulation_env_config: the emulation env config
         :return: None
@@ -68,6 +71,9 @@ class ELKController:
                                     ip=emulation_env_config.elk_config.container.get_ips()[0],
                                     create_producer=False)
 
+        Logger.__call__().get_logger().info(f"Stopping elk manager on node: "
+                                            f"{emulation_env_config.elk_config.container.get_ips()[0]}")
+
         # Stop background job
         cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
               constants.COMMANDS.SPACE_DELIM \
@@ -75,6 +81,8 @@ class ELKController:
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+
+        time.sleep(5)
 
     @staticmethod
     def get_elk_status(emulation_env_config: EmulationEnvConfig) -> \

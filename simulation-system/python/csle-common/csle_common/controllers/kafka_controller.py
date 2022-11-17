@@ -14,9 +14,9 @@ from csle_common.logging.log import Logger
 class KafkaController:
 
     @staticmethod
-    def _start_kafka_manager_if_not_running(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_kafka_manager(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Utility method for checking if the kafka manager is running and starting it if it is not running
+        Utility method for starting the Kafka manager
 
         :param emulation_env_config: the emulation env config
         :return: None
@@ -33,9 +33,11 @@ class KafkaController:
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
-        t = constants.COMMANDS.SEARCH_KAFKA_MANAGER
 
         if not constants.COMMANDS.SEARCH_KAFKA_MANAGER in str(o):
+
+            Logger.__call__().get_logger().info(f"Starting the Kafka manager on node "
+                                                f"{emulation_env_config.kafka_config.container.get_ips()[0]}")
 
             # Stop old background job if running
             cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
@@ -56,6 +58,33 @@ class KafkaController:
             time.sleep(5)
 
     @staticmethod
+    def stop_kafka_manager(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Utility method for stopping the Kafka manager
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
+                                    ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                                    create_producer=False)
+
+        Logger.__call__().get_logger().info(f"Starting the Kafka manager on node "
+                                            f"{emulation_env_config.kafka_config.container.get_ips()[0]}")
+
+        # Stop old background job if running
+        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+              constants.COMMANDS.SPACE_DELIM \
+              + constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(
+            cmd=cmd,
+            conn=
+            emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
+        time.sleep(5)
+
+    @staticmethod
     def create_topics(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the KafkaManager to create topics according to the given configuration
@@ -65,7 +94,7 @@ class KafkaController:
         """
         Logger.__call__().get_logger().info(
             f"creating kafka topics on container: {emulation_env_config.kafka_config.container.get_ips()[0]}")
-        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+        KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
         kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
             ip=emulation_env_config.kafka_config.container.get_ips()[0],
             port=emulation_env_config.kafka_config.kafka_manager_port)
@@ -97,7 +126,7 @@ class KafkaController:
         :param emulation_env_config: the emulation config
         :return: a KafkaDTO with the status of the server
         """
-        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+        KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
         kafka_dto = KafkaController.get_kafka_status_by_port_and_ip(
             ip=emulation_env_config.kafka_config.container.get_ips()[0],
             port=emulation_env_config.kafka_config.kafka_manager_port)
@@ -132,7 +161,7 @@ class KafkaController:
         """
         Logger.__call__().get_logger().info(
             f"Stopping kafka server on container: {emulation_env_config.kafka_config.container.get_ips()[0]}")
-        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+        KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -154,7 +183,7 @@ class KafkaController:
         """
         Logger.__call__().get_logger().info(
             f"Starting kafka server on container: {emulation_env_config.kafka_config.container.get_ips()[0]}")
-        KafkaController._start_kafka_manager_if_not_running(emulation_env_config=emulation_env_config)
+        KafkaController.start_kafka_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(

@@ -43,9 +43,9 @@ class OSSECIDSController:
                     continue
 
     @staticmethod
-    def _start_ossec_ids_manager_if_not_running(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_ossec_ids_managers(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Utility method for checking if the ossec ids manager is running and starting it if it is not running
+        Utility method for starting OSSEC IDS managers
 
         :param emulation_env_config: the emulation env config
         :return: None
@@ -65,6 +65,8 @@ class OSSECIDSController:
 
                     if not constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER in str(o):
 
+                        Logger.__call__().get_logger().info(f"Starting OSSEC IDS manager on node {c.get_ips()[0]}")
+
                         # Stop old background job if running
                         cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
                               constants.COMMANDS.SPACE_DELIM \
@@ -80,6 +82,30 @@ class OSSECIDSController:
                         time.sleep(5)
 
     @staticmethod
+    def stop_ossec_ids_managers(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Utility method for stopping ossec ids managers
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
+                if ids_image in c.name:
+                    # Connect
+                    EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+                    Logger.__call__().get_logger().info(f"Stopping OSSEC IDS manager on node {c.get_ips()[0]}")
+
+                    cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+                          constants.COMMANDS.SPACE_DELIM \
+                          + constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(
+                        cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
+
+                    time.sleep(5)
+
+    @staticmethod
     def start_ossec_ids_monitor_thread(emulation_env_config: EmulationEnvConfig) -> None:
         """
         A method that sends a request to the OSSECIDSManager on every container that runs
@@ -88,7 +114,7 @@ n
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        OSSECIDSController._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_ids_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
@@ -119,7 +145,7 @@ n
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        OSSECIDSController._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_ids_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
@@ -144,7 +170,7 @@ n
         :return: List of monitor thread statuses
         """
         statuses = []
-        OSSECIDSController._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_ids_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
@@ -167,7 +193,7 @@ n
         :return: List of monitor thread statuses
         """
         ids_log_data_list = []
-        OSSECIDSController._start_ossec_ids_manager_if_not_running(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_ids_managers(emulation_env_config=emulation_env_config)
         time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:

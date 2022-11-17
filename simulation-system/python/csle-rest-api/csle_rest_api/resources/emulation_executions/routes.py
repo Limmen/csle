@@ -15,6 +15,7 @@ from csle_common.controllers.elk_controller import ELKController
 from csle_common.controllers.snort_ids_controller import SnortIDSController
 from csle_common.controllers.ossec_ids_controller import OSSECIDSController
 from csle_common.controllers.host_controller import HostController
+from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -162,6 +163,48 @@ def start_stop_client_manager(execution_id: int):
         stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
             Logger.__call__().get_logger().info(
+                f"Stopping client manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            TrafficController.stop_client_manager(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting client manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            TrafficController.start_client_manager(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_client_population(execution_id: int):
+    """
+    The /emulation-executions/id/client-population resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the client manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
                 f"Stopping client population on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             TrafficController.stop_client_population(emulation_env_config=execution.emulation_env_config)
@@ -177,6 +220,7 @@ def start_stop_client_manager(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
 
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
@@ -205,10 +249,53 @@ def start_stop_docker_stats_manager(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping docker stats manager for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            ContainerController.stop_docker_stats_thread(execution=execution)
+            MonitorToolsController.stop_docker_stats_manager()
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting docker stats manager for emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            MonitorToolsController.start_docker_stats_manager(
+                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_docker_stats_monitor(execution_id: int):
+    """
+    The /emulation-executions/id/docker-stats-monitor resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the docker stats manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping docker stats monitor for emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            ContainerController.stop_docker_stats_thread(execution=execution)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting docker stats monitor for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             ContainerController.start_docker_stats_thread(execution=execution)
         response = jsonify({})
@@ -226,6 +313,47 @@ def start_stop_docker_stats_manager(execution_id: int):
 def start_stop_kafka_manager(execution_id: int):
     """
     The /emulation-executions/id/kafka-manager resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the kafka manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping kafka manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            KafkaController.stop_kafka_manager(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting kafka manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            KafkaController.start_kafka_manager(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_kafka(execution_id: int):
+    """
+    The /emulation-executions/id/kafka resource.
 
     :param execution_id: the id of the execution
     :return: Starts or stop the kafka manager of a given execution
@@ -268,6 +396,48 @@ def start_stop_kafka_manager(execution_id: int):
 def start_stop_snort_manager(execution_id: int):
     """
     The /emulation-executions/id/snort-ids-manager resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the snort manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping snort manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            SnortIDSController.stop_snort_managers(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting snort manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            SnortIDSController.start_snort_managers(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_snort_ids(execution_id: int):
+    """
+    The /emulation-executions/id/snort-ids resource.
 
     :param execution_id: the id of the execution
     :return: Starts or stop the snort manager of a given execution
@@ -330,12 +500,54 @@ def start_stop_ossec_manager(execution_id: int):
         stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
             Logger.__call__().get_logger().info(
-                f"Stopping OSSEC IDS manager on emulation: {execution.emulation_env_config.name}, "
+                f"Stopping OSSEC IDS managers on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            OSSECIDSController.stop_ossec_ids_managers(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting OSSEC IDS manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            OSSECIDSController.start_ossec_ids_managers(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_ossec_ids(execution_id: int):
+    """
+    The /emulation-executions/id/ossec-ids resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the ossec manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping OSSEC IDS on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config)
         if start:
             Logger.__call__().get_logger().info(
-                f"Starting OSSEC IDS manager on emulation: {execution.emulation_env_config.name}, "
+                f"Starting OSSEC IDS on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config)
             OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config)
@@ -375,10 +587,52 @@ def start_stop_host_manager(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping host managers on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            HostController.stop_host_monitor_thread(emulation_env_config=execution.emulation_env_config)
+            HostController.stop_host_managers(emulation_env_config=execution.emulation_env_config)
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting host managers on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            HostController.start_host_managers(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_host_monitor_thread(execution_id: int):
+    """
+    The /emulation-executions/id/host-manager resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the host managers of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping host monitor on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            HostController.stop_host_monitor_thread(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting host monitor on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             HostController.start_host_monitor_thread(emulation_env_config=execution.emulation_env_config)
         response = jsonify({})
@@ -637,6 +891,48 @@ def start_stop_kibana(execution_id: int):
                 f"Starting kibana on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
         ELKController.start_kibana(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_traffic_manager(execution_id: int):
+    """
+    The /emulation-executions/id/traffic-manager resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the traffic manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping traffic manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            TrafficController.stop_traffic_managers(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting traffic manager on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            TrafficController.start_traffic_managers(emulation_env_config=execution.emulation_env_config)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
