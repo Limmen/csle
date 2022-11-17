@@ -223,6 +223,48 @@ def start_stop_client_population(execution_id: int):
 
 
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_client_producer(execution_id: int):
+    """
+    The /emulation-executions/id/client-producer resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stops the client producer of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping client producer on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            TrafficController.stop_client_producer(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting client producer on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            TrafficController.start_client_producer(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def start_stop_docker_stats_manager(execution_id: int):

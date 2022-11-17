@@ -84,7 +84,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 28
+        steps = 29
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -176,7 +176,12 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
+        TrafficController.stop_client_producer(emulation_env_config=emulation_env_config)
         TrafficController.start_client_population(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client Kafka producer --")
+        TrafficController.start_client_producer(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
@@ -297,7 +302,9 @@ class EmulationEnvController:
         """
         if not no_traffic:
             TrafficController.create_internal_traffic_generator_scripts(emulation_env_config=emulation_env_config)
+        TrafficController.stop_client_producer(emulation_env_config=emulation_env_config)
         TrafficController.start_client_population(emulation_env_config=emulation_env_config)
+        TrafficController.start_client_producer(emulation_env_config=emulation_env_config)
 
     @staticmethod
     def stop_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:

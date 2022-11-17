@@ -69,62 +69,9 @@ const ExecutionControlPlane = (props) => {
 
     const startOrStop = (start, stop, entity) => {
         addLoadingEntity(entity)
-        if(entity === "client_manager") {
-            props.startOrStopClientPopulation(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "host_manager") {
-            props.startOrStopHostManager(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "docker_stats_manager") {
-            props.startOrStopDockerStatsManager(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "kafka_manager") {
-            props.startOrStopKafkaManager(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "snort_ids_manager") {
-            props.startOrStopSnortManager(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "ossec_ids_manager") {
-            props.startOrStopOSSECManager(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "elk_manager") {
-            props.startOrStopElkManager(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "elastic") {
-            props.startOrStopElastic(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "logstash") {
-            props.startOrStopLogstash(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "kibana") {
-            props.startOrStopKibana(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        if(entity === "traffic_manager") {
-            props.startOrStopTrafficManager(props.execution.ip_first_octet, props.execution.emulation_name,
-                start, stop)
-            return
-        }
-        props.startOrStopContainer(props.execution.ip_first_octet, props.execution.emulation_name, start, stop, entity)
+        props.startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
+            start, stop)
+        // props.startOrStopContainer(props.execution.ip_first_octet, props.execution.emulation_name, start, stop, entity)
     }
 
     const SpinnerOrButton = (props) => {
@@ -145,7 +92,7 @@ const ExecutionControlPlane = (props) => {
                         overlay={renderStopTooltip}
                     >
                         <Button variant="warning" className="startButton" size="sm"
-                                onClick={() => startOrStop(false, true, props.entity)}>
+                                onClick={() => startOrStop(false, true, props.entity, props.name, props.ip)}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -213,7 +160,9 @@ const ExecutionControlPlane = (props) => {
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes(container.full_name_str)}
-                                                    running={true} entity={container.full_name_str}/>
+                                                    running={true} entity="container"
+                                                    name={container.full_name_str} ip={container.ips_and_networks[0]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -227,7 +176,8 @@ const ExecutionControlPlane = (props) => {
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes(container.full_name_str)}
-                                                    running={false} entity={container.full_name_str}/>
+                                                    running={false} entity="container"
+                                                    name={container.full_name_str} ip={container.ips_and_networks[0]} />
                                             </td>
                                         </tr>
                                     )}
@@ -313,7 +263,7 @@ const ExecutionControlPlane = (props) => {
                                     </thead>
                                     <tbody>
                                     {props.info.client_managers_info.client_managers_statuses.map((status, index) =>
-                                        <tr key={"client_status-" + index}>
+                                        <tr key={"client-manager-" + index}>
                                             <td>Client manager</td>
                                             <td>{props.info.client_managers_info.ips[index]}</td>
                                             <td>{props.info.client_managers_info.ports[index]}</td>
@@ -321,11 +271,18 @@ const ExecutionControlPlane = (props) => {
                                             <td></td>
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("client-manager-"+
+                                                        props.info.client_managers_info.ips[index])}
+                                                    running={props.info.client_managers_info.running}
+                                                    entity={"client-manager"} name={"client-manager"}
+                                                    ip={props.info.client_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.client_managers_info.client_managers_statuses.map((status, index) =>
-                                        <tr key={"client_status-" + index}>
+                                        <tr key={"client-population-" + index}>
                                             <td>Client process</td>
                                             <td>{props.info.client_managers_info.ips[index]}</td>
                                             <td></td>
@@ -334,14 +291,17 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("client_manager")}
-                                                    running={status.producer_active && status.client_process_active}
-                                                    entity={"client_manager"}/>
+                                                    loading={loadingEntities.includes("client-population-"+
+                                                        props.info.client_managers_info.ips[index])}
+                                                    running={status.client_process_active}
+                                                    entity={"client-population"} name={"client-population"}
+                                                    ip={props.info.client_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
                                     {props.info.client_managers_info.client_managers_statuses.map((status, index) =>
-                                        <tr key={"client_status-" + index}>
+                                        <tr key={"client-producer-" + index}>
                                             <td>Producer process</td>
                                             <td>{props.info.client_managers_info.ips[index]}</td>
                                             <td></td>
@@ -350,9 +310,12 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("client_manager")}
-                                                    running={status.producer_active && status.client_process_active}
-                                                    entity={"client_manager"}/>
+                                                    loading={loadingEntities.includes("client-producer-"+
+                                                        props.info.client_managers_info.ips[index])}
+                                                    running={status.producer_active}
+                                                    entity={"client-producer"} name={"client-producer"}
+                                                    ip={props.info.client_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}

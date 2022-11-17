@@ -156,19 +156,75 @@ class TrafficController:
             ip=emulation_env_config.traffic_config.client_population_config.ip,
             port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
 
-        # Open a gRPC session
-        with grpc.insecure_channel(
-                f'{emulation_env_config.traffic_config.client_population_config.ip}:'
-                f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
-            stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
-
-            # Stop the producer
-            if client_dto.client_process_active:
-                csle_collector.client_manager.query_clients.stop_producer(stub)
-
-            # Stop the client population
-            if client_dto.client_process_active:
+        if client_dto.client_process_active:
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{emulation_env_config.traffic_config.client_population_config.ip}:'
+                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
                 csle_collector.client_manager.query_clients.stop_clients(stub)
+
+    @staticmethod
+    def start_client_producer(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Starts the Kafka producer for client metrics
+
+        :param emulation_env_config: the emulation environment configuration
+        :return: None
+        """
+        Logger.__call__().get_logger().info(f"Starting client producer on container:"
+                                            f" {emulation_env_config.traffic_config.client_population_config.ip}")
+
+        TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
+
+        client_dto = TrafficController.get_clients_dto_by_ip_and_port(
+            ip=emulation_env_config.traffic_config.client_population_config.ip,
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port
+        )
+        if not client_dto.producer_active:
+
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{emulation_env_config.traffic_config.client_population_config.ip}:'
+                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
+
+                # Start the producer thread
+                csle_collector.client_manager.query_clients.start_producer(
+                    stub=stub, ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                    port=emulation_env_config.kafka_config.kafka_port,
+                    time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
+
+    @staticmethod
+    def stop_client_producer(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Stops the Kafka producer for client metrics
+
+        :param emulation_env_config: the emulation environment configuration
+        :return: None
+        """
+        Logger.__call__().get_logger().info(f"Stopping client producer on container:"
+                                            f" {emulation_env_config.traffic_config.client_population_config.ip}")
+
+        TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
+
+        client_dto = TrafficController.get_clients_dto_by_ip_and_port(
+            ip=emulation_env_config.traffic_config.client_population_config.ip,
+            port=emulation_env_config.traffic_config.client_population_config.client_manager_port
+        )
+
+        if client_dto.producer_active:
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{emulation_env_config.traffic_config.client_population_config.ip}:'
+                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
+
+                # Stop the producer thread
+                csle_collector.client_manager.query_clients.start_producer(
+                    stub=stub, ip=emulation_env_config.kafka_config.container.get_ips()[0],
+                    port=emulation_env_config.kafka_config.kafka_port,
+                    time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
 
     @staticmethod
     def start_client_population(emulation_env_config: EmulationEnvConfig) -> None:
@@ -222,11 +278,6 @@ class TrafficController:
                 csle_collector.client_manager.query_clients.stop_clients(stub)
                 time.sleep(5)
 
-            # Stop the producer thread if it is already running
-            if client_dto.client_process_active:
-                csle_collector.client_manager.query_clients.stop_producer(stub)
-                time.sleep(5)
-
             # Start the client population
             sine_modulated = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
@@ -246,15 +297,15 @@ class TrafficController:
 
             time.sleep(5)
 
-            # Start the producer thread
-            csle_collector.client_manager.query_clients.start_producer(
-                stub=stub, ip=emulation_env_config.kafka_config.container.get_ips()[0],
-                port=emulation_env_config.kafka_config.kafka_port,
-                time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
-
     @staticmethod
     def get_num_active_clients(emulation_env_config : EmulationEnvConfig) \
             -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+        """
+        Gets the number of active clients
+
+        :param emulation_env_config: the emulation configuration
+        :return: A ClientDTO which contains the number of active clients
+        """
 
         TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
 

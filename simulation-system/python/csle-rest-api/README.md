@@ -95,6 +95,7 @@ A REST API for the CSLE management platform.
 | `/emulation-executions/<execution_id>/docker-stats-monitor?token=<valid_token>&emulation=<emulation>` | Start/stop docker stats monitor of an emulation execution      | `POST`                                  |
 | `/emulation-executions/<execution_id>/client-manager?token=<valid_token>&emulation=<emulation>`       | Start/stop client manager of an emulation execution            | `POST`                                  |
 | `/emulation-executions/<execution_id>/client-population?token=<valid_token>&emulation=<emulation>`    | Start/stop client population of an emulation execution         | `POST`                                  |
+| `/emulation-executions/<execution_id>/client-producer?token=<valid_token>&emulation=<emulation>`      | Start/stop client producer of an emulation execution           | `POST`                                  |
 | `/emulation-executions/<execution_id>/kafka-manager?token=<valid_token>&emulation=<emulation>`        | Start/stop Kafka manager of an emulation execution             | `POST`                                  |
 | `/emulation-executions/<execution_id>/kafka?token=<valid_token>&emulation=<emulation>`                | Start/stop Kafka of an emulation execution                     | `POST`                                  |
 | `/emulation-executions/<execution_id>/snort-ids-manager?token=<valid_token>&emulation=<emulation>`    | Start/stop Snort manager of an emulation execution             | `POST`                                  |
