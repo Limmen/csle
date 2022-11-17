@@ -187,7 +187,7 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the ELK stack --")
-        EmulationEnvController.apply_pre_elk_config(emulation_env_config=emulation_env_config)
+        EmulationEnvController.apply_elk_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers --")

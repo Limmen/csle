@@ -52,8 +52,7 @@ function App() {
                             <Route path="/"
                                    element={<MainContainer sessionData={sessionData}
                                                            setSessionData={setSessionData}/>}>
-                                <Route index element={<Login setSessionData={setSessionData}
-                                                             sessionData={sessionData}/>}>
+                                <Route index element={<Navigate to="login-page" />}>
                                 </Route>
                                 <Route path="emulations-page" index element={
                                     <ProtectedRoute>

@@ -361,7 +361,7 @@ class ELK:
     """
     String constants for managing the ELK stack
     """
-    ELK_START = "nohup /usr/local/bin/start.sh > /elk_server.log"
+    ELK_START = "nohup /usr/local/bin/start.sh > /elk_server.log &"
     ELASTICSEARCH_STOP = "service elasticsearch stop"
     KIBANA_STOP = "service kibana stop"
     LOGSTASH_STOP = "service logstash stop"
