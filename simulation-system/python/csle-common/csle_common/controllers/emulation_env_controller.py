@@ -84,7 +84,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 27
+        steps = 28
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -159,11 +159,20 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
         TopologyController.create_topology(emulation_env_config=emulation_env_config)
 
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting traffic managers --")
+        TrafficController._start_traffic_managers_if_not_running(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "
+                                            f"on internal nodes --")
+        TrafficController.create_internal_traffic_generator_scripts(emulation_env_config=emulation_env_config)
+
         if not no_traffic:
             current_step += 1
-            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "
+            Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting traffic generators "
                                                 f"on internal nodes --")
-            TrafficController.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
+            TrafficController.start_internal_traffic_generators(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting client population --")
@@ -287,7 +296,7 @@ class EmulationEnvController:
         :return: None
         """
         if not no_traffic:
-            TrafficController.create_and_start_internal_traffic_generators(emulation_env_config=emulation_env_config)
+            TrafficController.create_internal_traffic_generator_scripts(emulation_env_config=emulation_env_config)
         TrafficController.start_client_population(emulation_env_config=emulation_env_config)
 
     @staticmethod
@@ -707,6 +716,8 @@ class EmulationEnvController:
             HostController.get_host_managers_info(emulation_env_config=execution.emulation_env_config)
         client_managers_info = \
             TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
+        traffic_managers_info = \
+            TrafficController.get_traffic_managers_info(emulation_env_config=execution.emulation_env_config)
         docker_stats_managers_info = \
             ContainerController.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config)
         elk_managers_info = \
@@ -726,5 +737,6 @@ class EmulationEnvController:
                                                 stopped_containers=stopped_containers,
                                                 active_networks=active_networks,
                                                 inactive_networks=inactive_networks,
-                                                elk_managers_info=elk_managers_info)
+                                                elk_managers_info=elk_managers_info,
+                                                traffic_managers_info=traffic_managers_info)
         return execution_info

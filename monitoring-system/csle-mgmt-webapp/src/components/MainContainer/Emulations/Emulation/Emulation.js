@@ -33,6 +33,7 @@ const Emulation = (props) => {
     const [kafkaOpen, setKafkaOpen] = useState(false);
     const [elkOpen, setElkOpen] = useState(false);
     const [hostManagerConfigOpen, setHostManagerConfigOpen] = useState(false);
+    const [trafficManagersConfigOpen, setTrafficManagersConfigOpen] = useState(false);
     const [snortManagerConfigOpen, setSnortManagerConfigOpen] = useState(false);
     const [ossecManagerConfigOpen, setOSSECManagerConfigOpen] = useState(false);
     const [dockerStatsManagerConfigOpen, setDockerStatsManagerConfigOpen] = useState(false);
@@ -42,7 +43,6 @@ const Emulation = (props) => {
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
     const ip = serverIp
-    console.log(emulation)
     // const ip = "172.31.212.92"
 
     const startorStopEmulationPre = (emulation) => {
@@ -945,6 +945,39 @@ const Emulation = (props) => {
                                     <td>{emulation.host_manager_config.host_manager_port}</td>
                                     <td>{emulation.host_manager_config.time_step_len_seconds}</td>
                                 </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setTrafficManagersConfigOpen(!trafficManagersConfigOpen)}
+                            aria-controls="trafficManagersConfigBody"
+                            aria-expanded={trafficManagersConfigOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle">Traffic managers configuration</h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={trafficManagersConfigOpen}>
+                        <div id="trafficManagersConfigBody" className="cardBodyHidden">
+                            <Table striped bordered hover>
+                                <thead>
+                                <tr>
+                                    <th>Traffic manager IP</th>
+                                    <th>GRPC API port</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {emulation.traffic_config.node_traffic_configs.map((node_traffic_config, index) =>
+                                    <tr key={node_traffic_config.ip + "-" + index}>
+                                        <td>{node_traffic_config.ip}</td>
+                                        <td>{node_traffic_config.traffic_manager_port}</td>
+                                    </tr>
+                                )}
                                 </tbody>
                             </Table>
                         </div>

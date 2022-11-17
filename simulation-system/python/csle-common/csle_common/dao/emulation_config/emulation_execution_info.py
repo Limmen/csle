@@ -6,6 +6,7 @@ from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
 from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
+from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 
@@ -19,7 +20,8 @@ class EmulationExecutionInfo:
                  ossec_managers_info: OSSECIDSManagersInfo, kafka_managers_info: KafkaManagersInfo,
                  host_managers_info: HostManagersInfo, client_managers_info: ClientManagersInfo,
                  docker_stats_managers_info: DockerStatsManagersInfo, running_containers: List[NodeContainerConfig],
-                 stopped_containers: List[NodeContainerConfig], active_networks: List[ContainerNetwork],
+                 stopped_containers: List[NodeContainerConfig], traffic_managers_info: TrafficManagersInfo,
+                 active_networks: List[ContainerNetwork],
                  inactive_networks: List[ContainerNetwork], elk_managers_info: ELKManagersInfo):
         """
         Initializes the DTO
@@ -30,6 +32,7 @@ class EmulationExecutionInfo:
         :param ossec_managers_info: information about the OSSEC managers
         :param kafka_managers_info: information about the Kafka managers
         :param host_managers_info: information about the Host managers
+        :param traffic_managers_info: information about the traffic managers
         :param client_managers_info: information about the client managers
         :param docker_stats_managers_info: information about the docker stats managers
         :param running_containers: information about the running containers
@@ -51,6 +54,7 @@ class EmulationExecutionInfo:
         self.active_networks = active_networks
         self.inactive_networks = inactive_networks
         self.elk_managers_info = elk_managers_info
+        self.traffic_managers_info = traffic_managers_info
 
     def __str__(self) -> str:
         """
@@ -61,7 +65,7 @@ class EmulationExecutionInfo:
                f"kafka_managers_info: {self.kafka_managers_info}, host_managers_info: {self.host_managers_info}," \
                f"client_managers_info: {self.client_managers_info}, " \
                f"docker_stats_managers_info: {self.docker_stats_managers_info}, " \
-               f"elk_managers_info: {self.elk_managers_info}" \
+               f"elk_managers_info: {self.elk_managers_info}, traffic_managers_info: {self.traffic_managers_info}" \
                f"running_containers: {list(map(lambda x: str(x), self.running_containers))}, " \
                f"stopped_containers: {list(map(lambda x: str(x), self.stopped_containers))}, " \
                f"active_networks : {list(map(lambda x: str(x), self.active_networks))}, " \
@@ -79,6 +83,7 @@ class EmulationExecutionInfo:
         d["kafka_managers_info"] = self.kafka_managers_info.to_dict()
         d["host_managers_info"] = self.host_managers_info.to_dict()
         d["elk_managers_info"] = self.elk_managers_info.to_dict()
+        d["traffic_managers_info"] = self.traffic_managers_info.to_dict()
         d["client_managers_info"] = self.client_managers_info.to_dict()
         d["docker_stats_managers_info"] = self.docker_stats_managers_info.to_dict()
         d["running_containers"] = list(map(lambda x: x.to_dict(), self.running_containers))
@@ -99,6 +104,7 @@ class EmulationExecutionInfo:
                                      ossec_managers_info=OSSECIDSManagersInfo.from_dict(d["ossec_managers_info"]),
                                      kafka_managers_info=KafkaManagersInfo.from_dict(d["kafka_managers_info"]),
                                      elk_managers_info=ELKManagersInfo.from_dict(d["elk_managers_info"]),
+                                     traffic_managers_info=TrafficManagersInfo.from_dict(d["traffic_managers_info"]),
                                      host_managers_info=HostManagersInfo.from_dict(d["host_managers_info"]),
                                      client_managers_info=ClientManagersInfo.from_dict(d["client_managers_info"]),
                                      docker_stats_managers_info=

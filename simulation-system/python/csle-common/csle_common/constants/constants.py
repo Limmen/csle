@@ -800,6 +800,7 @@ class COMMANDS:
     START_SNORT_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /snort_ids_manager.py --port {} &"
     START_OSSEC_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ossec_ids_manager.py --port {} &"
     START_HOST_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /host_manager.py --port {} &"
+    START_TRAFFIC_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /traffic_manager.py --port {} &"
     START_SDN_CONTROLLER = "sudo nohup /root/miniconda3/bin/python3 /ryu_controller.py --port {} --webport {} " \
                            "--controller {} &"
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
@@ -807,6 +808,7 @@ class COMMANDS:
     SEARCH_SNORT_IDS_MANAGER = "/root/miniconda3/bin/python3 /snort_ids_manager.py"
     SEARCH_OSSEC_IDS_MANAGER = "/root/miniconda3/bin/python3 /ossec_ids_manager.py"
     SEARCH_HOST_MANAGER = "/root/miniconda3/bin/python3 /host_manager.py"
+    SEARCH_TRAFFIC_MANAGER = "/root/miniconda3/bin/python3 /traffic_manager.py"
     SEARCH_SDN_CONTROLLER = "/root/miniconda3/bin/python3 /ryu_controller.py"
     DOCKER_STATS_MANAGER_PIDFILE = "/var/log/csle/statsmanager.pid"
     DOCKER_STATS_MANAGER_OUTFILE = "/var/log/csle/statsmanager.out"
@@ -1025,6 +1027,7 @@ class TRAFFIC_COMMANDS:
     SNORT_IDS_MANAGER_FILE_NAME = "snort_ids_manager.py"
     OSSEC_IDS_MANAGER_FILE_NAME = "ossec_ids_manager.py"
     HOST_MANAGER_FILE_NAME = "host_manager.py"
+    TRAFFIC_MANAGER_FILE_NAME = "traffic_manager.py"
     SDN_CONTROLLER_FILE_NAME = "ryu_controller.py"
     GENERIC_COMMANDS = "generic_commands"
     CLIENT_1_SUBNET = "client_1_subnet"

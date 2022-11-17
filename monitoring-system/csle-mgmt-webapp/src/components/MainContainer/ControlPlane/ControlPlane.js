@@ -102,7 +102,6 @@ const ControlPlane = (props) => {
             return res.json()
         })
         .then(response => {
-            console.log(response)
             if (response === null) {
                 return
             }
