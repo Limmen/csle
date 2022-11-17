@@ -14,7 +14,7 @@ from csle_common.logging.log import Logger
 class ELKController:
 
     @staticmethod
-    def _start_elk_manager_if_not_running(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Utility method for checking if the elk manager is running and starting it if it is not running
 
@@ -56,6 +56,27 @@ class ELKController:
             time.sleep(5)
 
     @staticmethod
+    def stop_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Utility method for checking if the elk manager is running and starting it if it is not running
+
+        :param emulation_env_config: the emulation env config
+        :return: None
+        """
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
+                                    ip=emulation_env_config.elk_config.container.get_ips()[0],
+                                    create_producer=False)
+
+        # Stop background job
+        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
+              constants.COMMANDS.SPACE_DELIM \
+              + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME
+        o, e, _ = EmulationUtil.execute_ssh_cmd(
+            cmd=cmd,
+            conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+
+    @staticmethod
     def get_elk_status(emulation_env_config: EmulationEnvConfig) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
@@ -64,7 +85,7 @@ class ELKController:
         :param emulation_env_config: the emulation config
         :return: an ELKDTO with the status of the server
         """
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
         elk_dto = ELKController.get_elk_status_by_port_and_ip(
             ip=emulation_env_config.elk_config.container.get_ips()[0],
             port=emulation_env_config.elk_config.elk_manager_port)
@@ -99,7 +120,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Stopping ELK stack on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -120,7 +141,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Starting ELK stack on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -141,7 +162,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -162,7 +183,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Starting kibana on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -183,7 +204,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Starting logstash on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -204,7 +225,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Starting elasticsearch on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -225,7 +246,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Starting kibana on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -246,7 +267,7 @@ class ELKController:
         """
         Logger.__call__().get_logger().info(
             f"Starting logstash on container: {emulation_env_config.elk_config.container.get_ips()[0]}")
-        ELKController._start_elk_manager_if_not_running(emulation_env_config=emulation_env_config)
+        ELKController.start_elk_manager(emulation_env_config=emulation_env_config)
 
         # Open a gRPC session
         with grpc.insecure_channel(

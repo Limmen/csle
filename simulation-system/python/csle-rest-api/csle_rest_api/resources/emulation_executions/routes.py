@@ -460,6 +460,48 @@ def start_stop_elk_manager(execution_id: int):
         stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
             Logger.__call__().get_logger().info(
+                f"Stopping ELK manager: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            ELKController.stop_elk_manager(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting ELK manager: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+        ELKController.start_elk_manager(emulation_env_config=execution.emulation_env_config)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_elk_stack(execution_id: int):
+    """
+    The /emulation-executions/id/elk-stack resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the ELK stack of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json.loads(request.data)[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json.loads(request.data)[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
                 f"Stopping ELK stack on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             ELKController.stop_elk_stack(emulation_env_config=execution.emulation_env_config)

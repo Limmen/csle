@@ -45,6 +45,7 @@ class MGMT_WEBAPP:
     CLIENT_MANAGER_SUBRESOURCE = "client-manager"
     KAFKA_MANAGER_SUBRESOURCE = "kafka-manager"
     ELK_MANAGER_SUBRESOURCE = "elk-manager"
+    ELK_STACK_SUBRESOURCE = "elk-stack"
     ELASTIC_SUBRESOURCE = "elastic"
     KIBANA_SUBRESOURCE = "kibana"
     LOGSTASH_SUBRESOURCE = "logstash"
