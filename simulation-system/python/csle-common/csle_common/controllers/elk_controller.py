@@ -89,7 +89,7 @@ class ELKController:
             return elk_dto
 
     @staticmethod
-    def stop_elk_server(emulation_env_config: EmulationEnvConfig) -> \
+    def stop_elk_stack(emulation_env_config: EmulationEnvConfig) -> \
             csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Method for requesting the ELKManager to stop the ELK server

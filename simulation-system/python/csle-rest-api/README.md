@@ -96,6 +96,10 @@ A REST API for the CSLE management platform.
 | `/emulation-executions/<execution_id>/snort-ids-manager?token=<valid_token>&emulation=<emulation>` | Start/stop Snort manager of an emulation execution             | `POST`                                  |
 | `/emulation-executions/<execution_id>/ossec-ids-manager?token=<valid_token>&emulation=<emulation>` | Start/stop OSSEC IDS manager of an emulation execution         | `POST`                                  |
 | `/emulation-executions/<execution_id>/host-manager?token=<valid_token>&emulation=<emulation>`      | Start/stop Host managers of an emulation execution             | `POST`                                  |
+| `/emulation-executions/<execution_id>/elk-manager?token=<valid_token>&emulation=<emulation>`       | Start/stop ELK managers of an emulation execution              | `POST`                                  |
+| `/emulation-executions/<execution_id>/elastic?token=<valid_token>&emulation=<emulation>`           | Start/stop Elasticsearch on an emulation execution             | `POST`                                  |
+| `/emulation-executions/<execution_id>/logstash?token=<valid_token>&emulation=<emulation>`          | Start/stop Logstash on an emulation execution                  | `POST`                                  |
+| `/emulation-executions/<execution_id>/kibana?token=<valid_token>&emulation=<emulation>`            | Start/stop Kibana on an emulation execution                    | `POST`                                  |
 | `/emulation-executions/<execution_id>/container?token=<valid_token>&emulation=<emulation>`         | Start/stop container of an emulation execution                 | `POST`                                  |
 | `/users?token=<valid_token>`                                                                       | List of users                                                  | `GET`,`DELETE`                          |
 | `/users?ids=true&token=<valid_token>`                                                              | List of user ids only (fast to fetch)                          | `GET`,`DELETE`                          |

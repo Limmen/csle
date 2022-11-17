@@ -24,7 +24,9 @@ const ExecutionControlPlane = (props) => {
     const [ossecIdsManagersOpen, setOssecIdsManagersOpen] = useState(false);
     const [snortManagersOpen, setSnortManagersOpen] = useState(false);
     const [elkManagersOpen, setElkManagersOpen] = useState(false);
+    const [trafficManagersOpen, setTrafficManagersOpen] = useState(false);
     const [loadingEntities, setLoadingEntities] = useState([]);
+    console.log(props.info)
 
     const activeStatus = (active) => {
         if (active) {
@@ -114,6 +116,11 @@ const ExecutionControlPlane = (props) => {
         }
         if(entity === "kibana") {
             props.startOrStopKibana(props.execution.ip_first_octet, props.execution.emulation_name,
+                start, stop)
+            return
+        }
+        if(entity === "traffic_manager") {
+            props.startOrStopTrafficManager(props.execution.ip_first_octet, props.execution.emulation_name,
                 start, stop)
             return
         }
@@ -295,11 +302,10 @@ const ExecutionControlPlane = (props) => {
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
+                                        <th>Service</th>
                                         <th>IP</th>
-                                        <th>Client manager port</th>
-                                        <th>Client manager status</th>
-                                        <th>Client process status</th>
-                                        <th>Producer status</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
                                         <th># Clients</th>
                                         <th>Time-step length (s)</th>
                                         <th>Actions</th>
@@ -308,12 +314,39 @@ const ExecutionControlPlane = (props) => {
                                     <tbody>
                                     {props.info.client_managers_info.client_managers_statuses.map((status, index) =>
                                         <tr key={"client_status-" + index}>
+                                            <td>Client manager</td>
                                             <td>{props.info.client_managers_info.ips[index]}</td>
                                             <td>{props.info.client_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.client_managers_info.running)}
+                                            <td></td>
+                                            <td>{status.clients_time_step_len_seconds}</td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.client_managers_info.client_managers_statuses.map((status, index) =>
+                                        <tr key={"client_status-" + index}>
+                                            <td>Client process</td>
+                                            <td>{props.info.client_managers_info.ips[index]}</td>
+                                            <td></td>
                                             {activeStatus(status.client_process_active)}
-                                            {activeStatus(status.producer_active)}
                                             <td>{status.num_clients}</td>
+                                            <td>{status.clients_time_step_len_seconds}</td>
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("client_manager")}
+                                                    running={status.producer_active && status.client_process_active}
+                                                    entity={"client_manager"}/>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.client_managers_info.client_managers_statuses.map((status, index) =>
+                                        <tr key={"client_status-" + index}>
+                                            <td>Producer process</td>
+                                            <td>{props.info.client_managers_info.ips[index]}</td>
+                                            <td></td>
+                                            {activeStatus(status.producer_active)}
+                                            <td></td>
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
                                                 <SpinnerOrButton
@@ -347,19 +380,29 @@ const ExecutionControlPlane = (props) => {
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
+                                        <th>Service</th>
                                         <th>IP</th>
-                                        <th>Docker stats manager port</th>
-                                        <th># Monitors</th>
-                                        <th>Docker statistics manager status</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {props.info.docker_stats_managers_info.docker_stats_managers_statuses.map((status, index) =>
                                         <tr key={"docker_stats_status-" + index}>
+                                            <td>Docker Statistics Manager</td>
                                             <td>{props.info.docker_stats_managers_info.ips[index]}</td>
                                             <td>{props.info.docker_stats_managers_info.ports[index]}</td>
-                                            <td>{status.num_monitors}</td>
+                                            {activeStatus(props.info.docker_stats_managers_info.running)}
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.docker_stats_managers_info.docker_stats_managers_statuses.map((status, index) =>
+                                        <tr key={"docker_stats_status-" + index}>
+                                            <td>Docker Statistics Monitor Thread</td>
+                                            <td>{props.info.docker_stats_managers_info.ips[index]}</td>
+                                            <td></td>
                                             {activeStatus(status.num_monitors > 0)}
                                             <td>
                                                 <SpinnerOrButton
@@ -393,17 +436,29 @@ const ExecutionControlPlane = (props) => {
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
+                                        <th>Service</th>
                                         <th>IP</th>
-                                        <th>Host manager port</th>
-                                        <th>Host manager status</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {props.info.host_managers_info.host_managers_statuses.map((status, index) =>
                                         <tr key={"host_manager_status-" + index}>
+                                            <td>Host Manager</td>
                                             <td>{props.info.host_managers_info.ips[index]}</td>
                                             <td>{props.info.host_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.host_managers_info.running)}
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.host_managers_info.host_managers_statuses.map((status, index) =>
+                                        <tr key={"host_manager_status-" + index}>
+                                            <td>Host monitor thread</td>
+                                            <td>{props.info.host_managers_info.ips[index]}</td>
+                                            <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
@@ -437,23 +492,32 @@ const ExecutionControlPlane = (props) => {
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
+                                        <th>Service</th>
                                         <th>IP</th>
-                                        <th>Kafka manager port</th>
-                                        <th>Kafka port</th>
+                                        <th>Port</th>
                                         <th>Topics</th>
-                                        <th>Kafka manager status</th>
-                                        <th>Kafka status</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {props.info.kafka_managers_info.kafka_managers_statuses.map((status, index) =>
                                         <tr key={"kafka_manager_status-" + index}>
+                                            <td>Kafka Manager</td>
                                             <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.info.kafka_managers_info.ports[index]}</td>
+                                            <td></td>
+                                            {activeStatus(props.info.kafka_managers_info.running)}
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.kafka_managers_info.kafka_managers_statuses.map((status, index) =>
+                                        <tr key={"kafka_manager_status-" + index}>
+                                            <td>Kafka</td>
+                                            <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.kafka_config.kafka_port}</td>
                                             <td>{getTopicsString(status.topics)}</td>
-                                            {activeStatus(props.info.kafka_managers_info.running)}
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
@@ -487,19 +551,29 @@ const ExecutionControlPlane = (props) => {
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
+                                        <th>Service</th>
                                         <th>IP</th>
-                                        <th>OSSEC IDS manager port</th>
-                                        <th>OSSEC IDS manager status</th>
-                                        <th>OSSEC IDS status</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {props.info.ossec_managers_info.ossec_ids_statuses.map((status, index) =>
                                         <tr key={"ossec_manager_status-" + index}>
+                                            <td>OSSEC IDS Manager</td>
                                             <td>{props.info.ossec_managers_info.ips[index]}</td>
                                             <td>{props.info.ossec_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.ossec_managers_info.running)}
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.ossec_managers_info.ossec_ids_statuses.map((status, index) =>
+                                        <tr key={"ossec_manager_status-" + index}>
+                                            <td>OSSEC IDS</td>
+                                            <td>{props.info.ossec_managers_info.ips[index]}</td>
+                                            <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
@@ -533,19 +607,29 @@ const ExecutionControlPlane = (props) => {
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
+                                        <th>Service</th>
                                         <th>IP</th>
-                                        <th>Snort IDS manager port</th>
-                                        <th>Snort IDS manager status</th>
-                                        <th>Snort IDS status</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {props.info.snort_managers_info.snort_statuses.map((status, index) =>
                                         <tr key={"snort_manager_status-" + index}>
+                                            <td>Snort IDS Manager</td>
                                             <td>{props.info.snort_managers_info.ips[index]}</td>
                                             <td>{props.info.snort_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.snort_managers_info.running)}
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.snort_managers_info.snort_statuses.map((status, index) =>
+                                        <tr key={"snort_manager_status-" + index}>
+                                            <td>Snort IDS</td>
+                                            <td>{props.info.snort_managers_info.ips[index]}</td>
+                                            <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
@@ -595,9 +679,22 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.elk_managers_info.ports[index]}</td>
                                             {activeStatus(props.info.elk_managers_info.running)}
                                             <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
+                                        <tr key={"elk_manager_status-" + index}>
+                                            <td>ELK stack</td>
+                                            <td>{props.info.elk_managers_info.ips[index]}</td>
+                                            <td>{props.execution.emulation_env_config.elk_config.elastic_port},
+                                                {props.execution.emulation_env_config.elk_config.logstash_port},
+                                                {props.execution.emulation_env_config.elk_config.kibana_port}
+                                            </td>
+                                            {activeStatus(props.info.elk_managers_info.running)}
+                                            <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("elk_manager")}
-                                                    running={status.running}
+                                                    running={props.info.elk_managers_info.running}
                                                     entity={"elk_manager"}/>
                                             </td>
                                         </tr>
@@ -611,7 +708,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("elastic")}
-                                                    running={status.running}
+                                                    running={status.elasticRunning}
                                                     entity={"elastic"}/>
                                             </td>
                                         </tr>
@@ -625,7 +722,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("logstash")}
-                                                    running={status.running}
+                                                    running={status.logstashRunning}
                                                     entity={"logstash"}/>
                                             </td>
                                         </tr>
@@ -640,8 +737,64 @@ const ExecutionControlPlane = (props) => {
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("kibana")}
-                                                    running={status.running}
+                                                    running={status.kibanaRunning}
                                                     entity={"kibana"}/>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
+                            onClick={() => setTrafficManagersOpen(!trafficManagersOpen)}
+                            aria-controls="trafficManagersBody"
+                            aria-expanded={trafficManagersOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Traffic managers </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={trafficManagersOpen}>
+                        <div id="trafficManagersBody" className="cardBodyHidden">
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>IP</th>
+                                        <th>Port</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {props.info.traffic_managers_info.traffic_managers_statuses.map((status, index) =>
+                                        <tr key={"traffic_manager_status-" + index}>
+                                            <td>Traffic Manager</td>
+                                            <td>{props.info.traffic_managers_info.ips[index]}</td>
+                                            <td>{props.info.traffic_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.traffic_managers_info.running)}
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.traffic_managers_info.traffic_managers_statuses.map((status, index) =>
+                                        <tr key={"traffic_generator_status-" + index}>
+                                            <td>Traffic Generator</td>
+                                            <td>{props.info.traffic_managers_info.ips[index]}</td>
+                                            <td>-</td>
+                                            {activeStatus(status.running)}
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("traffic_manager")}
+                                                    running={status.running}
+                                                    entity={"traffic_manager"}/>
                                             </td>
                                         </tr>
                                     )}
