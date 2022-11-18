@@ -426,7 +426,8 @@ class TrafficController:
         """
         if node_traffic_config is None or container is None:
             return
-        TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
+        TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
+                                                node_traffic_config=node_traffic_config)
         time.sleep(5)
         Logger.__call__().get_logger().info(f"Starting traffic generator script, "
                                             f"node ip:{node_traffic_config.ip}")

@@ -575,7 +575,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.monitor_running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("ossec-ids-monitor"+
+                                                    loading={loadingEntities.includes("ossec-ids-monitor-"+
                                                         props.info.ossec_ids_managers_info.ips[index])}
                                                     running={status.monitor_running}
                                                     entity={"ossec-ids-monitor"} name={"ossec-ids-monitor"}

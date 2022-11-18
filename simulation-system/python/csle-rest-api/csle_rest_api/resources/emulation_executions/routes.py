@@ -560,12 +560,11 @@ def start_stop_snort_ids(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping snort on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            SnortIDSController.stop_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config)
+            SnortIDSController.stop_snort_idses(emulation_env_config=execution.emulation_env_config)
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting snort on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            SnortIDSController.start_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config)
             SnortIDSController.start_snort_idses(emulation_env_config=execution.emulation_env_config)
         time.sleep(10)
         response = jsonify({})
@@ -578,7 +577,7 @@ def start_stop_snort_ids(execution_id: int):
 
 
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
-                               f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
+                               f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def start_stop_snort_ids_monitor(execution_id: int):
     """

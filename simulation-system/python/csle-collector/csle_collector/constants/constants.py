@@ -244,7 +244,7 @@ class SNORT_IDS_ROUTER:
     START_SNORT_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l " \
                       "/var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile"
     CHECK_IF_SNORT_IS_RUNNING_CMD = "ps -aux | grep snort.conf"
-    SEARCH_SNORT_RUNNING = "/etc/snort/snort/conf"
+    SEARCH_SNORT_RUNNING = "/etc/snort/snort.conf"
 
 class HOST_METRICS:
     """
