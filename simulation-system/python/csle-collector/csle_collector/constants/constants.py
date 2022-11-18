@@ -5,7 +5,7 @@ import re
 
 
 class GRPC:
-    TIMEOUT_SECONDS = 15
+    TIMEOUT_SECONDS = 30
 
 
 class LOG_FILES:

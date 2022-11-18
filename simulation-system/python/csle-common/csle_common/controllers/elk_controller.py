@@ -319,7 +319,6 @@ class ELKController:
         elk_managers_statuses = []
         elk_managers_running = []
         for ip in elk_managers_ips:
-            running = False
             status = None
             try:
                 status = ELKController.get_elk_status_by_port_and_ip(

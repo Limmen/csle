@@ -249,10 +249,7 @@ class TrafficController:
                 stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
 
                 # Stop the producer thread
-                csle_collector.client_manager.query_clients.start_producer(
-                    stub=stub, ip=emulation_env_config.kafka_config.container.get_ips()[0],
-                    port=emulation_env_config.kafka_config.kafka_port,
-                    time_step_len_seconds=emulation_env_config.kafka_config.time_step_len_seconds)
+                csle_collector.client_manager.query_clients.stop_producer(stub=stub)
 
     @staticmethod
     def start_client_population(emulation_env_config: EmulationEnvConfig) -> None:

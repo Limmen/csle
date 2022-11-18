@@ -230,11 +230,9 @@ class KafkaController:
             running = False
             status = None
             try:
-                print("sending kafka status request")
                 status = KafkaController.get_kafka_status_by_port_and_ip(
                     port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
                 running = True
-                print("kafka status obtained")
             except Exception as e:
                 Logger.__call__().get_logger().debug(
                     f"Could not fetch Kafka manager status on IP:{ip}, error: {str(e)}, {repr(e)}")

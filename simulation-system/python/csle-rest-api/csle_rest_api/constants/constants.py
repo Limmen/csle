@@ -44,7 +44,7 @@ class MGMT_WEBAPP:
     INFO_SUBRESOURCE = "info"
     CLIENT_MANAGER_SUBRESOURCE = "client-manager"
     CLIENT_POPULATION_SUBRESOURCE = "client-population"
-    CLIENT_PRODUCER_SUBRESOURCE = "client-population"
+    CLIENT_PRODUCER_SUBRESOURCE = "client-producer"
     KAFKA_MANAGER_SUBRESOURCE = "kafka-manager"
     KAFKA_SUBRESOURCE = "kafka"
     ELK_MANAGER_SUBRESOURCE = "elk-manager"

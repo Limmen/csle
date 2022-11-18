@@ -711,21 +711,17 @@ class EmulationEnvController:
         :param emulation_env_config: the emulation for which executions should be stopped
         :return: execution information
         """
-        print("get info")
+
         emulation_name = execution.emulation_name
         execution_id = execution.ip_first_octet
         snort_ids_managers_info = \
             SnortIDSController.get_snort_managers_info(emulation_env_config=execution.emulation_env_config)
-        print("get snort")
         ossec_ids_managers_info = \
             OSSECIDSController.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config)
-        print("get ossec")
         kafka_managers_info = \
             KafkaController.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config)
-        print("get kafka")
         host_managers_info = \
             HostController.get_host_managers_info(emulation_env_config=execution.emulation_env_config)
-        print("get host")
         client_managers_info = \
             TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
         traffic_managers_info = \

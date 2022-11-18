@@ -68,7 +68,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
         elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
             elasticRunning = elasticsearch_running,
-            kibanaRunning = kibana_running, logstashRunning = kibana_running
+            kibanaRunning = kibana_running, logstashRunning = logstash_running
         )
         return elk_dto
 

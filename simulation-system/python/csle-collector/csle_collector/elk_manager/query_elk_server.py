@@ -74,7 +74,7 @@ def start_elastic(stub: csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManag
     :return: an ElkDTO describing the status of the ELK server
     """
     start_elastic_msg = csle_collector.elk_manager.elk_manager_pb2.StartElkMsg()
-    elk_dto = stub.stopElastic(start_elastic_msg, timeout=timeout)
+    elk_dto = stub.startElastic(start_elastic_msg, timeout=timeout)
     return elk_dto
 
 
