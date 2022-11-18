@@ -61,6 +61,7 @@ class MGMT_WEBAPP:
     HOST_MANAGER_SUBRESOURCE = "host-manager"
     HOST_MONITOR_SUBRESOURCE = "host-monitor"
     TRAFFIC_MANAGER_SUBRESOURCE = "traffic-manager"
+    TRAFFIC_GENERATOR_SUBRESOURCE = "traffic-generator"
     DOCKER_STATS_MANAGER_SUBRESOURCE = "docker-stats-manager"
     DOCKER_STATS_MONITOR_SUBRESOURCE = "docker-stats-monitor"
     CONTAINER_SUBRESOURCE = "container"

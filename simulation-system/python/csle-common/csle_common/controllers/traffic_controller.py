@@ -14,6 +14,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
 from csle_common.logging.log import Logger
@@ -399,112 +400,64 @@ class TrafficController:
         :return: None
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            TrafficController.start_internal_traffic_generator(emulation_env_config=emulation_env_config,
-                                                               node_traffic_config=node_traffic_config)
+            container = None
+            for c in emulation_env_config.containers_config.containers:
+                if node_traffic_config.ip in c.get_ips():
+                    container = c
+                    break
+            if container is None:
+                continue
+            else:
+                TrafficController.start_internal_traffic_generator(
+                    emulation_env_config=emulation_env_config, node_traffic_config=node_traffic_config,
+                    container=container)
 
     @staticmethod
-    def start_internal_traffic_generator(emulation_env_config: EmulationEnvConfig,
-                                         node_traffic_config: NodeTrafficConfig) -> None:
+    def start_internal_traffic_generator(
+            emulation_env_config: EmulationEnvConfig, node_traffic_config: NodeTrafficConfig,
+            container: NodeContainerConfig) -> None:
         """
         Utility function for starting internal traffic generators
 
         :param emulation_env_config: the configuration of the emulation env
         :param node_traffic_config: the node traffic configuration
+        :param container: the container
         :return: None
         """
+        if node_traffic_config is None or container is None:
+            return
         TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
         time.sleep(5)
         Logger.__call__().get_logger().info(f"Starting traffic generator script, "
                                             f"node ip:{node_traffic_config.ip}")
 
+        commands = []
+        subnet_masks = []
+        reachable_containers = []
+        for ip_net1 in container.ips_and_networks:
+            ip,net1 = ip_net1
+            subnet_masks.append(net1.subnet_mask)
+        for c in emulation_env_config.containers_config.containers:
+            for ip_net1 in c.ips_and_networks:
+                ip,net1 = ip_net1
+                if net1.subnet_mask in subnet_masks and ip not in container.get_ips():
+                    reachable_containers.append((ip, c.get_ips()))
+
+        for node2 in emulation_env_config.traffic_config.node_traffic_configs:
+            for rc in reachable_containers:
+                ip, ips = rc
+                if node2.ip in ips:
+                    for cmd in node2.commands:
+                        commands.append(cmd.format(ip))
+
+        sleep_time = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
+
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{node_traffic_config.ip}:{node_traffic_config.traffic_manager_port}') as channel:
             stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
-            csle_collector.traffic_manager.query_traffic_manager.start_traffic(stub)
-
-    @staticmethod
-    def create_internal_traffic_generator_scripts(emulation_env_config: EmulationEnvConfig) -> None:
-        """
-        Installs the traffic generation scripts at each node
-
-        :param emulation_env_config: the emulation env configuration
-        :return: None
-        """
-        sleep_time = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
-        for node in emulation_env_config.traffic_config.node_traffic_configs:
-            container = None
-            for c in emulation_env_config.containers_config.containers:
-                if node.ip in c.get_ips():
-                    container = c
-                    break
-
-            commands = []
-            subnet_masks = []
-            reachable_containers = []
-            for ip_net1 in container.ips_and_networks:
-                ip,net1 = ip_net1
-                subnet_masks.append(net1.subnet_mask)
-            for c in emulation_env_config.containers_config.containers:
-                for ip_net1 in c.ips_and_networks:
-                    ip,net1 = ip_net1
-                    if net1.subnet_mask in subnet_masks and ip not in container.get_ips():
-                        reachable_containers.append((ip, c.get_ips()))
-
-            for node2 in emulation_env_config.traffic_config.node_traffic_configs:
-                for rc in reachable_containers:
-                    ip, ips = rc
-                    if node2.ip in ips:
-                        for cmd in node2.commands:
-                            commands.append(cmd.format(ip))
-
-            Logger.__call__().get_logger().info("Creating traffic generator script, node ip:{}".format(node.ip))
-
-            # Connect
-            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node.ip)
-
-            # Remove old file if exists
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.RM_F + \
-                  constants.COMMANDS.SPACE_DELIM + \
-                  constants.COMMANDS.SLASH_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=node.ip))
-
-            # File contents
-            script_file = ""
-            script_file = script_file + "#!/bin/bash\n"
-            script_file = script_file + "while [ 1 ]\n"
-            script_file = script_file + "do\n"
-            script_file = script_file + "    sleep {}\n".format(sleep_time)
-            for cmd in commands:
-                script_file = script_file + "    " + cmd + "\n"
-                script_file = script_file + "    sleep {}\n".format(sleep_time)
-            script_file = script_file + "done\n"
-
-            # Create file
-            sftp_client = emulation_env_config.get_connection(ip=node.ip).open_sftp()
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM \
-                  + constants.COMMANDS.TOUCH + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SLASH_DELIM \
-                  + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=node.ip))
-
-            # Make executable
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.CHMOD_777 + \
-                  constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SLASH_DELIM \
-                  + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME
-            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=node.ip))
-
-            # Write traffic generation script file
-            remote_file = sftp_client.open(constants.COMMANDS.SLASH_DELIM
-                                           + constants.TRAFFIC_COMMANDS.TRAFFIC_GENERATOR_FILE_NAME, mode="w")
-            try:
-                remote_file.write(script_file)
-            except Exception as e:
-                Logger.__call__().get_logger().warning("exception writing traffic generation file:{}".format(str(e)))
-            finally:
-                remote_file.close()
-
-            # Disconnect
-            EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
+            csle_collector.traffic_manager.query_traffic_manager.start_traffic(stub, commands=commands,
+                                                                               sleep_time=sleep_time)
 
     @staticmethod
     def get_client_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:

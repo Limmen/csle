@@ -84,7 +84,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 30
+        steps = 29
         if no_traffic:
             steps = steps-1
         if no_clients:
@@ -163,11 +163,6 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting traffic managers --")
         TrafficController.start_traffic_managers(emulation_env_config=emulation_env_config)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating traffic generators "
-                                            f"on internal nodes --")
-        TrafficController.create_internal_traffic_generator_scripts(emulation_env_config=emulation_env_config)
-
         if not no_traffic:
             current_step += 1
             Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting traffic generators "
@@ -194,7 +189,7 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step "
                                             f"{current_step}/{steps}: Starting the OSSEC Intrusion Detection System --")
-        OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config)
+        OSSECIDSController.start_ossec_idses(emulation_env_config=emulation_env_config)
         time.sleep(10)
         OSSECIDSController.start_ossec_idses_monitor_threads(emulation_env_config=emulation_env_config)
         time.sleep(10)
@@ -301,7 +296,7 @@ class EmulationEnvController:
         :return: None
         """
         if not no_traffic:
-            TrafficController.create_internal_traffic_generator_scripts(emulation_env_config=emulation_env_config)
+            TrafficController.start_internal_traffic_generators(emulation_env_config=emulation_env_config)
         TrafficController.stop_client_producer(emulation_env_config=emulation_env_config)
         TrafficController.start_client_population(emulation_env_config=emulation_env_config)
         TrafficController.start_client_producer(emulation_env_config=emulation_env_config)

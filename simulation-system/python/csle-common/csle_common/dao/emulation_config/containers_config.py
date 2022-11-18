@@ -31,7 +31,6 @@ class ContainersConfig:
         self.networks = networks
         self.agent_reachable_nodes = agent_reachable_nodes
 
-
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ContainersConfig":
         """
@@ -104,7 +103,6 @@ class ContainersConfig:
         """
         agent_container = self.get_agent_container()
         return self.get_reachable_ips(container=agent_container)
-
 
     def get_container_from_ip(self, ip: str) -> Union[NodeContainerConfig, None]:
         """

@@ -1,3 +1,4 @@
+from typing import List
 import csle_collector.traffic_manager.traffic_manager_pb2_grpc
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.constants.constants as constants
@@ -34,6 +35,7 @@ def stop_traffic(stub: csle_collector.traffic_manager.traffic_manager_pb2_grpc.T
 
 
 def start_traffic(stub: csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub,
+                  commands: List[str], sleep_time: int,
                   timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO:
     """
@@ -41,8 +43,11 @@ def start_traffic(stub: csle_collector.traffic_manager.traffic_manager_pb2_grpc.
 
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
+    :param commands: list of commands for the traffic generator
+    :param sleep_time: sleep time for the traffic generator
     :return: an TrafficDTO describing the status of the traffic manager
     """
-    start_traffic_msg = csle_collector.traffic_manager.traffic_manager_pb2.StartTrafficMsg()
+    start_traffic_msg = csle_collector.traffic_manager.traffic_manager_pb2.StartTrafficMsg(
+        commands=commands, sleepTime=sleep_time)
     traffic_dto = stub.startTraffic(start_traffic_msg, timeout=timeout)
     return traffic_dto

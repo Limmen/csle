@@ -568,16 +568,33 @@ const ExecutionControlPlane = (props) => {
                                         </tr>
                                     )}
                                     {props.info.ossec_ids_managers_info.ossec_ids_managers_statuses.map((status, index) =>
+                                        <tr key={"ossec-ids-monitor-" + index}>
+                                            <td>OSSEC IDS Monitor</td>
+                                            <td>{props.info.ossec_ids_managers_info.ips[index]}</td>
+                                            <td></td>
+                                            {activeStatus(status.monitor_running)}
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("ossec-ids-monitor"+
+                                                        props.info.ossec_ids_managers_info.ips[index])}
+                                                    running={status.monitor_running}
+                                                    entity={"ossec-ids-monitor"} name={"ossec-ids-monitor"}
+                                                    ip={props.info.ossec_ids_managers_info.ips[index]}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.ossec_ids_managers_info.ossec_ids_managers_statuses.map((status, index) =>
                                         <tr key={"ossec-ids-" + index}>
                                             <td>OSSEC IDS</td>
                                             <td>{props.info.ossec_ids_managers_info.ips[index]}</td>
                                             <td></td>
-                                            {activeStatus(status.running)}
+                                            {activeStatus(status.ossec_ids_running)}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("ossec-ids-"+
                                                         props.info.ossec_ids_managers_info.ips[index])}
-                                                    running={status.running}
+                                                    running={status.ossec_ids_running}
                                                     entity={"ossec-ids"} name={"ossec-ids"}
                                                     ip={props.info.ossec_ids_managers_info.ips[index]}
                                                 />
@@ -635,15 +652,15 @@ const ExecutionControlPlane = (props) => {
                                     )}
                                     {props.info.snort_ids_managers_info.snort_ids_managers_statuses.map((status, index) =>
                                         <tr key={"snort-ids-monitor-" + index}>
-                                            <td>Snort IDS</td>
+                                            <td>Snort IDS Monitor</td>
                                             <td>{props.info.snort_ids_managers_info.ips[index]}</td>
                                             <td></td>
-                                            {activeStatus(status.running)}
+                                            {activeStatus(status.monitor_running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("snort-ids-"+
+                                                    loading={loadingEntities.includes("snort-ids-monitor-"+
                                                         props.info.snort_ids_managers_info.ips[index])}
-                                                    running={status.running}
+                                                    running={status.monitor_running}
                                                     entity={"snort-ids-monitor"} name={"snort-ids-monitor"}
                                                     ip={props.info.snort_ids_managers_info.ips[index]}
                                                 />
@@ -655,12 +672,12 @@ const ExecutionControlPlane = (props) => {
                                             <td>Snort IDS</td>
                                             <td>{props.info.snort_ids_managers_info.ips[index]}</td>
                                             <td></td>
-                                            {activeStatus(status.running)}
+                                            {activeStatus(status.snort_ids_running)}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("snort-ids-"+
                                                         props.info.snort_ids_managers_info.ips[index])}
-                                                    running={status.running}
+                                                    running={status.snort_ids_running}
                                                     entity={"snort-ids"} name={"snort-ids"}
                                                     ip={props.info.snort_ids_managers_info.ips[index]}
                                                 />
