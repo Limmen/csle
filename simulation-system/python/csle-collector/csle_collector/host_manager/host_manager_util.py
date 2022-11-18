@@ -273,7 +273,16 @@ class HostManagerUtil:
         host_metrics_dto.num_login_events = 0
         host_metrics_dto.num_processes = 0
         host_metrics_dto.num_users = 0
-        host_metrics_dto.ip = 0
+        host_metrics_dto.ip = ""
         host_metrics_dto.timestamp = 0
         return host_metrics_dto
+
+    @staticmethod
+    def host_monitor_dto_empty() -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+        """
+        :return: an empty HostMonitorDTO
+        """
+        host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostMonitorDTO()
+        host_monitor_dto.running = False
+        return host_monitor_dto
 

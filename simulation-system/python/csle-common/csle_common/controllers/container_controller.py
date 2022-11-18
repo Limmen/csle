@@ -714,10 +714,11 @@ class ContainerController:
             emulation_env_config=emulation_env_config)
         docker_stats_managers_ports = ContainerController.get_docker_stats_managers_ports(
             emulation_env_config=emulation_env_config)
-        docker_stats_statuses = []
-        running = False
-        status = None
+        docker_stats_managers_statuses = []
+        docker_stats_managers_running = []
         for ip in docker_stats_managers_ips:
+            running = False
+            status = None
             try:
                 status = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
                     port=emulation_env_config.docker_stats_manager_config.docker_stats_manager_port, ip=ip)
@@ -726,14 +727,16 @@ class ContainerController:
                 Logger.__call__().get_logger().debug(
                     f"Could not fetch Docker stats manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                docker_stats_statuses.append(status)
+                docker_stats_managers_statuses.append(status)
             else:
-                docker_stats_statuses.append(
+                docker_stats_managers_statuses.append(
                     csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_empty())
+            docker_stats_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         docker_stats_manager_info_dto = DockerStatsManagersInfo(
-            running=running, ips=docker_stats_managers_ips, execution_id=execution_id, emulation_name=emulation_name,
-            docker_stats_managers_statuses=docker_stats_statuses, ports=docker_stats_managers_ports)
+            docker_stats_managers_running=docker_stats_managers_running, ips=docker_stats_managers_ips,
+            execution_id=execution_id, emulation_name=emulation_name,
+            docker_stats_managers_statuses=docker_stats_managers_statuses, ports=docker_stats_managers_ports)
         return docker_stats_manager_info_dto
 

@@ -4,6 +4,10 @@ Constants for csle collector
 import re
 
 
+class GRPC:
+    TIMEOUT_SECONDS = 15
+
+
 class DOCKER_STATS:
     CPU_STATS = "cpu_stats"
     CPU_USAGE = "cpu_usage"

@@ -430,7 +430,7 @@ def start_stop_kafka_manager(execution_id: int):
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
-                               f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
+                               f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def start_stop_kafka(execution_id: int):
     """
@@ -462,11 +462,13 @@ def start_stop_kafka(execution_id: int):
                 f"Stopping kafka server on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             KafkaController.stop_kafka_server(emulation_env_config=execution.emulation_env_config)
+            time.sleep(10)
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting kafka server on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             KafkaController.start_kafka_server(emulation_env_config=execution.emulation_env_config)
+            time.sleep(30)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
@@ -705,6 +707,7 @@ def start_stop_host_manager(execution_id: int):
                 f"Stopping host manager with IP:{ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             HostController.stop_host_manager(emulation_env_config=execution.emulation_env_config, ip=ip)
+            time.sleep(5)
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting host manager with IP: {ip} on emulation: {execution.emulation_env_config.name}, "

@@ -9,20 +9,21 @@ class ClientManagersInfo:
     DTO containing the status of the Client managers for a given emulation execution
     """
 
-    def __init__(self, running: bool, ips: List[str], ports: List[int],
+    def __init__(self, ips: List[str], ports: List[int],
                  emulation_name: str, execution_id: int,
-                 client_managers_statuses: List[csle_collector.client_manager.client_manager_pb2.ClientsDTO]):
+                 client_managers_statuses: List[csle_collector.client_manager.client_manager_pb2.ClientsDTO],
+                 client_managers_running: List[bool]):
         """
         Initializes the DTO
 
-        :param running: boolean that indicates whether the at least one Client manager is running or not
         :param ips: the list of IPs of the running Client managers
         :param ports: the list of ports of the running Client managers
         :param emulation_name: the name of the corresponding emulation
         :param execution_id: the ID of the corresponding emulation execution
         :param client_managers_statuses: a list of statuses of the Client managers
+        :param client_managers_running: a list of booleans indicating whether the client managers are running or not
         """
-        self.running = running
+        self.client_managers_running = client_managers_running
         self.ips = ips
         self.emulation_name = emulation_name
         self.execution_id = execution_id
@@ -33,7 +34,8 @@ class ClientManagersInfo:
         """
         :return: a string representation of the DTO
         """
-        return f"running: {self.running}, ips: {list(map(lambda x: str(x), self.ips))}, " \
+        return f"client_managers_running: {self.client_managers_running}, " \
+               f"ips: {list(map(lambda x: str(x), self.ips))}, " \
                f"ports: {list(map(lambda x: str(x), self.ports))}," \
                f"emulation_name: {self.emulation_name}, " \
                f"execution_id: {self.execution_id}, " \
@@ -44,7 +46,7 @@ class ClientManagersInfo:
         :return: a dict representation of the object
         """
         d = {}
-        d["running"] = self.running
+        d["client_managers_running"] = self.client_managers_running
         d["ips"] = self.ips
         d["ports"] = self.ports
         d["emulation_name"] = self.emulation_name
@@ -61,9 +63,9 @@ class ClientManagersInfo:
 
         :return: a dto representation of the object
         """
-        dto = ClientManagersInfo(running=d["running"], ips=d["ips"], ports=d["ports"],
-                                 emulation_name=d["emulation_name"],
-                                 execution_id=d["execution_id"], client_managers_statuses=list(map(
-                lambda x: client_manager_util.ClientManagerUtil.clients_dto_from_dict(x),
-                d["client_managers_statuses"])))
+        dto = ClientManagersInfo(
+            client_managers_running=d["client_managers_running"], ips=d["ips"], ports=d["ports"],
+            emulation_name=d["emulation_name"], execution_id=d["execution_id"],
+            client_managers_statuses=list(map(lambda x: client_manager_util.ClientManagerUtil.clients_dto_from_dict(x),
+                                              d["client_managers_statuses"])))
         return dto

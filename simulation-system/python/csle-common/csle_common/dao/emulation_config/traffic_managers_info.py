@@ -9,20 +9,21 @@ class TrafficManagersInfo:
     DTO containing the status of the Traffic managers for a given emulation execution
     """
 
-    def __init__(self, running: bool, ips: List[str], ports: List[int],
+    def __init__(self, ips: List[str], ports: List[int],
                  emulation_name: str, execution_id: int,
-                 traffic_managers_statuses: List[csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO]):
+                 traffic_managers_statuses: List[csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO],
+                 traffic_managers_running: List[bool]):
         """
         Initializes the DTO
 
-        :param running: boolean that indicates whether the at least one Traffic manager is running or not
         :param ips: the list of IPs of the running traffic managers
         :param ports: the list of ports of the running traffic managers
         :param emulation_name: the name of the corresponding emulation
         :param execution_id: the ID of the corresponding emulation execution
         :param traffic_managers_statuses: a list of statuses of the traffic managers
+        :param traffic_managers_running: a list of booleans indicating whether the traffic managers are running
         """
-        self.running = running
+        self.traffic_managers_running = traffic_managers_running
         self.ips = ips
         self.ports = ports
         self.emulation_name = emulation_name
@@ -33,7 +34,8 @@ class TrafficManagersInfo:
         """
         :return: a string representation of the DTO
         """
-        return f"running: {self.running}, ips: {list(map(lambda x: str(x), self.ips))}, " \
+        return f"traffic_managers_running: {self.traffic_managers_running}, " \
+               f"ips: {list(map(lambda x: str(x), self.ips))}, " \
                f"ports: {list(map(lambda x: str(x), self.ports))}," \
                f"emulation_name: {self.emulation_name}, " \
                f"execution_id: {self.execution_id}, " \
@@ -44,7 +46,7 @@ class TrafficManagersInfo:
         :return: a dict representation of the object
         """
         d = {}
-        d["running"] = self.running
+        d["traffic_managers_running"] = self.traffic_managers_running
         d["ips"] = self.ips
         d["emulation_name"] = self.emulation_name
         d["execution_id"] = self.execution_id
@@ -61,9 +63,9 @@ class TrafficManagersInfo:
 
         :return: a dto representation of the object
         """
-        dto = TrafficManagersInfo(running=d["running"], ips=d["ips"], ports = d["ports"],
-                               emulation_name=d["emulation_name"],
-                               execution_id=d["execution_id"], traffic_managers_statuses=list(map(
-                lambda x: traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict(x),
-                d["traffic_managers_statuses"])))
+        dto = TrafficManagersInfo(
+            traffic_managers_running=d["traffic_managers_running"], ips=d["ips"], ports = d["ports"],
+            emulation_name=d["emulation_name"], execution_id=d["execution_id"],
+            traffic_managers_statuses=list(map(lambda x: traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict(x),
+                                               d["traffic_managers_statuses"])))
         return dto

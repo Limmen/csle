@@ -539,10 +539,11 @@ class TrafficController:
         """
         client_managers_ips = TrafficController.get_client_managers_ips(emulation_env_config=emulation_env_config)
         client_managers_ports = TrafficController.get_client_managers_ports(emulation_env_config=emulation_env_config)
-        client_statuses = []
-        running = False
-        status = None
+        client_managers_statuses = []
+        client_managers_running = []
         for ip in client_managers_ips:
+            running = False
+            status = None
             try:
                 status = TrafficController.get_clients_dto_by_ip_and_port(
                     ip=ip,
@@ -552,15 +553,17 @@ class TrafficController:
                 Logger.__call__().get_logger().debug(
                     f"Could not fetch client manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                client_statuses.append(status)
+                client_managers_statuses.append(status)
             else:
-                client_statuses.append(
+                client_managers_statuses.append(
                     csle_collector.client_manager.client_manager_util.ClientManagerUtil.clients_dto_empty())
+            client_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         client_manager_info_dto = ClientManagersInfo(
-            running=running, ips=client_managers_ips, execution_id=execution_id,
-            emulation_name=emulation_name, client_managers_statuses=client_statuses,  ports=client_managers_ports)
+            client_managers_running=client_managers_running, ips=client_managers_ips, execution_id=execution_id,
+            emulation_name=emulation_name, client_managers_statuses=client_managers_statuses,
+            ports=client_managers_ports)
         return client_manager_info_dto
 
     @staticmethod
@@ -590,12 +593,7 @@ class TrafficController:
         """
         ips = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            try:
-                TrafficController.get_traffic_manager_status_by_port_and_ip(
-                    port=node_traffic_config.traffic_manager_port, ip = node_traffic_config.ip)
-                ips.append(node_traffic_config.ip)
-            except Exception as e:
-                pass
+            ips.append(node_traffic_config.ip)
         return ips
 
     @staticmethod
@@ -608,12 +606,7 @@ class TrafficController:
         """
         ports = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            try:
-                TrafficController.get_traffic_manager_status_by_port_and_ip(
-                    port=node_traffic_config.traffic_manager_port, ip = node_traffic_config.ip)
-                ports.append(node_traffic_config.traffic_manager_port)
-            except Exception as e:
-                pass
+            ports.append(node_traffic_config.traffic_manager_port)
         return ports
 
     @staticmethod
@@ -627,9 +620,10 @@ class TrafficController:
         traffic_managers_ips = TrafficController.get_traffic_managers_ips(emulation_env_config=emulation_env_config)
         traffic_managers_ports = TrafficController.get_traffic_managers_ports(emulation_env_config=emulation_env_config)
         traffic_managers_statuses = []
-        running = False
-        status = None
+        traffic_managers_running = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
+            running = False
+            status = None
             if node_traffic_config.ip in traffic_managers_ips:
                 try:
                     status = TrafficController.get_traffic_manager_status_by_port_and_ip(
@@ -643,9 +637,11 @@ class TrafficController:
                 else:
                     traffic_managers_statuses.append(
                         csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_empty())
+                traffic_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         traffic_manager_info_dto = TrafficManagersInfo(
-            running=running, ips=traffic_managers_ips, execution_id=execution_id, emulation_name=emulation_name,
-            traffic_managers_statuses=traffic_managers_statuses, ports=traffic_managers_ports)
+            traffic_managers_running=traffic_managers_running, ips=traffic_managers_ips, execution_id=execution_id,
+            emulation_name=emulation_name, traffic_managers_statuses=traffic_managers_statuses,
+            ports=traffic_managers_ports)
         return traffic_manager_info_dto

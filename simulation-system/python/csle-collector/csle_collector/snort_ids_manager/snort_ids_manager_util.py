@@ -5,6 +5,7 @@ from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsAlert, Snor
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.constants.constants as constants
+import csle_collector.constants.constants as constants
 
 
 class SnortIdsManagerUtil:
@@ -298,3 +299,13 @@ class SnortIdsManagerUtil:
         snort_ids_log_dto.severe_alerts = 0
         snort_ids_log_dto.alerts_weighted_by_priority = 0
         return snort_ids_log_dto
+
+    @staticmethod
+    def snort_ids_monitor_dto_empty() -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
+        """
+        :return: An empty SnortIdsMonitorDTO
+        """
+        snort_ids_monitor_dto = csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO()
+        snort_ids_monitor_dto.running = False
+        return snort_ids_monitor_dto
+

@@ -287,3 +287,12 @@ class OSSecManagerUtil:
         ossec_ids_log_dto.apache_alerts = 0
         ossec_ids_log_dto.syslog_alerts = 0
         return ossec_ids_log_dto
+
+    @staticmethod
+    def ossec_ids_monitor_dto_empty() -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
+        """
+        :return: An empty OSSECIdsMonitorDTO
+        """
+        ossec_ids_monitor_dto = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO()
+        ossec_ids_monitor_dto.running = False
+        return ossec_ids_monitor_dto

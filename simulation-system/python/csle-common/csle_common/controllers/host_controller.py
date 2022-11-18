@@ -240,12 +240,7 @@ class HostController:
         """
         ips = []
         for c in emulation_env_config.containers_config.containers:
-            try:
-                HostController.get_host_monitor_thread_status_by_port_and_ip(
-                    port=emulation_env_config.host_manager_config.host_manager_port, ip = c.get_ips()[0])
-                ips.append(c.get_ips()[0])
-            except Exception as e:
-                pass
+            ips.append(c.get_ips()[0])
         return ips
 
     @staticmethod
@@ -258,12 +253,7 @@ class HostController:
         """
         ports = []
         for c in emulation_env_config.containers_config.containers:
-            try:
-                HostController.get_host_monitor_thread_status_by_port_and_ip(
-                    port=emulation_env_config.host_manager_config.host_manager_port, ip = c.get_ips()[0])
-                ports.append(emulation_env_config.host_manager_config.host_manager_port)
-            except Exception as e:
-                pass
+            ports.append(emulation_env_config.host_manager_config.host_manager_port)
         return ports
 
     @staticmethod
@@ -277,9 +267,10 @@ class HostController:
         host_managers_ips = HostController.get_host_managers_ips(emulation_env_config=emulation_env_config)
         host_managers_ports = HostController.get_host_managers_ports(emulation_env_config=emulation_env_config)
         host_managers_statuses = []
-        running = False
-        status = None
+        host_managers_running = []
         for ip in host_managers_ips:
+            status = None
+            running = False
             try:
                 status = HostController.get_host_monitor_thread_status_by_port_and_ip(
                     port=emulation_env_config.host_manager_config.host_manager_port, ip=ip)
@@ -291,11 +282,12 @@ class HostController:
                 host_managers_statuses.append(status)
             else:
                 host_managers_statuses.append(
-                    csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty())
+                    csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty())
+            host_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         host_manager_info_dto = HostManagersInfo(
-            running=running, ips=host_managers_ips, execution_id=execution_id, emulation_name=emulation_name,
+            host_managers_running=host_managers_running, ips=host_managers_ips, execution_id=execution_id, emulation_name=emulation_name,
             host_managers_statuses=host_managers_statuses, ports=host_managers_ports)
         return host_manager_info_dto
 

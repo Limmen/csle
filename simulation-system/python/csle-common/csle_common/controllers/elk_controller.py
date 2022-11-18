@@ -316,10 +316,11 @@ class ELKController:
         """
         elk_managers_ips = ELKController.get_elk_managers_ips(emulation_env_config=emulation_env_config)
         elk_managers_ports = ELKController.get_elk_managers_ports(emulation_env_config=emulation_env_config)
-        elk_statuses = []
-        running = False
-        status = None
+        elk_managers_statuses = []
+        elk_managers_running = []
         for ip in elk_managers_ips:
+            running = False
+            status = None
             try:
                 status = ELKController.get_elk_status_by_port_and_ip(
                     port=emulation_env_config.elk_config.elk_manager_port, ip=ip)
@@ -329,14 +330,13 @@ class ELKController:
                 Logger.__call__().get_logger().debug(
                     f"Could not fetch Elk manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                elk_statuses.append(status)
+                elk_managers_statuses.append(status)
             else:
-                elk_statuses.append(csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty())
+                elk_managers_statuses.append(csle_collector.elk_manager.elk_manager_util.ElkManagerUtil.elk_dto_empty())
+            elk_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
-        elk_manager_info_dto = ELKManagersInfo(running=running, ips=elk_managers_ips,
-                                                   execution_id=execution_id,
-                                                   emulation_name=emulation_name,
-                                                   elk_managers_statuses=elk_statuses,
-                                                   ports = elk_managers_ports)
+        elk_manager_info_dto = ELKManagersInfo(
+            elk_managers_running=elk_managers_running, ips=elk_managers_ips, execution_id=execution_id,
+            emulation_name=emulation_name, elk_managers_statuses=elk_managers_statuses, ports = elk_managers_ports)
         return elk_manager_info_dto

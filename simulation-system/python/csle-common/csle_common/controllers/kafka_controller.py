@@ -224,27 +224,30 @@ class KafkaController:
         """
         kafka_managers_ips = KafkaController.get_kafka_managers_ips(emulation_env_config=emulation_env_config)
         kafka_managers_ports = KafkaController.get_kafka_managers_ports(emulation_env_config=emulation_env_config)
-        kafka_statuses = []
-        running = False
-        status = None
+        kafka_managers_statuses = []
+        kafka_managers_running = []
         for ip in kafka_managers_ips:
+            running = False
+            status = None
             try:
+                print("sending kafka status request")
                 status = KafkaController.get_kafka_status_by_port_and_ip(
                     port=emulation_env_config.kafka_config.kafka_manager_port, ip=ip)
                 running = True
+                print("kafka status obtained")
             except Exception as e:
                 Logger.__call__().get_logger().debug(
                     f"Could not fetch Kafka manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                kafka_statuses.append(status)
+                kafka_managers_statuses.append(status)
             else:
-                kafka_statuses.append(
+                kafka_managers_statuses.append(
                     csle_collector.kafka_manager.kafka_manager_util.KafkaManagerUtil.kafka_dto_empty())
+            kafka_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
-        kafka_manager_info_dto = KafkaManagersInfo(running=running, ips=kafka_managers_ips,
-                                                   execution_id=execution_id,
-                                                   emulation_name=emulation_name,
-                                                   kafka_managers_statuses=kafka_statuses,
-                                                   ports = kafka_managers_ports)
+        kafka_manager_info_dto = KafkaManagersInfo(
+            kafka_managers_running=kafka_managers_running, ips=kafka_managers_ips, execution_id=execution_id,
+            emulation_name=emulation_name, kafka_managers_statuses=kafka_managers_statuses,
+            ports = kafka_managers_ports)
         return kafka_manager_info_dto

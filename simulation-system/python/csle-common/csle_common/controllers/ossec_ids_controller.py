@@ -270,12 +270,7 @@ class OSSECIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    try:
-                        OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = c.get_ips()[0])
-                        ips.append(c.get_ips()[0])
-                    except Exception as e:
-                        pass
+                    ips.append(c.get_ips()[0])
         return ips
 
     @staticmethod
@@ -290,12 +285,7 @@ class OSSECIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    try:
-                        OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = c.get_ips()[0])
-                        ports.append(emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port)
-                    except Exception as e:
-                        pass
+                    ports.append(emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port)
         return ports
 
     @staticmethod
@@ -326,10 +316,11 @@ class OSSECIDSController:
         ossec_ids_managers_ips = OSSECIDSController.get_ossec_idses_managers_ips(emulation_env_config=emulation_env_config)
         ossec_ids_managers_ports = \
             OSSECIDSController.get_ossec_idses_managers_ports(emulation_env_config=emulation_env_config)
-        ossec_statuses = []
-        running = False
-        status = None
+        ossec_ids_managers_statuses = []
+        ossec_ids_managers_running = []
         for ip in ossec_ids_managers_ips:
+            running = False
+            status = None
             try:
                 status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
                     port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
@@ -338,13 +329,17 @@ class OSSECIDSController:
                 Logger.__call__().get_logger().debug(
                     f"Could not fetch OSSEC IDS manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                ossec_statuses.append(status)
+                ossec_ids_managers_statuses.append(status)
             else:
-                ossec_statuses.append(
-                    csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_log_dto_empty())
+                ossec_ids_managers_statuses.append(
+                    csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.
+                        ossec_ids_monitor_dto_empty())
+            ossec_ids_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         ossec_manager_info_dto = OSSECIDSManagersInfo(
-            running=running, ips=ossec_ids_managers_ips, execution_id=execution_id,
-            emulation_name=emulation_name, ossec_ids_statuses=ossec_statuses, ports=ossec_ids_managers_ports)
+            ossec_ids_managers_running=ossec_ids_managers_running, ips=ossec_ids_managers_ips,
+            execution_id=execution_id,
+            emulation_name=emulation_name, ossec_ids_managers_statuses=ossec_ids_managers_statuses,
+            ports=ossec_ids_managers_ports)
         return ossec_manager_info_dto

@@ -1,14 +1,17 @@
 from typing import List
 import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
+import csle_collector.constants.constants as constants
 
 
-def get_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub) \
+def get_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
+                timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
     """
     Queries the server for the client state
 
     :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
     :return: a clientsDTO describing the state of the clients
     """
     get_clients_dto_msg = csle_collector.client_manager.client_manager_pb2.GetClientsMsg()
@@ -16,11 +19,13 @@ def get_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Clie
     return clients_dto
 
 
-def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub):
+def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
+                 timeout=constants.GRPC.TIMEOUT_SECONDS):
     """
     Stops the client arrival process
 
     :param stub: the stub to the gRPC server
+    :param timeout: the GRPC timeout (seconds)
     :return: a clientsDTO describing the state of the clients
     """
     stop_clients_msg = csle_collector.client_manager.client_manager_pb2.StopClientsMsg()
@@ -30,7 +35,8 @@ def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cli
 
 def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
                   mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int=2,
-                  sine_modulated: bool = False, time_scaling_factor: float = 0.01, period_scaling_factor: float = 20):
+                  sine_modulated: bool = False, time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
+                  timeout=constants.GRPC.TIMEOUT_SECONDS):
     """
     Starts the client arrival process
 
@@ -42,6 +48,7 @@ def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cl
     :param sine_modulated: whether the arrival process is sine modulated or not
     :param time_scaling_factor: the time scaling factor for the sine modulated arrival process
     :param period_scaling_factor: the period scaling factor for the sine modulated arrival process
+    :param timeout: the GRPC timeout (seconds)
     :return: a clientsDTO describing the state of the clients
     """
     start_clients_msg = csle_collector.client_manager.client_manager_pb2.StartClientsMsg(
@@ -53,26 +60,29 @@ def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cl
     return clients_dto
 
 
-def stop_producer(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub):
+def stop_producer(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
+                  timeout=constants.GRPC.TIMEOUT_SECONDS):
     """
     Stops the producer process
 
     :param stub: the stub to the gRPC server
+    :param timeout: the GRPC timeout (seconds)
     :return: a clientsDTO describing the state of the clients
     """
     stop_producer_msg = csle_collector.client_manager.client_manager_pb2.StopProducerMsg()
-    clients_dto = stub.stopProducer(stop_producer_msg)
+    clients_dto = stub.stopProducer(stop_producer_msg, timeout=timeout)
     return clients_dto
 
 
 def start_producer(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub, ip: str, port: int,
-                   time_step_len_seconds: int):
+                   time_step_len_seconds: int, timeout=constants.GRPC.TIMEOUT_SECONDS):
     """
     Stops the producer process
 
     :param stub: the stub to the gRPC server
     :param ip: ip of the kafka server to produce to
     :param port: port of the kafka server to produce to
+    :param timeout: the GRPC timeout (seconds)
     :return: a clientsDTO describing the state of the clients
     """
     start_producer_msg = csle_collector.client_manager.client_manager_pb2.StartProducerMsg(
@@ -80,6 +90,6 @@ def start_producer(stub: csle_collector.client_manager.client_manager_pb2_grpc.C
         port=port,
         time_step_len_seconds=time_step_len_seconds
     )
-    clients_dto = stub.startProducer(start_producer_msg)
+    clients_dto = stub.startProducer(start_producer_msg, timeout=timeout)
     return clients_dto
 

@@ -2,7 +2,7 @@ from typing import List
 import grpc
 import time
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.emulation_config.snort_managers_info import SnortManagersInfo
+from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManagersInfo
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as csle_collector_constants
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
@@ -296,12 +296,7 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    try:
-                        SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(
-                            port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=c.get_ips()[0])
-                        ips.append(c.get_ips()[0])
-                    except Exception as e:
-                        pass
+                    ips.append(c.get_ips()[0])
         return ips
 
     @staticmethod
@@ -316,16 +311,11 @@ class SnortIDSController:
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
-                    try:
-                        SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(
-                            port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=c.get_ips()[0])
-                        ports.append(emulation_env_config.snort_ids_manager_config.snort_ids_manager_port)
-                    except Exception as e:
-                        pass
+                    ports.append(emulation_env_config.snort_ids_manager_config.snort_ids_manager_port)
         return ports
 
     @staticmethod
-    def get_snort_managers_info(emulation_env_config: EmulationEnvConfig) -> SnortManagersInfo:
+    def get_snort_managers_info(emulation_env_config: EmulationEnvConfig) -> SnortIdsManagersInfo:
         """
         Extracts the information of the Snort managers for a given emulation
 
@@ -335,10 +325,11 @@ class SnortIDSController:
         snort_ids_managers_ips = SnortIDSController.get_snort_ids_managers_ips(emulation_env_config=emulation_env_config)
         snort_ids_managers_ports = \
             SnortIDSController.get_snort_idses_managers_ports(emulation_env_config=emulation_env_config)
-        snort_statuses = []
-        running = False
-        status = None
+        snort_managers_statuses = []
+        snort_managers_running = []
         for ip in snort_ids_managers_ips:
+            running = False
+            status = None
             try:
                 status = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(
                     port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=ip)
@@ -347,16 +338,17 @@ class SnortIDSController:
                 Logger.__call__().get_logger().debug(
                     f"Could not fetch Snort IDS manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
-                snort_statuses.append(status)
+                snort_managers_statuses.append(status)
             else:
-                snort_statuses.append(
-                    csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_empty())
+                snort_managers_statuses.append(
+                    csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.
+                        snort_ids_monitor_dto_empty())
+            snort_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
-        snort_manager_info_dto = SnortManagersInfo(running=running, ips=snort_ids_managers_ips,
-                                                   ports=snort_ids_managers_ports,
-                                                   execution_id=execution_id,
-                                                   emulation_name=emulation_name, snort_statuses=snort_statuses)
+        snort_manager_info_dto = SnortIdsManagersInfo(
+            snort_ids_managers_running=snort_managers_running,  ips=snort_ids_managers_ips, ports=snort_ids_managers_ports,
+            execution_id=execution_id, emulation_name=emulation_name, snort_ids_managers_statuses=snort_managers_statuses)
         return snort_manager_info_dto
 
 

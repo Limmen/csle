@@ -265,14 +265,14 @@ const ExecutionControlPlane = (props) => {
                                             <td>Client manager</td>
                                             <td>{props.info.client_managers_info.ips[index]}</td>
                                             <td>{props.info.client_managers_info.ports[index]}</td>
-                                            {activeStatus(props.info.client_managers_info.running)}
+                                            {activeStatus(props.info.client_managers_info.client_managers_running[index])}
                                             <td></td>
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("client-manager-"+
                                                         props.info.client_managers_info.ips[index])}
-                                                    running={props.info.client_managers_info.running}
+                                                    running={props.info.client_managers_info.client_managers_running[index]}
                                                     entity={"client-manager"} name={"client-manager"}
                                                     ip={props.info.client_managers_info.ips[index]}
                                                 />
@@ -354,12 +354,12 @@ const ExecutionControlPlane = (props) => {
                                             <td>Docker Statistics Manager</td>
                                             <td>{props.info.docker_stats_managers_info.ips[index]}</td>
                                             <td>{props.info.docker_stats_managers_info.ports[index]}</td>
-                                            {activeStatus(props.info.docker_stats_managers_info.running)}
+                                            {activeStatus(props.info.docker_stats_managers_info.docker_stats_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("docker-stats-manager-"+
                                                         props.info.docker_stats_managers_info.ips[index])}
-                                                    running={props.info.docker_stats_managers_info.running}
+                                                    running={props.info.docker_stats_managers_info.docker_stats_managers_running[index]}
                                                     entity={"docker-stats-manager"} name={"docker-stats-manager"}
                                                     ip={props.info.docker_stats_managers_info.ips[index]}
                                                 />
@@ -420,12 +420,12 @@ const ExecutionControlPlane = (props) => {
                                             <td>Host Manager</td>
                                             <td>{props.info.host_managers_info.ips[index]}</td>
                                             <td>{props.info.host_managers_info.ports[index]}</td>
-                                            {activeStatus(props.info.host_managers_info.running)}
+                                            {activeStatus(props.info.host_managers_info.host_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("host-manager-"+
                                                         props.info.host_managers_info.ips[index])}
-                                                    running={props.info.host_managers_info.running}
+                                                    running={props.info.host_managers_info.host_managers_running[index]}
                                                     entity={"host-manager"} name={"host-manager"}
                                                     ip={props.info.host_managers_info.ips[index]}
                                                 />
@@ -488,12 +488,12 @@ const ExecutionControlPlane = (props) => {
                                             <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.info.kafka_managers_info.ports[index]}</td>
                                             <td></td>
-                                            {activeStatus(props.info.kafka_managers_info.running)}
+                                            {activeStatus(props.info.kafka_managers_info.kafka_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("kafka-manager-"+
                                                         props.info.kafka_managers_info.ips[index])}
-                                                    running={props.info.kafka_managers_info.running}
+                                                    running={props.info.kafka_managers_info.kafka_managers_running[index]}
                                                     entity={"kafka-manager"} name={"kafka-manager"}
                                                     ip={props.info.kafka_managers_info.ips[index]}
                                                 />
@@ -550,36 +550,36 @@ const ExecutionControlPlane = (props) => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {props.info.ossec_managers_info.ossec_ids_statuses.map((status, index) =>
+                                    {props.info.ossec_ids_managers_info.ossec_ids_managers_statuses.map((status, index) =>
                                         <tr key={"ossec-manager" + index}>
                                             <td>OSSEC IDS Manager</td>
-                                            <td>{props.info.ossec_managers_info.ips[index]}</td>
-                                            <td>{props.info.ossec_managers_info.ports[index]}</td>
-                                            {activeStatus(props.info.ossec_managers_info.running)}
+                                            <td>{props.info.ossec_ids_managers_info.ips[index]}</td>
+                                            <td>{props.info.ossec_ids_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.ossec_ids_managers_info.ossec_ids_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("ossec-manager-"+
-                                                        props.info.ossec_managers_info.ips[index])}
-                                                    running={props.info.ossec_managers_info.running}
+                                                        props.info.ossec_ids_managers_info.ips[index])}
+                                                    running={props.info.ossec_ids_managers_info.ossec_ids_managers_running[index]}
                                                     entity={"ossec-manager"} name={"ossec-manager"}
-                                                    ip={props.info.ossec_managers_info.ips[index]}
+                                                    ip={props.info.ossec_ids_managers_info.ips[index]}
                                                 />
                                             </td>
                                         </tr>
                                     )}
-                                    {props.info.ossec_managers_info.ossec_ids_statuses.map((status, index) =>
+                                    {props.info.ossec_ids_managers_info.ossec_ids_managers_statuses.map((status, index) =>
                                         <tr key={"ossec-ids-" + index}>
                                             <td>OSSEC IDS</td>
-                                            <td>{props.info.ossec_managers_info.ips[index]}</td>
+                                            <td>{props.info.ossec_ids_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("ossec-ids-"+
-                                                        props.info.ossec_managers_info.ips[index])}
+                                                        props.info.ossec_ids_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"ossec-ids"} name={"ossec-ids"}
-                                                    ip={props.info.ossec_managers_info.ips[index]}
+                                                    ip={props.info.ossec_ids_managers_info.ips[index]}
                                                 />
                                             </td>
                                         </tr>
@@ -616,36 +616,36 @@ const ExecutionControlPlane = (props) => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {props.info.snort_managers_info.snort_statuses.map((status, index) =>
+                                    {props.info.snort_ids_managers_info.snort_ids_managers_statuses.map((status, index) =>
                                         <tr key={"snort-manager-" + index}>
                                             <td>Snort IDS Manager</td>
-                                            <td>{props.info.snort_managers_info.ips[index]}</td>
-                                            <td>{props.info.snort_managers_info.ports[index]}</td>
-                                            {activeStatus(props.info.snort_managers_info.running)}
+                                            <td>{props.info.snort_ids_managers_info.ips[index]}</td>
+                                            <td>{props.info.snort_ids_managers_info.ports[index]}</td>
+                                            {activeStatus(props.info.snort_ids_managers_info.snort_ids_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("snort-manager-"+
-                                                        props.info.snort_managers_info.ips[index])}
-                                                    running={props.info.snort_managers_info.running}
+                                                        props.info.snort_ids_managers_info.ips[index])}
+                                                    running={props.info.snort_ids_managers_info.snort_ids_managers_running[index]}
                                                     entity={"snort-manager"} name={"snort-manager"}
-                                                    ip={props.info.snort_managers_info.ips[index]}
+                                                    ip={props.info.snort_ids_managers_info.ips[index]}
                                                 />
                                             </td>
                                         </tr>
                                     )}
-                                    {props.info.snort_managers_info.snort_statuses.map((status, index) =>
+                                    {props.info.snort_ids_managers_info.snort_ids_managers_statuses.map((status, index) =>
                                         <tr key={"snort-ids-" + index}>
                                             <td>Snort IDS</td>
-                                            <td>{props.info.snort_managers_info.ips[index]}</td>
+                                            <td>{props.info.snort_ids_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("snort-ids-"+
-                                                        props.info.snort_managers_info.ips[index])}
+                                                        props.info.snort_ids_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"snort-ids"} name={"snort-ids"}
-                                                    ip={props.info.snort_managers_info.ips[index]}
+                                                    ip={props.info.snort_ids_managers_info.ips[index]}
                                                 />
                                             </td>
                                         </tr>
@@ -688,12 +688,12 @@ const ExecutionControlPlane = (props) => {
                                             <td>ELK manager</td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.info.elk_managers_info.ports[index]}</td>
-                                            {activeStatus(props.info.elk_managers_info.running)}
+                                            {activeStatus(props.info.elk_managers_info.elk_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("elk-manager-"+
                                                         props.info.elk_managers_info.ips[index])}
-                                                    running={props.info.elk_managers_info.running}
+                                                    running={props.info.elk_managers_info.elk_managers_running[index]}
                                                     entity={"elk-manager"} name={"elk-manager"}
                                                     ip={props.info.elk_managers_info.ips[index]}
                                                 />
@@ -811,12 +811,12 @@ const ExecutionControlPlane = (props) => {
                                             <td>Traffic Manager</td>
                                             <td>{props.info.traffic_managers_info.ips[index]}</td>
                                             <td>{props.info.traffic_managers_info.ports[index]}</td>
-                                            {activeStatus(props.info.traffic_managers_info.running)}
+                                            {activeStatus(props.info.traffic_managers_info.traffic_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("traffic-manager-"+
                                                         props.info.traffic_managers_info.ips[index])}
-                                                    running={props.info.traffic_managers_info.running}
+                                                    running={props.info.traffic_managers_info.traffic_managers_running[index]}
                                                     entity={"traffic-manager"} name={"traffic-manager"}
                                                     ip={props.info.traffic_managers_info.ips[index]}
                                                 />
