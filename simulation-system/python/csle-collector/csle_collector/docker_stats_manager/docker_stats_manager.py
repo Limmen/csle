@@ -144,7 +144,7 @@ class DockerStatsManagerServicer(
         """
         Initializes the server
         """
-        file_name = "docker_stats_manager.log"
+        file_name = constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE
         dir = "/var/log/csle/"
         logfile = os.path.join(dir, file_name)
         logging.basicConfig(filename=logfile, level=logging.INFO)

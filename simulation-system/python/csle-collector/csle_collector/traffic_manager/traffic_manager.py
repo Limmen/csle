@@ -7,6 +7,7 @@ import grpc
 import socket
 import csle_collector.traffic_manager.traffic_manager_pb2_grpc
 import csle_collector.traffic_manager.traffic_manager_pb2
+import csle_collector.constants.constants as constants
 
 
 class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerServicer):
@@ -22,7 +23,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         :param ip: the ip of the traffic manager
         :param hostname: the hostname of the traffic manager
         """
-        logging.basicConfig(filename="/traffic_manager.log", level=logging.INFO)
+        logging.basicConfig(filename=f"/{constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE}", level=logging.INFO)
         self.ip = ip
         self.hostname = hostname
         if self.hostname is None:

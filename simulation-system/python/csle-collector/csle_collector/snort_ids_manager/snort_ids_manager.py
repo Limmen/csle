@@ -66,7 +66,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         """
         Initializes the server
         """
-        logging.basicConfig(filename="/snort_ids_manager.log", level=logging.INFO)
+        logging.basicConfig(filename=f"/{constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {

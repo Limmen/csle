@@ -69,7 +69,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         """
         Initializes the server
         """
-        logging.basicConfig(filename="/host_manager.log", level=logging.INFO)
+        logging.basicConfig(filename=f"/{constants.LOG_FILES.HOST_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",

@@ -25,7 +25,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :param ip: the ip of the kafka server
         :param hostname: the hostname of the kafka server
         """
-        logging.basicConfig(filename="/kafka_manager.log", level=logging.INFO)
+        logging.basicConfig(filename=f"/{constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE}", level=logging.INFO)
         self.ip = ip
         self.hostname = hostname
         if self.hostname is None:

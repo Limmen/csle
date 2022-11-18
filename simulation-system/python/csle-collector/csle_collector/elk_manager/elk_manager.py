@@ -23,7 +23,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :param ip: the ip of the ELK server
         :param hostname: the hostname of the ELK server
         """
-        logging.basicConfig(filename="/elk_manager.log", level=logging.INFO)
+        logging.basicConfig(filename=f"/{constants.LOG_FILES.ELK_MANAGER_LOG_FILE}", level=logging.INFO)
         self.ip = ip
         self.hostname = hostname
         if self.hostname is None:

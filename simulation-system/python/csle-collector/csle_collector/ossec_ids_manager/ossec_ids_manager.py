@@ -66,7 +66,7 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         """
         Initializes the server
         """
-        logging.basicConfig(filename="/ossec_ids_manager.log", level=logging.INFO)
+        logging.basicConfig(filename=f"/{constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {

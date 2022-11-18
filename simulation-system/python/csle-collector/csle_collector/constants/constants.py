@@ -8,6 +8,17 @@ class GRPC:
     TIMEOUT_SECONDS = 15
 
 
+class LOG_FILES:
+    KAFKA_MANAGER_LOG_FILE = "kafka_manager.log"
+    OSSEC_IDS_MANAGER_LOG_FILE = "ossec_ids_manager.log"
+    SNORT_IDS_MANAGER_LOG_FILE = "snort_ids_manager.log"
+    ELK_MANAGER_LOG_FILE = "elk_manager.log"
+    DOCKER_STATS_MANAGER_LOG_FILE = "docker_stats_manager.log"
+    HOST_MANAGER_LOG_FILE = "host_manager.log"
+    CLIENT_MANAGER_LOG_FILE = "client_manager.log"
+    TRAFFIC_MANAGER_LOG_FILE = "traffic_manager.log"
+
+
 class DOCKER_STATS:
     CPU_STATS = "cpu_stats"
     CPU_USAGE = "cpu_usage"

@@ -188,7 +188,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         """
         self.arrival_thread = None
         self.producer_thread = None
-        logging.basicConfig(filename="/client_manager.log", level=logging.INFO)
+        logging.basicConfig(filename=f"/{constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE}", level=logging.INFO)
 
     def getClients(self, request: csle_collector.client_manager.client_manager_pb2.GetClientsMsg, context: grpc.ServicerContext) \
             -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
