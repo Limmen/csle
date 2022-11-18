@@ -67,7 +67,7 @@ includes an operations center where emulations can be managed and learned polici
 policy examination component of the monitoring system is a component for interactive examination of learned security
 policies. It allows a user to traverse episodes of Markov decision processes in a controlled manner and to track the
 actions triggered by security policies. Similar to a software debugger, a user can continue or or halt an episode at any
-time step and inspect parameters and probability distributions  
+time step and inspect parameters and probability distributions
 of interest. The system enables insight into the structure of a given policy and in the behavior of a policy in edge
 cases.
 
@@ -141,21 +141,21 @@ running commands can read and write to this directory.
 
 4. **Create log directory**
    - ```bash
-     mkdir /tmp/csle     
+     mkdir /tmp/csle
      ```
 
 5. **Create PID file directory**
    - ```bash
      mkdir /var/log/csle
      mkdir /var/log/csle/datasets
-     chmod -R 777 /var/log/csle     
+     chmod -R 777 /var/log/csle
      ```
 
 6. **Install PostgreSQL as a metastore (see ([README](metastore/README.MD)) for more information)**
     - Installation:
       ```bash
       sudo apt-get install postgresql
-      sudo apt-get install libpq-dev 
+      sudo apt-get install libpq-dev
       ```
     - Setup a password for the postgres user:
       ```bash
@@ -279,7 +279,7 @@ running commands can read and write to this directory.
       ```bash
       cd csle-cli
       pip install -e .
-      cd ../../../     
+      cd ../../../
       ```
     - Setup auto-completion in BASH by generating the following file:
       ```bash
@@ -291,12 +291,12 @@ running commands can read and write to this directory.
       ```
     - Setup auto-completion in Fish:
       ```bash
-      _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish 
+      _CSLE_COMPLETE=fish_source csle > ~/.config/fish/completions/csle.fish
       ```
    - Initialize management users
      ```bash
-     csle init 
-     ```      
+     csle init
+     ```
 
 9. **Install the emulation system**
     - Add Docker's official GPG key:
@@ -337,12 +337,12 @@ running commands can read and write to this directory.
       cd emulation-system
       make build
       cd ../
-      ```   
+      ```
     - Set `max_map_count`. Add the line
       ```bash
       vm.max_map_count=262144
       ```
-      to the file `/etc/sysctl.conf` (you can also set a higher value). 
+      to the file `/etc/sysctl.conf` (you can also set a higher value).
       Alternatively, for a non-persisten configuration, run:
       ```bash
        sysctl -w vm.max_map_count=262144
@@ -361,14 +361,14 @@ running commands can read and write to this directory.
         nvm install node # Install node
         npm install -g npm # Update npm
         node -v # Verify version of node
-        npm -v # Verify version of npm       
+        npm -v # Verify version of npm
         ```
      - To serve the webapp withe TLS you need nginx as a reverse proxy, install and start nginx with the following commands:
        ```bash
        sudo apt install nginx
        sudo service nginx start
        ```
-     - Configure nginx by editing `/etc/nginx/sites-available/default` and modifying location `/` inside the server object 
+     - Configure nginx by editing `/etc/nginx/sites-available/default` and modifying location `/` inside the server object
        by adding the following:
        ```bash
        location / {
@@ -383,31 +383,31 @@ running commands can read and write to this directory.
        ```bash
        sudo service nginx restart
        ```
-     - If you have HTTPS enabled on the REST API and have certificates you can configure them in NGINX as follows 
+     - If you have HTTPS enabled on the REST API and have certificates you can configure them in NGINX as follows
        by editing `/etc/nginx/sites-available/default`:
        ```bash
-       server {                                                                                                                                                                                      
-            listen 80 default_server;                                                                                                                                                             
-            listen [::]:80 default_server;                                                                                                                                                        
-            server_name _;                                                                                                                                                                        
-            return 301 https://$host$request_uri;                                                                                                                                                 
+       server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
+            server_name _;
+            return 301 https://$host$request_uri;
         }
-        
-        server {                                                                                                                                                                                      
-            listen 443 ssl default_server;                                                                                                                                                        
-            listen [::]:443 ssl default_server;                                                                                                                                                   
-            ssl_certificate /var/log/csle/certs/csle.dev.crt;                                                                                                                                     
-            ssl_certificate_key /var/log/csle/certs/csle_private.key;                                                                                                                             
-            root /var/www/html;                                                                                                                                                                   
-            index index.html index.htm index.nginx-debian.html;                                                                                                                                   
-            server_name csle.dev;                                                                                                                                                                 
-            location / {                                                                                                                                                                          
-            proxy_pass http://localhost:7777/;                                                                                                                                            
-            proxy_buffering off;                                                                                                                                                          
-            proxy_set_header X-Real-IP $remote_addr;                                                                                                                                      
-            proxy_set_header X-Forwarded-Host $host;                                                                                                                                      
-            proxy_set_header X-Forwarded-Port $server_port;                                                                                                                               
-            }                                                                                                                                                                                     
+
+        server {
+            listen 443 ssl default_server;
+            listen [::]:443 ssl default_server;
+            ssl_certificate /var/log/csle/certs/csle.dev.crt;
+            ssl_certificate_key /var/log/csle/certs/csle_private.key;
+            root /var/www/html;
+            index index.html index.htm index.nginx-debian.html;
+            server_name csle.dev;
+            location / {
+            proxy_pass http://localhost:7777/;
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            }
         }
        ```
      - Install the monitoring system and associated tools:
@@ -553,7 +553,7 @@ For documentation, see the README.md files inside each sub-directory,
 
 ## Video tutorials
 
-### NOMS22 Demo - A System for Interactive Examination of Learned Security Policies 
+### NOMS22 Demo - A System for Interactive Examination of Learned Security Policies
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/18P7MjPKNDg/0.jpg)](http://www.youtube.com/watch?v=18P7MjPKNDg "A System for Interactive Examination of Learned Security Policies - Hammar & Stadler")
 
@@ -605,7 +605,7 @@ that policy convergence in self-play remains a challenge."
 }
 ```
 
-- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021) 
+- **Learning Intrusion Prevention Policies through Optimal Stopping (CNSM 2021)
   preprint: https://arxiv.org/abs/2106.07160, IEEE Proceedings: https://ieeexplore.ieee.org/document/9615542, IFIP Open
   Library Conference proceedings: http://dl.ifip.org/db/conf/cnsm/cnsm2021/1570732932.pdf**
 
@@ -628,8 +628,8 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 ```bash
 @ARTICLE{9779345,
   author={Hammar, Kim and Stadler, Rolf},
-  journal={IEEE Transactions on Network and Service Management}, 
-  title={Intrusion Prevention through Optimal Stopping}, 
+  journal={IEEE Transactions on Network and Service Management},
+  title={Intrusion Prevention through Optimal Stopping},
   year={2022},
   volume={},
   number={},
@@ -685,6 +685,15 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 - [gym-idsgame](https://github.com/Limmen/gym-idsgame)
 - [gym-optimal-intrusion-response](https://github.com/Limmen/gym-optimal-intrusion-response)
 - [awesome-rl-for-cybersecurity](https://github.com/Limmen/awesome-rl-for-cybersecurity)
+
+## Lines of code
+
+The project consists of aorund 120k lines of Python, 30k lines of JavaScript, and 2.5k lines of Dockerfiles. The lines of code can be counted by executing the following commands from the project root:
+``` bash
+find . -name '*.py' | xargs wc -l
+find . -name '*.js' | xargs wc -l
+find . -name 'Dockerfile' | xargs wc -l
+```
 
 ## Disclaimer
 
