@@ -1,7 +1,7 @@
 from typing import Tuple
-import time
 import logging
 import os
+import subprocess
 from concurrent import futures
 import grpc
 import socket
@@ -38,12 +38,21 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
 
         :return: status of elastic, status of kibana, status of logstash
         """
-        stat = os.system(constants.ELK.ELASTICSEARCH_STATUS)
-        elasticsearch_running = (stat == 0)
-        stat = os.system(constants.ELK.KIBANA_STATUS)
-        kibana_running = (stat == 0)
-        stat = os.system(constants.ELK.LOGSTASH_STATUS)
-        logstash_running = (stat == 0)
+        p = subprocess.Popen(constants.ELK.ELASTICSEARCH_STATUS, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        p.wait()
+        status_output = output.decode()
+        elasticsearch_running = not ("not" in status_output)
+        p = subprocess.Popen(constants.ELK.KIBANA_STATUS, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        p.wait()
+        status_output = output.decode()
+        kibana_running = not ("not" in status_output)
+        p = subprocess.Popen(constants.ELK.LOGSTASH_STATUS, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        p.wait()
+        status_output = output.decode()
+        logstash_running = not ("not" in status_output)
         return elasticsearch_running, kibana_running, logstash_running
 
     def getElkStatus(self, request: csle_collector.elk_manager.elk_manager_pb2.GetElkStatusMsg,

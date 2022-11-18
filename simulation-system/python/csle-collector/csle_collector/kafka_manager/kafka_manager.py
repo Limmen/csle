@@ -1,6 +1,7 @@
 import time
 from typing import Tuple, List
 import logging
+import subprocess
 import os
 from concurrent import futures
 import grpc
@@ -42,13 +43,20 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
 
         :return: status and list of topics
         """
-        stat = os.system(constants.KAFKA.KAFKA_STATUS)
-        running = (stat == 0)
-        client = confluent_kafka.admin.AdminClient(self.conf)
-        cluster_metadata = client.list_topics()
+        p = subprocess.Popen(constants.KAFKA.KAFKA_STATUS, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        p.wait()
+        status_output = output.decode()
+        running = not ("not" in status_output)
         topics = []
-        for k,v in cluster_metadata.topics.items():
-            topics.append(k)
+        if running:
+            client = confluent_kafka.admin.AdminClient(self.conf)
+            try:
+                cluster_metadata = client.list_topics(timeout=1)
+                for k,v in cluster_metadata.topics.items():
+                    topics.append(k)
+            except Exception as e:
+                logging.info(f"There was an exception listing the Kafka topics: {str(e)}, {repr(e)}")
         return running, topics
 
     def getKafkaStatus(self, request: csle_collector.kafka_manager.kafka_manager_pb2.GetKafkaStatusMsg,
@@ -135,7 +143,6 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
             topics = topics + [request.name]
         )
         return kafka_dto
-
 
 def serve(port : int = 50051, ip=None, hostname=None) -> None:
     """
