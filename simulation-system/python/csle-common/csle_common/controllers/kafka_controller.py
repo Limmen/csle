@@ -56,7 +56,7 @@ class KafkaController:
                 cmd=cmd,
                 conn=
                 emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
-            time.sleep(5)
+            time.sleep(2)
 
     @staticmethod
     def stop_kafka_manager(emulation_env_config: EmulationEnvConfig) -> None:
@@ -72,7 +72,7 @@ class KafkaController:
                                     ip=emulation_env_config.kafka_config.container.get_ips()[0],
                                     create_producer=False)
 
-        Logger.__call__().get_logger().info(f"Starting the Kafka manager on node "
+        Logger.__call__().get_logger().info(f"Stopping the Kafka manager on node "
                                             f"{emulation_env_config.kafka_config.container.get_ips()[0]}")
 
         # Stop old background job if running
@@ -83,7 +83,7 @@ class KafkaController:
             cmd=cmd,
             conn=
             emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
-        time.sleep(5)
+        time.sleep(2)
 
     @staticmethod
     def create_topics(emulation_env_config: EmulationEnvConfig) -> None:
@@ -215,7 +215,7 @@ class KafkaController:
         return [emulation_env_config.kafka_config.kafka_manager_port]
 
     @staticmethod
-    def get_kafka_managers_info(emulation_env_config: EmulationEnvConfig) -> KafkaManagersInfo:
+    def get_kafka_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> KafkaManagersInfo:
         """
         Extracts the information of the Kafka managers for a given emulation
 
@@ -227,6 +227,8 @@ class KafkaController:
         kafka_managers_statuses = []
         kafka_managers_running = []
         for ip in kafka_managers_ips:
+            if ip not in active_ips:
+                continue
             running = False
             status = None
             try:

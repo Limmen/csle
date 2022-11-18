@@ -137,7 +137,7 @@ class OSSECIDSController:
                 emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
-            time.sleep(5)
+            time.sleep(2)
 
     @staticmethod
     def stop_ossec_idses_managers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -173,7 +173,7 @@ class OSSECIDSController:
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
-        time.sleep(5)
+        time.sleep(2)
 
     @staticmethod
     def start_ossec_idses_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
@@ -185,7 +185,6 @@ class OSSECIDSController:
         :return: None
         """
         OSSECIDSController.start_ossec_idses_managers(emulation_env_config=emulation_env_config)
-        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
@@ -264,7 +263,6 @@ class OSSECIDSController:
         """
         statuses = []
         OSSECIDSController.start_ossec_idses_managers(emulation_env_config=emulation_env_config)
-        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
@@ -287,7 +285,6 @@ class OSSECIDSController:
         """
         ids_log_data_list = []
         OSSECIDSController.start_ossec_idses_managers(emulation_env_config=emulation_env_config)
-        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
@@ -351,11 +348,12 @@ class OSSECIDSController:
             return status
 
     @staticmethod
-    def get_ossec_managers_info(emulation_env_config: EmulationEnvConfig) -> OSSECIDSManagersInfo:
+    def get_ossec_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> OSSECIDSManagersInfo:
         """
         Extracts the information of the OSSEC IDS managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param active_ips: list of active IPs
         :return: a DTO with the status of the OSSEC IDS managers
         """
         ossec_ids_managers_ips = OSSECIDSController.get_ossec_idses_managers_ips(emulation_env_config=emulation_env_config)
@@ -364,6 +362,8 @@ class OSSECIDSController:
         ossec_ids_managers_statuses = []
         ossec_ids_managers_running = []
         for ip in ossec_ids_managers_ips:
+            if ip not in active_ips:
+                continue
             running = False
             status = None
             try:

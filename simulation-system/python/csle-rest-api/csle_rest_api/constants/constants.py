@@ -118,6 +118,8 @@ class MGMT_WEBAPP:
     PORT_PROPERTY = "port"
     START_PROPERTY = "start"
     STOP_PROPERTY = "stop"
+    STOP_ALL_PROPERTY = "stop-all"
+    START_ALL_PROPERTY = "start-all"
     USERNAME_PROPERTY = "username"
     PASSWORD_PROPERTY = "password"
     FIRST_NAME_PROPERTY = "first_name"

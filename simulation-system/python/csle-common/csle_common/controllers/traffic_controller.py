@@ -74,7 +74,7 @@ class TrafficController:
             cmd = constants.COMMANDS.START_TRAFFIC_MANAGER.format(node_traffic_config.traffic_manager_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
-            time.sleep(5)
+            time.sleep(2)
 
     @staticmethod
     def stop_traffic_managers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -85,7 +85,7 @@ class TrafficController:
         :return: None
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
-            TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
+            TrafficController.stop_traffic_manager(emulation_env_config=emulation_env_config,
                                                     node_traffic_config=node_traffic_config)
 
     @staticmethod
@@ -144,7 +144,7 @@ class TrafficController:
                 emulation_env_config.traffic_config.client_population_config.client_manager_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
-            time.sleep(5)
+            time.sleep(2)
 
     @staticmethod
     def stop_client_manager(emulation_env_config: EmulationEnvConfig) -> None:
@@ -302,7 +302,7 @@ class TrafficController:
             # Stop the client population if it is already running
             if client_dto.client_process_active:
                 csle_collector.client_manager.query_clients.stop_clients(stub)
-                time.sleep(5)
+                time.sleep(2)
 
             # Start the client population
             sine_modulated = False
@@ -321,7 +321,6 @@ class TrafficController:
                 period_scaling_factor=emulation_env_config.traffic_config.client_population_config.period_scaling_factor
             )
 
-            time.sleep(5)
 
     @staticmethod
     def get_num_active_clients(emulation_env_config : EmulationEnvConfig) \
@@ -381,7 +380,6 @@ class TrafficController:
         """
         TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
                                                 node_traffic_config=node_traffic_config)
-        time.sleep(5)
         Logger.__call__().get_logger().info(f"Stopping traffic generator script, "
                                             f"node ip:{node_traffic_config.ip}")
 
@@ -428,7 +426,6 @@ class TrafficController:
             return
         TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
                                                 node_traffic_config=node_traffic_config)
-        time.sleep(5)
         Logger.__call__().get_logger().info(f"Starting traffic generator script, "
                                             f"node ip:{node_traffic_config.ip}")
 
@@ -481,11 +478,12 @@ class TrafficController:
         return [emulation_env_config.traffic_config.client_population_config.client_manager_port]
 
     @staticmethod
-    def get_client_managers_info(emulation_env_config: EmulationEnvConfig) -> ClientManagersInfo:
+    def get_client_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> ClientManagersInfo:
         """
         Extracts the information of the Client managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param active_ips: list of active IPs
         :return: a DTO with the status of the Client managers
         """
         client_managers_ips = TrafficController.get_client_managers_ips(emulation_env_config=emulation_env_config)
@@ -493,6 +491,8 @@ class TrafficController:
         client_managers_statuses = []
         client_managers_running = []
         for ip in client_managers_ips:
+            if ip not in active_ips:
+                continue
             running = False
             status = None
             try:
@@ -561,11 +561,12 @@ class TrafficController:
         return ports
 
     @staticmethod
-    def get_traffic_managers_info(emulation_env_config: EmulationEnvConfig) -> TrafficManagersInfo:
+    def get_traffic_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> TrafficManagersInfo:
         """
         Extracts the information of the traffic managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param active_ips: list of active IPs
         :return: a DTO with the status of the traffic managers
         """
         traffic_managers_ips = TrafficController.get_traffic_managers_ips(emulation_env_config=emulation_env_config)
@@ -573,6 +574,8 @@ class TrafficController:
         traffic_managers_statuses = []
         traffic_managers_running = []
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
+            if node_traffic_config.ip not in active_ips:
+                continue
             running = False
             status = None
             if node_traffic_config.ip in traffic_managers_ips:

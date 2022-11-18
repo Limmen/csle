@@ -448,6 +448,34 @@ class EmulationEnvController:
             subprocess.call(cmd, shell=True)
 
     @staticmethod
+    def start_containers(emulation_execution: EmulationExecution) -> None:
+        """
+        Starts stopped containers in a given emulation execution
+
+        :param emulation_execution: the execution DTO
+        :return: None
+        """
+        path = ExperimentUtil.default_output_dir()
+        emulation_env_config = emulation_execution.emulation_env_config
+
+        # Start regular containers
+        for c in emulation_env_config.containers_config.containers:
+            ContainerController.start_container(name = c.get_full_name())
+
+        # Start the kafka container
+        c = emulation_env_config.kafka_config.container
+        ContainerController.start_container(name = c.get_full_name())
+
+        # Start the ELK container
+        c = emulation_env_config.elk_config.container
+        ContainerController.start_container(name = c.get_full_name())
+
+        if emulation_env_config.sdn_controller_config is not None:
+            # Start the SDN controller container
+            c = emulation_env_config.sdn_controller_config.container
+            ContainerController.start_container(name = c.get_full_name())
+
+    @staticmethod
     def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1, create_network : bool = True) -> None:
         """
         Runs a given container
@@ -711,27 +739,37 @@ class EmulationEnvController:
         :param emulation_env_config: the emulation for which executions should be stopped
         :return: execution information
         """
-
+        running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
+            emulation_env_config=execution.emulation_env_config)
+        active_ips = []
+        for container in running_containers:
+            active_ips = active_ips + container.get_ips()
         emulation_name = execution.emulation_name
         execution_id = execution.ip_first_octet
         snort_ids_managers_info = \
-            SnortIDSController.get_snort_managers_info(emulation_env_config=execution.emulation_env_config)
+            SnortIDSController.get_snort_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                       active_ips=active_ips)
         ossec_ids_managers_info = \
-            OSSECIDSController.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config)
+            OSSECIDSController.get_ossec_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                       active_ips=active_ips)
         kafka_managers_info = \
-            KafkaController.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config)
+            KafkaController.get_kafka_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                    active_ips=active_ips)
         host_managers_info = \
-            HostController.get_host_managers_info(emulation_env_config=execution.emulation_env_config)
+            HostController.get_host_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                  active_ips=active_ips)
         client_managers_info = \
-            TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config)
+            TrafficController.get_client_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                       active_ips=active_ips)
         traffic_managers_info = \
-            TrafficController.get_traffic_managers_info(emulation_env_config=execution.emulation_env_config)
+            TrafficController.get_traffic_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                        active_ips=active_ips)
         docker_stats_managers_info = \
-            ContainerController.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config)
+            ContainerController.get_docker_stats_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                               active_ips=active_ips)
         elk_managers_info = \
-            ELKController.get_elk_managers_info(emulation_env_config=execution.emulation_env_config)
-        running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
-            emulation_env_config=execution.emulation_env_config)
+            ELKController.get_elk_managers_info(emulation_env_config=execution.emulation_env_config,
+                                                active_ips=active_ips)
         active_networks, inactive_networks = ContainerController.list_all_active_networks_for_emulation(
             emulation_env_config=execution.emulation_env_config)
         execution_info = EmulationExecutionInfo(emulation_name=emulation_name, execution_id=execution_id,

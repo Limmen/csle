@@ -120,7 +120,6 @@ class HostController:
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
-        time.sleep(10)
 
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
@@ -157,7 +156,6 @@ class HostController:
         :return: None
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
-        time.sleep(10)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -178,7 +176,6 @@ class HostController:
         """
         statuses = []
         HostController.start_host_managers(emulation_env_config=emulation_env_config)
-        time.sleep(10)
         for c in emulation_env_config.containers_config.containers:
             status = HostController.get_host_monitor_thread_status_by_port_and_ip(
                 ip=c.get_ips()[0], port=emulation_env_config.host_manager_config.host_manager_port)
@@ -217,7 +214,6 @@ class HostController:
         """
         host_metrics_data_list = []
         HostController.start_host_managers(emulation_env_config=emulation_env_config)
-        time.sleep(10)
 
         for c in emulation_env_config.containers_config.containers:
             # Open a gRPC session
@@ -257,11 +253,12 @@ class HostController:
         return ports
 
     @staticmethod
-    def get_host_managers_info(emulation_env_config: EmulationEnvConfig) -> HostManagersInfo:
+    def get_host_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> HostManagersInfo:
         """
         Extracts the information of the Host managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param active_ips: list of active IPs
         :return: a DTO with the status of the Host managers
         """
         host_managers_ips = HostController.get_host_managers_ips(emulation_env_config=emulation_env_config)
@@ -269,6 +266,8 @@ class HostController:
         host_managers_statuses = []
         host_managers_running = []
         for ip in host_managers_ips:
+            if ip not in active_ips:
+                continue
             status = None
             running = False
             try:

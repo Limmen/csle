@@ -57,7 +57,7 @@ class ELKController:
                 cmd=cmd,
                 conn=
                 emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
-            time.sleep(5)
+            time.sleep(2)
 
     @staticmethod
     def stop_elk_manager(emulation_env_config: EmulationEnvConfig) -> None:
@@ -83,7 +83,7 @@ class ELKController:
             cmd=cmd,
             conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
 
-        time.sleep(5)
+        time.sleep(2)
 
     @staticmethod
     def get_elk_status(emulation_env_config: EmulationEnvConfig) -> \
@@ -307,11 +307,12 @@ class ELKController:
         return [emulation_env_config.elk_config.elk_manager_port]
 
     @staticmethod
-    def get_elk_managers_info(emulation_env_config: EmulationEnvConfig) -> ELKManagersInfo:
+    def get_elk_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> ELKManagersInfo:
         """
         Extracts the information of the ELK managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param active_ips: list of active IPs
         :return: a DTO with the status of the ELK managers
         """
         elk_managers_ips = ELKController.get_elk_managers_ips(emulation_env_config=emulation_env_config)
@@ -319,6 +320,8 @@ class ELKController:
         elk_managers_statuses = []
         elk_managers_running = []
         for ip in elk_managers_ips:
+            if ip not in active_ips:
+                continue
             status = None
             try:
                 status = ELKController.get_elk_status_by_port_and_ip(

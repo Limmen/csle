@@ -5,3 +5,13 @@
 .containerStoppedStatus{
     color: red;
 }
+
+.aggregateActions {
+    font-size: 14px;
+    font-weight: bolder;
+    margin-left:10px;
+}
+
+.aggregateActionsContainer {
+    margin-bottom: 15px;
+}

@@ -135,7 +135,7 @@ class SnortIDSController:
                 emulation_env_config.snort_ids_manager_config.snort_ids_manager_port)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
-            time.sleep(5)
+            time.sleep(2)
 
     @staticmethod
     def stop_snort_managers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -169,7 +169,7 @@ class SnortIDSController:
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
-        time.sleep(5)
+        time.sleep(2)
 
     @staticmethod
     def start_snort_idses_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
@@ -350,11 +350,12 @@ class SnortIDSController:
         return ports
 
     @staticmethod
-    def get_snort_managers_info(emulation_env_config: EmulationEnvConfig) -> SnortIdsManagersInfo:
+    def get_snort_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> SnortIdsManagersInfo:
         """
         Extracts the information of the Snort managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param active_ips: list of active IPs
         :return: a DTO with the status of the Snort managers
         """
         snort_ids_managers_ips = SnortIDSController.get_snort_ids_managers_ips(emulation_env_config=emulation_env_config)
@@ -363,6 +364,8 @@ class SnortIDSController:
         snort_managers_statuses = []
         snort_managers_running = []
         for ip in snort_ids_managers_ips:
+            if ip not in active_ips:
+                continue
             running = False
             status = None
             try:

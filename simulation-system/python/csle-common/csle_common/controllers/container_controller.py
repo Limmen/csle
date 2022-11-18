@@ -706,11 +706,13 @@ class ContainerController:
         return [emulation_env_config.docker_stats_manager_config.docker_stats_manager_port]
 
     @staticmethod
-    def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig) -> DockerStatsManagersInfo:
+    def get_docker_stats_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) \
+            -> DockerStatsManagersInfo:
         """
         Extracts the information of the Docker stats managers for a given emulation
 
         :param emulation_env_config: the configuration of the emulation
+        :param active_ips: list of active IPs
         :return: a DTO with the status of the Docker stats managers
         """
         docker_stats_managers_ips = ContainerController.get_docker_stats_managers_ips(
@@ -720,6 +722,8 @@ class ContainerController:
         docker_stats_managers_statuses = []
         docker_stats_managers_running = []
         for ip in docker_stats_managers_ips:
+            if ip not in active_ips:
+                continue
             running = False
             status = None
             try:

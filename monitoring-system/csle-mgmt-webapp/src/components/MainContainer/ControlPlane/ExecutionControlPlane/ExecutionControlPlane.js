@@ -48,7 +48,7 @@ const ExecutionControlPlane = (props) => {
     }
 
     const addLoadingEntity = (entity) => {
-        var newLoadingEntities= []
+        var newLoadingEntities = []
         for (let i = 0; i < loadingEntities.length; i++) {
             newLoadingEntities.push(loadingEntities[i])
         }
@@ -57,9 +57,9 @@ const ExecutionControlPlane = (props) => {
     }
 
     const removeLoadingEntity = (entity) => {
-        var newLoadingEntities= []
+        var newLoadingEntities = []
         for (let i = 0; i < loadingEntities.length; i++) {
-            if(loadingEntities[i] !== entity) {
+            if (loadingEntities[i] !== entity) {
                 newLoadingEntities.push(loadingEntities[i])
             }
         }
@@ -116,7 +116,8 @@ const ExecutionControlPlane = (props) => {
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.execution.emulation_name + "_"
                 + props.execution.ip_first_octet} className="mgHeader">
-                <span className="subnetTitle">ID: {props.execution.ip_first_octet}, name: {props.execution.emulation_name}</span>
+                <span
+                    className="subnetTitle">ID: {props.execution.ip_first_octet}, name: {props.execution.emulation_name}</span>
             </Accordion.Toggle>
         </Card.Header>
         <Accordion.Collapse eventKey={props.execution.emulation_name + "_" + props.execution.ip_first_octet}>
@@ -130,11 +131,25 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={runningContainersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Containers statuses </h5>
+                            <h5 className="semiTitle"> Container statuses </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={runningContainersOpen}>
                         <div id="activeNetworksBody" className="cardBodyHidden">
+                            <div className="aggregateActionsContainer">
+                                <span className="aggregateActions">Stop all containers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("container-stop-all")}
+                                    running={true} entity="container"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all containers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("container-start-all")}
+                                    running={false} entity="container"
+                                    name="start-all" ip="start-all"
+                                />
+                            </div>
                             <div className="table-responsive">
                                 <Table striped bordered hover>
                                     <thead>
@@ -157,9 +172,10 @@ const ExecutionControlPlane = (props) => {
                                             <td className="containerRunningStatus"> Running</td>
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes(container.full_name_str)}
+                                                    loading={loadingEntities.includes("container-"
+                                                        + container.full_name_str)}
                                                     running={true} entity="container"
-                                                    name={container.full_name_str} ip={container.ips_and_networks[0]}
+                                                    name={container.full_name_str} ip={container.full_name_str}
                                                 />
                                             </td>
                                         </tr>
@@ -173,9 +189,10 @@ const ExecutionControlPlane = (props) => {
                                             <td className="containerStoppedStatus">Stopped</td>
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes(container.full_name_str)}
+                                                    loading={loadingEntities.includes("container-" +
+                                                        container.full_name_str)}
                                                     running={false} entity="container"
-                                                    name={container.full_name_str} ip={container.ips_and_networks[0]} />
+                                                    name={container.full_name_str} ip={container.full_name_str}/>
                                             </td>
                                         </tr>
                                     )}
@@ -232,7 +249,6 @@ const ExecutionControlPlane = (props) => {
                         </div>
                     </Collapse>
                 </Card>
-
                 <Card className="subCard">
                     <Card.Header>
                         <Button
@@ -270,7 +286,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("client-manager-"+
+                                                    loading={loadingEntities.includes("client-manager-" +
                                                         props.info.client_managers_info.ips[index])}
                                                     running={props.info.client_managers_info.client_managers_running[index]}
                                                     entity={"client-manager"} name={"client-manager"}
@@ -289,7 +305,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("client-population-"+
+                                                    loading={loadingEntities.includes("client-population-" +
                                                         props.info.client_managers_info.ips[index])}
                                                     running={status.client_process_active}
                                                     entity={"client-population"} name={"client-population"}
@@ -308,7 +324,7 @@ const ExecutionControlPlane = (props) => {
                                             <td>{status.clients_time_step_len_seconds}</td>
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("client-producer-"+
+                                                    loading={loadingEntities.includes("client-producer-" +
                                                         props.info.client_managers_info.ips[index])}
                                                     running={status.producer_active}
                                                     entity={"client-producer"} name={"client-producer"}
@@ -357,7 +373,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(props.info.docker_stats_managers_info.docker_stats_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("docker-stats-manager-"+
+                                                    loading={loadingEntities.includes("docker-stats-manager-" +
                                                         props.info.docker_stats_managers_info.ips[index])}
                                                     running={props.info.docker_stats_managers_info.docker_stats_managers_running[index]}
                                                     entity={"docker-stats-manager"} name={"docker-stats-manager"}
@@ -374,7 +390,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.num_monitors > 0)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("docker-stats-monitor-"+
+                                                    loading={loadingEntities.includes("docker-stats-monitor-" +
                                                         props.info.docker_stats_managers_info.ips[index])}
                                                     running={status.num_monitors > 0}
                                                     entity={"docker-stats-monitor"} name={"docker-stats-monitor"}
@@ -403,6 +419,32 @@ const ExecutionControlPlane = (props) => {
                     </Card.Header>
                     <Collapse in={hostManagersOpen}>
                         <div id="hostManagersOpen" className="cardBodyHidden">
+                            <div className="aggregateActionsContainer">
+                                <span className="aggregateActions">Stop all managers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("host-manager-stop-all")}
+                                    running={true} entity="host-manager"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all managers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("host-manager-start-all")}
+                                    running={false} entity="host-manager"
+                                    name="start-all" ip="start-all"
+                                />
+                                <span className="aggregateActions">Stop all monitors:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("host-monitor-stop-all")}
+                                    running={true} entity="host-monitor"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all monitors:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("host-monitor-start-all")}
+                                    running={false} entity="host-monitor"
+                                    name="start-all" ip="start-all"
+                                />
+                            </div>
                             <div className="table-responsive">
                                 <Table striped bordered hover>
                                     <thead>
@@ -423,7 +465,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(props.info.host_managers_info.host_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("host-manager-"+
+                                                    loading={loadingEntities.includes("host-manager-" +
                                                         props.info.host_managers_info.ips[index])}
                                                     running={props.info.host_managers_info.host_managers_running[index]}
                                                     entity={"host-manager"} name={"host-manager"}
@@ -440,7 +482,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("host-monitor-"+
+                                                    loading={loadingEntities.includes("host-monitor-" +
                                                         props.info.host_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"host-monitor"} name={"host-monitor"}
@@ -491,7 +533,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(props.info.kafka_managers_info.kafka_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("kafka-manager-"+
+                                                    loading={loadingEntities.includes("kafka-manager-" +
                                                         props.info.kafka_managers_info.ips[index])}
                                                     running={props.info.kafka_managers_info.kafka_managers_running[index]}
                                                     entity={"kafka-manager"} name={"kafka-manager"}
@@ -509,7 +551,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("kafka-"+
+                                                    loading={loadingEntities.includes("kafka-" +
                                                         props.info.kafka_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"kafka"} name={"kafka"}
@@ -538,6 +580,44 @@ const ExecutionControlPlane = (props) => {
                     </Card.Header>
                     <Collapse in={ossecIdsManagersOpen}>
                         <div id="ossecIdsManagersBody" className="cardBodyHidden">
+                            <div className="aggregateActionsContainer">
+                                <span className="aggregateActions">Stop all managers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("ossec-ids-manager-stop-all")}
+                                    running={true} entity="ossec-ids-manager"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all managers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("ossec-ids-manager-start-all")}
+                                    running={false} entity="ossec-ids-manager"
+                                    name="start-all" ip="start-all"
+                                />
+                                <span className="aggregateActions">Stop all monitors:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("ossec-ids-monitor-stop-all")}
+                                    running={true} entity="ossec-ids-monitor"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all monitors:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("ossec-ids-monitor-start-all")}
+                                    running={false} entity="ossec-ids-monitor"
+                                    name="start-all" ip="start-all"
+                                />
+                                <span className="aggregateActions">Stop all IDSes:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("ossec-ids-stop-all")}
+                                    running={true} entity="ossec-ids"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all IDSes:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("ossec-ids-start-all")}
+                                    running={false} entity="ossec-ids"
+                                    name="start-all" ip="start-all"
+                                />
+                            </div>
                             <div className="table-responsive">
                                 <Table striped bordered hover>
                                     <thead>
@@ -558,7 +638,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(props.info.ossec_ids_managers_info.ossec_ids_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("ossec-ids-manager-"+
+                                                    loading={loadingEntities.includes("ossec-ids-manager-" +
                                                         props.info.ossec_ids_managers_info.ips[index])}
                                                     running={props.info.ossec_ids_managers_info.ossec_ids_managers_running[index]}
                                                     entity={"ossec-ids-manager"} name={"ossec-ids-manager"}
@@ -575,7 +655,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.monitor_running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("ossec-ids-monitor-"+
+                                                    loading={loadingEntities.includes("ossec-ids-monitor-" +
                                                         props.info.ossec_ids_managers_info.ips[index])}
                                                     running={status.monitor_running}
                                                     entity={"ossec-ids-monitor"} name={"ossec-ids-monitor"}
@@ -592,7 +672,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.ossec_ids_running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("ossec-ids-"+
+                                                    loading={loadingEntities.includes("ossec-ids-" +
                                                         props.info.ossec_ids_managers_info.ips[index])}
                                                     running={status.ossec_ids_running}
                                                     entity={"ossec-ids"} name={"ossec-ids"}
@@ -641,7 +721,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(props.info.snort_ids_managers_info.snort_ids_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("snort-ids-manager-"+
+                                                    loading={loadingEntities.includes("snort-ids-manager-" +
                                                         props.info.snort_ids_managers_info.ips[index])}
                                                     running={props.info.snort_ids_managers_info.snort_ids_managers_running[index]}
                                                     entity={"snort-ids-manager"} name={"snort-ids-manager"}
@@ -658,7 +738,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.monitor_running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("snort-ids-monitor-"+
+                                                    loading={loadingEntities.includes("snort-ids-monitor-" +
                                                         props.info.snort_ids_managers_info.ips[index])}
                                                     running={status.monitor_running}
                                                     entity={"snort-ids-monitor"} name={"snort-ids-monitor"}
@@ -675,7 +755,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.snort_ids_running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("snort-ids-"+
+                                                    loading={loadingEntities.includes("snort-ids-" +
                                                         props.info.snort_ids_managers_info.ips[index])}
                                                     running={status.snort_ids_running}
                                                     entity={"snort-ids"} name={"snort-ids"}
@@ -725,7 +805,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(props.info.elk_managers_info.elk_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("elk-manager-"+
+                                                    loading={loadingEntities.includes("elk-manager-" +
                                                         props.info.elk_managers_info.ips[index])}
                                                     running={props.info.elk_managers_info.elk_managers_running[index]}
                                                     entity={"elk-manager"} name={"elk-manager"}
@@ -746,7 +826,7 @@ const ExecutionControlPlane = (props) => {
                                                 & status.logstashRunning))}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("elk-stack-"+
+                                                    loading={loadingEntities.includes("elk-stack-" +
                                                         props.info.elk_managers_info.ips[index])}
                                                     running={(status.elasticRunning & status.kibanaRunning
                                                         & status.logstashRunning)}
@@ -764,7 +844,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.elasticRunning)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("elastic-"+
+                                                    loading={loadingEntities.includes("elastic-" +
                                                         props.info.elk_managers_info.ips[index])}
                                                     running={status.elasticRunning}
                                                     entity={"elastic"} name={"elastic"}
@@ -781,7 +861,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.logstashRunning)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("logstash-"+
+                                                    loading={loadingEntities.includes("logstash-" +
                                                         props.info.elk_managers_info.ips[index])}
                                                     running={status.logstashRunning}
                                                     entity={"logstash"} name={"logstash"}
@@ -799,7 +879,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.kibanaRunning)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("kibana-"+
+                                                    loading={loadingEntities.includes("kibana-" +
                                                         props.info.elk_managers_info.ips[index])}
                                                     running={status.kibanaRunning}
                                                     entity={"kibana"} name={"kibana"}
@@ -828,6 +908,32 @@ const ExecutionControlPlane = (props) => {
                     </Card.Header>
                     <Collapse in={trafficManagersOpen}>
                         <div id="trafficManagersBody" className="cardBodyHidden">
+                            <div className="aggregateActionsContainer">
+                                <span className="aggregateActions">Stop all managers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("traffic-manager-stop-all")}
+                                    running={true} entity="traffic-manager"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all managers:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("traffic-manager-start-all")}
+                                    running={false} entity="traffic-manager"
+                                    name="start-all" ip="start-all"
+                                />
+                                <span className="aggregateActions">Stop all generators:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("traffic-generator-stop-all")}
+                                    running={true} entity="traffic-generator"
+                                    name="stop-all" ip="stop-all"
+                                />
+                                <span className="aggregateActions">Start all generators:</span>
+                                <SpinnerOrButton
+                                    loading={loadingEntities.includes("traffic-generator-start-all")}
+                                    running={false} entity="traffic-generator"
+                                    name="start-all" ip="start-all"
+                                />
+                            </div>
                             <div className="table-responsive">
                                 <Table striped bordered hover>
                                     <thead>
@@ -848,7 +954,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(props.info.traffic_managers_info.traffic_managers_running[index])}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("traffic-manager-"+
+                                                    loading={loadingEntities.includes("traffic-manager-" +
                                                         props.info.traffic_managers_info.ips[index])}
                                                     running={props.info.traffic_managers_info.traffic_managers_running[index]}
                                                     entity={"traffic-manager"} name={"traffic-manager"}
@@ -865,7 +971,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("traffic-generator-"+
+                                                    loading={loadingEntities.includes("traffic-generator-" +
                                                         props.info.traffic_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"traffic-generator"} name={"traffic-generator"}
