@@ -33,11 +33,11 @@ class OSSECIDSController:
                     cmd = constants.COMMANDS.CHANGE_PERMISSION_LOG_DIRS
                     o, e, _ = EmulationUtil.execute_ssh_cmd(
                         cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-                    cmd = constants.COMMANDS.STOP_SNORT_IDS
+                    cmd = constants.COMMANDS.STOP_OSSEC_IDS
                     o, e, _ = EmulationUtil.execute_ssh_cmd(
                         cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-                    time.sleep(1)
-                    cmd = constants.COMMANDS.START_SNORT_IDS
+                    time.sleep(5)
+                    cmd = constants.COMMANDS.START_OSSEC_IDS
                     Logger.__call__().get_logger().info(f"Starting OSSEC IDS on {c.get_ips()[0]}")
                     o, e, _ = EmulationUtil.execute_ssh_cmd(
                         cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
