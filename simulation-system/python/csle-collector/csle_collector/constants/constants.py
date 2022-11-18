@@ -3,6 +3,8 @@ Constants for csle collector
 """
 import re
 
+LATEST_VERSION  = "latest"
+INSTALL = "sudo /root/miniconda3/bin/pip install -U csle-collector"
 
 class GRPC:
     """

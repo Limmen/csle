@@ -359,14 +359,14 @@ class ContainerController:
                 ContainerController.create_network_from_dto(network_dto=net, existing_network_names=networks)
 
     @staticmethod
-    def connect_containers_to_networks(containers_config: ContainersConfig) -> None:
+    def connect_containers_to_networks(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Connects running containers to networks
 
-        :param containers_config: the containers configuration
+        :param emulation_env_config: the emulation config
         :return: None
         """
-        for c in containers_config.containers:
+        for c in emulation_env_config.containers_config.containers:
             container_name = c.get_full_name()
             # Disconnect from none
             cmd = f"docker network disconnect none {container_name}"
@@ -382,6 +382,9 @@ class ContainerController:
                 Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
                                                     f"with ip: {ip}")
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+
+        ContainerController.connect_kafka_container_to_network(kafka_config=emulation_env_config.kafka_config)
+        ContainerController.connect_elk_container_to_network(elk_config=emulation_env_config.elk_config)
 
     @staticmethod
     def connect_kafka_container_to_network(kafka_config: KafkaConfig) -> None:

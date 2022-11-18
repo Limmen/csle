@@ -2,6 +2,7 @@ from typing import List, Tuple
 import time
 import subprocess
 import random
+import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
@@ -21,6 +22,7 @@ from csle_common.controllers.topology_controller import TopologyController
 from csle_common.controllers.ovs_controller import OVSController
 from csle_common.controllers.monitor_tools_controller import MonitorToolsController
 from csle_common.controllers.resource_constraints_controller import ResourceConstraintsController
+from csle_common.util.emulation_util import EmulationUtil
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
@@ -74,6 +76,28 @@ class EmulationEnvController:
             ContainerController.stop_docker_stats_thread(execution=exec)
 
     @staticmethod
+    def install_csle_collector_library(emulation_env_config: EmulationEnvConfig):
+        """
+        Installs the latest csle-collector library on all nodes
+
+        :return:
+        """
+        ips = list(map(lambda x: x.get_ips()[0], emulation_env_config.containers_config.containers))
+        ips.append(emulation_env_config.kafka_config.container.get_ips()[0])
+        ips.append(emulation_env_config.elk_config.container.get_ips()[0])
+        for ip in ips:
+            Logger.__call__().get_logger().info(f"Installing csle-collector version "
+                                                f"{emulation_env_config.csle_collector_version} on node: {ip}")
+            EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
+            cmd = collector_constants.INSTALL
+            if emulation_env_config.csle_collector_version != collector_constants.LATEST_VERSION:
+                cmd = cmd + f"=={emulation_env_config.csle_collector_version}"
+            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+            time.sleep(2)
+            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+            EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
+
+    @staticmethod
     def apply_emulation_env_config(emulation_execution: EmulationExecution, no_traffic: bool = False,
                                    no_clients: bool = False) -> None:
         """
@@ -99,15 +123,15 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")
-        ContainerController.connect_containers_to_networks(containers_config=emulation_env_config.containers_config)
+        ContainerController.connect_containers_to_networks(emulation_env_config=emulation_env_config)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
+        EmulationEnvController.install_csle_collector_library(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
         EmulationEnvController.apply_kafka_config(emulation_env_config=emulation_env_config)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply ELK config --")
-        EmulationEnvController.apply_pre_elk_config(emulation_env_config=emulation_env_config)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect SDN controller to  network --")
@@ -237,14 +261,10 @@ class EmulationEnvController:
         :param emulation_env_config: the emulation env config
         :return: None
         """
-        steps = 3
+        steps = 2
         current_step = 1
         Logger.__call__().get_logger().info(f"-- Configuring the kafka container --")
-        Logger.__call__().get_logger().info(
-            f"-- Kafka configuration step {current_step}/{steps}: Connect kafka container to network --")
-        ContainerController.connect_kafka_container_to_network(kafka_config=emulation_env_config.kafka_config)
 
-        current_step += 1
         Logger.__call__().get_logger().info(
             f"-- Kafka configuration step {current_step}/{steps}: Restarting the Kafka server --")
         KafkaController.stop_kafka_server(emulation_env_config=emulation_env_config)
@@ -255,21 +275,6 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Kafka configuration step {current_step}/{steps}: Create topics --")
         KafkaController.create_topics(emulation_env_config=emulation_env_config)
-
-    @staticmethod
-    def apply_pre_elk_config(emulation_env_config: EmulationEnvConfig) -> None:
-        """
-        Applies the ELK pre-config
-
-        :param emulation_env_config: the emulation env config
-        :return: None
-        """
-        steps = 1
-        current_step = 1
-        Logger.__call__().get_logger().info(f"-- Configuring the ELK container --")
-        Logger.__call__().get_logger().info(
-            f"-- ELK configuration step {current_step}/{steps}: Connect ELK container to network --")
-        ContainerController.connect_elk_container_to_network(elk_config=emulation_env_config.elk_config)
 
     @staticmethod
     def apply_elk_config(emulation_env_config: EmulationEnvConfig) -> None:

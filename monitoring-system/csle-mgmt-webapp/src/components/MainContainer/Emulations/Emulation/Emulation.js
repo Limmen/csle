@@ -406,6 +406,10 @@ const Emulation = (props) => {
                                         <td>{emulation.containers_config.containers.length}</td>
                                     </tr>
                                     <tr>
+                                        <td>csle-collector version</td>
+                                        <td>{emulation.csle_collector_version}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Configuration</td>
                                         <td>
                                             <Button variant="link"
