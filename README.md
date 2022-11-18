@@ -688,11 +688,13 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 
 ## Lines of code
 
-The project consists of aorund 120k lines of Python, 30k lines of JavaScript, and 2.5k lines of Dockerfiles. The lines of code can be counted by executing the following commands from the project root:
+The project consists of aorund 120k lines of Python, 30k lines of JavaScript, 2.5k lines of Dockerfiles, 1.4k lines of Makefile, and 1.6k lines of bash. The lines of code can be counted by executing the following commands from the project root:
 ``` bash
 find . -name '*.py' | xargs wc -l
 find . -name '*.js' | xargs wc -l
 find . -name 'Dockerfile' | xargs wc -l
+find . -name 'Makefile' | xargs wc -l
+find . -name '*.sh' | xargs wc -l
 ```
 
 ## Disclaimer
