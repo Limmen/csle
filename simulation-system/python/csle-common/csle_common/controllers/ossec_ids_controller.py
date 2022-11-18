@@ -73,7 +73,7 @@ class OSSECIDSController:
         cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
               + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME
         o, e, _ = EmulationUtil.execute_ssh_cmd(
-            cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
+            cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
         t = constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER
 
         if not constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER in str(o):
