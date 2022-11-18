@@ -84,7 +84,7 @@ class EmulationEnvController:
         :param no_clients: a boolean parameter that is True if the client population should be skipped
         :return: None
         """
-        steps = 29
+        steps = 30
         if no_traffic:
             steps = steps-1
         if no_clients:
