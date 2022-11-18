@@ -578,6 +578,54 @@ def start_stop_snort_ids(execution_id: int):
 
 
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_snort_ids_monitor(execution_id: int):
+    """
+    The /emulation-executions/id/snort-ids-monitor resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the snort manager of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    json_data = json.loads(request.data)
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping snort-ids-monitor on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            SnortIDSController.stop_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting snort-ids-monitor on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            SnortIDSController.start_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config)
+        time.sleep(2)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def start_stop_ossec_manager(execution_id: int):
@@ -661,12 +709,61 @@ def start_stop_ossec_ids(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping OSSEC IDS with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
+            OSSECIDSController.stop_ossec_ids(emulation_env_config=execution.emulation_env_config, ip=ip)
+        if start:
+            Logger.__call__().get_logger().info(
+                f"Starting OSSEC IDS with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
+            OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config, ip=ip)
+        time.sleep(30)
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+
+@emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
+                               f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
+                               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def start_stop_ossec_ids_monitor(execution_id: int):
+    """
+    The /emulation-executions/id/ossec-ids-monitor resource.
+
+    :param execution_id: the id of the execution
+    :return: Starts or stop the ossec-ids-monitor of a given execution
+    """
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
+
+    # Extract emulation query parameter
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    json_data = json.loads(request.data)
+    # Verify payload
+    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
+            or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
+            api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    if emulation is not None:
+        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+        start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
+        stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
+        if stop:
+            Logger.__call__().get_logger().info(
+                f"Stopping OSSEC IDS with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
+                f"execution id: {execution.ip_first_octet}")
             OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting OSSEC IDS with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            # OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config)
             OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
         time.sleep(5)
         response = jsonify({})

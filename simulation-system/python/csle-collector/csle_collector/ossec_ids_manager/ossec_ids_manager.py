@@ -3,6 +3,7 @@ import socket
 import time
 import grpc
 import threading
+import subprocess
 from concurrent import futures
 from confluent_kafka import Producer
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc
@@ -75,6 +76,19 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         self.ids_monitor_thread = None
         logging.info(f"Starting the OSSEC IDSManager hostname: {self.hostname} ip: {self.ip}")
 
+    def _is_ossec_running(self) -> bool:
+        """
+        Utility method to check if OSSEC is running
+
+        :return: status and list of topics
+        """
+        p = subprocess.Popen(constants.OSSEC.CHECK_IF_OSSEC_IS_RUNNING_CMD, stdout=subprocess.PIPE, shell=True)
+        (output, err) = p.communicate()
+        p.wait()
+        status_output = output.decode()
+        running = constants.OSSEC.OSSEC_RUNNING_SEARCH in status_output
+        return running
+
     def getOSSECIdsAlerts(self, request: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.GetOSSECIdsAlertsMsg,
                      context: grpc.ServicerContext) \
             -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO:
@@ -130,6 +144,57 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
             running = False
         )
+
+    def startOSSECIds(self, request: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.StartOSSECIdsMsg,
+                      context: grpc.ServicerContext) \
+            -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
+        """
+        Starts the OSSEC IDS
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the IDS and its monitor thread
+        """
+        logging.info(f"Starting the OSSEC IDS")
+        monitor_running = False
+        if self.ids_monitor_thread is not None:
+            monitor_running = self.ids_monitor_thread.running
+        ossec_running = self._is_ossec_running()
+        if ossec_running:
+            p = subprocess.Popen(constants.OSSEC.STOP_OSSEC_IDS, stdout=subprocess.DEVNULL, shell=True)
+            (output, err) = p.communicate()
+            p.wait()
+        if not ossec_running:
+            p = subprocess.Popen(constants.OSSEC.START_OSSEC_IDS, stdout=subprocess.DEVNULL, shell=True)
+            (output, err) = p.communicate()
+            p.wait()
+        logging.info(f"Started the OSSEC IDS")
+        return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
+            monitor_running = monitor_running, ossec_ids_running = True
+        )
+
+    def stopOssecIds(self, request: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.StartOSSECIdsMsg,
+                     context: grpc.ServicerContext) \
+            -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
+        """
+        Stops the OSSEC IDS
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the IDS and its monitor thread
+        """
+        logging.info(f"Stopping the OSSECIDS")
+        monitor_running = False
+        if self.ids_monitor_thread is not None:
+            monitor_running = self.ids_monitor_thread.running
+        p = subprocess.Popen(constants.OSSEC.STOP_OSSEC_IDS, stdout=subprocess.DEVNULL, shell=True)
+        (output, err) = p.communicate()
+        p.wait()
+        logging.info(f"Stopped the OSSECIDS")
+        return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
+            monitor_running = monitor_running, ossec_ids_running = False
+        )
+
 
     def getOSSECIdsMonitorStatus(
             self, request: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.GetOSSECIdsMonitorStatusMsg,

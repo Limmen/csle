@@ -5,10 +5,15 @@ import re
 
 
 class GRPC:
+    """
+    Constants related to GRPC
+    """
     TIMEOUT_SECONDS = 30
 
-
 class LOG_FILES:
+    """
+    Constants related to the log files
+    """
     KAFKA_MANAGER_LOG_FILE = "kafka_manager.log"
     OSSEC_IDS_MANAGER_LOG_FILE = "ossec_ids_manager.log"
     SNORT_IDS_MANAGER_LOG_FILE = "snort_ids_manager.log"
@@ -19,7 +24,22 @@ class LOG_FILES:
     TRAFFIC_MANAGER_LOG_FILE = "traffic_manager.log"
 
 
+class TRAFFIC_GENERATOR:
+    """
+    Constants related to the traffic generator
+    """
+    START_TRAFFIC_GENERATOR_CMD = "sudo nohup /traffic_generator.sh &"
+    CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING = "ps -aux | grep traffic_generator"
+    TRAFFIC_GENERATOR_FILE_NAME = "traffic_generator.sh"
+    CREATE_TRAFFIC_GENERATOR_FILE = "sudo touch /traffic_generator.sh"
+    MAKE_TRAFFIC_GENERATOR_FILE_EXECUTABLE = "sudo chmod 777 /traffic_generator.sh"
+    REMOVE_OLD_TRAFFIC_GENERATOR_FILE = "sudo rm -f /traffic_generator.sh"
+
+
 class DOCKER_STATS:
+    """
+    Constants related to Docker stats
+    """
     CPU_STATS = "cpu_stats"
     CPU_USAGE = "cpu_usage"
     PERCPU_USAGE = "percpu_usage"
@@ -128,6 +148,10 @@ class OSSEC:
     OSSEC_IDS_ALERT_GROUP_ID["apache"] = 10
     OSSEC_IDS_ALERT_GROUP_ID["syslog"] = 11
     OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD = 10
+    STOP_OSSEC_IDS = "/var/ossec/bin/ossec-control stop"
+    START_OSSEC_IDS = "/var/ossec/bin/ossec-control start"
+    CHECK_IF_OSSEC_IS_RUNNING_CMD = "ps -aux | grep ossec"
+    OSSEC_RUNNING_SEARCH = "/var/ossec/bin/ossec-execd"
 
 
 class SNORT_IDS_ROUTER:
@@ -214,7 +238,11 @@ class SNORT_IDS_ROUTER:
     SNORT_ALERT_IDS_ID["Attempted User Privilege Gain"] = 32
     SNORT_ALERT_IDS_ID["attempted-admin"] = 33
     SNORT_ALERT_IDS_ID["Attempted Administrator Privilege Gain"] = 33
-
+    STOP_SNORT_IDS = "kill -9 $(pgrep snort)"
+    START_SNORT_IDS = "sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l " \
+                      "/var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile"
+    CHECK_IF_SNORT_IS_RUNNING_CMD = "ps -aux | grep snort.conf"
+    SEARCH_SNORT_RUNNING = "/etc/snort/snort/conf"
 
 class HOST_METRICS:
     """

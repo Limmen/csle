@@ -5,8 +5,6 @@ from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsAlert, Snor
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.constants.constants as constants
-import csle_collector.constants.constants as constants
-
 
 class SnortIdsManagerUtil:
     """
@@ -121,7 +119,8 @@ class SnortIdsManagerUtil:
         :return: a dict representation of the DTO
         """
         d = {}
-        d["running"] = snort_ids_monitor_dto.running
+        d["monitor_running"] = snort_ids_monitor_dto.monitor_running
+        d["snort_ids_running"] = snort_ids_monitor_dto.snort_ids_running
         return d
 
     @staticmethod
@@ -134,7 +133,8 @@ class SnortIdsManagerUtil:
         :return: the converted DTO
         """
         snort_ids_monitor_dto = csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO()
-        snort_ids_monitor_dto.running = d["running"]
+        snort_ids_monitor_dto.monitor_running = d["monitor_running"]
+        snort_ids_monitor_dto.snort_ids_running = d["snort_ids_running"]
         return snort_ids_monitor_dto
 
     @staticmethod
@@ -306,6 +306,7 @@ class SnortIdsManagerUtil:
         :return: An empty SnortIdsMonitorDTO
         """
         snort_ids_monitor_dto = csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO()
-        snort_ids_monitor_dto.running = False
+        snort_ids_monitor_dto.monitor_running = False
+        snort_ids_monitor_dto.snort_ids_running = False
         return snort_ids_monitor_dto
 

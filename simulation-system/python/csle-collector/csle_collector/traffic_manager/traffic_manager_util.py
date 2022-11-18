@@ -17,6 +17,7 @@ class TrafficManagerUtil:
         """
         d = {}
         d["running"] = traffic_dto.running
+        d["script"] = traffic_dto.script
         return d
 
     @staticmethod
@@ -29,6 +30,7 @@ class TrafficManagerUtil:
         """
         traffic_dto = csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO()
         traffic_dto.running = d["running"]
+        traffic_dto.script = d["script"]
         return traffic_dto
 
     @staticmethod
@@ -38,4 +40,5 @@ class TrafficManagerUtil:
         """
         traffic_dto = csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO()
         traffic_dto.running = False
+        traffic_dto.script = ""
         return traffic_dto

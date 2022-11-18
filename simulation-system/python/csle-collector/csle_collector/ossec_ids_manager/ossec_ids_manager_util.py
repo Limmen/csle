@@ -132,7 +132,8 @@ class OSSecManagerUtil:
         :return: a dict representation of the DTO
         """
         d = {}
-        d["running"] = ossec_ids_monitor_dto.running
+        d["monitor_running"] = ossec_ids_monitor_dto.monitor_running
+        d["ossec_ids_running"] = ossec_ids_monitor_dto.ossec_ids_running
         return d
 
     @staticmethod
@@ -193,7 +194,8 @@ class OSSecManagerUtil:
         :return: the converted DTO
         """
         ossec_ids_monitor_dto = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO()
-        ossec_ids_monitor_dto.running = d["running"]
+        ossec_ids_monitor_dto.monitor_running = d["monitor_running"]
+        ossec_ids_monitor_dto.ossec_ids_running = d["ossec_ids_running"]
         return ossec_ids_monitor_dto
 
     @staticmethod
@@ -294,5 +296,6 @@ class OSSecManagerUtil:
         :return: An empty OSSECIdsMonitorDTO
         """
         ossec_ids_monitor_dto = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO()
-        ossec_ids_monitor_dto.running = False
+        ossec_ids_monitor_dto.monitor_running = False
+        ossec_ids_monitor_dto.ossec_ids_running = False
         return ossec_ids_monitor_dto

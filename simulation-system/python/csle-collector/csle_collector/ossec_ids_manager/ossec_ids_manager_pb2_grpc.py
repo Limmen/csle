@@ -30,6 +30,16 @@ class OSSECIdsManagerStub(object):
                 request_serializer=ossec__ids__manager__pb2.StartOSSECIdsMonitorMsg.SerializeToString,
                 response_deserializer=ossec__ids__manager__pb2.OSSECIdsMonitorDTO.FromString,
                 )
+        self.stopOSSECIds = channel.unary_unary(
+                '/OSSECIdsManager/stopOSSECIds',
+                request_serializer=ossec__ids__manager__pb2.StopOSSECIdsMsg.SerializeToString,
+                response_deserializer=ossec__ids__manager__pb2.OSSECIdsMonitorDTO.FromString,
+                )
+        self.startOSSECIds = channel.unary_unary(
+                '/OSSECIdsManager/startOSSECIds',
+                request_serializer=ossec__ids__manager__pb2.StartOSSECIdsMsg.SerializeToString,
+                response_deserializer=ossec__ids__manager__pb2.OSSECIdsMonitorDTO.FromString,
+                )
         self.getOSSECIdsMonitorStatus = channel.unary_unary(
                 '/OSSECIdsManager/getOSSECIdsMonitorStatus',
                 request_serializer=ossec__ids__manager__pb2.GetOSSECIdsMonitorStatusMsg.SerializeToString,
@@ -59,6 +69,18 @@ class OSSECIdsManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopOSSECIds(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startOSSECIds(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def getOSSECIdsMonitorStatus(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -81,6 +103,16 @@ def add_OSSECIdsManagerServicer_to_server(servicer, server):
             'startOSSECIdsMonitor': grpc.unary_unary_rpc_method_handler(
                     servicer.startOSSECIdsMonitor,
                     request_deserializer=ossec__ids__manager__pb2.StartOSSECIdsMonitorMsg.FromString,
+                    response_serializer=ossec__ids__manager__pb2.OSSECIdsMonitorDTO.SerializeToString,
+            ),
+            'stopOSSECIds': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopOSSECIds,
+                    request_deserializer=ossec__ids__manager__pb2.StopOSSECIdsMsg.FromString,
+                    response_serializer=ossec__ids__manager__pb2.OSSECIdsMonitorDTO.SerializeToString,
+            ),
+            'startOSSECIds': grpc.unary_unary_rpc_method_handler(
+                    servicer.startOSSECIds,
+                    request_deserializer=ossec__ids__manager__pb2.StartOSSECIdsMsg.FromString,
                     response_serializer=ossec__ids__manager__pb2.OSSECIdsMonitorDTO.SerializeToString,
             ),
             'getOSSECIdsMonitorStatus': grpc.unary_unary_rpc_method_handler(
@@ -146,6 +178,40 @@ class OSSECIdsManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/OSSECIdsManager/startOSSECIdsMonitor',
             ossec__ids__manager__pb2.StartOSSECIdsMonitorMsg.SerializeToString,
+            ossec__ids__manager__pb2.OSSECIdsMonitorDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopOSSECIds(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/OSSECIdsManager/stopOSSECIds',
+            ossec__ids__manager__pb2.StopOSSECIdsMsg.SerializeToString,
+            ossec__ids__manager__pb2.OSSECIdsMonitorDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startOSSECIds(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/OSSECIdsManager/startOSSECIds',
+            ossec__ids__manager__pb2.StartOSSECIdsMsg.SerializeToString,
             ossec__ids__manager__pb2.OSSECIdsMonitorDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

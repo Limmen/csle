@@ -634,6 +634,23 @@ const ExecutionControlPlane = (props) => {
                                         </tr>
                                     )}
                                     {props.info.snort_ids_managers_info.snort_ids_managers_statuses.map((status, index) =>
+                                        <tr key={"snort-ids-monitor-" + index}>
+                                            <td>Snort IDS</td>
+                                            <td>{props.info.snort_ids_managers_info.ips[index]}</td>
+                                            <td></td>
+                                            {activeStatus(status.running)}
+                                            <td>
+                                                <SpinnerOrButton
+                                                    loading={loadingEntities.includes("snort-ids-"+
+                                                        props.info.snort_ids_managers_info.ips[index])}
+                                                    running={status.running}
+                                                    entity={"snort-ids-monitor"} name={"snort-ids-monitor"}
+                                                    ip={props.info.snort_ids_managers_info.ips[index]}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {props.info.snort_ids_managers_info.snort_ids_managers_statuses.map((status, index) =>
                                         <tr key={"snort-ids-" + index}>
                                             <td>Snort IDS</td>
                                             <td>{props.info.snort_ids_managers_info.ips[index]}</td>

@@ -5,6 +5,8 @@ service OSSECIdsManager {
   rpc getOSSECIdsAlerts(GetOSSECIdsAlertsMsg) returns (OSSECIdsLogDTO) {}
   rpc stopOSSECIdsMonitor(StopOSSECIdsMonitorMsg) returns (OSSECIdsMonitorDTO) {}
   rpc startOSSECIdsMonitor(StartOSSECIdsMonitorMsg) returns (OSSECIdsMonitorDTO) {}
+  rpc stopOSSECIds(StopOSSECIdsMsg) returns (OSSECIdsMonitorDTO) {}
+  rpc startOSSECIds(StartOSSECIdsMsg) returns (OSSECIdsMonitorDTO) {}
   rpc getOSSECIdsMonitorStatus(GetOSSECIdsMonitorStatusMsg) returns (OSSECIdsMonitorDTO) {}
 }
 
@@ -17,6 +19,12 @@ message GetOSSECIdsAlertsMsg {
 // Message that the client sends to stop the OSSECIdsMonitor
 message StopOSSECIdsMonitorMsg {}
 
+// Message that the client sends to stop the OSSECIds
+message StopOSSECIdsMsg {}
+
+// Message that the client sends to start the OSSECIds
+message StartOSSECIdsMsg {}
+
 // Message that the client sends to start the OSSECIdsMonitor
 message StartOSSECIdsMonitorMsg {
   string kafka_ip = 1;
@@ -28,9 +36,10 @@ message StartOSSECIdsMonitorMsg {
 // Message that the client sends to get the status of the OSSECIdsMonitor
 message GetOSSECIdsMonitorStatusMsg {}
 
-//Message that the server returns when asked about the status of the OSSEC IDS Monitor thread
+//Message that the server returns when asked about the status of the OSSEC IDS Monitor thread and OSSEC itself
 message OSSECIdsMonitorDTO {
-  bool running = 1;
+  bool monitor_running = 1;
+  bool ossec_ids_running = 2;
 }
 
 // Message that the server returns when requested by the client, contains info about the OSSEC IDS log

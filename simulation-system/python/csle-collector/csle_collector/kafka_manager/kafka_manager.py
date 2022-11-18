@@ -144,6 +144,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         )
         return kafka_dto
 
+
 def serve(port : int = 50051, ip=None, hostname=None) -> None:
     """
     Starts the gRPC server for managing clients

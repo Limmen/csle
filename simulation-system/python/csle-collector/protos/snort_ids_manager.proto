@@ -6,6 +6,8 @@ service SnortIdsManager {
   rpc stopSnortIdsMonitor(StopSnortIdsMonitorMsg) returns (SnortIdsMonitorDTO) {}
   rpc startSnortIdsMonitor(StartSnortIdsMonitorMsg) returns (SnortIdsMonitorDTO) {}
   rpc getSnortIdsMonitorStatus(GetSnortIdsMonitorStatusMsg) returns (SnortIdsMonitorDTO) {}
+  rpc stopSnortIds(StopSnortIdsMsg) returns (SnortIdsMonitorDTO) {}
+  rpc startSnortIds(StartSnortIdsMsg) returns (SnortIdsMonitorDTO) {}
 }
 
 // Message that the client sends to extract the Snort IDS log statistics from a given timestamp
@@ -25,12 +27,19 @@ message StartSnortIdsMonitorMsg {
   int32 time_step_len_seconds = 4;
 }
 
+// Message that the client sends to stop the Snort IDS
+message StopSnortIdsMsg {}
+
+// Message that the client sends to start the Snort IDS
+message StartSnortIdsMsg {}
+
 // Message that the client sends to get the status of the SnortIdsMonitor
 message GetSnortIdsMonitorStatusMsg {}
 
-//Message that the server returns when asked about the status of the Snort IDS Monitor thread
+//Message that the server returns when asked about the status of the Snort IDS Monitor thread and Snort itself
 message SnortIdsMonitorDTO {
-  bool running = 1;
+  bool monitor_running = 1;
+  bool snort_ids_running = 2;
 }
 
 // Message that the server returns when requested by the client, contains info about the Snort IDS log

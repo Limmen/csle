@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15traffic_manager.proto\"\x10\n\x0eStopTrafficMsg\"\x11\n\x0fStartTrafficMsg\"\x15\n\x13GetTrafficStatusMsg\"\x1d\n\nTrafficDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\x32\xa9\x01\n\x0eTrafficManager\x12\x37\n\x10getTrafficStatus\x12\x14.GetTrafficStatusMsg\x1a\x0b.TrafficDTO\"\x00\x12-\n\x0bstopTraffic\x12\x0f.StopTrafficMsg\x1a\x0b.TrafficDTO\"\x00\x12/\n\x0cstartTraffic\x12\x10.StartTrafficMsg\x1a\x0b.TrafficDTO\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15traffic_manager.proto\"\x10\n\x0eStopTrafficMsg\"6\n\x0fStartTrafficMsg\x12\x11\n\tsleepTime\x18\x01 \x01(\x05\x12\x10\n\x08\x63ommands\x18\x02 \x03(\t\"\x15\n\x13GetTrafficStatusMsg\"-\n\nTrafficDTO\x12\x0f\n\x07running\x18\x01 \x01(\x08\x12\x0e\n\x06script\x18\x02 \x01(\t2\xa9\x01\n\x0eTrafficManager\x12\x37\n\x10getTrafficStatus\x12\x14.GetTrafficStatusMsg\x1a\x0b.TrafficDTO\"\x00\x12-\n\x0bstopTraffic\x12\x0f.StopTrafficMsg\x1a\x0b.TrafficDTO\"\x00\x12/\n\x0cstartTraffic\x12\x10.StartTrafficMsg\x1a\x0b.TrafficDTO\"\x00\x62\x06proto3')
 
 
 
@@ -57,11 +57,11 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _STOPTRAFFICMSG._serialized_start=25
   _STOPTRAFFICMSG._serialized_end=41
   _STARTTRAFFICMSG._serialized_start=43
-  _STARTTRAFFICMSG._serialized_end=60
-  _GETTRAFFICSTATUSMSG._serialized_start=62
-  _GETTRAFFICSTATUSMSG._serialized_end=83
-  _TRAFFICDTO._serialized_start=85
-  _TRAFFICDTO._serialized_end=114
-  _TRAFFICMANAGER._serialized_start=117
-  _TRAFFICMANAGER._serialized_end=286
+  _STARTTRAFFICMSG._serialized_end=97
+  _GETTRAFFICSTATUSMSG._serialized_start=99
+  _GETTRAFFICSTATUSMSG._serialized_end=120
+  _TRAFFICDTO._serialized_start=122
+  _TRAFFICDTO._serialized_end=167
+  _TRAFFICMANAGER._serialized_start=170
+  _TRAFFICMANAGER._serialized_end=339
 # @@protoc_insertion_point(module_scope)

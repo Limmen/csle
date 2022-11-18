@@ -2,6 +2,7 @@ import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.constants.constants as constants
 
+
 def get_snort_ids_monitor_status(
         stub: csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub,
         timeout=constants.GRPC.TIMEOUT_SECONDS) \
@@ -56,6 +57,40 @@ def stop_snort_ids_monitor(
     stop_ids_monitor_msg = \
         csle_collector.snort_ids_manager.snort_ids_manager_pb2.StopSnortIdsMonitorMsg()
     ids_monitor_dto = stub.stopSnortIdsMonitor(stop_ids_monitor_msg, timeout=timeout)
+    return ids_monitor_dto
+
+
+def stop_snort_ids(
+        stub: csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
+    """
+    Sends a request to the IDS manager to stop the Snort IDS
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an IdsMonitorDTO describing the status of the IDS and its monitor thread
+    """
+    stop_ids_msg = \
+        csle_collector.snort_ids_manager.snort_ids_manager_pb2.StopSnortIdsMsg()
+    ids_monitor_dto = stub.stopSnortIds(stop_ids_msg, timeout=timeout)
+    return ids_monitor_dto
+
+
+def start_snort_ids(
+        stub: csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
+    """
+    Sends a request to the IDS manager to start the Snort IDS
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an IdsMonitorDTO describing the status of the IDS and its monitor thread
+    """
+    start_ids_msg = \
+        csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMsg()
+    ids_monitor_dto = stub.startSnortIds(start_ids_msg, timeout=timeout)
     return ids_monitor_dto
 
 

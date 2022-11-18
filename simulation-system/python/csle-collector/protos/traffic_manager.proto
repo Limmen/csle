@@ -11,7 +11,10 @@ service TrafficManager {
 message StopTrafficMsg {}
 
 // Message that the client sends to start the traffic generator
-message StartTrafficMsg {}
+message StartTrafficMsg {
+  int32 sleepTime = 1;
+  repeated string commands = 2;
+}
 
 // Message that the client sends to extract the status of the traffic generator
 message GetTrafficStatusMsg {}
@@ -19,5 +22,6 @@ message GetTrafficStatusMsg {}
 // Message that the server returns when requested by the client, contains info about the traffic generator
 message TrafficDTO {
   bool running = 1;
+  string script = 2;
 }
 

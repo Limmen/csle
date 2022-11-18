@@ -35,6 +35,16 @@ class SnortIdsManagerStub(object):
                 request_serializer=snort__ids__manager__pb2.GetSnortIdsMonitorStatusMsg.SerializeToString,
                 response_deserializer=snort__ids__manager__pb2.SnortIdsMonitorDTO.FromString,
                 )
+        self.stopSnortIds = channel.unary_unary(
+                '/SnortIdsManager/stopSnortIds',
+                request_serializer=snort__ids__manager__pb2.StopSnortIdsMsg.SerializeToString,
+                response_deserializer=snort__ids__manager__pb2.SnortIdsMonitorDTO.FromString,
+                )
+        self.startSnortIds = channel.unary_unary(
+                '/SnortIdsManager/startSnortIds',
+                request_serializer=snort__ids__manager__pb2.StartSnortIdsMsg.SerializeToString,
+                response_deserializer=snort__ids__manager__pb2.SnortIdsMonitorDTO.FromString,
+                )
 
 
 class SnortIdsManagerServicer(object):
@@ -65,6 +75,18 @@ class SnortIdsManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopSnortIds(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSnortIds(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SnortIdsManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -86,6 +108,16 @@ def add_SnortIdsManagerServicer_to_server(servicer, server):
             'getSnortIdsMonitorStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.getSnortIdsMonitorStatus,
                     request_deserializer=snort__ids__manager__pb2.GetSnortIdsMonitorStatusMsg.FromString,
+                    response_serializer=snort__ids__manager__pb2.SnortIdsMonitorDTO.SerializeToString,
+            ),
+            'stopSnortIds': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSnortIds,
+                    request_deserializer=snort__ids__manager__pb2.StopSnortIdsMsg.FromString,
+                    response_serializer=snort__ids__manager__pb2.SnortIdsMonitorDTO.SerializeToString,
+            ),
+            'startSnortIds': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSnortIds,
+                    request_deserializer=snort__ids__manager__pb2.StartSnortIdsMsg.FromString,
                     response_serializer=snort__ids__manager__pb2.SnortIdsMonitorDTO.SerializeToString,
             ),
     }
@@ -163,6 +195,40 @@ class SnortIdsManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/SnortIdsManager/getSnortIdsMonitorStatus',
             snort__ids__manager__pb2.GetSnortIdsMonitorStatusMsg.SerializeToString,
+            snort__ids__manager__pb2.SnortIdsMonitorDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSnortIds(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/SnortIdsManager/stopSnortIds',
+            snort__ids__manager__pb2.StopSnortIdsMsg.SerializeToString,
+            snort__ids__manager__pb2.SnortIdsMonitorDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSnortIds(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/SnortIdsManager/startSnortIds',
+            snort__ids__manager__pb2.StartSnortIdsMsg.SerializeToString,
             snort__ids__manager__pb2.SnortIdsMonitorDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

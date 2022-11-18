@@ -59,6 +59,40 @@ def stop_ossec_ids_monitor(
     return ids_monitor_dto
 
 
+def stop_ossec_ids(
+        stub: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
+    """
+    Sends a request to the OSSEC IDS manager to stop the IDS
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an OSSECIdsMonitorDTO describing the status of the IDS and its monitor thread
+    """
+    stop_ossec_ids_msg = \
+        csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.StopOSSECIdsMsg()
+    ids_monitor_dto = stub.stopOSSECIds(stop_ossec_ids_msg, timeout=timeout)
+    return ids_monitor_dto
+
+
+def start_ossec_ids(
+        stub: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
+    """
+    Sends a request to the OSSEC IDS manager to start the IDS
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: an OSSECIdsMonitorDTO describing the status of the IDS and its monitor thread
+    """
+    start_ossec_ids_msg = \
+        csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.StartOSSECIdsMsg()
+    ids_monitor_dto = stub.startOSSECIds(start_ossec_ids_msg, timeout=timeout)
+    return ids_monitor_dto
+
+
 def get_ossec_ids_alerts(
         stub: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub, timestamp: float,
         log_file_path: str, timeout=constants.GRPC.TIMEOUT_SECONDS) \

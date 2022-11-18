@@ -19,29 +19,74 @@ class OSSECIDSController:
     """
 
     @staticmethod
-    def start_ossec_ids(emulation_env_config: EmulationEnvConfig):
+    def stop_ossec_idses(emulation_env_config: EmulationEnvConfig) -> None:
         """
-        Utility function for starting the OSSEC IDS
+        Utility function for stopping the OSSEC IDSes
 
         :param emulation_config: the emulation env configuration
-        :return:
+        :return: None
         """
         for c in emulation_env_config.containers_config.containers:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
-                    EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
-                    cmd = constants.COMMANDS.CHANGE_PERMISSION_LOG_DIRS
-                    o, e, _ = EmulationUtil.execute_ssh_cmd(
-                        cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-                    cmd = constants.COMMANDS.STOP_OSSEC_IDS
-                    o, e, _ = EmulationUtil.execute_ssh_cmd(
-                        cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-                    time.sleep(5)
-                    cmd = constants.COMMANDS.START_OSSEC_IDS
-                    Logger.__call__().get_logger().info(f"Starting OSSEC IDS on {c.get_ips()[0]}")
-                    o, e, _ = EmulationUtil.execute_ssh_cmd(
-                        cmd=cmd, conn=emulation_env_config.get_connection(ip=c.get_ips()[0]))
-                    continue
+                    OSSECIDSController.stop_ossec_ids(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+    @staticmethod
+    def start_ossec_idses(emulation_env_config: EmulationEnvConfig) -> None:
+        """
+        Utility function for starting the OSSEC IDSes
+
+        :param emulation_config: the emulation env configuration
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
+                if ids_image in c.name:
+                    OSSECIDSController.start_ossec_ids(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
+
+    @staticmethod
+    def start_ossec_ids(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        Utility function for starting a OSSEC IDS with a specific IP
+
+        :param emulation_config: the emulation env configuration
+        :param ip: the IP of the node where the OSSEC IDS should be started
+        :return: None
+        """
+        OSSECIDSController.start_ossec_ids_manager(emulation_env_config=emulation_env_config, ip=ip)
+        ids_monitor_dto = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
+            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = ip)
+        if not ids_monitor_dto.ossec_ids_running:
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{ip}:'
+                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
+                stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
+                Logger.__call__().get_logger().info(
+                    f"Starting OSSEC IDS on {ip}.")
+                csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids(stub=stub)
+
+    @staticmethod
+    def stop_ossec_ids(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+        """
+        Utility function for stopping an OSSEC IDS with a specific IP
+
+        :param emulation_config: the emulation env configuration
+        :param ip: the IP of the node where the OSSEC IDS should be stopped
+        :return: None
+        """
+        OSSECIDSController.start_ossec_ids_manager(emulation_env_config=emulation_env_config, ip=ip)
+        ids_monitor_dto = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
+            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = ip)
+        if ids_monitor_dto.ossec_ids_running:
+            # Open a gRPC session
+            with grpc.insecure_channel(
+                    f'{ip}:'
+                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
+                stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
+                Logger.__call__().get_logger().info(
+                    f"Stopping OSSEC IDS on {ip}.")
+                csle_collector.ossec_ids_manager.query_ossec_ids_manager.stop_ossec_ids(stub=stub)
 
     @staticmethod
     def start_ossec_idses_managers(emulation_env_config: EmulationEnvConfig) -> None:
@@ -161,7 +206,7 @@ class OSSECIDSController:
         OSSECIDSController.start_ossec_ids_manager(emulation_env_config=emulation_env_config, ip=ip)
         ids_monitor_dto = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
             port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = ip)
-        if not ids_monitor_dto.running:
+        if not ids_monitor_dto.monitor_running:
             Logger.__call__().get_logger().info(
                 f"OSSEC IDS monitor thread is not running on {ip}, starting it.")
             with grpc.insecure_channel(
