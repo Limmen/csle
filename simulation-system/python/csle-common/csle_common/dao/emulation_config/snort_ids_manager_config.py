@@ -6,17 +6,24 @@ class SnortIDSManagerConfig:
     Represents the configuration of the Snort IDS managers in a CSLE emulation
     """
 
-    def __init__(self, time_step_len_seconds = 15, snort_ids_manager_port = 50048, version: str = "0.0.1") -> None:
+    def __init__(self, snort_ids_manager_log_file : str, snort_ids_manager_log_dir: str,
+                 snort_ids_manager_max_workers : int,
+                 time_step_len_seconds = 15, snort_ids_manager_port = 50048, version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
         :param time_step_len_seconds: the length of a time-step (period for logging)
         :param version: the version
         :param snort_ids_manager_port: the GRPC port of the snort IDS manager
+        :param snort_ids_manager_log_file: the log file of the snort IDS manager
+        :param snort_ids_manager_log_dir: the log dir of the snort IDS manager
         """
         self.time_step_len_seconds = time_step_len_seconds
         self.version = version
         self.snort_ids_manager_port = snort_ids_manager_port
+        self.snort_ids_manager_log_file = snort_ids_manager_log_file
+        self.snort_ids_manager_log_dir = snort_ids_manager_log_dir
+        self.snort_ids_manager_max_workers = snort_ids_manager_max_workers
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "SnortIDSManagerConfig":
@@ -27,7 +34,10 @@ class SnortIDSManagerConfig:
         :return: the created instance
         """
         obj = SnortIDSManagerConfig(time_step_len_seconds=d["time_step_len_seconds"],
-                                    version=d["version"], snort_ids_manager_port=d["snort_ids_manager_port"])
+                                    version=d["version"], snort_ids_manager_port=d["snort_ids_manager_port"],
+                                    snort_ids_manager_max_workers = d["snort_ids_manager_max_workers"],
+                                    snort_ids_manager_log_dir=d["snort_ids_manager_log_dir"],
+                                    snort_ids_manager_log_file=d["snort_ids_manager_log_file"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -38,6 +48,9 @@ class SnortIDSManagerConfig:
         d["snort_ids_manager_port"] = self.snort_ids_manager_port
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
+        d["snort_ids_manager_max_workers"] = self.snort_ids_manager_max_workers
+        d["snort_ids_manager_log_dir"] = self.snort_ids_manager_log_dir
+        d["snort_ids_manager_log_file"] = self.snort_ids_manager_log_file
         return d
 
     def __str__(self) -> str:
@@ -46,7 +59,9 @@ class SnortIDSManagerConfig:
         """
         return f"snort_ids_manager_port: {self.snort_ids_manager_port}, " \
                f"time_step_len_seconds: {self.time_step_len_seconds}," \
-               f" version: {self.version}"
+               f" version: {self.version}, snort_ids_manager_max_workers: {self.snort_ids_manager_max_workers}," \
+               f"snort_ids_manager_log_file: {self.snort_ids_manager_log_file}, " \
+               f"snort_ids_manager_log_dir: {self.snort_ids_manager_log_dir}"
 
     def to_json_str(self) -> str:
         """
@@ -91,5 +106,6 @@ class SnortIDSManagerConfig:
         """
         :return: get the schema of the DTO
         """
-        return SnortIDSManagerConfig()
+        return SnortIDSManagerConfig(snort_ids_manager_log_file="snort_ids_manager.log", snort_ids_manager_log_dir="/",
+                                     snort_ids_manager_max_workers=10)
 

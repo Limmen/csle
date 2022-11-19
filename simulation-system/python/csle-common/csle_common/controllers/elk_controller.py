@@ -52,7 +52,9 @@ class ELKController:
 
             # Start the elk_manager
             cmd = constants.COMMANDS.START_ELK_MANAGER.format(
-                emulation_env_config.elk_config.elk_manager_port)
+                emulation_env_config.elk_config.elk_manager_port, emulation_env_config.elk_config.elk_manager_log_dir,
+                emulation_env_config.elk_config.elk_manager_log_file,
+                emulation_env_config.elk_config.elk_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
                 conn=

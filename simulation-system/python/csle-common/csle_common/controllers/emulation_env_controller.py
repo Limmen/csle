@@ -230,7 +230,11 @@ class EmulationEnvController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
         ManagementSystemController.start_docker_stats_manager(
-            port=emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
+            port=emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
+            log_file=emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
+            log_dir=emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
+            max_workers=emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
+        )
         time.sleep(10)
         ContainerController.start_docker_stats_thread(execution=emulation_execution)
 

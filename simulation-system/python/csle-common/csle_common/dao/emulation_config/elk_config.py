@@ -11,6 +11,7 @@ class ElkConfig:
 
     def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig,
                  firewall_config: NodeFirewallConfig,
+                 elk_manager_log_file :str, elk_manager_log_dir :str, elk_manager_max_workers : int,
                  elastic_port: int= 9200, kibana_port = 5601, logstash_port = 5044,
                  time_step_len_seconds = 15, elk_manager_port = 50045, version: str = "0.0.1") -> None:
         """
@@ -26,6 +27,9 @@ class ElkConfig:
         :param firewall_config: the firewall configuration
         :param container: the container
         :param version: the version
+        :param elk_manager_log_file: the log file of the elk manager
+        :param elk_manager_log_dir: the log dir of the elk manager
+        :param elk_manager_max_workers: the maximum number of GRPC workers for the elk maanger
         """
         self.elastic_port = elastic_port
         self.kibana_port = kibana_port
@@ -36,6 +40,9 @@ class ElkConfig:
         self.container = container
         self.resources = resources
         self.firewall_config = firewall_config
+        self.elk_manager_log_file = elk_manager_log_file
+        self.elk_manager_log_dir = elk_manager_log_dir
+        self.elk_manager_max_workers = elk_manager_max_workers
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ElkConfig":
@@ -52,7 +59,10 @@ class ElkConfig:
             time_step_len_seconds=d["time_step_len_seconds"],
             elk_manager_port=d["elk_manager_port"],
             version=d["version"],
-            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
+            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"]),
+            elk_manager_max_workers = d["elk_manager_max_workers"],
+            elk_manager_log_dir=d["elk_manager_log_dir"],
+            elk_manager_log_file=d["elk_manager_log_file"]
         )
         return obj
 
@@ -70,6 +80,9 @@ class ElkConfig:
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
         d["firewall_config"] = self.firewall_config.to_dict()
+        d["elk_manager_log_file"] = self.elk_manager_log_file
+        d["elk_manager_log_dir"] = self.elk_manager_log_dir
+        d["elk_manager_max_workers"] = self.elk_manager_max_workers
         return d
 
     def __str__(self) -> str:
@@ -80,7 +93,10 @@ class ElkConfig:
                f"elastic port:{self.elastic_port}, version: {self.version}, resources: {self.resources}, " \
                f"kibana port: {self.kibana_port}, logstash_port: {self.logstash_port} " \
                f"elk_manager_port:{self.elk_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
-               f"firewall_config: {self.firewall_config}"
+               f"firewall_config: {self.firewall_config}, " \
+               f"elk_manager_log_file: {self.elk_manager_log_file}, " \
+               f"elk_manager_log_dir: {self.elk_manager_log_dir}, " \
+               f"elk_manager_max_workers: {self.elk_manager_max_workers}"
 
     def to_json_str(self) -> str:
         """
@@ -129,5 +145,6 @@ class ElkConfig:
         :return: get the schema of the DTO
         """
         return ElkConfig(container=NodeContainerConfig.schema(), resources=NodeResourcesConfig.schema(),
-                             firewall_config=NodeFirewallConfig.schema())
+                             firewall_config=NodeFirewallConfig.schema(), elk_manager_log_file="elk_manager.log",
+                         elk_manager_log_dir="/", elk_manager_max_workers=10)
 

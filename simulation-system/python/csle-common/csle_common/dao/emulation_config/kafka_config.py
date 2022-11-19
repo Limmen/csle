@@ -13,6 +13,7 @@ class KafkaConfig:
     def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig,
                  firewall_config: NodeFirewallConfig,
                  topics: List[KafkaTopic],
+                 kafka_manager_log_file : str, kafka_manager_log_dir: str, kafka_manager_max_workers : int,
                  kafka_port: int= 9092, time_step_len_seconds = 15, kafka_manager_port = 50051,
                  version: str = "0.0.1") -> None:
         """
@@ -27,6 +28,9 @@ class KafkaConfig:
         :param container: the container
         :param topics: list of kafka topics
         :param version: the version
+        :param kafka_manager_log_file: log file of the kafka manager
+        :param kafka_manager_log_dir: log dir of the kafka manager
+        :param kafka_manager_max_workers: maximum number of GRPC workers of the kafka manager
         """
         self.kafka_port = kafka_port
         self.kafka_manager_port = kafka_manager_port
@@ -36,6 +40,9 @@ class KafkaConfig:
         self.resources = resources
         self.topics = topics
         self.firewall_config = firewall_config
+        self.kafka_manager_log_file = kafka_manager_log_file
+        self.kafka_manager_log_dir = kafka_manager_log_dir
+        self.kafka_manager_max_workers = kafka_manager_max_workers
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "KafkaConfig":
@@ -52,7 +59,10 @@ class KafkaConfig:
             kafka_port=d["kafka_port"], time_step_len_seconds=d["time_step_len_seconds"],
             kafka_manager_port=d["kafka_manager_port"],
             version=d["version"],
-            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
+            firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"]),
+            kafka_manager_log_file = d["kafka_manager_log_file"],
+            kafka_manager_log_dir=d["kafka_manager_log_dir"],
+            kafka_manager_max_workers=d["kafka_manager_max_workers"]
         )
         return obj
 
@@ -69,6 +79,9 @@ class KafkaConfig:
         d["version"] = self.version
         d["topics"] = list(map(lambda x: x.to_dict(), self.topics))
         d["firewall_config"] = self.firewall_config.to_dict()
+        d["kafka_manager_max_workers"] = self.kafka_manager_max_workers
+        d["kafka_manager_log_dir"] = self.kafka_manager_log_dir
+        d["kafka_manager_log_file"] = self.kafka_manager_log_file
         return d
 
     def __str__(self) -> str:
@@ -79,7 +92,10 @@ class KafkaConfig:
                f"kafka server port :{self.kafka_port}, version: {self.version}, resources: {self.resources}, " \
                f"topics: {','.join(list(map(lambda x: str(x), self.topics)))}, " \
                f"kafka_manager_port:{self.kafka_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}, " \
-               f"firewall_config: {self.firewall_config}"
+               f"firewall_config: {self.firewall_config}, " \
+               f"kafka_manager_log_file: {self.kafka_manager_log_file}, " \
+               f"kafka_manager_log_dir: {self.kafka_manager_log_dir}, " \
+               f"kafka_manager_max_workers: {self.kafka_manager_max_workers}"
 
     def to_json_str(self) -> str:
         """
@@ -128,5 +144,7 @@ class KafkaConfig:
         :return: get the schema of the DTO
         """
         return KafkaConfig(container=NodeContainerConfig.schema(), resources=NodeResourcesConfig.schema(),
-                           firewall_config=NodeFirewallConfig.schema(), topics=[KafkaTopic.schema()])
+                           firewall_config=NodeFirewallConfig.schema(), topics=[KafkaTopic.schema()],
+                           kafka_manager_max_workers=10, kafka_manager_log_dir="/",
+                           kafka_manager_log_file="kafka_manager.log")
 

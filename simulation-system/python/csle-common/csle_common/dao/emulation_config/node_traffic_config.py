@@ -7,17 +7,24 @@ class NodeTrafficConfig:
     A DTO object representing the traffic configuration of an individual container in an emulation
     """
 
-    def __init__(self, ip: str, commands: List[str], traffic_manager_port : int = 50043):
+    def __init__(self, ip: str, commands: List[str], traffic_manager_log_file: str, traffic_manager_log_dir: str,
+                 traffic_manager_max_workers : int, traffic_manager_port : int = 50043):
         """
         Creates a NodeTrafficConfig DTO Object
 
         :param ip: the ip of the node that generate the traffic
         :param commands: the commands used to generate the traffic
+        :param traffic_manager_log_file: the file name to write logs of the traffic manager
+        :param traffic_manager_log_dir: the directory to save the log file of the traffic manager
+        :param traffic_manager_max_workers: the maximum number of gRPC workers for the traffic manager
         :param traffic_manager_port: the port of the traffic manager
         """
         self.ip = ip
         self.commands = commands
         self.traffic_manager_port = traffic_manager_port
+        self.traffic_manager_log_file = traffic_manager_log_file
+        self.traffic_manager_log_dir = traffic_manager_log_dir
+        self.traffic_manager_max_workers = traffic_manager_max_workers
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeTrafficConfig":
@@ -28,7 +35,10 @@ class NodeTrafficConfig:
         :return: the created instance
         """
         obj= NodeTrafficConfig(
-            ip=d["ip"], commands=d["commands"], traffic_manager_port=d["traffic_manager_port"]
+            ip=d["ip"], commands=d["commands"], traffic_manager_port=d["traffic_manager_port"],
+            traffic_manager_max_workers=d["traffic_manager_max_workers"],
+            traffic_manager_log_file=d["traffic_manager_log_file"],
+            traffic_manager_log_dir=d["traffic_manager_log_dir"]
         )
         return obj
 
@@ -40,13 +50,19 @@ class NodeTrafficConfig:
         d["ip"] = self.ip
         d["commands"] = self.commands
         d["traffic_manager_port"] = self.traffic_manager_port
+        d["traffic_manager_max_workers"] = self.traffic_manager_max_workers
+        d["traffic_manager_log_file"] = self.traffic_manager_log_file
+        d["traffic_manager_log_dir"] = self.traffic_manager_log_dir
         return d
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"ip:{self.ip}, commands:{self.commands}, traffic_manager_port: {self.traffic_manager_port}"
+        return f"ip:{self.ip}, commands:{self.commands}, traffic_manager_port: {self.traffic_manager_port}, " \
+               f"traffic_manager_log_file: {self.traffic_manager_log_file}, " \
+               f"traffic_manager_max_workers: {self.traffic_manager_max_workers}, " \
+               f"traffic_manager_log_file_dir: {self.traffic_manager_log_dir}"
 
     def to_json_str(self) -> str:
         """

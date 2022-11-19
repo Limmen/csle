@@ -71,7 +71,10 @@ class TrafficController:
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
 
             # Start the _manager
-            cmd = constants.COMMANDS.START_TRAFFIC_MANAGER.format(node_traffic_config.traffic_manager_port)
+            cmd = constants.COMMANDS.START_TRAFFIC_MANAGER.format(node_traffic_config.traffic_manager_port,
+                                                                  node_traffic_config.traffic_manager_log_dir,
+                                                                  node_traffic_config.traffic_manager_log_file,
+                                                                  node_traffic_config.traffic_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
             time.sleep(2)

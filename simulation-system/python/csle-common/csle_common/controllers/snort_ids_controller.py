@@ -132,7 +132,10 @@ class SnortIDSController:
 
             # Start the ids_manager
             cmd = constants.COMMANDS.START_SNORT_IDS_MANAGER.format(
-                emulation_env_config.snort_ids_manager_config.snort_ids_manager_port)
+                emulation_env_config.snort_ids_manager_config.snort_ids_manager_port,
+                emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_dir,
+                emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_file,
+                emulation_env_config.snort_ids_manager_config.snort_ids_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(2)

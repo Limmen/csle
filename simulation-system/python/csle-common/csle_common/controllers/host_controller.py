@@ -60,7 +60,10 @@ class HostController:
 
             # Start the host_manager
             cmd = constants.COMMANDS.START_HOST_MANAGER.format(
-                emulation_env_config.host_manager_config.host_manager_port)
+                emulation_env_config.host_manager_config.host_manager_port,
+                emulation_env_config.host_manager_config.host_manager_log_dir,
+                emulation_env_config.host_manager_config.host_manager_log_file,
+                emulation_env_config.host_manager_config.host_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                     conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(5)

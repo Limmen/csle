@@ -6,17 +6,25 @@ class DockerStatsManagerConfig:
     Represents the configuration of the docker stats managers in a CSLE emulation
     """
 
-    def __init__(self, time_step_len_seconds = 15, docker_stats_manager_port = 50046, version: str = "0.0.1") -> None:
+    def __init__(self, docker_stats_manager_log_file: str, docker_stats_manager_log_dir : str,
+                 docker_stats_manager_max_workers : int,
+                 time_step_len_seconds = 15, docker_stats_manager_port = 50046, version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
         :param time_step_len_seconds: the length of a time-step (period for logging)
         :param version: the version
         :param docker_stats_manager_port: the GRPC port of the docker stats manager
+        :param docker_stats_manager_log_file: log file of the docker stats manager
+        :param docker_stats_manager_log_dir: log dir of the docker stats manager
+        :param docker_stats_manager_max_workers: max number of gRPC workers of the docker stats manager
         """
         self.time_step_len_seconds = time_step_len_seconds
         self.version = version
         self.docker_stats_manager_port = docker_stats_manager_port
+        self.docker_stats_manager_log_file = docker_stats_manager_log_file
+        self.docker_stats_manager_log_dir = docker_stats_manager_log_dir
+        self.docker_stats_manager_max_workers = docker_stats_manager_max_workers
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "DockerStatsManagerConfig":
@@ -27,7 +35,10 @@ class DockerStatsManagerConfig:
         :return: the created instance
         """
         obj = DockerStatsManagerConfig(time_step_len_seconds=d["time_step_len_seconds"],
-                                       version=d["version"], docker_stats_manager_port=d["docker_stats_manager_port"])
+                                       version=d["version"], docker_stats_manager_port=d["docker_stats_manager_port"],
+                                       docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
+                                       docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
+                                       docker_stats_manager_max_workers=d["docker_stats_manager_max_workers"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -38,6 +49,9 @@ class DockerStatsManagerConfig:
         d["docker_stats_manager_port"] = self.docker_stats_manager_port
         d["time_step_len_seconds"] = self.time_step_len_seconds
         d["version"] = self.version
+        d["docker_stats_manager_log_file"] = self.docker_stats_manager_log_file
+        d["docker_stats_manager_log_dir"] = self.docker_stats_manager_log_dir
+        d["docker_stats_manager_max_workers"] = self.docker_stats_manager_max_workers
         return d
 
     def __str__(self) -> str:
@@ -45,7 +59,9 @@ class DockerStatsManagerConfig:
         :return: a string representation of the object
         """
         return f"docker_stats_manager_port: {self.docker_stats_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}," \
-               f" version: {self.version}"
+               f" version: {self.version}, docker_stats_manager_log_dir: {self.docker_stats_manager_log_dir}, " \
+               f"docker_stats_manager_log_file: {self.docker_stats_manager_log_file}, " \
+               f"docker_stats_manager_max_workers: {self.docker_stats_manager_max_workers}"
 
     def to_json_str(self) -> str:
         """
@@ -90,5 +106,6 @@ class DockerStatsManagerConfig:
         """
         :return: get the schema of the DTO
         """
-        return DockerStatsManagerConfig()
+        return DockerStatsManagerConfig(docker_stats_manager_log_file="docker_stats_manager.log",
+                                        docker_stats_manager_log_dir="/var/log/csle/", docker_stats_manager_port=10)
 

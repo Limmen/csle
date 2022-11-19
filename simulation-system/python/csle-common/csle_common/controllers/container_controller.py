@@ -445,7 +445,11 @@ class ContainerController:
         """
         if not ManagementSystemController.is_statsmanager_running():
             ManagementSystemController.start_docker_stats_manager(
-                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
+                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
+                log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
+                log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
+                max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
+            )
             time.sleep(5)
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
@@ -480,7 +484,11 @@ class ContainerController:
         """
         if not ManagementSystemController.is_statsmanager_running():
             ManagementSystemController.start_docker_stats_manager(
-                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
+                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
+                log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
+                log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
+                max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
+            )
             time.sleep(5)
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)

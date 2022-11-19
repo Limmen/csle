@@ -811,17 +811,23 @@ def datacollectionjob(id: int) -> None:
     DataCollectionJobManager.run_data_collection_job(job_config=data_collection_job)
 
 
-def start_docker_stats_manager(port: int = 50046) -> None:
+def start_docker_stats_manager(port: int = 50046, log_file: str = "docker_stats_manager.log",
+                               log_dir: str = "/var/log/csle", max_workers :int = 10) -> None:
     """
     Starts the stats manager as a daemon
 
-    :param port: the port the manager should listen on
+    :param port: the port that the docker stats manager will listen to
+    :param log_file: log file of the docker stats manager
+    :param log_dir: log dir of the docker stats manager
+    :param max_workers: max workers of the docker stats manager
     :return: None
     """
     from csle_common.controllers.management_system_controller import ManagementSystemController
-    started = ManagementSystemController.start_docker_stats_manager(port=port)
+    started = ManagementSystemController.start_docker_stats_manager(port=port, log_file=log_file, log_dir=log_dir,
+                                                                    max_workers=max_workers)
     if started:
-        click.secho(f"Starting docker stats manager on port:{port}", bold=False)
+        click.secho(f"Starting docker stats manager on port:{port}, log_file: {log_file}, log_dir: {log_dir}, "
+                    f"max_workers: {max_workers}", bold=False)
     else:
         click.secho(f"Docker stats manager is already running on port:{port}", bold=False)
 
@@ -861,13 +867,17 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | proxy | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job | proxy")
-def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int) -> None:
+def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
+          log_file: str, log_dir: str, max_workers : int) -> None:
     """
     Starts a container or all containers
 
     :param entity: the container or emulation to start or "all"
     :param name: extra parameter for running a Docker image
     :param port: extra parameter for starting the docker stats manager
+    :param log_file: extra parameter for starting the docker stats manager
+    :param log_dir: extra parameter for starting the docker stats manager
+    :param max_workers: extra parameter for starting the docker stats manager
     :param no_traffic: a boolean parameter that is True if the traffic generators should be skipped
     :param no_clients: a boolean parameter that is True if the client population should be skipped
     :param no_network: a boolean parameter that is True if the network should be skipped when creating a container
@@ -883,7 +893,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
     if entity == "all":
         ContainerController.start_all_stopped_containers()
     elif entity == "statsmanager":
-        start_docker_stats_manager(port=port)
+        start_docker_stats_manager(port=port, log_file=log_file, log_dir=log_dir, max_workers=max_workers)
     elif entity == "node_exporter":
          ManagementSystemController.start_node_exporter()
     elif entity == "prometheus":

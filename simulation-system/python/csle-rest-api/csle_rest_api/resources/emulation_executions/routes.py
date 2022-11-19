@@ -324,7 +324,10 @@ def start_stop_docker_stats_manager(execution_id: int):
                 f"Starting docker stats manager for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             ManagementSystemController.start_docker_stats_manager(
-                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
+                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
+                log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
+                log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir
+            )
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE

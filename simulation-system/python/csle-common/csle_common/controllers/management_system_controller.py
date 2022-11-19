@@ -365,16 +365,21 @@ class ManagementSystemController:
         return constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in output and str(pid) in output
 
     @staticmethod
-    def start_docker_stats_manager(port: int = 50046) -> bool:
+    def start_docker_stats_manager(log_file: str = "docker_stats_manager.log",
+                                   log_dir: str = "/var/log/csle", max_workers :int = 10,
+                                   port: int = 50046) -> bool:
         """
         Starts the docker stats manager on the docker host if it is not already started
 
         :param port: the port that the docker stats manager will listen to
+        :param log_file: log file of the docker stats manager
+        :param log_dir: log dir of the docker stats manager
+        :param max_workers: max workers of the docker stats manager
         :return: True if it was started, False otherwise
         """
         if ManagementSystemController.is_statsmanager_running():
             return False
-        cmd = constants.COMMANDS.START_DOCKER_STATS_MANAGER.format(port)
+        cmd = constants.COMMANDS.START_DOCKER_STATS_MANAGER.format(port, log_dir, log_file, max_workers)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
