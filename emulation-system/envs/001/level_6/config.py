@@ -3685,158 +3685,189 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.2",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.54",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.74",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_3]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.61",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.62",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_3]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.101",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.7",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.4",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.5",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.6",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.8",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.9",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.178",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.11",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.12",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.13",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.14",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.15",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.16",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.17",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.18",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.19",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.20",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10
                           ),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.22",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.23",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.24",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043),
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.25",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043)
+                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
+                          traffic_manager_log_dir="/", traffic_manager_max_workers=10)
     ]
     client_population_config = ClientPopulationConfig(
         networks=[ContainerNetwork(
