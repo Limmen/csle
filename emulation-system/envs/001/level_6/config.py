@@ -4838,7 +4838,9 @@ def default_snort_ids_manager_config(network_id: int, level: int, version: str) 
     :param version: the version of the emulation
     :return: the Snort IDS manager configuration
     """
-    config = SnortIDSManagerConfig(version=version, time_step_len_seconds=15, snort_ids_manager_port=50048)
+    config = SnortIDSManagerConfig(version=version, time_step_len_seconds=15, snort_ids_manager_port=50048,
+                                   snort_ids_manager_log_dir="/", snort_ids_manager_log_file="snort_ids_manager.log",
+                                   snort_ids_manager_max_workers=10)
     return config
 
 
@@ -4851,7 +4853,9 @@ def default_ossec_ids_manager_config(network_id: int, level: int, version: str) 
     :param version: the version of the emulation
     :return: the OSSEC IDS manager configuration
     """
-    config = OSSECIDSManagerConfig(version=version, time_step_len_seconds=15, ossec_ids_manager_port=50047)
+    config = OSSECIDSManagerConfig(version=version, time_step_len_seconds=15, ossec_ids_manager_port=50047,
+                                   ossec_ids_manager_log_file="ossec_ids_manager.log", ossec_ids_manager_log_dir="/",
+                                   ossec_ids_manager_max_workers=10)
     return config
 
 
