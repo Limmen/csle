@@ -4659,7 +4659,9 @@ def default_host_manager_config(network_id: int, level: int, version: str) -> Ho
     :param version: the version of the emulation
     :return: the host manager configuration
     """
-    config = HostManagerConfig(version=version, time_step_len_seconds=15, host_manager_port=50049)
+    config = HostManagerConfig(version=version, time_step_len_seconds=15, host_manager_port=50049,
+                               host_manager_log_file="host_manager.log", host_manager_log_dir="/",
+                               host_manager_max_workers=10)
     return config
 
 
