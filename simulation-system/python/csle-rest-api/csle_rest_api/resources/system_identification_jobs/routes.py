@@ -7,7 +7,7 @@ import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.controllers.management_system_controller import ManagementSystemController
 from csle_system_identification.job_controllers.system_identification_job_manager import SystemIdentificationJobManager
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -53,7 +53,7 @@ def system_identification_jobs():
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         jobs = MetastoreFacade.list_system_identification_jobs()
         for job in jobs:
-            MonitorToolsController.stop_pid(job.pid)
+            ManagementSystemController.stop_pid(job.pid)
             MetastoreFacade.remove_system_identification_job(system_identification_job=job)
         time.sleep(2)
         response = jsonify({})
@@ -104,7 +104,7 @@ def system_identification_policy(job_id: int):
                 job.running = True
             response = jsonify(job.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-            MonitorToolsController.stop_pid(job.pid)
+            ManagementSystemController.stop_pid(job.pid)
             MetastoreFacade.remove_system_identification_job(system_identification_job=job)
             time.sleep(2)
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -117,7 +117,7 @@ def system_identification_policy(job_id: int):
                     system_identification_job=job)
                 time.sleep(4)
             else:
-                MonitorToolsController.stop_pid(pid=job.pid)
+                ManagementSystemController.stop_pid(pid=job.pid)
                 time.sleep(2)
 
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

@@ -664,13 +664,13 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     running_containers = ContainerController.list_all_running_containers()
     containers = running_containers
     containers = list(map(lambda x: x[0], containers))
-    return ["prometheus", "node_exporter", "cadvisor", "grafana", "monitor", "proxy",
+    return ["prometheus", "node_exporter", "cadvisor", "grafana", "managementsystem", "proxy",
             "statsmanager", "all", "emulation_executions"] + emulations + containers
 
 
 @click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
-@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | monitor | proxy | container-name | "
+@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | managementsystem | proxy | container-name | "
                             "emulation-name | statsmanager | emulation_executions | all")
 def stop(entity: str, id: int = -1) -> None:
     """
@@ -681,7 +681,7 @@ def stop(entity: str, id: int = -1) -> None:
     :return: None
     """
     from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
     from csle_common.metastore.metastore_facade import MetastoreFacade
 
     if entity == "all":
@@ -689,19 +689,19 @@ def stop(entity: str, id: int = -1) -> None:
         for emulation in MetastoreFacade.list_emulations():
             stop_all_executions_of_emulation(emulation_env_config=emulation)
     elif entity == "node_exporter":
-        MonitorToolsController.stop_node_exporter()
+        ManagementSystemController.stop_node_exporter()
     elif entity == "prometheus":
-        MonitorToolsController.stop_prometheus()
+        ManagementSystemController.stop_prometheus()
     elif entity == "cadvisor":
-        MonitorToolsController.stop_cadvisor()
+        ManagementSystemController.stop_cadvisor()
     elif entity == "grafana":
-        MonitorToolsController.stop_grafana()
-    elif entity == "monitor":
-        MonitorToolsController.stop_monitor()
+        ManagementSystemController.stop_grafana()
+    elif entity == "managementsystem":
+        ManagementSystemController.stop_management_system()
     elif entity == "proxy":
-        MonitorToolsController.stop_proxy()
+        ManagementSystemController.stop_proxy()
     elif entity == "statsmanager":
-        MonitorToolsController.stop_docker_stats_manager()
+        ManagementSystemController.stop_docker_stats_manager()
     elif entity == "emulation_executions":
         stop_emulation_executions()
     else:
@@ -817,10 +817,10 @@ def start_docker_stats_manager() -> None:
 
     :return: None
     """
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
     port = 50051
-    started = MonitorToolsController.start_docker_stats_manager(port=port)
+    started = ManagementSystemController.start_docker_stats_manager(port=port)
     if started:
         click.secho(f"Starting docker stats manager on port:{port}", bold=False)
     else:
@@ -847,7 +847,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     containers = list(map(lambda x: x[0], containers))
     image_names=ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
-    return ["prometheus", "node_exporter", "grafana", "cadvisor", "monitor", "proxy"
+    return ["prometheus", "node_exporter", "grafana", "cadvisor", "managementsystem", "proxy"
             "all",
             "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"] + emulations + \
            containers + image_names
@@ -859,7 +859,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--no_network', is_flag=True, help='skip creating network when starting individual container')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
-@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | monitor | proxy | "
+@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | proxy | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job | proxy")
 def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool) -> None:
@@ -876,7 +876,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
     from csle_agents.job_controllers.training_job_manager import TrainingJobManager
     from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
 
@@ -885,13 +885,13 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
     elif entity == "statsmanager":
         start_docker_stats_manager()
     elif entity == "node_exporter":
-         MonitorToolsController.start_node_exporter()
+         ManagementSystemController.start_node_exporter()
     elif entity == "prometheus":
-        MonitorToolsController.start_prometheus()
+        ManagementSystemController.start_prometheus()
     elif entity == "cadvisor":
-        MonitorToolsController.start_cadvisor()
+        ManagementSystemController.start_cadvisor()
     elif entity == "grafana":
-        MonitorToolsController.start_grafana()
+        ManagementSystemController.start_grafana()
     elif entity == "training_job":
         training_job = MetastoreFacade.get_training_job_config(id=id)
         TrainingJobManager.start_training_job_in_background(training_job=training_job)
@@ -899,10 +899,10 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
         system_id_job = MetastoreFacade.get_data_collection_job_config(id=id)
         DataCollectionJobManager.start_data_collection_job_in_background(
             data_collection_job=system_id_job)
-    elif entity == "monitor":
-        MonitorToolsController.start_monitor()
+    elif entity == "managementsystem":
+        ManagementSystemController.start_management_system()
     elif entity == "proxy":
-        MonitorToolsController.start_proxy()
+        ManagementSystemController.start_proxy()
     else:
         container_started = ContainerController.start_container(name=entity)
         if not container_started:
@@ -1184,12 +1184,12 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     image_names = list(map(lambda x: x[0], image_names))
     active_networks_names = ContainerController.list_all_networks()
     return ["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-            "cadvisor", "monitor", "proxy", "statsmanager", "--all", "--running", "--stopped"] + emulations + containers \
+            "cadvisor", "managementsystem", "proxy", "statsmanager", "--all", "--running", "--stopped"] + emulations + containers \
            + image_names + active_networks_names + simulations
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
-                    "| cadvisor | statsmanager | monitor | proxy | simulations | emulation_executions")
+                    "| cadvisor | statsmanager | managementsystem | proxy | simulations | emulation_executions")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -1232,8 +1232,8 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
         list_cadvisor()
     elif entity == "grafana":
         list_grafana()
-    elif entity == "monitor":
-        list_monitor()
+    elif entity == "managementsystem":
+        list_management_system()
     elif entity == "proxy":
         list_proxy()
     elif entity == "statsmanager":
@@ -1336,13 +1336,13 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_emulation_executions()
     list_simulations()
     list_csle_gym_envs()
-    click.secho("CSLE monitoring system:", fg="magenta", bold=True)
+    click.secho("CSLE management system:", fg="magenta", bold=True)
     list_prometheus()
     list_node_exporter()
     list_cadvisor()
     list_grafana()
     list_statsmanager()
-    list_monitor()
+    list_management_system()
     list_proxy()
 
 
@@ -1354,9 +1354,9 @@ def list_statsmanager() -> None:
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_controller import ContainerController
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if MonitorToolsController.is_statsmanager_running():
+    if ManagementSystemController.is_statsmanager_running():
         emulations = MetastoreFacade.list_emulations()
         running_emulations, stopped_emulations = separate_running_and_stopped_emulations(emulations=emulations)
         docker_stats_monitor_status = None
@@ -1385,29 +1385,29 @@ def list_grafana() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if MonitorToolsController.is_grafana_running():
+    if ManagementSystemController.is_grafana_running():
         click.secho("Grafana status: " + f" {click.style('[running]', fg='green')} "
                                          f"port:{constants.COMMANDS.GRAFANA_PORT}", bold=False)
     else:
         click.secho("Grafana status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
-def list_monitor() -> None:
+def list_management_system() -> None:
     """
-    List status of monitor
+    List status of the management system
 
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if MonitorToolsController.is_monitor_running():
-        click.secho("Monitor status: " + f" {click.style('[running]', fg='green')} "
-                                         f"port:{constants.COMMANDS.MONITOR_PORT}", bold=False)
+    if ManagementSystemController.is_management_system_running():
+        click.secho("Management system status: " + f" {click.style('[running]', fg='green')} "
+                                         f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
     else:
-        click.secho("Monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+        click.secho("Management status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_proxy() -> None:
@@ -1417,9 +1417,9 @@ def list_proxy() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if MonitorToolsController.is_proxy_running():
+    if ManagementSystemController.is_proxy_running():
         click.secho("Proxy status: " + f" {click.style('[running]', fg='green')} "
                                          f"port:{constants.COMMANDS.PROXY_PORT}", bold=False)
     else:
@@ -1433,9 +1433,9 @@ def list_cadvisor() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if MonitorToolsController.is_cadvisor_running():
+    if ManagementSystemController.is_cadvisor_running():
         click.secho("Cadvisor status: " + f" {click.style('[running]', fg='green')} "
                                           f"port:{constants.COMMANDS.CADVISOR_PORT}", bold=False)
     else:
@@ -1449,9 +1449,9 @@ def list_node_exporter() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if MonitorToolsController.is_node_exporter_running():
+    if ManagementSystemController.is_node_exporter_running():
         click.secho("Node exporter status: " + f" {click.style('[running]', fg='green')} "
                                                f"port:{constants.COMMANDS.NODE_EXPORTER_PORT}", bold=False)
     else:
@@ -1465,9 +1465,9 @@ def list_prometheus() -> None:
     :return: None
     """
     import csle_common.constants.constants as constants
-    from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+    from csle_common.controllers.management_system_controller import ManagementSystemController
 
-    if MonitorToolsController.is_prometheus_running():
+    if ManagementSystemController.is_prometheus_running():
         click.secho("Prometheus status: " + f" {click.style('[running]', fg='green')} "
                                             f"port:{constants.COMMANDS.PROMETHEUS_PORT}", bold=False)
     else:

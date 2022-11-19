@@ -60,11 +60,11 @@ target infrastructure, such as, web servers, databases, and an IDS.
 The simulation system implements a MDP/POMDP/Markov Game that can be used to train defender policies using reinforcement
 learning. It exposes an OpenAI-gym interface.
 
-### Monitoring System
+### Management System
 
-The monitoring system allows to track the execution of running emulations and their resource consumptions. It also
+The management system allows to track the execution of running emulations and their resource consumptions. It also
 includes an operations center where emulations can be managed and learned policies can be examines. Specifically, the
-policy examination component of the monitoring system is a component for interactive examination of learned security
+policy examination component of the management system is a component for interactive examination of learned security
 policies. It allows a user to traverse episodes of Markov decision processes in a controlled manner and to track the
 actions triggered by security policies. Similar to a software debugger, a user can continue or or halt an episode at any
 time step and inspect parameters and probability distributions
@@ -352,8 +352,8 @@ running commands can read and write to this directory.
       sysctl vm.max_map_count
       ```
 
-10. **Install the monitoring system**
-     - To build the webapp used in the monitoring system and in the policy examination system you need node.js and npm
+10. **Install the management system**
+     - To build the webapp used in the management system and in the policy examination system you need node.js and npm
        installed, to install node and npm execute:
         ```bash
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # install nvm
@@ -410,39 +410,39 @@ running commands can read and write to this directory.
             }
         }
        ```
-     - Install the monitoring system and associated tools:
+     - Install the management system and associated tools:
      ```bash
-       cd monitoring-system
+       cd management-system
        chmod u+x install.sh
        ./install.sh
      ```
-     - Configure the IP of the server where the monitoring system runs by editing the file:
+     - Configure the IP of the server where the management system runs by editing the file:
       ```bash
-       csle/monitoring-system/csle-mgmt-webapp/src/components/Common/serverIp.js
+       csle/management-system/csle-mgmt-webapp/src/components/Common/serverIp.js
       ```
      - Add prometheus binary to the path
        ```bash
-        export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH
+        export PATH=/path/to/csle/management-system/prometheus/:$PATH
         ```
        or for fish shell:
        ```bash
-        fish_add_path /path/to/csle/monitoring-system/prometheus/
+        fish_add_path /path/to/csle/management-system/prometheus/
         ```
     To have the binary permanently in $PATH, add the following line to the
-    .bashrc: `export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
+    .bashrc: `export PATH=/path/to/csle/management-system/prometheus/:$PATH`
      - Add node_exporter binary to the path
        ```bash
-        export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH
+        export PATH=/path/to/csle/management-system/node_exporter/:$PATH
         ```
        or for fish shell:
        ```bash
-        fish_add_path /path/to/csle/monitoring-system/node_exporter/
+        fish_add_path /path/to/csle/management-system/node_exporter/
         ```
     To have the binary permanently in $PATH, add the following line to the
-    .bashrc: `export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
-     - Run the monitoring system (for more instructions see [README](monitoring system/README.MD)):
+    .bashrc: `export PATH=/path/to/csle/management-system/node_exporter/:$PATH`
+     - Run the management system (for more instructions see [README](management system/README.MD)):
      ```bash
-       cd monitoring-system
+       cd management-system
        chmod u+x run_all.sh
        ./run_all.sh
      ```
@@ -547,7 +547,7 @@ For documentation, see the README.md files inside each sub-directory,
 
 - **Emulation System** ([emulation-system](./emulation-system)).
 - **Simulation System** ([simulation-system](./simulation-system)).
-- **Monitoring System** ([monitoring-system](./monitoring-system)).
+- **Management System** ([management-system](./management-system)).
 - **Metastore** ([metastore](./metastore)).
 - **General Documentation** ([docs](./docs)).
 

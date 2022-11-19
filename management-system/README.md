@@ -1,4 +1,4 @@
-# CSLE Monitoring System
+# CSLE Management System
 
 This system builds on Grafana, Prometheus, Cadvisor, NodeExporter, the rest api, and the `csle-mgmt-webapp` applicaton 
 
@@ -21,8 +21,8 @@ Grafana is used to monitor the performance of the emulation environments
 <img src="docs/grafana_2.png" width="1200">
 </p>
 
-## CSLE Monitor
-A webapp for monitoring emulation environments created with csle
+## CSLE Management System
+A webapp for managing and monitoring emulation environments created with csle
 
 <p align="center">
 <img src="csle-mgmt-webapp/docs/screen.png" width="1200">
@@ -31,19 +31,19 @@ A webapp for monitoring emulation environments created with csle
 ## Useful scripts
 ```bash
 # Download and setup prometheus:
-cd csle/monitoring-system
+cd csle/management-system
 wget https://github.com/prometheus/prometheus/releases/download/v2.34.0/prometheus-2.34.0.linux-amd64.tar.gz
 tar -xf prometheus-2.34.0.linux-amd64.tar.gz
 mv prometheus-2.34.0.linux-amd64 prometheus
 rm -rf prometheus-2.34.0.linux-amd64.tar.gz
-export PATH=/path/to/csle/monitoring-system/prometheus/:$PATH`
+export PATH=/path/to/csle/management-system/prometheus/:$PATH`
 
 # Download and setup node exporter:
 wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
 tar -xf node_exporter-1.3.1.linux-amd64.tar.gz
 mv node_exporter-1.3.1.linux-amd64 node_exporter
 rm -rf node_exporter-1.3.1.linux-amd64.tar.gz
-`export PATH=/path/to/csle/monitoring-system/node_exporter/:$PATH`
+`export PATH=/path/to/csle/management-system/node_exporter/:$PATH`
 
 ./install.sh   # Installs prometheus, grafana, csle-mgmt-webapp, NodeExporter, Dashboards, C_Advisor etc.
 ./csle-mgmt-webapp.sh  # Installs csle-mgmt-webapp
@@ -97,12 +97,12 @@ When everything is running, use the following command to setup tunnels:
 ```bash
 ssh -L 8080:localhost:8080 -L 3000:localhost:3000 -L 9090:localhost:9090 -L 9100:localhost:9100 -L 7777:localhost:7777 kim@<server-ip>
 ```
-then you can access Grafana at `localhost:2382`, Prometheus at `localhost:2383`, Node exporter at `localhost:2384`, and csle Monitor at `localhost:2385`
+then you can access Grafana at `localhost:2382`, Prometheus at `localhost:2383`, Node exporter at `localhost:2384`, and csle management system at `localhost:2385`
 
 ## Note
 
-Note that if you have started the csle_monitor but cannot access the app from a SSH tunnel, you may need to
-edit `csle_monitor/server/server.py` and update the hostname (e.g. `0.0.0.0` instead of `localhost`).
+Note that if you have started the CSLE management system but cannot access the app from a SSH tunnel, you may need to
+edit `management-system/csle-mgmt-webapp/server/server.py` and update the hostname (e.g. `0.0.0.0` instead of `localhost`).
 
 ## Author & Maintainer
 

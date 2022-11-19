@@ -5,7 +5,7 @@ import csle_common.constants.constants as constants
 import sys
 
 
-class MonitorToolsController:
+class ManagementSystemController:
     """
     Controller managing monitoring tools
     """
@@ -30,7 +30,7 @@ class MonitorToolsController:
 
         :return: True if it is running, false otherwise
         """
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
         if pid == -1:
             return False
         cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM \
@@ -49,7 +49,7 @@ class MonitorToolsController:
 
         :return: True if it is running, false otherwise
         """
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
         if pid == -1:
             return False
         cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
@@ -62,13 +62,13 @@ class MonitorToolsController:
         return constants.COMMANDS.SEARCH_NODE_EXPORTER in output and str(pid) in output
 
     @staticmethod
-    def is_monitor_running() -> bool:
+    def is_management_system_running() -> bool:
         """
-        Checks if the monitor ui is running on the host
+        Checks if the management system is running on the host
 
         :return: True if it is running, false otherwise
         """
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.MONITOR_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
         if pid == -1:
             return False
         cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
@@ -87,7 +87,7 @@ class MonitorToolsController:
 
         :return: True if it is running, false otherwise
         """
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.PROXY_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROXY_PID_FILE)
         if pid == -1:
             return False
         cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
@@ -106,7 +106,7 @@ class MonitorToolsController:
 
         :return: True if it was started, False otherwise
         """
-        if MonitorToolsController.is_node_exporter_running():
+        if ManagementSystemController.is_node_exporter_running():
             return False
         cmd = constants.COMMANDS.START_NODE_EXPORTER
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
@@ -114,13 +114,13 @@ class MonitorToolsController:
         return True
 
     @staticmethod
-    def start_monitor() -> bool:
+    def start_management_system() -> bool:
         """
         Starts the REST API
 
         :return: True if it was started, False otherwise
         """
-        if MonitorToolsController.is_monitor_running():
+        if ManagementSystemController.is_management_system_running():
             return False
 
         cmd = constants.COMMANDS.BUILD_MONITOR
@@ -141,7 +141,7 @@ class MonitorToolsController:
         (output, err) = p.communicate()
         pid = p.pid + 1
 
-        cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.MONITOR_PID_FILE)
+        cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
@@ -153,7 +153,7 @@ class MonitorToolsController:
 
         :return: True if it was started, False otherwise
         """
-        if MonitorToolsController.is_proxy_running():
+        if ManagementSystemController.is_proxy_running():
             return False
 
         cmd = constants.COMMANDS.BUILD_MONITOR
@@ -186,24 +186,24 @@ class MonitorToolsController:
 
         :return: True if it was stopped, False otherwise
         """
-        if not MonitorToolsController.is_node_exporter_running():
+        if not ManagementSystemController.is_node_exporter_running():
             return False
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
 
     @staticmethod
-    def stop_monitor() -> bool:
+    def stop_management_system() -> bool:
         """
-        Stops the monitoring system
+        Stops the management system
 
         :return: True if it was stopped, False otherwise
         """
-        if not MonitorToolsController.is_monitor_running():
+        if not ManagementSystemController.is_management_system_running():
             return False
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.MONITOR_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
@@ -216,9 +216,9 @@ class MonitorToolsController:
 
         :return: True if it was stopped, False otherwise
         """
-        if not MonitorToolsController.is_proxy_running():
+        if not ManagementSystemController.is_proxy_running():
             return False
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.PROXY_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROXY_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
@@ -231,7 +231,7 @@ class MonitorToolsController:
 
         :return: True if it was started, False otherwise
         """
-        if MonitorToolsController.is_prometheus_running():
+        if ManagementSystemController.is_prometheus_running():
             return False
         cmd = constants.COMMANDS.START_PROMETHEUS
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
@@ -245,9 +245,9 @@ class MonitorToolsController:
 
         :return: True if it was stopped, False otherwise
         """
-        if not MonitorToolsController.is_prometheus_running():
+        if not ManagementSystemController.is_prometheus_running():
             return False
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
@@ -283,7 +283,7 @@ class MonitorToolsController:
         """
         :return: True if cadvisor was started, otherwise False
         """
-        if MonitorToolsController.is_cadvisor_running():
+        if ManagementSystemController.is_cadvisor_running():
             return False
         client_1 = docker.from_env()
         containers = client_1.containers.list(all=True)
@@ -317,7 +317,7 @@ class MonitorToolsController:
         """
         :return: True if grafana was started, otherwise False
         """
-        if MonitorToolsController.is_grafana_running():
+        if ManagementSystemController.is_grafana_running():
             return False
         client_1 = docker.from_env()
         containers = client_1.containers.list(all=True)
@@ -352,7 +352,7 @@ class MonitorToolsController:
 
         :return: True if it is running, false otherwise
         """
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
         if pid == -1:
             return False
         cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
@@ -372,7 +372,7 @@ class MonitorToolsController:
         :param port: the port that the docker stats manager will listen to
         :return: True if it was started, False otherwise
         """
-        if MonitorToolsController.is_statsmanager_running():
+        if ManagementSystemController.is_statsmanager_running():
             return False
         cmd = constants.COMMANDS.START_DOCKER_STATS_MANAGER.format(port)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
@@ -386,9 +386,9 @@ class MonitorToolsController:
 
         :return: True if it was stopped, False otherwise
         """
-        if not MonitorToolsController.is_statsmanager_running():
+        if not ManagementSystemController.is_statsmanager_running():
             return False
-        pid = MonitorToolsController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
+        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
@@ -418,7 +418,7 @@ class MonitorToolsController:
         :param pid: the pid to stop
         :return: True if the pid was stopped, false if it was not running
         """
-        if not MonitorToolsController.is_pid_running(pid):
+        if not ManagementSystemController.is_pid_running(pid):
             return False
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)

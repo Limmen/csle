@@ -17,7 +17,7 @@ from csle_common.controllers.elk_controller import ELKController
 from csle_common.controllers.snort_ids_controller import SnortIDSController
 from csle_common.controllers.ossec_ids_controller import OSSECIDSController
 from csle_common.controllers.host_controller import HostController
-from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -318,12 +318,12 @@ def start_stop_docker_stats_manager(execution_id: int):
             Logger.__call__().get_logger().info(
                 f"Stopping docker stats manager for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            MonitorToolsController.stop_docker_stats_manager()
+            ManagementSystemController.stop_docker_stats_manager()
         if start:
             Logger.__call__().get_logger().info(
                 f"Starting docker stats manager for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
-            MonitorToolsController.start_docker_stats_manager(
+            ManagementSystemController.start_docker_stats_manager(
                 port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

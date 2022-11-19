@@ -3,7 +3,7 @@ Routes and sub-resources for the /prometheus resource
 """
 
 from flask import Blueprint, jsonify, request
-from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -27,14 +27,14 @@ def prometheus():
     if authorized is not None:
         return authorized
 
-    running = MonitorToolsController.is_prometheus_running()
+    running = ManagementSystemController.is_prometheus_running()
     port = constants.COMMANDS.PROMETHEUS_PORT
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
         if running:
-            MonitorToolsController.stop_prometheus()
+            ManagementSystemController.stop_prometheus()
             running = False
         else:
-            MonitorToolsController.start_prometheus()
+            ManagementSystemController.start_prometheus()
             running = True
     prometheus_dict = {
         api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,

@@ -3,7 +3,7 @@ Routes and sub-resources for the /cadvisor resource
 """
 
 from flask import Blueprint, jsonify, request
-from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -26,14 +26,14 @@ def cadvisor():
     if authorized is not None:
         return authorized
 
-    running = MonitorToolsController.is_cadvisor_running()
+    running = ManagementSystemController.is_cadvisor_running()
     port = constants.COMMANDS.CADVISOR_PORT
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
         if running:
-            MonitorToolsController.stop_cadvisor()
+            ManagementSystemController.stop_cadvisor()
             running = False
         else:
-            MonitorToolsController.start_cadvisor()
+            ManagementSystemController.start_cadvisor()
             running = True
     cadvisor_dict = {
         api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,

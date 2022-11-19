@@ -34,6 +34,6 @@
   "docker_stats_manager_pidfile": "/var/log/csle/statsmanager.pid",
   "prometheus_pid_file": "/var/log/csle/prometheus.pid",
   "prometheus_log_file": "/var/log/csle/prometheus.log",
-  "prometheus_config_file": "$CSLE_HOME/monitoring-system/prometheus.yml",
+  "prometheus_config_file": "$CSLE_HOME/management-system/prometheus.yml",
   "default_log_dir": "/tmp/csle/"
 }

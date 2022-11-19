@@ -19,8 +19,8 @@ grafana:
 node_exporter:
 	./run_node_exporter.sh
 
-csle_monitor:
-	./run_csle_monitor.sh
+management_system:
+	./run_mgmt_webapp.sh
 
 list_stopped:
 	python manage_containers.py --c list_stopped

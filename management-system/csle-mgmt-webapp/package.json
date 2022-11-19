@@ -1,5 +1,5 @@
 {
-  "name": "csle_emulation_monitor",
+  "name": "csle_mgmt_webapp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

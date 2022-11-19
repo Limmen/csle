@@ -3,7 +3,7 @@ Routes and sub-resources for the /node_exporter resource
 """
 
 from flask import Blueprint, jsonify, request
-from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.controllers.management_system_controller import ManagementSystemController
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -28,7 +28,7 @@ def node_exporter():
     if authorized is not None:
         return authorized
 
-    running = MonitorToolsController.is_node_exporter_running()
+    running = ManagementSystemController.is_node_exporter_running()
     port = constants.COMMANDS.NODE_EXPORTER_PORT
     node_exporter_dict = {
         api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,

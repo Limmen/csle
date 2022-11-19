@@ -20,7 +20,7 @@ from csle_common.controllers.flags_controller import FlagsController
 from csle_common.controllers.traffic_controller import TrafficController
 from csle_common.controllers.topology_controller import TopologyController
 from csle_common.controllers.ovs_controller import OVSController
-from csle_common.controllers.monitor_tools_controller import MonitorToolsController
+from csle_common.controllers.management_system_controller import ManagementSystemController
 from csle_common.controllers.resource_constraints_controller import ResourceConstraintsController
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -229,28 +229,28 @@ class EmulationEnvController:
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Docker stats monitor --")
-        MonitorToolsController.start_docker_stats_manager(port=50051)
+        ManagementSystemController.start_docker_stats_manager(port=50051)
         time.sleep(10)
         ContainerController.start_docker_stats_thread(execution=emulation_execution)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Cadvisor --")
-        MonitorToolsController.start_cadvisor()
+        ManagementSystemController.start_cadvisor()
         time.sleep(2)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Grafana --")
-        MonitorToolsController.start_grafana()
+        ManagementSystemController.start_grafana()
         time.sleep(2)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Node_exporter --")
-        MonitorToolsController.start_node_exporter()
+        ManagementSystemController.start_node_exporter()
         time.sleep(2)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting Prometheus --")
-        MonitorToolsController.start_prometheus()
+        ManagementSystemController.start_prometheus()
         time.sleep(2)
 
     @staticmethod

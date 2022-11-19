@@ -13,7 +13,7 @@ traces_page_bp = Blueprint(api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE, __nam
                            static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
                                    f'{api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE}{constants.COMMANDS.SLASH_DELIM}'
                                    f'{api_constants.MGMT_WEBAPP.STATIC}',
-                           static_folder="../../../../../../monitoring-system/csle-mgmt-webapp/build")
+                           static_folder="../../../../../../management-system/csle-mgmt-webapp/build")
 
 
 @traces_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
