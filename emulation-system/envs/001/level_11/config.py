@@ -5071,7 +5071,8 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
 
     config =  ElkConfig(version=version, time_step_len_seconds=15, elastic_port=9200, kibana_port=5601,
                         logstash_port=5044, elk_manager_port=50045, container=container,
-                        resources=resources, firewall_config=firewall_config)
+                        resources=resources, firewall_config=firewall_config,
+                        elk_manager_log_file="elk_manager.log", elk_manager_log_dir="/", elk_manager_max_workers=10)
     return config
 
 if __name__ == '__main__':
