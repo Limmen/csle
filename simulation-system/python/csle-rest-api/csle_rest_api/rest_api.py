@@ -53,6 +53,8 @@ from csle_rest_api.resources.traces_datasets.routes import traces_datasets_bp
 from csle_rest_api.resources.statistics_datasets.routes import statistics_datasets_bp
 from csle_rest_api.resources.users.routes import users_bp
 import csle_rest_api.constants.constants as api_constants
+from csle_common.tunneling.forward_tunnel_thread import ForwardTunnelThread
+import paramiko
 
 
 def create_app(static_folder: str):
@@ -226,6 +228,17 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
 
     :return: None
     """
+    conn = paramiko.SSHClient()
+    conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    conn.connect("15.4.253.252", username="csle_admin", password="csle@admin-pw_191")
+    conn.get_transport().set_keepalive(5)
+    print("connected")
+    agent_transport = conn.get_transport()
+    tunnel_thread = ForwardTunnelThread(local_port=5601,
+                                        remote_host="15.4.253.252", remote_port=5601,
+                                        transport=agent_transport)
+    tunnel_thread.start()
+    print("tunnel created")
     app = create_app(static_folder=static_folder)
     if not https:
         serve(app, host=host, port=port, threads=num_threads)
