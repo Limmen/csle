@@ -1407,7 +1407,7 @@ def list_management_system() -> None:
         click.secho("Management system status: " + f" {click.style('[running]', fg='green')} "
                                          f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
     else:
-        click.secho("Management status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+        click.secho("Management system status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_proxy() -> None:
