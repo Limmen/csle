@@ -1307,6 +1307,30 @@ def create_app(static_folder: str, proxy_server: str):
                 return delete(f'{proxy_server}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}'
                               f'?token={token}').content
 
+
+    @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
+               f'{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}',
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+    def config_proxy():
+        """
+        Proxy for the /config resource
+
+        :return: the /config resource
+        """
+        token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+        if token is None:
+            token = -1
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            return get(f'{proxy_server}{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}'
+                       f'?token={token}').content
+        elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            post_json_data = json.loads(request.data)
+            headers = {api_constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE,
+                       api_constants.MGMT_WEBAPP.ACCEPT_HEADER: api_constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE}
+            return post(f'{proxy_server}{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}'
+                          f'?token={token}', json=post_json_data, headers=headers).content
+    
+
     @app.route(f'{constants.COMMANDS.SLASH_DELIM}'
                f'{api_constants.MGMT_WEBAPP.USERS_RESOURCE}{constants.COMMANDS.SLASH_DELIM}<user_id>',
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])

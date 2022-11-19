@@ -52,6 +52,7 @@ from csle_rest_api.resources.login.routes import login_bp
 from csle_rest_api.resources.traces_datasets.routes import traces_datasets_bp
 from csle_rest_api.resources.statistics_datasets.routes import statistics_datasets_bp
 from csle_rest_api.resources.users.routes import users_bp
+from csle_rest_api.resources.config.routes import config_bp
 import csle_rest_api.constants.constants as api_constants
 from csle_common.tunneling.forward_tunnel_thread import ForwardTunnelThread
 import paramiko
@@ -207,6 +208,9 @@ def create_app(static_folder: str):
     app.register_blueprint(users_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}")
+    app.register_blueprint(config_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}")
 
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def root():
