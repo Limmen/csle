@@ -93,6 +93,7 @@ class MGMT_WEBAPP:
     VECTOR_POLICIES_RESOURCE = "vector-policies"
     TABULAR_POLICIES_RESOURCE = "tabular-policies"
     USERS_RESOURCE = "users"
+    CONFIG_RESOURCE = "config"
     DQN_POLICIES_RESOURCE = "dqn-policies"
     FNN_W_SOFTMAX_POLICIES_RESOURCE = "fnn-w-softmax-policies"
     TRACES_RESOURCE = "traces"
