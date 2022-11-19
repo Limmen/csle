@@ -22,6 +22,7 @@ from csle_common.dao.emulation_config.emulation_execution import EmulationExecut
 from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
+from csle_common.controllers.management_system_controller import ManagementSystemController
 
 
 class ContainerController:
@@ -442,8 +443,13 @@ class ContainerController:
         :param execution: the emulation execution
         :return: None
         """
+        if not ManagementSystemController.is_statsmanager_running():
+            ManagementSystemController.start_docker_stats_manager(
+                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
+            time.sleep(5)
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
+        print(f"connecting to: {ip}:{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}")
         with grpc.insecure_channel(
                 f'{ip}:'
                 f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}') as channel:
@@ -454,6 +460,7 @@ class ContainerController:
                 ip = c.get_ips()[0]
                 container_ip_dtos.append(csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp(
                     ip=ip, container=name))
+            print("connected")
 
             csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name,
@@ -471,6 +478,10 @@ class ContainerController:
         :param execution: the execution of the emulation for which the monitor should be stopped
         :return: None
         """
+        if not ManagementSystemController.is_statsmanager_running():
+            ManagementSystemController.start_docker_stats_manager(
+                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port)
+            time.sleep(5)
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
         with grpc.insecure_channel(

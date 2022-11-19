@@ -3,6 +3,7 @@ import { useAlert } from "react-alert";
 import { useNavigate } from "react-router-dom";
 import './Register.css';
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * The component representing the /register-page

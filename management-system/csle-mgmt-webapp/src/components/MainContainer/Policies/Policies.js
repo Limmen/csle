@@ -27,6 +27,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * Component representing the /policies page

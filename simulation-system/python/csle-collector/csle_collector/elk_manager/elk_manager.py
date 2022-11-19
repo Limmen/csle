@@ -16,20 +16,14 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
     state of the ELK stack.
     """
 
-    def __init__(self, ip : str=None, hostname :str = None,) -> None:
+    def __init__(self) -> None:
         """
         Initializes the server
-
-        :param ip: the ip of the ELK server
-        :param hostname: the hostname of the ELK server
         """
-        logging.basicConfig(filename=f"/{constants.LOG_FILES.ELK_MANAGER_LOG_FILE}", level=logging.INFO)
-        self.ip = ip
-        self.hostname = hostname
-        if self.hostname is None:
-            self.hostname = socket.gethostname()
-        if self.ip is None:
-            self.ip = socket.gethostbyname(self.hostname)
+        logging.basicConfig(filename=f"{constants.LOG_FILES.ELK_MANAGER_LOG_DIR}"
+                                     f"{constants.LOG_FILES.ELK_MANAGER_LOG_FILE}", level=logging.INFO)
+        self.hostname = socket.gethostname()
+        self.ip = socket.gethostbyname(self.hostname)
         logging.info(f"Setting up ElkManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_elk_status(self) -> Tuple[bool,bool,bool]:
@@ -203,16 +197,23 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
             elasticRunning = elasticsearch_running, kibanaRunning = kibana_running, logstashRunning =False)
         return elk_dto
 
-def serve(port : int = 50045, ip=None, hostname=None) -> None:
+
+def serve(port : int = 50045, log_dir: str = "/", max_workers: int = 10,
+          log_file_name: str = "elk_manager.log") -> None:
     """
     Starts the gRPC server for managing the ELK stack
 
     :param port: the port that the server will listen to
+    :param log_dir: the directory to write the log file
+    :param log_file_name: the file name of the log
+    :param max_workers: the maximum number of GRPC workers
     :return: None
     """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    constants.LOG_FILES.ELK_MANAGER_LOG_DIR = log_dir
+    constants.LOG_FILES.ELK_MANAGER_LOG_FILE = log_file_name
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
     csle_collector.elk_manager.elk_manager_pb2_grpc.add_ElkManagerServicer_to_server(
-        ElkManagerServicer(hostname=hostname, ip=ip), server)
+        ElkManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
     server.start()
     logging.info(f"ElkManager Server Started, Listening on port: {port}")
@@ -221,4 +222,4 @@ def serve(port : int = 50045, ip=None, hostname=None) -> None:
 
 # Program entrypoint
 if __name__ == '__main__':
-    serve(port=50045)
+    serve()

@@ -188,7 +188,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         """
         self.arrival_thread = None
         self.producer_thread = None
-        logging.basicConfig(filename=f"/{constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE}", level=logging.INFO)
+        logging.basicConfig(filename=f"{constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR}"
+                                     f"{constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE}", level=logging.INFO)
 
     def getClients(self, request: csle_collector.client_manager.client_manager_pb2.GetClientsMsg, context: grpc.ServicerContext) \
             -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
@@ -379,14 +380,20 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         return clients_dto
 
 
-def serve(port : int = 50044) -> None:
+def serve(port : int = 50044, log_dir: str = "/", log_file_name: str = "client_manager.log",
+          max_workers: int = 10) -> None:
     """
     Starts the gRPC server for managing clients
 
     :param port: the port that the server will listen to
+    :param log_dir: the directory to write the log file
+    :param log_file_name: the file name of the log
+    :param max_workers: the maximum number of GRPC workers
     :return: None
     """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR = log_dir
+    constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE = log_file_name
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
     csle_collector.client_manager.client_manager_pb2_grpc.add_ClientManagerServicer_to_server(
         ClientManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
@@ -397,5 +404,5 @@ def serve(port : int = 50044) -> None:
 
 # Program entrypoint
 if __name__ == '__main__':
-    serve(port=50044)
+    serve()
 

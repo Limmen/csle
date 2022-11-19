@@ -13,6 +13,7 @@ import getAgentTypeStr from '../../../Common/getAgentTypeStr'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * The component representing the /jobs/<id> resource for training jobs

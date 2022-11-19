@@ -365,7 +365,7 @@ class ManagementSystemController:
         return constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in output and str(pid) in output
 
     @staticmethod
-    def start_docker_stats_manager(port: int = 50051) -> bool:
+    def start_docker_stats_manager(port: int = 50046) -> bool:
         """
         Starts the docker stats manager on the docker host if it is not already started
 

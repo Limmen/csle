@@ -17,13 +17,21 @@ class LOG_FILES:
     Constants related to the log files
     """
     KAFKA_MANAGER_LOG_FILE = "kafka_manager.log"
+    KAFKA_MANAGER_LOG_DIR = "/"
     OSSEC_IDS_MANAGER_LOG_FILE = "ossec_ids_manager.log"
+    OSSEC_IDS_MANAGER_LOG_DIR = "/"
     SNORT_IDS_MANAGER_LOG_FILE = "snort_ids_manager.log"
+    SNORT_IDS_MANAGER_LOG_DIR = "/"
     ELK_MANAGER_LOG_FILE = "elk_manager.log"
+    ELK_MANAGER_LOG_DIR = "/"
     DOCKER_STATS_MANAGER_LOG_FILE = "docker_stats_manager.log"
+    DOCKER_STATS_MANAGER_LOG_DIR = "/var/log/csle/"
     HOST_MANAGER_LOG_FILE = "host_manager.log"
+    HOST_MANAGER_LOG_DIR = "/"
     CLIENT_MANAGER_LOG_FILE = "client_manager.log"
+    CLIENT_MANAGER_LOG_DIR = "/"
     TRAFFIC_MANAGER_LOG_FILE = "traffic_manager.log"
+    TRAFFIC_MANAGER_LOG_DIR = "/"
 
 
 class TRAFFIC_GENERATOR:

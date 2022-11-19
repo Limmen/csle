@@ -22,6 +22,7 @@ import getSystemModelTypeStr from "../../Common/getSystemModelTypeStr";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * Component representing the /system-models-page

@@ -19,20 +19,14 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
     state of the server and create/delete topics.
     """
 
-    def __init__(self, ip : str=None, hostname :str = None,) -> None:
+    def __init__(self) -> None:
         """
         Initializes the server
-
-        :param ip: the ip of the kafka server
-        :param hostname: the hostname of the kafka server
         """
-        logging.basicConfig(filename=f"/{constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE}", level=logging.INFO)
-        self.ip = ip
-        self.hostname = hostname
-        if self.hostname is None:
-            self.hostname = socket.gethostname()
-        if self.ip is None:
-            self.ip = socket.gethostbyname(self.hostname)
+        logging.basicConfig(filename=f"{constants.LOG_FILES.KAFKA_MANAGER_LOG_DIR}"
+                                     f"{constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE}", level=logging.INFO)
+        self.hostname = socket.gethostname()
+        self.ip = socket.gethostbyname(self.hostname)
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
                 constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         logging.info(f"Setting up KafkaManager hostname: {self.hostname} ip: {self.ip}")
@@ -145,16 +139,22 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         return kafka_dto
 
 
-def serve(port : int = 50051, ip=None, hostname=None) -> None:
+def serve(port : int = 50051, log_dir: str = "/", max_workers: int = 10,
+          log_file_name: str = "kafka_manager.log") -> None:
     """
     Starts the gRPC server for managing clients
 
     :param port: the port that the server will listen to
+    :param log_dir: the directory to write the log file
+    :param log_file_name: the file name of the log
+    :param max_workers: the maximum number of GRPC workers
     :return: None
     """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    constants.LOG_FILES.KAFKA_MANAGER_LOG_DIR = log_dir
+    constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE = log_file_name
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
     csle_collector.kafka_manager.kafka_manager_pb2_grpc.add_KafkaManagerServicer_to_server(
-        KafkaManagerServicer(hostname=hostname, ip=ip), server)
+        KafkaManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
     server.start()
     logging.info(f"KafkaManager Server Started, Listening on port: {port}")
@@ -164,4 +164,4 @@ def serve(port : int = 50051, ip=None, hostname=None) -> None:
 
 # Program entrypoint
 if __name__ == '__main__':
-    serve(port=50051)
+    serve()

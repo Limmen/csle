@@ -8,6 +8,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import serverIp from "../../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * Component representing the /sdn-controllers/id resource

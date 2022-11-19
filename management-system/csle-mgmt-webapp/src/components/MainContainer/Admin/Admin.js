@@ -11,14 +11,17 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Type } from 'react-bootstrap-table2-editor';
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * Component representing the /admin-page
  */
 const Admin = (props) => {
     const [users, setUsers] = useState([]);
+    const [config, setConfig] = useState([]);
     const [loading, setLoading] = useState(true);
     const ip = serverIp;
+    const port = serverPort;
     const alert = useAlert();
     const navigate = useNavigate();
 
@@ -70,7 +73,7 @@ const Admin = (props) => {
 
     const fetchUsers = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/users' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/users' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -88,7 +91,7 @@ const Admin = (props) => {
                 return res.json()
             })
             .then(response => {
-                setUsers(response)
+                setConfig(response)
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
@@ -120,6 +123,33 @@ const Admin = (props) => {
             })
             .then(response => {
                 refresh()
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+
+    const fetchConfig = useCallback(() => {
+        fetch(
+            `http://` + ip + ':7777/config' + "?token=" + props.sessionData.token,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setUsers(response)
+                setLoading(false)
             })
             .catch(error => console.log("error:" + error))
     }, []);

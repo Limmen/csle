@@ -69,7 +69,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         """
         Initializes the server
         """
-        logging.basicConfig(filename=f"/{constants.LOG_FILES.HOST_MANAGER_LOG_FILE}", level=logging.INFO)
+        logging.basicConfig(filename=f"{constants.LOG_FILES.HOST_MANAGER_LOG_DIR}"
+                                     f"{constants.LOG_FILES.HOST_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
@@ -147,14 +148,20 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         )
 
 
-def serve(port : int = 50049) -> None:
+def serve(port : int = 50049, log_dir: str = "/", max_workers: int = 10,
+          log_file_name: str = "host_manager.log") -> None:
     """
     Starts the gRPC server for managing clients
 
     :param port: the port that the server will listen to
+    :param log_dir: the directory to write the log file
+    :param log_file_name: the file name of the log
+    :param max_workers: the maximum number of GRPC workers
     :return: None
     """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    constants.LOG_FILES.HOST_MANAGER_LOG_DIR = log_dir
+    constants.LOG_FILES.HOST_MANAGER_LOG_FILE = log_file_name
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
     csle_collector.host_manager.host_manager_pb2_grpc.add_HostManagerServicer_to_server(
         HostManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
@@ -165,4 +172,4 @@ def serve(port : int = 50049) -> None:
 
 # Program entrypoint
 if __name__ == '__main__':
-    serve(port=50049)
+    serve()

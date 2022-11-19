@@ -21,6 +21,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * Component representing the /statistics-page
@@ -47,6 +48,7 @@ const EmulationStatistics = (props) => {
     const [searchString, setSearchString] = useState("");
 
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

@@ -16,6 +16,7 @@ import {useNavigate} from "react-router-dom";
 import fileDownload from 'react-file-download'
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  *  Component representing the /downloads-page
@@ -36,6 +37,7 @@ const Downloads = (props) => {
     const [searchStringStatisticsDatasets, setSearchStringStatisticsDatasets] = useState("");
     const [loadingStatisticsDatasets, setLoadingStatisticsDatasets] = useState(true);
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
 

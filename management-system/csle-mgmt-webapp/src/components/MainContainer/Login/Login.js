@@ -4,6 +4,7 @@ import './Login.css';
 import Button from 'react-bootstrap/Button'
 import ChangeUserDataForm from "./ChangeUserDataForm/ChangeUserDataForm";
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * The component representing the /login-page
@@ -12,6 +13,7 @@ const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
 
     const loginUser = useCallback((credentials) => {

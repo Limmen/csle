@@ -11,6 +11,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * The component representing the /jobs/<id> resource for system identification jobs

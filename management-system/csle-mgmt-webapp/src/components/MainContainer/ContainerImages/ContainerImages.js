@@ -14,6 +14,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * Component representing the /images-page
@@ -25,6 +26,7 @@ const ContainerImages = (props) => {
     const [loading, setLoading] = useState([]);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"

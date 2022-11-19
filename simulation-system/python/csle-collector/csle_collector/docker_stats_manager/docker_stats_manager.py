@@ -145,7 +145,7 @@ class DockerStatsManagerServicer(
         Initializes the server
         """
         file_name = constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE
-        dir = "/var/log/csle/"
+        dir = constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR
         logfile = os.path.join(dir, file_name)
         logging.basicConfig(filename=logfile, level=logging.INFO)
         self.docker_stats_monitor_threads = []
@@ -244,14 +244,20 @@ class DockerStatsManagerServicer(
         )
 
 
-def serve(port: int = 50046) -> None:
+def serve(port: int = 50046, log_dir: str = "/var/log/csle/", max_workers: int = 10,
+          log_file_name: str = "docker_stats_manager.log") -> None:
     """
     Starts the gRPC server for managing clients
 
     :param port: the port that the server will listen to
+    :param log_dir: the directory to write the log file
+    :param log_file_name: the file name of the log
+    :param max_workers: the maximum number of parallel gRPC workers
     :return: None
     """
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR = log_dir
+    constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE = log_file_name
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
     csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.add_DockerStatsManagerServicer_to_server(
         DockerStatsManagerServicer(), server)
     server.add_insecure_port(f'[::]:{port}')
@@ -262,4 +268,4 @@ def serve(port: int = 50046) -> None:
 
 # Program entrypoint
 if __name__ == '__main__':
-    serve(port=50046)
+    serve()

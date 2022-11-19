@@ -17,6 +17,7 @@ import {useDebouncedCallback} from 'use-debounce';
 import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
+import serverPort from "../../Common/serverPort";
 
 /**
  * Component with a user interface to the control plane of the emulations
@@ -34,6 +35,7 @@ const ControlPlane = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [searchString, setSearchString] = useState("");
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
 
