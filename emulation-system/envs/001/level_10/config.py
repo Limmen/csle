@@ -2348,7 +2348,8 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
     config = KafkaConfig(container=container, resources=resources, topics=topics,
                          version=version, kafka_port=9092, kafka_manager_port=50051,
                          time_step_len_seconds=15,
-                         firewall_config=firewall_config)
+                         firewall_config=firewall_config, kafka_manager_log_file="kafka_manager.log",
+                         kafka_manager_log_dir="/", kafka_manager_max_workers=10)
     return config
 
 

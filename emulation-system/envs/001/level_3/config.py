@@ -4043,7 +4043,8 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
 
     config = KafkaConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
                          version=version, kafka_port=9092, kafka_manager_port=50051,
-                         time_step_len_seconds=15)
+                         time_step_len_seconds=15, kafka_manager_log_file="kafka_manager.log",
+                         kafka_manager_log_dir="/", kafka_manager_max_workers=10)
     return config
 
 def default_users_config(network_id: int) -> UsersConfig:

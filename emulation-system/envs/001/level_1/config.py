@@ -383,7 +383,8 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
         num_cpus=1, available_memory_gb=4,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
              None)])
 
     firewall_config = NodeFirewallConfig(
@@ -509,7 +510,8 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
 
     config = KafkaConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
                          version=version, kafka_port=9092, kafka_manager_port=50051,
-                         time_step_len_seconds=15)
+                         time_step_len_seconds=15, kafka_manager_log_file="kafka_manager.log",
+                         kafka_manager_log_dir="/", kafka_manager_max_workers=10)
     return config
 
 
