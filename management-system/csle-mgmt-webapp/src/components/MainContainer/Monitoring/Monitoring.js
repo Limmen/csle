@@ -110,6 +110,7 @@ const Monitoring = (props) => {
     const [openFlowSwitchesOptions, setOpenFlowSwitchesOptions] = useState([]);
     const [selectedOpenFlowSwitch, setSelectedOpenFlowSwitch] = useState(null);
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
 
@@ -309,7 +310,7 @@ const Monitoring = (props) => {
 
     const startOrStopGrafanaRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/grafana' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/grafana' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -337,7 +338,7 @@ const Monitoring = (props) => {
 
     const startOrStopcAdvisorRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/cadvisor' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/cadvisor' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -365,7 +366,7 @@ const Monitoring = (props) => {
 
     const startOrStopNodeExporterRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/node-exporter' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/node-exporter' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -393,7 +394,7 @@ const Monitoring = (props) => {
 
     const startOrStopPrometheusRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/prometheus' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/prometheus' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -421,7 +422,7 @@ const Monitoring = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulation-executions?ids=true' + "&token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulation-executions?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -465,7 +466,7 @@ const Monitoring = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`http://` + ip + ':7777/emulation-executions/' + id_obj.value.id + "?emulation="
+            (`http://` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "?emulation="
                 + id_obj.value.emulation + "&token=" + props.sessionData.token),
             {
                 method: "GET",
@@ -506,7 +507,7 @@ const Monitoring = (props) => {
     }, []);
 
     const fetchMonitoringData = useCallback((len, execution) => fetch(
-        (`http://` + ip + ':7777/emulations/' + execution.emulation_env_config.id +
+        (`http://` + ip + ':' + port + '/emulations/' + execution.emulation_env_config.id +
             "/executions/" + execution.ip_first_octet + "/monitor/" + len + "?token=" + props.sessionData.token),
         {
             method: "GET",
@@ -546,7 +547,7 @@ const Monitoring = (props) => {
 
     const fetchGrafanaStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/grafana' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/grafana' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -574,7 +575,7 @@ const Monitoring = (props) => {
 
     const fetchCadvisorStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/cadvisor' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/cadvisor' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -602,7 +603,7 @@ const Monitoring = (props) => {
 
     const fetchPrometheusStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/prometheus' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/prometheus' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -630,7 +631,7 @@ const Monitoring = (props) => {
 
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/node-exporter' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/node-exporter' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

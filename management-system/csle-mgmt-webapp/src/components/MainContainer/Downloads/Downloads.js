@@ -43,7 +43,7 @@ const Downloads = (props) => {
 
     const fetchTracesDatasets = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/traces-datasets',
+            `http://` + ip + ':' + port + '/traces-datasets',
             {
                 method: "GET",
                 headers: new Headers({
@@ -65,7 +65,7 @@ const Downloads = (props) => {
 
     const removeAllTracesDatasetsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/traces-datasets' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/traces-datasets' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -93,7 +93,7 @@ const Downloads = (props) => {
 
     const removeTracesDatasetRequest = useCallback((tracesDataset) => {
         fetch(
-            `http://` + ip + ':7777/traces-datasets/' + tracesDataset.id + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/traces-datasets/' + tracesDataset.id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -544,7 +544,7 @@ const Downloads = (props) => {
 
     const fetchStatisticsDatasets = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/statistics-datasets',
+            `http://` + ip + ':' + port + '/statistics-datasets',
             {
                 method: "GET",
                 headers: new Headers({
@@ -566,7 +566,7 @@ const Downloads = (props) => {
 
     const removeAllStatisticsDatasetsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/statistics-datasets' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/statistics-datasets' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -594,7 +594,7 @@ const Downloads = (props) => {
 
     const removeStatisticsDatasetRequest = useCallback((statisticsDataset) => {
         fetch(
-            `http://` + ip + ':7777/statistics-datasets/' + statisticsDataset.id + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/statistics-datasets/' + statisticsDataset.id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

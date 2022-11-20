@@ -16,12 +16,13 @@ const Register = () => {
     const [organization, setOrganization] = useState("");
     const [email, setEmail] = useState("");
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
 
     const createUser = useCallback((userConfiguration) => {
         fetch(
-            `http://` + ip + ':7777/users/create',
+            `http://` + ip + ':' + port +'/users/create',
             {
                 method: "POST",
                 headers: new Headers({

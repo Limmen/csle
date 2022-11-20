@@ -41,7 +41,7 @@ const Emulations = (props) => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulations?ids=true&token=' + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulations?ids=true&token=' + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -92,7 +92,7 @@ const Emulations = (props) => {
 
     const removeEmulationRequest = useCallback((emulationId) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulationId + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulations/' + emulationId + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -122,7 +122,7 @@ const Emulations = (props) => {
 
     const removeEmulationExecutionRequest = useCallback((emulation_id, execution_id) => {
         fetch(
-            (`http://` + ip + ':7777/emulations/' + emulation_id + '/executions/' + execution_id
+            (`http://` + ip + ':' + port + '/emulations/' + emulation_id + '/executions/' + execution_id
                 + "?token=" + props.sessionData.token),
             {
                 method: "DELETE",
@@ -156,7 +156,7 @@ const Emulations = (props) => {
 
     const startOrStopEmulationRequest = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulations/' + emulation_id + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -189,7 +189,7 @@ const Emulations = (props) => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id.value + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulations/' + emulation_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -218,7 +218,7 @@ const Emulations = (props) => {
 
     const removeAllEmulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulations' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulations' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

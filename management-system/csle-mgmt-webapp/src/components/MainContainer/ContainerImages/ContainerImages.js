@@ -33,7 +33,7 @@ const ContainerImages = (props) => {
 
     const fetchImages = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/images' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/images' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

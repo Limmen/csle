@@ -152,7 +152,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatisticsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulation-statistics?ids=true' + "&token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulation-statistics?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -202,7 +202,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatistic = useCallback((statistic_id) => {
         fetch(
-            (`http://` + ip + ':7777/emulation-statistics/' + statistic_id.value +
+            (`http://` + ip + ':' + port + '/emulation-statistics/' + statistic_id.value +
             "?token=" + props.sessionData.token),
             {
                 method: "GET",
@@ -252,7 +252,7 @@ const EmulationStatistics = (props) => {
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `http://` + ip + ':7777/emulation-statistics/' + statistic_id + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulation-statistics/' + statistic_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

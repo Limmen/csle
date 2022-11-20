@@ -30,13 +30,14 @@ const SDNControllers = (props) => {
     const [filteredEmulationsIds, setFilteredEmulationsIds] = useState([]);
     const [searchString, setSearchString] = useState("");
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/sdn-controllers?ids=true' + "&token=" + props.sessionData.token,
+            `http://` + ip+ ':' + port +'/sdn-controllers?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -83,7 +84,7 @@ const SDNControllers = (props) => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id.value + "/executions/"+ emulation_id.exec_id
+            `http://` + ip + ':' + port +'/emulations/' + emulation_id.value + "/executions/"+ emulation_id.exec_id
             + "?token=" + props.sessionData.token,
             {
                 method: "GET",

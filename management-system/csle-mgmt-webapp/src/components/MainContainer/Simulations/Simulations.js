@@ -33,13 +33,14 @@ const Simulations = (props) => {
     const [loading, setLoading] = useState(true);
     const [loadingSelectedSimulation, setLoadingSelectedSimulation] = useState(true);
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulations?ids=true' + "&token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/simulations?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -84,7 +85,7 @@ const Simulations = (props) => {
 
     const fetchSimulation = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':7777/simulations/' + simulation_id.value + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port +'/simulations/' + simulation_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -113,7 +114,7 @@ const Simulations = (props) => {
 
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/simulations' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port +'/simulations' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -147,7 +148,7 @@ const Simulations = (props) => {
 
     const removeSimulationRequest = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':7777/simulations/' + simulation_id + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port +'/simulations/' + simulation_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

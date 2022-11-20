@@ -18,7 +18,7 @@ const Login = (props) => {
 
     const loginUser = useCallback((credentials) => {
         fetch(
-            `http://` + ip + ':7777/login',
+            `http://` + ip + ':' + port + '/login',
             {
                 method: "POST",
                 headers: new Headers({

@@ -85,7 +85,7 @@ const ControlPlane = (props) => {
     );
 
     const fetchExecutionInfo = useCallback((id_obj) => fetch(
-        (`http://` + ip + ':7777/emulation-executions/' + id_obj.value.id + "/info?emulation="
+        (`http://` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "/info?emulation="
             + id_obj.value.emulation + "&token=" + props.sessionData.token),
         {
             method: "GET",
@@ -114,7 +114,7 @@ const ControlPlane = (props) => {
 
     const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, node_ip) => {
         fetch(
-            `http://` + ip + ':7777/emulation-executions/' + id + "/" + entity + "?emulation="
+            `http://` + ip + ':' + port + '/emulation-executions/' + id + "/" + entity + "?emulation="
             + emulation + "&token=" + props.sessionData.token,
             {
                 method: "POST",
@@ -189,7 +189,7 @@ const ControlPlane = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/emulation-executions?ids=true' + "&token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/emulation-executions?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -236,7 +236,7 @@ const ControlPlane = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`http://` + ip + ':7777/emulation-executions/' + id_obj.value.id + "?emulation="
+            (`http://` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "?emulation="
                 + id_obj.value.emulation + "&token=" + props.sessionData.token),
             {
                 method: "GET",

@@ -78,6 +78,7 @@ const PolicyExamination = (props) => {
     const fullDomain = true
     const fullRange = true
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
 
@@ -102,7 +103,7 @@ const PolicyExamination = (props) => {
     // const ip = "172.31.212.92"
 
     const fetchTraces = useCallback(() => {
-        fetch(`http://` + ip + ':7777/emulation-simulation-traces' + "?token=" + props.sessionData.token, {
+        fetch(`http://` + ip + ':' + port +'/emulation-simulation-traces' + "?token=" + props.sessionData.token, {
             method: "GET", headers: new Headers({
                 Accept: "application/vnd.github.cloak-preview"
             })

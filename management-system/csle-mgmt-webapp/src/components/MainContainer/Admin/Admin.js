@@ -99,7 +99,7 @@ const Admin = (props) => {
 
     const updateUser = useCallback((user) => {
         fetch(
-            `http://` + ip + ':7777/users/' + user.id + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/users/' + user.id + "?token=" + props.sessionData.token,
             {
                 method: "PUT",
                 headers: new Headers({
@@ -130,7 +130,7 @@ const Admin = (props) => {
 
     const fetchConfig = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/config' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/config' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
