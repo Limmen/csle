@@ -1,0 +1,29 @@
+.aboutText {
+    font-size: 14px;
+}
+
+.publicationsTitle {
+    margin-top: 20px
+}
+
+.boldSpan {
+    font-weight: bolder;
+}
+
+.archImg {
+    height:400px;
+    width:510px;
+}
+
+.usersTable {
+    font-size: 12px;
+}
+
+.configTable {
+    font-size: 12px;
+}
+
+.saveUsersBtn {
+    margin-left:20px;
+    font-size: 10px;
+}

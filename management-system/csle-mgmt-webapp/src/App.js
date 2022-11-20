@@ -12,7 +12,9 @@ import ContainerImages from "./components/MainContainer/ContainerImages/Containe
 import Simulations from "./components/MainContainer/Simulations/Simulations";
 import TrainingResults from "./components/MainContainer/TrainingResults/TrainingResults";
 import About from "./components/MainContainer/About/About";
-import UserAdmin from "./components/MainContainer/UserAdmin/Admin";
+import UserAdmin from "./components/MainContainer/UserAdmin/UserAdmin";
+import SystemAdmin from "./components/MainContainer/SystemAdmin/SystemAdmin";
+import LogsAdmin from "./components/MainContainer/LogsAdmin/LogsAdmin";
 import Login from "./components/MainContainer/Login/Login";
 import Register from "./components/MainContainer/Register/Register";
 import Policies from "./components/MainContainer/Policies/Policies";
@@ -144,6 +146,18 @@ function App() {
                                 <Route path="user-admin-page" index element={
                                     <ProtectedRoute>
                                     <UserAdmin sessionData={sessionData} setSessionData={setSessionData} />
+                                    </ProtectedRoute>
+                                }>
+                                </Route>
+                                <Route path="system-admin-page" index element={
+                                    <ProtectedRoute>
+                                        <SystemAdmin sessionData={sessionData} setSessionData={setSessionData} />
+                                    </ProtectedRoute>
+                                }>
+                                </Route>
+                                <Route path="logs-admin-page" index element={
+                                    <ProtectedRoute>
+                                        <LogsAdmin sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>
                                 }>
                                 </Route>

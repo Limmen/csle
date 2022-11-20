@@ -9,22 +9,56 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
  */
 const Header = (props) => {
     const location = useLocation();
-    const dropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",
+    const managementDropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",
         "/emulation-statistics-page", "/system-models-page", "/policy-examination-page", "/images-page",
         "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page", "/control-plane-page"]
+    const adminDropdownRoutes = ["/user-admin-page", "/system-admin-page", "/logs-admin-page"]
 
     const ActionsCellTracesDataset = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
-                <li className="nav-item navtabheader">
+                <li className="nav-item dropdown navtabheader">
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
                         overlay={renderAdminTooltip}>
-                        <NavLink className="nav-link navtablabel largeFont" to={"admin-page"}>
-                            Admin
-                        </NavLink>
+                        <a className={"nav-link dropdown-toggle navtablabel largeFont "
+                            + (adminDropdownRoutes.includes(location.pathname) ? 'active' : 'notActive')}
+                           data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false"
+                           id="navbarDropdown"
+                        >
+                            Administration </a>
                     </OverlayTrigger>
+                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderUserAdminTooltip}
+                            data-toggle="tab">
+                            <NavLink className="dropdown-item" to={"user-admin-page"} data-toggle="tab">
+                                User administration
+                            </NavLink>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderSystemAdminTooltip}
+                            data-toggle="tab">
+                            <NavLink className="dropdown-item" to={"system-admin-page"} data-toggle="tab">
+                                System administration
+                            </NavLink>
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                            placement="right"
+                            delay={{show: 0, hide: 0}}
+                            overlay={renderLogsAdminTooltip}
+                            data-toggle="tab">
+                            <NavLink className="dropdown-item" to={"logs-admin-page"} data-toggle="tab">
+                                Logs administration
+                            </NavLink>
+                        </OverlayTrigger>
+                    </div>
                 </li>
             )
         } else {
@@ -124,7 +158,25 @@ const Header = (props) => {
 
     const renderAdminTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Administration of the environment.
+        </Tooltip>
+    );
+
+    const renderUserAdminTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Administration of user accounts.
+        </Tooltip>
+    );
+
+    const renderSystemAdminTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Administration of system configuration.
+        </Tooltip>
+    );
+
+    const renderLogsAdminTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Administration of system logs.
         </Tooltip>
     );
 
@@ -201,7 +253,7 @@ const Header = (props) => {
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderManagementTooltip}>
                                 <a className={"nav-link dropdown-toggle navtablabel largeFont "
-                                    + (dropdownRoutes.includes(location.pathname) ? 'active' : 'notActive')}
+                                    + (managementDropdownRoutes.includes(location.pathname) ? 'active' : 'notActive')}
                                    data-toggle="dropdown"
                                    role="button" aria-haspopup="true" aria-expanded="false"
                                    id="navbarDropdown"

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import './Admin.css';
+import './UserAdmin.css';
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -14,12 +14,10 @@ import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 
 /**
- * Component representing the /admin-page
+ * Component representing the /user-admin-page
  */
 const UserAdmin = (props) => {
     const [users, setUsers] = useState([]);
-    const [parametersConfig, setParametersConfig] = useState([]);
-    const [clusterConfig, setClusterConfig] = useState([]);
     const [loading, setLoading] = useState(true);
     const ip = serverIp;
     const port = serverPort;
@@ -69,39 +67,6 @@ const UserAdmin = (props) => {
         {
             dataField: 'password',
             text: 'Password'
-        }
-    ];
-
-    const parameterConfigColumns = [
-        {
-            dataField: 'param',
-            text: 'Parameter'
-        },
-        {
-            dataField: 'value',
-            text: 'Value'
-        }
-    ];
-
-    const clusterConfigColumns = [
-        {
-            dataField: 'ip',
-            text: 'IP'
-        },
-        {
-            dataField: 'master',
-            text: 'Master',
-            editor: {
-                type: Type.SELECT,
-                options: [{
-                    value: 'true',
-                    label: 'true'
-                }, {
-                    value: 'false',
-                    label: 'false'
-                }
-                ]
-            }
         }
     ];
 
@@ -161,68 +126,9 @@ const UserAdmin = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const updateConfig = useCallback((config) => {
-        fetch(
-            `http://` + ip + ':' + port + '/config' + "?token=" + props.sessionData.token,
-            {
-                method: "PUT",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                }),
-                body: JSON.stringify({config: config})
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate("/login-page");
-                    return null
-                }
-                if(res.status === 400) {
-                    alert.show("Invalid request, could not update users")
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                refresh()
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
-
-    const fetchConfig = useCallback(() => {
-        fetch(
-            `http://` + ip + ':' + port + '/config' + "?token=" + props.sessionData.token,
-            {
-                method: "GET",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate("/login-page");
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                setParametersConfig(response.parameters)
-                setClusterConfig(response.cluster_config.cluster_nodes)
-                setLoading(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
     const refresh = () => {
         setLoading(true)
         fetchUsers()
-        fetchConfig()
     }
 
     const renderRefreshTooltip = (props) => (
@@ -270,106 +176,16 @@ const UserAdmin = (props) => {
         }
     }
 
-    const ConfigTableOrSpinner = (props) => {
-        if (!props.loading && props.config.length === 0) {
-            return (
-                <div>
-                    <span className="emptyText">No configuration is available</span>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshTooltip}
-                    >
-                        <Button variant="button" onClick={refresh}>
-                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </div>
-            )
-        }
-        if (props.loading) {
-            return (
-                <div>
-                    <span className="spinnerLabel"> Fetching configuration... </span>
-                    <Spinner animation="border" role="status" className="dropdownSpinner">
-                        <span className="visually-hidden"></span>
-                    </Spinner>
-                </div>)
-        } else {
-            return (
-                <div className="configTable">
-                    <BootstrapTable
-                        keyField="id"
-                        data={ props.config }
-                        columns={ parameterConfigColumns }
-                        cellEdit={ cellEditFactory({ mode: 'click' }) }
-                    />
-                </div>
-            )
-        }
-    }
-
-
-    const ClusterConfigTableOrSpinner = (props) => {
-        if (!props.loading && props.config.length === 0) {
-            return (
-                <div>
-                    <span className="emptyText">No cluster configuration is available</span>
-                    <OverlayTrigger
-                        placement="top"
-                        delay={{show: 0, hide: 0}}
-                        overlay={renderRefreshTooltip}
-                    >
-                        <Button variant="button" onClick={refresh}>
-                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
-                        </Button>
-                    </OverlayTrigger>
-                </div>
-            )
-        }
-        if (props.loading) {
-            return (
-                <div>
-                    <span className="spinnerLabel"> Fetching configuration... </span>
-                    <Spinner animation="border" role="status" className="dropdownSpinner">
-                        <span className="visually-hidden"></span>
-                    </Spinner>
-                </div>)
-        } else {
-            return (
-                <div className="configTable">
-                    <BootstrapTable
-                        keyField="id"
-                        data={ props.config }
-                        columns={ clusterConfigColumns }
-                        cellEdit={ cellEditFactory({ mode: 'click' }) }
-                    />
-                </div>
-            )
-        }
-    }
-
     const saveUsers = () => {
         for (let i = 0; i < users.length; i++) {
             updateUser(users[i])
         }
     }
 
-    const saveConfig = () => {
-        var clusterConfigObj = {
-            "cluster_nodes" : clusterConfig
-        }
-        var configObj = {}
-        configObj["cluster_config"] = clusterConfigObj
-        configObj["parameters"] = parametersConfig
-        updateConfig(configObj)
-    }
-
     useEffect(() => {
         setLoading(true);
         fetchUsers()
-        fetchConfig()
-    }, [fetchUsers, fetchConfig]);
+    }, [fetchUsers]);
 
     return (
         <div className="Admin">
@@ -382,31 +198,6 @@ const UserAdmin = (props) => {
                 <div className="col-sm-1"></div>
                 <div className="col-sm-10">
                     <UsersTableOrSpinner users={users} loading={loading} />
-                </div>
-                <div className="col-sm-1"></div>
-            </div>
-            <h3> System Configuration (click in a cell to edit, press enter to save)
-                <button type="submit" className="btn btn-primary btn-sm saveUsersBtn" onClick={saveConfig}>
-                    Save
-                </button>
-            </h3>
-            <div className="row">
-                <div className="col-sm-1"></div>
-                <div className="col-sm-10">
-                    <ConfigTableOrSpinner config={parametersConfig} loading={loading} />
-                </div>
-                <div className="col-sm-1"></div>
-            </div>
-
-            <h3> Cluster Configuration (click in a cell to edit, press enter to save)
-                <button type="submit" className="btn btn-primary btn-sm saveUsersBtn" onClick={saveConfig}>
-                    Save
-                </button>
-            </h3>
-            <div className="row">
-                <div className="col-sm-1"></div>
-                <div className="col-sm-10">
-                    <ClusterConfigTableOrSpinner config={clusterConfig} loading={loading} />
                 </div>
                 <div className="col-sm-1"></div>
             </div>

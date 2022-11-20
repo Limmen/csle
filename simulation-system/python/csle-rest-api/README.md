@@ -117,6 +117,26 @@ A REST API for the CSLE management platform.
 | `/users/<user_id>?token=<valid_token>`                                                                | Get/update/delete individual user                              | `GET`,`DELETE`, `PUT`                   |
 | `/users/create`                                                                                       | Create a new user                                              | `POST`                                  |
 | `/config?token=<valid_token>`                                                                         | Get/Update system configuration                                | `GET`,`PUT`                             |
+| `/about-page`                                                                                         | Get the about page                                             | `GET`                             |
+| `/login-page`                                                                                         | Get the login page                                             | `GET`                             |
+| `/register-page`                                                                                      | Get the register page                                          | `GET`                             |
+| `/emulation-statistics-page`                                                                          | Get the emulation-statistics                                   | `GET`                             |
+| `/emulations-page`                                                                                    | Get the emulation page                                         | `GET`                             |
+| `/images-page`                                                                                        | Get the images page                                            | `GET`                             |
+| `/downloads-page`                                                                                     | Get the downloads page                                         | `GET`                             |
+| `/jobs-page`                                                                                          | Get the jobs page                                              | `GET`                             |
+| `/monitoring-page`                                                                                    | Get the monitoring page                                        | `GET`                             |
+| `/policies-page`                                                                                      | Get the policies page                                          | `GET`                             |
+| `/policy-examination-page`                                                                            | Get the policy-examination page                                | `GET`                             |
+| `/sdn-controllers-page`                                                                               | Get the SDN-controllers page                                   | `GET`                             |
+| `/control-plane-page`                                                                                 | Get the control-plane page                                     | `GET`                             |
+| `/user-admin-page`                                                                                    | Get the user administration page                               | `GET`                             |
+| `/system-admin-page`                                                                                  | Get the system administration page                             | `GET`                             |
+| `/logs-admin-page`                                                                                    | Get the logs administration page                               | `GET`                             |
+| `/simulations-page`                                                                                   | Get the simulations page                                       | `GET`                             |
+| `/system-models-page`                                                                                 | Get the system models page                                     | `GET`                             |
+| `/traces-page`                                                                                        | Get the traces page                                            | `GET`                             |
+| `/training-page`                                                                                      | Get the training page                                          | `GET`                             |
 
 ## Author & Maintainer
 
