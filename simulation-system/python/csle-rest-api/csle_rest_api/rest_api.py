@@ -120,7 +120,7 @@ def create_app(static_folder: str):
                                       f"{api_constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE}")
     app.register_blueprint(admin_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
-                                      f"{api_constants.MGMT_WEBAPP.ADMIN_PAGE_RESOURCE}")
+                                      f"{api_constants.MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE}")
     app.register_blueprint(register_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE}")
