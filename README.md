@@ -121,7 +121,7 @@ chmod u+rwx Anaconda3-5.0.0-Linux-x86_64.sh
 
 2. **Setup the configuration**
 
-- Setup your configuration (e.g define username and passwords) by editing the config file `csle/config.json`
+- Setup your configuration (e.g define default username and passwords for the management system) by editing the config file `csle/config.json`
 
 3. **Clone the repository, set CSLE_HOME environment variable and setup logging directory**
 
@@ -419,6 +419,10 @@ running commands can read and write to this directory.
      - Configure the IP of the server where the management system runs by editing the file:
       ```bash
        csle/management-system/csle-mgmt-webapp/src/components/Common/serverIp.js
+      ```
+    - Configure the Port of the server where the management system runs by editing the file:
+      ```bash
+       csle/management-system/csle-mgmt-webapp/src/components/Common/serverPort.js
       ```
      - Add prometheus binary to the path
        ```bash

@@ -112,10 +112,11 @@ A REST API for the CSLE management platform.
 | `/emulation-executions/<execution_id>/kibana?token=<valid_token>&emulation=<emulation>`               | Start/stop Kibana on an emulation execution                    | `POST`                                  |
 | `/emulation-executions/<execution_id>/container?token=<valid_token>&emulation=<emulation>`            | Start/stop container of an emulation execution                 | `POST`                                  |
 | `/emulation-executions/<execution_id>/elk-stack?token=<valid_token>&emulation=<emulation>`            | Start/stop ELK stack of an emulation execution                 | `POST`                                  |
-| `/users?token=<valid_token>`                                                                          | List of users                                                  | `GET`,`DELETE`                          |
+| `/users?token=<valid_token>`                                                                          | Get/Update/Delete List of users                                | `GET`,`DELETE`, `PUT`                   |
 | `/users?ids=true&token=<valid_token>`                                                                 | List of user ids only (fast to fetch)                          | `GET`,`DELETE`                          |
 | `/users/<user_id>?token=<valid_token>`                                                                | Get/update/delete individual user                              | `GET`,`DELETE`, `PUT`                   |
 | `/users/create`                                                                                       | Create a new user                                              | `POST`                                  |
+| `/config?token=<valid_token>`                                                                         | Get/Update system configuration                                | `GET`,`PUT`                             |
 
 ## Author & Maintainer
 
