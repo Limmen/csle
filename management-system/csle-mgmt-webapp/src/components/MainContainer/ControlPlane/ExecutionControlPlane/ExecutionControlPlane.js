@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
+import { useNavigate } from "react-router-dom";
 import './ExecutionControlPlane.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
@@ -8,8 +9,12 @@ import Collapse from 'react-bootstrap/Collapse'
 import getIps from "../../../Common/getIps";
 import getTopicsString from "../../../Common/getTopicsString";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Modal from 'react-bootstrap/Modal'
 import Tooltip from 'react-bootstrap/Tooltip';
 import Spinner from 'react-bootstrap/Spinner'
+import serverIp from "../../../Common/serverIp";
+import serverPort from "../../../Common/serverPort";
+import parseLogs from "../../../Common/parseLogs";
 
 /**
  * Component representing the /emulation-executions/<id>/control resource
@@ -26,6 +31,40 @@ const ExecutionControlPlane = (props) => {
     const [elkManagersOpen, setElkManagersOpen] = useState(false);
     const [trafficManagersOpen, setTrafficManagersOpen] = useState(false);
     const [loadingEntities, setLoadingEntities] = useState([]);
+    const [showLogsModal, setShowLogsModal] = useState(false);
+    const [containerToGetLogsFor, setContainerToGetLogsFor] = useState(null);
+    const [loadingContainerLogs, setLoadingContainerLogs] = useState(false);
+    const [containerLogs, setContainerLogs] = useState([]);
+    const ip = serverIp;
+    const port = serverPort;
+    const navigate = useNavigate();
+
+    const fetchContainerLogs = useCallback((containerName) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/container' + "?token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({name: containerName})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingContainerLogs(false)
+                setContainerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
 
     const activeStatus = (active) => {
         if (active) {
@@ -38,6 +77,12 @@ const ExecutionControlPlane = (props) => {
     const renderStopTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Stop
+        </Tooltip>)
+    }
+
+    const renderLogsTooltip = (props) => {
+        return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            View logs
         </Tooltip>)
     }
 
@@ -66,10 +111,97 @@ const ExecutionControlPlane = (props) => {
         setLoadingEntities(newLoadingEntities)
     }
 
+    const getContainerLogs = (containerName) => {
+        setShowLogsModal(true)
+        setContainerToGetLogsFor(containerName)
+        setLoadingContainerLogs(true)
+        fetchContainerLogs(containerName)
+    }
+
     const startOrStop = (start, stop, entity, name, ip) => {
         addLoadingEntity(entity + "-" + ip)
         props.startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
             start, stop, entity, name, ip)
+    }
+
+    const SpinnerOrLogs = (props) => {
+        if (props.loadingLogs || props.logs === null || props.logs === undefined) {
+            return (
+                <div>
+                    <span className="logsLabel">Fetching logs...</span>
+                <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+            />
+                </div>
+                    )
+        } else {
+            return (
+                <div className="table-responsive">
+                    <Table striped bordered hover>
+                        <thead>
+                        <tr>
+                            <th>Line number</th>
+                            <th>Log</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {props.logs.map((logLine, index) => {
+                            return <tr key={logLine.index + "-" + index}>
+                                <td>{logLine.index}</td>
+                                <td>{logLine.content}</td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </Table>
+                </div>
+            )
+        }
+    }
+
+    const LogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for container: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                    <div className="table-responsive">
+                        <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                    </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const LogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getContainerLogs(props.name)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
     }
 
     const SpinnerOrButton = (props) => {
@@ -113,6 +245,8 @@ const ExecutionControlPlane = (props) => {
     };
 
     return (<Card key={props.execution.name} ref={props.wrapper}>
+        <LogsModal show={showLogsModal} onHide={() => setShowLogsModal(false)} name={containerToGetLogsFor}
+         loading={loadingContainerLogs} logs={containerLogs} />
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.execution.emulation_name + "_"
                 + props.execution.ip_first_octet} className="mgHeader">
@@ -177,6 +311,10 @@ const ExecutionControlPlane = (props) => {
                                                     running={true} entity="container"
                                                     name={container.full_name_str} ip={container.full_name_str}
                                                 />
+                                                <LogsButton
+                                                    loading={loadingEntities.includes("container-" +
+                                                        container.full_name_str + "-logs")}
+                                                    name={container.full_name_str}/>
                                             </td>
                                         </tr>
                                     )}
@@ -755,8 +893,7 @@ const ExecutionControlPlane = (props) => {
                                             {activeStatus(status.snort_ids_running)}
                                             <td>
                                                 <SpinnerOrButton
-                                                    loading={loadingEntities.includes("snort-ids-" +
-                                                        props.info.snort_ids_managers_info.ips[index])}
+                                                    loading={loadingEntities.includes("snort-ids-" + props.info.snort_ids_managers_info.ips[index])}
                                                     running={status.snort_ids_running}
                                                     entity={"snort-ids"} name={"snort-ids"}
                                                     ip={props.info.snort_ids_managers_info.ips[index]}

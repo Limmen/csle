@@ -15,3 +15,12 @@
 .aggregateActionsContainer {
     margin-bottom: 15px;
 }
+
+.logsModalBody {
+    align-content: center;
+    text-align: center;
+}
+
+.logsLabel {
+    margin-right: 20px;
+}

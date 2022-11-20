@@ -4,6 +4,7 @@ Routes and sub-resources for the /logs resource
 from flask import Blueprint, jsonify, request
 import os
 import subprocess
+import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -166,6 +167,32 @@ def grafana_logs():
         return authorized
 
     cmd = constants.COMMANDS.GRAFANA_LOGS
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    (output, err) = p.communicate()
+    output = output.decode("utf-8")
+    output = output.split("\n")[-100:]
+    data = output
+    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def container_logs():
+    """
+    The /logs/container resource.
+
+    :return: The logs of a specific container
+    """
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+    container_name = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
+    cmd = constants.COMMANDS.CONTAINER_LOGS.format(container_name)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (output, err) = p.communicate()
     output = output.decode("utf-8")

@@ -170,7 +170,7 @@ const ControlPlane = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <p className="modalText">
-                        To perform these management operations, a dedicated management network is used.
+                        To perform management operations, a dedicated management network is used.
                         Each component in the emulated infrastructure has a dedicated port to
                         communicate with the management network. The reason for using a dedicated management network
                         instead of carrying management traffic on the same network as the rest of the services is to
@@ -422,6 +422,7 @@ const ControlPlane = (props) => {
                                    selectedEmulationExecutionInfo={selectedEmulationExecutionInfo}
                                    emulationExecutionContainerOptions={emulationExecutionContainerOptions}
                                    startOrStopEntity={startOrStopEntity}
+                                   sessionData={props.sessionData}
             />
         </div>
     );

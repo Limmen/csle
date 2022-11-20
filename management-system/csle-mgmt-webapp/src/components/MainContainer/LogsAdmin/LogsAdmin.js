@@ -13,6 +13,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import parseLogs from "../../Common/parseLogs";
 
 /**
  * Component representing the /logs-admin-page
@@ -262,16 +263,6 @@ const LogsAdmin = (props) => {
             Reload logs from the backend
         </Tooltip>
     );
-
-    const parseLogs = (lines) => {
-        var data = lines.map((line, index) => {
-            return {
-                index: index,
-                content: line
-            }
-        })
-        return data
-    }
 
     const SpinnerOrLogs = (props) => {
         if (props.loadingLogs || props.logs === null || props.logs === undefined) {
