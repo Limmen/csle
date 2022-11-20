@@ -858,6 +858,10 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
            containers + image_names
 
 
+@click.argument('max_workers', default=10, type=int, shell_complete=start_shell_complete)
+@click.argument('log_file', default="docker_statsmanager.log", type=str, shell_complete=start_shell_complete)
+@click.argument('log_dir', default="/var/log/csle", type=str, shell_complete=start_shell_complete)
+@click.argument('port', default=50051, type=int, shell_complete=start_shell_complete)
 @click.option('--id', default=None, type=int)
 @click.option('--no_clients', is_flag=True, help='skip starting the client population')
 @click.option('--no_traffic', is_flag=True, help='skip starting the traffic generators')
