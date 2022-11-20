@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 import csle_common.constants.constants as constants
 from csle_common.logging.log import Logger
@@ -717,3 +717,10 @@ class Config:
         except Exception as e:
             Logger.__call__().get_logger().info(f"Failed to read configuration file from: {config_file_path}. "
                                                 f"Exception: {str(e)}, {repr(e)}")
+
+    @staticmethod
+    def get_current_confg() -> Union["Config", None]:
+        """
+        :return: The currently parsed config
+        """
+        return constants.CONFIG_FILE.PARSED_CONFIG

@@ -6,6 +6,8 @@ import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
+import Table from 'react-bootstrap/Table'
+import Spinner from 'react-bootstrap/Spinner'
 import Collapse from 'react-bootstrap/Collapse'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import serverIp from "../../Common/serverIp";
@@ -17,19 +19,19 @@ import serverPort from "../../Common/serverPort";
 const LogsAdmin = (props) => {
     const [loadingStatsManagerLogs, setLoadingStatsManagerLogs] = useState(true);
     const [statsManagerLogsOpen, setStatsManagerLogsOpen] = useState(false);
-    const [statsManagerLogs, setStatsManagerLogs] = useState("");
+    const [statsManagerLogs, setStatsManagerLogs] = useState([]);
     const [loadingGrafanaLogs, setLoadingGrafanaLogs] = useState(true);
     const [grafanaLogsOpen, setGrafanaLogsOpen] = useState(false);
-    const [grafanaLogs, setGrafanaLogs] = useState("");
+    const [grafanaLogs, setGrafanaLogs] = useState([]);
     const [loadingCAdvisorLogs, setLoadingCAdvisorLogs] = useState(true);
     const [cadvisorLogsOpen, setCAdvisorLogsOpen] = useState(false);
-    const [cadvisorLogs, setCAdvisorLogs] = useState("");
+    const [cadvisorLogs, setCAdvisorLogs] = useState([]);
     const [loadingPrometheusLogs, setLoadingPrometheusLogs] = useState(true);
     const [prometheusLogsOpen, setPrometheusLogsOpen] = useState(false);
-    const [prometheusLogs, setPrometheusLogs] = useState("");
+    const [prometheusLogs, setPrometheusLogs] = useState([]);
     const [loadingNodeExporterLogs, setLoadingNodeExporterLogs] = useState(true);
     const [nodeExporterLogsOpen, setNodeExporterLogsOpen] = useState(false);
-    const [nodeExporterLogs, setNodeExporterLogs] = useState("");
+    const [nodeExporterLogs, setNodeExporterLogs] = useState([]);
     const ip = serverIp;
     const port = serverPort;
     const alert = useAlert();
@@ -37,13 +39,12 @@ const LogsAdmin = (props) => {
 
     const fetchStatsManagerLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/file' + "?token=" + props.sessionData.token,
+            `http://` + ip + ":" + port + '/logs/docker-stats-manager' + "?token=" + props.sessionData.token,
             {
-                method: "POST",
+                method: "GET",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
-                }),
-                body: JSON.stringify({path: props.experiment.log_file_path})
+                })
             }
         )
             .then(res => {
@@ -57,7 +58,111 @@ const LogsAdmin = (props) => {
             })
             .then(response => {
                 setLoadingStatsManagerLogs(false)
-                setStatsManagerLogs(response)
+                setStatsManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchPrometheusLogs = useCallback(() => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/prometheus' + "?token=" + props.sessionData.token,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingPrometheusLogs(false)
+                setPrometheusLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchNodeExporterLogs = useCallback(() => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/node-exporter' + "?token=" + props.sessionData.token,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingNodeExporterLogs(false)
+                setNodeExporterLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchCAdvisorLogs = useCallback(() => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/cadvisor' + "?token=" + props.sessionData.token,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingCAdvisorLogs(false)
+                setCAdvisorLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchGrafanaLogs = useCallback(() => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/grafana' + "?token=" + props.sessionData.token,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingGrafanaLogs(false)
+                setGrafanaLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -68,6 +173,11 @@ const LogsAdmin = (props) => {
         setLoadingGrafanaLogs(true)
         setLoadingNodeExporterLogs(true)
         setLoadingPrometheusLogs(true)
+        fetchStatsManagerLogs()
+        fetchNodeExporterLogs()
+        fetchPrometheusLogs()
+        fetchCAdvisorLogs()
+        fetchGrafanaLogs()
     }
 
     const renderRefreshTooltip = (props) => (
@@ -76,10 +186,64 @@ const LogsAdmin = (props) => {
         </Tooltip>
     );
 
+    const parseLogs = (lines) => {
+        var data = lines.map((line, index) => {
+            return {
+                index: index,
+                content: line
+            }
+        })
+        return data
+    }
+
+    const SpinnerOrLogs = (props) => {
+        if (props.loadingLogs || props.logs === null || props.logs === undefined) {
+            return (<Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+            />)
+        } else {
+            return (
+                <div className="table-responsive">
+                    <Table striped bordered hover>
+                        <thead>
+                        <tr>
+                            <th>Line number</th>
+                            <th>Log</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {props.logs.map((logLine, index) => {
+                            return <tr key={logLine.index + "-" + index}>
+                                <td>{logLine.index}</td>
+                                <td>{logLine.content}</td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </Table>
+                </div>
+            )
+        }
+
+    }
+
 
     useEffect(() => {
         setLoadingStatsManagerLogs(true);
-    }, []);
+        setLoadingCAdvisorLogs(true)
+        setLoadingGrafanaLogs(true)
+        setLoadingNodeExporterLogs(true)
+        setLoadingPrometheusLogs(true)
+        fetchStatsManagerLogs()
+        fetchPrometheusLogs()
+        fetchNodeExporterLogs()
+        fetchCAdvisorLogs()
+        fetchGrafanaLogs()
+    }, [fetchStatsManagerLogs, fetchPrometheusLogs, fetchNodeExporterLogs, fetchCAdvisorLogs,
+        fetchGrafanaLogs]);
 
     return (
         <div className="Admin">
@@ -107,8 +271,11 @@ const LogsAdmin = (props) => {
                 </Card.Header>
                 <Collapse in={statsManagerLogsOpen}>
                     <div id="statsManagerLogsBody" className="cardBodyHidden">
+                        <h4>
+                            Last 100 log lines:
+                        </h4>
                         <div className="table-responsive">
-                            <p> LOGS</p>
+                            <SpinnerOrLogs loadingLogs={loadingStatsManagerLogs} logs={statsManagerLogs}/>
                         </div>
                     </div>
                 </Collapse>
@@ -127,8 +294,11 @@ const LogsAdmin = (props) => {
                 </Card.Header>
                 <Collapse in={grafanaLogsOpen}>
                     <div id="grafanaLogsBody" className="cardBodyHidden">
+                        <h4>
+                            Last 100 log lines:
+                        </h4>
                         <div className="table-responsive">
-                            <p> LOGS</p>
+                            <SpinnerOrLogs loadingLogs={loadingGrafanaLogs} logs={grafanaLogs}/>
                         </div>
                     </div>
                 </Collapse>
@@ -147,8 +317,11 @@ const LogsAdmin = (props) => {
                 </Card.Header>
                 <Collapse in={prometheusLogsOpen}>
                     <div id="prometheusLogsBody" className="cardBodyHidden">
+                        <h4>
+                            Last 100 log lines:
+                        </h4>
                         <div className="table-responsive">
-                            <p> LOGS</p>
+                            <SpinnerOrLogs loadingLogs={loadingPrometheusLogs} logs={prometheusLogs}/>
                         </div>
                     </div>
                 </Collapse>
@@ -167,8 +340,11 @@ const LogsAdmin = (props) => {
                 </Card.Header>
                 <Collapse in={cadvisorLogsOpen}>
                     <div id="cAdvisorLogsBody" className="cardBodyHidden">
+                        <h4>
+                            Last 100 log lines:
+                        </h4>
                         <div className="table-responsive">
-                            <p> LOGS</p>
+                            <SpinnerOrLogs loadingLogs={loadingCAdvisorLogs} logs={cadvisorLogs}/>
                         </div>
                     </div>
                 </Collapse>
@@ -187,8 +363,11 @@ const LogsAdmin = (props) => {
                 </Card.Header>
                 <Collapse in={nodeExporterLogsOpen}>
                     <div id="nodeExporterLogsBody" className="cardBodyHidden">
+                        <h4>
+                            Last 100 log lines:
+                        </h4>
                         <div className="table-responsive">
-                            <p> LOGS</p>
+                            <SpinnerOrLogs loadingLogs={loadingNodeExporterLogs} logs={nodeExporterLogs}/>
                         </div>
                     </div>
                 </Collapse>

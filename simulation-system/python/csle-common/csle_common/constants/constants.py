@@ -837,6 +837,8 @@ class COMMANDS:
                      "--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   " \
                      f"--publish={CADVISOR_PORT}:{CADVISOR_PORT}  --name=cadvisor  " \
                      "google/cadvisor:latest"
+    CADVISOR_LOGS = "docker logs cadvisor"
+    GRAFANA_LOGS = "docker logs grafana"
     NODE_EXPORTER_PID_FILE = "/var/log/csle/node_exporter.pid"
     MANAGEMENT_SYSTEM_PID_FILE = "/var/log/csle/management_system.pid"
     PROXY_PID_FILE = "/var/log/csle/proxy.pid"

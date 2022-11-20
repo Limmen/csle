@@ -68,9 +68,9 @@ def users_ids():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@users_bp.route("/<user_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-                                       api_constants.MGMT_WEBAPP.HTTP_REST_PUT])
+@users_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<user_id>",
+                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+                         api_constants.MGMT_WEBAPP.HTTP_REST_PUT])
 def user(user_id: int):
     """
     The /users/id resource.
@@ -124,7 +124,8 @@ def user(user_id: int):
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@users_bp.route("/create", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+@users_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def create_user():
     """
     The /users/create resource.
