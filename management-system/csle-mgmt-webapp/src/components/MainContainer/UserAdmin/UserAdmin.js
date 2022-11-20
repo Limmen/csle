@@ -16,7 +16,7 @@ import serverPort from "../../Common/serverPort";
 /**
  * Component representing the /admin-page
  */
-const Admin = (props) => {
+const UserAdmin = (props) => {
     const [users, setUsers] = useState([]);
     const [parametersConfig, setParametersConfig] = useState([]);
     const [clusterConfig, setClusterConfig] = useState([]);
@@ -414,6 +414,6 @@ const Admin = (props) => {
     );
 }
 
-Admin.propTypes = {};
-Admin.defaultProps = {};
-export default Admin;
+UserAdmin.propTypes = {};
+UserAdmin.defaultProps = {};
+export default UserAdmin;

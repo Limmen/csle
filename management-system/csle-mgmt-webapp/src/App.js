@@ -12,7 +12,7 @@ import ContainerImages from "./components/MainContainer/ContainerImages/Containe
 import Simulations from "./components/MainContainer/Simulations/Simulations";
 import TrainingResults from "./components/MainContainer/TrainingResults/TrainingResults";
 import About from "./components/MainContainer/About/About";
-import Admin from "./components/MainContainer/Admin/Admin";
+import UserAdmin from "./components/MainContainer/UserAdmin/Admin";
 import Login from "./components/MainContainer/Login/Login";
 import Register from "./components/MainContainer/Register/Register";
 import Policies from "./components/MainContainer/Policies/Policies";
@@ -143,7 +143,7 @@ function App() {
                                 </Route>
                                 <Route path="user-admin-page" index element={
                                     <ProtectedRoute>
-                                    <Admin sessionData={sessionData} setSessionData={setSessionData} />
+                                    <UserAdmin sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>
                                 }>
                                 </Route>
