@@ -16,6 +16,31 @@ logs_bp = Blueprint(
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
 
 
+@logs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def logs():
+    """
+    The /logs resource.
+
+    :return: List of log files in the CSLE logging directory
+    """
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+
+    config = Config.get_current_confg()
+    path = config.default_log_dir
+    log_files = []
+    for f in os.listdir(path):
+        log_files.append(os.path.join(path, f))
+    data = log_files
+    data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+    response = jsonify(data_dict)
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return response, constants.HTTPS.OK_STATUS_CODE
+
+
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def docker_stats_manager_logs():

@@ -116,6 +116,7 @@ A REST API for the CSLE management platform.
 | `/users?ids=true&token=<valid_token>`                                                                 | List of user ids only (fast to fetch)                          | `GET`,`DELETE`                          |
 | `/users/<user_id>?token=<valid_token>`                                                                | Get/update/delete individual user                              | `GET`,`DELETE`, `PUT`                   |
 | `/users/create`                                                                                       | Create a new user                                              | `POST`                                  |
+| `/logs`                                                                          | Get list of log files from the log dir                         | `GET`                                   |
 | `/logs/docker-stats-manager`                                                                          | Get logs of the docker stats manager                           | `GET`                                   |
 | `/logs/prometheus`                                                                                    | Get logs of Prometheus                                         | `GET`                                   |
 | `/logs/grafana`                                                                                       | Get logs of Grafana                                            | `GET`                                   |
