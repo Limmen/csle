@@ -10,8 +10,6 @@ import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import getIps from "../../../Common/getIps";
-import serverIp from "../../../Common/serverIp";
-import serverPort from "../../Common/serverPort";
 
 
 /**
@@ -43,8 +41,6 @@ const Emulation = (props) => {
     const [staticAttackerSequenceOpen, setStaticAttackerSequenceOpen] = useState(false);
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
-    const ip = serverIp
-    // const ip = "172.31.212.92"
 
     const startorStopEmulationPre = (emulation) => {
         setLoading(true)
@@ -821,6 +817,8 @@ const Emulation = (props) => {
                                     <th>Operating system</th>
                                     <th>Kafka port</th>
                                     <th>Kafka Manager GRPC API port</th>
+                                    <th>Kafka Manager Log file</th>
+                                    <th>Kafka Manager GRPC max workers</th>
                                     <th>Memory</th>
                                     <th>CPUs</th>
                                 </tr>
@@ -832,6 +830,8 @@ const Emulation = (props) => {
                                     <td>{emulation.kafka_config.container.os}</td>
                                     <td>{emulation.kafka_config.kafka_port}</td>
                                     <td>{emulation.kafka_config.kafka_manager_port}</td>
+                                    <td>{emulation.kafka_config.kafka_manager_log_dir}{emulation.kafka_config.kafka_manager_log_file}</td>
+                                    <td>{emulation.kafka_config.kafka_manager_max_workers}</td>
                                     <td>{emulation.kafka_config.resources.available_memory_gb}GB</td>
                                     <td>{emulation.kafka_config.resources.num_cpus}</td>
                                 </tr>
@@ -901,6 +901,8 @@ const Emulation = (props) => {
                                     <th>Operating system</th>
                                     <th>Elasticsearch port</th>
                                     <th>ELK Manager GRPC API port</th>
+                                    <th>ELK Manager log file</th>
+                                    <th>ELK Manager GRPC max workers</th>
                                     <th>Kibana port</th>
                                     <th>Logstash port</th>
                                     <th>Memory</th>
@@ -914,6 +916,8 @@ const Emulation = (props) => {
                                     <td>{emulation.elk_config.container.os}</td>
                                     <td>{emulation.elk_config.elastic_port}</td>
                                     <td>{emulation.elk_config.elk_manager_port}</td>
+                                    <td>{emulation.elk_config.elk_manager_log_dir}{emulation.elk_config.elk_manager_log_file}</td>
+                                    <td>{emulation.elk_config.elk_manager_max_workers}</td>
                                     <td>{emulation.elk_config.kibana_port}</td>
                                     <td>{emulation.elk_config.logstash_port}</td>
                                     <td>{emulation.elk_config.resources.available_memory_gb}GB</td>
@@ -942,12 +946,16 @@ const Emulation = (props) => {
                                 <thead>
                                 <tr>
                                     <th>Host managers GRPC API port</th>
+                                    <th>Host managers log file</th>
+                                    <th>Host managers GRPC max workers</th>
                                     <th>Time-step length (s)</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr key={emulation.host_manager_config.host_manager_port}>
                                     <td>{emulation.host_manager_config.host_manager_port}</td>
+                                    <td>{emulation.host_manager_config.host_manager_log_dir}{emulation.host_manager_config.host_manager_log_file}</td>
+                                    <td>{emulation.host_manager_config.host_manager_max_workers}</td>
                                     <td>{emulation.host_manager_config.time_step_len_seconds}</td>
                                 </tr>
                                 </tbody>
@@ -974,6 +982,8 @@ const Emulation = (props) => {
                                 <tr>
                                     <th>Traffic manager IP</th>
                                     <th>GRPC API port</th>
+                                    <th>Log file</th>
+                                    <th>GRPC Max workers</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -981,6 +991,8 @@ const Emulation = (props) => {
                                     <tr key={node_traffic_config.ip + "-" + index}>
                                         <td>{node_traffic_config.ip}</td>
                                         <td>{node_traffic_config.traffic_manager_port}</td>
+                                        <td>{node_traffic_config.traffic_manager_log_dir}{node_traffic_config.traffic_manager_log_file}</td>
+                                        <td>{node_traffic_config.traffic_manager_max_workers}</td>
                                     </tr>
                                 )}
                                 </tbody>
@@ -1006,12 +1018,16 @@ const Emulation = (props) => {
                                 <thead>
                                 <tr>
                                     <th>Snort IDS managers GRPC API port</th>
+                                    <th>Snort IDS managers Log file</th>
+                                    <th>Snort IDS managers GRPC max workers</th>
                                     <th>Time-step length (s)</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr key={emulation.snort_ids_manager_config.snort_ids_manager_port}>
                                     <td>{emulation.snort_ids_manager_config.snort_ids_manager_port}</td>
+                                    <td>{emulation.snort_ids_manager_config.snort_ids_manager_log_dir}{emulation.snort_ids_manager_config.snort_ids_manager_log_file}</td>
+                                    <td>{emulation.snort_ids_manager_config.snort_ids_manager_max_workers}</td>
                                     <td>{emulation.snort_ids_manager_config.time_step_len_seconds}</td>
                                 </tr>
                                 </tbody>
@@ -1037,12 +1053,16 @@ const Emulation = (props) => {
                                 <thead>
                                 <tr>
                                     <th>OSSEC IDS managers GRPC API port</th>
+                                    <th>OSSEC IDS managers log file</th>
+                                    <th>OSSEC IDS managers GRPC max workers</th>
                                     <th>Time-step length (s)</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr key={emulation.ossec_ids_manager_config.ossec_ids_manager_port}>
                                     <td>{emulation.ossec_ids_manager_config.ossec_ids_manager_port}</td>
+                                    <td>{emulation.ossec_ids_manager_config.ossec_ids_manager_log_dir}{emulation.ossec_ids_manager_config.ossec_ids_manager_log_file}</td>
+                                    <td>{emulation.ossec_ids_manager_config.ossec_ids_manager_max_workers}</td>
                                     <td>{emulation.ossec_ids_manager_config.time_step_len_seconds}</td>
                                 </tr>
                                 </tbody>
@@ -1068,12 +1088,16 @@ const Emulation = (props) => {
                                 <thead>
                                 <tr>
                                     <th>Docker stats managers GRPC API port</th>
+                                    <th>Docker stats managers log file</th>
+                                    <th>Docker stats managers GRPC max workers</th>
                                     <th>Time-step length (s)</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr key={emulation.docker_stats_manager_config.docker_stats_manager_port}>
                                     <td>{emulation.docker_stats_manager_config.docker_stats_manager_port}</td>
+                                    <td>{emulation.docker_stats_manager_config.docker_stats_manager_log_dir}{emulation.docker_stats_manager_config.docker_stats_manager_log_file}</td>
+                                    <td>{emulation.docker_stats_manager_config.docker_stats_manager_max_workers}</td>
                                     <td>{emulation.docker_stats_manager_config.time_step_len_seconds}</td>
                                 </tr>
                                 </tbody>

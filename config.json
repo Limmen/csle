@@ -1,4 +1,3 @@
-
 {
   "management_admin_username_default": "admin",
   "management_admin_password_default": "admin",
@@ -40,10 +39,12 @@
   "metastore_user": "csle",
   "metastore_password": "csle",
   "metastore_database_name": "csle",
-  "cluster_config": [
-    {
-      "ip": "172.31.212.92",
-      "master": true
-    }
-  ]
+  "cluster_config": {
+    "cluster_nodes": [
+      {
+        "ip": "172.31.212.92",
+        "master": true
+      }
+    ]
+  }
 }

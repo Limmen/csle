@@ -11,6 +11,7 @@ class CONFIG_FILE:
     """
     CSLE_HOME_ENV_PARAM = "CSLE_HOME"
     CONFIG_FILE_NAME = "config.json"
+    PARSED_CONFIG = None
 
 
 class CONTAINER_IMAGES:
