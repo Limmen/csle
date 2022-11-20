@@ -16,6 +16,7 @@ import getDateStr from "../../../Common/getDateStr";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
+import serverPort from "../../../Common/serverPort";
 
 /**
  * Component representing the /training-results/id resource
@@ -32,6 +33,7 @@ const Experiment = (props) => {
     const [logs, setLogs] = useState(null);
 
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     // const ip = "172.31.212.92"
@@ -39,7 +41,7 @@ const Experiment = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/file' + "?token=" + props.sessionData.token,
+            `http://` + ip + ":" + port + '/file' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({

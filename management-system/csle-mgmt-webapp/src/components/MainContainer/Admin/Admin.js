@@ -263,7 +263,7 @@ const Admin = (props) => {
     }
 
     const saveConfig = () => {
-        consoel.log("saveConfig")
+        console.log("saveConfig")
     }
 
     useEffect(() => {

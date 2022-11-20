@@ -8,7 +8,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import serverIp from "../../../Common/serverIp";
-import serverPort from "../../Common/serverPort";
+import serverPort from "../../../Common/serverPort";
 
 /**
  * Component representing the /sdn-controllers/id resource
@@ -27,12 +27,12 @@ const SDNController = (props) => {
     const [tablesOpen, setTablesOpen] = useState(false);
     const [portsOpen, setPortsOpen] = useState(false);
     const ip = serverIp
-    // const ip = "172.31.212.92"
+    const port = serverPort
 
 
     const fetchSwitches = useCallback((emulation_id, exec_id) => {
         fetch(
-            `http://` + ip + ':7777/emulations/' + emulation_id + "/executions/" + exec_id + "/switches",
+            `http://` + ip + ':' + port +'/emulations/' + emulation_id + "/executions/" + exec_id + "/switches",
             {
                 method: "GET",
                 headers: new Headers({

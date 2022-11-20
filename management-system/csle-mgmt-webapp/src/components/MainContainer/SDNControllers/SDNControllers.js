@@ -37,7 +37,7 @@ const SDNControllers = (props) => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip+ ':' + port +'/sdn-controllers?ids=true' + "&token=" + props.sessionData.token,
+            `http://` + ip + ':' + port +'/sdn-controllers?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import getIpString from "../../../Common/getIpString";
 import serverIp from "../../../Common/serverIp";
-import serverPort from "../../Common/serverPort";
+import serverPort from "../../../Common/serverPort";
 
 /**
  * The component representing the /jobs/<id> resource for data collection jobs
@@ -26,9 +26,9 @@ const DataCollectionJob = (props) => {
     const [loadingLogs, setLoadingLogs] = useState(false);
     const [logs, setLogs] = useState(null);
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-    // const ip = "172.31.212.92"
 
     const renderRemoveDataCollectionJobTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -63,7 +63,7 @@ const DataCollectionJob = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ':7777/file' + "?token=" + props.sessionData.token,
+            `http://` + ip + ':' + port + '/file' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({

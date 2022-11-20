@@ -3,7 +3,7 @@ import {useAlert} from "react-alert";
 import './Login.css';
 import {useNavigate} from "react-router-dom";
 import serverIp from "../../../Common/serverIp";
-import serverPort from "../../Common/serverPort";
+import serverPort from "../../../Common/serverPort";
 
 /**
  * The component representing the /login-page
@@ -19,12 +19,13 @@ const ChangeUserDataForm = (props) => {
     const [userId, setUserId] = useState(props.sessionData.id);
     const [token, setToken] = useState(props.sessionData.token);
     const ip = serverIp
+    const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
 
     const updateUser = useCallback((user) => {
         fetch(
-            `http://` + ip + ':7777/users/' + user.id + "?token=" + token,
+            `http://` + ip + ':' + port + '/users/' + user.id + "?token=" + token,
             {
                 method: "PUT",
                 headers: new Headers({
