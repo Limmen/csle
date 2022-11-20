@@ -25,7 +25,7 @@ const Admin = (props) => {
     const alert = useAlert();
     const navigate = useNavigate();
 
-    const columns = [
+    const usersColumns = [
         {
         dataField: 'id',
         text: 'ID'
@@ -68,6 +68,17 @@ const Admin = (props) => {
         {
             dataField: 'password',
             text: 'Password'
+        }
+    ];
+
+    const configColumns = [
+        {
+            dataField: 'param',
+            text: 'Parameter'
+        },
+        {
+            dataField: 'val',
+            text: 'Value'
         }
     ];
 
@@ -148,6 +159,7 @@ const Admin = (props) => {
                 return res.json()
             })
             .then(response => {
+                console.log(response)
                 setUsers(response)
                 setLoading(false)
             })
@@ -157,6 +169,7 @@ const Admin = (props) => {
     const refresh = () => {
         setLoading(true)
         fetchUsers()
+        fetchConfig()
     }
 
     const renderRefreshTooltip = (props) => (
@@ -196,7 +209,7 @@ const Admin = (props) => {
                     <BootstrapTable
                         keyField="id"
                         data={ props.users }
-                        columns={ columns }
+                        columns={ usersColumns }
                         cellEdit={ cellEditFactory({ mode: 'click' }) }
                     />
                 </div>
@@ -204,21 +217,65 @@ const Admin = (props) => {
         }
     }
 
-    const save = () => {
+    const ConfigTableOrSpinner = (props) => {
+        if (!props.loading && props.users.length === 0) {
+            return (
+                <div>
+                    <span className="emptyText">No configuration is available</span>
+                    <OverlayTrigger
+                        placement="top"
+                        delay={{show: 0, hide: 0}}
+                        overlay={renderRefreshTooltip}
+                    >
+                        <Button variant="button" onClick={refresh}>
+                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                        </Button>
+                    </OverlayTrigger>
+                </div>
+            )
+        }
+        if (props.loading) {
+            return (
+                <div>
+                    <span className="spinnerLabel"> Fetching configuration... </span>
+                    <Spinner animation="border" role="status" className="dropdownSpinner">
+                        <span className="visually-hidden"></span>
+                    </Spinner>
+                </div>)
+        } else {
+            return (
+                <div className="configTable">
+                    <BootstrapTable
+                        keyField="id"
+                        data={ props.config }
+                        columns={ configColumns }
+                        cellEdit={ cellEditFactory({ mode: 'click' }) }
+                    />
+                </div>
+            )
+        }
+    }
+
+    const saveUsers = () => {
         for (let i = 0; i < users.length; i++) {
             updateUser(users[i])
         }
     }
 
+    const saveConfig = () => {
+        consoel.log("saveConfig")
+    }
+
     useEffect(() => {
         setLoading(true);
         fetchUsers()
-    }, [fetchUsers]);
+        fetchConfig()
+    }, [fetchUsers, fetchConfig]);
 
     return (
-        <div className="About">
+        <div className="Admin">
             <h3> User administration (click in a cell to edit)
-                <button type="submit" className="btn btn-primary btn-sm saveUsersBtn" onClick={save}>
+                <button type="submit" className="btn btn-primary btn-sm saveUsersBtn" onClick={saveUsers}>
                     Save
                 </button>
             </h3>
@@ -226,6 +283,18 @@ const Admin = (props) => {
                 <div className="col-sm-1"></div>
                 <div className="col-sm-10">
                     <UsersTableOrSpinner users={users} loading={loading} />
+                </div>
+                <div className="col-sm-1"></div>
+            </div>
+            <h3> System Configuration (click in a cell to edit)
+                <button type="submit" className="btn btn-primary btn-sm saveUsersBtn" onClick={saveConfig}>
+                    Save
+                </button>
+            </h3>
+            <div className="row">
+                <div className="col-sm-1"></div>
+                <div className="col-sm-10">
+                    <UsersTableOrSpinner users={config} loading={loading} />
                 </div>
                 <div className="col-sm-1"></div>
             </div>
