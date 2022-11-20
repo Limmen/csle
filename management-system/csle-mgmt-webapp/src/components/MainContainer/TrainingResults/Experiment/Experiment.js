@@ -36,7 +36,6 @@ const Experiment = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-    // const ip = "172.31.212.92"
 
 
     const fetchLogs = useCallback(() => {

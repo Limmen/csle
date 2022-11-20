@@ -17,7 +17,7 @@ config_bp = Blueprint(
 
 
 @config_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                              api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+                              api_constants.MGMT_WEBAPP.HTTP_REST_PUT])
 def config():
     """
     The /config resource.
@@ -30,22 +30,24 @@ def config():
         return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-        config = {}
         try:
             config = Config.read_config_file()
+            response = jsonify(config.to_param_dict())
         except Exception as e:
             Logger.__call__().get_logger().info(f"There was an error reading the config file: {str(e)}, {repr(e)}")
-        response = jsonify(config.to_dict())
+            response = jsonify({})
+            return response, constants.HTTPS.INTERNAL_SERVER_ERROR_STATUS_CODE
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
-    elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+    elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_PUT:
         json_data = json.loads(request.data)
         # Verify payload
         if api_constants.MGMT_WEBAPP.CONFIG_RESOURCE not in json_data:
             return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        config = json_data[api_constants.MGMT_WEBAPP.CONFIG_RESOURCE]
-        Config.save_config_file(config=config)
+        config = json_data[api_constants.MGMT_WEBAPP.CONFIG_PROPERTY]
+        config = Config.from_param_dict(config)
+        Config.save_config_file(config=config.to_dict())
         Config.set_config_parameters_from_config_file()
-        response = jsonify(config.to_dict())
+        response = jsonify(config.to_param_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
