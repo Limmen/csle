@@ -279,6 +279,14 @@ class ContainerController:
                 running_emulation_containers.append(c)
             else:
                 stopped_emulation_containers.append(c)
+        if emulation_env_config.kafka_config.container.full_name_str in running_containers_names:
+            running_emulation_containers.append(emulation_env_config.kafka_config.container)
+        else:
+            stopped_emulation_containers.append(emulation_env_config.kafka_config.container)
+        if emulation_env_config.elk_config.container.full_name_str in running_containers_names:
+            running_emulation_containers.append(emulation_env_config.elk_config.container)
+        else:
+            stopped_emulation_containers.append(emulation_env_config.elk_config.container)
         return running_emulation_containers, stopped_emulation_containers
 
     @staticmethod
