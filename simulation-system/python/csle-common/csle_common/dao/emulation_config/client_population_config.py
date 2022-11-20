@@ -10,7 +10,9 @@ class ClientPopulationConfig:
     """
 
     def __init__(self, ip: str, networks: List[ContainerNetwork], client_process_type: ClientPopulationProcessType,
-                 lamb: float, mu: float, client_manager_port: int, num_commands: int = 5,
+                 lamb: float, mu: float, client_manager_port: int, client_manager_log_file: str, 
+                 client_manager_log_dir: str, client_manager_max_workers: int, 
+                 num_commands: int = 5,
                  client_time_step_len_seconds: int = 1, time_scaling_factor : float = 0.01,
                  period_scaling_factor: float = 20):
         """
@@ -24,6 +26,9 @@ class ClientPopulationConfig:
         :param client_time_step_len_seconds: time-step length to measure the arrival process
         :param time_scaling_factor: the time-scaling factor for sine-modulated arrival processes
         :param period_scaling_factor: the period-scaling factor for sine-modulated arrival processes
+        :param client_manager_log_file: the log file of the client manager
+        :param client_manager_log_dir: the log dir of the client manager
+        :param client_manager_max_workers: the maximum number of GRPC workers for the client manager
         """
         self.networks = networks
         self.ip = ip
@@ -35,6 +40,9 @@ class ClientPopulationConfig:
         self.client_time_step_len_seconds = client_time_step_len_seconds
         self.time_scaling_factor = time_scaling_factor
         self.period_scaling_factor = period_scaling_factor
+        self.client_manager_log_dir = client_manager_log_dir
+        self.client_manager_log_file = client_manager_log_file
+        self.client_manager_max_workers = client_manager_max_workers
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ClientPopulationConfig":
@@ -50,7 +58,9 @@ class ClientPopulationConfig:
             client_process_type=d["client_process_type"],
             lamb=d["lamb"], mu=d["mu"], client_manager_port=d["client_manager_port"],
             num_commands=d["num_commands"], client_time_step_len_seconds=d["client_time_step_len_seconds"],
-            period_scaling_factor = d["period_scaling_factor"], time_scaling_factor=d["time_scaling_factor"]
+            period_scaling_factor = d["period_scaling_factor"], time_scaling_factor=d["time_scaling_factor"],
+            client_manager_log_dir=d["client_manager_log_dir"], client_manager_log_file=d["client_manager_log_file"],
+            client_manager_max_workers=d["client_manager_max_workers"]
         )
         return obj
 
@@ -64,7 +74,8 @@ class ClientPopulationConfig:
             client_process_type=self.client_process_type,
             lamb=0, mu=0, client_manager_port=self.client_manager_port,
             num_commands=0, client_time_step_len_seconds=self.client_time_step_len_seconds,
-            period_scaling_factor = self.period_scaling_factor, time_scaling_factor=self.time_scaling_factor
+            period_scaling_factor = self.period_scaling_factor, time_scaling_factor=self.time_scaling_factor,
+            client_manager_log_file="client_manager.log", client_manager_log_dir="/", client_manager_max_workers=10
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,6 +93,9 @@ class ClientPopulationConfig:
         d["client_time_step_len_seconds"] = self.client_time_step_len_seconds
         d["time_scaling_factor"] = self.time_scaling_factor
         d["period_scaling_factor"] = self.period_scaling_factor
+        d["client_manager_log_file"] = self.client_manager_log_file
+        d["client_manager_log_dir"] = self.client_manager_log_dir
+        d["client_manager_max_workers"] = self.client_manager_max_workers
         return d
 
     def __str__(self) -> str:
@@ -93,7 +107,10 @@ class ClientPopulationConfig:
                f"client_manager_port: {self.client_manager_port}, num_commands:{self.num_commands}, " \
                f"client_time_step_len_seconds: {self.client_time_step_len_seconds}," \
                f"time_scaling_factor: {self.time_scaling_factor}, " \
-               f"period_scaling_factor: {self.period_scaling_factor}"
+               f"period_scaling_factor: {self.period_scaling_factor}," \
+               f"client_manager_log_file: {self.client_manager_log_file}, " \
+               f"client_manager_log_dir: {self.client_manager_log_dir}, " \
+               f"client_manager_max_workers: {self.client_manager_max_workers}"
 
     def to_json_str(self) -> str:
         """

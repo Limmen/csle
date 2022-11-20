@@ -144,7 +144,11 @@ class TrafficController:
 
             # Start the client_manager
             cmd = constants.COMMANDS.START_CLIENT_MANAGER.format(
-                emulation_env_config.traffic_config.client_population_config.client_manager_port)
+                emulation_env_config.traffic_config.client_population_config.client_manager_port,
+                emulation_env_config.traffic_config.client_population_config.client_manager_log_dir,
+                emulation_env_config.traffic_config.client_population_config.client_manager_log_file,
+                emulation_env_config.traffic_config.client_population_config.client_manager_max_workers
+            )
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
             time.sleep(2)

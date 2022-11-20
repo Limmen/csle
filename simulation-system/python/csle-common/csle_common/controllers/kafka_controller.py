@@ -53,7 +53,8 @@ class KafkaController:
             cmd = constants.COMMANDS.START_KAFKA_MANAGER.format(
                 emulation_env_config.kafka_config.kafka_manager_port,
                 emulation_env_config.kafka_config.kafka_manager_log_dir,
-                emulation_env_config.kafka_config.kafka_manager_log_file)
+                emulation_env_config.kafka_config.kafka_manager_log_file,
+                emulation_env_config.kafka_config.kafka_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
                 conn=
