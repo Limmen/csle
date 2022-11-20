@@ -18,7 +18,7 @@ from csle_rest_api.pages.policy_examination.routes import policy_examination_pag
 from csle_rest_api.pages.training.routes import training_page_bp
 from csle_rest_api.pages.sdn_controllers.routes import sdn_controllers_page_bp
 from csle_rest_api.pages.control_plane.routes import control_plane_page_bp
-from csle_rest_api.pages.admin.routes import admin_page_bp
+from csle_rest_api.pages.user_admin.routes import user_admin_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
 from csle_rest_api.resources.prometheus.routes import prometheus_bp
 from csle_rest_api.resources.cadvisor.routes import cadvisor_bp
@@ -118,7 +118,7 @@ def create_app(static_folder: str):
     app.register_blueprint(control_plane_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE}")
-    app.register_blueprint(admin_page_bp,
+    app.register_blueprint(user_admin_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE}")
     app.register_blueprint(register_page_bp,

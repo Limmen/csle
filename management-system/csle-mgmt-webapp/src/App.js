@@ -141,7 +141,7 @@ function App() {
                                 </Route>
                                 <Route path="register-page" index element={<Register />}>
                                 </Route>
-                                <Route path="admin-page" index element={
+                                <Route path="user-admin-page" index element={
                                     <ProtectedRoute>
                                     <Admin sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>
