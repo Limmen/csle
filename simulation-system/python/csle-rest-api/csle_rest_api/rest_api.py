@@ -240,7 +240,6 @@ def create_app(static_folder: str):
         """
         return app.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
 
-    app.config["SECRET_KEY"] = "secret!"
     app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD] = None
     app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CMD] = [constants.COMMANDS.BASH]
     app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CHILD_PID] = None
