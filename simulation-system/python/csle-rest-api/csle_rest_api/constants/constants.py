@@ -32,6 +32,7 @@ class MGMT_WEBAPP:
     CONTROL_PLANE_PAGE_RESOURCE = "control-plane-page"
     USER_ADMIN_PAGE_RESOURCE = "user-admin-page"
     HOST_TERMINAL_PAGE_RESOURCE = "host-terminal-page"
+    CONTAINER_TERMINAL_PAGE_RESOURCE = "container-terminal-page"
     SYSTEM_ADMIN_PAGE_RESOURCE = "system-admin-page"
     LOGS_ADMIN_PAGE_RESOURCE = "logs-admin-page"
     SIMULATIONS_PAGE_RESOURCE = "simulations-page"

@@ -37,7 +37,7 @@ const ContainerTerminal = (props) => {
 
     useEffect(() => {
         console.log("component did mount")
-        term.open(document.getElementById('sshTerminal'));
+        term.open(document.getElementById('hostTerminal'));
         term.attachCustomKeyEventHandler(customKeyEventHandler);
         fitAddon.fit();
         term.resize(15, 50);
@@ -134,7 +134,7 @@ const ContainerTerminal = (props) => {
                     <span>
                         status: <span id="status">connecting...</span>
                     </span>
-                    <div id="sshTerminal" className="sshTerminal">
+                    <div id="hostTerminal" className="hostTerminal2">
 
                     </div>
                 </div>

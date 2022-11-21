@@ -144,7 +144,8 @@ A REST API for the CSLE management platform.
 | `/system-models-page`                                                                                 | Get the system models page                                     | `GET`                                   |
 | `/traces-page`                                                                                        | Get the traces page                                            | `GET`                                   |
 | `/training-page`                                                                                      | Get the training page                                          | `GET`                                   |
-| `/terminal-page`                                                                                      | Get the terminal page                                          | `GET`                                   |
+| `/host-terminal-page`                                                                                 | Get the host-terminal page                                     | `GET`                                   |
+| `/container-terminal-page`                                                                            | Get the container-terminal page                                | `GET`                                   |
 
 ## Author & Maintainer
 

@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_socketio import SocketIO
-from waitress import serve
 import csle_common.constants.constants as constants
 from csle_rest_api.pages.emulations.routes import emulations_page_bp
 from csle_rest_api.pages.simulations.routes import simulations_page_bp
@@ -21,6 +20,7 @@ from csle_rest_api.pages.sdn_controllers.routes import sdn_controllers_page_bp
 from csle_rest_api.pages.control_plane.routes import control_plane_page_bp
 from csle_rest_api.pages.user_admin.routes import user_admin_page_bp
 from csle_rest_api.pages.host_terminal.routes import host_terminal_page_bp
+from csle_rest_api.pages.container_terminal.routes import container_terminal_page_bp
 from csle_rest_api.pages.system_admin.routes import system_admin_page_bp
 from csle_rest_api.pages.logs_admin.routes import logs_admin_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
@@ -137,6 +137,9 @@ def create_app(static_folder: str):
     app.register_blueprint(host_terminal_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.HOST_TERMINAL_PAGE_RESOURCE}")
+    app.register_blueprint(container_terminal_page_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_PAGE_RESOURCE}")
     app.register_blueprint(system_admin_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}")
@@ -244,13 +247,9 @@ def create_app(static_folder: str):
 
     def read_and_forward_pty_output():
         max_read_bytes = 1024 * 20
-        f = False
         while True:
             socketio.sleep(0.01)
             if app.config["fd"]:
-                if not f:
-                    print(f"Reading from fd: {app.config['fd']}")
-                    f = True
                 timeout_sec = 0
                 (data_ready, _, _) = select.select([app.config["fd"]], [], [], timeout_sec)
                 if data_ready:
@@ -267,7 +266,6 @@ def create_app(static_folder: str):
         terminal.
         """
         if app.config["fd"]:
-            print(repr(f"received input from browser: {data['input']}, writing to FD: {app.config['fd']}"))
             os.write(app.config["fd"], data["input"].encode())
 
     @socketio.on("resize", namespace="/pty")

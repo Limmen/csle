@@ -23,6 +23,7 @@ import ControlPlane from "./components/MainContainer/ControlPlane/ControlPlane";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
 import Downloads from "./components/MainContainer/Downloads/Downloads";
 import ContainerTerminal from "./components/MainContainer/ContainerTerminal/ContainerTerminal";
+import HostTerminal from "./components/MainContainer/HostTerminal/HostTerminal";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import useSession from "./components/MainContainer/SessionManagement/useSession";
 import { useAlert } from "react-alert";
@@ -134,9 +135,15 @@ function App() {
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="terminal-page" index element={
+                                <Route path="container-terminal-page" index element={
                                     <ProtectedRoute>
                                         <ContainerTerminal sessionData={sessionData} setSessionData={setSessionData}/>
+                                    </ProtectedRoute>
+                                }>
+                                </Route>
+                                <Route path="host-terminal-page" index element={
+                                    <ProtectedRoute>
+                                        <HostTerminal sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>

@@ -12,7 +12,7 @@ const Header = (props) => {
     const managementDropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",
         "/emulation-statistics-page", "/system-models-page", "/policy-examination-page", "/images-page",
         "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page", "/control-plane-page",
-        "/terminal-page"]
+        "/host-terminal-page", "/container-terminal-page"]
     const adminDropdownRoutes = ["/user-admin-page", "/system-admin-page", "/logs-admin-page"]
 
     const ActionsCellTracesDataset = (props) => {
@@ -151,9 +151,15 @@ const Header = (props) => {
         </Tooltip>
     );
 
-    const renderTerminalTooltip = (props) => (
+    const renderHostTerminalTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Terminal access to emulations
+            Terminal access to the host of the management system
+        </Tooltip>
+    );
+
+    const renderContainerTerminalTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Terminal access to containers of emulations
         </Tooltip>
     );
 
@@ -370,15 +376,23 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderControlPlaneTooltip}>
                                     <NavLink className="dropdown-item" to={"control-plane-page"}>
-                                        Control plane
+                                        Control Plane
                                     </NavLink>
                                 </OverlayTrigger>
                                 <OverlayTrigger
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
-                                    overlay={renderTerminalTooltip}>
-                                    <NavLink className="dropdown-item" to={"terminal-page"}>
-                                        SSH Terminal
+                                    overlay={renderHostTerminalTooltip}>
+                                    <NavLink className="dropdown-item" to={"host-terminal-page"}>
+                                        Host Terminal
+                                    </NavLink>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{show: 0, hide: 0}}
+                                    overlay={renderContainerTerminalTooltip}>
+                                    <NavLink className="dropdown-item" to={"container-terminal-page"}>
+                                        Container Terminal
                                     </NavLink>
                                 </OverlayTrigger>
                             </div>
