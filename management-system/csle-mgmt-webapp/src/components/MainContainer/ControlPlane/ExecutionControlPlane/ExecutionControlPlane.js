@@ -16,12 +16,6 @@ import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import parseLogs from "../../../Common/parseLogs";
 import KibanaImg from './Kibana.png'
-import SnortImg from './Snort.png'
-import KafkaImg from './Kafka.png'
-import ElasticImg from './Elastic.png'
-import LogstashImg from './Logstash.png'
-import DockerImg from './Docker.png'
-import OssecImg from './Ossec.png'
 
 /**
  * Component representing the /emulation-executions/<id>/control resource
@@ -45,6 +39,31 @@ const ExecutionControlPlane = (props) => {
     const [showClientManagerLogsModal, setShowClientManagerLogsModal] = useState(false);
     const [loadingClientManagerLogs, setLoadingClientManagerLogs] = useState(false);
     const [clientManagerLogs, setClientManagerLogs] = useState([]);
+    const [clientManagerToGetLogsFor, setClientManagerToGetLogsFor] = useState(null);
+    const [showSnortManagerLogsModal, setShowSnortManagerLogsModal] = useState(false);
+    const [loadingSnortManagerLogs, setLoadingSnortManagerLogs] = useState(false);
+    const [snortManagerLogs, setSnortManagerLogs] = useState([]);
+    const [snortManagerToGetLogsFor, setSnortManagerToGetLogsFor] = useState(null);
+    const [showKafkaManagerLogsModal, setShowKafkaManagerLogsModal] = useState(false);
+    const [loadingKafkaManagerLogs, setLoadingKafkaManagerLogs] = useState(false);
+    const [kafkaManagerLogs, setKafkaManagerLogs] = useState([]);
+    const [kafkaManagerToGetLogsFor, setKafkaManagerToGetLogsFor] = useState(null);
+    const [showOssecIDSManagerLogsModal, setShowOssecIDSManagerLogsModal] = useState(false);
+    const [loadingOssecIDSManagerLogs, setLoadingOssecIDSManagerLogs] = useState(false);
+    const [ossecIDSManagerLogs, setOssecIDSManagerLogs] = useState([]);
+    const [ossecIDSManagerToGetLogsFor, setOssecIDSManagerToGetLogsFor] = useState(null);
+    const [showTrafficManagerLogsModal, setShowTrafficManagerLogsModal] = useState(false);
+    const [loadingTrafficManagerLogs, setLoadingTrafficManagerLogs] = useState(false);
+    const [trafficManagerLogs, setTrafficManagerLogs] = useState([]);
+    const [trafficManagerToGetLogsFor, setTrafficManagerToGetLogsFor] = useState(null);
+    const [showHostManagerLogsModal, setShowHostManagerLogsModal] = useState(false);
+    const [loadingHostManagerLogs, setLoadingHostManagerLogs] = useState(false);
+    const [hostManagerLogs, setHostManagerLogs] = useState([]);
+    const [hostManagerToGetLogsFor, setHostManagerToGetLogsFor] = useState(null);
+    const [showElkManagerLogsModal, setShowElkManagerLogsModal] = useState(false);
+    const [loadingElkManagerLogs, setLoadingElkManagerLogs] = useState(false);
+    const [elkManagerLogs, setElkManagerLogs] = useState([]);
+    const [elkManagerToGetLogsFor, setELkManagerToGetLogsFor] = useState(null);
     const ip = serverIp;
     const port = serverPort;
     const navigate = useNavigate();
@@ -76,15 +95,16 @@ const ExecutionControlPlane = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchClientManagerLogs = useCallback((emulation) => {
+    const fetchClientManagerLogs = useCallback((emulation, client_manager_ip) => {
         fetch(
             `http://` + ip + ":" + port + '/logs/client-manager' + "?token=" + props.sessionData.token
             + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
             {
-                method: "GET",
+                method: "POST",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
-                })
+                }),
+                body: JSON.stringify({ip: client_manager_ip})
             }
         )
             .then(res => {
@@ -99,6 +119,174 @@ const ExecutionControlPlane = (props) => {
             .then(response => {
                 setLoadingClientManagerLogs(false)
                 setClientManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchKafkaManagerLogs = useCallback((emulation, kafka_manager_ip) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/kafka-manager' + "?token=" + props.sessionData.token
+            + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: kafka_manager_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingKafkaManagerLogs(false)
+                setKafkaManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchSnortIdsManagerLogs = useCallback((emulation, snort_manager_ip) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/snort-ids-manager' + "?token=" + props.sessionData.token
+            + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: snort_manager_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingSnortManagerLogs(false)
+                setSnortManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchOssecIdsManagerLogs = useCallback((emulation, ossec_ids_manager_ip) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/ossec-ids-manager' + "?token=" + props.sessionData.token
+            + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: ossec_ids_manager_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingOssecIDSManagerLogs(false)
+                setOssecIDSManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchHostManagerLogs = useCallback((emulation, host_manager_ip) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/host-manager' + "?token=" + props.sessionData.token
+            + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: host_manager_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingHostManagerLogs(false)
+                setHostManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchElkManagerLogs = useCallback((emulation, elk_manager_ip) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/elk-manager' + "?token=" + props.sessionData.token
+            + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: elk_manager_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingElkManagerLogs(false)
+                setElkManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchTrafficManagerLogs = useCallback((emulation, traffic_manager_ip) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/traffic-manager' + "?token=" + props.sessionData.token
+            + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({ip: traffic_manager_ip})
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingTrafficManagerLogs(false)
+                setTrafficManagerLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -167,10 +355,53 @@ const ExecutionControlPlane = (props) => {
         fetchContainerLogs(containerName)
     }
 
-    const getClientManagerLogs = () => {
+    const getClientManagerLogs = (ip) => {
         setShowClientManagerLogsModal(true)
         setLoadingClientManagerLogs(true)
-        fetchClientManagerLogs(props.execution.emulation_name)
+        setClientManagerToGetLogsFor(ip)
+        fetchClientManagerLogs(props.execution.emulation_name, ip)
+    }
+
+    const getKafkaManagerLogs = (ip) => {
+        setShowKafkaManagerLogsModal(true)
+        setLoadingKafkaManagerLogs(true)
+        setKafkaManagerToGetLogsFor(ip)
+        fetchKafkaManagerLogs(props.execution.emulation_name, ip)
+    }
+
+    const getSnortManagerLogs = (ip) => {
+        setShowSnortManagerLogsModal(true)
+        setLoadingSnortManagerLogs(true)
+        setSnortManagerToGetLogsFor(ip)
+        fetchSnortIdsManagerLogs(props.execution.emulation_name, ip)
+    }
+
+    const getTrafficManagerLogs = (ip) => {
+        setShowTrafficManagerLogsModal(true)
+        setLoadingTrafficManagerLogs(true)
+        setTrafficManagerToGetLogsFor(ip)
+        fetchTrafficManagerLogs(props.execution.emulation_name, ip)
+    }
+
+    const getHostManagerLogs = (ip) => {
+        setShowHostManagerLogsModal(true)
+        setLoadingHostManagerLogs(true)
+        setHostManagerToGetLogsFor(ip)
+        fetchHostManagerLogs(props.execution.emulation_name, ip)
+    }
+
+    const getElkManagerLogs = (ip) => {
+        setShowElkManagerLogsModal(true)
+        setLoadingElkManagerLogs(true)
+        setELkManagerToGetLogsFor(ip)
+        fetchElkManagerLogs(props.execution.emulation_name, ip)
+    }
+
+    const getOssecIDSManagerLogs = (ip) => {
+        setShowOssecIDSManagerLogsModal(true)
+        setLoadingOssecIDSManagerLogs(true)
+        setOssecIDSManagerToGetLogsFor(ip)
+        fetchOssecIdsManagerLogs(props.execution.emulation_name, ip)
     }
 
     const startOrStop = (start, stop, entity, name, ip) => {
@@ -271,6 +502,168 @@ const ExecutionControlPlane = (props) => {
         );
     }
 
+    const KafkaManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for Kafka manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const SnortIdsManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for Snort IDS manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const OssecIDSManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for OSSEC IDS manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const TrafficManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for traffic manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const HostManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for host manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const ElkManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for ELK manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
     const ContainerLogsButton = (props) => {
         return (
             <OverlayTrigger
@@ -294,7 +687,97 @@ const ExecutionControlPlane = (props) => {
                 overlay={renderLogsTooltip}
             >
                 <Button variant="info" className="startButton" size="sm"
-                        onClick={() => getClientManagerLogs()}>
+                        onClick={() => getClientManagerLogs(props.ip)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const SnortManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getSnortManagerLogs(props.ip)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const KafkaManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getKafkaManagerLogs(props.ip)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const OssecIDSManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getOssecIDSManagerLogs(props.ip)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const TrafficManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getTrafficManagerLogs(props.ip)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const HostManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getHostManagerLogs(props.ip)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const ElkManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getElkManagerLogs(props.ip)}>
                     <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
                 </Button>
             </OverlayTrigger>
@@ -376,7 +859,19 @@ const ExecutionControlPlane = (props) => {
         <ContainerLogsModal show={showContainerLogsModal} onHide={() => setShowContainerLogsModal(false)} name={containerToGetLogsFor}
                    loading={loadingContainerLogs} logs={containerLogs}/>
         <ClientManagerLogsModal show={showClientManagerLogsModal} onHide={() => setShowClientManagerLogsModal(false)}
-                            loading={loadingClientManagerLogs} logs={clientManagerLogs}/>
+                            loading={loadingClientManagerLogs} logs={clientManagerLogs} name={clientManagerToGetLogsFor}/>
+        <KafkaManagerLogsModal show={showKafkaManagerLogsModal} onHide={() => setShowKafkaManagerLogsModal(false)}
+                                loading={loadingKafkaManagerLogs} logs={kafkaManagerLogs} name={kafkaManagerToGetLogsFor}/>
+        <SnortIdsManagerLogsModal show={showSnortManagerLogsModal} onHide={() => setShowSnortManagerLogsModal(false)}
+                               loading={loadingSnortManagerLogs} logs={snortManagerLogs} name={snortManagerToGetLogsFor}/>
+        <OssecIDSManagerLogsModal show={showOssecIDSManagerLogsModal} onHide={() => setShowOssecIDSManagerLogsModal(false)}
+                                  loading={loadingOssecIDSManagerLogs} logs={ossecIDSManagerLogs} name={ossecIDSManagerToGetLogsFor}/>
+        <TrafficManagerLogsModal show={showTrafficManagerLogsModal} onHide={() => setShowTrafficManagerLogsModal(false)}
+                                  loading={loadingTrafficManagerLogs} logs={trafficManagerLogs} name={trafficManagerToGetLogsFor}/>
+        <HostManagerLogsModal show={showHostManagerLogsModal} onHide={() => setShowHostManagerLogsModal(false)}
+                                 loading={loadingHostManagerLogs} logs={hostManagerLogs} name={hostManagerToGetLogsFor}/>
+        <ElkManagerLogsModal show={showElkManagerLogsModal} onHide={() => setShowElkManagerLogsModal(false)}
+                              loading={loadingElkManagerLogs} logs={elkManagerLogs} name={elkManagerToGetLogsFor}/>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.execution.emulation_name + "_"
                 + props.execution.ip_first_octet} className="mgHeader">
@@ -567,7 +1062,9 @@ const ExecutionControlPlane = (props) => {
                                                 />
                                                 <ClientManagerLogsButton
                                                     loading={loadingEntities.includes("client-manager-" +
-                                                        props.info.client_managers_info.ips[index] + "-logs")}/>
+                                                        props.info.client_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.client_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -589,7 +1086,9 @@ const ExecutionControlPlane = (props) => {
                                                 />
                                                 <ClientManagerLogsButton
                                                     loading={loadingEntities.includes("client-manager-" +
-                                                        props.info.client_managers_info.ips[index] + "-logs")}/>
+                                                        props.info.client_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.client_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -611,7 +1110,9 @@ const ExecutionControlPlane = (props) => {
                                                 />
                                                 <ClientManagerLogsButton
                                                     loading={loadingEntities.includes("client-manager-" +
-                                                        props.info.client_managers_info.ips[index] + "-logs")}/>
+                                                        props.info.client_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.client_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -754,6 +1255,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"host-manager"} name={"host-manager"}
                                                     ip={props.info.host_managers_info.ips[index]}
                                                 />
+                                                <HostManagerLogsButton
+                                                    loading={loadingEntities.includes("host-manager-" +
+                                                        props.info.host_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.host_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -769,6 +1275,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.host_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"host-monitor"} name={"host-monitor"}
+                                                    ip={props.info.host_managers_info.ips[index]}
+                                                />
+                                                <HostManagerLogsButton
+                                                    loading={loadingEntities.includes("host-manager-" +
+                                                        props.info.host_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.host_managers_info.ips[index]}
                                                 />
                                             </td>
@@ -823,6 +1334,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"kafka-manager"} name={"kafka-manager"}
                                                     ip={props.info.kafka_managers_info.ips[index]}
                                                 />
+                                                <KafkaManagerLogsButton
+                                                    loading={loadingEntities.includes("kafka-manager-" +
+                                                        props.info.kafka_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.kafka_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -840,6 +1356,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.kafka_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"kafka"} name={"kafka"}
+                                                    ip={props.info.kafka_managers_info.ips[index]}
+                                                />
+                                                <KafkaManagerLogsButton
+                                                    loading={loadingEntities.includes("kafka-manager-" +
+                                                        props.info.kafka_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.kafka_managers_info.ips[index]}
                                                 />
                                             </td>
@@ -930,6 +1451,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"ossec-ids-manager"} name={"ossec-ids-manager"}
                                                     ip={props.info.ossec_ids_managers_info.ips[index]}
                                                 />
+                                                <OssecIDSManagerLogsButton
+                                                    loading={loadingEntities.includes("ossec-ids-manager-" +
+                                                        props.info.ossec_ids_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.ossec_ids_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -945,6 +1471,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.ossec_ids_managers_info.ips[index])}
                                                     running={status.monitor_running}
                                                     entity={"ossec-ids-monitor"} name={"ossec-ids-monitor"}
+                                                    ip={props.info.ossec_ids_managers_info.ips[index]}
+                                                />
+                                                <OssecIDSManagerLogsButton
+                                                    loading={loadingEntities.includes("ossec-ids-manager-" +
+                                                        props.info.ossec_ids_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.ossec_ids_managers_info.ips[index]}
                                                 />
                                             </td>
@@ -963,6 +1494,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.ossec_ids_managers_info.ips[index])}
                                                     running={status.ossec_ids_running}
                                                     entity={"ossec-ids"} name={"ossec-ids"}
+                                                    ip={props.info.ossec_ids_managers_info.ips[index]}
+                                                />
+                                                <OssecIDSManagerLogsButton
+                                                    loading={loadingEntities.includes("ossec-ids-manager-" +
+                                                        props.info.ossec_ids_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.ossec_ids_managers_info.ips[index]}
                                                 />
                                             </td>
@@ -1015,6 +1551,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"snort-ids-manager"} name={"snort-ids-manager"}
                                                     ip={props.info.snort_ids_managers_info.ips[index]}
                                                 />
+                                                <SnortManagerLogsButton
+                                                    loading={loadingEntities.includes("snort-manager-" +
+                                                        props.info.snort_ids_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.snort_ids_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -1032,6 +1573,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"snort-ids-monitor"} name={"snort-ids-monitor"}
                                                     ip={props.info.snort_ids_managers_info.ips[index]}
                                                 />
+                                                <SnortManagerLogsButton
+                                                    loading={loadingEntities.includes("snort-manager-" +
+                                                        props.info.snort_ids_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.snort_ids_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -1047,6 +1593,11 @@ const ExecutionControlPlane = (props) => {
                                                     loading={loadingEntities.includes("snort-ids-" + props.info.snort_ids_managers_info.ips[index])}
                                                     running={status.snort_ids_running}
                                                     entity={"snort-ids"} name={"snort-ids"}
+                                                    ip={props.info.snort_ids_managers_info.ips[index]}
+                                                />
+                                                <SnortManagerLogsButton
+                                                    loading={loadingEntities.includes("snort-manager-" +
+                                                        props.info.snort_ids_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.snort_ids_managers_info.ips[index]}
                                                 />
                                             </td>
@@ -1100,6 +1651,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"elk-manager"} name={"elk-manager"}
                                                     ip={props.info.elk_managers_info.ips[index]}
                                                 />
+                                                <ElkManagerLogsButton
+                                                    loading={loadingEntities.includes("elk-manager-" +
+                                                        props.info.elk_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -1122,6 +1678,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"elk-stack"} name={"elk-stack"}
                                                     ip={props.info.elk_managers_info.ips[index]}
                                                 />
+                                                <ElkManagerLogsButton
+                                                    loading={loadingEntities.includes("elk-manager-" +
+                                                        props.info.elk_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -1140,6 +1701,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"elastic"} name={"elastic"}
                                                     ip={props.info.elk_managers_info.ips[index]}
                                                 />
+                                                <ElkManagerLogsButton
+                                                    loading={loadingEntities.includes("elk-manager-" +
+                                                        props.info.elk_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -1156,6 +1722,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.elk_managers_info.ips[index])}
                                                     running={status.logstashRunning}
                                                     entity={"logstash"} name={"logstash"}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
+                                                <ElkManagerLogsButton
+                                                    loading={loadingEntities.includes("elk-manager-" +
+                                                        props.info.elk_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.elk_managers_info.ips[index]}
                                                 />
                                             </td>
@@ -1181,6 +1752,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.elk_managers_info.ips[index])}
                                                     running={status.kibanaRunning}
                                                     entity={"kibana"} name={"kibana"}
+                                                    ip={props.info.elk_managers_info.ips[index]}
+                                                />
+                                                <ElkManagerLogsButton
+                                                    loading={loadingEntities.includes("elk-manager-" +
+                                                        props.info.elk_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.elk_managers_info.ips[index]}
                                                 />
                                             </td>
@@ -1258,6 +1834,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"traffic-manager"} name={"traffic-manager"}
                                                     ip={props.info.traffic_managers_info.ips[index]}
                                                 />
+                                                <TrafficManagerLogsButton
+                                                    loading={loadingEntities.includes("traffic-manager-" +
+                                                        props.info.traffic_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.traffic_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -1273,6 +1854,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.traffic_managers_info.ips[index])}
                                                     running={status.running}
                                                     entity={"traffic-generator"} name={"traffic-generator"}
+                                                    ip={props.info.traffic_managers_info.ips[index]}
+                                                />
+                                                <TrafficManagerLogsButton
+                                                    loading={loadingEntities.includes("traffic-manager-" +
+                                                        props.info.traffic_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.traffic_managers_info.ips[index]}
                                                 />
                                             </td>
