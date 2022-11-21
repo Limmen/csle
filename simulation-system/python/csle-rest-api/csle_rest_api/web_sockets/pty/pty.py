@@ -11,11 +11,10 @@ import termios
 import select
 import csle_rest_api.constants.constants as api_constants
 import csle_common.constants.constants as constants
+from csle_rest_api import socketio
 
-from ... import socketio
 
-
-def get_websockets_bp(app):
+def get_pty_bp(app):
 
     def set_winsize(fd: int, row: int, col: int, xpix :int =0, ypix: int =0) -> None:
         """
