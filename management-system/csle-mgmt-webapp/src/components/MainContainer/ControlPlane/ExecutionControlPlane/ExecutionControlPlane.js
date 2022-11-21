@@ -64,6 +64,10 @@ const ExecutionControlPlane = (props) => {
     const [loadingElkManagerLogs, setLoadingElkManagerLogs] = useState(false);
     const [elkManagerLogs, setElkManagerLogs] = useState([]);
     const [elkManagerToGetLogsFor, setELkManagerToGetLogsFor] = useState(null);
+    const [showDockerStatsManagerLogsModal, setShowDockerStatsManagerLogsModal] = useState(false);
+    const [loadingDockerStatsManagerLogs, setLoadingDockerStatsManagerLogs] = useState(false);
+    const [dockerStatsManagerLogs, setDockerStatsManagerLogs] = useState([]);
+    const [dockerStatsManagerToGetLogsFor, setDockerStatsManagerToGetLogsFor] = useState(null);
     const ip = serverIp;
     const port = serverPort;
     const navigate = useNavigate();
@@ -91,6 +95,32 @@ const ExecutionControlPlane = (props) => {
             .then(response => {
                 setLoadingContainerLogs(false)
                 setContainerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchStatsManagerLogs = useCallback(() => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/docker-stats-manager' + "?token=" + props.sessionData.token,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingDockerStatsManagerLogs(false)
+                setDockerStatsManagerLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -397,6 +427,13 @@ const ExecutionControlPlane = (props) => {
         fetchElkManagerLogs(props.execution.emulation_name, ip)
     }
 
+    const getDockerStatsManagerLogs = (ip) => {
+        setShowDockerStatsManagerLogsModal(true)
+        setLoadingDockerStatsManagerLogs(true)
+        setDockerStatsManagerToGetLogsFor(ip)
+        fetchStatsManagerLogs()
+    }
+
     const getOssecIDSManagerLogs = (ip) => {
         setShowOssecIDSManagerLogsModal(true)
         setLoadingOssecIDSManagerLogs(true)
@@ -664,6 +701,33 @@ const ExecutionControlPlane = (props) => {
         );
     }
 
+    const DockerStatsManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for Docker stats manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
     const ContainerLogsButton = (props) => {
         return (
             <OverlayTrigger
@@ -784,6 +848,21 @@ const ExecutionControlPlane = (props) => {
         )
     }
 
+    const DockerStatsManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getDockerStatsManagerLogs(props.ip)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
     const ShellButton = (props) => {
         return (
             <OverlayTrigger
@@ -872,6 +951,8 @@ const ExecutionControlPlane = (props) => {
                                  loading={loadingHostManagerLogs} logs={hostManagerLogs} name={hostManagerToGetLogsFor}/>
         <ElkManagerLogsModal show={showElkManagerLogsModal} onHide={() => setShowElkManagerLogsModal(false)}
                               loading={loadingElkManagerLogs} logs={elkManagerLogs} name={elkManagerToGetLogsFor}/>
+        <DockerStatsManagerLogsModal show={showDockerStatsManagerLogsModal} onHide={() => setShowDockerStatsManagerLogsModal(false)}
+                             loading={loadingDockerStatsManagerLogs} logs={dockerStatsManagerLogs} name={dockerStatsManagerToGetLogsFor}/>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.execution.emulation_name + "_"
                 + props.execution.ip_first_octet} className="mgHeader">
@@ -1163,6 +1244,11 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"docker-stats-manager"} name={"docker-stats-manager"}
                                                     ip={props.info.docker_stats_managers_info.ips[index]}
                                                 />
+                                                <DockerStatsManagerLogsButton
+                                                    loading={loadingEntities.includes("docker-stats-manager-" +
+                                                        props.info.docker_stats_managers_info.ips[index] + "-logs")}
+                                                    ip={props.info.docker_stats_managers_info.ips[index]}
+                                                />
                                             </td>
                                         </tr>
                                     )}
@@ -1178,6 +1264,11 @@ const ExecutionControlPlane = (props) => {
                                                         props.info.docker_stats_managers_info.ips[index])}
                                                     running={status.num_monitors > 0}
                                                     entity={"docker-stats-monitor"} name={"docker-stats-monitor"}
+                                                    ip={props.info.docker_stats_managers_info.ips[index]}
+                                                />
+                                                <DockerStatsManagerLogsButton
+                                                    loading={loadingEntities.includes("docker-stats-manager-" +
+                                                        props.info.docker_stats_managers_info.ips[index] + "-logs")}
                                                     ip={props.info.docker_stats_managers_info.ips[index]}
                                                 />
                                             </td>
