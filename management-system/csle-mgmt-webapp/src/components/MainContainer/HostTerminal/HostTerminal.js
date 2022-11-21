@@ -51,9 +51,9 @@ const HostTerminal = (props) => {
         fitAddon.fit();
         term.writeln('')
         term.onData((data) => {
-            socket.emit("pty-input", { input: data });
+            socket.emit("pty-input", { input: data, token:props.sessionData.token});
         });
-        const socket = io.connect(ip + ":" + port + "/pty");
+        const socket = io.connect(ip + ":" + port + "/pty?token=" + props.sessionData.token);
         setSocketState(socket)
         const status = document.getElementById("status");
 
@@ -65,7 +65,7 @@ const HostTerminal = (props) => {
             fitToscreen();
             status.innerHTML =
                 '<span style="background-color: lightgreen;">connected</span>';
-            socket.emit("pty-input", { input: "\r" });
+            socket.emit("pty-input", { input: "\r" , token:props.sessionData.token});
         });
 
         socket.on("disconnect", () => {
@@ -75,7 +75,7 @@ const HostTerminal = (props) => {
 
         function fitToscreen() {
             fitAddon.fit();
-            const dims = { cols: term.cols, rows: term.rows };
+            const dims = { cols: term.cols, rows: term.rows , token:props.sessionData.token};
             socket.emit("resize", dims);
         }
 

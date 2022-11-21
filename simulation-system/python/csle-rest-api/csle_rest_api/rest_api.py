@@ -1,5 +1,5 @@
-from flask import Flask
-from flask_socketio import SocketIO
+from flask import Flask, request
+from flask_socketio import SocketIO, ConnectionRefusedError
 import csle_common.constants.constants as constants
 from csle_rest_api.pages.emulations.routes import emulations_page_bp
 from csle_rest_api.pages.simulations.routes import simulations_page_bp
@@ -59,6 +59,7 @@ from csle_rest_api.resources.users.routes import users_bp
 from csle_rest_api.resources.config.routes import config_bp
 from csle_rest_api.resources.logs.routes import logs_bp
 import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 import os
 import pty
 import struct
@@ -275,6 +276,9 @@ def create_app(static_folder: str):
 
     @socketio.on("connect", namespace="/pty")
     def connect():
+        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+        if authorized is not None:
+            raise ConnectionRefusedError('unauthorized!')
         if app.config["child_pid"]:
             return
         (child_pid, fd) = pty.fork()

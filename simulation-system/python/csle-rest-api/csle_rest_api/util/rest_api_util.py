@@ -14,7 +14,7 @@ def check_if_user_is_authorized(request, requires_admin: bool = False):
     :return: the non-authorized response or None
     """
     # Extract token and check if user is authorized
-    token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
+    token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)    
     token_obj = MetastoreFacade.get_session_token_metadata(token=token)
     if token_obj is None:
         response = jsonify({})
