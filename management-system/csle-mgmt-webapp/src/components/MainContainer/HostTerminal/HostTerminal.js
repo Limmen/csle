@@ -51,13 +51,13 @@ const HostTerminal = (props) => {
         fitAddon.fit();
         term.writeln('')
         term.onData((data) => {
-            socket.emit("pty-input", { input: data, token:props.sessionData.token});
+            socket.emit("host-terminal-input", { input: data, token:props.sessionData.token});
         });
-        const socket = io.connect(ip + ":" + port + "/pty?token=" + props.sessionData.token);
+        const socket = io.connect(ip + ":" + port + "/host-terminal?token=" + props.sessionData.token);
         setSocketState(socket)
         const status = document.getElementById("status");
 
-        socket.on("pty-output", function (data) {
+        socket.on("host-terminal-output", function (data) {
             term.write(data.output);
         });
 
@@ -65,7 +65,7 @@ const HostTerminal = (props) => {
             fitToscreen();
             status.innerHTML =
                 '<span style="background-color: lightgreen;">connected</span>';
-            socket.emit("pty-input", { input: "\r" , token:props.sessionData.token});
+            socket.emit("host-terminal-input", { input: "\r" , token:props.sessionData.token});
         });
 
         socket.on("disconnect", () => {
