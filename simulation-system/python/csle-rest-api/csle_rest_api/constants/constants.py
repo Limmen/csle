@@ -10,6 +10,7 @@ class MGMT_WEBAPP:
     TOKEN_QUERY_PARAM = "token"
     STOP_QUERY_PARAM = "stop"
     EMULATION_QUERY_PARAM = "emulation"
+    EXECUTION_ID_QUERY_PARAM = "executionid"
     CONTAINER_NAME_PROPERTY = "container_name"
     STATIC_RESOURCE_INDEX = "index.html"
     HTTP_REST_GET = "GET"

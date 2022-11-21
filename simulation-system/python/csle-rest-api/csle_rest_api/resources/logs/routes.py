@@ -9,6 +9,8 @@ import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.dao.emulation_config.config import Config
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.util.emulation_util import EmulationUtil
 
 
 # Creates a blueprint "sub application" of the main REST app
@@ -202,3 +204,49 @@ def container_logs():
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
+
+
+@logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+def client_manager_logs():
+    """
+    The /logs/client-manager resource.
+
+    :return: The logs of the client manager
+    """
+
+    # Check that token is valid
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
+    if authorized is not None:
+        return authorized
+
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
+    execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
+    if emulation is not None:
+        emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, 
+                                                                       emulation_name=emulation).emulation_env_config
+        path = emulation_env_config.traffic_config.client_population_config.client_manager_log_dir \
+               + emulation_env_config.traffic_config.client_population_config.client_manager_log_file
+        # Connect
+        EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
+                                    ip=emulation_env_config.traffic_config.client_population_config.ip)
+        sftp_client = emulation_env_config.get_connection(
+            ip=emulation_env_config.traffic_config.client_population_config.ip).open_sftp()
+        remote_file = sftp_client.open(path)
+        data = []
+        try:
+            data = remote_file.read()
+            data = data.decode()
+            data = data.split("\n")
+            data = data[-100:]
+        finally:
+            remote_file.close()
+
+        data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
+        response = jsonify(data_dict)
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.OK_STATUS_CODE
+    else:
+        response = jsonify({})
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE

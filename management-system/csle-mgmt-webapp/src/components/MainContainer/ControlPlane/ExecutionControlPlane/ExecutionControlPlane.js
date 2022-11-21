@@ -38,10 +38,13 @@ const ExecutionControlPlane = (props) => {
     const [elkManagersOpen, setElkManagersOpen] = useState(false);
     const [trafficManagersOpen, setTrafficManagersOpen] = useState(false);
     const [loadingEntities, setLoadingEntities] = useState([]);
-    const [showLogsModal, setShowLogsModal] = useState(false);
+    const [showContainerLogsModal, setShowContainerLogsModal] = useState(false);
     const [containerToGetLogsFor, setContainerToGetLogsFor] = useState(null);
     const [loadingContainerLogs, setLoadingContainerLogs] = useState(false);
     const [containerLogs, setContainerLogs] = useState([]);
+    const [showClientManagerLogsModal, setShowClientManagerLogsModal] = useState(false);
+    const [loadingClientManagerLogs, setLoadingClientManagerLogs] = useState(false);
+    const [clientManagerLogs, setClientManagerLogs] = useState([]);
     const ip = serverIp;
     const port = serverPort;
     const navigate = useNavigate();
@@ -69,6 +72,33 @@ const ExecutionControlPlane = (props) => {
             .then(response => {
                 setLoadingContainerLogs(false)
                 setContainerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+    const fetchClientManagerLogs = useCallback((emulation) => {
+        fetch(
+            `http://` + ip + ":" + port + '/logs/client-manager' + "?token=" + props.sessionData.token
+            + "&emulation=" + emulation + "&executionid=" + props.execution.ip_first_octet,
+            {
+                method: "GET",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingClientManagerLogs(false)
+                setClientManagerLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -131,10 +161,16 @@ const ExecutionControlPlane = (props) => {
     }
 
     const getContainerLogs = (containerName) => {
-        setShowLogsModal(true)
+        setShowContainerLogsModal(true)
         setContainerToGetLogsFor(containerName)
         setLoadingContainerLogs(true)
         fetchContainerLogs(containerName)
+    }
+
+    const getClientManagerLogs = () => {
+        setShowClientManagerLogsModal(true)
+        setLoadingClientManagerLogs(true)
+        fetchClientManagerLogs(props.execution.emulation_name)
     }
 
     const startOrStop = (start, stop, entity, name, ip) => {
@@ -181,7 +217,7 @@ const ExecutionControlPlane = (props) => {
         }
     }
 
-    const LogsModal = (props) => {
+    const ContainerLogsModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -208,7 +244,34 @@ const ExecutionControlPlane = (props) => {
         );
     }
 
-    const LogsButton = (props) => {
+    const ClientManagerLogsModal = (props) => {
+        return (
+            <Modal
+                {...props}
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
+                        Logs for client manager: {props.name}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="logsModalBody">
+                        <div className="table-responsive">
+                            <SpinnerOrLogs loadingLogs={props.loading} logs={props.logs}/>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFooter">
+                    <Button onClick={props.onHide} size="sm">Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    const ContainerLogsButton = (props) => {
         return (
             <OverlayTrigger
                 placement="right"
@@ -217,6 +280,21 @@ const ExecutionControlPlane = (props) => {
             >
                 <Button variant="info" className="startButton" size="sm"
                         onClick={() => getContainerLogs(props.name)}>
+                    <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const ClientManagerLogsButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderLogsTooltip}
+            >
+                <Button variant="info" className="startButton" size="sm"
+                        onClick={() => getClientManagerLogs()}>
                     <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
                 </Button>
             </OverlayTrigger>
@@ -295,8 +373,10 @@ const ExecutionControlPlane = (props) => {
     };
 
     return (<Card key={props.execution.name} ref={props.wrapper}>
-        <LogsModal show={showLogsModal} onHide={() => setShowLogsModal(false)} name={containerToGetLogsFor}
+        <ContainerLogsModal show={showContainerLogsModal} onHide={() => setShowContainerLogsModal(false)} name={containerToGetLogsFor}
                    loading={loadingContainerLogs} logs={containerLogs}/>
+        <ClientManagerLogsModal show={showClientManagerLogsModal} onHide={() => setShowClientManagerLogsModal(false)}
+                            loading={loadingClientManagerLogs} logs={clientManagerLogs}/>
         <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey={props.execution.emulation_name + "_"
                 + props.execution.ip_first_octet} className="mgHeader">
@@ -316,8 +396,6 @@ const ExecutionControlPlane = (props) => {
                             variant="link"
                         >
                             <h5 className="semiTitle"> Docker container statuses
-                                <img src={DockerImg} alt="Docker-logo" className="img-fluid dockerLogo" width="6%"
-                                     height="6%"/>
                             </h5>
                         </Button>
                     </Card.Header>
@@ -364,7 +442,7 @@ const ExecutionControlPlane = (props) => {
                                                     running={true} entity="container"
                                                     name={container.full_name_str} ip={container.full_name_str}
                                                 />
-                                                <LogsButton
+                                                <ContainerLogsButton
                                                     loading={loadingEntities.includes("container-" +
                                                         container.full_name_str + "-logs")}
                                                     name={container.full_name_str}/>
@@ -487,6 +565,9 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"client-manager"} name={"client-manager"}
                                                     ip={props.info.client_managers_info.ips[index]}
                                                 />
+                                                <ClientManagerLogsButton
+                                                    loading={loadingEntities.includes("client-manager-" +
+                                                        props.info.client_managers_info.ips[index] + "-logs")}/>
                                             </td>
                                         </tr>
                                     )}
@@ -506,6 +587,9 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"client-population"} name={"client-population"}
                                                     ip={props.info.client_managers_info.ips[index]}
                                                 />
+                                                <ClientManagerLogsButton
+                                                    loading={loadingEntities.includes("client-manager-" +
+                                                        props.info.client_managers_info.ips[index] + "-logs")}/>
                                             </td>
                                         </tr>
                                     )}
@@ -525,6 +609,9 @@ const ExecutionControlPlane = (props) => {
                                                     entity={"client-producer"} name={"client-producer"}
                                                     ip={props.info.client_managers_info.ips[index]}
                                                 />
+                                                <ClientManagerLogsButton
+                                                    loading={loadingEntities.includes("client-manager-" +
+                                                        props.info.client_managers_info.ips[index] + "-logs")}/>
                                             </td>
                                         </tr>
                                     )}
@@ -544,8 +631,6 @@ const ExecutionControlPlane = (props) => {
                             variant="link"
                         >
                             <h5 className="semiTitle"> Docker Statistics Managers
-                                <img src={DockerImg} alt="Docker-logo" className="img-fluid dockerLogo" width="6%"
-                                     height="6%"/>
                             </h5>
                         </Button>
                     </Card.Header>
@@ -705,8 +790,6 @@ const ExecutionControlPlane = (props) => {
                             variant="link"
                         >
                             <h5 className="semiTitle"> Kafka managers
-                                <img src={KafkaImg} alt="Kafka-logo" className="img-fluid" width="6%" height="6%"
-                                     className="kafkaLogo"/>
                             </h5>
                         </Button>
                     </Card.Header>
@@ -746,9 +829,6 @@ const ExecutionControlPlane = (props) => {
                                     {props.info.kafka_managers_info.kafka_managers_statuses.map((status, index) =>
                                         <tr key={"kafka-" + index}>
                                             <td>Kafka
-                                                <img src={KafkaImg} alt="Kafka-logo" className="img-fluid" width="35%"
-                                                     height="35%"
-                                                     className="kafkaLogo"/>
                                             </td>
                                             <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.kafka_config.kafka_port}</td>
@@ -781,8 +861,6 @@ const ExecutionControlPlane = (props) => {
                             variant="link"
                         >
                             <h5 className="semiTitle"> OSSEC IDS Managers
-                                <img src={OssecImg} alt="Ossec-logo" className="img-fluid ossecLogo"
-                                     width="6%" height="6%"/>
                             </h5>
                         </Button>
                     </Card.Header>
@@ -906,8 +984,6 @@ const ExecutionControlPlane = (props) => {
                             variant="link"
                         >
                             <h5 className="semiTitle"> Snort IDS Managers
-                                <img src={SnortImg} alt="Snort-logo" className="img-fluid snortLogo" width="10%"
-                                     height="10%"/>
                             </h5>
                         </Button>
                     </Card.Header>
@@ -962,9 +1038,6 @@ const ExecutionControlPlane = (props) => {
                                     {props.info.snort_ids_managers_info.snort_ids_managers_statuses.map((status, index) =>
                                         <tr key={"snort-ids-" + index}>
                                             <td>Snort IDS
-                                                <img src={SnortImg} alt="Snort-logo" className="img-fluid" width="10%"
-                                                     height="10%"
-                                                     className="snortLogo"/>
                                             </td>
                                             <td>{props.info.snort_ids_managers_info.ips[index]}</td>
                                             <td></td>
@@ -996,10 +1069,6 @@ const ExecutionControlPlane = (props) => {
                             variant="link"
                         >
                             <h5 className="semiTitle"> ELK Managers
-                                <img src={ElasticImg} alt="Kibana" className="img-fluid elasticLogo" height="15%"
-                                     width="15%"/>
-                                <img src={LogstashImg} alt="Kibana" className="img-fluid" height="15%" width="15%"/>
-                                <img src={KibanaImg} alt="Kibana" className="img-fluid"/>
                             </h5>
                         </Button>
                     </Card.Header>
@@ -1059,8 +1128,6 @@ const ExecutionControlPlane = (props) => {
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
                                         <tr key={"elastic-" + index}>
                                             <td>Elasticsearch
-                                                <img src={ElasticImg} alt="Kibana" className="img-fluid elasticLogo"
-                                                     height="7%" width="7%"/>
                                             </td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.elastic_port}</td>
@@ -1079,8 +1146,6 @@ const ExecutionControlPlane = (props) => {
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
                                         <tr key={"elk_manager_status-" + index}>
                                             <td>Logstash
-                                                <img src={LogstashImg} alt="Kibana" className="img-fluid logstashLogo"
-                                                     height="7%" width="7%"/>
                                             </td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.logstash_port}</td>
@@ -1100,8 +1165,6 @@ const ExecutionControlPlane = (props) => {
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
                                         <tr key={"kibana-" + index}>
                                             <td>Kibana
-                                                <img src={KibanaImg} alt="Kibana" className="img-fluid kibanaLogo"
-                                                     height="5%" width="5%"/>
                                             </td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.kibana_port}</td>
