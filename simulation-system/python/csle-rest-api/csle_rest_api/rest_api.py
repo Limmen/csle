@@ -241,60 +241,103 @@ def create_app(static_folder: str):
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
 
-    def set_winsize(fd, row, col, xpix=0, ypix=0):
+    def set_winsize(fd: int, row: int, col: int, xpix :int =0, ypix: int =0) -> None:
+        """
+        Set shell window size
+
+        :param fd: the file descriptor of the shell
+        :param row: the number of rows of the new window size
+        :param col: the number of cols of the new window size
+        :param xpix: the number of x pixels of the new size
+        :param ypix: the number of y pixels of the new size
+        :return:
+        """
         winsize = struct.pack("HHHH", row, col, xpix, ypix)
         fcntl.ioctl(fd, termios.TIOCSWINSZ, winsize)
 
+    def read_and_forward_pty_output() -> None:
+        """
+        Reads output from a given file descriptor and sends the output to the web socket
 
-    def read_and_forward_pty_output():
+        :return: None
+        """
         max_read_bytes = 1024 * 20
         while True:
             socketio.sleep(0.01)
-            if app.config["fd"]:
+            if app.config[api_constants.MGMT_WEBAPP.APP_FD]:
                 timeout_sec = 0
-                (data_ready, _, _) = select.select([app.config["fd"]], [], [], timeout_sec)
+                (data_ready, _, _) = select.select([app.config[api_constants.MGMT_WEBAPP.APP_FD]], [], [], timeout_sec)
                 if data_ready:
-                    output = os.read(app.config["fd"], max_read_bytes).decode(errors="ignore")
-                    socketio.emit("pty-output", {"output": output}, namespace="/pty")
+                    output = os.read(app.config[api_constants.MGMT_WEBAPP.APP_FD], max_read_bytes).decode(
+                        errors="ignore")
+                    socketio.emit(api_constants.MGMT_WEBAPP.WS_PTY_OUTPUT_MSG,
+                                  {api_constants.MGMT_WEBAPP.OUTPUT_PROPERTY: output},
+                                  namespace=f"{constants.COMMANDS.SLASH_DELIM}"
+                                            f"{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
 
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def root():
+        """
+        :return: the root page of the management application
+        """
         return app.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
 
-    @socketio.on("pty-input", namespace="/pty")
-    def pty_input(data):
-        """write to the child pty. The pty sees this as if you are typing in a real
-        terminal.
+    @socketio.on(api_constants.MGMT_WEBAPP.WS_PTY_INPUT_MSG,
+                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
+    def pty_input(data) -> None:
         """
-        if app.config["fd"]:
-            os.write(app.config["fd"], data["input"].encode())
+        Receives input msg on a websocket and writes it to the PTY representing the bash shell.
+        The pty sees this as if you are typing in a real terminal.
 
-    @socketio.on("resize", namespace="/pty")
-    def resize(data):
-        if app.config["fd"]:
-            set_winsize(app.config["fd"], data["rows"], data["cols"])
+        :param data: the input data to write
+        :return: None
+        """
+        if app.config[api_constants.MGMT_WEBAPP.APP_FD]:
+            os.write(app.config[api_constants.MGMT_WEBAPP.APP_FD],
+                     data[api_constants.MGMT_WEBAPP.INPUT_PROPERTY].encode())
 
-    @socketio.on("connect", namespace="/pty")
-    def connect():
+    @socketio.on(api_constants.MGMT_WEBAPP.WS_RESIZE_MSG,
+                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
+    def resize(data) -> None:
+        """
+        Handler when receiving a message on a websocket to resize the PTY window. Parses the data and resize
+        the window accordingly.
+
+        :param data: data with information about the new PTY size
+        :return: None
+        """
+        if app.config[api_constants.MGMT_WEBAPP.APP_FD]:
+            set_winsize(app.config[api_constants.MGMT_WEBAPP.APP_FD], data[api_constants.MGMT_WEBAPP.ROWS_PROPERTY],
+                        data[api_constants.MGMT_WEBAPP.COLS_PROPERTY])
+
+    @socketio.on(api_constants.MGMT_WEBAPP.WS_CONNECT_MSG, namespace=f"{constants.COMMANDS.SLASH_DELIM}"
+                                                                     f"{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
+    def connect() -> None:
+        """
+        Handler for new websocket connection requests for the /pty namespace.
+
+        First checks if the user is authorized and then sets up the connection
+
+        :return: None
+        """
         authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
         if authorized is not None:
-            raise ConnectionRefusedError('unauthorized!')
-        if app.config["child_pid"]:
+            raise ConnectionRefusedError()
+        if app.config[api_constants.MGMT_WEBAPP.APP_CHILD_PID]:
             return
         (child_pid, fd) = pty.fork()
         if child_pid == 0:
-            subprocess.run(app.config["cmd"])
+            subprocess.run(app.config[api_constants.MGMT_WEBAPP.APP_CMD])
         else:
-            app.config["fd"] = fd
-            app.config["child_pid"] = child_pid
+            app.config[api_constants.MGMT_WEBAPP.APP_FD] = fd
+            app.config[api_constants.MGMT_WEBAPP.APP_CHILD_PID] = child_pid
             set_winsize(fd, 50, 50)
-            cmd = " ".join(shlex.quote(c) for c in app.config["cmd"])
             socketio.start_background_task(target=read_and_forward_pty_output)
 
     app.config["SECRET_KEY"] = "secret!"
-    app.config["fd"] = None
-    app.config["cmd"] = ["bash"]
-    app.config["child_pid"] = None
+    app.config[api_constants.MGMT_WEBAPP.APP_FD] = None
+    app.config[api_constants.MGMT_WEBAPP.APP_CMD] = [constants.COMMANDS.BASH]
+    app.config[api_constants.MGMT_WEBAPP.APP_CHILD_PID] = None
     socketio.init_app(app)
     return app
 

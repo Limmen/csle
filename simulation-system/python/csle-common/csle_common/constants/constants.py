@@ -750,6 +750,7 @@ class COMMANDS:
     Constants related to arbitrary commands
     """
     CHANNEL_WHOAMI = "whoami\n"
+    BASH = "bash"
     CHANNEL_SU_ROOT = "su root\n"
     CHANNEL_ROOT = "root\n"
     LIST_CACHE = "ls -1 "

@@ -105,6 +105,14 @@ class MGMT_WEBAPP:
     TRACES_RESOURCE = "traces"
     TRAINING_RESOURCE = "training"
     RUNNING_PROPERTY = "running"
+    OUTPUT_PROPERTY = "output"
+    INPUT_PROPERTY = "input"
+    ROWS_PROPERTY = "rows"
+    COLS_PROPERTY = "cols"
+    WS_CONNECT_MSG = "connect"
+    WS_PTY_OUTPUT_MSG = "pty-output"
+    WS_PTY_INPUT_MSG = "pty-input"
+    WS_RESIZE_MSG = "resize"
     IP_PROPERTY = "ip"
     EXEC_ID_PROPERTY = "exec_id"
     EMULATION_PROPERTY = "emulation"
@@ -166,6 +174,10 @@ class MGMT_WEBAPP:
     GP_SYSTEM_MODEL_TYPE = "gp"
     KIBANA_TUNNELS_DICT = {}
     KIBANA_TUNNEL_BASE_PORT = 17000
+    PTY_WS_NAMESPACE = "pty"
+    APP_FD = "fd"
+    APP_CHILD_PID = "fd"
+    APP_CMD = "cmd"
 
 
 class SESSION_TOKENS:
