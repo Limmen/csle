@@ -20,7 +20,7 @@ from csle_rest_api.pages.training.routes import training_page_bp
 from csle_rest_api.pages.sdn_controllers.routes import sdn_controllers_page_bp
 from csle_rest_api.pages.control_plane.routes import control_plane_page_bp
 from csle_rest_api.pages.user_admin.routes import user_admin_page_bp
-from csle_rest_api.pages.terminal.routes import terminal_page_bp
+from csle_rest_api.pages.host_terminal.routes import host_terminal_page_bp
 from csle_rest_api.pages.system_admin.routes import system_admin_page_bp
 from csle_rest_api.pages.logs_admin.routes import logs_admin_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
@@ -134,9 +134,9 @@ def create_app(static_folder: str):
     app.register_blueprint(user_admin_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE}")
-    app.register_blueprint(terminal_page_bp,
+    app.register_blueprint(host_terminal_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
-                                      f"{api_constants.MGMT_WEBAPP.TERMINAL_PAGE_RESOURCE}")
+                                      f"{api_constants.MGMT_WEBAPP.HOST_TERMINAL_PAGE_RESOURCE}")
     app.register_blueprint(system_admin_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}")
