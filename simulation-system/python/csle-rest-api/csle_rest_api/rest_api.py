@@ -67,7 +67,7 @@ import fcntl
 import subprocess
 import termios
 import select
-import shlex
+
 
 socketio = SocketIO(cors_allowed_origins="*")
 
@@ -357,8 +357,4 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
     """
     app = create_app(static_folder=static_folder)
     socketio.run(app, debug=False, port=port, host=host)
-    # if not https:
-    #     serve(app, host=host, port=port, threads=num_threads)
-    # else:
-    #     serve(app, host=host, port=port, threads=num_threads, url_scheme='https')
 
