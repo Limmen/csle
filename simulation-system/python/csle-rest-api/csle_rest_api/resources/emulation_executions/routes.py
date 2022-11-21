@@ -4,6 +4,7 @@ Routes and sub-resources for the /emulation-executions resource
 import time
 
 from flask import Blueprint, jsonify, request
+from requests import get
 import json
 from csle_common.logging.log import Logger
 import csle_common.constants.constants as constants
@@ -124,7 +125,27 @@ def emulation_execution_info(execution_id: int):
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
+        local_port = api_constants.MGMT_WEBAPP.KIBANA_TUNNEL_BASE_PORT + execution.ip_first_octet
+        if execution.emulation_env_config.elk_config.container.get_ips()[0] \
+                not in api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT:
+            EmulationEnvController.create_kibana_tunnel(execution=execution,
+                                                        tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
+                                                        local_port=local_port)
+        else:
+            tunnel_thread_dict = api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT[
+                execution.emulation_env_config.elk_config.container.get_ips()[0]]
+            response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
+                           f'{local_port}')
+            if response.status_code != constants.HTTPS.OK_STATUS_CODE:
+                tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY].shutdown()
+                del api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT[
+                    execution.emulation_env_config.elk_config.container.get_ips()[0]]
+                EmulationEnvController.create_kibana_tunnel(execution=execution,
+                                                            tunnels_dict=api_constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT,
+                                                            local_port=local_port)
+
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        execution_info.elk_managers_info.local_kibana_port = local_port
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response

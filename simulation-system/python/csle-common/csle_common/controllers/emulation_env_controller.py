@@ -1,9 +1,11 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any
 import time
 import subprocess
 import random
+import paramiko
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
+import csle_rest_api.constants.constants as api_constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
@@ -29,6 +31,7 @@ from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 from csle_common.dao.emulation_config.config import Config
+from csle_common.tunneling.forward_tunnel_thread import ForwardTunnelThread
 
 
 class EmulationEnvController:
@@ -798,3 +801,30 @@ class EmulationEnvController:
                                                 elk_managers_info=elk_managers_info,
                                                 traffic_managers_info=traffic_managers_info)
         return execution_info
+
+    @staticmethod
+    def create_kibana_tunnel(execution: EmulationExecution, tunnels_dict: Dict[str, Any], local_port: int) -> None:
+        """
+        Creates an SSH tunnel to forward the Kibana port of a container
+
+        :param execution: the emulation execution
+        :param tunnels_dict: a dict with existing tunnels
+        :param local_port: the local port to forward
+        :return: None
+        """
+        config = Config.get_current_confg()
+        conn = paramiko.SSHClient()
+        conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        conn.connect(execution.emulation_env_config.elk_config.container.get_ips()[0], 
+                     username=config.ssh_admin_username, password=config.ssh_admin_password)
+        conn.get_transport().set_keepalive(5)
+        agent_transport = conn.get_transport()
+        tunnel_thread = ForwardTunnelThread(
+            local_port=local_port,
+            remote_host=execution.emulation_env_config.elk_config.container.get_ips()[0], 
+            remote_port=execution.emulation_env_config.elk_config.kibana_port, transport=agent_transport)
+        tunnel_thread.start()
+        tunnel_thread_dict = {}
+        tunnel_thread_dict[api_constants.MGMT_WEBAPP.THREAD_PROPERTY] = tunnel_thread
+        tunnel_thread_dict[api_constants.MGMT_WEBAPP.PORT_PROPERTY] = local_port
+        tunnels_dict[execution.emulation_env_config.elk_config.container.get_ips()[0]] = tunnel_thread_dict

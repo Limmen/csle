@@ -121,6 +121,7 @@ class MGMT_WEBAPP:
     PATH_PROPERTY = "path"
     USER_PROPERTY = "user"
     PORT_PROPERTY = "port"
+    THREAD_PROPERTY = "thread"
     START_PROPERTY = "start"
     CONFIG_PROPERTY = "config"
     STOP_PROPERTY = "stop"
@@ -160,7 +161,9 @@ class MGMT_WEBAPP:
     APPLICATION_JSON_DATA_TYPE = "application/json"
     GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE = "gaussian_mixture"
     EMPIRICAL_SYSTEM_MODEL_TYPE = "empirical"
-    GP_SYSTEM_MODEL_TYPE = "gp"    
+    GP_SYSTEM_MODEL_TYPE = "gp"
+    KIBANA_TUNNELS_DICT = {}
+    KIBANA_TUNNEL_BASE_PORT = 17000
 
 
 class SESSION_TOKENS:
