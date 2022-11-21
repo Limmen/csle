@@ -160,7 +160,7 @@ class MGMT_WEBAPP:
     APPLICATION_JSON_DATA_TYPE = "application/json"
     GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE = "gaussian_mixture"
     EMPIRICAL_SYSTEM_MODEL_TYPE = "empirical"
-    GP_SYSTEM_MODEL_TYPE = "gp"
+    GP_SYSTEM_MODEL_TYPE = "gp"    
 
 
 class SESSION_TOKENS:

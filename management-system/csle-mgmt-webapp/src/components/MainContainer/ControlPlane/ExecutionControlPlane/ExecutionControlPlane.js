@@ -95,7 +95,7 @@ const ExecutionControlPlane = (props) => {
 
     const renderKibanaTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            View logs
+            View Kibana
         </Tooltip>)
     }
 

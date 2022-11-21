@@ -28,6 +28,7 @@ from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
+from csle_common.dao.emulation_config.config import Config
 
 
 class EmulationEnvController:
@@ -749,6 +750,12 @@ class EmulationEnvController:
         active_ips = []
         for container in running_containers:
             active_ips = active_ips + container.get_ips()
+        active_ips.append(constants.COMMON.LOCALHOST)
+        active_ips.append(constants.COMMON.LOCALHOST_127_0_0_1)
+        active_ips.append(constants.COMMON.LOCALHOST_127_0_1_1)
+        config = Config.get_current_confg()
+        for node in config.cluster_config.cluster_nodes:
+            active_ips.append(node.ip)
         emulation_name = execution.emulation_name
         execution_id = execution.ip_first_octet
         snort_ids_managers_info = \
