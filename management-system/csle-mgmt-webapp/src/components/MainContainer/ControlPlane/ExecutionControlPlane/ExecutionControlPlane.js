@@ -15,6 +15,13 @@ import Spinner from 'react-bootstrap/Spinner'
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import parseLogs from "../../../Common/parseLogs";
+import KibanaImg from './Kibana.png'
+import SnortImg from './Snort.png'
+import KafkaImg from './Kafka.png'
+import ElasticImg from './Elastic.png'
+import LogstashImg from './Logstash.png'
+import DockerImg from './Docker.png'
+import OssecImg from './Ossec.png'
 
 /**
  * Component representing the /emulation-executions/<id>/control resource
@@ -81,6 +88,12 @@ const ExecutionControlPlane = (props) => {
     }
 
     const renderLogsTooltip = (props) => {
+        return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            View logs
+        </Tooltip>)
+    }
+
+    const renderKibanaTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             View logs
         </Tooltip>)
@@ -204,6 +217,21 @@ const ExecutionControlPlane = (props) => {
         )
     }
 
+    const KibanaButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderKibanaTooltip}
+            >
+                <Button variant="light" className="startButton" size="sm"
+                        onClick={() => getContainerLogs(props.name)}>
+                    <img src={KibanaImg} alt="Kibana" className="img-fluid"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
     const SpinnerOrButton = (props) => {
         if (props.loading) {
             return (<Spinner
@@ -265,7 +293,9 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={runningContainersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Container statuses </h5>
+                            <h5 className="semiTitle"> Docker container statuses
+                                <img src={DockerImg} alt="Docker-logo" className="img-fluid dockerLogo" width="6%" height="6%"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={runningContainersOpen}>
@@ -486,7 +516,9 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={dockerStatsManagersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Docker Statistics Managers </h5>
+                            <h5 className="semiTitle"> Docker Statistics Managers
+                                <img src={DockerImg} alt="Docker-logo" className="img-fluid dockerLogo" width="6%" height="6%"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={dockerStatsManagersOpen}>
@@ -644,7 +676,10 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={kafkaManagersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Kafka managers </h5>
+                            <h5 className="semiTitle"> Kafka managers
+                                <img src={KafkaImg} alt="Kafka-logo" className="img-fluid" width="6%" height="6%"
+                                     className="kafkaLogo"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={kafkaManagersOpen}>
@@ -682,7 +717,10 @@ const ExecutionControlPlane = (props) => {
                                     )}
                                     {props.info.kafka_managers_info.kafka_managers_statuses.map((status, index) =>
                                         <tr key={"kafka-" + index}>
-                                            <td>Kafka</td>
+                                            <td>Kafka
+                                                <img src={KafkaImg} alt="Kafka-logo" className="img-fluid" width="35%" height="35%"
+                                                     className="kafkaLogo"/>
+                                            </td>
                                             <td>{props.info.kafka_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.kafka_config.kafka_port}</td>
                                             <td>{getTopicsString(status.topics)}</td>
@@ -713,7 +751,10 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={ossecIdsManagersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> OSSEC IDS Managers</h5>
+                            <h5 className="semiTitle"> OSSEC IDS Managers
+                                <img src={OssecImg} alt="Ossec-logo" className="img-fluid ossecLogo"
+                                     width="6%" height="6%"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={ossecIdsManagersOpen}>
@@ -804,7 +845,8 @@ const ExecutionControlPlane = (props) => {
                                     )}
                                     {props.info.ossec_ids_managers_info.ossec_ids_managers_statuses.map((status, index) =>
                                         <tr key={"ossec-ids-" + index}>
-                                            <td>OSSEC IDS</td>
+                                            <td>OSSEC IDS
+                                            </td>
                                             <td>{props.info.ossec_ids_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.ossec_ids_running)}
@@ -834,7 +876,9 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={snortManagersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Snort IDS Managers</h5>
+                            <h5 className="semiTitle"> Snort IDS Managers
+                                <img src={SnortImg} alt="Snort-logo" className="img-fluid snortLogo" width="10%" height="10%"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={snortManagersOpen}>
@@ -887,7 +931,10 @@ const ExecutionControlPlane = (props) => {
                                     )}
                                     {props.info.snort_ids_managers_info.snort_ids_managers_statuses.map((status, index) =>
                                         <tr key={"snort-ids-" + index}>
-                                            <td>Snort IDS</td>
+                                            <td>Snort IDS
+                                                <img src={SnortImg} alt="Snort-logo" className="img-fluid" width="10%" height="10%"
+                                                     className="snortLogo"/>
+                                            </td>
                                             <td>{props.info.snort_ids_managers_info.ips[index]}</td>
                                             <td></td>
                                             {activeStatus(status.snort_ids_running)}
@@ -917,7 +964,11 @@ const ExecutionControlPlane = (props) => {
                             aria-expanded={elkManagersOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> ELK Managers</h5>
+                            <h5 className="semiTitle"> ELK Managers
+                                <img src={ElasticImg} alt="Kibana" className="img-fluid elasticLogo" height="15%" width="15%" />
+                                <img src={LogstashImg} alt="Kibana" className="img-fluid" height="15%" width="15%"/>
+                                <img src={KibanaImg} alt="Kibana" className="img-fluid"/>
+                            </h5>
                         </Button>
                     </Card.Header>
                     <Collapse in={elkManagersOpen}>
@@ -975,7 +1026,9 @@ const ExecutionControlPlane = (props) => {
                                     )}
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
                                         <tr key={"elastic-" + index}>
-                                            <td>Elasticsearch</td>
+                                            <td>Elasticsearch
+                                                <img src={ElasticImg} alt="Kibana" className="img-fluid elasticLogo" height="7%" width="7%" />
+                                            </td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.elastic_port}</td>
                                             {activeStatus(status.elasticRunning)}
@@ -992,7 +1045,9 @@ const ExecutionControlPlane = (props) => {
                                     )}
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
                                         <tr key={"elk_manager_status-" + index}>
-                                            <td>Logstash</td>
+                                            <td>Logstash
+                                                <img src={LogstashImg} alt="Kibana" className="img-fluid logstashLogo" height="7%" width="7%" />
+                                            </td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.logstash_port}</td>
                                             {activeStatus(status.logstashRunning)}
@@ -1010,11 +1065,18 @@ const ExecutionControlPlane = (props) => {
 
                                     {props.info.elk_managers_info.elk_managers_statuses.map((status, index) =>
                                         <tr key={"kibana-" + index}>
-                                            <td>Kibana</td>
+                                            <td>Kibana
+                                                <img src={KibanaImg} alt="Kibana" className="img-fluid kibanaLogo"
+                                                     height="5%" width="5%" />
+                                            </td>
                                             <td>{props.info.elk_managers_info.ips[index]}</td>
                                             <td>{props.execution.emulation_env_config.elk_config.kibana_port}</td>
                                             {activeStatus(status.kibanaRunning)}
                                             <td>
+                                                <KibanaButton
+                                                    loading={loadingEntities.includes("kibana-" +
+                                                        props.info.elk_managers_info.ips[index])}
+                                                    name={props.info.elk_managers_info.ips[index]}/>
                                                 <SpinnerOrButton
                                                     loading={loadingEntities.includes("kibana-" +
                                                         props.info.elk_managers_info.ips[index])}

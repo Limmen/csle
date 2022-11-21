@@ -19,6 +19,8 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import GrafanaImg from './Grafana.png'
+import PrometheusImg from './Prometheus.png'
 
 /**
  * Component containing various plots for monitoring a running execution of an emulation
@@ -933,10 +935,13 @@ const Monitoring = (props) => {
             if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
                 return (
                     <span className="grafanaStatus">Grafana status: stopped
+                        <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
                     </span>)
             } else {
                 return (
-                    <a className="grafanaStatus" href={props.grafanaStatus.url}>Grafana (running)
+                    <a className="grafanaStatus" href={props.grafanaStatus.url}>
+                        Grafana (running)
+                        <img src={GrafanaImg} alt="Grafana" className="img-fluid" width="2%" height="2%"/>
                     </a>
                 )
             }
@@ -944,6 +949,7 @@ const Monitoring = (props) => {
         if (props.grafanaStatus == null || props.grafanaStatus.running === false) {
             return (
                 <span className="grafanaStatus">Grafana status: stopped
+                    <img src={GrafanaImg} alt="Grafana" className="img-fluid grafanaImg" width="2%" height="2%"/>
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
@@ -957,6 +963,7 @@ const Monitoring = (props) => {
         } else {
             return (
                 <a className="grafanaStatus" href={props.grafanaStatus.url}>Grafana (running)
+                    <img src={GrafanaImg} alt="Grafana" className="img-fluid grafanaImg" width="2%" height="2%"/>
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
@@ -976,10 +983,12 @@ const Monitoring = (props) => {
             if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
                 return (
                     <span className="grafanaStatus">Prometheus status: stopped
+                        <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
                 </span>)
             } else {
                 return (
                     <a className="grafanaStatus" href={props.prometheusStatus.url}>Prometheus (running)
+                        <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
                     </a>
                 )
             }
@@ -987,6 +996,7 @@ const Monitoring = (props) => {
         if (props.prometheusStatus == null || props.prometheusStatus.running === false) {
             return (
                 <span className="grafanaStatus">Prometheus status: stopped
+                    <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
                 <OverlayTrigger
                     placement="right"
                     delay={{show: 0, hide: 0}}
@@ -1000,6 +1010,7 @@ const Monitoring = (props) => {
         } else {
             return (
                 <a className="grafanaStatus" href={props.prometheusStatus.url}>Prometheus (running)
+                    <img src={PrometheusImg} alt="Prometheus" className="img-fluid" width="2%" height="2%"/>
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
