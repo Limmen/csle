@@ -1,4 +1,5 @@
-from flask import Flask, g
+from flask import Flask
+from flask_socketio import SocketIO
 from waitress import serve
 import csle_common.constants.constants as constants
 from csle_rest_api.pages.emulations.routes import emulations_page_bp
@@ -19,6 +20,7 @@ from csle_rest_api.pages.training.routes import training_page_bp
 from csle_rest_api.pages.sdn_controllers.routes import sdn_controllers_page_bp
 from csle_rest_api.pages.control_plane.routes import control_plane_page_bp
 from csle_rest_api.pages.user_admin.routes import user_admin_page_bp
+from csle_rest_api.pages.terminal.routes import terminal_page_bp
 from csle_rest_api.pages.system_admin.routes import system_admin_page_bp
 from csle_rest_api.pages.logs_admin.routes import logs_admin_page_bp
 from csle_rest_api.resources.node_exporter.routes import node_exporter_bp
@@ -57,6 +59,16 @@ from csle_rest_api.resources.users.routes import users_bp
 from csle_rest_api.resources.config.routes import config_bp
 from csle_rest_api.resources.logs.routes import logs_bp
 import csle_rest_api.constants.constants as api_constants
+import os
+import pty
+import struct
+import fcntl
+import subprocess
+import termios
+import select
+import shlex
+
+socketio = SocketIO(cors_allowed_origins="*")
 
 
 def create_app(static_folder: str):
@@ -122,6 +134,9 @@ def create_app(static_folder: str):
     app.register_blueprint(user_admin_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE}")
+    app.register_blueprint(terminal_page_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.TERMINAL_PAGE_RESOURCE}")
     app.register_blueprint(system_admin_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}")
@@ -222,10 +237,63 @@ def create_app(static_folder: str):
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
 
+    def set_winsize(fd, row, col, xpix=0, ypix=0):
+        winsize = struct.pack("HHHH", row, col, xpix, ypix)
+        fcntl.ioctl(fd, termios.TIOCSWINSZ, winsize)
+
+
+    def read_and_forward_pty_output():
+        max_read_bytes = 1024 * 20
+        f = False
+        while True:
+            socketio.sleep(0.01)
+            if app.config["fd"]:
+                if not f:
+                    print(f"Reading from fd: {app.config['fd']}")
+                    f = True
+                timeout_sec = 0
+                (data_ready, _, _) = select.select([app.config["fd"]], [], [], timeout_sec)
+                if data_ready:
+                    output = os.read(app.config["fd"], max_read_bytes).decode(errors="ignore")
+                    socketio.emit("pty-output", {"output": output}, namespace="/pty")
+
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def root():
         return app.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
 
+    @socketio.on("pty-input", namespace="/pty")
+    def pty_input(data):
+        """write to the child pty. The pty sees this as if you are typing in a real
+        terminal.
+        """
+        if app.config["fd"]:
+            print(repr(f"received input from browser: {data['input']}, writing to FD: {app.config['fd']}"))
+            os.write(app.config["fd"], data["input"].encode())
+
+    @socketio.on("resize", namespace="/pty")
+    def resize(data):
+        if app.config["fd"]:
+            set_winsize(app.config["fd"], data["rows"], data["cols"])
+
+    @socketio.on("connect", namespace="/pty")
+    def connect():
+        if app.config["child_pid"]:
+            return
+        (child_pid, fd) = pty.fork()
+        if child_pid == 0:
+            subprocess.run(app.config["cmd"])
+        else:
+            app.config["fd"] = fd
+            app.config["child_pid"] = child_pid
+            set_winsize(fd, 50, 50)
+            cmd = " ".join(shlex.quote(c) for c in app.config["cmd"])
+            socketio.start_background_task(target=read_and_forward_pty_output)
+
+    app.config["SECRET_KEY"] = "secret!"
+    app.config["fd"] = None
+    app.config["cmd"] = ["bash"]
+    app.config["child_pid"] = None
+    socketio.init_app(app)
     return app
 
 
@@ -242,9 +310,10 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
 
     :return: None
     """
-    app = create_app(static_folder=static_folder)    
-    if not https:
-        serve(app, host=host, port=port, threads=num_threads)
-    else:
-        serve(app, host=host, port=port, threads=num_threads, url_scheme='https')
+    app = create_app(static_folder=static_folder)
+    socketio.run(app, debug=False, port=port, host=host)
+    # if not https:
+    #     serve(app, host=host, port=port, threads=num_threads)
+    # else:
+    #     serve(app, host=host, port=port, threads=num_threads, url_scheme='https')
 

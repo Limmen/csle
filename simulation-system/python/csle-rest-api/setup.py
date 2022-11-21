@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(name='csle_rest_api',
       version='0.0.1',
-      install_requires=['flask', 'waitress', 'csle-common', "csle-agents", "csle-system-identification", "csle-ryu",
-                        'bcrypt', 'pyopenssl'],
+      install_requires=['flask', 'waitress', 'flask-socketio', 'csle-common', "csle-agents",
+                        "csle-system-identification", "csle-ryu", 'bcrypt', 'pyopenssl'],
       author='Kim Hammar',
       author_email='hammar.kim@gmail.com',
       description='CSLE REST API',

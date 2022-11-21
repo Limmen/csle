@@ -351,6 +351,10 @@ running commands can read and write to this directory.
       ```bash
       sysctl vm.max_map_count
       ```
+     - Set `max_user_watches`. Run:
+      ```bash
+      echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+      ```     
 
 10. **Install the management system**
      - To build the webapp used in the management system and in the policy examination system you need node.js and npm

@@ -22,6 +22,7 @@ import Jobs from "./components/MainContainer/Jobs/Jobs";
 import ControlPlane from "./components/MainContainer/ControlPlane/ControlPlane";
 import SDNControllers from "./components/MainContainer/SDNControllers/SDNControllers";
 import Downloads from "./components/MainContainer/Downloads/Downloads";
+import ContainerTerminal from "./components/MainContainer/ContainerTerminal/ContainerTerminal";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import useSession from "./components/MainContainer/SessionManagement/useSession";
 import { useAlert } from "react-alert";
@@ -130,6 +131,12 @@ function App() {
                                 <Route path="control-plane-page" index element={
                                     <ProtectedRoute>
                                         <ControlPlane sessionData={sessionData} setSessionData={setSessionData}/>
+                                    </ProtectedRoute>
+                                }>
+                                </Route>
+                                <Route path="terminal-page" index element={
+                                    <ProtectedRoute>
+                                        <ContainerTerminal sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>

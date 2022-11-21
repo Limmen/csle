@@ -11,7 +11,8 @@ const Header = (props) => {
     const location = useLocation();
     const managementDropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",
         "/emulation-statistics-page", "/system-models-page", "/policy-examination-page", "/images-page",
-        "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page", "/control-plane-page"]
+        "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page", "/control-plane-page",
+        "/terminal-page"]
     const adminDropdownRoutes = ["/user-admin-page", "/system-admin-page", "/logs-admin-page"]
 
     const ActionsCellTracesDataset = (props) => {
@@ -147,6 +148,12 @@ const Header = (props) => {
     const renderControlPlaneTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Control plane for emulations
+        </Tooltip>
+    );
+
+    const renderTerminalTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Terminal access to emulations
         </Tooltip>
     );
 
@@ -364,6 +371,14 @@ const Header = (props) => {
                                     overlay={renderControlPlaneTooltip}>
                                     <NavLink className="dropdown-item" to={"control-plane-page"}>
                                         Control plane
+                                    </NavLink>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{show: 0, hide: 0}}
+                                    overlay={renderTerminalTooltip}>
+                                    <NavLink className="dropdown-item" to={"terminal-page"}>
+                                        SSH Terminal
                                     </NavLink>
                                 </OverlayTrigger>
                             </div>

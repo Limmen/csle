@@ -93,6 +93,12 @@ const ExecutionControlPlane = (props) => {
         </Tooltip>)
     }
 
+    const renderShellTooltip = (props) => {
+        return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
+            Open SSH shell
+        </Tooltip>)
+    }
+
     const renderKibanaTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             View Kibana
@@ -212,6 +218,21 @@ const ExecutionControlPlane = (props) => {
                 <Button variant="info" className="startButton" size="sm"
                         onClick={() => getContainerLogs(props.name)}>
                     <i className="fa fa-folder-open startStopIcon" aria-hidden="true"/>
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
+    const ShellButton = (props) => {
+        return (
+            <OverlayTrigger
+                placement="right"
+                delay={{show: 0, hide: 0}}
+                overlay={renderShellTooltip}
+            >
+                <Button variant="secondary" className="startButton" size="sm"
+                        onClick={() => getContainerLogs(props.name)}>
+                    <i className="fa fa-terminal startStopIcon" aria-hidden="true"/>
                 </Button>
             </OverlayTrigger>
         )
@@ -346,6 +367,10 @@ const ExecutionControlPlane = (props) => {
                                                 <LogsButton
                                                     loading={loadingEntities.includes("container-" +
                                                         container.full_name_str + "-logs")}
+                                                    name={container.full_name_str}/>
+                                                <ShellButton
+                                                    loading={loadingEntities.includes("container-" +
+                                                        container.full_name_str + "-shell")}
                                                     name={container.full_name_str}/>
                                             </td>
                                         </tr>
