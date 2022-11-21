@@ -664,13 +664,13 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     running_containers = ContainerController.list_all_running_containers()
     containers = running_containers
     containers = list(map(lambda x: x[0], containers))
-    return ["prometheus", "node_exporter", "cadvisor", "grafana", "managementsystem", "proxy",
+    return ["prometheus", "node_exporter", "cadvisor", "grafana", "managementsystem",
             "statsmanager", "all", "emulation_executions"] + emulations + containers
 
 
 @click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=stop_shell_complete)
-@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | managementsystem | proxy | container-name | "
+@click.command("stop", help="prometheus | node_exporter | cadvisor | grafana | managementsystem | container-name | "
                             "emulation-name | statsmanager | emulation_executions | all")
 def stop(entity: str, id: int = -1) -> None:
     """
@@ -698,8 +698,6 @@ def stop(entity: str, id: int = -1) -> None:
         ManagementSystemController.stop_grafana()
     elif entity == "managementsystem":
         ManagementSystemController.stop_management_system()
-    elif entity == "proxy":
-        ManagementSystemController.stop_proxy()
     elif entity == "statsmanager":
         ManagementSystemController.stop_docker_stats_manager()
     elif entity == "emulation_executions":
@@ -852,7 +850,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     containers = list(map(lambda x: x[0], containers))
     image_names=ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
-    return ["prometheus", "node_exporter", "grafana", "cadvisor", "managementsystem", "proxy"
+    return ["prometheus", "node_exporter", "grafana", "cadvisor", "managementsystem",
             "all",
             "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"] + emulations + \
            containers + image_names
@@ -868,9 +866,9 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--no_network', is_flag=True, help='skip creating network when starting individual container')
 @click.argument('name', default="", type=str)
 @click.argument('entity', default="", type=str, shell_complete=start_shell_complete)
-@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | proxy | "
+@click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | "
                              "container-name | emulation-name | all | statsmanager | training_job "
-                             "| system_id_job | proxy")
+                             "| system_id_job ")
 def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
           log_file: str, log_dir: str, max_workers : int) -> None:
     """
@@ -914,9 +912,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
         DataCollectionJobManager.start_data_collection_job_in_background(
             data_collection_job=system_id_job)
     elif entity == "managementsystem":
-        ManagementSystemController.start_management_system()
-    elif entity == "proxy":
-        ManagementSystemController.start_proxy()
+        ManagementSystemController.start_management_system()    
     else:
         container_started = ContainerController.start_container(name=entity)
         if not container_started:
@@ -1198,12 +1194,12 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     image_names = list(map(lambda x: x[0], image_names))
     active_networks_names = ContainerController.list_all_networks()
     return ["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-            "cadvisor", "managementsystem", "proxy", "statsmanager", "--all", "--running", "--stopped"] + emulations + containers \
+            "cadvisor", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations + containers \
            + image_names + active_networks_names + simulations
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
-                    "| cadvisor | statsmanager | managementsystem | proxy | simulations | emulation_executions")
+                    "| cadvisor | statsmanager | managementsystem | simulations | emulation_executions")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
@@ -1247,9 +1243,7 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     elif entity == "grafana":
         list_grafana()
     elif entity == "managementsystem":
-        list_management_system()
-    elif entity == "proxy":
-        list_proxy()
+        list_management_system()    
     elif entity == "statsmanager":
         list_statsmanager()
     elif entity == "simulations":
@@ -1356,8 +1350,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_cadvisor()
     list_grafana()
     list_statsmanager()
-    list_management_system()
-    list_proxy()
+    list_management_system()    
 
 
 def list_statsmanager() -> None:
@@ -1422,22 +1415,6 @@ def list_management_system() -> None:
                                          f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
     else:
         click.secho("Management system status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
-
-
-def list_proxy() -> None:
-    """
-    List status of proxy
-
-    :return: None
-    """
-    import csle_common.constants.constants as constants
-    from csle_common.controllers.management_system_controller import ManagementSystemController
-
-    if ManagementSystemController.is_proxy_running():
-        click.secho("Proxy status: " + f" {click.style('[running]', fg='green')} "
-                                         f"port:{constants.COMMANDS.PROXY_PORT}", bold=False)
-    else:
-        click.secho("Proxy status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
 
 def list_cadvisor() -> None:

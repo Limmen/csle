@@ -81,25 +81,6 @@ class ManagementSystemController:
         return constants.COMMANDS.SEARCH_MONITOR in output and str(pid) in output
 
     @staticmethod
-    def is_proxy_running() -> bool:
-        """
-        Checks if the proxy is running on the host
-
-        :return: True if it is running, false otherwise
-        """
-        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROXY_PID_FILE)
-        if pid == -1:
-            return False
-        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SEARCH_PROXY
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        output = str(output)
-        return constants.COMMANDS.SEARCH_PROXY in output and str(pid) in output
-
-    @staticmethod
     def start_node_exporter() -> bool:
         """
         Starts the node exporter
@@ -147,39 +128,6 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def start_proxy() -> bool:
-        """
-        Starts the REST API Proxy
-
-        :return: True if it was started, False otherwise
-        """
-        if ManagementSystemController.is_proxy_running():
-            return False
-
-        cmd = constants.COMMANDS.BUILD_MONITOR
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        while True:
-            out = p.stdout.read(1)
-            if p.poll() != None:
-                break
-            if out != '':
-                try:
-                    sys.stdout.write(out.decode("utf-8"))
-                except:
-                    pass
-                sys.stdout.flush()
-
-        cmd = constants.COMMANDS.START_PROXY
-        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
-        pid = p.pid + 1
-
-        cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.PROXY_PID_FILE)
-        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
-        return True
-
-    @staticmethod
     def stop_node_exporter() -> bool:
         """
         Stops the node exporter
@@ -209,20 +157,6 @@ class ManagementSystemController:
         (output, err) = p.communicate()
         return True
 
-    @staticmethod
-    def stop_proxy() -> bool:
-        """
-        Stops the proxy
-
-        :return: True if it was stopped, False otherwise
-        """
-        if not ManagementSystemController.is_proxy_running():
-            return False
-        pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROXY_PID_FILE)
-        cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
-        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
-        return True
 
     @staticmethod
     def start_prometheus() -> bool:

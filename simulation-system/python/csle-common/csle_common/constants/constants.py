@@ -829,11 +829,9 @@ class COMMANDS:
                        f"&& echo $! > {PROMETHEUS_PID_FILE}"
     SEARCH_NODE_EXPORTER = "node_exporter"
     SEARCH_MONITOR = "server.py"
-    SEARCH_PROXY = "proxy.py"
     NODE_EXPORTER_PORT = 9100
     GRAFANA_PORT = 3000
     MANAGEMENT_SYSTEM_PORT = 7777
-    PROXY_PORT = 7777
     START_GRAFANA = f"docker run -d -p {GRAFANA_PORT}:{GRAFANA_PORT} --name grafana grafana/grafana"
     CADVISOR_PORT=8080
     START_CADVISOR = "docker run  -dt --volume=/:/rootfs:ro   --volume=/var/run:/var/run:ro   " \
@@ -846,15 +844,12 @@ class COMMANDS:
     GRAFANA_LOGS = "docker logs grafana"
     NODE_EXPORTER_PID_FILE = "/var/log/csle/node_exporter.pid"
     MANAGEMENT_SYSTEM_PID_FILE = "/var/log/csle/management_system.pid"
-    PROXY_PID_FILE = "/var/log/csle/proxy.pid"
     NODE_EXPORTER_LOG_FILE = "/var/log/csle/node_exporter.log"
     START_NODE_EXPORTER = f"nohup node_exporter & > {NODE_EXPORTER_LOG_FILE} && echo $! " \
                           f"> {NODE_EXPORTER_PID_FILE}"
     BUILD_MONITOR = f"cd ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp && npm run build"
     START_MONITOR = f"nohup python ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp" \
                     "/server/server.py &"
-    START_PROXY = f"nohup python ${CONFIG_FILE.CSLE_HOME_ENV_PARAM}/management-system/csle-mgmt-webapp" \
-                    "/server/proxy.py &"
     GET_LATEST_PID = "$!"
     SAVE_PID = "echo {} > {}"
     KILL_PROCESS = "kill -9 {}"

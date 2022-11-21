@@ -260,6 +260,8 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
 
     :return: None
     """
+    # from subprocess import run
+    # run(f"gunicorn -b {host}:{port} 'csle_rest_api.rest_api:create_app() --workers 4 --threads {num_threads}'".split(' '))
     #gunicorn -b 0.0.0.0:5000 --workers 4 --threads num_threads module:app
     app = create_app(static_folder=static_folder)
     socketio.run(app, debug=False, port=port, host=host)

@@ -15,10 +15,16 @@ from csle_rest_api import socketio
 
 
 def get_host_terminal_bp(app):
+    """
+    Gets the blue print of the Web socket API for the host terminal
+
+    :param app: the Flask app
+    :return: the blue print
+    """
 
     def set_host_terminal_winsize(fd: int, row: int, col: int, xpix :int =0, ypix: int =0) -> None:
         """
-        Set shell window size
+        Set shell window size of the host terminal
 
         :param fd: the file descriptor of the shell
         :param row: the number of rows of the new window size
@@ -54,7 +60,7 @@ def get_host_terminal_bp(app):
                  namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
     def host_terminal_input(data) -> None:
         """
-        Receives input msg on a websocket and writes it to the PTY representing the bash shell.
+        Receives input msg on a websocket and writes it to the PTY representing the bash shell of the Host terminal.
         The pty sees this as if you are typing in a real terminal.
 
         :param data: the input data to write
@@ -69,8 +75,8 @@ def get_host_terminal_bp(app):
                  namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
     def host_terminal_resize(data) -> None:
         """
-        Handler when receiving a message on a websocket to resize the PTY window. Parses the data and resize
-        the window accordingly.
+        Handler when receiving a message on a websocket to resize the PTY window of a host terminal.
+        The handler parses the data and resizes the window accordingly.
 
         :param data: data with information about the new PTY size
         :return: None

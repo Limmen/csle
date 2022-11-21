@@ -20,13 +20,13 @@ class Config:
                  management_guest_email_default: str, management_guest_organization_default: str,
                  ssh_admin_username: str, ssh_admin_password: str, ssh_agent_username: str, ssh_agent_password: str,
                  metastore_user: str, metastore_password: str, metastore_database_name: str, metastore_ip: str,
-                 node_exporter_port: int, grafana_port: int, proxy_port: int,
+                 node_exporter_port: int, grafana_port: int,
                  management_system_port: int, cadvisor_port: int, prometheus_port: int, node_exporter_pid_file: str,
                  management_system_pid_file: str, docker_stats_manager_log_file: str, docker_stats_manager_log_dir: str,
                  docker_stats_manager_port: int, docker_stats_manager_max_workers: int,
                  docker_stats_manager_outfile: str, docker_stats_manager_pidfile: str, prometheus_pid_file: str,
                  prometheus_log_file: str, prometheus_config_file: str, default_log_dir: str,
-                 cluster_config: ClusterConfig, proxy_pid_file: str, node_exporter_log_file: str):
+                 cluster_config: ClusterConfig, node_exporter_log_file: str):
         """
         Initializes the DTO
 
@@ -52,7 +52,6 @@ class Config:
         :param metastore_ip: the default ip to the metastore
         :param node_exporter_port: the default port to run node_exporter
         :param grafana_port: the default port to run grafana
-        :param proxy_port: the default port to run the proxy
         :param management_system_port: the default port to run the management system
         :param cadvisor_port: the default port to run c_advisor
         :param prometheus_port: the default port to run prometheus
@@ -69,7 +68,6 @@ class Config:
         :param prometheus_config_file: the the config file of prometheus
         :param default_log_dir: the default log directory for CSLE applications
         :param cluster_config: the cluster configuration of the CSLE deployment
-        :param proxy_pid_file: the file to save the PID of the proxy
         :param node_exporter_log_file: th file to save the logs of the node_exporter
         """
         self.management_admin_username_default = management_admin_username_default
@@ -94,7 +92,6 @@ class Config:
         self.metastore_ip = metastore_ip
         self.node_exporter_port= node_exporter_port
         self.grafana_port = grafana_port
-        self.proxy_port= proxy_port
         self.management_system_port= management_system_port
         self.cadvisor_port = cadvisor_port
         self.prometheus_port = prometheus_port
@@ -111,7 +108,6 @@ class Config:
         self.prometheus_config_file = prometheus_config_file
         self.default_log_dir = default_log_dir
         self.cluster_config = cluster_config
-        self.proxy_pid_file = proxy_pid_file
         self.node_exporter_log_file = node_exporter_log_file
 
     def to_dict(self) -> Dict[str, Any]:
@@ -141,7 +137,6 @@ class Config:
         d["metastore_ip"] = self.metastore_ip
         d["node_exporter_port"] = self.node_exporter_port
         d["grafana_port"] = self.grafana_port
-        d["proxy_port"] = self.proxy_port
         d["management_system_port"] = self.management_system_port
         d["cadvisor_port"] = self.cadvisor_port
         d["prometheus_port"] = self.prometheus_port
@@ -158,7 +153,6 @@ class Config:
         d["prometheus_config_file"] = self.prometheus_config_file
         d["default_log_dir"] = self.default_log_dir
         d["cluster_config"] = self.cluster_config.to_dict()
-        d["proxy_pid_file"] = self.proxy_pid_file
         d["node_exporter_log_file"] = self.node_exporter_log_file
         return d
 
@@ -321,14 +315,7 @@ class Config:
                 "param": "grafana_port",
                 "value": self.grafana_port
             }
-        )
-        d["parameters"].append(
-            {
-                "id": 22,
-                "param": "proxy_port",
-                "value": self.proxy_port
-            }
-        )
+        )        
         d["parameters"].append(
             {
                 "id": 23,
@@ -436,13 +423,6 @@ class Config:
         )
         d["parameters"].append(
             {
-                "id": 38,
-                "param": "proxy_pid_file",
-                "value": self.proxy_pid_file
-            }
-        )
-        d["parameters"].append(
-            {
                 "id": 39,
                 "param": "node_exporter_log_file",
                 "value": self.node_exporter_log_file
@@ -480,7 +460,6 @@ class Config:
                      metastore_ip = d["metastore_ip"],
                      node_exporter_port = d["node_exporter_port"],
                      grafana_port = d["grafana_port"],
-                     proxy_port = d["proxy_port"],
                      management_system_port = d["management_system_port"],
                      cadvisor_port = d["cadvisor_port"],
                      prometheus_port = d["prometheus_port"],
@@ -497,7 +476,6 @@ class Config:
                      prometheus_config_file = d["prometheus_config_file"],
                      default_log_dir = d["default_log_dir"],
                      cluster_config = ClusterConfig.from_dict(d["cluster_config"]),
-                     proxy_pid_file=d["proxy_pid_file"],
                      node_exporter_log_file = d["node_exporter_log_file"])
         return dto
 
@@ -535,7 +513,6 @@ class Config:
                      metastore_ip = d["metastore_ip"],
                      node_exporter_port = d["node_exporter_port"],
                      grafana_port = d["grafana_port"],
-                     proxy_port = d["proxy_port"],
                      management_system_port = d["management_system_port"],
                      cadvisor_port = d["cadvisor_port"],
                      prometheus_port = d["prometheus_port"],
@@ -551,8 +528,7 @@ class Config:
                      prometheus_log_file = d["prometheus_log_file"],
                      prometheus_config_file = d["prometheus_config_file"],
                      default_log_dir = d["default_log_dir"],
-                     cluster_config = ClusterConfig.from_dict(d["cluster_config"]),
-                     proxy_pid_file=d["proxy_pid_file"],
+                     cluster_config = ClusterConfig.from_dict(d["cluster_config"]),                     
                      node_exporter_log_file = d["node_exporter_log_file"])
         return dto
 
@@ -576,7 +552,6 @@ class Config:
                f"metastore_ip: {self.metastore_ip}, " \
                f"node_exporter_port: {self.node_exporter_port}, " \
                f"grafana_port: {self.grafana_port}, " \
-               f"proxy_port: {self.proxy_port}, " \
                f"management_system_port: {self.management_system_port}, " \
                f"cadvisor_port: {self.cadvisor_port}, " \
                f"prometheus_port: {self.prometheus_port}, " \
@@ -593,8 +568,7 @@ class Config:
                f"prometheus_config_file: {self.prometheus_config_file}, " \
                f"default_log_dir: {self.default_log_dir}, " \
                f"cluster_config: {self.cluster_config}," \
-               f"node_exporter_log_file: {self.node_exporter_log_file}," \
-               f"proxy_pid_file: {self.proxy_pid_file}"
+               f"node_exporter_log_file: {self.node_exporter_log_file}"
 
     def to_json_str(self) -> str:
         """
@@ -699,12 +673,10 @@ class Config:
             constants.COMMANDS.NODE_EXPORTER_PORT = config.node_exporter_port
             constants.COMMANDS.GRAFANA_PORT = config.grafana_port
             constants.COMMANDS.MANAGEMENT_SYSTEM_PORT = config.management_system_port
-            constants.COMMANDS.PROXY_PORT = config.proxy_port
             constants.COMMANDS.CADVISOR_PORT = config.cadvisor_port
             constants.COMMANDS.PROMETHEUS_PORT = config.prometheus_port
             constants.COMMANDS.NODE_EXPORTER_PID_FILE = config.node_exporter_pid_file
             constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE = config.management_system_pid_file
-            constants.COMMANDS.PROXY_PID_FILE = config.proxy_pid_file
             constants.COMMANDS.NODE_EXPORTER_LOG_FILE = config.node_exporter_log_file
             constants.COMMANDS.DOCKER_STATS_MANAGER_OUTFILE = config.docker_stats_manager_outfile
             constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE = config.docker_stats_manager_pidfile
