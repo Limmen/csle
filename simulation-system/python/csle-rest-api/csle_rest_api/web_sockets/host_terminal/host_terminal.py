@@ -14,9 +14,9 @@ import csle_common.constants.constants as constants
 from csle_rest_api import socketio
 
 
-def get_pty_bp(app):
+def get_host_terminal_bp(app):
 
-    def set_winsize(fd: int, row: int, col: int, xpix :int =0, ypix: int =0) -> None:
+    def set_host_terminal_winsize(fd: int, row: int, col: int, xpix :int =0, ypix: int =0) -> None:
         """
         Set shell window size
 
@@ -30,7 +30,7 @@ def get_pty_bp(app):
         winsize = struct.pack("HHHH", row, col, xpix, ypix)
         fcntl.ioctl(fd, termios.TIOCSWINSZ, winsize)
 
-    def read_and_forward_pty_output() -> None:
+    def read_and_forward_host_terminal_output() -> None:
         """
         Reads output from a given file descriptor and sends the output to the web socket
 
@@ -39,20 +39,20 @@ def get_pty_bp(app):
         max_read_bytes = 1024 * 20
         while True:
             socketio.sleep(0.01)
-            if app.config[api_constants.MGMT_WEBAPP.APP_FD]:
+            if app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]:
                 timeout_sec = 0
-                (data_ready, _, _) = select.select([app.config[api_constants.MGMT_WEBAPP.APP_FD]], [], [], timeout_sec)
+                (data_ready, _, _) = select.select([app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]], [], [], timeout_sec)
                 if data_ready:
-                    output = os.read(app.config[api_constants.MGMT_WEBAPP.APP_FD], max_read_bytes).decode(
+                    output = os.read(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD], max_read_bytes).decode(
                         errors="ignore")
-                    socketio.emit(api_constants.MGMT_WEBAPP.WS_PTY_OUTPUT_MSG,
+                    socketio.emit(api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_OUTPUT_MSG,
                                   {api_constants.MGMT_WEBAPP.OUTPUT_PROPERTY: output},
                                   namespace=f"{constants.COMMANDS.SLASH_DELIM}"
-                                            f"{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
+                                            f"{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
 
-    @socketio.on(api_constants.MGMT_WEBAPP.WS_PTY_INPUT_MSG,
-                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
-    def pty_input(data) -> None:
+    @socketio.on(api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_INPUT_MSG,
+                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
+    def host_terminal_input(data) -> None:
         """
         Receives input msg on a websocket and writes it to the PTY representing the bash shell.
         The pty sees this as if you are typing in a real terminal.
@@ -60,14 +60,14 @@ def get_pty_bp(app):
         :param data: the input data to write
         :return: None
         """
-        if app.config[api_constants.MGMT_WEBAPP.APP_FD]:
-            os.write(app.config[api_constants.MGMT_WEBAPP.APP_FD],
+        if app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]:
+            os.write(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD],
                      data[api_constants.MGMT_WEBAPP.INPUT_PROPERTY].encode())
 
 
     @socketio.on(api_constants.MGMT_WEBAPP.WS_RESIZE_MSG,
-                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
-    def resize(data) -> None:
+                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
+    def host_terminal_resize(data) -> None:
         """
         Handler when receiving a message on a websocket to resize the PTY window. Parses the data and resize
         the window accordingly.
@@ -75,15 +75,15 @@ def get_pty_bp(app):
         :param data: data with information about the new PTY size
         :return: None
         """
-        if app.config[api_constants.MGMT_WEBAPP.APP_FD]:
-            set_winsize(app.config[api_constants.MGMT_WEBAPP.APP_FD], data[api_constants.MGMT_WEBAPP.ROWS_PROPERTY],
+        if app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]:
+            set_host_terminal_winsize(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD], data[api_constants.MGMT_WEBAPP.ROWS_PROPERTY],
                         data[api_constants.MGMT_WEBAPP.COLS_PROPERTY])
 
     @socketio.on(api_constants.MGMT_WEBAPP.WS_CONNECT_MSG, namespace=f"{constants.COMMANDS.SLASH_DELIM}"
-                                                                     f"{api_constants.MGMT_WEBAPP.PTY_WS_NAMESPACE}")
-    def connect() -> None:
+                                                                     f"{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
+    def host_terminal_connect() -> None:
         """
-        Handler for new websocket connection requests for the /pty namespace.
+        Handler for new websocket connection requests for the /host-terminal namespace.
 
         First checks if the user is authorized and then sets up the connection
 
@@ -92,16 +92,16 @@ def get_pty_bp(app):
         authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
         if authorized is not None:
             raise ConnectionRefusedError()
-        if app.config[api_constants.MGMT_WEBAPP.APP_CHILD_PID]:
+        if app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CHILD_PID]:
             return
         (child_pid, fd) = pty.fork()
         if child_pid == 0:
-            subprocess.run(app.config[api_constants.MGMT_WEBAPP.APP_CMD])
+            subprocess.run(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CMD])
         else:
-            app.config[api_constants.MGMT_WEBAPP.APP_FD] = fd
-            app.config[api_constants.MGMT_WEBAPP.APP_CHILD_PID] = child_pid
-            set_winsize(fd, 50, 50)
-            socketio.start_background_task(target=read_and_forward_pty_output)
+            app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD] = fd
+            app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CHILD_PID] = child_pid
+            set_host_terminal_winsize(fd, 50, 50)
+            socketio.start_background_task(target=read_and_forward_host_terminal_output)
 
-    web_sockets_bp = Blueprint('main', __name__)
-    return web_sockets_bp
+    host_terminal_bp = Blueprint('main', __name__)
+    return host_terminal_bp

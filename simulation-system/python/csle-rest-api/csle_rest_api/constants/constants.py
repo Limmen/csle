@@ -110,8 +110,8 @@ class MGMT_WEBAPP:
     ROWS_PROPERTY = "rows"
     COLS_PROPERTY = "cols"
     WS_CONNECT_MSG = "connect"
-    WS_PTY_OUTPUT_MSG = "pty-output"
-    WS_PTY_INPUT_MSG = "pty-input"
+    WS_HOST_TERMINAL_OUTPUT_MSG = "host-terminal-output"
+    WS_HOST_TERMINAL_INPUT_MSG = "host-terminal-input"
     WS_RESIZE_MSG = "resize"
     IP_PROPERTY = "ip"
     EXEC_ID_PROPERTY = "exec_id"
@@ -174,10 +174,10 @@ class MGMT_WEBAPP:
     GP_SYSTEM_MODEL_TYPE = "gp"
     KIBANA_TUNNELS_DICT = {}
     KIBANA_TUNNEL_BASE_PORT = 17000
-    PTY_WS_NAMESPACE = "pty"
-    APP_FD = "fd"
-    APP_CHILD_PID = "child_pid"
-    APP_CMD = "cmd"
+    WS_HOST_TERMINAL_NAMESPACE = "host-terminal"
+    HOST_TERMINAL_FD = "host-terminal-fd"
+    HOST_TERMINAL_CHILD_PID = "host-terminal-child-pid"
+    HOST_TERMINAL_CMD = "host-terminal-cmd"
 
 
 class SESSION_TOKENS:

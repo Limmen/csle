@@ -58,7 +58,7 @@ from csle_rest_api.resources.statistics_datasets.routes import statistics_datase
 from csle_rest_api.resources.users.routes import users_bp
 from csle_rest_api.resources.config.routes import config_bp
 from csle_rest_api.resources.logs.routes import logs_bp
-from csle_rest_api.web_sockets.pty.pty import get_pty_bp
+from csle_rest_api.web_sockets.host_terminal.host_terminal import get_host_terminal_bp
 import csle_rest_api.constants.constants as api_constants
 
 
@@ -230,7 +230,7 @@ def create_app(static_folder: str):
     app.register_blueprint(logs_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}")
-    web_sockets_bp = get_pty_bp(app)
+    web_sockets_bp = get_host_terminal_bp(app)
     app.register_blueprint(web_sockets_bp)
 
     @app.route(constants.COMMANDS.SLASH_DELIM, methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -241,9 +241,9 @@ def create_app(static_folder: str):
         return app.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
 
     app.config["SECRET_KEY"] = "secret!"
-    app.config[api_constants.MGMT_WEBAPP.APP_FD] = None
-    app.config[api_constants.MGMT_WEBAPP.APP_CMD] = [constants.COMMANDS.BASH]
-    app.config[api_constants.MGMT_WEBAPP.APP_CHILD_PID] = None
+    app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD] = None
+    app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CMD] = [constants.COMMANDS.BASH]
+    app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_CHILD_PID] = None
     socketio.init_app(app)
     return app
 
