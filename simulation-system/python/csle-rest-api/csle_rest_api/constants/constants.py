@@ -176,7 +176,7 @@ class MGMT_WEBAPP:
     KIBANA_TUNNEL_BASE_PORT = 17000
     PTY_WS_NAMESPACE = "pty"
     APP_FD = "fd"
-    APP_CHILD_PID = "fd"
+    APP_CHILD_PID = "child_pid"
     APP_CMD = "cmd"
 
 
