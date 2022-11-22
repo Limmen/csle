@@ -23,34 +23,17 @@ is possible to train and evaluate reinforcement learning agents on practical pro
 
 # Main Features
 
-- **Emulations**
-    - [x] 50+ pre-defined versions of emulation environments
-    - [x] Automatic generation of custom emulation environment
-    - [x] Monitoring Framework with Webapp, Grafana, Prometheus, C-advisor, Node-exporter
-    - [x] Automatic Network Traffic Simulation
-    - [x] 20+ vulnerable containers with exploits
+### **Emulation System**
 
-- **Open-AI Gym Environment**
-    - [x] GUI rendering
-    - [x] optimal stopping game
-    - [x] Simulation-mode
-    - [x] Emulation-mode
+TODO
 
-- **Learning Process**
-    - [x] Attacker training
-    - [x] Defender training
-    - [x] Self-play
+### **Simulation System**
 
-- **System Identification**
-    - [x] Custom system identifification algorithm to learn model of emulation
-    - [ ] Function approximation
+TODO
 
-- **Policy-examination**
-    - [x] A System for Inspecting Automated Intrusion Prevention Policies
+### **Management System**
 
-- **Management and Monitoring**
-    - [x] A distributed telemetry system for real-time monitoring
-    - [x] A management platform with an extensive REST API and web frontend
+TODO
 
 ## Installation
 
@@ -84,7 +67,7 @@ TODO
 
 ## Demonstrations
 
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/18P7MjPKNDg/0.jpg)](http://www.youtube.com/watch?v=18P7MjPKNDg "A System for Interactive Examination of Learned Security Policies - Hammar & Stadler")
+- ["A System for Interactive Examination of Learned Security Policies - Hammar & Stadler"] (http://www.youtube.com/watch?v=18P7MjPKNDg )
 
 ## Author & Maintainer
 
