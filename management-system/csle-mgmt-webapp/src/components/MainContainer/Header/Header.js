@@ -3,6 +3,8 @@ import './Header.css';
 import {NavLink, useLocation} from "react-router-dom";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import CsleLogo from './CsleLogo.png'
+import CsleSmallLogo from './CsleSmallLogo.png'
 
 /**
  * The header component that is present on every page
@@ -216,6 +218,7 @@ const Header = (props) => {
                 <div className="col-sm-12 p-5 mb-4 bg-light rounded-3 jumbotron blue-grey lighten-5">
                     <h1 className="text-center title">
                         Cyber Security Learning Environment (CSLE)
+                        <img src={CsleSmallLogo} alt="CSLE logo" className="img-fluid csleLogo" height="8%" width="8%" />
                     </h1>
 
                     <ul className="nav nav-tabs justify-content-center navtabsheader navbar-expand">

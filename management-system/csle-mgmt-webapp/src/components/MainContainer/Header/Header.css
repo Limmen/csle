@@ -20,6 +20,7 @@
 
 .jumbotron {
     height:70px;
+    margin-top:-9px;
     color: black !important;
 }
 
@@ -49,4 +50,10 @@
     .jumbotron {
         height:195px;
     }
+}
+
+.csleLogo {
+    margin-left:100px;
+    margin-top:-23px;
+    position:absolute;
 }
