@@ -26,7 +26,6 @@ class DefenderStoppingMiddleware:
         s_prime.defender_obs_state.stopped = True
         return s_prime
 
-
     @staticmethod
     def continue_monitor(s: EmulationEnvState, defender_action: EmulationDefenderAction,
                          attacker_action: EmulationAttackerAction,
@@ -42,4 +41,3 @@ class DefenderStoppingMiddleware:
         """
         s_prime = s
         return s_prime
-

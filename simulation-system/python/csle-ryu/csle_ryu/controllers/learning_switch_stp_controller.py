@@ -71,14 +71,14 @@ class LearningSwitchSTPController(FlowAndPortStatsMonitor):
             datapath.send_msg(mod)
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
-    def switch_features_handler(self, ev):
+    def switch_features_handler(self, ev) -> None:
         """
         Handler called after OpenFlow handshake with switch completed. It adds teh Table-miss flow entry to
         the flow tables of the switch so that next packet which yield a flow-table-miss will be sent to the
         controller
 
         :param ev: the handshake complete event
-        :return:
+        :return: None
         """
         # the datapath, i.e. abstraction of the link to the switch
         datapath = ev.msg.datapath
@@ -117,8 +117,8 @@ class LearningSwitchSTPController(FlowAndPortStatsMonitor):
         :param buffer_id: the id of the buffer where packets for this flow are queued if they cannot be sent
         :return: None
         """
-        openflow_protocol = datapath.ofproto # Extract the openflow protocol used for communicating with the switch
-        parser = datapath.ofproto_parser # extract packet parser
+        openflow_protocol = datapath.ofproto  # Extract the openflow protocol used for communicating with the switch
+        parser = datapath.ofproto_parser  # extract packet parser
 
         # Define the instruction that the switch should perform if the flow is matched
         instruction = [parser.OFPInstructionActions(openflow_protocol.OFPIT_APPLY_ACTIONS, actions)]
@@ -129,8 +129,7 @@ class LearningSwitchSTPController(FlowAndPortStatsMonitor):
                                     priority=priority, match=match,
                                     instructions=instruction)
         else:
-            mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
-                                    match=match, instructions=instruction)
+            mod = parser.OFPFlowMod(datapath=datapath, priority=priority, match=match, instructions=instruction)
 
         # Send the message to the switch
         datapath.send_msg(mod)
@@ -243,11 +242,9 @@ class LearningSwitchSTPController(FlowAndPortStatsMonitor):
         port_no = ev.port_no
 
         # Map port state to strings for logging
-        openflow_state = {stplib.PORT_STATE_DISABLE: 'DISABLE',
-                    stplib.PORT_STATE_BLOCK: 'BLOCK',
-                    stplib.PORT_STATE_LISTEN: 'LISTEN',
-                    stplib.PORT_STATE_LEARN: 'LEARN',
-                    stplib.PORT_STATE_FORWARD: 'FORWARD'}
+        openflow_state = {stplib.PORT_STATE_DISABLE: 'DISABLE', stplib.PORT_STATE_BLOCK: 'BLOCK',
+                          stplib.PORT_STATE_LISTEN: 'LISTEN', stplib.PORT_STATE_LEARN: 'LEARN',
+                          stplib.PORT_STATE_FORWARD: 'FORWARD'}
 
         self.logger.info(f"[SDN-Controller {self.controller_type}] a port {port_no} was modified on switch with "
                          f"DPID: {datapath_id}. Port state: {openflow_state[ev.port_state]}")

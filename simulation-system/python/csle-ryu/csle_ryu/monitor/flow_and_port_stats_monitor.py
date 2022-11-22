@@ -55,7 +55,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         self.time_step_len_seconds = 30
 
         # Acquires the the WSGIApplication to register the controller class
-        self.logger.info(f"Registering CSLE Northbound REST API Controller")
+        self.logger.info("Registering CSLE Northbound REST API Controller")
         wsgi = kwargs['wsgi']
         wsgi.register(NorthBoundRestAPIController, {"controller_app": self})
 
@@ -156,8 +156,10 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 eth_dst = flow.match['eth_dst']
             flow_statistic_dto = FlowStatistic(
                 timestamp=ts, datapath_id=ev.msg.datapath.id, in_port=in_port,
-                out_port=flow.instructions[0].actions[0].kafka_port, dst_mac_address=eth_dst, num_packets=flow.packet_count,
-                num_bytes=flow.byte_count, duration_nanoseconds=flow.duration_nsec, duration_seconds=flow.duration_sec,
+                out_port=flow.instructions[0].actions[0].kafka_port, dst_mac_address=eth_dst,
+                num_packets=flow.packet_count,
+                num_bytes=flow.byte_count, duration_nanoseconds=flow.duration_nsec,
+                duration_seconds=flow.duration_sec,
                 hard_timeout=flow.hard_timeout, idle_timeout=flow.idle_timeout, priority=flow.priority,
                 cookie=flow.cookie
             )
@@ -186,7 +188,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         # Extract the response body
         body = ev.msg.body
         ts = time.time()
-        
+
         port_stats = []
 
         # Log the statistics
@@ -206,7 +208,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                                       port_statistics_dto.to_kafka_record())
                 self.producer.poll(0)
                 port_stats.append(port_statistics_dto)
-        
+
         if self.producer_running and len(port_stats) > 0:
             avg_flow_stats = AvgPortStatistic.average_port_statistics(
                 timestamp=ts, datapath_id=port_stats[0].datapath_id, port_statistics=port_stats)
@@ -222,13 +224,14 @@ class NorthBoundRestAPIController(ControllerBase):
     Example requests:
 
     curl -X GET http://15.12.252.3:8080/cslenorthboundapi/producer/status
-    curl -X PUT -d '{"bootstrap.servers": "15.12.253.253", "time_step_len_seconds": 30}' http://15.12.252.3:8080/cslenorthboundapi/producer/start
+    curl -X PUT -d '{"bootstrap.servers": "15.12.253.253", "time_step_len_seconds": 30}'
+    http://15.12.252.3:8080/cslenorthboundapi/producer/start
     curl -X POST http://15.12.252.3:8080/cslenorthboundapi/producer/stop
     """
 
     def __init__(self, req, link, data, **config):
         super(NorthBoundRestAPIController, self).__init__(req, link, data, **config)
-        self.controller_app = data["controller_app"] # These names has to match!
+        self.controller_app = data["controller_app"]  # These names has to match!
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
 
@@ -282,7 +285,7 @@ class NorthBoundRestAPIController(ControllerBase):
         :param kwargs: WSGI arguments
         :return: The REST response
         """
-        self.controller_app.logger.info(f"Stopping Kafka producer")
+        self.controller_app.logger.info("Stopping Kafka producer")
         self.controller_app.kafka_conf = {}
         self.controller_app.producer_running = False
         self.controller_app.producer = None

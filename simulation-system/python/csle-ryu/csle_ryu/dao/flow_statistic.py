@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 
 class FlowStatistic:
@@ -30,7 +30,7 @@ class FlowStatistic:
         self.datapath_id = datapath_id
         self.in_port = in_port
         self.out_port = out_port
-        self.dst_mac_address= dst_mac_address
+        self.dst_mac_address = dst_mac_address
         self.num_packets = num_packets
         self.num_bytes = num_bytes
         self.duration_nanoseconds = duration_nanoseconds
@@ -69,7 +69,7 @@ class FlowStatistic:
         d["num_packets"] = self.num_packets
         d["num_bytes"] = self.num_bytes
         d["duration_nanoseconds"] = self.duration_nanoseconds
-        d["duration_seconds"]=self.duration_seconds
+        d["duration_seconds"] = self.duration_seconds
         d["hard_timeout"] = self.hard_timeout
         d["idle_timeout"] = self.idle_timeout
         d["priority"] = self.priority
@@ -123,9 +123,10 @@ class FlowStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = FlowStatistic(timestamp = float(parts[0]), datapath_id=int(parts[1]), in_port=int(parts[2]),
+        obj = FlowStatistic(timestamp=float(parts[0]), datapath_id=int(parts[1]), in_port=int(parts[2]),
                             out_port=int(parts[3]), dst_mac_address=parts[4], num_packets=int(parts[5]),
-                            num_bytes=int(parts[6]), duration_nanoseconds=int(parts[7]), duration_seconds=int(parts[8]),
+                            num_bytes=int(parts[6]), duration_nanoseconds=int(parts[7]),
+                            duration_seconds=int(parts[8]),
                             hard_timeout=int(parts[9]), idle_timeout=int(parts[10]), priority=int(parts[11]),
                             cookie=int(parts[12]))
         return obj
@@ -149,36 +150,15 @@ class FlowStatistic:
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id=int(parts[1])
-        self.in_port=int(parts[2])
-        self.out_port=int(parts[3])
-        self.dst_mac_address=int(parts[4])
-        self.num_packets=int(parts[5])
-        self.num_bytes=int(parts[6])
-        self.duration_nanoseconds=int(parts[7])
-        self.duration_seconds=int(parts[8])
-        self.hard_timeout=int(parts[9])
-        self.idle_timeout=int(parts[10])
-        self.priority=int(parts[11])
-        self.cookie=int(parts[12])
-
-
-    @staticmethod
-    def average_flow_statistics(timestamp: float, datapath_id: int,
-                                flow_statistics: List["FlowStatistic"]) -> "FlowStatistic":
-        """
-        Computes the average metrics from a list of flow statistics
-
-        :param flow_statistics: the list of flow statistics to average
-        :return: the computed averages
-        """
-        total_num_logged_in_users = 0
-
-        for flow in flow_statistics:
-            total_num_logged_in_users += flow.num_logged_in_users
-        aggregated_flow_statistics_dto.num_logged_in_users = total_num_logged_in_users
-        aggregated_flow_statistics_dto = FlowStatistic(
-            timestamp=timestamp, datapath_id=datapath_id
-        )
-        return aggregated_flow_statistics_dto
-
+        self.datapath_id = int(parts[1])
+        self.in_port = int(parts[2])
+        self.out_port = int(parts[3])
+        self.dst_mac_address = int(parts[4])
+        self.num_packets = int(parts[5])
+        self.num_bytes = int(parts[6])
+        self.duration_nanoseconds = int(parts[7])
+        self.duration_seconds = int(parts[8])
+        self.hard_timeout = int(parts[9])
+        self.idle_timeout = int(parts[10])
+        self.priority = int(parts[11])
+        self.cookie = int(parts[12])

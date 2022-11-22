@@ -151,7 +151,7 @@ class PortStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = PortStatistic(timestamp = float(parts[0]), datapath_id=int(parts[1]), port=int(parts[2]),
+        obj = PortStatistic(timestamp=float(parts[0]), datapath_id=int(parts[1]), port=int(parts[2]),
                             num_received_packets=int(parts[3]),
                             num_received_bytes=int(parts[4]), num_received_errors=int(parts[5]),
                             num_transmitted_packets=int(parts[6]), num_transmitted_bytes=int(parts[7]),
@@ -168,10 +168,12 @@ class PortStatistic:
 
         :return: the kafka record
         """
-        return f"{self.timestamp},{self.datapath_id},{self.port},{self.num_received_packets},{self.num_received_bytes}," \
+        return f"{self.timestamp},{self.datapath_id},{self.port},{self.num_received_packets}," \
+               f"{self.num_received_bytes}," \
                f"{self.num_received_errors},{self.num_transmitted_packets},{self.num_transmitted_bytes}," \
                f"{self.num_transmitted_errors},{self.num_received_dropped},{self.num_transmitted_dropped}," \
-               f"{self.num_received_frame_errors},{self.num_received_overrun_errors},{self.num_received_crc_errors}," \
+               f"{self.num_received_frame_errors},{self.num_received_overrun_errors}," \
+               f"{self.num_received_crc_errors}," \
                f"{self.num_collisions},{self.duration_nanoseconds},{self.duration_seconds}"
 
     def update_with_kafka_record(self, record: str) -> None:
@@ -183,22 +185,19 @@ class PortStatistic:
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id=int(parts[1])
-
-        self.port=int(parts[2])
-        self.num_received_packets=int(parts[3])
-        self.num_received_bytes=int(parts[4])
-        self.num_received_errors=int(parts[5])
-        self.num_transmitted_packets=int(parts[6])
-        self.num_transmitted_bytes=int(parts[7])
-        self.num_transmitted_errors=int(parts[8])
-        self.num_received_dropped=int(parts[9])
-        self.num_transmitted_dropped=int(parts[10])
-        self.num_received_frame_errors=int(parts[11])
-        self.num_received_overrun_errors=int(parts[12])
-        self.num_received_crc_errors=int(parts[13])
-        self.num_collisions=int(parts[14])
-        self.duration_nanoseconds=int(parts[15])
-        self.duration_seconds=int(parts[16])
-
-
+        self.datapath_id = int(parts[1])
+        self.port = int(parts[2])
+        self.num_received_packets = int(parts[3])
+        self.num_received_bytes = int(parts[4])
+        self.num_received_errors = int(parts[5])
+        self.num_transmitted_packets = int(parts[6])
+        self.num_transmitted_bytes = int(parts[7])
+        self.num_transmitted_errors = int(parts[8])
+        self.num_received_dropped = int(parts[9])
+        self.num_transmitted_dropped = int(parts[10])
+        self.num_received_frame_errors = int(parts[11])
+        self.num_received_overrun_errors = int(parts[12])
+        self.num_received_crc_errors = int(parts[13])
+        self.num_collisions = int(parts[14])
+        self.duration_nanoseconds = int(parts[15])
+        self.duration_seconds = int(parts[16])

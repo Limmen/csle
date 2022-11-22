@@ -59,6 +59,7 @@ class TOPIC_NAMES:
     AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_flow_stats_per_switch_topic"
     AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME = "avg_openflow_port_stats_per_switch_topic"
 
+
 class KAFKA:
     """
     String constants for managing Kafka
@@ -74,5 +75,3 @@ class KAFKA:
     EARLIEST_OFFSET = "earliest"
     PORT = 9092
     TIME_STEP_LEN_SECONDS = "time_step_len_seconds"
-
-

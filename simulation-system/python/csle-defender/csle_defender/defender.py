@@ -11,7 +11,7 @@ class Defender:
 
     @staticmethod
     def defender_transition(s: EmulationEnvState, defender_action: EmulationDefenderAction,
-                            attacker_action : EmulationAttackerAction = None) -> EmulationEnvState:
+                            attacker_action: EmulationAttackerAction = None) -> EmulationEnvState:
         """
         Implements the transition operator of the MDP/Markov Game for defense actions,
         supporting both simulation and emulation mode

@@ -1,9 +1,17 @@
 # Developer Guide
 
+## Install development tools
 
+Install the `flake8` linter:
+```bash
+python -m pip install flake8
+```
 
 ## Static code analysis
 
+```bash
+flake8 simulation-system/python/
+```
 
 ## Lines of code
 

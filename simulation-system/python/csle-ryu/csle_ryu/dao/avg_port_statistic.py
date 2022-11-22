@@ -154,14 +154,20 @@ class AvgPortStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = AvgPortStatistic(timestamp = float(parts[0]), datapath_id=int(parts[1]),
+        obj = AvgPortStatistic(timestamp=float(parts[0]), datapath_id=int(parts[1]),
                                total_num_received_packets=int(parts[2]),
-                               total_num_received_bytes=int(parts[3]), total_num_received_errors=int(parts[4]),
-                               total_num_transmitted_packets=int(parts[5]), total_num_transmitted_bytes=int(parts[6]),
-                               total_num_transmitted_errors=int(parts[7]), total_num_received_dropped=int(parts[8]),
-                               total_num_transmitted_dropped=int(parts[9]), total_num_received_frame_errors=int(parts[10]),
-                               total_num_received_overrun_errors=int(parts[11]), total_num_received_crc_errors=int(parts[12]),
-                               total_num_collisions=int(parts[13]), avg_duration_nanoseconds=int(parts[14]),
+                               total_num_received_bytes=int(parts[3]),
+                               total_num_received_errors=int(parts[4]),
+                               total_num_transmitted_packets=int(parts[5]),
+                               total_num_transmitted_bytes=int(parts[6]),
+                               total_num_transmitted_errors=int(parts[7]),
+                               total_num_received_dropped=int(parts[8]),
+                               total_num_transmitted_dropped=int(parts[9]),
+                               total_num_received_frame_errors=int(parts[10]),
+                               total_num_received_overrun_errors=int(parts[11]),
+                               total_num_received_crc_errors=int(parts[12]),
+                               total_num_collisions=int(parts[13]),
+                               avg_duration_nanoseconds=int(parts[14]),
                                avg_duration_seconds=int(parts[15]))
         return obj
 
@@ -171,11 +177,16 @@ class AvgPortStatistic:
 
         :return: the kafka record
         """
-        return f"{self.timestamp},{self.datapath_id},{self.total_num_received_packets},{self.total_num_received_bytes}," \
-               f"{self.total_num_received_errors},{self.total_num_transmitted_packets},{self.total_num_transmitted_bytes}," \
-               f"{self.total_num_transmitted_errors},{self.total_num_received_dropped},{self.total_num_transmitted_dropped}," \
-               f"{self.total_num_received_frame_errors},{self.total_num_received_overrun_errors},{self.total_num_received_crc_errors}," \
-               f"{self.total_num_collisions},{self.avg_duration_nanoseconds},{self.avg_duration_seconds}"
+        return f"{self.timestamp},{self.datapath_id},{self.total_num_received_packets}, " \
+               f"{self.total_num_received_bytes}," \
+               f"{self.total_num_received_errors},{self.total_num_transmitted_packets}, " \
+               f"{self.total_num_transmitted_bytes}," \
+               f"{self.total_num_transmitted_errors},{self.total_num_received_dropped}, " \
+               f"{self.total_num_transmitted_dropped}," \
+               f"{self.total_num_received_frame_errors},{self.total_num_received_overrun_errors}, " \
+               f"{self.total_num_received_crc_errors}," \
+               f"{self.total_num_collisions},{self.avg_duration_nanoseconds}, " \
+               f"{self.avg_duration_seconds}"
 
     def update_with_kafka_record(self, record: str) -> None:
         """
@@ -186,23 +197,21 @@ class AvgPortStatistic:
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id=int(parts[1])
-        self.total_num_received_packets=int(parts[2])
-        self.total_num_received_bytes=int(parts[3])
-        self.total_num_received_errors=int(parts[4])
-        self.total_num_transmitted_packets=int(parts[5])
-        self.total_num_transmitted_bytes=int(parts[6])
-        self.total_num_transmitted_errors=int(parts[7])
-        self.total_num_received_dropped=int(parts[8])
-        self.total_num_transmitted_dropped=int(parts[9])
-        self.total_num_received_frame_errors=int(parts[10])
-        self.total_num_received_overrun_errors=int(parts[11])
-        self.total_num_received_crc_errors=int(parts[12])
-        self.total_num_collisions=int(parts[13])
-        self.avg_duration_nanoseconds=int(parts[14])
-        self.avg_duration_seconds=int(parts[15])
-
-
+        self.datapath_id = int(parts[1])
+        self.total_num_received_packets = int(parts[2])
+        self.total_num_received_bytes = int(parts[3])
+        self.total_num_received_errors = int(parts[4])
+        self.total_num_transmitted_packets = int(parts[5])
+        self.total_num_transmitted_bytes = int(parts[6])
+        self.total_num_transmitted_errors = int(parts[7])
+        self.total_num_received_dropped = int(parts[8])
+        self.total_num_transmitted_dropped = int(parts[9])
+        self.total_num_received_frame_errors = int(parts[10])
+        self.total_num_received_overrun_errors = int(parts[11])
+        self.total_num_received_crc_errors = int(parts[12])
+        self.total_num_collisions = int(parts[13])
+        self.avg_duration_nanoseconds = int(parts[14])
+        self.avg_duration_seconds = int(parts[15])
 
     @staticmethod
     def average_port_statistics(timestamp: float, datapath_id: int,

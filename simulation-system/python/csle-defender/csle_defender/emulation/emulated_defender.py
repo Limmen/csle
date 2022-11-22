@@ -29,7 +29,6 @@ class EmulatedDefender:
         else:
             raise ValueError("Action type not recognized")
 
-
     @staticmethod
     def defender_stopping_action(s: EmulationEnvState, defender_action: EmulationDefenderAction,
                                  attacker_action: EmulationAttackerAction) -> EmulationEnvState:
@@ -53,4 +52,3 @@ class EmulatedDefender:
         else:
             raise ValueError("Stopping action id:{},name:{} "
                              "not recognized".format(defender_action.id, defender_action.name))
-

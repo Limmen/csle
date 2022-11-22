@@ -27,7 +27,6 @@ from csle_common.dao.emulation_action_result.nmap_http_grep import NmapHttpGrep
 from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
 from csle_common.util.emulation_util import EmulationUtil
 from csle_common.util.connection_util import ConnectionUtil
-from csle_common.util.ssh_util import SSHUtil
 from csle_common.logging.log import Logger
 
 

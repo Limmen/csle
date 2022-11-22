@@ -76,8 +76,8 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         :param buffer_id: the id of the buffer where packets for this flow are queued if they cannot be sent
         :return: None
         """
-        openflow_protocol = datapath.ofproto # Extract the openflow protocol used for communicating with the switch
-        parser = datapath.ofproto_parser # extract packet parser
+        openflow_protocol = datapath.ofproto  # Extract the openflow protocol used for communicating with the switch
+        parser = datapath.ofproto_parser  # extract packet parser
 
         # Define the instruction that the switch should perform if the flow is matched
         instruction = [parser.OFPInstructionActions(openflow_protocol.OFPIT_APPLY_ACTIONS, actions)]
@@ -131,7 +131,8 @@ class LearningSwitchController(FlowAndPortStatsMonitor):
         self.mac_to_port.setdefault(datapath_id, {})
 
         self.logger.debug(f"[SDN-Controller {self.controller_type}] received packet in, DPID:{datapath_id}, "
-                         f"src_mac_address:{src_mac_address}, dst_mac_address:{dst_mac_address}, port number:{in_port}")
+                          f"src_mac_address:{src_mac_address}, dst_mac_address:{dst_mac_address}, "
+                          f"port number:{in_port}")
 
         # learn a mac address to avoid FLOOD next time, i.e. map the port of the switch to the source MAC address
         self.mac_to_port[datapath_id][src_mac_address] = in_port

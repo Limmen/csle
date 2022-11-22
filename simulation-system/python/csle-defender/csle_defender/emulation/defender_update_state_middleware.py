@@ -1,7 +1,6 @@
-import sys
 from confluent_kafka import KafkaError, KafkaException
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
-import csle_collector.constants.constants as constants
+
 
 class DefenderUpdateStateMiddleware:
     """
