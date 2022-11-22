@@ -3,7 +3,7 @@ import './Header.css';
 import {NavLink, useLocation} from "react-router-dom";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import CsleLogo from './CsleLogo.png'
+import CsleLogo from '../../../../../../docs/CsleLogo.png'
 import CsleSmallLogo from './CsleSmallLogo.png'
 
 /**

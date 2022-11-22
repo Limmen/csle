@@ -1,6 +1,10 @@
 # Installation 
 
-Follow the instructions below to install CSLE on a Ubuntu server.
+Follow the instructions below to install CSLE.
+
+## Requirements
+Ubuntu server
+TODO
 
 ## Install from source
 
