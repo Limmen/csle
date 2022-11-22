@@ -50,7 +50,7 @@ Usage examples are available at [Usage](Usage.md)
 
 ## Demonstrations
 
-- ["A System for Interactive Examination of Learned Security Policies - Hammar & Stadler"] (http://www.youtube.com/watch?v=18P7MjPKNDg )
+- [System Demo 14/4 2022] (http://www.youtube.com/watch?v=18P7MjPKNDg)
 
 ## Author & Maintainer
 
