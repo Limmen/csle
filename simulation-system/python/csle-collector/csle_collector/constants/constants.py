@@ -32,6 +32,7 @@ class LOG_FILES:
     CLIENT_MANAGER_LOG_DIR = "/"
     TRAFFIC_MANAGER_LOG_FILE = "traffic_manager.log"
     TRAFFIC_MANAGER_LOG_DIR = "/"
+    KAFKA_LOG_FILE = "/usr/local/kafka/logs/server.log"
 
 
 class TRAFFIC_GENERATOR:
@@ -93,6 +94,7 @@ class OSSEC:
     """
     MAX_ALERTS = 10000
     OSSEC_ALERTS_FILE = "/var/ossec/alerts/alerts.log"
+    OSSEC_LOG_FILE = "/var/ossec/logs/ossec.log"
     TAIL_ALERTS_COMMAND = "sudo tail -" + str(MAX_ALERTS)
     ALERTLINE_REGEX = re.compile(r"\*\* Alert (\d+.\d+)*: - (\w+.+)")
     HOSTLINE_REGEX = re.compile(r"\d+ \w+ \d+ \d+:\d+:\d+ \((\w+.+)\) (\d+.\d+.\d+.\d+)")
@@ -415,6 +417,7 @@ class ELK:
     String constants for managing the ELK stack
     """
     ELK_START = "nohup /usr/local/bin/start.sh > /elk_server.log &"
+    ELK_LOG = "/elk_server.log"
     ELASTICSEARCH_STOP = "service elasticsearch stop"
     KIBANA_STOP = "service kibana stop"
     LOGSTASH_STOP = "service logstash stop"
