@@ -49,7 +49,7 @@ const LogsAdmin = (props) => {
         fetch(
             `http://` + ip + ":" + port + '/logs/docker-stats-manager' + "?token=" + props.sessionData.token,
             {
-                method: "GET",
+                method: "POST",
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

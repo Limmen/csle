@@ -46,7 +46,7 @@ def logs():
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
-               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def docker_stats_manager_logs():
     """
     The /logs/docker-stats-manager resource.
@@ -222,10 +222,10 @@ def client_manager_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -271,10 +271,10 @@ def kafka_manager_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -321,10 +321,10 @@ def kafka_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -370,10 +370,10 @@ def snort_ids_manager_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -420,10 +420,10 @@ def snort_ids_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -470,10 +470,10 @@ def ossec_ids_manager_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -520,10 +520,10 @@ def ossec_ids_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -571,10 +571,10 @@ def host_ids_manager_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -621,10 +621,10 @@ def traffic_manager_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -671,10 +671,10 @@ def elk_manager_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
@@ -721,10 +721,10 @@ def elk_logs():
     if authorized is not None:
         return authorized
 
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json.loads(request.data):
+    if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
 
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
