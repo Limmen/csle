@@ -6,6 +6,10 @@ import Table from 'react-bootstrap/Table'
 import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
+import {
+    CLIENT_PRODUCER_SUBRESOURCE,
+    CLIENT_MANAGER_SUBRESOURCE,
+    CLIENT_POPULATION_SUBRESOURCE} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about client managers
@@ -40,7 +44,7 @@ const ClientManagersInfo = (props) => {
                             </thead>
                             <tbody>
                             {props.clientManagersInfo.client_managers_statuses.map((status, index) =>
-                                <tr key={"client-manager-" + index}>
+                                <tr key={`${CLIENT_MANAGER_SUBRESOURCE}-${index}`}>
                                     <td>Client manager</td>
                                     <td>{props.clientManagersInfo.ips[index]}</td>
                                     <td>{props.clientManagersInfo.ports[index]}</td>
@@ -49,20 +53,22 @@ const ClientManagersInfo = (props) => {
                                     <td>{status.clients_time_step_len_seconds}</td>
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("client-manager-" +
-                                                props.clientManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(`
+                                            ${CLIENT_MANAGER_SUBRESOURCE}-${props.clientManagersInfo.ips[index]}`)}
                                             running={props.clientManagersInfo.client_managers_running[index]}
-                                            entity={"client-manager"} name={"client-manager"}
+                                            entity={CLIENT_MANAGER_SUBRESOURCE} name={CLIENT_MANAGER_SUBRESOURCE}
                                             ip={props.clientManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.clientManagersInfo.ips[index]}
-                                                    entity="client-manager"/>
+                                                    entity={CLIENT_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.clientManagersInfo.client_managers_statuses.map((status, index) =>
-                                <tr key={"client-population-" + index}>
+                                <tr key={`${CLIENT_POPULATION_SUBRESOURCE}-${index}`}>
                                     <td>Client process</td>
                                     <td>{props.clientManagersInfo.ips[index]}</td>
                                     <td></td>
@@ -71,20 +77,23 @@ const ClientManagersInfo = (props) => {
                                     <td>{status.clients_time_step_len_seconds}</td>
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("client-population-" +
-                                                props.clientManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${CLIENT_POPULATION_SUBRESOURCE}-`
+                                                +`${props.clientManagersInfo.ips[index]}`)}
                                             running={status.client_process_active}
-                                            entity={"client-population"} name={"client-population"}
+                                            entity={CLIENT_POPULATION_SUBRESOURCE} name={CLIENT_POPULATION_SUBRESOURCE}
                                             ip={props.clientManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.clientManagersInfo.ips[index]}
-                                                    entity="client-manager"/>
+                                                    entity={CLIENT_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.clientManagersInfo.client_managers_statuses.map((status, index) =>
-                                <tr key={"client-producer-" + index}>
+                                <tr key={`${CLIENT_PRODUCER_SUBRESOURCE}-${index}`}>
                                     <td>Producer process</td>
                                     <td>{props.clientManagersInfo.ips[index]}</td>
                                     <td></td>
@@ -93,15 +102,17 @@ const ClientManagersInfo = (props) => {
                                     <td>{status.clients_time_step_len_seconds}</td>
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("client-producer-" +
-                                                props.clientManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${CLIENT_PRODUCER_SUBRESOURCE}-`
+                                                +`${props.clientManagersInfo.ips[index]}`)}
                                             running={status.producer_active}
-                                            entity={"client-producer"} name={"client-producer"}
+                                            entity={CLIENT_PRODUCER_SUBRESOURCE} name={CLIENT_PRODUCER_SUBRESOURCE}
                                             ip={props.clientManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.clientManagersInfo.ips[index]}
-                                                    entity="client-manager"/>
+                                                    entity={CLIENT_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}/>
                                     </td>
                                 </tr>
                             )}

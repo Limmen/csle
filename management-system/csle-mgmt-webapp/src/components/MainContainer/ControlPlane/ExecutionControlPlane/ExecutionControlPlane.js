@@ -18,6 +18,37 @@ import OSSECIDSManagersInfo from "./OSSECIDSManagersInfo/OSSECIDSManagersInfo";
 import SnortIDSManagersInfo from "./SnortIDSManagersInfo/SnortIDSManagersInfo";
 import ElkManagersInfo from "./ElkManagersInfo/ElkManagersInfo";
 import TrafficManagersInfo from "./TrafficManagersInfo/TrafficManagersInfo";
+import {
+    HTTP_PREFIX,
+    CLIENT_MANAGER_SUBRESOURCE,
+    CLIENT_POPULATION_SUBRESOURCE,
+    CLIENT_PRODUCER_SUBRESOURCE,
+    CONTAINER_SUBRESOURCE,
+    DOCKER_STATS_MANAGER_SUBRESOURCE,
+    DOCKER_STATS_MONITOR_SUBRESOURCE,
+    ELASTIC_SUBRESOURCE,
+    ELK_MANAGER_SUBRESOURCE,
+    ELK_STACK_SUBRESOURCE,
+    HOST_MANAGER_SUBRESOURCE,
+    HOST_MONITOR_SUBRESOURCE,
+    KAFKA_MANAGER_SUBRESOURCE,
+    KAFKA_SUBRESOURCE,
+    KIBANA_SUBRESOURCE,
+    LOGSTASH_SUBRESOURCE,
+    OSSEC_IDS_MANAGER_SUBRESOURCE,
+    OSSEC_IDS_MONITOR_SUBRESOURCE,
+    OSSEC_IDS_SUBRESOURCE,
+    SNORT_IDS_MANAGER_SUBRESOURCE,
+    SNORT_IDS_MONITOR_SUBRESOURCE,
+    SNORT_IDS_SUBRESOURCE,
+    TRAFFIC_GENERATOR_SUBRESOURCE,
+    TRAFFIC_MANAGER_SUBRESOURCE,
+    LOGS_RESOURCE,
+    TOKEN_QUERY_PARAM,
+    EMULATION_QUERY_PARAM,
+    EXECUTION_ID_QUERY_PARAM,
+    LOGIN_PAGE_RESOURCE, EMULATION_EXECUTIONS_RESOURCE, HTTP_REST_POST
+} from "../../../Common/constants";
 
 /**
  * Component representing the /emulation-executions/<id>/control resource
@@ -58,10 +89,11 @@ const ExecutionControlPlane = (props) => {
 
     const fetchLogs = useCallback((name, entity) => {
         fetch(
-            `http://` + ip + ":" + port + '/logs/' + entity + "?token=" + props.sessionData.token +
-            "&emulation=" + props.execution.emulation_name + "&executionid=" + props.execution.ip_first_octet,
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${entity}?${TOKEN_QUERY_PARAM}=`
+            +`${props.sessionData.token}&${EMULATION_QUERY_PARAM}=${props.execution.emulation_name}&`
+            +`${EXECUTION_ID_QUERY_PARAM}=${props.execution.ip_first_octet}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
@@ -72,7 +104,7 @@ const ExecutionControlPlane = (props) => {
                 if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`)
                     return null
                 }
                 return res.json()
@@ -86,10 +118,10 @@ const ExecutionControlPlane = (props) => {
 
     const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, node_ip) => {
         fetch(
-            `http://` + ip + ':' + port + '/emulation-executions/' + id + "/" + entity + "?emulation="
-            + emulation + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id}/${entity}?`
+            +`${EMULATION_QUERY_PARAM}=${emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
@@ -100,7 +132,7 @@ const ExecutionControlPlane = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -114,35 +146,38 @@ const ExecutionControlPlane = (props) => {
 
 
     const updateStateAfterStartOrStop = (entity, response) => {
-        if(entity === "client-manager" || entity === "client-manager" || entity === "client-producer"){
+        if(entity === CLIENT_MANAGER_SUBRESOURCE || entity === CLIENT_POPULATION_SUBRESOURCE ||
+            entity === CLIENT_PRODUCER_SUBRESOURCE){
             setClientManagersInfo(response.client_managers_info)
         }
-        if(entity === "kafka-manager" || entity === "kafka"){
+        if(entity === KAFKA_MANAGER_SUBRESOURCE || entity === KAFKA_SUBRESOURCE){
             setkafkaManagersInfo(response.kafka_managers_info)
         }
-        if(entity === "elk-manager" || entity === "elk-stack" || entity === "elastic" || entity === "kibana"
-            || entity === "logstash"){
+        if(entity === ELK_MANAGER_SUBRESOURCE || entity === ELK_STACK_SUBRESOURCE || entity === ELASTIC_SUBRESOURCE
+            || entity === KIBANA_SUBRESOURCE || entity === LOGSTASH_SUBRESOURCE){
             setElkManagersInfo(response.elk_managers_info)
         }
-        if(entity === "ossec-ids-manager" || entity === "ossec-ids" || entity === "ossec-ids-monitor"){
+        if(entity === OSSEC_IDS_MANAGER_SUBRESOURCE || entity === OSSEC_IDS_SUBRESOURCE ||
+            entity === OSSEC_IDS_MONITOR_SUBRESOURCE){
             setOSSECIDSManagersInfo(response.ossec_ids_managers_info)
         }
-        if(entity === "snort-ids-manager" || entity === "snort-ids" || entity === "snort-ids-monitor"){
+        if(entity === SNORT_IDS_MANAGER_SUBRESOURCE || entity === SNORT_IDS_SUBRESOURCE ||
+            entity === SNORT_IDS_MONITOR_SUBRESOURCE){
             setSnortIDSManagersInfo(response.snort_ids_managers_info)
         }
-        if(entity === "host-manager" || entity === "host-monitor"){
+        if(entity === HOST_MANAGER_SUBRESOURCE || entity === HOST_MONITOR_SUBRESOURCE){
             setHostManagersInfo(response.host_managers_info)
         }
-        if(entity === "traffic-manager" || entity === "traffic-generator"){
+        if(entity === TRAFFIC_MANAGER_SUBRESOURCE || entity === TRAFFIC_GENERATOR_SUBRESOURCE){
             setTrafficManagersInfo(response.traffic_managers_info)
         }
-        if(entity === "container"){
+        if(entity === CONTAINER_SUBRESOURCE){
             setInactiveNetworks(response.inactive_networks)
             setRunningContainers(response.running_containers)
             setStoppedContainers(response.stopped_containers)
             setActiveNetworks(response.active_networks)
         }
-        if(entity === "docker-stats-manager" || entity === "docker-stats-monitor"){
+        if(entity === DOCKER_STATS_MANAGER_SUBRESOURCE || entity === DOCKER_STATS_MONITOR_SUBRESOURCE){
             setDockerStatsManagersInfo(response.docker_stats_managers_info)
         }
     }

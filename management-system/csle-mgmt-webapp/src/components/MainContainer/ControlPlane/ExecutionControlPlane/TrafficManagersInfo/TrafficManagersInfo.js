@@ -6,6 +6,11 @@ import Table from 'react-bootstrap/Table'
 import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
+import {
+    TRAFFIC_MANAGER_SUBRESOURCE,
+    TRAFFIC_GENERATOR_SUBRESOURCE,
+    START_ALL_PROPERTY,
+    STOP_ALL_PROPERTY} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about traffic managers
@@ -28,30 +33,34 @@ const TrafficManagersInfo = (props) => {
                     <div className="aggregateActionsContainer">
                         <span className="aggregateActions">Stop all managers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("traffic-manager-stop-all")}
-                            running={true} entity="traffic-manager"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${TRAFFIC_MANAGER_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={TRAFFIC_MANAGER_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all managers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("traffic-manager-start-all")}
-                            running={false} entity="traffic-manager"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${TRAFFIC_MANAGER_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={TRAFFIC_MANAGER_SUBRESOURCE}
+                            name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Stop all generators:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("traffic-generator-stop-all")}
-                            running={true} entity="traffic-generator"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${TRAFFIC_GENERATOR_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={TRAFFIC_GENERATOR_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all generators:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("traffic-generator-start-all")}
-                            running={false} entity="traffic-generator"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${TRAFFIC_GENERATOR_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={TRAFFIC_GENERATOR_SUBRESOURCE}
+                            name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                     </div>
@@ -68,42 +77,49 @@ const TrafficManagersInfo = (props) => {
                             </thead>
                             <tbody>
                             {props.trafficManagersInfo.traffic_managers_statuses.map((status, index) =>
-                                <tr key={"traffic-manager-" + index}>
+                                <tr key={`${TRAFFIC_MANAGER_SUBRESOURCE}-${index}`}>
                                     <td>Traffic Manager</td>
                                     <td>{props.trafficManagersInfo.ips[index]}</td>
                                     <td>{props.trafficManagersInfo.ports[index]}</td>
                                     {props.activeStatus(props.trafficManagersInfo.traffic_managers_running[index])}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("traffic-manager-" +
-                                                props.trafficManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${TRAFFIC_MANAGER_SUBRESOURCE}-`
+                                                + `${props.trafficManagersInfo.ips[index]}`)}
                                             running={props.trafficManagersInfo.traffic_managers_running[index]}
-                                            entity={"traffic-manager"} name={"traffic-manager"}
+                                            entity={TRAFFIC_MANAGER_SUBRESOURCE} name={TRAFFIC_MANAGER_SUBRESOURCE}
                                             ip={props.trafficManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.trafficManagersInfo.ips[index]}
-                                                    entity="traffic-manager"/>
+                                                    entity={TRAFFIC_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.trafficManagersInfo.traffic_managers_statuses.map((status, index) =>
-                                <tr key={"traffic-generator-" + index}>
+                                <tr key={`${TRAFFIC_GENERATOR_SUBRESOURCE}-${index}`}>
                                     <td>Traffic Generator</td>
                                     <td>{props.trafficManagersInfo.ips[index]}</td>
                                     <td>-</td>
                                     {props.activeStatus(status.running)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("traffic-generator-" +
-                                                props.trafficManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${TRAFFIC_GENERATOR_SUBRESOURCE}-`
+                                                + `${props.trafficManagersInfo.ips[index]}`)}
                                             running={status.running}
-                                            entity={"traffic-generator"} name={"traffic-generator"}
+                                            entity={TRAFFIC_GENERATOR_SUBRESOURCE}
+                                            name={TRAFFIC_GENERATOR_SUBRESOURCE}
                                             ip={props.trafficManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.trafficManagersInfo.ips[index]}
-                                                    entity="traffic-manager"/>
+                                                    entity={TRAFFIC_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}

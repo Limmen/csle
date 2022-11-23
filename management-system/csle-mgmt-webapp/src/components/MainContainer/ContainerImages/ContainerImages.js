@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import {HTTP_PREFIX, IMAGES_RESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM} from "../../Common/constants";
 
 /**
  * Component representing the /images-page
@@ -33,7 +34,7 @@ const ContainerImages = (props) => {
 
     const fetchImages = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/images' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${IMAGES_RESOURCE}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -45,7 +46,7 @@ const ContainerImages = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()

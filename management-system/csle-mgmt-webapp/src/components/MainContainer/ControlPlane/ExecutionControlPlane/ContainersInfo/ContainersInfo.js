@@ -8,6 +8,7 @@ import getIps from "../../../../Common/getIps";
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
 import ShellButton from "../ShellButton/ShellButton";
+import {CONTAINER_SUBRESOURCE, STOP_ALL_PROPERTY, START_ALL_PROPERTY} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that represents information about containers
@@ -31,16 +32,18 @@ const ContainersInfo = (props) => {
                     <div className="aggregateActionsContainer">
                         <span className="aggregateActions">Stop all containers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("container-stop-all")}
-                            running={true} entity="container"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${CONTAINER_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={CONTAINER_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all containers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("container-start-all")}
-                            running={false} entity="container"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${CONTAINER_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={CONTAINER_SUBRESOURCE}
+                            name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                     </div>
@@ -66,18 +69,18 @@ const ContainersInfo = (props) => {
                                     <td className="containerRunningStatus"> Running</td>
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("container-"
-                                                + container.full_name_str)}
-                                            running={true} entity="container"
+                                            loading={props.loadingEntities.includes(
+                                                `${CONTAINER_SUBRESOURCE}-${container.full_name_str}`)}
+                                            running={true} entity={CONTAINER_SUBRESOURCE}
                                             name={container.full_name_str} ip={container.full_name_str}
                                             startOrStop={props.startOrStop}
                                         />
-                                        <LogsButton name={container.full_name_str} entity="container"
+                                        <LogsButton name={container.full_name_str} entity={CONTAINER_SUBRESOURCE}
                                                     getLogs={props.getLogs}
                                         />
                                         <ShellButton
-                                            loading={props.loadingEntities.includes("container-" +
-                                                container.full_name_str + "-shell")}
+                                            loading={props.loadingEntities.includes(
+                                                `${CONTAINER_SUBRESOURCE}-${container.full_name_str}`)}
                                             name={container.full_name_str}/>
                                     </td>
                                 </tr>
@@ -91,9 +94,9 @@ const ContainersInfo = (props) => {
                                     <td className="containerStoppedStatus">Stopped</td>
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("container-" +
-                                                container.full_name_str)}
-                                            running={false} entity="container"
+                                            loading={props.loadingEntities.includes(
+                                                `${CONTAINER_SUBRESOURCE}-${container.full_name_str}`)}
+                                            running={false} entity={CONTAINER_SUBRESOURCE}
                                             name={container.full_name_str} ip={container.full_name_str}
                                             startOrStop={props.startOrStop}
                                         />

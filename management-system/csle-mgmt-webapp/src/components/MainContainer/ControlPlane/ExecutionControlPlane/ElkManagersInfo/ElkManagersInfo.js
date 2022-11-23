@@ -10,6 +10,13 @@ import KibanaImg from './Kibana.png'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import serverIp from "../../../../Common/serverIp";
+import {
+    ELK_STACK_SUBRESOURCE,
+    LOGSTASH_SUBRESOURCE,
+    KIBANA_SUBRESOURCE,
+    ELK_MANAGER_SUBRESOURCE,
+    ELASTIC_SUBRESOURCE
+} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about ELK managers
@@ -67,7 +74,7 @@ const ElkManagersInfo = (props) => {
                             </thead>
                             <tbody>
                             {props.elkManagersInfo.elk_managers_statuses.map((status, index) =>
-                                <tr key={"elk-manager-" + index}>
+                                <tr key={`${ELK_MANAGER_SUBRESOURCE}-${index}`}>
                                     <td>ELK manager</td>
                                     <td>{props.elkManagersInfo.ips[index]}</td>
                                     <td>{props.elkManagersInfo.ports[index]}</td>
@@ -75,20 +82,22 @@ const ElkManagersInfo = (props) => {
                                     <td>
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
-                                                "elk-manager-" +
-                                                props.elkManagersInfo.ips[index])}
+                                                `${ELK_MANAGER_SUBRESOURCE}-`
+                                                + `${props.elkManagersInfo.ips[index]}`)}
                                             running={props.elkManagersInfo.elk_managers_running[index]}
-                                            entity={"elk-manager"} name={"elk-manager"}
+                                            entity={ELK_MANAGER_SUBRESOURCE} name={ELK_MANAGER_SUBRESOURCE}
                                             ip={props.elkManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.elkManagersInfo.ips[index]}
-                                                    entity="elk-manager"/>
+                                                    entity={ELK_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.elkManagersInfo.elk_managers_statuses.map((status, index) =>
-                                <tr key={"elk-stack-" + index}>
+                                <tr key={`${ELK_STACK_SUBRESOURCE}-${index}`}>
                                     <td>ELK stack</td>
                                     <td>{props.elkManagersInfo.ips[index]}</td>
                                     <td>{props.elasticPort},
@@ -99,21 +108,24 @@ const ElkManagersInfo = (props) => {
                                         & status.logstashRunning))}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("elk-stack-" +
-                                                props.elkManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${ELK_STACK_SUBRESOURCE}-`
+                                                + `${props.elkManagersInfo.ips[index]}`)}
                                             running={(status.elasticRunning & status.kibanaRunning
                                                 & status.logstashRunning)}
-                                            entity={"elk-stack"} name={"elk-stack"}
+                                            entity={ELK_STACK_SUBRESOURCE} name={ELK_STACK_SUBRESOURCE}
                                             ip={props.elkManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.elkManagersInfo.ips[index]}
-                                                    entity="elk-stack"/>
+                                                    entity={ELK_STACK_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.elkManagersInfo.elk_managers_statuses.map((status, index) =>
-                                <tr key={"elastic-" + index}>
+                                <tr key={`${ELASTIC_SUBRESOURCE}-${index}`}>
                                     <td>Elasticsearch
                                     </td>
                                     <td>{props.elkManagersInfo.ips[index]}</td>
@@ -121,20 +133,23 @@ const ElkManagersInfo = (props) => {
                                     {props.activeStatus(status.elasticRunning)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("elastic-" +
-                                                props.elkManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${ELASTIC_SUBRESOURCE}-`
+                                                + `${props.elkManagersInfo.ips[index]}`)}
                                             running={status.elasticRunning}
-                                            entity={"elastic"} name={"elastic"}
+                                            entity={ELASTIC_SUBRESOURCE} name={ELASTIC_SUBRESOURCE}
                                             ip={props.elkManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.elkManagersInfo.ips[index]}
-                                                    entity="elk-stack"/>
+                                                    entity={ELK_STACK_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.elkManagersInfo.elk_managers_statuses.map((status, index) =>
-                                <tr key={"elk_manager_status-" + index}>
+                                <tr key={`${LOGSTASH_SUBRESOURCE}-${index}`}>
                                     <td>Logstash
                                     </td>
                                     <td>{props.elkManagersInfo.ips[index]}</td>
@@ -142,21 +157,24 @@ const ElkManagersInfo = (props) => {
                                     {props.activeStatus(status.logstashRunning)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("logstash-" +
-                                                props.elkManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${LOGSTASH_SUBRESOURCE}-`
+                                                + `${props.elkManagersInfo.ips[index]}`)}
                                             running={status.logstashRunning}
-                                            entity={"logstash"} name={"logstash"}
+                                            entity={LOGSTASH_SUBRESOURCE} name={LOGSTASH_SUBRESOURCE}
                                             ip={props.elkManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.elkManagersInfo.ips[index]}
-                                                    entity="elk-stack"/>
+                                                    entity={ELK_STACK_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
 
                             {props.elkManagersInfo.elk_managers_statuses.map((status, index) =>
-                                <tr key={"kibana-" + index}>
+                                <tr key={`${KIBANA_SUBRESOURCE}-${index}`}>
                                     <td>Kibana
                                     </td>
                                     <td>{props.elkManagersInfo.ips[index]}</td>
@@ -164,21 +182,25 @@ const ElkManagersInfo = (props) => {
                                     {props.activeStatus(status.kibanaRunning)}
                                     <td>
                                         <KibanaButton
-                                            loading={props.loadingEntities.includes("kibana-" +
-                                                props.elkManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${KIBANA_SUBRESOURCE}-`
+                                                + `${props.elkManagersInfo.ips[index]}`)}
                                             name={props.elkManagersInfo.ips[index]}
                                             port={props.elkManagersInfo.local_kibana_port}
                                         />
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("kibana-" +
-                                                props.elkManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${KIBANA_SUBRESOURCE}-`
+                                                + `${props.elkManagersInfo.ips[index]}`)}
                                             running={status.kibanaRunning}
-                                            entity={"kibana"} name={"kibana"}
+                                            entity={KIBANA_SUBRESOURCE} name={KIBANA_SUBRESOURCE}
                                             ip={props.elkManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.elkManagersInfo.ips[index]}
-                                                    entity="elk-stack"/>
+                                                    entity={ELK_STACK_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}

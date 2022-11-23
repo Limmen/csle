@@ -1,16 +1,12 @@
-import React, {useState, useEffect, useCallback, useRef} from 'react';
+import React, {useEffect} from 'react';
 import './ContainerTerminal.css';
-import { useNavigate } from "react-router-dom";
-import { useAlert } from "react-alert";
 import { Terminal } from 'xterm';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-// import { XTerm } from 'xterm-for-react'
 import io from 'socket.io-client';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 import { SearchAddon } from 'xterm-addon-search';
-import { WebSocketServer } from "ws";
 
 /**
  * Component representing the /terminal-page

@@ -6,6 +6,11 @@ import Table from 'react-bootstrap/Table'
 import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
+import {
+    HOST_MONITOR_SUBRESOURCE,
+    HOST_MANAGER_SUBRESOURCE,
+    START_ALL_PROPERTY,
+    STOP_ALL_PROPERTY} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about host managers
@@ -28,30 +33,34 @@ const HostManagersInfo = (props) => {
                     <div className="aggregateActionsContainer">
                         <span className="aggregateActions">Stop all managers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("host-manager-stop-all")}
-                            running={true} entity="host-manager"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${HOST_MANAGER_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={HOST_MANAGER_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all managers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("host-manager-start-all")}
-                            running={false} entity="host-manager"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${HOST_MANAGER_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={HOST_MANAGER_SUBRESOURCE}
+                            name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Stop all monitors:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("host-monitor-stop-all")}
-                            running={true} entity="host-monitor"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${HOST_MONITOR_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={HOST_MONITOR_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all monitors:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("host-monitor-start-all")}
-                            running={false} entity="host-monitor"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${HOST_MONITOR_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={HOST_MONITOR_SUBRESOURCE}
+                            name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                     </div>
@@ -68,42 +77,49 @@ const HostManagersInfo = (props) => {
                             </thead>
                             <tbody>
                             {props.hostManagersInfo.host_managers_statuses.map((status, index) =>
-                                <tr key={"host-monitor-" + index}>
+                                <tr key={`${HOST_MONITOR_SUBRESOURCE}-${index}`}>
                                     <td>Host Manager</td>
                                     <td>{props.hostManagersInfo.ips[index]}</td>
                                     <td>{props.hostManagersInfo.ports[index]}</td>
                                     {props.activeStatus(props.hostManagersInfo.host_managers_running[index])}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("host-manager-" +
-                                                props.hostManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${HOST_MANAGER_SUBRESOURCE}-`
+                                                + `${props.hostManagersInfo.ips[index]}`)}
                                             running={props.hostManagersInfo.host_managers_running[index]}
-                                            entity={"host-manager"} name={"host-manager"}
+                                            entity={HOST_MANAGER_SUBRESOURCE} name={HOST_MANAGER_SUBRESOURCE}
                                             ip={props.hostManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.hostManagersInfo.ips[index]}
-                                                    entity="host-manager"/>
+                                                    entity={HOST_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.hostManagersInfo.host_managers_statuses.map((status, index) =>
-                                <tr key={"host-monitor-" + index}>
+                                <tr key={`${HOST_MONITOR_SUBRESOURCE}-${index}`}>
                                     <td>Host monitor thread</td>
                                     <td>{props.hostManagersInfo.ips[index]}</td>
                                     <td></td>
                                     {props.activeStatus(status.running)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("host-monitor-" +
-                                                props.hostManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${HOST_MONITOR_SUBRESOURCE}-`
+                                                + `${props.hostManagersInfo.ips[index]}`)}
                                             running={status.running}
-                                            entity={"host-monitor"} name={"host-monitor"}
+                                            entity={HOST_MONITOR_SUBRESOURCE}
+                                            name={HOST_MONITOR_SUBRESOURCE}
                                             ip={props.hostManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.hostManagersInfo.ips[index]}
-                                                    entity="host-manager"/>
+                                                    entity={HOST_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}

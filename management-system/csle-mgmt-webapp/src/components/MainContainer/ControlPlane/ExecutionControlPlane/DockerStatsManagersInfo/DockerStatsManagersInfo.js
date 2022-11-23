@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table'
 import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
-
+import {DOCKER_STATS_MANAGER_SUBRESOURCE, DOCKER_STATS_MONITOR_SUBRESOURCE} from "../../../../Common/constants";
 /**
  * Subcomponent of the /control-plane page that contains information about Docker stats managers
  */
@@ -38,43 +38,54 @@ const DockerStatsManagersInfo = (props) => {
                             </tr>
                             </thead>
                             <tbody>
-                            {props.dockerStatsManagersInfo.docker_stats_managers_statuses.map((status, index) =>
-                                <tr key={"docker-stats-manager-" + index}>
+                            {props.dockerStatsManagersInfo.docker_stats_managers_statuses.map((
+                                status, index) =>
+                                <tr key={`${DOCKER_STATS_MANAGER_SUBRESOURCE}-${index}`}>
                                     <td>Docker Statistics Manager</td>
                                     <td>{props.dockerStatsManagersInfo.ips[index]}</td>
                                     <td>{props.dockerStatsManagersInfo.ports[index]}</td>
-                                    {props.activeStatus(props.dockerStatsManagersInfo.docker_stats_managers_running[index])}
+                                    {props.activeStatus(
+                                        props.dockerStatsManagersInfo.docker_stats_managers_running[index])}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("docker-stats-manager-" +
-                                                props.dockerStatsManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${DOCKER_STATS_MANAGER_SUBRESOURCE}-`+
+                                                `${props.dockerStatsManagersInfo.ips[index]}`)}
                                             running={props.dockerStatsManagersInfo.docker_stats_managers_running[index]}
-                                            entity={"docker-stats-manager"} name={"docker-stats-manager"}
+                                            entity={DOCKER_STATS_MANAGER_SUBRESOURCE}
+                                            name={DOCKER_STATS_MANAGER_SUBRESOURCE}
                                             ip={props.dockerStatsManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.dockerStatsManagersInfo.ips[index]}
-                                                    entity="docker-stats-manager"/>
+                                                    entity={DOCKER_STATS_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
-                            {props.dockerStatsManagersInfo.docker_stats_managers_statuses.map((status, index) =>
-                                <tr key={"docker-stats-monitor-" + index}>
+                            {props.dockerStatsManagersInfo.docker_stats_managers_statuses.map((
+                                status, index) =>
+                                <tr key={`${DOCKER_STATS_MONITOR_SUBRESOURCE}-${index}`}>
                                     <td>Docker Statistics Monitor Thread</td>
                                     <td>{props.dockerStatsManagersInfo.ips[index]}</td>
                                     <td></td>
                                     {props.activeStatus(status.num_monitors > 0)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("docker-stats-monitor-" +
-                                                props.dockerStatsManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${DOCKER_STATS_MONITOR_SUBRESOURCE}-`
+                                                + `${props.dockerStatsManagersInfo.ips[index]}`)}
                                             running={status.num_monitors > 0}
-                                            entity={"docker-stats-monitor"} name={"docker-stats-monitor"}
+                                            entity={DOCKER_STATS_MONITOR_SUBRESOURCE}
+                                            name={DOCKER_STATS_MONITOR_SUBRESOURCE}
                                             ip={props.dockerStatsManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.dockerStatsManagersInfo.ips[index]}
-                                                    entity="docker-stats-manager"/>
+                                                    entity={DOCKER_STATS_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}

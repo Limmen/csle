@@ -6,6 +6,12 @@ import Table from 'react-bootstrap/Table'
 import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
+import {
+    OSSEC_IDS_SUBRESOURCE,
+    OSSEC_IDS_MANAGER_SUBRESOURCE,
+    OSSEC_IDS_MONITOR_SUBRESOURCE,
+    STOP_ALL_PROPERTY,
+    START_ALL_PROPERTY} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about OSSEC IDS managers
@@ -29,44 +35,50 @@ const OSSECIDSManagersInfo = (props) => {
                     <div className="aggregateActionsContainer">
                         <span className="aggregateActions">Stop all managers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("ossec-ids-manager-stop-all")}
-                            running={true} entity="ossec-ids-manager"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${OSSEC_IDS_MANAGER_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={OSSEC_IDS_MANAGER_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all managers:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("ossec-ids-manager-start-all")}
-                            running={false} entity="ossec-ids-manager"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${OSSEC_IDS_MANAGER_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={OSSEC_IDS_MANAGER_SUBRESOURCE}
+                            name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Stop all monitors:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("ossec-ids-monitor-stop-all")}
-                            running={true} entity="ossec-ids-monitor"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${OSSEC_IDS_MONITOR_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={OSSEC_IDS_MONITOR_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all monitors:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("ossec-ids-monitor-start-all")}
-                            running={false} entity="ossec-ids-monitor"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${OSSEC_IDS_MONITOR_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={OSSEC_IDS_MONITOR_SUBRESOURCE}
+                            name={START_ALL_PROPERTY} ip={START_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Stop all IDSes:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("ossec-ids-stop-all")}
-                            running={true} entity="ossec-ids"
-                            name="stop-all" ip="stop-all"
+                            loading={props.loadingEntities.includes(
+                                `${OSSEC_IDS_SUBRESOURCE}-${STOP_ALL_PROPERTY}`)}
+                            running={true} entity={OSSEC_IDS_SUBRESOURCE}
+                            name={STOP_ALL_PROPERTY} ip={STOP_ALL_PROPERTY}
                             startOrStop={props.startOrStop}
                         />
                         <span className="aggregateActions">Start all IDSes:</span>
                         <SpinnerOrButton
-                            loading={props.loadingEntities.includes("ossec-ids-start-all")}
-                            running={false} entity="ossec-ids"
-                            name="start-all" ip="start-all"
+                            loading={props.loadingEntities.includes(
+                                `${OSSEC_IDS_SUBRESOURCE}-${START_ALL_PROPERTY}`)}
+                            running={false} entity={OSSEC_IDS_SUBRESOURCE}
+                            name={OSSEC_IDS_SUBRESOURCE} ip={OSSEC_IDS_SUBRESOURCE}
                             startOrStop={props.startOrStop}
                         />
                     </div>
@@ -83,47 +95,54 @@ const OSSECIDSManagersInfo = (props) => {
                             </thead>
                             <tbody>
                             {props.ossecIDSManagersInfo.ossec_ids_managers_statuses.map((status, index) =>
-                                <tr key={"ossec-ids-manager" + index}>
+                                <tr key={`${OSSEC_IDS_MANAGER_SUBRESOURCE}-${index}`}>
                                     <td>OSSEC IDS Manager</td>
                                     <td>{props.ossecIDSManagersInfo.ips[index]}</td>
                                     <td>{props.ossecIDSManagersInfo.ports[index]}</td>
                                     {props.activeStatus(props.ossecIDSManagersInfo.ossec_ids_managers_running[index])}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("ossec-ids-manager-" +
-                                                props.ossecIDSManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${OSSEC_IDS_MANAGER_SUBRESOURCE}-`
+                                                + `${props.ossecIDSManagersInfo.ips[index]}`)}
                                             running={props.ossecIDSManagersInfo.ossec_ids_managers_running[index]}
-                                            entity={"ossec-ids-manager"} name={"ossec-ids-manager"}
+                                            entity={OSSEC_IDS_MANAGER_SUBRESOURCE} name={OSSEC_IDS_MANAGER_SUBRESOURCE}
                                             ip={props.ossecIDSManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.ossecIDSManagersInfo.ips[index]}
-                                                    entity="ossec-ids-manager"/>
+                                                    entity={OSSEC_IDS_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.ossecIDSManagersInfo.ossec_ids_managers_statuses.map((status, index) =>
-                                <tr key={"ossec-ids-monitor-" + index}>
+                                <tr key={`${OSSEC_IDS_MONITOR_SUBRESOURCE}-${index}`}>
                                     <td>OSSEC IDS Monitor</td>
                                     <td>{props.ossecIDSManagersInfo.ips[index]}</td>
                                     <td></td>
                                     {props.activeStatus(status.monitor_running)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("ossec-ids-monitor-" +
-                                                props.ossecIDSManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${OSSEC_IDS_MONITOR_SUBRESOURCE}-`
+                                                + `${props.ossecIDSManagersInfo.ips[index]}`)}
                                             running={status.monitor_running}
-                                            entity={"ossec-ids-monitor"} name={"ossec-ids-monitor"}
+                                            entity={OSSEC_IDS_MONITOR_SUBRESOURCE}
+                                            name={OSSEC_IDS_MONITOR_SUBRESOURCE}
                                             ip={props.ossecIDSManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.ossecIDSManagersInfo.ips[index]}
-                                                    entity="ossec-ids-manager"/>
+                                                    entity={OSSEC_IDS_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.ossecIDSManagersInfo.ossec_ids_managers_statuses.map((status, index) =>
-                                <tr key={"ossec-ids-" + index}>
+                                <tr key={`${OSSEC_IDS_SUBRESOURCE}-${index}`}>
                                     <td>OSSEC IDS
                                     </td>
                                     <td>{props.ossecIDSManagersInfo.ips[index]}</td>
@@ -131,15 +150,18 @@ const OSSECIDSManagersInfo = (props) => {
                                     {props.activeStatus(status.ossec_ids_running)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("ossec-ids-" +
-                                                props.ossecIDSManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${OSSEC_IDS_SUBRESOURCE}-`
+                                                + `${props.ossecIDSManagersInfo.ips[index]}`)}
                                             running={status.ossec_ids_running}
-                                            entity={"ossec-ids"} name={"ossec-ids"}
+                                            entity={OSSEC_IDS_SUBRESOURCE} name={OSSEC_IDS_SUBRESOURCE}
                                             ip={props.ossecIDSManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.ossecIDSManagersInfo.ips[index]}
-                                                    entity="ossec-ids-manager"/>
+                                                    entity={OSSEC_IDS_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}

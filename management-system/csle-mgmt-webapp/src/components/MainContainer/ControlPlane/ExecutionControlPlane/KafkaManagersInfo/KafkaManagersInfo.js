@@ -7,6 +7,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
 import LogsButton from "../LogsButton/LogsButton";
 import getTopicsString from "../../../../Common/getTopicsString";
+import {KAFKA_MANAGER_SUBRESOURCE, KAFKA_SUBRESOURCE} from "../../../../Common/constants";
 
 /**
  * Subcomponent of the /control-plane page that contains information about kafka managers
@@ -41,7 +42,7 @@ const KafkaManagersInfo = (props) => {
                             </thead>
                             <tbody>
                             {props.kafkaManagersInfo.kafka_managers_statuses.map((status, index) =>
-                                <tr key={"kafka-manager-" + index}>
+                                <tr key={`${KAFKA_MANAGER_SUBRESOURCE}-${index}`}>
                                     <td>Kafka Manager</td>
                                     <td>{props.kafkaManagersInfo.ips[index]}</td>
                                     <td>{props.kafkaManagersInfo.ports[index]}</td>
@@ -49,20 +50,23 @@ const KafkaManagersInfo = (props) => {
                                     {props.activeStatus(props.kafkaManagersInfo.kafka_managers_running[index])}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("kafka-manager-" +
-                                                props.kafkaManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${KAFKA_MANAGER_SUBRESOURCE}-`
+                                                + `${props.kafkaManagersInfo.ips[index]}`)}
                                             running={props.kafkaManagersInfo.kafka_managers_running[index]}
-                                            entity={"kafka-manager"} name={"kafka-manager"}
+                                            entity={KAFKA_MANAGER_SUBRESOURCE} name={KAFKA_MANAGER_SUBRESOURCE}
                                             ip={props.kafkaManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.kafkaManagersInfo.ips[index]}
-                                                    entity="kafka-manager"/>
+                                                    entity={KAFKA_MANAGER_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
                             {props.kafkaManagersInfo.kafka_managers_statuses.map((status, index) =>
-                                <tr key={"kafka-" + index}>
+                                <tr key={`${KAFKA_SUBRESOURCE}-${index}`}>
                                     <td>Kafka
                                     </td>
                                     <td>{props.kafkaManagersInfo.ips[index]}</td>
@@ -71,15 +75,18 @@ const KafkaManagersInfo = (props) => {
                                     {props.activeStatus(status.running)}
                                     <td>
                                         <SpinnerOrButton
-                                            loading={props.loadingEntities.includes("kafka-" +
-                                                props.kafkaManagersInfo.ips[index])}
+                                            loading={props.loadingEntities.includes(
+                                                `${KAFKA_SUBRESOURCE}-`
+                                                + `${props.kafkaManagersInfo.ips[index]}`)}
                                             running={status.running}
-                                            entity={"kafka"} name={"kafka"}
+                                            entity={KAFKA_SUBRESOURCE} name={KAFKA_SUBRESOURCE}
                                             ip={props.kafkaManagersInfo.ips[index]}
                                             startOrStop={props.startOrStop}
                                         />
                                         <LogsButton name={props.kafkaManagersInfo.ips[index]}
-                                                    entity="kafka"/>
+                                                    entity={KAFKA_SUBRESOURCE}
+                                                    getLogs={props.getLogs}
+                                        />
                                     </td>
                                 </tr>
                             )}
