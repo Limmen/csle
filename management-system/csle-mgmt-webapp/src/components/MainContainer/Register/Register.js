@@ -22,7 +22,7 @@ const Register = () => {
 
     const createUser = useCallback((userConfiguration) => {
         fetch(
-            `http://` + ip + ':' + port +'/users/create',
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/users/create',
             {
                 method: "POST",
                 headers: new Headers({

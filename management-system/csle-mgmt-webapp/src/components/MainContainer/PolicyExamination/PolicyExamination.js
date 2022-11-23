@@ -103,7 +103,7 @@ const PolicyExamination = (props) => {
     // const ip = "172.31.212.92"
 
     const fetchTraces = useCallback(() => {
-        fetch(`http://` + ip + ':' + port +'/emulation-simulation-traces' + "?token=" + props.sessionData.token, {
+        fetch(`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-simulation-traces' + "?token=" + props.sessionData.token, {
             method: "GET", headers: new Headers({
                 Accept: "application/vnd.github.cloak-preview"
             })

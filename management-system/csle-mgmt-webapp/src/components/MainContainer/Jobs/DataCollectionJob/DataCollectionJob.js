@@ -63,7 +63,7 @@ const DataCollectionJob = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/file' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/file' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({

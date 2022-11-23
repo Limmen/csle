@@ -18,7 +18,7 @@ const Login = (props) => {
 
     const loginUser = useCallback((credentials) => {
         fetch(
-            `http://` + ip + ':' + port + '/login',
+           `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/login',
             {
                 method: "POST",
                 headers: new Headers({

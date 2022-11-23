@@ -217,7 +217,8 @@ const Header = (props) => {
                 <div className="col-sm-12 p-5 mb-4 bg-light rounded-3 jumbotron blue-grey lighten-5">
                     <h1 className="text-center title">
                         Cyber Security Learning Environment (CSLE)
-                        <img src={CsleSmallLogo} alt="CSLE logo" className="img-fluid csleLogo" height="190px" width="130px" />
+                        <img src={CsleSmallLogo} alt="CSLE logo" className="img-fluid csleLogo" height="190px"
+                             width="130px" />
                     </h1>
 
                     <ul className="nav nav-tabs justify-content-center navtabsheader navbar-expand">

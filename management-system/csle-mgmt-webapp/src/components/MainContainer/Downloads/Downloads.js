@@ -43,7 +43,7 @@ const Downloads = (props) => {
 
     const fetchTracesDatasets = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/traces-datasets',
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/traces-datasets',
             {
                 method: "GET",
                 headers: new Headers({

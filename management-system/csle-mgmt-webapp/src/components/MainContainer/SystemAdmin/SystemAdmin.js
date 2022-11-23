@@ -60,7 +60,7 @@ const SystemAdmin = (props) => {
 
     const updateConfig = useCallback((config) => {
         fetch(
-            `http://` + ip + ':' + port + '/config' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/config' + "?token=" + props.sessionData.token,
             {
                 method: "PUT",
                 headers: new Headers({
@@ -91,7 +91,7 @@ const SystemAdmin = (props) => {
 
     const fetchConfig = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/config' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/config' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

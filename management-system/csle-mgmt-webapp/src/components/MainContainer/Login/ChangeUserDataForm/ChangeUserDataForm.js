@@ -25,7 +25,7 @@ const ChangeUserDataForm = (props) => {
 
     const updateUser = useCallback((user) => {
         fetch(
-            `http://` + ip + ':' + port + '/users/' + user.id + "?token=" + token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/users/' + user.id + "?token=" + token,
             {
                 method: "PUT",
                 headers: new Headers({

@@ -72,7 +72,7 @@ const UserAdmin = (props) => {
 
     const fetchUsers = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/users' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/users' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -98,7 +98,7 @@ const UserAdmin = (props) => {
 
     const updateUser = useCallback((user) => {
         fetch(
-            `http://` + ip + ':' + port + '/users/' + user.id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/users/' + user.id + "?token=" + props.sessionData.token,
             {
                 method: "PUT",
                 headers: new Headers({

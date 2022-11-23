@@ -47,7 +47,7 @@ const LogsAdmin = (props) => {
 
     const fetchStatsManagerLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/logs/docker-stats-manager' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/docker-stats-manager' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -73,7 +73,7 @@ const LogsAdmin = (props) => {
 
     const fetchLogFile = useCallback((path) => {
         fetch(
-            `http://` + ip + ":" + port + '/file' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/file' + "?token=" + props.sessionData.token,
             {
                 method: "POST",
                 headers: new Headers({
@@ -100,7 +100,7 @@ const LogsAdmin = (props) => {
 
     const fetchCsleLogFiles = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/logs' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -140,7 +140,7 @@ const LogsAdmin = (props) => {
 
     const fetchPrometheusLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/logs/prometheus' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/prometheus' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -166,7 +166,7 @@ const LogsAdmin = (props) => {
 
     const fetchNodeExporterLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/logs/node-exporter' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/node-exporter' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -192,7 +192,7 @@ const LogsAdmin = (props) => {
 
     const fetchCAdvisorLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/logs/cadvisor' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/cadvisor' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -218,7 +218,7 @@ const LogsAdmin = (props) => {
 
     const fetchGrafanaLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/logs/grafana' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/grafana' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

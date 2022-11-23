@@ -152,7 +152,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatisticsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/emulation-statistics?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-statistics?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -202,7 +202,7 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatistic = useCallback((statistic_id) => {
         fetch(
-            (`http://` + ip + ':' + port + '/emulation-statistics/' + statistic_id.value +
+            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-statistics/' + statistic_id.value +
             "?token=" + props.sessionData.token),
             {
                 method: "GET",

@@ -40,7 +40,7 @@ const Simulations = (props) => {
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/simulations?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/simulations?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -85,7 +85,7 @@ const Simulations = (props) => {
 
     const fetchSimulation = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/simulations/' + simulation_id.value + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulations/' + simulation_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -114,7 +114,7 @@ const Simulations = (props) => {
 
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/simulations' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulations' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -148,7 +148,7 @@ const Simulations = (props) => {
 
     const removeSimulationRequest = useCallback((simulation_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/simulations/' + simulation_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulations/' + simulation_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

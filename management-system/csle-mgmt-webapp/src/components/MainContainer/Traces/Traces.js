@@ -47,13 +47,12 @@ const Traces = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-    // const ip = "172.31.212.92"
 
     const wrapper = createRef();
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/emulation-traces/' + trace_id.value + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces/' + trace_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -82,7 +81,7 @@ const Traces = (props) => {
 
     const fetchSimulationTrace = useCallback((trace_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/simulation-traces/' + trace_id.value + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces/' + trace_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -111,7 +110,7 @@ const Traces = (props) => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/emulation-traces?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -154,7 +153,7 @@ const Traces = (props) => {
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/simulation-traces?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -197,7 +196,7 @@ const Traces = (props) => {
 
     const fetchSimulationTraces = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/simulation-traces' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces' + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -234,7 +233,7 @@ const Traces = (props) => {
 
     const removeSimulationTraceRequest = useCallback((simulation_trace_id) => {
         fetch(
-            (`http://` + ip + ':' + port +'/simulation-traces/' + simulation_trace_id + "?token="
+            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces/' + simulation_trace_id + "?token="
                 + props.sessionData.token),
             {
                 method: "DELETE",
@@ -270,7 +269,7 @@ const Traces = (props) => {
 
     const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/emulation-traces/' + emulation_trace_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces/' + emulation_trace_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -298,7 +297,7 @@ const Traces = (props) => {
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/emulation-traces' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -326,7 +325,7 @@ const Traces = (props) => {
 
     const removeAllSimulationTracesRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/simulation-traces' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

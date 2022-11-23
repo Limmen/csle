@@ -41,7 +41,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/experiments?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments?ids=true' + "&token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -90,7 +90,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiment = useCallback((experiment_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/experiments/' + experiment_id.value + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments/' + experiment_id.value + "?token=" + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({
@@ -119,7 +119,7 @@ const TrainingResults = (props) => {
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/experiments/' + experiment_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments/' + experiment_id + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -147,7 +147,7 @@ const TrainingResults = (props) => {
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port +'/experiments' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments' + "?token=" + props.sessionData.token,
             {
                 method: "DELETE",
                 headers: new Headers({

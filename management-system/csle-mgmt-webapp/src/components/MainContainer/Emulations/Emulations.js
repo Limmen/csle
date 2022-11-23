@@ -41,7 +41,7 @@ const Emulations = (props) => {
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/emulations?ids=true&token=' + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulations?ids=true&token=' + props.sessionData.token,
             {
                 method: "GET",
                 headers: new Headers({

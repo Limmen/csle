@@ -18,6 +18,7 @@ import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import {HTTP_PREFIX} from "../../Common/constants";
 
 /**
  * Component with a user interface to the control plane of the emulations
@@ -37,8 +38,6 @@ const ControlPlane = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-
-    // const ip = "172.31.212.92"
 
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -84,7 +83,7 @@ const ControlPlane = (props) => {
     );
 
     const fetchExecutionInfo = useCallback((id_obj) => fetch(
-        (`http://` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "/info?emulation="
+        (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "/info?emulation="
             + id_obj.value.emulation + "&token=" + props.sessionData.token),
         {
             method: "GET",
