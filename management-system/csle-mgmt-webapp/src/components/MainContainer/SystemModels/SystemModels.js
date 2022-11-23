@@ -23,7 +23,16 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    EMPIRICAL_SYSTEM_MODELS_RESOURCE,
+    GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE, GP_SYSTEM_MODELS_RESOURCE,
+    HTTP_PREFIX, HTTP_REST_DELETE,
+    HTTP_REST_GET,
+    LOGIN_PAGE_RESOURCE,
+    TOKEN_QUERY_PARAM,
+    IDS_QUERY_PARAM,
+    SYSTEM_MODELS_RESOURCE
+} from "../../Common/constants";
 
 
 /**
@@ -168,9 +177,10 @@ const SystemModels = (props) => {
 
     const fetchSystemModelsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/system-models?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_MODELS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -227,10 +237,10 @@ const SystemModels = (props) => {
 
     const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/gaussian-mixture-system-models/' + parseInt(model_id_obj.value.split("_")[0])
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/`
+            + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -281,10 +291,10 @@ const SystemModels = (props) => {
 
     const fetchEmpiricalSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/empirical-system-models/' + parseInt(model_id_obj.value.split("_")[0])
-                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/`
+                + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -335,10 +345,10 @@ const SystemModels = (props) => {
 
     const fetchGPSystemModel = useCallback((model_id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/gp-system-models/' + parseInt(model_id_obj.value.split("_")[0]) + "?token="
-                + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${GP_SYSTEM_MODELS_RESOURCE}/`
+                + `${parseInt(model_id_obj.value.split("_")[0])} ?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -390,10 +400,10 @@ const SystemModels = (props) => {
 
     const removeGaussianMixtureSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/gaussian-mixture-system-models/' + model_id + "?token="
-                + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/${model_id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -419,9 +429,10 @@ const SystemModels = (props) => {
 
     const removeEmpiricalSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/empirical-system-models/' + model_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/${model_id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -447,9 +458,10 @@ const SystemModels = (props) => {
 
     const removeGpSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/gp-system-models/' + model_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${GP_SYSTEM_MODELS_RESOURCE}/${model_id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -575,7 +587,8 @@ const SystemModels = (props) => {
     );
 
     const SelectedSystemModelView = (props) => {
-        if (props.loadingSelectedSystemModel || props.selectedSystemModel === null || props.selectedSystemModel === undefined) {
+        if (props.loadingSelectedSystemModel || props.selectedSystemModel === null ||
+            props.selectedSystemModel === undefined) {
             if (props.loadingSelectedSystemModel) {
                 return (
                     <h3>

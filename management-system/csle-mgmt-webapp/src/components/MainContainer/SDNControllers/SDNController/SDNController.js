@@ -9,7 +9,13 @@ import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_GET} from "../../../Common/constants";
+import {
+    HTTP_PREFIX,
+    HTTP_REST_GET,
+    EMULATIONS_RESOURCE,
+    SWITCHES_SUBRESOURCE,
+    EXECUTIONS_SUBRESOURCE
+} from "../../../Common/constants";
 
 /**
  * Component representing the /sdn-controllers/id resource

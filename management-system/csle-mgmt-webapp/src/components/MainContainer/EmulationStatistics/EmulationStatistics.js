@@ -27,7 +27,9 @@ import {
     HTTP_PREFIX,
     HTTP_REST_DELETE,
     HTTP_REST_GET,
-    LOGIN_PAGE_RESOURCE
+    LOGIN_PAGE_RESOURCE,
+    TOKEN_QUERY_PARAM,
+    IDS_QUERY_PARAM
 } from "../../Common/constants";
 
 /**

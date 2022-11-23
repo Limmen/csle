@@ -26,7 +26,9 @@ import {
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     SIMULATION_TRACES_RESOURCE,
-    TOKEN_QUERY_PARAM
+    TOKEN_QUERY_PARAM,
+    EMULATION_TRACES_RESOURCE,
+    IDS_QUERY_PARAM
 } from "../../Common/constants";
 
 
@@ -60,7 +62,7 @@ const Traces = (props) => {
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES}/${trace_id.value}`
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}/${trace_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -120,7 +122,7 @@ const Traces = (props) => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES}${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

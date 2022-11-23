@@ -12,7 +12,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Type } from 'react-bootstrap-table2-editor';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_GET, HTTP_REST_PUT, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {HTTP_PREFIX, HTTP_REST_GET, HTTP_REST_PUT, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM,
+    USERS_RESOURCE} from "../../Common/constants";
 
 
 /**

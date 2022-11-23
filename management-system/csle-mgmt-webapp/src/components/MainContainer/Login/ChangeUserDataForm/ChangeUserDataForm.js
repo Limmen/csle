@@ -17,7 +17,8 @@ import {
     ID_PROPERTY,
     ADMIN_PROPERTY,
     PASSWORD_PROPERTY,
-    SALT_PROPERTY
+    SALT_PROPERTY,
+    TOKEN_QUERY_PARAM
 } from "../../../Common/constants";
 
 /**

@@ -38,7 +38,7 @@ import {
     MULTI_THRESHOLD_POLICIES_RESOURCE,
     TABULAR_POLICIES_RESOURCE,
     TOKEN_QUERY_PARAM,
-    VECTOR_POLICIES_RESOURCE
+    VECTOR_POLICIES_RESOURCE, PPO_POLICIES_RESOURCE, IDS_QUERY_PARAM, DQN_POLICIES_RESOURCE
 } from "../../Common/constants";
 
 /**
@@ -379,7 +379,7 @@ const Policies = (props) => {
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,

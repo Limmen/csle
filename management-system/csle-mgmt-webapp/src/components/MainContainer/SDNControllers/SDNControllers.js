@@ -16,7 +16,16 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, HTTP_REST_GET, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    HTTP_PREFIX,
+    HTTP_REST_GET,
+    LOGIN_PAGE_RESOURCE,
+    TOKEN_QUERY_PARAM,
+    SDN_CONTROLLERS_RESOURCE,
+    EMULATIONS_RESOURCE,
+    EXECUTIONS_SUBRESOURCE,
+    IDS_QUERY_PARAM
+} from "../../Common/constants";
 
 /**
  * Component representing the /sdn-controllers-page
@@ -87,7 +96,7 @@ const SDNControllers = (props) => {
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}` +
-            + `/${EXECUTIONS_RESOURCE}/${emulation_id.exec_id}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            + `/${EXECUTIONS_SUBRESOURCE}/${emulation_id.exec_id}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
                 headers: new Headers({
