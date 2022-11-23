@@ -514,7 +514,7 @@ const DQNPolicyComponent = (props) => {
 
     return (
         <div>
-            <div className="row dqnPolicies simulationTracesHeader">
+            <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectDQNPolicyOrSpinner loadingDQNPolicies={loadingDQNPolicies}

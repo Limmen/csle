@@ -515,7 +515,7 @@ const MultiThesholdPolicyComponent = (props) => {
 
     return (
         <div>
-            <div className="row">
+            <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectMultiThresholdPolicyOrSpinner

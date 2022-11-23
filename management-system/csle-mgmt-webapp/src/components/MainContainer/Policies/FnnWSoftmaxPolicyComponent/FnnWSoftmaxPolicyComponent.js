@@ -516,7 +516,7 @@ const FnnWSoftmaxPolicyComponent = (props) => {
 
     return (
         <div>
-            <div className="row fnnWSoftmaxPolicies simulationTracesHeader">
+            <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
                         <SelectFnnWSoftmaxPolicyOrSpinner loadingFnnWSoftmaxPolicies={loadingFnnWSoftmaxPolicies}

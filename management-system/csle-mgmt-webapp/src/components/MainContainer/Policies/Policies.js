@@ -3,6 +3,7 @@ import './Policies.css';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
+import Select from 'react-select'
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import AlphaVecPolicyComponent from "./AlphaVecPolicyComponent/AlphaVecPolicyComponent";
 import DQNPolicyComponent from "./DQNPolicyComponent/DQNPolicyComponent";
@@ -16,26 +17,89 @@ import TabularPolicyComponent from "./TabularPolicyComponent/TabularPolicyCompon
  * Component representing the /policies page
  */
 const Policies = (props) => {
+    const policyTypes = [
+        {
+            value: 0,
+            label: "Multi-threshold policies"
+        },
+        {
+            value: 1,
+            label: "Alpha-vector policies"
+        },
+        {
+            value: 2,
+            label: "DQN policies"
+        },
+        {
+            value: 3,
+            label: "PPO policies"
+        },
+        {
+            value: 4,
+            label: "Vector policies"
+        },
+        {
+            value: 5,
+            label: "Feed-forward neural network policies"
+        },
+        {
+            value: 6,
+            label: "Tabular policies"
+        }
+    ]
+    const [selectedPolicyType, setSelectedPolicyType] = useState(policyTypes[3]);
     const setSessionData = props.setSessionData
+
+    const updatedSelectedPolicyType = (selectedPolicyType) => {
+        setSelectedPolicyType(selectedPolicyType)
+    }
+
+    const SelectedPolicyComponent = (props) => {
+        if(props.selectedPolicyType.value === 0) {
+            return (<MultiThresholdPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
+        if(props.selectedPolicyType.value === 1) {
+            return (<AlphaVecPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
+        if(props.selectedPolicyType.value === 2) {
+            return (<DQNPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
+        if(props.selectedPolicyType.value === 3) {
+            return (<PPOPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
+        if(props.selectedPolicyType.value === 4) {
+            return (<VectorPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
+        if(props.selectedPolicyType.value === 5) {
+            return (<FnnWSoftmaxPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
+        if(props.selectedPolicyType.value === 6) {
+            return (<TabularPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
+
+    }
 
     return (
         <div className="policyExamination">
-            <h3 className="managementTitle"> Management of Policies </h3>
-
-            <MultiThresholdPolicyComponent sessionData={props.sessionData} setSessionData={setSessionData}/>
-
-            <AlphaVecPolicyComponent sessionData={props.sessionData} setSessionData={setSessionData}/>
-
-            <DQNPolicyComponent sessionData={props.sessionData} setSessionData={setSessionData}/>
-
-            <PPOPolicyComponent sessionData={props.sessionData} setSessionData={setSessionData}/>
-
-            <VectorPolicyComponent sessionData={props.sessionData} setSessionData={setSessionData}/>
-
-            <FnnWSoftmaxPolicyComponent sessionData={props.sessionData} setSessionData={setSessionData}/>
-
-            <TabularPolicyComponent sessionData={props.sessionData} setSessionData={setSessionData}/>
-
+            <h3 className="managementTitle"> Management of Policies
+            </h3>
+            <div className="policyTypeSelection inline-block">
+                <div className="conditionalDist inline-block conditionalLabel">
+                    Policy type:
+                </div>
+                <div className="conditionalDist inline-block" style={{width: "300px"}}>
+                    <Select
+                        style={{display: 'inline-block'}}
+                        value={selectedPolicyType}
+                        defaultValue={selectedPolicyType}
+                        options={policyTypes}
+                        onChange={updatedSelectedPolicyType}
+                        placeholder="Select policy"
+                    />
+                </div>
+            </div>
+            <SelectedPolicyComponent selectedPolicyType={selectedPolicyType} sessionData={props.sessionData}
+                                     setSessionData={setSessionData}/>
         </div>
     );
 }

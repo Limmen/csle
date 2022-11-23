@@ -67,10 +67,15 @@ label {
 }
 
 .logoutButton {
-    margin-left:20px;
+    margin-left:40px;
     font-size: 12px
 }
 
 .adminCheckbox {
     font-size: 5px;
+}
+
+.editButton {
+    font-size: 22px;
+    margin-left: 20px
 }
