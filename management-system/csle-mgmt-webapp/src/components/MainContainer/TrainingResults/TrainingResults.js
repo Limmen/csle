@@ -43,7 +43,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiments = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -92,7 +92,7 @@ const TrainingResults = (props) => {
 
     const fetchExperiment = useCallback((experiment_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments/' + experiment_id.value + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments/' + experiment_id.value + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -121,7 +121,7 @@ const TrainingResults = (props) => {
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments/' + experiment_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments/' + experiment_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -149,7 +149,7 @@ const TrainingResults = (props) => {
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/experiments' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "DELETE",
                 headers: new Headers({

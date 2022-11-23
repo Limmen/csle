@@ -19,7 +19,14 @@ import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    HTTP_PREFIX,
+    LOGIN_PAGE_RESOURCE,
+    IDS_QUERY_PARAM,
+    EMULATIONS_RESOURCE,
+    HTTP_REST_GET,
+    TOKEN_QUERY_PARAM, HTTP_REST_DELETE, EXECUTIONS_SUBRESOURCE, HTTP_REST_POST
+} from "../../Common/constants";
 
 /**
  * Component representing the /emulations-page
@@ -38,13 +45,13 @@ const Emulations = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-    // const ip = "172.31.212.92"
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulations?ids=true&token=' + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -93,9 +100,10 @@ const Emulations = (props) => {
 
     const removeEmulationRequest = useCallback((emulationId) => {
         fetch(
-            `http://` + ip + ':' + port + '/emulations/' + emulationId + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/`
+                + `${emulationId}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview",
                     'Access-Control-Allow-Origin': '*',
@@ -123,10 +131,10 @@ const Emulations = (props) => {
 
     const removeEmulationExecutionRequest = useCallback((emulation_id, execution_id) => {
         fetch(
-            (`http://` + ip + ':' + port + '/emulations/' + emulation_id + '/executions/' + execution_id
-                + "?token=" + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}/${EXECUTIONS_SUBRESOURCE}/`
+                    + `${execution_id}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -157,9 +165,10 @@ const Emulations = (props) => {
 
     const startOrStopEmulationRequest = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':' + port + '/emulations/' + emulation_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -190,9 +199,10 @@ const Emulations = (props) => {
 
     const fetchEmulation = useCallback((emulation_id) => {
         fetch(
-            `http://` + ip + ':' + port + '/emulations/' + emulation_id.value + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -219,9 +229,10 @@ const Emulations = (props) => {
 
     const removeAllEmulationsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/emulations' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

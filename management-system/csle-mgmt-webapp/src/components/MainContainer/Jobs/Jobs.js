@@ -65,7 +65,7 @@ const Jobs = (props) => {
 
     const fetchTrainingJobsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -117,7 +117,7 @@ const Jobs = (props) => {
 
     const fetchDataCollectionJobIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -169,7 +169,7 @@ const Jobs = (props) => {
 
     const fetchSystemIdentificationJobsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -229,7 +229,7 @@ const Jobs = (props) => {
 
     const removeTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -258,7 +258,7 @@ const Jobs = (props) => {
 
     const removeAllTrainingJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -398,7 +398,7 @@ const Jobs = (props) => {
     const removeSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id +
-            "?token=" + props.sessionData.token),
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -427,7 +427,7 @@ const Jobs = (props) => {
 
     const removeAllSystemIdentificationJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -597,7 +597,7 @@ const Jobs = (props) => {
 
     const fetchTrainingJob = useCallback((training_job_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id.value + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id.value + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -633,7 +633,7 @@ const Jobs = (props) => {
     const stopSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id + "?stop=true" +
-                "&token=" + props.sessionData.token),
+                `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "POST",
                 headers: new Headers({
@@ -663,7 +663,7 @@ const Jobs = (props) => {
     const fetchSystemIdentificationJob = useCallback((system_identification_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id.value +
-            "?token=" + props.sessionData.token),
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "GET",
                 headers: new Headers({
@@ -698,7 +698,7 @@ const Jobs = (props) => {
 
     const startTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "POST",
                 headers: new Headers({
@@ -733,7 +733,7 @@ const Jobs = (props) => {
     const startSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id +
-                "?token=" + props.sessionData.token),
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "POST",
                 headers: new Headers({
@@ -977,7 +977,7 @@ const Jobs = (props) => {
     const removeDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id +
-            "?token=" + props.sessionData.token),
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -1006,7 +1006,7 @@ const Jobs = (props) => {
 
     const removeAllDataCollectionJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -1147,7 +1147,7 @@ const Jobs = (props) => {
     const stopDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id + "?stop=true"
-            + "&token=" + props.sessionData.token),
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "POST",
                 headers: new Headers({
@@ -1177,7 +1177,7 @@ const Jobs = (props) => {
     const fetchDataCollectionJob = useCallback((data_collection_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id.value +
-            "?token=" + props.sessionData.token),
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "GET",
                 headers: new Headers({
@@ -1213,7 +1213,7 @@ const Jobs = (props) => {
     const startDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id +
-            "?token=" + props.sessionData.token),
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "POST",
                 headers: new Headers({

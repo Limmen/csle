@@ -40,7 +40,7 @@ const Experiment = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/file' + "?token=" + props.sessionData.token,
+            `http://` + ip + ":" + port + '/file' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "POST",
                 headers: new Headers({

@@ -22,7 +22,13 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    EMULATION_STATISTICS_RESOURCE,
+    HTTP_PREFIX,
+    HTTP_REST_DELETE,
+    HTTP_REST_GET,
+    LOGIN_PAGE_RESOURCE
+} from "../../Common/constants";
 
 /**
  * Component representing the /statistics-page
@@ -153,9 +159,10 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatisticsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-statistics?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -177,7 +184,7 @@ const EmulationStatistics = (props) => {
                 const statisticsIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        label: `ÌD:${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                 })
                 setEmulationStatisticIds(statisticsIds)
@@ -203,10 +210,10 @@ const EmulationStatistics = (props) => {
 
     const fetchEmulationStatistic = useCallback((statistic_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-statistics/' + statistic_id.value +
-            "?token=" + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id.value}` +
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -229,7 +236,8 @@ const EmulationStatistics = (props) => {
                 setLoadingSelectedEmulationStatistic(false)
 
                 if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
-                    const conditionalOptions = Object.keys(response.conditionals_counts).map((conditionalName, index) => {
+                    const conditionalOptions = Object.keys(response.conditionals_counts).map(
+                        (conditionalName, index) => {
                         return {
                             value: conditionalName,
                             label: conditionalName
@@ -253,9 +261,10 @@ const EmulationStatistics = (props) => {
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
-            `http://` + ip + ':' + port + '/emulation-statistics/' + statistic_id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id}`+
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

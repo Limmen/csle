@@ -169,7 +169,7 @@ const SystemModels = (props) => {
 
     const fetchSystemModelsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/system-models?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/system-models?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -229,7 +229,7 @@ const SystemModels = (props) => {
     const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/gaussian-mixture-system-models/' + parseInt(model_id_obj.value.split("_")[0])
-            + "?token=" + props.sessionData.token),
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "GET",
                 headers: new Headers({
@@ -283,7 +283,7 @@ const SystemModels = (props) => {
     const fetchEmpiricalSystemModel = useCallback((model_id_obj) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/empirical-system-models/' + parseInt(model_id_obj.value.split("_")[0])
-                + "?token=" + props.sessionData.token),
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "GET",
                 headers: new Headers({
@@ -420,7 +420,7 @@ const SystemModels = (props) => {
 
     const removeEmpiricalSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/empirical-system-models/' + model_id + "?token=" + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/empirical-system-models/' + model_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "DELETE",
                 headers: new Headers({
@@ -448,7 +448,7 @@ const SystemModels = (props) => {
 
     const removeGpSystemModelRequest = useCallback((model_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/gp-system-models/' + model_id + "?token=" + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/gp-system-models/' + model_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "DELETE",
                 headers: new Headers({

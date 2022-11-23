@@ -313,7 +313,7 @@ const Monitoring = (props) => {
 
     const startOrStopGrafanaRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/grafana' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/grafana' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "POST",
                 headers: new Headers({
@@ -341,7 +341,7 @@ const Monitoring = (props) => {
 
     const startOrStopcAdvisorRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/cadvisor' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/cadvisor' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "POST",
                 headers: new Headers({
@@ -369,7 +369,7 @@ const Monitoring = (props) => {
 
     const startOrStopNodeExporterRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/node-exporter' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/node-exporter' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "POST",
                 headers: new Headers({
@@ -397,7 +397,7 @@ const Monitoring = (props) => {
 
     const startOrStopPrometheusRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/prometheus' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/prometheus' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "POST",
                 headers: new Headers({
@@ -425,7 +425,7 @@ const Monitoring = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-executions?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-executions?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -470,7 +470,7 @@ const Monitoring = (props) => {
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "?emulation="
-                + id_obj.value.emulation + "&token=" + props.sessionData.token),
+                + id_obj.value.emulation + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: "GET",
                 headers: new Headers({
@@ -511,7 +511,7 @@ const Monitoring = (props) => {
 
     const fetchMonitoringData = useCallback((len, execution) => fetch(
         (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulations/' + execution.emulation_env_config.id +
-            "/executions/" + execution.ip_first_octet + "/monitor/" + len + "?token=" + props.sessionData.token),
+            "/executions/" + execution.ip_first_octet + "/monitor/" + len + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
         {
             method: "GET",
             headers: new Headers({
@@ -550,7 +550,7 @@ const Monitoring = (props) => {
 
     const fetchGrafanaStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/grafana' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/grafana' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -578,7 +578,7 @@ const Monitoring = (props) => {
 
     const fetchCadvisorStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/cadvisor' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/cadvisor' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -606,7 +606,7 @@ const Monitoring = (props) => {
 
     const fetchPrometheusStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/prometheus' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/prometheus' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -634,7 +634,7 @@ const Monitoring = (props) => {
 
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/node-exporter' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/node-exporter' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
