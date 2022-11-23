@@ -21,7 +21,13 @@ import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import GrafanaImg from './Grafana.png'
 import PrometheusImg from './Prometheus.png'
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    EMULATION_EXECUTIONS_RESOURCE, EMULATION_QUERY_PARAM, EMULATIONS_RESOURCE, EXECUTIONS_SUBRESOURCE,
+    HTTP_PREFIX,
+    HTTP_REST_GET,
+    HTTP_REST_POST,
+    LOGIN_PAGE_RESOURCE, MONITOR_SUBRESOURCE
+} from "../../Common/constants";
 
 /**
  * Component containing various plots for monitoring a running execution of an emulation
@@ -257,7 +263,8 @@ const Monitoring = (props) => {
     }
 
     const searchFilter = (executionIdObj, searchVal) => {
-        return (searchVal === "" || executionIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+        return (searchVal === ""
+            || executionIdObj.label.toString().toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
     const searchChange = (event) => {
@@ -313,9 +320,10 @@ const Monitoring = (props) => {
 
     const startOrStopGrafanaRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/grafana' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${GRAFANA_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -341,9 +349,10 @@ const Monitoring = (props) => {
 
     const startOrStopcAdvisorRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/cadvisor' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${CADVISOR_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -369,9 +378,10 @@ const Monitoring = (props) => {
 
     const startOrStopNodeExporterRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/node-exporter' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${NODE_EXPORTER_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -397,9 +407,10 @@ const Monitoring = (props) => {
 
     const startOrStopPrometheusRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/prometheus' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${PROMETHEUS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -425,9 +436,10 @@ const Monitoring = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-executions?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -449,7 +461,7 @@ const Monitoring = (props) => {
                 const emulationExecutionIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        label: `ID: ${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                 })
                 setEmulationExecutionIds(emulationExecutionIds)
@@ -469,10 +481,11 @@ const Monitoring = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "?emulation="
-                + id_obj.value.emulation + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
+                + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
+                + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -494,7 +507,8 @@ const Monitoring = (props) => {
                 setSelectedEmulationExecution(response)
                 setLoadingSelectedEmulationExecution(false)
                 if (response !== null && response !== undefined) {
-                    const containerOptions = response.emulation_env_config.containers_config.containers.map((c, index) => {
+                    const containerOptions = response.emulation_env_config.containers_config.containers.map(
+                        (c, index) => {
                         return {
                             value: c,
                             label: c.full_name_str
@@ -510,10 +524,11 @@ const Monitoring = (props) => {
     }, []);
 
     const fetchMonitoringData = useCallback((len, execution) => fetch(
-        (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulations/' + execution.emulation_env_config.id +
-            "/executions/" + execution.ip_first_octet + "/monitor/" + len + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+        (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${execution.emulation_env_config.id}` +
+            `/${EXECUTIONS_SUBRESOURCE}/${execution.ip_first_octet}/${MONITOR_SUBRESOURCE}/${len}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
         {
-            method: "GET",
+            method: HTTP_REST_GET,
             headers: new Headers({
                 Accept: "application/vnd.github.cloak-preview"
             })
@@ -550,9 +565,10 @@ const Monitoring = (props) => {
 
     const fetchGrafanaStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/grafana' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${GRAFANA_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -578,9 +594,10 @@ const Monitoring = (props) => {
 
     const fetchCadvisorStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/cadvisor' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${CADVISOR_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -606,9 +623,10 @@ const Monitoring = (props) => {
 
     const fetchPrometheusStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/prometheus' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${PROMETHEUS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -634,9 +652,10 @@ const Monitoring = (props) => {
 
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/node-exporter' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${NODE_EXPORTER_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
