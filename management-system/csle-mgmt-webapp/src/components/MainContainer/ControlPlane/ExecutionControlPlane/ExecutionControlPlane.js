@@ -39,6 +39,19 @@ const ExecutionControlPlane = (props) => {
     const [entityToGetLogsFor, setEntityToGetLogsFor] = useState(null);
     const [loadingLogs, setLoadingLogs] = useState(false);
     const [logs, setLogs] = useState([]);
+    const [activeNetworks, setActiveNetworks] = useState(props.info.active_networks);
+    const [clientManagersInfo, setClientManagersInfo] = useState(props.info.client_managers_info);
+    const [dockerStatsManagersInfo, setDockerStatsManagersInfo] = useState(props.info.docker_stats_managers_info);
+    const [elkManagersInfo, setElkManagersInfo] = useState(props.info.elk_managers_info);
+    const [hostManagersInfo, setHostManagersInfo] = useState(props.info.host_managers_info);
+    const [inactiveNetworks, setInactiveNetworks] = useState(props.info.inactive_networks);
+    const [kafkaManagersInfo, setkafkaManagersInfo] = useState(props.info.kafka_managers_info);
+    const [ossecIDSManagersInfo, setOSSECIDSManagersInfo] = useState(props.info.ossec_ids_managers_info);
+    const [snortIDSManagersInfo, setSnortIDSManagersInfo] = useState(props.info.snort_ids_managers_info);
+    const [runningContainers, setRunningContainers] = useState(props.info.running_containers);
+    const [stoppedContainers, setStoppedContainers] = useState(props.info.stopped_containers);
+    const [trafficManagersInfo, setTrafficManagersInfo] = useState(props.info.traffic_managers_info);
+
     const ip = serverIp;
     const port = serverPort;
     const navigate = useNavigate();
@@ -70,6 +83,69 @@ const ExecutionControlPlane = (props) => {
             })
             .catch(error => console.log("error:" + error))
     }, []);
+
+    const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, node_ip) => {
+        fetch(
+            `http://` + ip + ':' + port + '/emulation-executions/' + id + "/" + entity + "?emulation="
+            + emulation + "&token=" + props.sessionData.token,
+            {
+                method: "POST",
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                }),
+                body: JSON.stringify({start: start, stop: stop, name: name, ip: node_ip})
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate("/login-page");
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                updateStateAfterStartOrStop(entity, response)
+                removeLoadingEntity(entity + "-" + node_ip)
+            })
+            .catch(error => console.log("error:" + error))
+    }, []);
+
+
+    const updateStateAfterStartOrStop = (entity, response) => {
+        if(entity === "client-manager" || entity === "client-manager" || entity === "client-producer"){
+            setClientManagersInfo(response.client_managers_info)
+        }
+        if(entity === "kafka-manager" || entity === "kafka"){
+            setkafkaManagersInfo(response.kafka_managers_info)
+        }
+        if(entity === "elk-manager" || entity === "elk-stack" || entity === "elastic" || entity === "kibana"
+            || entity === "logstash"){
+            setElkManagersInfo(response.elk_managers_info)
+        }
+        if(entity === "ossec-ids-manager" || entity === "ossec-ids" || entity === "ossec-ids-monitor"){
+            setOSSECIDSManagersInfo(response.ossec_ids_managers_info)
+        }
+        if(entity === "snort-ids-manager" || entity === "snort-ids" || entity === "snort-ids-monitor"){
+            setSnortIDSManagersInfo(response.snort_ids_managers_info)
+        }
+        if(entity === "host-manager" || entity === "host-monitor"){
+            setHostManagersInfo(response.host_managers_info)
+        }
+        if(entity === "traffic-manager" || entity === "traffic-generator"){
+            setTrafficManagersInfo(response.traffic_managers_info)
+        }
+        if(entity === "container"){
+            setInactiveNetworks(response.inactive_networks)
+            setRunningContainers(response.running_containers)
+            setStoppedContainers(response.stopped_containers)
+            setActiveNetworks(response.active_networks)
+        }
+        if(entity === "docker-stats-manager" || entity === "docker-stats-monitor"){
+            setDockerStatsManagersInfo(response.docker_stats_managers_info)
+        }
+    }
 
     const activeStatus = (active) => {
         if (active) {
@@ -108,7 +184,7 @@ const ExecutionControlPlane = (props) => {
 
     const startOrStop = (start, stop, entity, name, ip) => {
         addLoadingEntity(entity + "-" + ip)
-        props.startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
+        startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
             start, stop, entity, name, ip)
     }
 
@@ -129,8 +205,8 @@ const ExecutionControlPlane = (props) => {
                     setRunningContainersOpen={setRunningContainersOpen}
                     runningContainersOpen={runningContainersOpen}
                     loadingEntities={loadingEntities}
-                    runningContainers={props.runningContainers}
-                    stoppedContainers={props.stoppedContainers}
+                    runningContainers={runningContainers}
+                    stoppedContainers={stoppedContainers}
                     getLogs={getLogs}
                     startOrStop={startOrStop}
                 />
@@ -139,8 +215,8 @@ const ExecutionControlPlane = (props) => {
                     setActiveNetworksOpen={setActiveNetworksOpen}
                     activeNetworksOpen={activeNetworksOpen}
                     loadingEntities={loadingEntities}
-                    activeNetworks={props.activeNetworks}
-                    inactiveNetworks={props.inactiveNetworks}
+                    activeNetworks={activeNetworks}
+                    inactiveNetworks={inactiveNetworks}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}
@@ -150,7 +226,7 @@ const ExecutionControlPlane = (props) => {
                     setClientManagersOpen={setClientManagersOpen}
                     clientManagersOpen={clientManagersOpen}
                     loadingEntities={loadingEntities}
-                    clientManagersInfo={props.clientManagersInfo}
+                    clientManagersInfo={clientManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}
@@ -160,7 +236,7 @@ const ExecutionControlPlane = (props) => {
                     setDockerStatsManagersOpen={setDockerStatsManagersOpen}
                     dockerStatsManagersOpen={dockerStatsManagersOpen}
                     loadingEntities={loadingEntities}
-                    dockerStatsManagersInfo={props.dockerStatsManagersInfo}
+                    dockerStatsManagersInfo={dockerStatsManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}
@@ -170,7 +246,7 @@ const ExecutionControlPlane = (props) => {
                     setHostManagersOpen={setHostManagersOpen}
                     hostManagersOpen={hostManagersOpen}
                     loadingEntities={loadingEntities}
-                    hostManagersInfo={props.hostManagersInfo}
+                    hostManagersInfo={hostManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}
@@ -180,7 +256,7 @@ const ExecutionControlPlane = (props) => {
                     setKafkaManagersOpen={setKafkaManagersOpen}
                     kafkaManagersOpen={kafkaManagersOpen}
                     loadingEntities={loadingEntities}
-                    kafkaManagersInfo={props.kafkaManagersInfo}
+                    kafkaManagersInfo={kafkaManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     kafkaPort={props.execution.emulation_env_config.kafka_config.kafka_port}
@@ -191,7 +267,7 @@ const ExecutionControlPlane = (props) => {
                     setOssecIdsManagersOpen={setOssecIdsManagersOpen}
                     ossecIdsManagersOpen={ossecIdsManagersOpen}
                     loadingEntities={loadingEntities}
-                    ossecIDSManagersInfo={props.ossecIDSManagersInfo}
+                    ossecIDSManagersInfo={ossecIDSManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}
@@ -201,7 +277,7 @@ const ExecutionControlPlane = (props) => {
                     setSnortManagersOpen={setSnortManagersOpen}
                     snortManagersOpen={snortManagersOpen}
                     loadingEntities={loadingEntities}
-                    snortIDSManagersInfo={props.snortIDSManagersInfo}
+                    snortIDSManagersInfo={snortIDSManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}
@@ -211,7 +287,7 @@ const ExecutionControlPlane = (props) => {
                     setElkManagersOpen={setElkManagersOpen}
                     elkManagersOpen={elkManagersOpen}
                     loadingEntities={loadingEntities}
-                    elkManagersInfo={props.elkManagersInfo}
+                    elkManagersInfo={elkManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     elasticPort={props.execution.emulation_env_config.elk_config.elastic_port}
@@ -224,7 +300,7 @@ const ExecutionControlPlane = (props) => {
                     setTrafficManagersOpen={setTrafficManagersOpen}
                     trafficManagersOpen={trafficManagersOpen}
                     loadingEntities={loadingEntities}
-                    trafficManagersInfo={props.trafficManagersInfo}
+                    trafficManagersInfo={trafficManagersInfo}
                     getLogs={getLogs}
                     activeStatus={activeStatus}
                     startOrStop={startOrStop}
