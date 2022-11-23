@@ -156,3 +156,5 @@ static
 .DS_Store
 
 */videos*/
+
+package-lock.json

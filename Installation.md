@@ -260,13 +260,18 @@ running commands can read and write to this directory.
     - To build the webapp used in the management system and in the policy examination system you need node.js and npm
       installed, to install node and npm execute:
        ```bash
-       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash # install nvm
+       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash # install nvm
        nvm -v # Verify nvm installation
        nvm install node # Install node
        npm install -g npm # Update npm
        node -v # Verify version of node
        npm -v # Verify version of npm
        ```
+      If the nvm installation failed, manually add the following lines to `.bashrc`:
+     ```bash
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+    ```
     - To serve the webapp withe TLS you need nginx as a reverse proxy, install and start nginx with the following commands:
       ```bash
       sudo apt install nginx
