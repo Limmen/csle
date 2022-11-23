@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './FnnWSoftmaxPolicy.css';
+import './PPOPolicy.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -7,21 +7,23 @@ import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
-import getAgentTypeStr from '../../../Common/getAgentTypeStr'
-import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
+import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
+import getPlayerTypeStr from '../../../../Common/getPlayerTypeStr'
 
 
 /**
- * Component representing the /policies/id page for an feed-forward neural network policy with softmax
+ * Component representing the /policies/id page for a PPO policy
  */
-const FnnWSoftmaxPolicy = (props) => {
+const PPOPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [hParamsOpen, setHParamsOpen] = useState(false);
+    const [neuralNetworkDetailsOpen, setNeuralNetworkDetailsOpen] = useState(false);
     const [actionsOpen, setActionsOpen] = useState(false);
 
-    const renderRemoveFnnWSoftmaxPolicy = (props) => (
+
+    const renderRemovePPOPolicy = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove Feed-forward policy
+            Remove PPO policy
         </Tooltip>
     );
 
@@ -34,10 +36,10 @@ const FnnWSoftmaxPolicy = (props) => {
                         className="removeButton"
                         placement="left"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveFnnWSoftmaxPolicy}
+                        overlay={renderRemovePPOPolicy}
                     >
                         <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => props.removeFnnWSoftmaxPolicy(props.policy)}>
+                                onClick={() => props.removePPOPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -58,8 +60,7 @@ const FnnWSoftmaxPolicy = (props) => {
         </Card.Header>
         <Accordion.Collapse eventKey={props.policy.id}>
             <Card.Body>
-                <Actions sessionData={props.sessionData} policy={props.policy}
-                         removeFnnWSoftmaxPolicy={props.removeFnnWSoftmaxPolicy}/>
+                <Actions sessionData={props.sessionData} policy={props.policy} removePPOPolicy={props.removePPOPolicy}/>
 
                 <Card className="subCard">
                     <Card.Header>
@@ -154,6 +155,45 @@ const FnnWSoftmaxPolicy = (props) => {
                 <Card className="subCard">
                     <Card.Header>
                         <Button
+                            onClick={() => setNeuralNetworkDetailsOpen(!neuralNetworkDetailsOpen)}
+                            aria-controls="neuralNetworkDetailsBody"
+                            aria-expanded={neuralNetworkDetailsOpen}
+                            variant="link"
+                        >
+                            <h5 className="semiTitle"> Neural network architecture </h5>
+                        </Button>
+                    </Card.Header>
+                    <Collapse in={neuralNetworkDetailsOpen}>
+                        <div id="neuralNetworkDetailsBody" className="cardBodyHidden">
+                            <div className="table-responsive">
+                                <Table striped bordered hover>
+                                    <thead>
+                                    <tr>
+                                        <th>Property</th>
+                                        <th> Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Num hidden layers:</td>
+                                        <td>{props.policy.policy_kwargs.net_arch.length}</td>
+                                    </tr>
+                                    {props.policy.policy_kwargs.net_arch.map((layer, index) => {
+                                        return (<tr key={layer + "-" + index}>
+                                            <td>Num neurons for hidden layer: {index}</td>
+                                            <td>{layer}</td>
+                                        </tr>)
+                                    })}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+
+                <Card className="subCard">
+                    <Card.Header>
+                        <Button
                             onClick={() => setActionsOpen(!actionsOpen)}
                             aria-controls="actionsBody"
                             aria-expanded={actionsOpen}
@@ -191,6 +231,6 @@ const FnnWSoftmaxPolicy = (props) => {
     </Card>)
 }
 
-FnnWSoftmaxPolicy.propTypes = {};
-FnnWSoftmaxPolicy.defaultProps = {};
-export default FnnWSoftmaxPolicy;
+PPOPolicy.propTypes = {};
+PPOPolicy.defaultProps = {};
+export default PPOPolicy;

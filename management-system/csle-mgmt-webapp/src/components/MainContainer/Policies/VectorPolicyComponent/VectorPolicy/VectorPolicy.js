@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './AlphaVecPolicy.css';
+import './VectorPolicy.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
@@ -7,20 +7,20 @@ import Accordion from 'react-bootstrap/Accordion';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Collapse from 'react-bootstrap/Collapse'
-import getAgentTypeStr from '../../../Common/getAgentTypeStr'
-import getPlayerTypeStr from '../../../Common/getPlayerTypeStr'
+import getAgentTypeStr from '../../../../Common/getAgentTypeStr'
+import getPlayerTypeStr from '../../../../Common/getPlayerTypeStr'
 
 /**
- * Component representing the /policies/id page for an alphavector policy
+ * Component representing the /policies/id page for a vector policy
  */
-const AlphaVecPolicy = (props) => {
+const VectorPolicy = (props) => {
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [actionsOpen, setActionsOpen] = useState(false);
-    const [alphaVectorsOpen, setAlphaVectorsOpen] = useState(false);
+    const [policyOpen, setPolicyOpen] = useState(false);
 
-    const renderRemoveAlphaVecPolicy = (props) => (
+    const renderRemoveVectorPolicy = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove Alpha-vector policy
+            Remove Vector policy
         </Tooltip>
     );
 
@@ -33,10 +33,10 @@ const AlphaVecPolicy = (props) => {
                         className="removeButton"
                         placement="left"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderRemoveAlphaVecPolicy}
+                        overlay={renderRemoveVectorPolicy}
                     >
                         <Button variant="danger" className="removeButton" size="sm"
-                                onClick={() => props.removeAlphaVecPolicy(props.policy)}>
+                                onClick={() => props.removeVectorPolicy(props.policy)}>
                             <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -57,8 +57,8 @@ const AlphaVecPolicy = (props) => {
         </Card.Header>
         <Accordion.Collapse eventKey={props.policy.id}>
             <Card.Body>
-                <Actions sessionData={props.sessionData} removeAlphaVecPolicy={props.removeAlphaVecPolicy}
-                         policy={props.policy}/>
+                <Actions sessionData={props.sessionData} policy={props.policy}
+                         removeVectorPolicy={props.removeVectorPolicy}/>
 
                 <Card className="subCard">
                     <Card.Header>
@@ -133,8 +133,7 @@ const AlphaVecPolicy = (props) => {
                                     <tbody>
                                     {props.policy.actions.map((action, index) => {
                                         return <tr key={action + "-" + index}>
-                                            <td>{action.id}</td>
-                                            <td>{action.descr}</td>
+                                            <td>{action}</td>
                                         </tr>
                                     })}
                                     </tbody>
@@ -147,31 +146,31 @@ const AlphaVecPolicy = (props) => {
                 <Card className="subCard">
                     <Card.Header>
                         <Button
-                            onClick={() => setAlphaVectorsOpen(!alphaVectorsOpen)}
-                            aria-controls="alphaVectorsBody"
-                            aria-expanded={alphaVectorsOpen}
+                            onClick={() => setPolicyOpen(!policyOpen)}
+                            aria-controls="policyBody"
+                            aria-expanded={policyOpen}
                             variant="link"
                         >
-                            <h5 className="semiTitle"> Alpha Vectors </h5>
+                            <h5 className="semiTitle"> Policy </h5>
                         </Button>
                     </Card.Header>
-                    <Collapse in={alphaVectorsOpen}>
+                    <Collapse in={policyOpen}>
                         <div id="actionsBody" className="cardBodyHidden">
                             <div className="table-responsive">
                                 <Table striped bordered hover>
                                     <thead>
                                     <tr>
-                                        <th>Vector ID</th>
-                                        <th>Vector Elements</th>
+                                        <th>Action</th>
+                                        <th>Probability</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {props.policy.alpha_vectors.map((vec, index) => {
-                                        return <tr key={vec + "-" + index}>
+                                    {props.policy.policy_vector.map((action_prob, index) => {
+                                        return(
+                                        <tr key={action_prob + "-" + index}>
                                             <td>{index}</td>
-                                            <td>{vec}</td>
-                                        </tr>
-                                    })}
+                                            <td>{action_prob}</td>
+                                        </tr>)})}
                                     </tbody>
                                 </Table>
                             </div>
@@ -179,12 +178,11 @@ const AlphaVecPolicy = (props) => {
                     </Collapse>
                 </Card>
 
-
             </Card.Body>
         </Accordion.Collapse>
     </Card>)
 }
 
-AlphaVecPolicy.propTypes = {};
-AlphaVecPolicy.defaultProps = {};
-export default AlphaVecPolicy;
+VectorPolicy.propTypes = {};
+VectorPolicy.defaultProps = {};
+export default VectorPolicy;
