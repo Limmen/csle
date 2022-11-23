@@ -1,5 +1,7 @@
 import React from "react";
 import './YoutubeEmbed.css';
+import {HTTP_PREFIX} from "../../Common/constants";
+
 
 /**
  * Component for embedding a youtube video on a page

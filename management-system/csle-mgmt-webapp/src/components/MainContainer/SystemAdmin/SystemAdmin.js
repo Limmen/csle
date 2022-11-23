@@ -12,6 +12,8 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Type } from 'react-bootstrap-table2-editor';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import {HTTP_PREFIX} from "../../Common/constants";
+
 
 /**
  * Component representing the /system-admin-page

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import './Register.css';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import {HTTP_PREFIX} from "../../Common/constants";
 
 /**
  * The component representing the /register-page

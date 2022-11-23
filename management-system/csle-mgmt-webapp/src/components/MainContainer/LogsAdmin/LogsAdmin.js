@@ -14,6 +14,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import parseLogs from "../../Common/parseLogs";
+import {HTTP_PREFIX} from "../../Common/constants";
 
 /**
  * Component representing the /logs-admin-page

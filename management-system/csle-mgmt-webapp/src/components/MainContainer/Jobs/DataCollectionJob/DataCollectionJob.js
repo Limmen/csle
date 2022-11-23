@@ -13,6 +13,7 @@ import { useAlert } from "react-alert";
 import getIpString from "../../../Common/getIpString";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
+import {HTTP_PREFIX} from "../../../Common/constants";
 
 /**
  * The component representing the /jobs/<id> resource for data collection jobs

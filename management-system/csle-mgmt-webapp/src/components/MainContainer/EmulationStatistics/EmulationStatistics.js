@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import {HTTP_PREFIX} from "../../Common/constants";
 
 /**
  * Component representing the /statistics-page

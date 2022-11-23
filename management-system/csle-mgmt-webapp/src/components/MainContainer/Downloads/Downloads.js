@@ -17,6 +17,7 @@ import fileDownload from 'react-file-download'
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import {HTTP_PREFIX} from "../../Common/constants";
 
 /**
  *  Component representing the /downloads-page

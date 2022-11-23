@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button'
 import ChangeUserDataForm from "./ChangeUserDataForm/ChangeUserDataForm";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
+import {HTTP_PREFIX} from "../../Common/constants";
 
 /**
  * The component representing the /login-page

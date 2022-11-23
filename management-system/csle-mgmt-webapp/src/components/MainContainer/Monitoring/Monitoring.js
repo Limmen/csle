@@ -21,6 +21,7 @@ import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import GrafanaImg from './Grafana.png'
 import PrometheusImg from './Prometheus.png'
+import {HTTP_PREFIX} from "../../Common/constants";
 
 /**
  * Component containing various plots for monitoring a running execution of an emulation
