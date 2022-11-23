@@ -29,7 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {HTTP_PREFIX, HTTP_REST_GET, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
 
 
 /**
@@ -105,8 +105,10 @@ const PolicyExamination = (props) => {
     // const ip = "172.31.212.92"
 
     const fetchTraces = useCallback(() => {
-        fetch(`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-simulation-traces' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`, {
-            method: "GET", headers: new Headers({
+        fetch(`${HTTP_PREFIX}${ip}:${port}/${EMULATION_SIMULATION_TRACES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`, {
+            method: HTTP_REST_GET,
+            headers: new Headers({
                 Accept: "application/vnd.github.cloak-preview"
             })
         })
@@ -127,7 +129,7 @@ const PolicyExamination = (props) => {
                     const tracesOptions = response.map((trace, index) => {
                         return {
                             value: trace,
-                            label: "Trace " + index
+                            label: `Trace ${index}`
                         }
                     })
                     setTraces(tracesOptions);

@@ -9,6 +9,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Collapse from 'react-bootstrap/Collapse'
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
+import {HTTP_PREFIX, HTTP_REST_GET} from "../../../Common/constants";
 
 /**
  * Component representing the /sdn-controllers/id resource
@@ -32,9 +33,10 @@ const SDNController = (props) => {
 
     const fetchSwitches = useCallback((emulation_id, exec_id) => {
         fetch(
-            `http://` + ip + ':' + port +'/emulations/' + emulation_id + "/executions/" + exec_id + "/switches",
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id}` +
+            `/${EXECUTIONS_SUBRESOURCE}/${exec_id}/${SWITCHES_SUBRESOURCE}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
