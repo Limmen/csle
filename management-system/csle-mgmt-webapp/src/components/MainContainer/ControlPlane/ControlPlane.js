@@ -156,9 +156,10 @@ const ControlPlane = (props) => {
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/emulation-executions?ids=true' + "&token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -180,7 +181,7 @@ const ControlPlane = (props) => {
                 const emulationExecutionIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        label: `ID:${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                 })
                 setEmulationExecutionIds(emulationExecutionIds)
@@ -203,10 +204,10 @@ const ControlPlane = (props) => {
 
     const fetchSelectedExecution = useCallback((id_obj) => {
         fetch(
-            (`http://` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "?emulation="
-                + id_obj.value.emulation + "&token=" + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
+            + `${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

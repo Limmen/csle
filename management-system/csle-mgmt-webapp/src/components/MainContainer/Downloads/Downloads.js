@@ -17,7 +17,8 @@ import fileDownload from 'react-file-download'
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {HTTP_PREFIX, HTTP_REST_DELETE, HTTP_REST_GET, LOGIN_PAGE_RESOURCE,
+    STATISTICS_DATASETS_RESOURCE, TRACES_DATASETS_RESOURCE} from "../../Common/constants";
 
 /**
  *  Component representing the /downloads-page
@@ -44,9 +45,9 @@ const Downloads = (props) => {
 
     const fetchTracesDatasets = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/traces-datasets',
+            `${HTTP_PREFIX}${ip}:${port}/${TRACES_DATASETS_RESOURCE}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -66,9 +67,10 @@ const Downloads = (props) => {
 
     const removeAllTracesDatasetsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/traces-datasets' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${TRACES_DATASETS_RESOURCE}?${TOKEN_QUERY_PARAM}=`
+                +`${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -94,9 +96,10 @@ const Downloads = (props) => {
 
     const removeTracesDatasetRequest = useCallback((tracesDataset) => {
         fetch(
-            `http://` + ip + ':' + port + '/traces-datasets/' + tracesDataset.id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${TRACES_DATASETS_RESOURCE}/${tracesDataset.id}?`
+                +`${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -567,9 +570,10 @@ const Downloads = (props) => {
 
     const removeAllStatisticsDatasetsRequest = useCallback(() => {
         fetch(
-            `http://` + ip + ':' + port + '/statistics-datasets' + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${STATISTICS_DATASETS_RESOURCE}?`
+                + `${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -595,9 +599,10 @@ const Downloads = (props) => {
 
     const removeStatisticsDatasetRequest = useCallback((statisticsDataset) => {
         fetch(
-            `http://` + ip + ':' + port + '/statistics-datasets/' + statisticsDataset.id + "?token=" + props.sessionData.token,
+            `${HTTP_PREFIX}${ip}:${port}/${STATISTICS_DATASETS_RESOURCE}/${statisticsDataset.id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
