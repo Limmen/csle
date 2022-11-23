@@ -59,7 +59,7 @@ const ContainerImages = (props) => {
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port]);
+    }, [alert, ip, navigate, port, props.sessionData, setSessionData]);
 
     useEffect(() => {
         setLoading(true)

@@ -22,9 +22,9 @@ const ChangeUserDataForm = (props) => {
     const [organization, setOrganization] = useState(props.sessionData.organization);
     const [firstName, setFirstName] = useState(props.sessionData.first_name);
     const [lastName, setLastName] = useState(props.sessionData.last_name);
-    const [admin, setAdmin] = useState(props.sessionData.admin);
-    const [userId, setUserId] = useState(props.sessionData.id);
-    const [token, setToken] = useState(props.sessionData.token);
+    const token = props.sessionData.token
+    const userId = props.sessionData.id
+    const admin = props.sessionData.admin
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
@@ -55,7 +55,6 @@ const ChangeUserDataForm = (props) => {
                 return res.json()
             })
             .then(response => {
-                console.log("USER update???")
                 var sessionData = {
                     "token" : props.sessionData.token,
                     "username": username,
@@ -70,21 +69,22 @@ const ChangeUserDataForm = (props) => {
                 alert.show("User data updated successfully")
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, alert, setSessionData, admin, email, firstName, lastName, navigate, organization,
+        props.sessionData.token, token, userId, username]);
 
 
     const updateUserFormSubmit = async (event) => {
         event.preventDefault()
         const userConfiguration = {
-            USERNAME_PROPERTY: username,
-            PASSWORD_PROPERTY: password,
-            EMAIL_PROPERTY: email,
-            FIRST_NAME_PROPERTY: firstName,
-            LAST_NAME_PROPERTY: lastName,
-            ORGANIZATION_PROPERTY: organization,
-            ID_PROPERTY: userId,
-            ADMIN_PROPERTY: admin,
-            SALT_PROPERTY: ""
+            "username": username,
+            "password": password,
+            "email": email,
+            "first_name": firstName,
+            "last_name": lastName,
+            "organization": organization,
+            "id": userId,
+            "admin": admin,
+            "salt": ""
         }
         if (username === "" || password === "") {
             alert.show("Username or password cannot be empty")

@@ -94,7 +94,7 @@ const DataCollectionJob = (props) => {
                 setLogs(parseLogs(response))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [navigate, alert, ip, port, props.job.log_file_path, props.sessionData.token, setSessionData]);
 
     const getMaxSteps = () => {
         return (props.job.attacker_sequence.length) * props.job.repeat_times

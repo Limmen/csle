@@ -68,6 +68,96 @@ const Jobs = (props) => {
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
+    const fetchDataCollectionJob = useCallback((data_collection_job_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id.value}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedDataCollectionJob(response)
+                setLoadingSelectedDataCollectionJob(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    const fetchSystemIdentificationJob = useCallback((system_identification_job_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/` +
+                `${system_identification_job_id.value}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedSystemIdentificationJob(response)
+                setLoadingSelectedSystemIdentificationJob(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    const fetchTrainingJob = useCallback((training_job_id) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}/${training_job_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedTrainingJob(response)
+                setLoadingSelectedTrainingJob(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
     const fetchTrainingJobsIds = useCallback(() => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
@@ -120,7 +210,7 @@ const Jobs = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTrainingJob]);
 
 
     const fetchDataCollectionJobIds = useCallback(() => {
@@ -173,7 +263,7 @@ const Jobs = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchDataCollectionJob]);
 
 
     const fetchSystemIdentificationJobsIds = useCallback(() => {
@@ -226,7 +316,7 @@ const Jobs = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchSystemIdentificationJob]);
 
     useEffect(() => {
         setTrainingJobsLoading(true)
@@ -265,7 +355,7 @@ const Jobs = (props) => {
                 fetchTrainingJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTrainingJobsIds]);
 
     const removeAllTrainingJobsRequest = useCallback(() => {
         fetch(
@@ -295,7 +385,7 @@ const Jobs = (props) => {
                 fetchTrainingJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTrainingJobsIds]);
 
     const removeTrainingJob = (job) => {
         setTrainingJobsLoading(true)
@@ -435,7 +525,7 @@ const Jobs = (props) => {
                 fetchSystemIdentificationJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchSystemIdentificationJobsIds]);
 
     const removeAllSystemIdentificationJobsRequest = useCallback(() => {
         fetch(
@@ -465,7 +555,7 @@ const Jobs = (props) => {
                 fetchSystemIdentificationJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchSystemIdentificationJobsIds]);
 
     const removeSystemIdentificationJob = (job) => {
         setSystemIdentificationJobsLoading(true)
@@ -606,37 +696,8 @@ const Jobs = (props) => {
                 fetchTrainingJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTrainingJobsIds]);
 
-    const fetchTrainingJob = useCallback((training_job_id) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}/${training_job_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedTrainingJob(response)
-                setLoadingSelectedTrainingJob(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
 
     const stopTrainingJob = (job) => {
         setTrainingJobsLoading(true)
@@ -672,37 +733,7 @@ const Jobs = (props) => {
                 fetchSystemIdentificationJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchSystemIdentificationJob = useCallback((system_identification_job_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/` +
-            `${system_identification_job_id.value}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedSystemIdentificationJob(response)
-                setLoadingSelectedSystemIdentificationJob(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchSystemIdentificationJobsIds]);
 
     const stopSystemIdentificationJob = (job) => {
         setSystemIdentificationJobsLoading(true)
@@ -738,7 +769,7 @@ const Jobs = (props) => {
                 fetchTrainingJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTrainingJobsIds]);
 
     const startTrainingJob = (job) => {
         setTrainingJobsLoading(true)
@@ -773,7 +804,7 @@ const Jobs = (props) => {
                 fetchSystemIdentificationJobsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchSystemIdentificationJobsIds]);
 
     const startSystemIdentificationJob = (job) => {
         setSystemIdentificationJobsLoading(true)
@@ -1017,7 +1048,7 @@ const Jobs = (props) => {
                 fetchDataCollectionJobIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchDataCollectionJobIds]);
 
     const removeAllDataCollectionJobsRequest = useCallback(() => {
         fetch(
@@ -1047,7 +1078,7 @@ const Jobs = (props) => {
                 fetchDataCollectionJobIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchDataCollectionJobIds]);
 
     const removeDataCollectionJob = (job) => {
         setDataCollectionJobsLoading(true)
@@ -1188,37 +1219,7 @@ const Jobs = (props) => {
                 fetchDataCollectionJobIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchDataCollectionJob = useCallback((data_collection_job_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id.value}` +
-            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedDataCollectionJob(response)
-                setLoadingSelectedDataCollectionJob(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchDataCollectionJobIds]);
 
     const stopDataCollectionJob = (job) => {
         setDataCollectionJobsLoading(true)
@@ -1254,7 +1255,7 @@ const Jobs = (props) => {
                 fetchDataCollectionJobIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchDataCollectionJobIds]);
 
     const startDataCollectionJob = (job) => {
         setDataCollectionJobsLoading(true)

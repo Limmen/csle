@@ -47,6 +47,36 @@ const Emulations = (props) => {
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
+    const fetchEmulation = useCallback((emulation_id) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                setSelectedEmulation(response)
+                setLoadingSelectedEmulation(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
     const fetchEmulationIds = useCallback(() => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}?${IDS_QUERY_PARAM}=true`
@@ -97,7 +127,7 @@ const Emulations = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchEmulation, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeEmulationRequest = useCallback((emulationId) => {
         fetch(
@@ -128,7 +158,7 @@ const Emulations = (props) => {
                 fetchEmulationIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchEmulationIds]);
 
     const removeEmulationExecutionRequest = useCallback((emulation_id, execution_id) => {
         fetch(
@@ -162,7 +192,7 @@ const Emulations = (props) => {
                 fetchEmulation(id_obj)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchEmulation]);
 
     const startOrStopEmulationRequest = useCallback((emulation_id) => {
         fetch(
@@ -196,37 +226,7 @@ const Emulations = (props) => {
                 fetchEmulation(id_obj)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchEmulation = useCallback((emulation_id) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}`
-                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if (response === null) {
-                    return
-                }
-                setSelectedEmulation(response)
-                setLoadingSelectedEmulation(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchEmulation]);
 
     const removeAllEmulationsRequest = useCallback(() => {
         fetch(
@@ -255,7 +255,7 @@ const Emulations = (props) => {
                 fetchEmulationIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchEmulationIds]);
 
     const removeEmulation = (emulation) => {
         setLoading(true)

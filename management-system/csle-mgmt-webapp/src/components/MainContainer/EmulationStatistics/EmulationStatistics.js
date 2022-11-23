@@ -46,7 +46,6 @@ const EmulationStatistics = (props) => {
     const [selectedMetric, setSelectedMetric] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingSelectedEmulationStatistic, setLoadingSelectedEmulationStatistic] = useState(true);
-    const [animationDuration, setAnimationDuration] = useState(5);
     const animationDurationFactor = 50000
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [deltaCountsOpen, setDeltaCountsOpen] = useState(false);
@@ -54,13 +53,63 @@ const EmulationStatistics = (props) => {
     const [deltaProbsOpen, setDeltaProbsOpen] = useState(false);
     const [initialProbsOpen, setInitialProbsOpen] = useState(false);
     const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
-    const [searchString, setSearchString] = useState("");
-
+    const animationDuration = 5
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
+
+    const fetchEmulationStatistic = useCallback((statistic_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id.value}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedEmulationStatistic(response)
+                setLoadingSelectedEmulationStatistic(false)
+
+                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
+                    const conditionalOptions = Object.keys(response.conditionals_counts).map(
+                        (conditionalName, index) => {
+                            return {
+                                value: conditionalName,
+                                label: conditionalName
+                            }
+                        })
+                    setConditionals(conditionalOptions)
+                    setSelectedConditionals([conditionalOptions[0]])
+                    const metricOptions = Object.keys(response.conditionals_counts[Object.keys(
+                        response.conditionals_counts)[0]]).map((metricName, index) => {
+                        return {
+                            value: metricName,
+                            label: metricName
+                        }
+                    })
+                    setMetrics(metricOptions)
+                    setSelectedMetric(metricOptions[0])
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData]);
 
     const resetState = () => {
         setEmulationStatisticIds([])
@@ -202,64 +251,13 @@ const EmulationStatistics = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData, fetchEmulationStatistic]);
 
     useEffect(() => {
         setLoading(true)
         fetchEmulationStatisticsIds()
     }, [fetchEmulationStatisticsIds]);
 
-
-    const fetchEmulationStatistic = useCallback((statistic_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_STATISTICS_RESOURCE}/${statistic_id.value}` +
-            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedEmulationStatistic(response)
-                setLoadingSelectedEmulationStatistic(false)
-
-                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
-                    const conditionalOptions = Object.keys(response.conditionals_counts).map(
-                        (conditionalName, index) => {
-                        return {
-                            value: conditionalName,
-                            label: conditionalName
-                        }
-                    })
-                    setConditionals(conditionalOptions)
-                    setSelectedConditionals([conditionalOptions[0]])
-                    const metricOptions = Object.keys(response.conditionals_counts[Object.keys(
-                        response.conditionals_counts)[0]]).map((metricName, index) => {
-                        return {
-                            value: metricName,
-                            label: metricName
-                        }
-                    })
-                    setMetrics(metricOptions)
-                    setSelectedMetric(metricOptions[0])
-                }
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
 
     const removeEmulationStatisticRequest = useCallback((statistic_id) => {
         fetch(
@@ -288,7 +286,7 @@ const EmulationStatistics = (props) => {
                 fetchEmulationStatisticsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData, fetchEmulationStatisticsIds]);
 
     const removeStatistic = (stat) => {
         setLoading(true)
@@ -357,7 +355,6 @@ const EmulationStatistics = (props) => {
             return searchFilter(stat_id_obj, searchVal)
         });
         setFilteredEmulationStatisticIds(filteredEmStatsIds)
-        setSearchString(searchVal)
 
         var selectedStatRemoved = false
         if (!loadingSelectedEmulationStatistic && filteredEmStatsIds.length > 0) {

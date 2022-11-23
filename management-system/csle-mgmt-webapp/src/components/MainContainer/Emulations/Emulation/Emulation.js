@@ -17,7 +17,6 @@ import getIps from "../../../Common/getIps";
  */
 const Emulation = (props) => {
     const [loading, setLoading] = useState(false);
-    const [emulation, setEmulation] = useState(props.emulation);
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [topologyOpen, setTopologyOpen] = useState(false);
     const [containersOpen, setContainersOpen] = useState(false);
@@ -41,6 +40,8 @@ const Emulation = (props) => {
     const [staticAttackerSequenceOpen, setStaticAttackerSequenceOpen] = useState(false);
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
+
+    const emulation = props.emulation
 
     const startorStopEmulationPre = (emulation) => {
         setLoading(true)
@@ -137,12 +138,6 @@ const Emulation = (props) => {
             return <span>{emulation.id}</span>
         }
     }
-
-    const renderStartEmulationTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Start emulation
-        </Tooltip>
-    );
 
     const renderRemoveEmulationTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

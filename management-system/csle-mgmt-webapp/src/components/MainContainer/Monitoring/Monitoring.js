@@ -116,7 +116,6 @@ const Monitoring = (props) => {
     const [prometheusStatus, setPrometheusStatus] = useState(null);
     const [nodeExporterStatus, setNodeExporterStatus] = useState(null);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [searchString, setSearchString] = useState("");
     const [openFlowSwitchesOptions, setOpenFlowSwitchesOptions] = useState([]);
     const [selectedOpenFlowSwitch, setSelectedOpenFlowSwitch] = useState(null);
     const ip = serverIp
@@ -125,7 +124,92 @@ const Monitoring = (props) => {
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
-    // const ip = "172.31.212.92"
+
+    const fetchMonitoringData = useCallback((len, execution) => fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${execution.emulation_env_config.id}` +
+                `/${EXECUTIONS_SUBRESOURCE}/${execution.ip_first_octet}/${MONITOR_SUBRESOURCE}/${len}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setMonitoringData(response)
+                setLoadingSelectedEmulationExecution(false)
+                var openFlowSwitchesOptions = []
+                openFlowSwitchesOptions = Object.keys(response.openflow_port_avg_metrics_per_switch).map((dpid, index) => {
+                    return {
+                        value: dpid,
+                        label: dpid
+                    }
+                })
+                setOpenFlowSwitchesOptions(openFlowSwitchesOptions)
+                if (openFlowSwitchesOptions.length > 0) {
+                    setSelectedOpenFlowSwitch(openFlowSwitchesOptions[0])
+                }
+            })
+            .catch(error => console.log("error:" + error)),
+        [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    const fetchSelectedExecution = useCallback((id_obj) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
+                + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
+                + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedEmulationExecution(response)
+                setLoadingSelectedEmulationExecution(false)
+                if (response !== null && response !== undefined) {
+                    const containerOptions = response.emulation_env_config.containers_config.containers.map(
+                        (c, index) => {
+                            return {
+                                value: c,
+                                label: c.full_name_str
+                            }
+                        })
+                    setEmulationExecutionContainerOptions(containerOptions)
+                    setSelectedContainer(containerOptions[0])
+                    fetchMonitoringData(windowLength.value, response)
+                }
+
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchMonitoringData,
+        windowLength.value]);
 
     const animationDurationUpdate = (selectedObj) => {
         setAnimationDuration(selectedObj)
@@ -275,7 +359,6 @@ const Monitoring = (props) => {
             return searchFilter(executionIdObj, searchVal)
         });
         setFilteredEmulationExecutionIds(filteredEIds)
-        setSearchString(searchVal)
     }
 
     const searchHandler = useDebouncedCallback(
@@ -347,7 +430,7 @@ const Monitoring = (props) => {
                 setGrafanaStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const startOrStopcAdvisorRequest = useCallback(() => {
         fetch(
@@ -376,7 +459,7 @@ const Monitoring = (props) => {
                 setCAdvisorStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const startOrStopNodeExporterRequest = useCallback(() => {
         fetch(
@@ -405,7 +488,7 @@ const Monitoring = (props) => {
                 setNodeExporterStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const startOrStopPrometheusRequest = useCallback(() => {
         fetch(
@@ -434,7 +517,7 @@ const Monitoring = (props) => {
                 setPrometheusStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchEmulationExecutionIds = useCallback(() => {
         fetch(
@@ -479,91 +562,8 @@ const Monitoring = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchSelectedExecution]);
 
-    const fetchSelectedExecution = useCallback((id_obj) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}`
-                + `?${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}`
-                + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedEmulationExecution(response)
-                setLoadingSelectedEmulationExecution(false)
-                if (response !== null && response !== undefined) {
-                    const containerOptions = response.emulation_env_config.containers_config.containers.map(
-                        (c, index) => {
-                        return {
-                            value: c,
-                            label: c.full_name_str
-                        }
-                    })
-                    setEmulationExecutionContainerOptions(containerOptions)
-                    setSelectedContainer(containerOptions[0])
-                    fetchMonitoringData(windowLength.value, response)
-                }
-
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchMonitoringData = useCallback((len, execution) => fetch(
-        (`${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${execution.emulation_env_config.id}` +
-            `/${EXECUTIONS_SUBRESOURCE}/${execution.ip_first_octet}/${MONITOR_SUBRESOURCE}/${len}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-        {
-            method: HTTP_REST_GET,
-            headers: new Headers({
-                Accept: "application/vnd.github.cloak-preview"
-            })
-        }
-    )
-        .then(res => {
-            if(res.status === 401) {
-                alert.show("Session token expired. Please login again.")
-                setSessionData(null)
-                navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                return null
-            }
-            return res.json()
-        })
-        .then(response => {
-            if(response === null) {
-                return
-            }
-            setMonitoringData(response)
-            setLoadingSelectedEmulationExecution(false)
-            var openFlowSwitchesOptions = []
-            openFlowSwitchesOptions = Object.keys(response.openflow_port_avg_metrics_per_switch).map((dpid, index) => {
-                return {
-                    value: dpid,
-                    label: dpid
-                }
-            })
-            setOpenFlowSwitchesOptions(openFlowSwitchesOptions)
-            if (openFlowSwitchesOptions.length > 0) {
-                setSelectedOpenFlowSwitch(openFlowSwitchesOptions[0])
-            }
-        })
-        .catch(error => console.log("error:" + error)), []);
 
     const fetchGrafanaStatus = useCallback(() => {
         fetch(
@@ -592,7 +592,7 @@ const Monitoring = (props) => {
                 setGrafanaStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchCadvisorStatus = useCallback(() => {
         fetch(
@@ -621,7 +621,7 @@ const Monitoring = (props) => {
                 setCAdvisorStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchPrometheusStatus = useCallback(() => {
         fetch(
@@ -650,7 +650,7 @@ const Monitoring = (props) => {
                 setPrometheusStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchNodeExporterStatus = useCallback(() => {
         fetch(
@@ -679,7 +679,7 @@ const Monitoring = (props) => {
                 setNodeExporterStatus(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const startOrStopGrafana = () => {
         startOrStopGrafanaRequest()
@@ -777,7 +777,7 @@ const Monitoring = (props) => {
                     </div>
                     <hr/>
 
-                    <ContainerMetrics key={'container' + '-' + props.animationDuration.value}
+                    <ContainerMetrics key={`container-${props.animationDuration.value}`}
                                       loading={props.loadingSelectedEmulationExecution}
                                       hostMetrics={getHostMetrics()}
                                       dockerMetrics={getDockerMetrics()}
@@ -798,7 +798,7 @@ const Monitoring = (props) => {
                         </div>
                     </div>
                     <hr/>
-                    <OpenFlowSwitchesStats key={'switch' + '-' + props.animationDuration.value}
+                    <OpenFlowSwitchesStats key={`switch-${props.animationDuration.value}`}
                                            loading={props.loadingSelectedEmulationExecution}
                                            portStats={getPortStats()}
                                            flowStats={getFlowStats()}
@@ -908,10 +908,10 @@ const Monitoring = (props) => {
 
 
     const SelectOpenFlowSwitchDropdownOrSpinner = (props) => {
-        if (!props.loading && (props.selectedEmulation === null) || props.selectedSwitch === null) {
+        if (!props.loading && (props.selectedEmulation === null || props.selectedSwitch === null)) {
             return (<></>)
         }
-        if (props.loading || props.selectedEmulation === null || props.selectedSwitch === null) {
+        if ((props.loading || props.selectedEmulation === null) || props.selectedSwitch === null) {
             return (
                 <Spinner animation="border" role="status" className="dropdownSpinner">
                     <span className="visually-hidden"></span>

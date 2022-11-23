@@ -65,7 +65,7 @@ const TrainingJob = (props) => {
                 setLogs(parseLogs(response))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.job.log_file_path, props.sessionData.token, setSessionData]);
 
     const renderRemoveTrainingJobTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
@@ -86,11 +86,12 @@ const TrainingJob = (props) => {
     );
 
     const getSeedReward = (experiment_result, seed, agentType) => {
+        var len = 0
         if(agentType === 0 || agentType === 1){
             if (experiment_result.all_metrics[seed].average_reward !== null &&
                 experiment_result.all_metrics[seed].average_reward !== undefined &&
                 experiment_result.all_metrics[seed].average_reward.length > 0) {
-                var len = experiment_result.all_metrics[seed].average_reward.length
+                len = experiment_result.all_metrics[seed].average_reward.length
                 return experiment_result.all_metrics[seed].average_reward[len - 1]
             } else {
                 return -1
@@ -100,7 +101,7 @@ const TrainingJob = (props) => {
             if (experiment_result.all_metrics[seed].exploitability !== null &&
                 experiment_result.all_metrics[seed].exploitability !== undefined &&
                 experiment_result.all_metrics[seed].exploitability.length > 0) {
-                var len = experiment_result.all_metrics[seed].exploitability.length
+                len = experiment_result.all_metrics[seed].exploitability.length
                 return experiment_result.all_metrics[seed].exploitability[len - 1]
             } else {
                 return -1

@@ -88,6 +88,16 @@ const ExecutionControlPlane = (props) => {
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
+    const removeLoadingEntity = useCallback((entity) => {
+        var newLoadingEntities = []
+        for (let i = 0; i < loadingEntities.length; i++) {
+            if (loadingEntities[i] !== entity) {
+                newLoadingEntities.push(loadingEntities[i])
+            }
+        }
+        setLoadingEntities(newLoadingEntities)
+    }, [loadingEntities])
+
     const fetchLogs = useCallback((name, entity) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${entity}?${TOKEN_QUERY_PARAM}=`
@@ -115,7 +125,8 @@ const ExecutionControlPlane = (props) => {
                 setLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, props.execution.emulation_name, props.sessionData.token,
+        props.execution.ip_first_octet, setSessionData]);
 
     const startOrStopEntity = useCallback((id, emulation, start, stop, entity, name, node_ip) => {
         fetch(
@@ -143,7 +154,7 @@ const ExecutionControlPlane = (props) => {
                 removeLoadingEntity(entity + "-" + node_ip)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, props.sessionData.token, removeLoadingEntity, setSessionData]);
 
 
     const updateStateAfterStartOrStop = (entity, response) => {
@@ -197,16 +208,6 @@ const ExecutionControlPlane = (props) => {
             newLoadingEntities.push(loadingEntities[i])
         }
         newLoadingEntities.push(entity)
-        setLoadingEntities(newLoadingEntities)
-    }
-
-    const removeLoadingEntity = (entity) => {
-        var newLoadingEntities = []
-        for (let i = 0; i < loadingEntities.length; i++) {
-            if (loadingEntities[i] !== entity) {
-                newLoadingEntities.push(loadingEntities[i])
-            }
-        }
         setLoadingEntities(newLoadingEntities)
     }
 

@@ -53,33 +53,6 @@ const LogsAdmin = (props) => {
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
-    const fetchStatsManagerLogs = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${DOCKER_STATS_MANAGER_SUBRESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_POST,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                setLoadingStatsManagerLogs(false)
-                setStatsManagerLogs(parseLogs(response.logs))
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
     const fetchLogFile = useCallback((path) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${FILE_RESOURCE}`
@@ -106,7 +79,35 @@ const LogsAdmin = (props) => {
                 setSelectedCsleLogFileData(parseLogs(response.logs.split("\n")))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchStatsManagerLogs = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${DOCKER_STATS_MANAGER_SUBRESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_POST,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setLoadingStatsManagerLogs(false)
+                setStatsManagerLogs(parseLogs(response.logs))
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
 
     const fetchCsleLogFiles = useCallback(() => {
         fetch(
@@ -147,7 +148,7 @@ const LogsAdmin = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchLogFile]);
 
     const fetchPrometheusLogs = useCallback(() => {
         fetch(
@@ -174,7 +175,7 @@ const LogsAdmin = (props) => {
                 setPrometheusLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
     const fetchNodeExporterLogs = useCallback(() => {
         fetch(
@@ -201,7 +202,7 @@ const LogsAdmin = (props) => {
                 setNodeExporterLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
     const fetchCAdvisorLogs = useCallback(() => {
         fetch(
@@ -228,7 +229,7 @@ const LogsAdmin = (props) => {
                 setCAdvisorLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
     const fetchGrafanaLogs = useCallback(() => {
         fetch(
@@ -255,7 +256,7 @@ const LogsAdmin = (props) => {
                 setGrafanaLogs(parseLogs(response.logs))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
     const refresh = () => {
         setLoadingStatsManagerLogs(true)

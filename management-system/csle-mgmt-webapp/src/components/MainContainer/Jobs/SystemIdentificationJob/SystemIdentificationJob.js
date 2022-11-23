@@ -99,7 +99,7 @@ const SystemIdentificationJob = (props) => {
                 setLogs(parseLogs(response))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.job.log_file_path, props.sessionData.token, setSessionData]);
 
     const startOrStopButton = () => {
         if (props.job.running) {

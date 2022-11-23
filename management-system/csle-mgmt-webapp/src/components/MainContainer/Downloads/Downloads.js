@@ -29,14 +29,12 @@ const Downloads = (props) => {
     const [modalSelectedTracesDataset, setModalSelectedTracesDataset] = useState(null);
     const [tracesDatasets, setTracesDatasets] = useState([]);
     const [filteredTracesDatasets, setFilteredTracesDatasets] = useState([]);
-    const [searchStringTracesDatasets, setSearchStringTracesDatasets] = useState("");
     const [loadingTracesDatasets, setLoadingTracesDatasets] = useState(true);
     const [showStatisticsDatasetsInfoModal, setShowStatisticsDatasetsInfoModal] = useState(false);
     const [showStatisticsDatasetInfoModal, setShowStatisticsDatasetInfoModal] = useState(false);
     const [modalSelectedStatisticsDataset, setModalSelectedStatisticsDataset] = useState(null);
     const [statisticsDatasets, setStatisticsDatasets] = useState([]);
     const [filteredStatisticsDatasets, setFilteredStatisticsDatasets] = useState([]);
-    const [searchStringStatisticsDatasets, setSearchStringStatisticsDatasets] = useState("");
     const [loadingStatisticsDatasets, setLoadingStatisticsDatasets] = useState(true);
     const ip = serverIp
     const port = serverPort
@@ -63,7 +61,7 @@ const Downloads = (props) => {
                 setLoadingTracesDatasets(false)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port]);
 
 
     const removeAllTracesDatasetsRequest = useCallback(() => {
@@ -93,7 +91,7 @@ const Downloads = (props) => {
                 fetchTracesDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, fetchTracesDatasets, props.sessionData.token, setSessionData, alert]);
 
     const removeTracesDatasetRequest = useCallback((tracesDataset) => {
         fetch(
@@ -122,7 +120,7 @@ const Downloads = (props) => {
                 fetchTracesDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, fetchTracesDatasets, props.sessionData.token, setSessionData, alert]);
 
 
     const refreshTracesDatasets = () => {
@@ -537,7 +535,6 @@ const Downloads = (props) => {
             return searchFilterTracesDatasets(tracesDataset, searchVal)
         });
         setFilteredTracesDatasets(fTracesDatasets)
-        setSearchStringTracesDatasets(searchVal)
     }
 
     const searchHandlerTracesDatasets = useDebouncedCallback(
@@ -566,7 +563,7 @@ const Downloads = (props) => {
                 setLoadingStatisticsDatasets(false)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port]);
 
 
     const removeAllStatisticsDatasetsRequest = useCallback(() => {
@@ -596,7 +593,7 @@ const Downloads = (props) => {
                 fetchStatisticsDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData, fetchStatisticsDatasets]);
 
     const removeStatisticsDatasetRequest = useCallback((statisticsDataset) => {
         fetch(
@@ -625,7 +622,7 @@ const Downloads = (props) => {
                 fetchStatisticsDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData, fetchStatisticsDatasets]);
 
 
     const refreshStatisticsDatasets = () => {
@@ -1036,7 +1033,6 @@ const Downloads = (props) => {
             return searchFilterStatisticsDatasets(statisticsDataset, searchVal)
         });
         setFilteredStatisticsDatasets(fStatisticsDatasets)
-        setSearchStringStatisticsDatasets(searchVal)
     }
 
     const searchHandlerStatisticsDatasets = useDebouncedCallback(
@@ -1051,7 +1047,7 @@ const Downloads = (props) => {
         fetchTracesDatasets()
         setLoadingStatisticsDatasets(true);
         fetchStatisticsDatasets()
-    }, [fetchTracesDatasets, fetchTracesDatasets]);
+    }, [fetchTracesDatasets, fetchStatisticsDatasets]);
 
     return (
         <div className="Downloads">

@@ -8,8 +8,6 @@ import serverPort from "../../Common/serverPort";
 import {
     HTTP_PREFIX,
     HTTP_REST_POST,
-    USERNAME_PROPERTY,
-    PASSWORD_PROPERTY,
     LOGIN_RESOURCE
 } from "../../Common/constants";
 
@@ -49,13 +47,13 @@ const Login = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, setSessionData]);
 
     const loginFormSubmit = async (event) => {
         event.preventDefault()
         const credentials = {
-            USERNAME_PROPERTY: username,
-            PASSWORD_PROPERTY: password
+            "username": username,
+            "password": password
         }
         if (username === "" || password === "") {
             alert.show("Username or password cannot be empty")

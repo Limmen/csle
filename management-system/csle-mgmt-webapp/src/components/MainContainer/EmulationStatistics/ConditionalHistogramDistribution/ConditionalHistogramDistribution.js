@@ -34,14 +34,15 @@ const ConditionalHistogramDistribution = React.memo((props) => {
 
             var keys = []
             if(props.selectedConditionals.length > 0){
+                var tempKeys = null
                 for (let i = 0; i < props.selectedConditionals.length; i++) {
-                    var tempKeys = Object.keys(props.data[props.selectedConditionals[i].value][props.selectedMetric.value])
+                    tempKeys = Object.keys(props.data[props.selectedConditionals[i].value][props.selectedMetric.value])
                     for (let j = 0; j < tempKeys.length; j++) {
                         keys.push(tempKeys[j])
                     }
                 }
             } else {
-                var tempKeys = Object.keys(props.data[props.selectedMetric.value])
+                tempKeys = Object.keys(props.data[props.selectedMetric.value])
                 for (let j = 0; j < tempKeys.length; j++) {
                     keys.push(tempKeys[j])
                 }
@@ -98,15 +99,16 @@ const ConditionalHistogramDistribution = React.memo((props) => {
                 }
             }
             var domain = [min_val, max_val]
+            var selectedConditionals= []
             if (props.selectedConditionals.length === 0){
-                var selectedConditionals =[
+                selectedConditionals =[
                     {
                         label: "initial_value",
                         value: "initial_value"
                     }
                 ]
             } else {
-                var selectedConditionals = props.selectedConditionals
+                selectedConditionals = props.selectedConditionals
             }
             return (
                 <div className="row">

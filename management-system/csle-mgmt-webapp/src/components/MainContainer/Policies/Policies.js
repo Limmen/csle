@@ -54,7 +54,6 @@ const Policies = (props) => {
     const [showVectorPoliciesInfoModal, setShowVectorPoliciesInfoModal] = useState(false);
     const [multiThresholdPoliciesIds, setMultiThresholdPoliciesIds] = useState([]);
     const [filteredMultiThresholdPoliciesIds, setFilteredMultiThresholdPoliciesIds] = useState([]);
-    const [multiThresholdPoliciesSearchString, setMultiThresholdPoliciesSearchString] = useState("");
     const [selectedMultiThresholdPolicy, setSelectedMultiThresholdPolicy] = useState(null);
     const [selectedMultiThresholdPolicyId, setSelectedMultiThresholdPolicyId] = useState(null);
     const [loadingMultiThresholdPolicy, setLoadingMultiThresholdPolicy] = useState(true);
@@ -63,37 +62,31 @@ const Policies = (props) => {
     const [selectedPpoPolicyId, setSelectedPpoPolicyId] = useState(null);
     const [loadingPpoPolicy, setLoadingPpoPolicy] = useState(true);
     const [filteredPPOPoliciesIds, setFilteredPPOPoliciesIds] = useState([]);
-    const [ppoPoliciesSearchString, setPpoPoliciesSearchString] = useState("");
     const [tabularPoliciesIds, setTabularPoliciesIds] = useState([]);
     const [selectedTabularPolicy, setSelectedTabularPolicy] = useState(null);
     const [selectedTabularPolicyId, setSelectedTabularPolicyId] = useState(null);
     const [loadingTabularPolicy, setLoadingTabularPolicy] = useState(true);
     const [filteredTabulaPoliciesIds, setFilteredTabularPoliciesIds] = useState([]);
-    const [tabularPoliciesSearchString, setTabularPoliciesSearchString] = useState("");
     const [alphaVecPoliciesIds, setAlphaVecPoliciesIds] = useState([]);
     const [selectedAlphaVecPolicy, setSelectedAlphaVecPolicy] = useState(null);
     const [selectedAlphaVecPolicyId, setSelectedALphaVecPolicyId] = useState(null);
     const [loadingAlphaVecPolicy, setLoadingAlphaVecPolicy] = useState(true);
     const [filteredAlphaVecPoliciesIds, setFilteredAlphaVecPoliciesIds] = useState([]);
-    const [alphaVecPoliciesSearchString, setAlphaVecPoliciesSearchString] = useState("");
     const [dqnPoliciesIds, setDQNPoliciesIds] = useState([]);
     const [selectedDQNPolicy, setSelectedDQNPolicy] = useState(null);
     const [selectedDQNPolicyId, setSelectedDQNPolicyId] = useState(null);
     const [loadingDQNPolicy, setLoadingDQNPolicy] = useState(true);
     const [filteredDQNPoliciesIds, setFilteredDQNPoliciesIds] = useState([]);
-    const [dqnPoliciesSearchString, setDQNPoliciesSearchString] = useState("");
     const [fnnWSoftmaxPoliciesIds, setFnnWSoftmaxPoliciesIds] = useState([]);
     const [selectedFnnWSoftmaxPolicy, setSelectedFnnWSoftmaxPolicy] = useState(null);
     const [selectedFnnWSoftmaxPolicyId, setSelectedFnnWSoftmaxPolicyId] = useState(null);
     const [loadingFnnWSoftmaxPolicy, setLoadingFnnWSoftmaxPolicy] = useState(true);
     const [filteredFnnWSoftmaxPoliciesIds, setFilteredFnnWSoftmaxPoliciesIds] = useState([]);
-    const [fnnWSoftmaxPoliciesSearchString, setFnnWSoftmaxPoliciesSearchString] = useState("");
     const [vectorPoliciesIds, setVectorPoliciesIds] = useState([]);
     const [selectedVectorPolicy, setSelectedVectorPolicy] = useState(null);
     const [selectedVectorPolicyId, setSelectedVectorPolicyId] = useState(null);
     const [loadingVectorPolicy, setLoadingVectorPolicy] = useState(true);
     const [filteredVectorPoliciesIds, setFilteredVectorPoliciesIds] = useState([]);
-    const [vectorPoliciesSearchString, setVectorPoliciesSearchString] = useState("");
     const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
     const [loadingPPOPolicies, setLoadingPPOPolicies] = useState(true);
     const [loadingDQNPolicies, setLoadingDQNPolicies] = useState(true);
@@ -106,7 +99,222 @@ const Policies = (props) => {
     const setSessionData = props.setSessionData
     const alert = useAlert();
     const navigate = useNavigate();
-    // const ip = "172.31.212.92"
+
+    const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedFnnWSoftmaxPolicy(response)
+                setLoadingFnnWSoftmaxPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchTabularPolicy = useCallback((tabular_policy_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id.value}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedTabularPolicy(response)
+                setLoadingTabularPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchVectorPolicy = useCallback((vector_policy_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedVectorPolicy(response)
+                setLoadingVectorPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchDQNPolicy = useCallback((dqn_policy_id) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedDQNPolicy(response)
+                setLoadingDQNPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedAlphaVecPolicy(response)
+                setLoadingAlphaVecPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchPpoPolicy = useCallback((ppo_policy_id) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}/${ppo_policy_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept:
+                        "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedPpoPolicy(response)
+                setLoadingPpoPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
+
+    const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id.value}` +
+                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedMultiThresholdPolicy(response)
+                setLoadingMultiThresholdPolicy(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
     const fetchMultiThresholdPoliciesIds = useCallback(() => {
         fetch(
@@ -151,7 +359,7 @@ const Policies = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchMultiThresholdPolicy]);
 
     const fetchPPOPoliciesIds = useCallback(() => {
         fetch(
@@ -196,7 +404,7 @@ const Policies = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchPpoPolicy]);
 
     const fetchDQNPoliciesIds = useCallback(() => {
         fetch(
@@ -241,7 +449,7 @@ const Policies = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchDQNPolicy, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchTabularPoliciesIds = useCallback(() => {
         fetch(
@@ -286,7 +494,7 @@ const Policies = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchTabularPolicy]);
 
     const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
@@ -331,7 +539,7 @@ const Policies = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchVectorPolicy]);
 
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
@@ -376,7 +584,7 @@ const Policies = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchAlphaVecPolicy]);
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
@@ -421,7 +629,7 @@ const Policies = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchFnnWSoftmaxPolicy]);
 
     useEffect(() => {
         setLoadingMultiThresholdPolicies(true)
@@ -468,38 +676,7 @@ const Policies = (props) => {
                 fetchPPOPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchPpoPolicy = useCallback((ppo_policy_id) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}/${ppo_policy_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept:
-                        "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedPpoPolicy(response)
-                setLoadingPpoPolicy(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchPPOPoliciesIds]);
 
     const removeAllPpoPoliciesRequest = useCallback(() => {
         fetch(
@@ -528,7 +705,7 @@ const Policies = (props) => {
                 fetchPPOPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchPPOPoliciesIds]);
 
     const removePPOPolicy = (ppoPolicy) => {
         setLoadingPPOPolicies(true)
@@ -660,38 +837,7 @@ const Policies = (props) => {
                 fetchFnnWSoftmaxPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
-            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept:
-                        "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedFnnWSoftmaxPolicy(response)
-                setLoadingFnnWSoftmaxPolicy(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchFnnWSoftmaxPoliciesIds]);
 
     const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
         fetch(
@@ -720,7 +866,7 @@ const Policies = (props) => {
                 fetchFnnWSoftmaxPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchFnnWSoftmaxPoliciesIds]);
 
     const removeFnnWSoftmaxPolicy = (fnnWSoftmaxPolicy) => {
         setLoadingFnnWSoftmaxPolicies(true)
@@ -754,7 +900,7 @@ const Policies = (props) => {
                 fetchDQNPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchDQNPoliciesIds]);
 
     const removeAllDQNPoliciesConfirm = () => {
         confirmAlert({
@@ -954,37 +1100,6 @@ const Policies = (props) => {
         })
     }
 
-    const fetchDQNPolicy = useCallback((dqn_policy_id) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept:
-                        "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedDQNPolicy(response)
-                setLoadingDQNPolicy(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
     const removeAllDQNPoliciesRequest = useCallback(() => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}`
@@ -1012,7 +1127,7 @@ const Policies = (props) => {
                 fetchDQNPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchDQNPoliciesIds]);
 
     const removeDQNPolicy = (dqnPolicy) => {
         setLoadingDQNPolicies(true)
@@ -1046,38 +1161,7 @@ const Policies = (props) => {
                 fetchTabularPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchTabularPolicy = useCallback((tabular_policy_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept:
-                        "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedTabularPolicy(response)
-                setLoadingTabularPolicy(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchTabularPoliciesIds]);
 
     const removeAllTabularPoliciesRequest = useCallback(() => {
         fetch(
@@ -1106,7 +1190,7 @@ const Policies = (props) => {
                 fetchTabularPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchTabularPoliciesIds]);
 
     const removeTabularPolicy = (tabularPolicy) => {
         setLoadingTabularPolicies(true)
@@ -1238,38 +1322,7 @@ const Policies = (props) => {
                 fetchVectorPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchVectorPolicy = useCallback((vector_policy_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept:
-                        "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedVectorPolicy(response)
-                setLoadingVectorPolicy(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchVectorPoliciesIds]);
 
     const removeAllVectorPoliciesRequest = useCallback(() => {
         fetch(
@@ -1298,7 +1351,7 @@ const Policies = (props) => {
                 fetchVectorPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port,  navigate, props.sessionData.token, setSessionData, fetchVectorPoliciesIds]);
 
     const removeVectorPolicy = (vectorPolicy) => {
         setLoadingVectorPolicies(true)
@@ -1430,38 +1483,7 @@ const Policies = (props) => {
                 fetchAlphaVecPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
-                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept:
-                        "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedAlphaVecPolicy(response)
-                setLoadingAlphaVecPolicy(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchAlphaVecPoliciesIds]);
 
     const removeAllAlphaVecPoliciesRequest = useCallback(() => {
         fetch(
@@ -1490,7 +1512,7 @@ const Policies = (props) => {
                 fetchAlphaVecPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchAlphaVecPoliciesIds]);
 
     const removeAlphaVecPolicy = (alphaVecPolicy) => {
         setLoadingAlphaVecPolicies(true)
@@ -1623,38 +1645,7 @@ const Policies = (props) => {
                 fetchMultiThresholdPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-
-    const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id.value}` +
-                `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedMultiThresholdPolicy(response)
-                setLoadingMultiThresholdPolicy(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchMultiThresholdPoliciesIds]);
 
     const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
         fetch(
@@ -1683,7 +1674,7 @@ const Policies = (props) => {
                 fetchMultiThresholdPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchMultiThresholdPoliciesIds]);
 
     const removeMultiThresholdPolicy = (multiThresholdPolicy) => {
         setLoadingMultiThresholdPolicies(true)
@@ -3063,7 +3054,6 @@ const Policies = (props) => {
             return searchMultiThresholdPoliciesFilter(policyId, searchVal)
         });
         setFilteredMultiThresholdPoliciesIds(fPoliciesIds)
-        setMultiThresholdPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
         if (!loadingMultiThresholdPolicy && fPoliciesIds.length > 0) {
@@ -3100,7 +3090,6 @@ const Policies = (props) => {
             return searchPPOPoliciesFilter(policy, searchVal)
         });
         setFilteredPPOPoliciesIds(fPoliciesIds)
-        setPpoPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
         if (!loadingPpoPolicy && fPoliciesIds.length > 0) {
@@ -3127,8 +3116,6 @@ const Policies = (props) => {
         350
     );
 
-    //fnn
-
     const searchFnnWSoftmaxPoliciesFilter = (fnnWSoftmaxPolicyId, searchVal) => {
         return (searchVal === "" || fnnWSoftmaxPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
@@ -3136,10 +3123,9 @@ const Policies = (props) => {
     const searchFnnWSoftmaxPolicyChange = (event) => {
         var searchVal = event.target.value
         const fPoliciesIds = fnnWSoftmaxPoliciesIds.filter(policy => {
-            return searchPPOPoliciesFilter(policy, searchVal)
+            return searchFnnWSoftmaxPoliciesFilter(policy, searchVal)
         });
         setFilteredFnnWSoftmaxPoliciesIds(fPoliciesIds)
-        setFnnWSoftmaxPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
         if (!loadingFnnWSoftmaxPolicy && fPoliciesIds.length > 0) {
@@ -3176,7 +3162,6 @@ const Policies = (props) => {
             return searchDQNPoliciesFilter(policy, searchVal)
         });
         setFilteredDQNPoliciesIds(fPoliciesIds)
-        setDQNPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
         if (!loadingDQNPolicy && fPoliciesIds.length > 0) {
@@ -3214,7 +3199,6 @@ const Policies = (props) => {
             return searchTabularPoliciesFilter(policy, searchVal)
         });
         setFilteredTabularPoliciesIds(fPoliciesIds)
-        setTabularPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
         if (!loadingTabularPolicy && fPoliciesIds.length > 0) {
@@ -3251,7 +3235,6 @@ const Policies = (props) => {
             return searchVectorPoliciesFilter(policy, searchVal)
         });
         setFilteredVectorPoliciesIds(fPoliciesIds)
-        setVectorPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
         if (!loadingVectorPolicy && fPoliciesIds.length > 0) {
@@ -3288,7 +3271,6 @@ const Policies = (props) => {
             return searchAlphaVecPoliciesFilter(policy, searchVal)
         });
         setFilteredAlphaVecPoliciesIds(fPoliciesIds)
-        setAlphaVecPoliciesSearchString(searchVal)
 
         var selectedPolicyRemoved = false
         if (!loadingAlphaVecPolicy && fPoliciesIds.length > 0) {

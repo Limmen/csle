@@ -44,6 +44,36 @@ const ControlPlane = (props) => {
     const navigate = useNavigate();
     const setSessionData = props.setSessionData
 
+    const fetchSelectedExecution = useCallback((id_obj) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
+                + `${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if (res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if (response === null) {
+                    return
+                }
+                setSelectedEmulationExecution(response)
+                setLoadingSelectedEmulationExecution(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData]);
+
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
             Reload data about emulations from the backend
@@ -112,7 +142,8 @@ const ControlPlane = (props) => {
             setSelectedEmulationExecutionInfo(response)
             setLoadingSelectedEmulationExecutionInfo(false)
         })
-        .catch(error => console.log("error:" + error)), [ip, navigate, port, props]);
+        .catch(error => console.log("error:" + error)),
+        [ip, navigate, port, alert, props.sessionData.token, setSessionData]);
 
 
     const renderInfoTooltip = (props) => (
@@ -199,37 +230,8 @@ const ControlPlane = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchSelectedExecution = useCallback((id_obj) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}?`
-            + `${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if (res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if (response === null) {
-                    return
-                }
-                setSelectedEmulationExecution(response)
-                setLoadingSelectedEmulationExecution(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchSelectedExecution,
+        fetchExecutionInfo]);
 
     const wrapper = createRef();
 

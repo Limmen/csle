@@ -24,14 +24,6 @@ const AlphaVecPolicy = (props) => {
         </Tooltip>
     );
 
-    const PolicyRow = (props) => {
-        return (
-            props.row.map((entry, index) => {
-                return (<td>{entry}</td>)
-            })
-        )
-    }
-
     const Actions = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
