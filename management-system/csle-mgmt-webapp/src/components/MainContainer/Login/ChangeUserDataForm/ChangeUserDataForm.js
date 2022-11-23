@@ -1,6 +1,6 @@
 import React, {useState, useCallback} from 'react';
 import {useAlert} from "react-alert";
-import './Login.css';
+import './ChangeUserDataForm.css';
 import {useNavigate} from "react-router-dom";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
@@ -9,15 +9,6 @@ import {
     HTTP_REST_PUT,
     LOGIN_PAGE_RESOURCE,
     USERS_RESOURCE,
-    USERNAME_PROPERTY,
-    ORGANIZATION_PROPERTY,
-    EMAIL_PROPERTY,
-    TOKEN_PROPERTY,
-    LAST_NAME_PROPERTY,
-    ID_PROPERTY,
-    ADMIN_PROPERTY,
-    PASSWORD_PROPERTY,
-    SALT_PROPERTY,
     TOKEN_QUERY_PARAM
 } from "../../../Common/constants";
 
@@ -49,8 +40,7 @@ const ChangeUserDataForm = (props) => {
                 }),
                 body: JSON.stringify({user: user})
             }
-        )
-            .then(res => {
+        ).then(res => {
                 if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
@@ -64,15 +54,16 @@ const ChangeUserDataForm = (props) => {
                 return res.json()
             })
             .then(response => {
+                console.log("USER update???")
                 var sessionData = {
-                    TOKEN_PROPERTY : props.sessionData.token,
-                    USERNAME_PROPERTY: username,
-                    EMAIL_PROPERTY: email,
-                    FIRST_NAME_PROPERTY: firstName,
-                    LAST_NAME_PROPERTY: lastName,
-                    ORGANIZATION_PROPERTY: organization,
-                    ID_PROPERTY: userId,
-                    ADMIN_PROPERTY: admin
+                    "token" : props.sessionData.token,
+                    "username": username,
+                    "email": email,
+                    "first_name": firstName,
+                    "last-name": lastName,
+                    "organization": organization,
+                    "id": userId,
+                    "admin": admin
                 }
                 props.setSessionData(sessionData)
                 alert.show("User data updated successfully")

@@ -211,13 +211,13 @@ const SystemModels = (props) => {
                 setLoading(false)
                 if (modelIds.length > 0) {
                     setSelectedSystemModelId(modelIds[0])
-                    if (modelIds[0].type == "gaussian_mixture") {
+                    if (modelIds[0].type === GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE) {
                         fetchGaussianMixtureSystemModel(modelIds[0])
                     }
-                    if (modelIds[0].type == "empirical") {
+                    if (modelIds[0].type === EMPIRICAL_SYSTEM_MODEL_TYPE) {
                         fetchEmpiricalSystemModel(modelIds[0])
                     }
-                    if (modelIds[0].type == "gp") {
+                    if (modelIds[0].type === GP_SYSTEM_MODEL_TYPE) {
                         fetchGPSystemModel(modelIds[0])
                     }
                     setLoadingSelectedSystemModel(true)
@@ -482,7 +482,7 @@ const SystemModels = (props) => {
                 fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchSystemModelsIds, ip, navigate, port, props]);
 
     const removeModel = (model) => {
         setLoading(true)
