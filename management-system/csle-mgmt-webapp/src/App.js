@@ -27,6 +27,30 @@ import HostTerminal from "./components/MainContainer/HostTerminal/HostTerminal";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import useSession from "./components/MainContainer/SessionManagement/useSession";
 import { useAlert } from "react-alert";
+import {
+    LOGIN_PAGE_RESOURCE,
+    EMULATIONS_PAGE_RESOURCE,
+    SIMULATIONS_PAGE_RESOURCE,
+    EMULATION_STATISTICS_PAGE_RESOURCE,
+    MONITORING_PAGE_RESOURCE,
+    TRACES_PAGE_RESOURCE,
+    POLICY_EXAMINATION_PAGE_RESOURCE,
+    IMAGES_PAGE_RESOURCE,
+    TRAINING_PAGE_RESOURCE,
+    POLICIES_PAGE_RESOURCE,
+    SDN_CONTROLLERS_PAGE_RESOURCE,
+    CONTROL_PLANE_PAGE_RESOURCE,
+    CONTAINER_TERMINAL_PAGE_RESOURCE,
+    HOST_TERMINAL_PAGE_RESOURCE,
+    ABOUT_PAGE_RESOURCE,
+    DOWNLOADS_PAGE_RESOURCE,
+    REGISTER_PAGE_RESOURCE,
+    USER_ADMIN_PAGE_RESOURCE,
+    SYSTEM_ADMIN_PAGE_RESOURCE,
+    LOGS_ADMIN_PAGE_RESOURCE,
+    SYSTEM_MODELS_PAGE_RESOURCE,
+    JOBS_PAGE_RESOURCE
+} from "./components/Common/constants";
 
 /**
  * Container component containing the main components of the page and defining the routes
@@ -37,7 +61,7 @@ function App() {
 
     const ProtectedRoute = ({
                                 user,
-                                redirectPath = '/login-page',
+                                redirectPath = `/${LOGIN_PAGE_RESOURCE}`,
                                 children,
                             }) => {
         if (!sessionData) {
@@ -58,118 +82,119 @@ function App() {
                                                            setSessionData={setSessionData}/>}>
                                 <Route index element={<Navigate to="login-page" />}>
                                 </Route>
-                                <Route path="emulations-page" index element={
+                                <Route path={EMULATIONS_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <Emulations sessionData={sessionData}
                                                     setSessionData={setSessionData}
                                         />
                                     </ProtectedRoute>}>
                                 </Route>
-                                <Route path="simulations-page" index element={
+                                <Route path={SIMULATIONS_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <Simulations sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>}>
                                 </Route>
-                                <Route path="monitoring-page" index element={
+                                <Route path={MONITORING_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <Monitoring sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>}>
                                 </Route>
-                                <Route path="traces-page" index element={
+                                <Route path={TRACES_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <Traces sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="emulation-statistics-page" index element={
+                                <Route path={EMULATION_STATISTICS_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <EmulationStatistics sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="system-models-page" index element={
+                                <Route path={SYSTEM_MODELS_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <SystemModels sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="policy-examination-page" index element={
+                                <Route path={POLICY_EXAMINATION_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <PolicyExamination sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="images-page" index element={
+                                <Route path={IMAGES_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <ContainerImages sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="training-page" index element={
+                                <Route path={TRAINING_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <TrainingResults sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="policies-page" index element={
+                                <Route path={POLICIES_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <Policies sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="jobs-page" index element={
+                                <Route path={JOBS_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <Jobs sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="sdn-controllers-page" index element={
+                                <Route path={SDN_CONTROLLERS_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <SDNControllers sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="control-plane-page" index element={
+                                <Route path={CONTROL_PLANE_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <ControlPlane sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="container-terminal-page" index element={
+                                <Route path={CONTAINER_TERMINAL_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <ContainerTerminal sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="host-terminal-page" index element={
+                                <Route path={HOST_TERMINAL_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <HostTerminal sessionData={sessionData} setSessionData={setSessionData}/>
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="about-page" index element={<About/>}>
+                                <Route path={ABOUT_PAGE_RESOURCE} index element={<About/>}>
                                 </Route>
-                                <Route path="downloads-page" index element={<Downloads sessionData={sessionData}
-                                                                                       setSessionData={setSessionData}/>}>
+                                <Route path={DOWNLOADS_PAGE_RESOURCE} index
+                                       element={<Downloads sessionData={sessionData}
+                                                           setSessionData={setSessionData}/>}>
                                 </Route>
-                                <Route path="login-page" index element={<Login setSessionData={setSessionData}
+                                <Route path={LOGIN_PAGE_RESOURCE} index element={<Login setSessionData={setSessionData}
                                                                                sessionData={sessionData}/>}>
                                 </Route>
-                                <Route path="register-page" index element={<Register />}>
+                                <Route path={REGISTER_PAGE_RESOURCE} index element={<Register />}>
                                 </Route>
-                                <Route path="user-admin-page" index element={
+                                <Route path={USER_ADMIN_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                     <UserAdmin sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="system-admin-page" index element={
+                                <Route path={SYSTEM_ADMIN_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <SystemAdmin sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>
                                 }>
                                 </Route>
-                                <Route path="logs-admin-page" index element={
+                                <Route path={LOGS_ADMIN_PAGE_RESOURCE} index element={
                                     <ProtectedRoute>
                                         <LogsAdmin sessionData={sessionData} setSessionData={setSessionData} />
                                     </ProtectedRoute>

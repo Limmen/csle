@@ -4,19 +4,44 @@ import {NavLink, useLocation} from "react-router-dom";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import CsleSmallLogo from './CsleSmallLogo.png'
+import {
+    ABOUT_PAGE_RESOURCE,
+    CONTAINER_TERMINAL_PAGE_RESOURCE,
+    CONTROL_PLANE_PAGE_RESOURCE,
+    EMULATION_STATISTICS_PAGE_RESOURCE,
+    EMULATIONS_PAGE_RESOURCE,
+    HOST_TERMINAL_PAGE_RESOURCE,
+    IMAGES_PAGE_RESOURCE,
+    JOBS_PAGE_RESOURCE,
+    LOGS_ADMIN_PAGE_RESOURCE,
+    MONITORING_PAGE_RESOURCE,
+    POLICIES_PAGE_RESOURCE,
+    POLICY_EXAMINATION_PAGE_RESOURCE,
+    SDN_CONTROLLERS_PAGE_RESOURCE,
+    SIMULATIONS_PAGE_RESOURCE,
+    SYSTEM_ADMIN_PAGE_RESOURCE,
+    SYSTEM_MODELS_PAGE_RESOURCE,
+    TRACES_PAGE_RESOURCE,
+    TRAINING_PAGE_RESOURCE,
+    USER_ADMIN_PAGE_RESOURCE
+} from "../../Common/constants";
 
 /**
  * The header component that is present on every page
  */
 const Header = (props) => {
     const location = useLocation();
-    const managementDropdownRoutes = ["/simulations-page", "/emulations-page", "/monitoring-page", "/traces-page",
-        "/emulation-statistics-page", "/system-models-page", "/policy-examination-page", "/images-page",
-        "/training-page", "/policies-page", "/jobs-page", "/sdn-controllers-page", "/control-plane-page",
-        "/host-terminal-page", "/container-terminal-page"]
-    const adminDropdownRoutes = ["/user-admin-page", "/system-admin-page", "/logs-admin-page"]
+    const managementDropdownRoutes = [`/${SIMULATIONS_PAGE_RESOURCE}`, `/${EMULATIONS_PAGE_RESOURCE}`,
+        `/${MONITORING_PAGE_RESOURCE}`, `/${TRACES_PAGE_RESOURCE}`,
+        `/${EMULATION_STATISTICS_PAGE_RESOURCE}`, `/${SYSTEM_MODELS_PAGE_RESOURCE}`,
+        `/${POLICY_EXAMINATION_PAGE_RESOURCE}`, `/${IMAGES_PAGE_RESOURCE}`,
+        `/${TRAINING_PAGE_RESOURCE}`, `/${POLICIES_PAGE_RESOURCE}`, `/${JOBS_PAGE_RESOURCE}`,
+        `/${SDN_CONTROLLERS_PAGE_RESOURCE}`, `/${CONTROL_PLANE_PAGE_RESOURCE}`,
+        `/${HOST_TERMINAL_PAGE_RESOURCE}`, `/${CONTAINER_TERMINAL_PAGE_RESOURCE}`]
+    const adminDropdownRoutes = [`/${USER_ADMIN_PAGE_RESOURCE}`, `/${SYSTEM_ADMIN_PAGE_RESOURCE}`,
+        `/${LOGS_ADMIN_PAGE_RESOURCE}`]
 
-    const ActionsCellTracesDataset = (props) => {
+    const AdministrationDropDown = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <li className="nav-item dropdown navtabheader">
@@ -38,7 +63,7 @@ const Header = (props) => {
                             delay={{show: 0, hide: 0}}
                             overlay={renderUserAdminTooltip}
                             data-toggle="tab">
-                            <NavLink className="dropdown-item" to={"user-admin-page"} data-toggle="tab">
+                            <NavLink className="dropdown-item" to={USER_ADMIN_PAGE_RESOURCE} data-toggle="tab">
                                 User administration
                             </NavLink>
                         </OverlayTrigger>
@@ -47,7 +72,7 @@ const Header = (props) => {
                             delay={{show: 0, hide: 0}}
                             overlay={renderSystemAdminTooltip}
                             data-toggle="tab">
-                            <NavLink className="dropdown-item" to={"system-admin-page"} data-toggle="tab">
+                            <NavLink className="dropdown-item" to={SYSTEM_ADMIN_PAGE_RESOURCE} data-toggle="tab">
                                 System administration
                             </NavLink>
                         </OverlayTrigger>
@@ -56,7 +81,7 @@ const Header = (props) => {
                             delay={{show: 0, hide: 0}}
                             overlay={renderLogsAdminTooltip}
                             data-toggle="tab">
-                            <NavLink className="dropdown-item" to={"logs-admin-page"} data-toggle="tab">
+                            <NavLink className="dropdown-item" to={LOGS_ADMIN_PAGE_RESOURCE} data-toggle="tab">
                                 Logs administration
                             </NavLink>
                         </OverlayTrigger>
@@ -226,8 +251,8 @@ const Header = (props) => {
                             <OverlayTrigger
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
-                                overlay={renderRegisterTooltip()}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"register-page"}>
+                                overlay={renderRegisterTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={REGISTER_PAGE_RESOURCE}>
                                     Register
                                 </NavLink>
                             </OverlayTrigger>
@@ -236,8 +261,8 @@ const Header = (props) => {
                             <OverlayTrigger
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
-                                overlay={renderLoginTooltip()}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"login-page"}>
+                                overlay={renderLoginTooltip}>
+                                <NavLink className="nav-link navtablabel largeFont" to={LOGIN_PAGE_RESOURCE}>
                                     Login
                                 </NavLink>
                             </OverlayTrigger>
@@ -247,7 +272,7 @@ const Header = (props) => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderAboutTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"about-page"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={ABOUT_PAGE_RESOURCE}>
                                     About
                                 </NavLink>
                             </OverlayTrigger>
@@ -258,7 +283,7 @@ const Header = (props) => {
                                 placement="top"
                                 delay={{show: 0, hide: 0}}
                                 overlay={renderDownloadsTooltip}>
-                                <NavLink className="nav-link navtablabel largeFont" to={"downloads-page"}>
+                                <NavLink className="nav-link navtablabel largeFont" to={DOWNLOADS_PAGE_RESOURCE}>
                                     Downloads
                                 </NavLink>
                             </OverlayTrigger>
@@ -282,7 +307,7 @@ const Header = (props) => {
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderEmulationsTooltip}
                                     data-toggle="tab">
-                                    <NavLink className="dropdown-item" to={"emulations-page"} data-toggle="tab">
+                                    <NavLink className="dropdown-item" to={EMULATIONS_PAGE_RESOURCE} data-toggle="tab">
                                         Emulations
                                     </NavLink>
                                 </OverlayTrigger>
@@ -290,7 +315,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderSimulationsTooltip}>
-                                    <NavLink className="dropdown-item" to={"simulations-page"}>
+                                    <NavLink className="dropdown-item" to={SIMULATIONS_PAGE_RESOURCE}>
                                         Simulations
                                     </NavLink>
                                 </OverlayTrigger>
@@ -298,7 +323,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderMonitoringTooltip}>
-                                    <NavLink className="dropdown-item" to={"monitoring-page"}>
+                                    <NavLink className="dropdown-item" to={MONITORING_PAGE_RESOURCE}>
                                         Monitoring
                                     </NavLink>
                                 </OverlayTrigger>
@@ -306,7 +331,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderTracesTooltip}>
-                                    <NavLink className="dropdown-item" to={"traces-page"}>
+                                    <NavLink className="dropdown-item" to={TRAINING_PAGE_RESOURCE}>
                                         Traces
                                     </NavLink>
                                 </OverlayTrigger>
@@ -314,7 +339,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderEmulationStatisticsTooltip}>
-                                    <NavLink className="dropdown-item" to={"emulation-statistics-page"}>
+                                    <NavLink className="dropdown-item" to={EMULATION_STATISTICS_PAGE_RESOURCE}>
                                         Statistics
                                     </NavLink>
                                 </OverlayTrigger>
@@ -322,7 +347,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderSystemModelsTooltip}>
-                                    <NavLink className="dropdown-item" to={"system-models-page"}>
+                                    <NavLink className="dropdown-item" to={SYSTEM_MODELS_PAGE_RESOURCE}>
                                         System Models
                                     </NavLink>
                                 </OverlayTrigger>
@@ -330,7 +355,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderPolicyExaminationTooltip}>
-                                    <NavLink className="dropdown-item" to={"policy-examination-page"}>
+                                    <NavLink className="dropdown-item" to={POLICY_EXAMINATION_PAGE_RESOURCE}>
                                         Policy Examination
                                     </NavLink>
                                 </OverlayTrigger>
@@ -338,7 +363,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderContainerImagesTooltip}>
-                                    <NavLink className="dropdown-item" to={"images-page"}>
+                                    <NavLink className="dropdown-item" to={IMAGES_PAGE_RESOURCE}>
                                         Container Images
                                     </NavLink>
                                 </OverlayTrigger>
@@ -346,7 +371,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderTrainingResultsTooltip}>
-                                    <NavLink className="dropdown-item" to={"training-page"}>
+                                    <NavLink className="dropdown-item" to={TRAINING_PAGE_RESOURCE}>
                                         Training Results
                                     </NavLink>
                                 </OverlayTrigger>
@@ -354,7 +379,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderPoliciesTooltip}>
-                                    <NavLink className="dropdown-item" to={"policies-page"}>
+                                    <NavLink className="dropdown-item" to={POLICIES_PAGE_RESOURCE}>
                                         Policies
                                     </NavLink>
                                 </OverlayTrigger>
@@ -362,7 +387,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderJobsTooltip}>
-                                    <NavLink className="dropdown-item" to={"jobs-page"}>
+                                    <NavLink className="dropdown-item" to={JOBS_PAGE_RESOURCE}>
                                         Jobs
                                     </NavLink>
                                 </OverlayTrigger>
@@ -370,7 +395,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderSdnControllersTooltip}>
-                                    <NavLink className="dropdown-item" to={"sdn-controllers-page"}>
+                                    <NavLink className="dropdown-item" to={SDN_CONTROLLERS_PAGE_RESOURCE}>
                                         SDN Controllers
                                     </NavLink>
                                 </OverlayTrigger>
@@ -378,7 +403,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderControlPlaneTooltip}>
-                                    <NavLink className="dropdown-item" to={"control-plane-page"}>
+                                    <NavLink className="dropdown-item" to={CONTROL_PLANE_PAGE_RESOURCE}>
                                         Control Plane
                                     </NavLink>
                                 </OverlayTrigger>
@@ -386,7 +411,7 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderHostTerminalTooltip}>
-                                    <NavLink className="dropdown-item" to={"host-terminal-page"}>
+                                    <NavLink className="dropdown-item" to={HOST_TERMINAL_PAGE_RESOURCE}>
                                         Host Terminal
                                     </NavLink>
                                 </OverlayTrigger>
@@ -394,13 +419,13 @@ const Header = (props) => {
                                     placement="right"
                                     delay={{show: 0, hide: 0}}
                                     overlay={renderContainerTerminalTooltip}>
-                                    <NavLink className="dropdown-item" to={"container-terminal-page"}>
+                                    <NavLink className="dropdown-item" to={CONTAINER_TERMINAL_PAGE_RESOURCE}>
                                         Container Terminal
                                     </NavLink>
                                 </OverlayTrigger>
                             </div>
                         </li>
-                        <ActionsCellTracesDataset sessionData={props.sessionData} setSessionData={props.setSessionData}/>
+                        <AdministrationDropDown sessionData={props.sessionData} setSessionData={props.setSessionData}/>
                     </ul>
                 </div>
             </div>
