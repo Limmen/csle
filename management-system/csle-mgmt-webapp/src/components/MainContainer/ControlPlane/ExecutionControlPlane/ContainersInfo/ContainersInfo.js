@@ -4,9 +4,10 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button'
 import Table from 'react-bootstrap/Table'
 import Collapse from 'react-bootstrap/Collapse'
-import getIps from "../../src/components/Common/getIps";
-import SpinnerOrButton from "../../src/components/MainContainer/ControlPlane/ExecutionControlPlane/SpinnerOrButton/SpinnerOrButton";
-import LogsButton from "../../src/components/MainContainer/ControlPlane/ExecutionControlPlane/LogsButton/LogsButton";
+import getIps from "../../../../Common/getIps";
+import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
+import LogsButton from "../LogsButton/LogsButton";
+import ShellButton from "../ShellButton/ShellButton";
 
 /**
  * Subcomponent of the /control-plane page that represents information about containers
@@ -71,7 +72,9 @@ const ContainersInfo = (props) => {
                                             name={container.full_name_str} ip={container.full_name_str}
                                             startOrStop={props.startOrStop}
                                         />
-                                        <LogsButton name={container.full_name_str} entity="container"/>
+                                        <LogsButton name={container.full_name_str} entity="container"
+                                                    getLogs={props.getLogs}
+                                        />
                                         <ShellButton
                                             loading={props.loadingEntities.includes("container-" +
                                                 container.full_name_str + "-shell")}

@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table'
 import Spinner from 'react-bootstrap/Spinner'
 
 /**
- * Subcomponent of the /control-plane page
+ * Subcomponent of the /control-plane page that represents a modal with logs
  */
 const LogsModal = (props) => {
 

@@ -1,0 +1,97 @@
+import React from 'react';
+import './KafkaManagersInfo.css';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button'
+import Table from 'react-bootstrap/Table'
+import Collapse from 'react-bootstrap/Collapse'
+import SpinnerOrButton from "../SpinnerOrButton/SpinnerOrButton";
+import LogsButton from "../LogsButton/LogsButton";
+import getTopicsString from "../../../../Common/getTopicsString";
+
+/**
+ * Subcomponent of the /control-plane page that contains information about kafka managers
+ */
+const KafkaManagersInfo = (props) => {
+    return (
+        <Card className="subCard">
+            <Card.Header>
+                <Button
+                    onClick={() => props.setKafkaManagersOpen(!props.kafkaManagersOpen)}
+                    aria-controls="kafkaManagersBody"
+                    aria-expanded={props.kafkaManagersOpen}
+                    variant="link"
+                >
+                    <h5 className="semiTitle"> Kafka managers
+                    </h5>
+                </Button>
+            </Card.Header>
+            <Collapse in={props.kafkaManagersOpen}>
+                <div id="kafkaManagersBody" className="cardBodyHidden">
+                    <div className="table-responsive">
+                        <Table striped bordered hover>
+                            <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>IP</th>
+                                <th>Port</th>
+                                <th>Topics</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {props.kafkaManagersInfo.kafka_managers_statuses.map((status, index) =>
+                                <tr key={"kafka-manager-" + index}>
+                                    <td>Kafka Manager</td>
+                                    <td>{props.kafkaManagersInfo.ips[index]}</td>
+                                    <td>{props.kafkaManagersInfo.ports[index]}</td>
+                                    <td></td>
+                                    {props.activeStatus(props.kafkaManagersInfo.kafka_managers_running[index])}
+                                    <td>
+                                        <SpinnerOrButton
+                                            loading={props.loadingEntities.includes("kafka-manager-" +
+                                                props.kafkaManagersInfo.ips[index])}
+                                            running={props.kafkaManagersInfo.kafka_managers_running[index]}
+                                            entity={"kafka-manager"} name={"kafka-manager"}
+                                            ip={props.kafkaManagersInfo.ips[index]}
+                                            startOrStop={props.startOrStop}
+                                        />
+                                        <LogsButton name={props.kafkaManagersInfo.ips[index]}
+                                                    entity="kafka-manager"/>
+                                    </td>
+                                </tr>
+                            )}
+                            {props.kafkaManagersInfo.kafka_managers_statuses.map((status, index) =>
+                                <tr key={"kafka-" + index}>
+                                    <td>Kafka
+                                    </td>
+                                    <td>{props.kafkaManagersInfo.ips[index]}</td>
+                                    <td>{props.kafkaPort}</td>
+                                    <td>{getTopicsString(status.topics)}</td>
+                                    {props.activeStatus(status.running)}
+                                    <td>
+                                        <SpinnerOrButton
+                                            loading={props.loadingEntities.includes("kafka-" +
+                                                props.kafkaManagersInfo.ips[index])}
+                                            running={status.running}
+                                            entity={"kafka"} name={"kafka"}
+                                            ip={props.kafkaManagersInfo.ips[index]}
+                                            startOrStop={props.startOrStop}
+                                        />
+                                        <LogsButton name={props.kafkaManagersInfo.ips[index]}
+                                                    entity="kafka"/>
+                                    </td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </Table>
+                    </div>
+                </div>
+            </Collapse>
+        </Card>
+    );
+}
+
+KafkaManagersInfo.propTypes = {};
+KafkaManagersInfo.defaultProps = {};
+export default KafkaManagersInfo;
