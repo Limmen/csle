@@ -754,6 +754,7 @@ class COMMANDS:
     CHANNEL_SU_ROOT = "su root\n"
     CHANNEL_ROOT = "root\n"
     LIST_CACHE = "ls -1 "
+    LS = "ls"
     SUDO = "sudo"
     CHMOD_777 = "chmod 777"
     CHMOD_U_RWX = "chmod u+rwx"

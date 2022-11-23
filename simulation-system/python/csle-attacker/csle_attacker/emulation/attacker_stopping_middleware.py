@@ -16,8 +16,7 @@ class AttackerStoppingMiddleware:
         :param a: the action to take
         :return: s_prime
         """
-        raise NotImplemented("Not Implemented yet")
-
+        raise NotImplementedError("Not Implemented yet")
 
     @staticmethod
     def continue_intrusion(s: EmulationEnvState, a: EmulationAttackerAction) -> EmulationEnvState:
@@ -29,4 +28,3 @@ class AttackerStoppingMiddleware:
         :return: s_prime, reward, done
         """
         return s
-

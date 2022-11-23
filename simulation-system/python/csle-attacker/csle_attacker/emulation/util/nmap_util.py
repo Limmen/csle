@@ -98,9 +98,7 @@ class NmapUtil:
         status = NmapHostStatus.UP
         trace = None
         for child in list(xml_data.iter()):
-            if child.tag == constants.NMAP_XML.STATUS:
-                port_status = NmapUtil._parse_nmap_status_xml(child)
-            elif child.tag == constants.NMAP_XML.ADDRESS:
+            if child.tag == constants.NMAP_XML.ADDRESS:
                 addr, type = NmapUtil._parse_nmap_address_xml(child)
                 if type == NmapAddrType.MAC:
                     mac_addr = addr
@@ -166,8 +164,8 @@ class NmapUtil:
         return hostnames
 
     @staticmethod
-    def _parse_nmap_ports_xml(xml_data, action: EmulationAttackerAction) -> Tuple[
-        List[NmapPort], List[NmapVuln], List[NmapBruteCredentials]]:
+    def _parse_nmap_ports_xml(xml_data, action: EmulationAttackerAction) -> Tuple[List[NmapPort], List[NmapVuln],
+                                                                                  List[NmapBruteCredentials]]:
         """
         Parses a ports XML element in the XML tree
 
@@ -198,7 +196,7 @@ class NmapUtil:
                         service_fp = NmapUtil._parse_nmap_service_fp_xml(child_2)
                     elif child_2.tag == constants.NMAP_XML.SCRIPT:
                         result, brute_vuln = NmapUtil._parse_nmap_script(child_2, port=port_id, protocol=protocol,
-                                                                            service=service_name, action=action)
+                                                                         service=service_name, action=action)
                         if result is not None:
                             if isinstance(result, list) and len(result) > 0 and isinstance(result[0], NmapVuln):
                                 vulnerabilities = result
@@ -321,9 +319,11 @@ class NmapUtil:
         return vuln
 
     @staticmethod
-    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str, action: EmulationAttackerAction) \
-            -> Tuple[Union[List[NmapVuln], List[NmapBruteCredentials], NmapHttpEnum, NmapHttpGrep, NmapVulscan, None],
-                     Union[NmapVuln, None]]:
+    def _parse_nmap_script(xml_data, port: int, protocol: TransportProtocol, service: str,
+                           action: EmulationAttackerAction) -> Tuple[Union[List[NmapVuln],
+                                                                           List[NmapBruteCredentials],
+                                                                           NmapHttpEnum, NmapHttpGrep,
+                                                                           NmapVulscan, None], Union[NmapVuln, None]]:
         """
         Parses a XML script element
 
@@ -339,7 +339,7 @@ class NmapUtil:
                 return NmapUtil._parse_nmap_vulners(xml_data, port=port, protocol=protocol, service=service), None
             elif xml_data.attrib[constants.NMAP_XML.ID] in constants.NMAP_XML.BRUTE_SCRIPTS:
                 return NmapUtil._parse_nmap_brute(xml_data, port=port, protocol=protocol, service=service,
-                                                     action=action)
+                                                  action=action)
             elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.HTTP_ENUM_SCRIPT:
                 return NmapUtil._parse_nmap_http_enum_xml(xml_data), None
             elif xml_data.attrib[constants.NMAP_XML.ID] == constants.NMAP_XML.HTTP_GREP_SCRIPT:
@@ -370,8 +370,8 @@ class NmapUtil:
         return vulnerabilities
 
     @staticmethod
-    def _parse_nmap_brute(xml_data, port: int, protocol: TransportProtocol, service: str, action: EmulationAttackerAction) \
-            -> Tuple[List[NmapBruteCredentials], NmapVuln]:
+    def _parse_nmap_brute(xml_data, port: int, protocol: TransportProtocol, service: str,
+                          action: EmulationAttackerAction) -> Tuple[List[NmapBruteCredentials], NmapVuln]:
         """
         Parses a XML result from a brute force dictionary scan
 
@@ -389,7 +389,7 @@ class NmapUtil:
                         for c_2 in list(child.iter())[1:]:
                             if c_2.tag == constants.NMAP_XML.TABLE:
                                 cred = NmapUtil._parse_nmap_table_cred(c_2, port=port, protocol=protocol,
-                                                                          service=service)
+                                                                       service=service)
                                 credentials.append(cred)
                         break
         vulnerability = None
@@ -482,17 +482,12 @@ class NmapUtil:
         scan_result = NmapScanResult(hosts=[], ips=[s.emulation_env_config.containers_config.agent_ip])
         for file_name in file_names:
             for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
-                # try:
                 xml_data = NmapUtil.parse_nmap_scan(file_name=file_name,
                                                     emulation_env_config=s.emulation_env_config)
                 scan_result_new = NmapUtil.parse_nmap_scan_xml(
                     xml_data, ips=[s.emulation_env_config.containers_config.agent_ip], action=a)
                 s.attacker_obs_state.agent_reachable.update(scan_result.reachable)
-                scan_result =NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
-                # except Exception as e:
-                #     Logger.__call__().get_logger().warning(
-                #         f"There was an exception parsing the nmap result file:{file_name}, "
-                #         f"{str(e)}, {repr(e)}")
+                scan_result = NmapUtil.merge_nmap_scan_results(scan_result, scan_result_new)
         return NmapUtil.nmap_pivot_scan_action_helper(s=s, a=a, partial_result=scan_result.copy())
 
     @staticmethod
@@ -623,9 +618,9 @@ class NmapUtil:
                     h.ports = list(set(h.ports).union(h2.ports))
                     h.vulnerabilities = list(set(h.vulnerabilities).union(h2.vulnerabilities))
                     h.credentials = list(set(h.credentials).union(h2.credentials))
-                    if h.os == None:
+                    if h.os is None:
                         h.os = h2.os
-                    if h.trace == None:
+                    if h.trace is None:
                         h.trace = h2.trace
 
         scan_result_1.hosts = scan_result_1.hosts + new_hosts
@@ -643,83 +638,21 @@ class NmapUtil:
         :param partial_result: the initial result before pivoting
         :return: the new state
         """
-        total_cost = 0
         merged_scan_result = partial_result
         total_results = []
         threads = []
         for machine in s.attacker_obs_state.machines:
-            scan_result = None
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
                 thread = PivotNMAPScanThread(machine=machine, s=s, a=a)
                 thread.start()
                 threads.append(thread)
-                # ssh_connections_alive = []
-                # for c in machine.ssh_connections:
-                #     try:
-                #         EmulationUtil.execute_ssh_cmds(cmds = ["ls"], conn=c.conn)
-                #         ssh_connections_alive.append(c)
-                #     except Exception as e:
-                #         new_conn = ConnectionUtil.reconnect_ssh(c)
-                #         ssh_connections_alive.append(new_conn)
-                # machine.ssh_connections = ssh_connections_alive
-                # ssh_connections_sorted_by_root = sorted(
-                #     machine.ssh_connections,
-                #     key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
-                #                    x.credential.username),
-                #     reverse=True)
-                # for c in ssh_connections_sorted_by_root:
-                #     cwd = "/home/" + c.credential.username + "/"
-                #     cmds, file_names = a.nmap_cmds(machine_ips=machine.ips)
-                #     results = []
-                #     for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
-                #         try:
-                #             results = EmulationUtil.execute_ssh_cmds(cmds=cmds, conn=c.conn)
-                #             break
-                #         except Exception as e:
-                #             Logger.__call__().get_logger().warning(
-                #                 f"exception execution commands for ip:{c.ip}, "
-                #                 f"username: {c.credential.username}, conn: {c.conn}, "
-                #                 f"transport: {c.conn.get_transport()}, active: {c.conn.get_transport().is_active()},"
-                #                 f"{str(e)}, {repr(e)}")
-                #             c = ConnectionUtil.reconnect_ssh(c)
-                #     total_time = sum(list(map(lambda x: x[2], results)))
-                #     total_cost += total_time
-                #     EmulationUtil.log_measured_action_time(
-                #         total_time=total_time, action=a, emulation_env_config=s.emulation_env_config)
-                #
-                #     # Read result
-                #     scan_result = NmapScanResult(hosts=[], ips=machine.ips)
-                #     for file_name in file_names:
-                #         for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
-                #             try:
-                #                 xml_data = NmapUtil.parse_nmap_scan(
-                #                     file_name=file_name, emulation_env_config=s.emulation_env_config,
-                #                     conn=c.conn, dir=cwd)
-                #                 new_scan_result = NmapUtil.parse_nmap_scan_xml(xml_data, ips=machine.ips, action=a)
-                #                 scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=scan_result,
-                #                                                                scan_result_2=new_scan_result)
-                #                 machine.reachable.update(scan_result.reachable)
-                #             except Exception as e:
-                #                 Logger.__call__().get_logger().warning(
-                #                     f"There was an exception parsing the file:{file_name} on ip:{c.ip}, error:{e}")
-                #                 time.sleep(constants.ENV_CONSTANTS.SLEEP_RETRY)
-                #     break
-                #
-                # # Update state with scan result
-                # if merged_scan_result is not None and scan_result is not None:
-                #     total_results.append(scan_result)
-                #     merged_scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=merged_scan_result,
-                #                                                              scan_result_2=scan_result.copy())
-                # elif merged_scan_result is None:
-                #     total_results.append(scan_result)
-                #     merged_scan_result = scan_result.copy()
         for thread in threads:
             thread.join()
         for i in range(len(threads)):
             if merged_scan_result is not None and threads[i].scan_result is not None:
                 total_results.append(threads[i].scan_result)
                 merged_scan_result = NmapUtil.merge_nmap_scan_results(scan_result_1=merged_scan_result,
-                                                                         scan_result_2=threads[i].scan_result.copy())
+                                                                      scan_result_2=threads[i].scan_result.copy())
             elif merged_scan_result is None:
                 total_results.append(threads[i].scan_result)
                 merged_scan_result = threads[i].scan_result.copy()
@@ -742,7 +675,7 @@ class NmapUtil:
 
             valid_ips = True
             for ip in machine.ips:
-                if int(ip.split(".")[-1]) ==1:
+                if int(ip.split(".")[-1]) == 1:
                     valid_ips = False
             if valid_ips:
                 new_machines_obs_1.append(machine)
@@ -767,9 +700,10 @@ class PivotNMAPScanThread(threading.Thread):
         ssh_connections_alive = []
         for c in self.machine.ssh_connections:
             try:
-                EmulationUtil.execute_ssh_cmds(cmds = ["ls"], conn=c.conn)
+                EmulationUtil.execute_ssh_cmds(cmds=[constants.COMMANDS.LS], conn=c.conn)
                 ssh_connections_alive.append(c)
-            except Exception as _:
+            except Exception as e:
+                Logger.__call__().get_logger().debug(f"There was an error connecting to {str(e)}, {repr(e)}")
                 new_conn = ConnectionUtil.reconnect_ssh(c)
                 ssh_connections_alive.append(new_conn)
         self.machine.ssh_connections = ssh_connections_alive

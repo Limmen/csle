@@ -38,7 +38,8 @@ class ShellUtil:
         total_cost = 0
         ssh_connections_sorted_by_root = sorted(
             machine.ssh_connections,
-            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root, x.credential.username),
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                           x.credential.username),
             reverse=True)
         root_scan = False
         flag_paths = []
@@ -100,7 +101,8 @@ class ShellUtil:
         total_cost = 0
         telnet_connections_sorted_by_root = sorted(
             machine.telnet_connections,
-            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root, x.credential.username),
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                           x.credential.username),
             reverse=True)
         root_scan = False
         for c in telnet_connections_sorted_by_root:
@@ -132,8 +134,8 @@ class ShellUtil:
         return new_m_obs, total_cost, root_scan
 
     @staticmethod
-    def _find_flag_using_ftp(machine: EmulationAttackerMachineObservationState, emulation_env_config: EmulationEnvConfig,
-                             a: EmulationAttackerAction,
+    def _find_flag_using_ftp(machine: EmulationAttackerMachineObservationState,
+                             emulation_env_config: EmulationEnvConfig, a: EmulationAttackerAction,
                              new_m_obs: EmulationAttackerMachineObservationState) \
             -> Tuple[EmulationAttackerMachineObservationState, float, bool]:
         """
@@ -148,7 +150,8 @@ class ShellUtil:
         total_cost = 0
         ftp_connections_sorted_by_root = sorted(
             machine.ftp_connections,
-            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root, x.credential.username),
+            key=lambda x: (constants.SSH_BACKDOOR.BACKDOOR_PREFIX in x.credential.username, x.root,
+                           x.credential.username),
             reverse=True)
         root_scan = False
         flag_paths = []
@@ -192,7 +195,7 @@ class ShellUtil:
                     output_str = constants.NMAP.SHELL_ESCAPE.sub("", output_str)
                     output_list = output_str.split('\r\n')
                     output_list = output_list[1:-1]  # remove command ([0]) and prompt ([-1])
-                    flag_paths = list(filter(lambda x: not constants.FTP.ACCESS_FAILED in x and x != "", output_list))
+                    flag_paths = list(filter(lambda x: constants.FTP.ACCESS_FAILED not in x and x != "", output_list))
                     ff = False
                     # Check for flags
                     for fp in flag_paths:
@@ -315,7 +318,6 @@ class ShellUtil:
                 telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
                 telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.credential.username)
                 for c in telnet_root_connections:
-                    key = (machine.ips, c.credential.username)
                     # Install packages
                     cmd = a.cmds[0] + "\n"
                     start = time.time()
@@ -396,7 +398,6 @@ class ShellUtil:
             response = conn.read_until(constants.TELNET.PROMPT, timeout=5)
             return "file exists" in response.decode()
 
-
     @staticmethod
     def execute_ssh_backdoor_helper(s: EmulationEnvState, a: EmulationAttackerAction) -> EmulationEnvState:
         """
@@ -440,7 +441,6 @@ class ShellUtil:
                 ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.credential.username)
                 ssh_cost = 0
                 for c in ssh_root_connections:
-                    #try:
                     users = EmulationUtil._list_all_users(c, emulation_env_config=s.emulation_env_config)
                     users = sorted(users, key=lambda x: x)
                     user_exists = False
@@ -481,13 +481,10 @@ class ShellUtil:
                     if len(setup_connection_dto.target_connections) == 0:
                         Logger.__call__().get_logger().warning(
                             "cannot install backdoor, machine:{}, credentials:{}".format(machine.ips, credential))
-                    connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
-                                                                         credential=credential,
-                                                                         root=machine.root,
-                                                                         service=constants.SSH.SERVICE_NAME,
-                                                                         port=credential.port,
-                                                                         proxy=setup_connection_dto.proxies[0],
-                                                                         ip=setup_connection_dto.ip)
+                    connection_dto = EmulationConnectionObservationState(
+                        conn=setup_connection_dto.target_connections[0], credential=credential, root=machine.root,
+                        service=constants.SSH.SERVICE_NAME, port=credential.port, proxy=setup_connection_dto.proxies[0],
+                        ip=setup_connection_dto.ip)
                     new_m_obs.ssh_connections.append(connection_dto)
                     new_m_obs.backdoor_installed = True
                     new_machines_obs.append(new_m_obs)
@@ -521,14 +518,14 @@ class ShellUtil:
                             # Create user
                             create_user_cmd = a.cmds[1].format(username, pw, username) + "\n"
                             c.conn.write(create_user_cmd.encode())
-                            response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                            c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
 
                         ssh_running = EmulationUtil._check_if_ssh_server_is_running(c.conn, telnet=True)
                         if not ssh_running:
                             # Start SSH Server
                             start_ssh_cmd = a.cmds[0] + "\n"
                             c.conn.write(start_ssh_cmd.encode())
-                            response = c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
+                            c.conn.read_until(constants.TELNET.PROMPT, timeout=5)
 
                         # Create SSH connection
                         new_m_obs.shell_access_credentials.append(credential)
@@ -537,13 +534,10 @@ class ShellUtil:
                         setup_connection_dto = ConnectionUtil._ssh_setup_connection(
                             a=a, credentials=[credential], proxy_connections=[c.proxy], s=s)
                         telnet_cost += setup_connection_dto.total_time
-                        connection_dto = EmulationConnectionObservationState(conn=setup_connection_dto.target_connections[0],
-                                                                             credential=credential,
-                                                                             root=machine.root,
-                                                                             service=constants.SSH.SERVICE_NAME,
-                                                                             port=credential.port,
-                                                                             proxy=setup_connection_dto.proxies[0],
-                                                                             ip=setup_connection_dto.ip)
+                        connection_dto = EmulationConnectionObservationState(
+                            conn=setup_connection_dto.target_connections[0], credential=credential, root=machine.root,
+                            service=constants.SSH.SERVICE_NAME, port=credential.port,
+                            proxy=setup_connection_dto.proxies[0], ip=setup_connection_dto.ip)
                         new_m_obs.ssh_connections.append(connection_dto)
                         new_m_obs.backdoor_installed = True
                         new_machines_obs.append(new_m_obs)

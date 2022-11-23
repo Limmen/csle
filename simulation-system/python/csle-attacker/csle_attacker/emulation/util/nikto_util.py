@@ -127,19 +127,17 @@ class NiktoUtil:
         """
         target_ip = ""
         targetport = ""
-        sitename = ""
         vulnerabilities = []
 
         if constants.NIKTO_XML.TARGETPORT in xml_data.keys():
             targetport = xml_data.attrib[constants.NIKTO_XML.TARGETPORT]
         if constants.NIKTO_XML.TARGETIP in xml_data.keys():
             target_ip = xml_data.attrib[constants.NIKTO_XML.TARGETIP]
-        if constants.NIKTO_XML.SITENAME in xml_data.keys():
-            sitename = xml_data.attrib[constants.NIKTO_XML.SITENAME]
 
         for child in list(xml_data.iter()):
             if child.tag == constants.NIKTO_XML.ITEM:
-                vuln = NmapUtil._parse_nmap_status_xml(child)
+                vuln = NiktoUtil._parse_nikto_item(NmapUtil._parse_nmap_status_xml(child))
+                vulnerabilities.append(vuln)
         nikto_scan_result = NiktoScanResult(vulnerabilities=vulnerabilities, port=targetport,
                                             ip=target_ip, sitename=target_ip)
         return nikto_scan_result

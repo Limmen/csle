@@ -9,7 +9,7 @@ class Attacker:
     """
 
     @staticmethod
-    def attacker_transition(s : EmulationEnvState, attacker_action : EmulationAttackerAction) -> EmulationEnvState:
+    def attacker_transition(s: EmulationEnvState, attacker_action: EmulationAttackerAction) -> EmulationEnvState:
         """
         Implements an attacker transition of the MDP/Markov Game:
         (s, a) --> s'

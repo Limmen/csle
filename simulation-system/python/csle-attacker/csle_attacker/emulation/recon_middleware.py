@@ -108,7 +108,6 @@ class ReconMiddleware:
         """
         return NmapUtil.nmap_scan_action_helper(s=s, a=a)
 
-
     @staticmethod
     def execute_nmap_vulners(s: EmulationEnvState, a: EmulationAttackerAction) -> EmulationEnvState:
         """
