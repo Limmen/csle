@@ -98,7 +98,7 @@ const Policies = (props) => {
 
     const fetchMultiThresholdPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/multi-threshold-policies?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/multi-threshold-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -142,7 +142,7 @@ const Policies = (props) => {
 
     const fetchPPOPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/ppo-policies?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/ppo-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -186,7 +186,7 @@ const Policies = (props) => {
 
     const fetchDQNPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/dqn-policies?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/dqn-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -230,7 +230,7 @@ const Policies = (props) => {
 
     const fetchTabularPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/tabular-policies?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/tabular-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -274,7 +274,7 @@ const Policies = (props) => {
 
     const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/vector-policies?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/vector-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -318,7 +318,7 @@ const Policies = (props) => {
 
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/alpha-vec-policies?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/alpha-vec-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -362,7 +362,7 @@ const Policies = (props) => {
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/fnn-w-softmax-policies?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/fnn-w-softmax-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({

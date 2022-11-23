@@ -112,7 +112,7 @@ const Traces = (props) => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -155,7 +155,7 @@ const Traces = (props) => {
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({

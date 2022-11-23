@@ -20,7 +20,14 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    DATA_COLLECTION_JOBS_RESOURCE,
+    HTTP_PREFIX,
+    HTTP_REST_DELETE,
+    HTTP_REST_GET, HTTP_REST_POST,
+    LOGIN_PAGE_RESOURCE, STOP_PROPERTY,
+    SYSTEM_IDENTIFICATION_JOBS_RESOURCE, TOKEN_QUERY_PARAM, TRAINING_JOBS_RESOURCE
+} from "../../Common/constants";
 
 /**
  * The component representing the /jobs-page
@@ -28,7 +35,6 @@ import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
 const Jobs = (props) => {
     const [showTrainingJobsInfoModal, setShowTrainingJobsInfoModal] = useState(false);
     const [trainingJobsLoading, setTrainingJobsLoading] = useState(false);
-    const [trainingJobs, setTrainingJobs] = useState([]);
     const [trainingJobsIds, setTrainingJobsIds] = useState([]);
     const [selectedTrainingJobId, setSelectedTrainingJobId] = useState(null);
     const [selectedTrainingJob, setSelectedTrainingJob] = useState(null);
@@ -36,7 +42,6 @@ const Jobs = (props) => {
     const [filteredTrainingJobsIds, setFilteredTrainingJobsIds] = useState([]);
     const [showDataCollectionJobsInfoModal, setShowDataCollectionJobsInfoModal] = useState(false);
     const [dataCollectionJobsLoading, setDataCollectionJobsLoading] = useState(false);
-    const [dataCollectionJobs, setDataCollectionJobs] = useState([]);
     const [dataCollectionJobsIds, setDataCollectionJobsIds] = useState([]);
     const [selectedDataCollectionJobId, setSelectedDataCollectionJobId] = useState(null);
     const [selectedDataCollectionJob, setSelectedDataCollectionJob] = useState(null);
@@ -48,7 +53,6 @@ const Jobs = (props) => {
     const [dataCollectionJobsSearchString, setDataCollectionJobsSearchString] = useState("");
     const [showSystemIdentificationJobsInfoModal, setShowSystemIdentificationJobsInfoModal] = useState(false);
     const [systemIdentificationJobsLoading, setSystemIdentificationJobsLoading] = useState(false);
-    const [systemIdentificationJobs, setSystemIdentificationJobs] = useState([]);
     const [systemIdentificationJobsIds, setSystemIdentificationJobsIds] = useState([]);
     const [selectedSystemIdentificationJobId, setSelectedSystemIdentificationJobId] = useState(null);
     const [selectedSystemIdentificationJob, setSelectedSystemIdentificationJob] = useState(null);
@@ -65,9 +69,10 @@ const Jobs = (props) => {
 
     const fetchTrainingJobsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -89,9 +94,11 @@ const Jobs = (props) => {
                 const trainingJobsIds = response.map((id_obj, index) => {
                     var lbl = ""
                     if (id_obj.running) {
-                        lbl = "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation + " (running)"
+                        lbl = `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
+                            + `, emulation: ${id_obj.emulation} (running)`
                     } else {
-                        lbl = "ID: " + id_obj.id + ", simulation: " + id_obj.simulation + ", emulation: " + id_obj.emulation
+                        lbl = `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
+                            + `, emulation: ${id_obj.emulation}`
                     }
                     return {
                         value: id_obj.id,
@@ -117,9 +124,10 @@ const Jobs = (props) => {
 
     const fetchDataCollectionJobIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -141,9 +149,9 @@ const Jobs = (props) => {
                 const dataCollectionJobIds = response.map((id_obj, index) => {
                     var lbl = ""
                     if (id_obj.running) {
-                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + " (running)"
+                        lbl = `ID: ${id_obj.id}, emulation: ${id_obj.emulation} (running)`
                     } else {
-                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        lbl = `ID: ${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                     return {
                         value: id_obj.id,
@@ -169,9 +177,10 @@ const Jobs = (props) => {
 
     const fetchSystemIdentificationJobsIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs?ids=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -193,9 +202,9 @@ const Jobs = (props) => {
                 const systemIdentificationJobsIds = response.map((id_obj, index) => {
                     var lbl = ""
                     if (id_obj.running) {
-                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation + " (running)"
+                        lbl = `ID: ${id_obj.id}, emulation: ${id_obj.emulation} (running)`
                     } else {
-                        lbl = "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        lbl = `ID: ${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                     return {
                         value: id_obj.id,
@@ -229,9 +238,10 @@ const Jobs = (props) => {
 
     const removeTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -258,9 +268,10 @@ const Jobs = (props) => {
 
     const removeAllTrainingJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -397,10 +408,10 @@ const Jobs = (props) => {
 
     const removeSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id +
+            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -427,9 +438,10 @@ const Jobs = (props) => {
 
     const removeAllSystemIdentificationJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -567,10 +579,10 @@ const Jobs = (props) => {
 
     const stopTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id + "?stop=true" + "&token="
-                + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
+                + `?${STOP_PROPERTY}=true&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -597,9 +609,10 @@ const Jobs = (props) => {
 
     const fetchTrainingJob = useCallback((training_job_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id.value + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}/${training_job_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -632,10 +645,10 @@ const Jobs = (props) => {
 
     const stopSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id + "?stop=true" +
-                `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}`
+                + `?${STOP_PROPERTY}=true&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -662,10 +675,10 @@ const Jobs = (props) => {
 
     const fetchSystemIdentificationJob = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id.value +
-            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/` +
+            `${system_identification_job_id.value}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -698,9 +711,10 @@ const Jobs = (props) => {
 
     const startTrainingJobRequest = useCallback((training_job_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/training-jobs/' + training_job_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TRAINING_JOBS_RESOURCE}/${training_job_id}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -732,10 +746,10 @@ const Jobs = (props) => {
 
     const startSystemIdentificationJobRequest = useCallback((system_identification_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/system-identification-jobs/' + system_identification_job_id +
+            (`${HTTP_PREFIX}${ip}:${port}/${SYSTEM_IDENTIFICATION_JOBS_RESOURCE}/${system_identification_job_id}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -976,10 +990,10 @@ const Jobs = (props) => {
 
     const removeDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id +
+            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1006,9 +1020,10 @@ const Jobs = (props) => {
 
     const removeAllDataCollectionJobsRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1146,10 +1161,10 @@ const Jobs = (props) => {
 
     const stopDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id + "?stop=true"
-            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}`
+                + `?${STOP_PROPERTY}=true&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1176,10 +1191,10 @@ const Jobs = (props) => {
 
     const fetchDataCollectionJob = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id.value +
+            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id.value}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1212,10 +1227,10 @@ const Jobs = (props) => {
 
     const startDataCollectionJobRequest = useCallback((data_collection_job_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/data-collection-jobs/' + data_collection_job_id +
+            (`${HTTP_PREFIX}${ip}:${port}/${DATA_COLLECTION_JOBS_RESOURCE}/${data_collection_job_id}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

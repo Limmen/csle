@@ -14,7 +14,12 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../../Common/constants";
+import {
+    HTTP_PREFIX,
+    HTTP_REST_POST,
+    LOGIN_PAGE_RESOURCE,
+    FILE_RESOURCE,
+    TOKEN_QUERY_PARAM} from "../../../Common/constants";
 /**
  * The component representing the /jobs/<id> resource for training jobs
  */
@@ -35,9 +40,10 @@ const TrainingJob = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/file' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${FILE_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
