@@ -14,7 +14,11 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import parseLogs from "../../Common/parseLogs";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    HTTP_PREFIX,
+    LOGIN_PAGE_RESOURCE,
+    DOCKER_STATS_MANAGER_SUBRESOURCE, HTTP_REST_POST, HTTP_REST_GET
+} from "../../Common/constants";
 
 /**
  * Component representing the /logs-admin-page
@@ -48,9 +52,10 @@ const LogsAdmin = (props) => {
 
     const fetchStatsManagerLogs = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/docker-stats-manager' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${DOCKER_STATS_MANAGER_SUBRESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -74,9 +79,10 @@ const LogsAdmin = (props) => {
 
     const fetchLogFile = useCallback((path) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/file' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${FILE_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
@@ -101,9 +107,10 @@ const LogsAdmin = (props) => {
 
     const fetchCsleLogFiles = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -141,9 +148,10 @@ const LogsAdmin = (props) => {
 
     const fetchPrometheusLogs = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/prometheus' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${PROMETHEUS_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -167,9 +175,10 @@ const LogsAdmin = (props) => {
 
     const fetchNodeExporterLogs = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/node-exporter' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${NODE_EXPORTER_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -193,7 +202,8 @@ const LogsAdmin = (props) => {
 
     const fetchCAdvisorLogs = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/cadvisor' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${CADVISOR_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: "GET",
                 headers: new Headers({
@@ -219,9 +229,10 @@ const LogsAdmin = (props) => {
 
     const fetchGrafanaLogs = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ":" + port + '/logs/grafana' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${LOGS_RESOURCE}/${GRAFANA_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

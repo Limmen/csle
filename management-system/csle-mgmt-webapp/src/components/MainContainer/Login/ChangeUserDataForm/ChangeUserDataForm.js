@@ -4,7 +4,21 @@ import './Login.css';
 import {useNavigate} from "react-router-dom";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../../Common/constants";
+import {
+    HTTP_PREFIX,
+    HTTP_REST_PUT,
+    LOGIN_PAGE_RESOURCE,
+    USERS_RESOURCE,
+    USERNAME_PROPERTY,
+    ORGANIZATION_PROPERTY,
+    EMAIL_PROPERTY,
+    TOKEN_PROPERTY,
+    LAST_NAME_PROPERTY,
+    ID_PROPERTY,
+    ADMIN_PROPERTY,
+    PASSWORD_PROPERTY,
+    SALT_PROPERTY
+} from "../../../Common/constants";
 
 /**
  * The component representing the /login-page
@@ -26,9 +40,9 @@ const ChangeUserDataForm = (props) => {
 
     const updateUser = useCallback((user) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/users/' + user.id + "?token=" + token,
+            `${HTTP_PREFIX}${ip}:${port}/${USERS_RESOURCE}/${user.id}?${TOKEN_QUERY_PARAM}=${token}`,
             {
-                method: "PUT",
+                method: HTTP_REST_PUT,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
@@ -50,14 +64,14 @@ const ChangeUserDataForm = (props) => {
             })
             .then(response => {
                 var sessionData = {
-                    "token" : props.sessionData.token,
-                    "username": username,
-                    "email": email,
-                    "first_name": firstName,
-                    "last_name": lastName,
-                    "organization": organization,
-                    "id": userId,
-                    "admin": admin
+                    TOKEN_PROPERTY : props.sessionData.token,
+                    USERNAME_PROPERTY: username,
+                    EMAIL_PROPERTY: email,
+                    FIRST_NAME_PROPERTY: firstName,
+                    LAST_NAME_PROPERTY: lastName,
+                    ORGANIZATION_PROPERTY: organization,
+                    ID_PROPERTY: userId,
+                    ADMIN_PROPERTY: admin
                 }
                 props.setSessionData(sessionData)
                 alert.show("User data updated successfully")
@@ -69,15 +83,15 @@ const ChangeUserDataForm = (props) => {
     const updateUserFormSubmit = async (event) => {
         event.preventDefault()
         const userConfiguration = {
-            "username": username,
-            "password": password,
-            "email": email,
-            "first_name": firstName,
-            "last_name": lastName,
-            "organization": organization,
-            "id": userId,
-            "admin": admin,
-            "salt": ""
+            USERNAME_PROPERTY: username,
+            PASSWORD_PROPERTY: password,
+            EMAIL_PROPERTY: email,
+            FIRST_NAME_PROPERTY: firstName,
+            LAST_NAME_PROPERTY: lastName,
+            ORGANIZATION_PROPERTY: organization,
+            ID_PROPERTY: userId,
+            ADMIN_PROPERTY: admin,
+            SALT_PROPERTY: ""
         }
         if (username === "" || password === "") {
             alert.show("Username or password cannot be empty")

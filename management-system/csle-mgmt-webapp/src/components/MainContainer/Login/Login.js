@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button'
 import ChangeUserDataForm from "./ChangeUserDataForm/ChangeUserDataForm";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX} from "../../Common/constants";
+import {HTTP_PREFIX, HTTP_REST_POST, USERNAME_PROPERTY, PASSWORD_PROPERTY} from "../../Common/constants";
 
 /**
  * The component representing the /login-page
@@ -19,9 +19,9 @@ const Login = (props) => {
 
     const loginUser = useCallback((credentials) => {
         fetch(
-           `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/login',
+           `${HTTP_PREFIX}${ip}:${port}/${LOGIN_RESOURCE}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
@@ -47,8 +47,8 @@ const Login = (props) => {
     const loginFormSubmit = async (event) => {
         event.preventDefault()
         const credentials = {
-            "username": username,
-            "password": password
+            USERNAME_PROPERTY: username,
+            PASSWORD_PROPERTY: password
         }
         if (username === "" || password === "") {
             alert.show("Username or password cannot be empty")
