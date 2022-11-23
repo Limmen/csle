@@ -200,7 +200,8 @@ def start_stop_client_manager(execution_id: int):
                 f"Starting client manager on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             TrafficController.start_client_manager(emulation_env_config=execution.emulation_env_config)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -249,7 +250,8 @@ def start_stop_client_population(execution_id: int):
                 f"Starting client population on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             TrafficController.start_client_population(emulation_env_config=execution.emulation_env_config)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -298,7 +300,8 @@ def start_stop_client_producer(execution_id: int):
                 f"Starting client producer on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             TrafficController.start_client_producer(emulation_env_config=execution.emulation_env_config)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -349,7 +352,8 @@ def start_stop_docker_stats_manager(execution_id: int):
                 log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
                 log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir
             )
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -396,7 +400,8 @@ def start_stop_docker_stats_monitor(execution_id: int):
                 f"Starting docker stats monitor for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             ContainerController.start_docker_stats_thread(execution=execution)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -443,7 +448,8 @@ def start_stop_kafka_manager(execution_id: int):
                 f"Starting kafka manager on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             KafkaController.start_kafka_manager(emulation_env_config=execution.emulation_env_config)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -491,7 +497,8 @@ def start_stop_kafka(execution_id: int):
                 f"execution id: {execution.ip_first_octet}")
             KafkaController.start_kafka_server(emulation_env_config=execution.emulation_env_config)
             time.sleep(35)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -538,7 +545,8 @@ def start_stop_snort_manager(execution_id: int):
                 f"Starting snort manager on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             SnortIDSController.start_snort_managers(emulation_env_config=execution.emulation_env_config)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -586,7 +594,8 @@ def start_stop_snort_ids(execution_id: int):
                 f"execution id: {execution.ip_first_octet}")
             SnortIDSController.start_snort_idses(emulation_env_config=execution.emulation_env_config)
         time.sleep(10)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -633,7 +642,8 @@ def start_stop_snort_ids_monitor(execution_id: int):
                 f"Starting snort-ids-monitor on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             SnortIDSController.start_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -694,7 +704,8 @@ def start_stop_ossec_manager(execution_id: int):
                     f"Starting OSSEC IDS manager with ip:{ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
                 OSSECIDSController.start_ossec_ids_manager(emulation_env_config=execution.emulation_env_config, ip=ip)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -756,7 +767,8 @@ def start_stop_ossec_ids(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 OSSECIDSController.start_ossec_ids(emulation_env_config=execution.emulation_env_config, ip=ip)
         time.sleep(30)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -819,7 +831,8 @@ def start_stop_ossec_ids_monitor(execution_id: int):
                     f"Starting OSSEC IDS monitor with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
                 OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -880,7 +893,8 @@ def start_stop_host_manager(execution_id: int):
                     f"Starting host manager with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_host_manager(emulation_env_config=execution.emulation_env_config, ip=ip)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -941,7 +955,8 @@ def start_stop_host_monitor_thread(execution_id: int):
                     f"Starting host monitor with IP:{ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
                 HostController.start_host_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1002,7 +1017,8 @@ def start_stop_container(execution_id: int):
                 f"Starting container: {container_name}, on emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             ContainerController.start_container(container_name)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1052,7 +1068,8 @@ def start_stop_elk_manager(execution_id: int):
                 f"Starting ELK manager: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             ELKController.start_elk_manager(emulation_env_config=execution.emulation_env_config)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1103,7 +1120,8 @@ def start_stop_elk_stack(execution_id: int):
                 f"execution id: {execution.ip_first_octet}")
             ELKController.start_elk_stack(emulation_env_config=execution.emulation_env_config)
             time.sleep(30)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1153,7 +1171,8 @@ def start_stop_elastic(execution_id: int):
                 f"execution id: {execution.ip_first_octet}")
             ELKController.start_elastic(emulation_env_config=execution.emulation_env_config)
         time.sleep(2)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1204,7 +1223,8 @@ def start_stop_logstash(execution_id: int):
                 f"execution id: {execution.ip_first_octet}")
             ELKController.start_logstash(emulation_env_config=execution.emulation_env_config)
         time.sleep(2)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1254,7 +1274,8 @@ def start_stop_kibana(execution_id: int):
                 f"execution id: {execution.ip_first_octet}")
             ELKController.start_kibana(emulation_env_config=execution.emulation_env_config)
         time.sleep(2)
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1318,7 +1339,8 @@ def start_stop_traffic_manager(execution_id: int):
                 TrafficController.start_traffic_manager(
                     emulation_env_config=execution.emulation_env_config,
                     node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip))
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -1384,7 +1406,8 @@ def start_stop_traffic_generator(execution_id: int):
                     emulation_env_config=execution.emulation_env_config,
                     node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip),
                     container=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip))
-        response = jsonify({})
+        execution_info = EmulationEnvController.get_execution_info(execution=execution)
+        response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
