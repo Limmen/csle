@@ -1,8 +1,5 @@
-import React, {useState, useEffect, useCallback, createRef} from 'react';
+import React, {useState} from 'react';
 import './Policies.css';
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
-import Form from 'react-bootstrap/Form';
 import Select from 'react-select'
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import AlphaVecPolicyComponent from "./AlphaVecPolicyComponent/AlphaVecPolicyComponent";
