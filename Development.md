@@ -9,8 +9,19 @@ python -m pip install flake8
 
 ## Static code analysis
 
+### Python: 
 ```bash
 flake8 simulation-system/python/
+```
+
+### JavaScript:
+To run the linter and print possible errors, use the commands:
+```bash
+cd management-system/csle-mgmt-webapp/; npm run lint
+```
+To automatically fix linting errors, use the command:
+```bash
+cd management-system/csle-mgmt-webapp/; npm run lint:fix
 ```
 
 ## Lines of code
