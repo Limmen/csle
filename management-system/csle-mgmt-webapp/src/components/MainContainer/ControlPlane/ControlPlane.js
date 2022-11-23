@@ -25,10 +25,32 @@ import serverPort from "../../Common/serverPort";
 const ControlPlane = (props) => {
     const [emulationExecutionIds, setEmulationExecutionIds] = useState([]);
     const [filteredEmulationExecutionIds, setFilteredEmulationExecutionIds] = useState([]);
-    const [emulationExecutionContainerOptions, setEmulationExecutionContainerOptions] = useState([]);
     const [selectedEmulationExecutionId, setSelectedEmulationExecutionId] = useState(null);
     const [selectedEmulationExecution, setSelectedEmulationExecution] = useState(null);
-    const [selectedEmulationExecutionInfo, setSelectedEmulationExecutionInfo] = useState(null);
+    const [selectedEmulationExecutionActiveNetworks, setSelectedEmulationExecutionActiveNetworks] = useState(
+        null);
+    const [selectedEmulationExecutionClientManagersInfo, setSelectedEmulationExecutionClientManagersInfo] = useState(
+        null);
+    const [selectedEmulationExecutionDockerStatsManagersInfo, setSelectedEmulationExecutionDockerStatsManagersInfo] = useState(
+        null);
+    const [selectedEmulationExecutionElkManagersInfo, setSelectedEmulationExecutionElkManagersInfo] = useState(
+        null);
+    const [selectedEmulationExecutionHostManagersInfo, setSelectedEmulationExecutionHostManagersInfo] = useState(
+        null);
+    const [selectedEmulationExecutionInactiveNetworks, setSelectedEmulationExecutionInactiveNetworks] = useState(
+        null);
+    const [selectedEmulationExecutionKafkaManagersInfo, setSelectedEmulationExecutionKafkaManagersInfo] = useState(
+        null);
+    const [selectedEmulationExecutionOSSECIDSManagersInfo,
+        setSelectedEmulationExecutionOSSECIDSManagersInfo] = useState(null);
+    const [selectedEmulationExecutionSnortIDSManagersInfo,
+        setSelectedEmulationExecutionSnortIDSManagersInfo] = useState(null);
+    const [selectedEmulationExecutionRunningContainers,
+        setSelectedEmulationExecutionRunningContainers] = useState(null);
+    const [selectedEmulationExecutionStoppedContainers,
+        setSelectedEmulationExecutionStoppedContainers] = useState(null);
+    const [selectedEmulationExecutionTrafficManagersInfo,
+        setSelectedEmulationExecutionTrafficManagersInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingSelectedEmulationExecution, setLoadingSelectedEmulationExecution] = useState(true);
     const [loadingSelectedEmulationExecutionInfo, setLoadingSelectedEmulationExecutionInfo] = useState(true);
@@ -60,7 +82,18 @@ const ControlPlane = (props) => {
         setLoadingSelectedEmulationExecution(true)
         setLoadingSelectedEmulationExecutionInfo(true)
         setSelectedEmulationExecution(null)
-        setSelectedEmulationExecutionInfo(null)
+        setSelectedEmulationExecutionActiveNetworks(null)
+        setSelectedEmulationExecutionClientManagersInfo(null)
+        setSelectedEmulationExecutionDockerStatsManagersInfo(null)
+        setSelectedEmulationExecutionElkManagersInfo(null)
+        setSelectedEmulationExecutionHostManagersInfo(null)
+        setSelectedEmulationExecutionInactiveNetworks(null)
+        setSelectedEmulationExecutionKafkaManagersInfo(null)
+        setSelectedEmulationExecutionOSSECIDSManagersInfo(null)
+        setSelectedEmulationExecutionSnortIDSManagersInfo(null)
+        setSelectedEmulationExecutionRunningContainers(null)
+        setSelectedEmulationExecutionStoppedContainers(null)
+        setSelectedEmulationExecutionTrafficManagersInfo(null)
         fetchEmulationExecutionIds()
     }
 
@@ -107,7 +140,18 @@ const ControlPlane = (props) => {
             if (response === null) {
                 return
             }
-            setSelectedEmulationExecutionInfo(response)
+            setSelectedEmulationExecutionActiveNetworks(response.active_networks)
+            setSelectedEmulationExecutionClientManagersInfo(response.client_managers_info)
+            setSelectedEmulationExecutionDockerStatsManagersInfo(response.docker_stats_managers_info)
+            setSelectedEmulationExecutionElkManagersInfo(response.elk_managers_info)
+            setSelectedEmulationExecutionHostManagersInfo(response.host_managers_info)
+            setSelectedEmulationExecutionInactiveNetworks(response.inactive_networks)
+            setSelectedEmulationExecutionKafkaManagersInfo(response.kafka_managers_info)
+            setSelectedEmulationExecutionOSSECIDSManagersInfo(response.ossec_ids_managers_info)
+            setSelectedEmulationExecutionSnortIDSManagersInfo(response.snort_ids_managers_info)
+            setSelectedEmulationExecutionRunningContainers(response.running_containers)
+            setSelectedEmulationExecutionStoppedContainers(response.stopped_containers)
+            setSelectedEmulationExecutionTrafficManagersInfo(response.traffic_managers_info)
             setLoadingSelectedEmulationExecutionInfo(false)
         })
         .catch(error => console.log("error:" + error)), []);
@@ -134,6 +178,7 @@ const ControlPlane = (props) => {
                 return res.json()
             })
             .then(response => {
+                console.log(response)
                 var id_obj = {
                     value: {
                         id: id,
@@ -260,16 +305,6 @@ const ControlPlane = (props) => {
                 }
                 setSelectedEmulationExecution(response)
                 setLoadingSelectedEmulationExecution(false)
-                if (response !== null && response !== undefined) {
-                    const containerOptions = response.emulation_env_config.containers_config.containers.map((c, index) => {
-                        return {
-                            value: c,
-                            label: c.full_name_str
-                        }
-                    })
-                    setEmulationExecutionContainerOptions(containerOptions)
-                }
-
             })
             .catch(error => console.log("error:" + error))
     }, []);
@@ -286,7 +321,8 @@ const ControlPlane = (props) => {
     const SelectedExecutionView = (props) => {
         if (props.loading || props.loadingSelectedEmulationExecution || props.loadingSelectedEmulationExecutionInfo
             || props.selectedEmulationExecution === null || props.selectedEmulationExecution === undefined ||
-            props.selectedEmulationExecutionInfo === undefined || props.selectedEmulationExecutionInfo === null) {
+            props.clientManagersInfo === undefined ||
+            props.clientManagersInfo === null) {
             if (props.loadingSelectedEmulationExecution || props.loadingSelectedEmulationExecutionInfo) {
                 return (
                     <h3>
@@ -311,7 +347,18 @@ const ControlPlane = (props) => {
                             execution={props.selectedEmulationExecution} wrapper={wrapper}
                             key={props.selectedEmulationExecution.name}
                             sessionData={props.sessionData}
-                            info={props.selectedEmulationExecutionInfo}
+                            activeNetworks={props.activeNetworks}
+                            clientManagersInfo={props.clientManagersInfo}
+                            dockerStatsManagersInfo={props.dockerStatsManagersInfo}
+                            elkManagersInfo={props.elkManagersInfo}
+                            hostManagersInfo={props.hostManagersInfo}
+                            inactiveNetworks={props.inactiveNetworks}
+                            kafkaManagersInfo={props.kafkaManagersInfo}
+                            ossecIDSManagersInfo={props.ossecIDSManagersInfo}
+                            snortIDSManagersInfo={props.snortIDSManagersInfo}
+                            runningContainers={props.runningContainers}
+                            stoppedContainers={props.stoppedContainers}
+                            trafficManagersInfo={props.trafficManagersInfo}
                             startOrStopEntity={props.startOrStopEntity}
                         />
                     </Accordion>
@@ -419,8 +466,18 @@ const ControlPlane = (props) => {
             <SelectedExecutionView loadingSelectedEmulationExecution={loadingSelectedEmulationExecution}
                                    loadingSelectedEmulationExecutionInfo={loadingSelectedEmulationExecutionInfo}
                                    selectedEmulationExecution={selectedEmulationExecution}
-                                   selectedEmulationExecutionInfo={selectedEmulationExecutionInfo}
-                                   emulationExecutionContainerOptions={emulationExecutionContainerOptions}
+                                   activeNetworks={selectedEmulationExecutionActiveNetworks}
+                                   clientManagersInfo={selectedEmulationExecutionClientManagersInfo}
+                                   dockerStatsManagersInfo={selectedEmulationExecutionDockerStatsManagersInfo}
+                                   elkManagersInfo={selectedEmulationExecutionElkManagersInfo}
+                                   hostManagersInfo={selectedEmulationExecutionHostManagersInfo}
+                                   inactiveNetworks={selectedEmulationExecutionInactiveNetworks}
+                                   kafkaManagersInfo={selectedEmulationExecutionKafkaManagersInfo}
+                                   ossecIDSManagersInfo={selectedEmulationExecutionOSSECIDSManagersInfo}
+                                   snortIDSManagersInfo={selectedEmulationExecutionSnortIDSManagersInfo}
+                                   runningContainers={selectedEmulationExecutionRunningContainers}
+                                   stoppedContainers={selectedEmulationExecutionStoppedContainers}
+                                   trafficManagersInfo={selectedEmulationExecutionTrafficManagersInfo}
                                    startOrStopEntity={startOrStopEntity}
                                    sessionData={props.sessionData}
             />
