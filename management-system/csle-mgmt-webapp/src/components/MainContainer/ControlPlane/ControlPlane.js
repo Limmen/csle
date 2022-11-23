@@ -18,7 +18,12 @@ import {useNavigate} from "react-router-dom";
 import {useAlert} from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX} from "../../Common/constants";
+import {
+    EMULATION_EXECUTIONS_RESOURCE,
+    EMULATION_QUERY_PARAM,
+    HTTP_PREFIX, HTTP_REST_GET,
+    INFO_SUBRESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM
+} from "../../Common/constants";
 
 /**
  * Component with a user interface to the control plane of the emulations
@@ -83,10 +88,10 @@ const ControlPlane = (props) => {
     );
 
     const fetchExecutionInfo = useCallback((id_obj) => fetch(
-        (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/emulation-executions/' + id_obj.value.id + "/info?emulation="
-            + id_obj.value.emulation + "&token=" + props.sessionData.token),
+        (`${HTTP_PREFIX}${ip}:${port}/${EMULATION_EXECUTIONS_RESOURCE}/${id_obj.value.id}/${INFO_SUBRESOURCE}?`
+            +`${EMULATION_QUERY_PARAM}=${id_obj.value.emulation}&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
         {
-            method: "GET",
+            method: HTTP_REST_GET,
             headers: new Headers({
                 Accept: "application/vnd.github.cloak-preview"
             })
@@ -96,7 +101,7 @@ const ControlPlane = (props) => {
             if (res.status === 401) {
                 alert.show("Session token expired. Please login again.")
                 props.setSessionData(null)
-                navigate("/login-page");
+                navigate(`/${LOGIN_PAGE_RESOURCE}`);
                 return null
             }
             return res.json()
@@ -163,7 +168,7 @@ const ControlPlane = (props) => {
                 if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -211,7 +216,7 @@ const ControlPlane = (props) => {
                 if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()

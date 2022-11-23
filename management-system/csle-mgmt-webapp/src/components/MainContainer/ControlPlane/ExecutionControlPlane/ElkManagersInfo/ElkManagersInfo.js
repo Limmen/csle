@@ -15,7 +15,7 @@ import {
     LOGSTASH_SUBRESOURCE,
     KIBANA_SUBRESOURCE,
     ELK_MANAGER_SUBRESOURCE,
-    ELASTIC_SUBRESOURCE
+    ELASTIC_SUBRESOURCE, HTTP_PREFIX
 } from "../../../../Common/constants";
 
 /**
@@ -37,7 +37,7 @@ const ElkManagersInfo = (props) => {
                 delay={{show: 0, hide: 0}}
                 overlay={renderKibanaTooltip}
             >
-                <a href={"http://" + ip + ":" + props.port} target="_blank" rel="noopener noreferrer">
+                <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
                     <Button variant="light" className="startButton" size="sm">
                         <img src={KibanaImg} alt="Kibana" className="img-fluid"/>
                     </Button>

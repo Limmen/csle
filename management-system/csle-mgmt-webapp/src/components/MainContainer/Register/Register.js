@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import './Register.css';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX} from "../../Common/constants";
+import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
 
 /**
  * The component representing the /register-page
@@ -54,7 +54,7 @@ const Register = () => {
                     setFirstName("")
                     setLastName("")
                     setOrganization("")
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                 }
             })
             .catch(error => console.log("error:" + error))

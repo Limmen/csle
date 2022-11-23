@@ -21,7 +21,7 @@ import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
 import GrafanaImg from './Grafana.png'
 import PrometheusImg from './Prometheus.png'
-import {HTTP_PREFIX} from "../../Common/constants";
+import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
 
 /**
  * Component containing various plots for monitoring a running execution of an emulation
@@ -325,7 +325,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -353,7 +353,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -381,7 +381,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -409,7 +409,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -437,7 +437,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -482,7 +482,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -523,7 +523,7 @@ const Monitoring = (props) => {
             if(res.status === 401) {
                 alert.show("Session token expired. Please login again.")
                 props.setSessionData(null)
-                navigate("/login-page");
+                navigate(`/${LOGIN_PAGE_RESOURCE}`);
                 return null
             }
             return res.json()
@@ -562,7 +562,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -590,7 +590,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -618,7 +618,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -646,7 +646,7 @@ const Monitoring = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()

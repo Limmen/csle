@@ -53,7 +53,7 @@ const Experiment = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()

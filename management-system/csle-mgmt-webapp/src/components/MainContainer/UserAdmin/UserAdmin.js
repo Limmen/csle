@@ -12,7 +12,7 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Type } from 'react-bootstrap-table2-editor';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX} from "../../Common/constants";
+import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
 
 
 /**
@@ -86,7 +86,7 @@ const UserAdmin = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
@@ -113,7 +113,7 @@ const UserAdmin = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 if(res.status === 400) {

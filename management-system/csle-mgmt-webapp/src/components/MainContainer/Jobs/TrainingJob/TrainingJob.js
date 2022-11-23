@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
-import {HTTP_PREFIX} from "../../../Common/constants";
+import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../../Common/constants";
 /**
  * The component representing the /jobs/<id> resource for training jobs
  */
@@ -48,7 +48,7 @@ const TrainingJob = (props) => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
                     props.setSessionData(null)
-                    navigate("/login-page");
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
                 return res.json()
