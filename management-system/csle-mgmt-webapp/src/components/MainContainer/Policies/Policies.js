@@ -28,7 +28,18 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    ALPHA_VEC_POLICIES_RESOURCE,
+    FNN_W_SOFTMAX_POLICIES_RESOURCE,
+    HTTP_PREFIX,
+    HTTP_REST_DELETE,
+    HTTP_REST_GET,
+    LOGIN_PAGE_RESOURCE,
+    MULTI_THRESHOLD_POLICIES_RESOURCE,
+    TABULAR_POLICIES_RESOURCE,
+    TOKEN_QUERY_PARAM,
+    VECTOR_POLICIES_RESOURCE
+} from "../../Common/constants";
 
 /**
  * Component representing the /policies page
@@ -98,9 +109,10 @@ const Policies = (props) => {
 
     const fetchMultiThresholdPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/multi-threshold-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -122,7 +134,7 @@ const Policies = (props) => {
                 const multiThresholdPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setMultiThresholdPoliciesIds(multiThresholdPoliciesIds)
@@ -142,9 +154,10 @@ const Policies = (props) => {
 
     const fetchPPOPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/ppo-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -166,7 +179,7 @@ const Policies = (props) => {
                 const ppoPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setPpoPoliciesIds(ppoPoliciesIds)
@@ -186,9 +199,10 @@ const Policies = (props) => {
 
     const fetchDQNPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/dqn-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -210,7 +224,7 @@ const Policies = (props) => {
                 const dqnPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setDQNPoliciesIds(dqnPoliciesIds)
@@ -230,9 +244,10 @@ const Policies = (props) => {
 
     const fetchTabularPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/tabular-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+                   + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -254,7 +269,7 @@ const Policies = (props) => {
                 const tabularPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setTabularPoliciesIds(tabularPoliciesIds)
@@ -274,9 +289,10 @@ const Policies = (props) => {
 
     const fetchVectorPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/vector-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -298,7 +314,7 @@ const Policies = (props) => {
                 const vectorPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setVectorPoliciesIds(vectorPoliciesIds)
@@ -318,9 +334,10 @@ const Policies = (props) => {
 
     const fetchAlphaVecPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/alpha-vec-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -342,7 +359,7 @@ const Policies = (props) => {
                 const alphavecPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setAlphaVecPoliciesIds(alphavecPoliciesIds)
@@ -362,9 +379,10 @@ const Policies = (props) => {
 
     const fetchFnnWSoftmaxPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/fnn-w-softmax-policies?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -386,7 +404,7 @@ const Policies = (props) => {
                 const fnnWSoftmaxPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setFnnWSoftmaxPoliciesIds(fnnWSoftmaxPoliciesIds)
@@ -424,9 +442,10 @@ const Policies = (props) => {
 
     const removePpoPoliciesRequest = useCallback((ppo_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/ppo-policies/' + ppo_policy_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}/${ppo_policy_id}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -452,9 +471,10 @@ const Policies = (props) => {
 
     const fetchPpoPolicy = useCallback((ppo_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/ppo-policies/' + ppo_policy_id.value + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}/${ppo_policy_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -482,9 +502,10 @@ const Policies = (props) => {
 
     const removeAllPpoPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/ppo-policies' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${PPO_POLICIES_RESOURCE}` +
+            `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -613,10 +634,10 @@ const Policies = (props) => {
 
     const removeFnnWSoftmaxPoliciesRequest = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id +
+            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -642,10 +663,10 @@ const Policies = (props) => {
 
     const fetchFnnWSoftmaxPolicy = useCallback((fnn_w_softmax_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/fnn-w-softmax-policies/' + fnn_w_softmax_policy_id.value +
+            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}/${fnn_w_softmax_policy_id.value}` +
             `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -673,9 +694,10 @@ const Policies = (props) => {
 
     const removeAllFnnWSoftmaxPoliciesRequest = useCallback(() => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/fnn-w-softmax-policies' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            (`${HTTP_PREFIX}${ip}:${port}/${FNN_W_SOFTMAX_POLICIES_RESOURCE}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -706,9 +728,10 @@ const Policies = (props) => {
 
     const removeDQNPoliciesRequest = useCallback((dqn_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/dqn-policies' + dqn_policy_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -932,9 +955,10 @@ const Policies = (props) => {
 
     const fetchDQNPolicy = useCallback((dqn_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/dqn-policies/' + dqn_policy_id.value + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}/${dqn_policy_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -962,9 +986,10 @@ const Policies = (props) => {
 
     const removeAllDQNPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/dqn-policies' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${DQN_POLICIES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -995,9 +1020,10 @@ const Policies = (props) => {
 
     const removeTabularPoliciesRequest = useCallback((tabular_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/tabular-policies/' + tabular_policy_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1023,10 +1049,10 @@ const Policies = (props) => {
 
     const fetchTabularPolicy = useCallback((tabular_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/tabular-policies/' + tabular_policy_id.value
+            (`${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}/${tabular_policy_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -1054,9 +1080,10 @@ const Policies = (props) => {
 
     const removeAllTabularPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/tabular-policies' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${TABULAR_POLICIES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1185,9 +1212,10 @@ const Policies = (props) => {
 
     const removeVectorPoliciesRequest = useCallback((vector_policy_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/vector-policies/' + vector_policy_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1213,10 +1241,10 @@ const Policies = (props) => {
 
     const fetchVectorPolicy = useCallback((vector_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/vector-policies/' + vector_policy_id.value
+            (`${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}/${vector_policy_id.value}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -1244,9 +1272,10 @@ const Policies = (props) => {
 
     const removeAllVectorPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/vector-policies' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${VECTOR_POLICIES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1375,10 +1404,10 @@ const Policies = (props) => {
 
     const removeAlphaVecPoliciesRequest = useCallback((alpha_vec_policies_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/alpha-vec-policies/' + alpha_vec_policies_id + "?token="
-            + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policies_id}`
+             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1404,10 +1433,10 @@ const Policies = (props) => {
 
     const fetchAlphaVecPolicy = useCallback((alpha_vec_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/alpha-vec-policies/' + alpha_vec_policy_id.value + "?token="
-                + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}/${alpha_vec_policy_id.value}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept:
                         "application/vnd.github.cloak-preview"
@@ -1435,9 +1464,10 @@ const Policies = (props) => {
 
     const removeAllAlphaVecPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/alpha-vec-policies' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${ALPHA_VEC_POLICIES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1567,10 +1597,10 @@ const Policies = (props) => {
 
     const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/multi-threshold-policies/' + multi_threshold_policy_id + "?token="
-                + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1597,10 +1627,10 @@ const Policies = (props) => {
 
     const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/multi-threshold-policies/' + multi_threshold_policy_id.value +
+            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -1627,9 +1657,10 @@ const Policies = (props) => {
 
     const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/multi-threshold-policies' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
