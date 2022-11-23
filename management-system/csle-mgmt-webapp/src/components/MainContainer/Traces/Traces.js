@@ -21,7 +21,13 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX, LOGIN_PAGE_RESOURCE} from "../../Common/constants";
+import {
+    HTTP_PREFIX, HTTP_REST_DELETE,
+    HTTP_REST_GET,
+    LOGIN_PAGE_RESOURCE,
+    SIMULATION_TRACES_RESOURCE,
+    TOKEN_QUERY_PARAM
+} from "../../Common/constants";
 
 
 /**
@@ -54,9 +60,10 @@ const Traces = (props) => {
 
     const fetchEmulationTrace = useCallback((trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces/' + trace_id.value + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES}/${trace_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -83,9 +90,10 @@ const Traces = (props) => {
 
     const fetchSimulationTrace = useCallback((trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces/' + trace_id.value + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}/${trace_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -112,9 +120,10 @@ const Traces = (props) => {
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES}${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -136,7 +145,7 @@ const Traces = (props) => {
                 const emulationTracesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", emulation: " + id_obj.emulation
+                        label: `ID: ${id_obj.id}, emulation: ${id_obj.emulation}`
                     }
                 })
                 setEmulationTracesIds(emulationTracesIds)
@@ -155,9 +164,10 @@ const Traces = (props) => {
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces?${IDS_QUERY_PARAM}=true' + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -179,7 +189,7 @@ const Traces = (props) => {
                 const simulationTracesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
-                        label: "ID: " + id_obj.id + ", simulation: " + id_obj.simulation
+                        label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
                 setSimulationTracesIds(simulationTracesIds)
@@ -196,36 +206,6 @@ const Traces = (props) => {
             .catch(error => console.log("error:" + error))
     }, []);
 
-    const fetchSimulationTraces = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: "GET",
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setFilteredSimulationTracesIds(response)
-                setSimulationTraces(response)
-                setLoadingSimulationTraces(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
     useEffect(() => {
         setLoadingEmulationTraces(true)
         setLoadingSimulationTraces(true)
@@ -235,10 +215,10 @@ const Traces = (props) => {
 
     const removeSimulationTraceRequest = useCallback((simulation_trace_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces/' + simulation_trace_id + "?token="
-                + props.sessionData.token),
+            (`${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}/${simulation_trace_id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -271,9 +251,10 @@ const Traces = (props) => {
 
     const removeEmulationTraceRequest = useCallback((emulation_trace_id) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces/' + emulation_trace_id + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}/${emulation_trace_id}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -299,9 +280,10 @@ const Traces = (props) => {
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/emulation-traces' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATION_TRACES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
@@ -327,9 +309,10 @@ const Traces = (props) => {
 
     const removeAllSimulationTracesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port +'/simulation-traces' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${SIMULATION_TRACES_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "DELETE",
+                method: HTTP_REST_DELETE,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })

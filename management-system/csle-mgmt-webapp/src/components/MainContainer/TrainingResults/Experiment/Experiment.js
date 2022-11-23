@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
+import {HTTP_PREFIX, HTTP_REST_POST, LOGIN_PAGE_RESOURCE} from "../../../Common/constants";
 
 /**
  * Component representing the /training-results/id resource
@@ -40,9 +41,10 @@ const Experiment = (props) => {
 
     const fetchLogs = useCallback(() => {
         fetch(
-            `http://` + ip + ":" + port + '/file' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${FILE_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "POST",
+                method: HTTP_REST_POST,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),

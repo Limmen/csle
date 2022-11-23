@@ -12,7 +12,7 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Type } from 'react-bootstrap-table2-editor';
 import serverIp from "../../Common/serverIp";
 import serverPort from "../../Common/serverPort";
-import {HTTP_PREFIX} from "../../Common/constants";
+import {HTTP_PREFIX, HTTP_REST_GET, HTTP_REST_PUT} from "../../Common/constants";
 
 
 /**
@@ -62,9 +62,10 @@ const SystemAdmin = (props) => {
 
     const updateConfig = useCallback((config) => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/config' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "PUT",
+                method: HTTP_REST_PUT,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 }),
@@ -93,9 +94,10 @@ const SystemAdmin = (props) => {
 
     const fetchConfig = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/` + ip + ':' + port + '/config' + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
-                method: "GET",
+                method: HTTP_REST_GET,
                 headers: new Headers({
                     Accept: "application/vnd.github.cloak-preview"
                 })
