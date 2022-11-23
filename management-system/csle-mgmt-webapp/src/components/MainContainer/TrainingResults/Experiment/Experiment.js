@@ -66,7 +66,7 @@ const Experiment = (props) => {
                 setLogs(parseLogs(response))
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props]);
 
     const renderRemoveExperimentTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

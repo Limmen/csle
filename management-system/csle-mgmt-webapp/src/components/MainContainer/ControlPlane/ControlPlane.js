@@ -38,7 +38,6 @@ const ControlPlane = (props) => {
     const [loadingSelectedEmulationExecution, setLoadingSelectedEmulationExecution] = useState(true);
     const [loadingSelectedEmulationExecutionInfo, setLoadingSelectedEmulationExecutionInfo] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
-    const [searchString, setSearchString] = useState("");
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
@@ -77,7 +76,6 @@ const ControlPlane = (props) => {
             return searchFilter(executionIdObj, searchVal)
         });
         setFilteredEmulationExecutionIds(filteredEIds)
-        setSearchString(searchVal)
     }
 
     const searchHandler = useDebouncedCallback(
@@ -113,7 +111,7 @@ const ControlPlane = (props) => {
             setSelectedEmulationExecutionInfo(response)
             setLoadingSelectedEmulationExecutionInfo(false)
         })
-        .catch(error => console.log("error:" + error)), []);
+        .catch(error => console.log("error:" + error)), [ip, navigate, port, props]);
 
 
     const renderInfoTooltip = (props) => (

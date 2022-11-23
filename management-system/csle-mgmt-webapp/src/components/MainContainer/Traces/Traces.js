@@ -38,7 +38,6 @@ import {
 const Traces = (props) => {
     const [showSimulationTracesInfoModal, setShowSimulationTracesInfoModal] = useState(false);
     const [showEmulationTracesInfoModal, setShowEmulationTracesInfoModal] = useState(false);
-    const [simulationTraces, setSimulationTraces] = useState([]);
     const [selectedEmulationTraceId, setSelectedEmulationTraceId] = useState(null);
     const [selectedSimulationTraceId, setSelectedSimulationTraceId] = useState(null);
     const [selectedEmulationTrace, setSelectedEmulationTrace] = useState(null);
@@ -51,8 +50,6 @@ const Traces = (props) => {
     const [loadingSimulationTraces, setLoadingSimulationTraces] = useState(true);
     const [filteredEmulationTracesIds, setFilteredEmulationTracesIds] = useState([]);
     const [filteredSimulationTracesIds, setFilteredSimulationTracesIds] = useState([]);
-    const [emulationTracesSearchString, setEmulationTracesSearchString] = useState([]);
-    const [simulationTracesSearchString, setSimulationTracesSearchString] = useState([]);
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
@@ -88,7 +85,7 @@ const Traces = (props) => {
                 setLoadingSelectedEmulationTrace(false)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, props, navigate]);
 
     const fetchSimulationTrace = useCallback((trace_id) => {
         fetch(
@@ -118,7 +115,7 @@ const Traces = (props) => {
                 setLoadingSelectedSimulationTrace(false)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, port, props, navigate]);
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
@@ -162,7 +159,7 @@ const Traces = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchEmulationTrace, ip, navigate, port, props]);
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
@@ -206,7 +203,7 @@ const Traces = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchSimulationTrace, ip, navigate, port, props]);
 
     useEffect(() => {
         setLoadingEmulationTraces(true)
@@ -242,7 +239,7 @@ const Traces = (props) => {
                 fetchSimulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [fetchSimulationTracesIds, ip, navigate, port, props, alert]);
 
     const removeSimulationTrace = (simulationTrace) => {
         setLoadingSimulationTraces(true)
@@ -278,7 +275,7 @@ const Traces = (props) => {
                 fetchEmulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchEmulationTracesIds, ip, navigate, port, props]);
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
@@ -307,7 +304,7 @@ const Traces = (props) => {
                 fetchEmulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [fetchEmulationTracesIds, ip, navigate, port, props, alert]);
 
     const removeAllSimulationTracesRequest = useCallback(() => {
         fetch(
@@ -336,7 +333,7 @@ const Traces = (props) => {
                 fetchSimulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchSimulationTracesIds, ip, navigate, port, props]);
 
     const removeEmulationTrace = (emulationTrace) => {
         setLoadingEmulationTraces(true)
@@ -607,7 +604,6 @@ const Traces = (props) => {
             return searchEmulationTracesFilter(emulationTraceId.label, searchVal)
         });
         setFilteredEmulationTracesIds(filteredEmTracesIds)
-        setEmulationTracesSearchString(searchVal)
         var selectedEmulationTraceRemoved = false
         if (!loadingSelectedEmulationTrace && filteredEmTracesIds.length > 0) {
             for (let i = 0; i < filteredEmTracesIds.length; i++) {
@@ -641,7 +637,6 @@ const Traces = (props) => {
             return searchSimulationTracesFilter(simTraceId, searchVal)
         });
         setFilteredSimulationTracesIds(filteredSimTracesIds)
-        setSimulationTracesSearchString(searchVal)
 
         var selectedSimulationTraceRemoved = false
         if (!loadingSelectedSimulationTrace && filteredSimTracesIds.length > 0) {

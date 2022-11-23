@@ -34,13 +34,42 @@ const TrainingResults = (props) => {
     const [loadingSelectedExperiment, setLoadingSelectedExperiment] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [filteredExperimentsIds, setFilteredExperimentsIds] = useState([]);
-    const [searchString, setSearchString] = useState("");
 
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-    // const ip = "172.31.212.92"
+
+    const fetchExperiment = useCallback((experiment_id) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${EXPERIMENTS_RESOURCE}/${experiment_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    props.setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedExperiment(response)
+                setLoadingSelectedExperiment(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props]);
+
 
     const fetchExperiments = useCallback(() => {
         fetch(
@@ -85,42 +114,7 @@ const TrainingResults = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    useEffect(() => {
-        setLoading(true)
-        fetchExperiments()
-    }, [fetchExperiments]);
-
-    const fetchExperiment = useCallback((experiment_id) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EXPERIMENTS_RESOURCE}/${experiment_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedExperiment(response)
-                setLoadingSelectedExperiment(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchExperiment, ip, navigate, port, props]);
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
@@ -149,7 +143,7 @@ const TrainingResults = (props) => {
                 fetchExperiments()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchExperiments, ip, navigate, port, props]);
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
@@ -178,7 +172,7 @@ const TrainingResults = (props) => {
                 fetchExperiments()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchExperiments, ip, navigate, port, props]);
 
     const removeExperiment = (experiment) => {
         setLoading(true)
@@ -205,6 +199,11 @@ const TrainingResults = (props) => {
         fetchExperiment(selectedId)
         setLoadingSelectedExperiment(true)
     }
+
+    useEffect(() => {
+        setLoading(true)
+        fetchExperiments()
+    }, [fetchExperiments]);
 
     const removeAllExperimentsConfirm = () => {
         confirmAlert({
@@ -421,7 +420,6 @@ const TrainingResults = (props) => {
             return searchFilter(exp, searchVal)
         });
         setFilteredExperimentsIds(fExpIds)
-        setSearchString(searchVal)
 
         var selectedExperimentRemoved = false
         if (!loadingSelectedExperiment && fExpIds.length > 0) {

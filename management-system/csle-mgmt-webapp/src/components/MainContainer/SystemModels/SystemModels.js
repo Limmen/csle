@@ -31,7 +31,7 @@ import {
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
     IDS_QUERY_PARAM,
-    SYSTEM_MODELS_RESOURCE
+    SYSTEM_MODELS_RESOURCE, GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE, EMPIRICAL_SYSTEM_MODEL_TYPE, GP_SYSTEM_MODEL_TYPE
 } from "../../Common/constants";
 
 
@@ -54,7 +54,6 @@ const SystemModels = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [deltaProbsOpen, setDeltaProbsOpen] = useState(false);
     const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
-    const [searchString, setSearchString] = useState("");
 
     const ip = serverIp
     const port = serverPort
@@ -131,13 +130,13 @@ const SystemModels = (props) => {
 
     const updateSystemModelId = (systemModelIdObj) => {
         setSelectedSystemModelId(systemModelIdObj)
-        if(systemModelIdObj.type == "gaussian_mixture") {
+        if(systemModelIdObj.type === GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE) {
             fetchGaussianMixtureSystemModel(systemModelIdObj)
         }
-        if(systemModelIdObj.type == "empirical") {
+        if(systemModelIdObj.type === EMPIRICAL_SYSTEM_MODEL_TYPE) {
             fetchEmpiricalSystemModel(systemModelIdObj)
         }
-        if(systemModelIdObj.type == "gp") {
+        if(systemModelIdObj.type === GP_SYSTEM_MODEL_TYPE) {
             fetchGPSystemModel(systemModelIdObj)
         }
         setLoadingSelectedSystemModel(true)
@@ -559,7 +558,6 @@ const SystemModels = (props) => {
             return searchFilter(model_id_obj, searchVal)
         });
         setFilteredSystemModelsIds(filteredMIds)
-        setSearchString(searchVal)
 
         var selectedModelRemoved = false
         if (!loadingSelectedSystemModel && filteredMIds.length > 0) {

@@ -98,7 +98,12 @@ const UserAdmin = (props) => {
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props]);
+
+    const refresh = useCallback(() => {
+        setLoading(true)
+        fetchUsers()
+    }, [fetchUsers])
 
     const updateUser = useCallback((user) => {
         fetch(
@@ -129,12 +134,7 @@ const UserAdmin = (props) => {
                 refresh()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const refresh = () => {
-        setLoading(true)
-        fetchUsers()
-    }
+    }, [alert, ip, navigate, port, props, refresh]);
 
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

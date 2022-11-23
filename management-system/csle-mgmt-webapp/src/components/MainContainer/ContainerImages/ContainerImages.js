@@ -23,7 +23,6 @@ import {HTTP_PREFIX, IMAGES_RESOURCE, LOGIN_PAGE_RESOURCE, TOKEN_QUERY_PARAM} fr
 const ContainerImages = (props) => {
     const [images, setImages] = useState([]);
     const [filteredImages, setFilteredImages] = useState([]);
-    const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState([]);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const ip = serverIp
@@ -60,12 +59,12 @@ const ContainerImages = (props) => {
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props]);
 
     useEffect(() => {
         setLoading(true)
         fetchImages()
-    }, []);
+    }, [fetchImages]);
 
     const refresh = () => {
         setLoading(true)
@@ -157,7 +156,6 @@ const ContainerImages = (props) => {
             return searchFilter(img, searchVal)
         });
         setFilteredImages(fImg)
-        setSearchString(searchVal)
     }
 
     const searchHandler = useDebouncedCallback(
