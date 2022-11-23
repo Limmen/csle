@@ -94,7 +94,7 @@ const PolicyAndBeliefChart = React.memo((props) => {
                                   animationEasing={'linear'}
                                   animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}/>
 
-                            <Area type="monotone" dataKey="Belief" stroke="#82ca9d" fill="#82ca9d"
+                            <Area type="monotone" dataKey="Belief" stroke="#82ca9d"
                                   isAnimationActive={props.animation} fillOpacity={1} fill="url(#colorPv)"
                                   animationEasing={'linear'}
                                   animationDuration={((1 - (props.animationDuration / 100)) * props.animiationDurationFactor)}/>

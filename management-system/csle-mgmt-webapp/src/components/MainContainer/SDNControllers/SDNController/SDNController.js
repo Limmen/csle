@@ -21,7 +21,6 @@ import {
  * Component representing the /sdn-controllers/id resource
  */
 const SDNController = (props) => {
-    const [loading, setLoading] = useState(false);
     const [generalInfoOpen, setGeneralInfoOpen] = useState(false);
     const [switches, setSwitches] = useState([]);
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
@@ -35,6 +34,7 @@ const SDNController = (props) => {
     const [portsOpen, setPortsOpen] = useState(false);
     const ip = serverIp
     const port = serverPort
+    const loading = false
 
 
     const fetchSwitches = useCallback((emulation_id, exec_id) => {
@@ -53,11 +53,11 @@ const SDNController = (props) => {
                 setSwitches(response)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, port]);
 
     useEffect(() => {
         fetchSwitches(props.emulation.id, props.emulation.execution_id)
-    }, [fetchSwitches]);
+    }, [fetchSwitches, props.emulation.id, props.emulation.execution_id]);
 
     const getSpinnerOrCircle = (emulation) => {
         if (loading) {

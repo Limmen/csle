@@ -82,7 +82,7 @@ const Simulation = (props) => {
             return (
                 <img src={`data:image/jpeg;base64,${props.simulation.image}`}
                      className="simulationImg img-fluid"
-                     alt="Image of the simulation"/>
+                     alt="Simulation"/>
             )
         }
     }

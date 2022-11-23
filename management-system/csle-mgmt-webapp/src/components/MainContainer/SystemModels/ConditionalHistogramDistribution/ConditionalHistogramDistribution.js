@@ -43,7 +43,6 @@ const getConditionals  = (systemModel, selectedConditionals, selectedMetric) => 
 const ConditionalHistogramDistribution = React.memo((props) => {
         const width = 500
         const colors = ["#8884d8", "#82ca9d"]
-        const shapes = ["triangle", "circle"]
         const height = 400
         const margin = {
             top: 10,

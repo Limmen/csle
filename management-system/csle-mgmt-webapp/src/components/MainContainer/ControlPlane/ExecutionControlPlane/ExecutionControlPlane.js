@@ -86,6 +86,7 @@ const ExecutionControlPlane = (props) => {
     const ip = serverIp;
     const port = serverPort;
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
     const fetchLogs = useCallback((name, entity) => {
         fetch(
@@ -103,7 +104,7 @@ const ExecutionControlPlane = (props) => {
             .then(res => {
                 if (res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`)
                     return null
                 }
@@ -131,7 +132,7 @@ const ExecutionControlPlane = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }

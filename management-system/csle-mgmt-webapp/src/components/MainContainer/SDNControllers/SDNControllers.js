@@ -38,12 +38,41 @@ const SDNControllers = (props) => {
     const [loadingSelectedEmulation, setLoadingSelectedEmulation] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [filteredEmulationsIds, setFilteredEmulationsIds] = useState([]);
-    const [searchString, setSearchString] = useState("");
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-    // const ip = "172.31.212.92"
+    const setSessionData = props.setSessionData
+
+    const fetchEmulation = useCallback((emulation_id) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}` +
+            + `/${EXECUTIONS_SUBRESOURCE}/${emulation_id.exec_id}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedEmulation(response)
+                setLoadingSelectedEmulation(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchEmulationIds = useCallback(() => {
         fetch(
@@ -59,7 +88,7 @@ const SDNControllers = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -91,37 +120,7 @@ const SDNControllers = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-    const fetchEmulation = useCallback((emulation_id) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${EMULATIONS_RESOURCE}/${emulation_id.value}` +
-            + `/${EXECUTIONS_SUBRESOURCE}/${emulation_id.exec_id}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedEmulation(response)
-                setLoadingSelectedEmulation(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchEmulation, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     useEffect(() => {
         setLoading(true)
@@ -153,7 +152,6 @@ const SDNControllers = (props) => {
             return searchFilter(em, searchVal)
         });
         setFilteredEmulationsIds(filteredEmsIds)
-        setSearchString(searchVal)
 
         var selectedEmulationRemoved = false
         if (!loadingSelectedEmulation && filteredEmsIds.length > 0) {

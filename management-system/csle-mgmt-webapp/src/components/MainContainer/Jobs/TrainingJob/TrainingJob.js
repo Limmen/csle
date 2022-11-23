@@ -37,6 +37,7 @@ const TrainingJob = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
     const fetchLogs = useCallback(() => {
         fetch(
@@ -53,7 +54,7 @@ const TrainingJob = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }

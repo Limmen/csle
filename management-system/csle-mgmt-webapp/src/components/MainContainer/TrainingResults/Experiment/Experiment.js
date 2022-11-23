@@ -38,6 +38,7 @@ const Experiment = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
 
     const fetchLogs = useCallback(() => {
@@ -55,7 +56,7 @@ const Experiment = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -66,7 +67,7 @@ const Experiment = (props) => {
                 setLogs(parseLogs(response))
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, props.experiment.log_file_path]);
 
     const renderRemoveExperimentTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

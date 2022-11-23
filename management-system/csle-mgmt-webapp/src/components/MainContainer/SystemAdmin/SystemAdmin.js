@@ -27,6 +27,7 @@ const SystemAdmin = (props) => {
     const port = serverPort;
     const alert = useAlert();
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
     const parameterConfigColumns = [
         {
@@ -61,6 +62,39 @@ const SystemAdmin = (props) => {
         }
     ];
 
+    const fetchConfig = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                setParametersConfig(response.parameters)
+                setClusterConfig(response.cluster_config.cluster_nodes)
+                setLoading(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [ip, alert, navigate, port, props.sessionData.token, setSessionData]);
+
+    const refresh = useCallback(() => {
+        setLoading(true)
+        fetchConfig()
+    }, [fetchConfig])
+
     const updateConfig = useCallback((config) => {
         fetch(
             `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}`
@@ -76,7 +110,7 @@ const SystemAdmin = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -90,41 +124,8 @@ const SystemAdmin = (props) => {
                 refresh()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, alert, navigate, port, refresh, props.sessionData.token, setSessionData]);
 
-
-    const fetchConfig = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${CONFIG_RESOURCE}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                setParametersConfig(response.parameters)
-                setClusterConfig(response.cluster_config.cluster_nodes)
-                setLoading(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
-    const refresh = () => {
-        setLoading(true)
-        fetchConfig()
-    }
 
     const renderRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

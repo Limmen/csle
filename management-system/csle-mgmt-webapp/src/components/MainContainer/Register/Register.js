@@ -58,7 +58,7 @@ const Register = () => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, navigate, ip, port]);
 
     const formSubmit = async (event) => {
         event.preventDefault()

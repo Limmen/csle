@@ -68,15 +68,14 @@ const PolicyExamination = (props) => {
             label: "100%"
         }
     ]
-
+    const initialT = 1
+    const initialL = 3
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [loading, setLoading] = useState([]);
     const [traces, setTraces] = useState([]);
     const [activeTrace, setActiveTrace] = useState(null);
-    const [t, setT] = useState(1);
-    const [l, setL] = useState(3);
-    const [animationDuration, setAnimationDuration] = useState(evolutionSpeedOptions[0]);
-    const [animation, setAnimation] = useState(true);
+    const [t, setT] = useState(initialT);
+    const [l, setL] = useState(initialL);
     const animiationDurationFactor = 50000
     const fullDomain = true
     const fullRange = true
@@ -84,10 +83,10 @@ const PolicyExamination = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
-
+    const animation = true
+    const animationDuration = evolutionSpeedOptions[0]
     const rawElements = getElements({x: 0, y: 0})
     const [elements, setElements] = useState(rawElements);
-    const [attackerFoundNodes, setAttackerFoundNodes] = useState([]);
     const height = 745
     const nodeTypes = {
         applicationServer: ApplicationServer,
@@ -103,7 +102,56 @@ const PolicyExamination = (props) => {
         applicationServerCompromised: ApplicationServerCompromised,
         firewall: Firewall
     };
-    // const ip = "172.31.212.92"
+    const setSessionData = props.setSessionData
+
+    const updateFoundNodes = useCallback((trace, l, t) => {
+        var attacker_found_nodes = []
+        var attacker_compromised_nodes = []
+        if (trace !== null) {
+            attacker_found_nodes = trace.attacker_found_nodes[t]
+            attacker_compromised_nodes = trace.attacker_compromised_nodes[t]
+            if (trace.attacker_actions[t] !== trace.attacker_continue_action && trace.attacker_actions[t] !== -1) {
+                if (!attacker_found_nodes.includes("attacker")) {
+                    attacker_found_nodes.push("attacker")
+                }
+            }
+            if (l < 3) {
+                if (!attacker_found_nodes.includes("firewall")) {
+                    attacker_found_nodes.push("firewall")
+                }
+            } else {
+                const index = attacker_found_nodes.indexOf("firewall");
+                if (index > -1) {
+                    attacker_found_nodes.splice(index, 1);
+                }
+            }
+        }
+        if (!attacker_found_nodes.includes("client")) {
+            attacker_found_nodes.push("client")
+        }
+        if (!attacker_found_nodes.includes("ids")) {
+            attacker_found_nodes.push("ids")
+        }
+        if (!attacker_found_nodes.includes("gateway")) {
+            attacker_found_nodes.push("gateway")
+        }
+        if (!attacker_found_nodes.includes("defender")) {
+            attacker_found_nodes.push("defender")
+        }
+        setElements((els) => els.map((e, index) => {
+            e.isHidden = ((!attacker_found_nodes.includes(e.id)) && !(attacker_found_nodes.includes(e.source)
+                    && attacker_found_nodes.includes(e.target)) && !(attacker_found_nodes.includes(e.source)
+                    && (e.target.includes("notfound" || e.target.includes("notstarted"))))
+                && !((e.source !== undefined && (e.source.includes("notfound") ||
+                            e.source.includes("notstarted")) &&
+                        !attacker_found_nodes.includes(e.source)) &&
+                    (e.target.includes("notfound" || e.target.includes("notstarted")))) &&
+                !(e.id.includes("notfound")) && !(e.id.includes("notstarted") &&
+                    !attacker_found_nodes.includes("attacker")) && !(e.id.includes("compromised") &&
+                    attacker_compromised_nodes.includes(e.id.replace("_compromised", ""))));
+            return e;
+        }))
+    }, [])
 
     const fetchTraces = useCallback(() => {
         fetch(`${HTTP_PREFIX}${ip}:${port}/${EMULATION_SIMULATION_TRACES_RESOURCE}`
@@ -116,7 +164,7 @@ const PolicyExamination = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -135,12 +183,14 @@ const PolicyExamination = (props) => {
                     })
                     setTraces(tracesOptions);
                     setActiveTrace(tracesOptions[0])
-                    updateFoundNodes(response[0])
+                    setL(initialL)
+                    setT(initialT)
+                    updateFoundNodes(response[0], initialL, initialT)
                 }
                 setLoading(false)
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, updateFoundNodes]);
 
     useEffect(() => {
         setLoading(true)
@@ -159,15 +209,6 @@ const PolicyExamination = (props) => {
         fetchTraces()
     }
 
-    const animationDurationUpdate = (selectedObj) => {
-        setAnimationDuration(selectedObj)
-        if (selectedObj.value > 0) {
-            setAnimation(true)
-        } else {
-            setAnimation(false)
-        }
-    };
-
     const renderRefreshTooltip = (props) => (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
         Reload traces from the backend
     </Tooltip>);
@@ -180,7 +221,7 @@ const PolicyExamination = (props) => {
             incrementT()
         }
         if (activeTrace !== null) {
-            updateFoundNodes(activeTrace.value)
+            updateFoundNodes(activeTrace.value, l, t)
         }
     }
 
@@ -229,47 +270,6 @@ const PolicyExamination = (props) => {
                 </div>
             )
         }
-    }
-
-    const updateFoundNodes = (trace) => {
-        var attacker_found_nodes = []
-        var attacker_compromised_nodes = []
-        if (trace !== null) {
-            attacker_found_nodes = trace.attacker_found_nodes[t]
-            attacker_compromised_nodes = trace.attacker_compromised_nodes[t]
-            if (trace.attacker_actions[t] !== trace.attacker_continue_action && trace.attacker_actions[t] !== -1) {
-                if (!attacker_found_nodes.includes("attacker")) {
-                    attacker_found_nodes.push("attacker")
-                }
-            }
-            if (l < 3) {
-                if (!attacker_found_nodes.includes("firewall")) {
-                    attacker_found_nodes.push("firewall")
-                }
-            } else {
-                const index = attacker_found_nodes.indexOf("firewall");
-                if (index > -1) {
-                    attacker_found_nodes.splice(index, 1);
-                }
-            }
-        }
-        if (!attacker_found_nodes.includes("client")) {
-            attacker_found_nodes.push("client")
-        }
-        if (!attacker_found_nodes.includes("ids")) {
-            attacker_found_nodes.push("ids")
-        }
-        if (!attacker_found_nodes.includes("gateway")) {
-            attacker_found_nodes.push("gateway")
-        }
-        if (!attacker_found_nodes.includes("defender")) {
-            attacker_found_nodes.push("defender")
-        }
-        setAttackerFoundNodes(attacker_found_nodes)
-        setElements((els) => els.map((e, index) => {
-            e.isHidden = ((!attacker_found_nodes.includes(e.id)) && !(attacker_found_nodes.includes(e.source) && attacker_found_nodes.includes(e.target)) && !(attacker_found_nodes.includes(e.source) && (e.target.includes("notfound" || e.target.includes("notstarted")))) && !((e.source != undefined && (e.source.includes("notfound") || e.source.includes("notstarted")) && !attacker_found_nodes.includes(e.source)) && (e.target.includes("notfound" || e.target.includes("notstarted")))) && !(e.id.includes("notfound")) && !(e.id.includes("notstarted") && !attacker_found_nodes.includes("attacker")) && !(e.id.includes("compromised") && attacker_compromised_nodes.includes(e.id.replace("_compromised", ""))));
-            return e;
-        }))
     }
 
     const decrementT = () => {

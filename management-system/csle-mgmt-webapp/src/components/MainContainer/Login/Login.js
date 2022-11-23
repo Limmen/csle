@@ -22,6 +22,7 @@ const Login = (props) => {
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
+    const setSessionData = props.setSessionData
 
     const loginUser = useCallback((credentials) => {
         fetch(
@@ -44,7 +45,7 @@ const Login = (props) => {
             })
             .then(response => {
                 if (response !== null) {
-                    props.setSessionData(response)
+                    setSessionData(response)
                 }
             })
             .catch(error => console.log("error:" + error))
@@ -64,7 +65,7 @@ const Login = (props) => {
     }
 
     const logout = () => {
-        props.setSessionData(null)
+        setSessionData(null)
     }
 
     const handleUsernameChange = (event) => {

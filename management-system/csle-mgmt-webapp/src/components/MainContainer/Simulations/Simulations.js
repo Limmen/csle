@@ -32,13 +32,43 @@ const Simulations = (props) => {
     const [selectedSimulation, setSelectedSimulation] = useState(null);
     const [selectedSimulationId, setSelectedSimulationId] = useState(null);
     const [filteredSimulationIds, setFilteredSimulationsIds] = useState([]);
-    const [searchString, setSearchString] = useState("");
     const [loading, setLoading] = useState(true);
     const [loadingSelectedSimulation, setLoadingSelectedSimulation] = useState(true);
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
+
+    const fetchSimulation = useCallback((simulation_id) => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${SIMULATIONS_RESOURCE}/${simulation_id.value}`
+            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                setSelectedSimulation(response)
+                setLoadingSelectedSimulation(false)
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchSimulationsIds = useCallback(() => {
         fetch(
@@ -54,7 +84,7 @@ const Simulations = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -83,38 +113,7 @@ const Simulations = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, []);
-
-
-    const fetchSimulation = useCallback((simulation_id) => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SIMULATIONS_RESOURCE}/${simulation_id.value}`
-            + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                setSelectedSimulation(response)
-                setLoadingSelectedSimulation(false)
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
+    }, [ip, navigate, fetchSimulation, port, alert, props.sessionData.token, setSessionData]);
 
     const removeAllSimulationsRequest = useCallback(() => {
         fetch(
@@ -130,7 +129,7 @@ const Simulations = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -143,7 +142,7 @@ const Simulations = (props) => {
                 fetchSimulationsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchSimulationsIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     useEffect(() => {
         setLoading(true);
@@ -165,7 +164,7 @@ const Simulations = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -178,7 +177,7 @@ const Simulations = (props) => {
                 fetchSimulationsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchSimulationsIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeSimulation = (simulation) => {
         setLoading(true)
@@ -323,7 +322,6 @@ const Simulations = (props) => {
             return searchFilter(simulation_id_obj, searchVal)
         });
         setFilteredSimulationsIds(filteredSimsIds)
-        setSearchString(searchVal)
 
         var selectedSimulationRemoved = false
         if (!loadingSelectedSimulation && filteredSimsIds.length > 0) {

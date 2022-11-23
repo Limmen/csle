@@ -49,16 +49,17 @@ const SystemModels = (props) => {
     const [selectedMetric, setSelectedMetric] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingSelectedSystemModel, setLoadingSelectedSystemModel] = useState(true);
-    const [animationDuration, setAnimationDuration] = useState(0);
     const animationDurationFactor = 50000
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [deltaProbsOpen, setDeltaProbsOpen] = useState(false);
     const [descriptiveStatsOpen, setDescriptiveStatsOpen] = useState(false);
 
+    const animationDuration = 0
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
     const resetState = () => {
         setSystemModelsIds([])
@@ -174,120 +175,6 @@ const SystemModels = (props) => {
         }
     }
 
-    const fetchSystemModelsIds = useCallback(() => {
-        fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_MODELS_RESOURCE}?${IDS_QUERY_PARAM}=true`
-            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                const modelIds = response.map((id_obj, index) => {
-                    return {
-                        value: id_obj.id + "_" + id_obj.system_model_type,
-                        label: ("ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistic_id: "
-                            + id_obj.statistic_id + ", (" + id_obj.system_model_type + ")") ,
-                        type: id_obj.system_model_type
-                    }
-                })
-                setSystemModelsIds(modelIds)
-                setFilteredSystemModelsIds(modelIds)
-                setLoading(false)
-                if (modelIds.length > 0) {
-                    setSelectedSystemModelId(modelIds[0])
-                    if (modelIds[0].type === GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE) {
-                        fetchGaussianMixtureSystemModel(modelIds[0])
-                    }
-                    if (modelIds[0].type === EMPIRICAL_SYSTEM_MODEL_TYPE) {
-                        fetchEmpiricalSystemModel(modelIds[0])
-                    }
-                    if (modelIds[0].type === GP_SYSTEM_MODEL_TYPE) {
-                        fetchGPSystemModel(modelIds[0])
-                    }
-                    setLoadingSelectedSystemModel(true)
-                } else {
-                    setLoadingSelectedSystemModel(false)
-                    setSelectedSystemModel(null)
-                }
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
-    useEffect(() => {
-        setLoading(true)
-        fetchSystemModelsIds()
-    }, [fetchSystemModelsIds]);
-
-    const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
-        fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/`
-            + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
-            {
-                method: HTTP_REST_GET,
-                headers: new Headers({
-                    Accept: "application/vnd.github.cloak-preview"
-                })
-            }
-        )
-            .then(res => {
-                if(res.status === 401) {
-                    alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
-                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
-                    return null
-                }
-                return res.json()
-            })
-            .then(response => {
-                if(response === null) {
-                    return
-                }
-                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
-                    var conditionalOptions = []
-                    for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
-                        for (let j = 0; j < response.conditional_metric_distributions[i].length; j++) {
-                            conditionalOptions.push(
-                                {
-                                    value: response.conditional_metric_distributions[i][j],
-                                    label: response.conditional_metric_distributions[i][j].conditional_name
-                                }
-                            )
-                        }
-                    }
-                    setConditionals(conditionalOptions)
-                    setSelectedConditionals([conditionalOptions[0]])
-                    setSelectedSystemModel(response)
-                    setLoadingSelectedSystemModel(false)
-                    const metricOptions = getMetricForSelectedConditional(conditionalOptions, [conditionalOptions[0]]).map((metricName, index) => {
-                        return {
-                            value: metricName,
-                            label: metricName
-                        }
-                    })
-                    setMetrics(metricOptions)
-                    setSelectedMetric(metricOptions[0])
-                }
-
-            })
-            .catch(error => console.log("error:" + error))
-    }, []);
-
     const fetchEmpiricalSystemModel = useCallback((model_id_obj) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/${EMPIRICAL_SYSTEM_MODELS_RESOURCE}/`
@@ -302,7 +189,7 @@ const SystemModels = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -340,7 +227,7 @@ const SystemModels = (props) => {
 
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchGPSystemModel = useCallback((model_id_obj) => {
         fetch(
@@ -356,7 +243,7 @@ const SystemModels = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -395,7 +282,125 @@ const SystemModels = (props) => {
 
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+
+    const fetchGaussianMixtureSystemModel = useCallback((model_id_obj) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE}/`
+                + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
+                    var conditionalOptions = []
+                    for (let i = 0; i < response.conditional_metric_distributions.length; i++) {
+                        for (let j = 0; j < response.conditional_metric_distributions[i].length; j++) {
+                            conditionalOptions.push(
+                                {
+                                    value: response.conditional_metric_distributions[i][j],
+                                    label: response.conditional_metric_distributions[i][j].conditional_name
+                                }
+                            )
+                        }
+                    }
+                    setConditionals(conditionalOptions)
+                    setSelectedConditionals([conditionalOptions[0]])
+                    setSelectedSystemModel(response)
+                    setLoadingSelectedSystemModel(false)
+                    const metricOptions = getMetricForSelectedConditional(conditionalOptions, [conditionalOptions[0]]).map((metricName, index) => {
+                        return {
+                            value: metricName,
+                            label: metricName
+                        }
+                    })
+                    setMetrics(metricOptions)
+                    setSelectedMetric(metricOptions[0])
+                }
+
+            })
+            .catch(error => console.log("error:" + error))
+    }, [ip, navigate, port, alert, props.sessionData.token, setSessionData]);
+
+
+    const fetchSystemModelsIds = useCallback(() => {
+        fetch(
+            `${HTTP_PREFIX}${ip}:${port}/${SYSTEM_MODELS_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                const modelIds = response.map((id_obj, index) => {
+                    return {
+                        value: id_obj.id + "_" + id_obj.system_model_type,
+                        label: ("ID: " + id_obj.id + ", emulation: " + id_obj.emulation + ", statistic_id: "
+                            + id_obj.statistic_id + ", (" + id_obj.system_model_type + ")") ,
+                        type: id_obj.system_model_type
+                    }
+                })
+                setSystemModelsIds(modelIds)
+                setFilteredSystemModelsIds(modelIds)
+                setLoading(false)
+                if (modelIds.length > 0) {
+                    setSelectedSystemModelId(modelIds[0])
+                    if (modelIds[0].type === GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE) {
+                        fetchGaussianMixtureSystemModel(modelIds[0])
+                    }
+                    if (modelIds[0].type === EMPIRICAL_SYSTEM_MODEL_TYPE) {
+                        fetchEmpiricalSystemModel(modelIds[0])
+                    }
+                    if (modelIds[0].type === GP_SYSTEM_MODEL_TYPE) {
+                        fetchGPSystemModel(modelIds[0])
+                    }
+                    setLoadingSelectedSystemModel(true)
+                } else {
+                    setLoadingSelectedSystemModel(false)
+                    setSelectedSystemModel(null)
+                }
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, fetchEmpiricalSystemModel, fetchGPSystemModel, fetchGaussianMixtureSystemModel,
+        ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    useEffect(() => {
+        setLoading(true)
+        fetchSystemModelsIds()
+    }, [fetchSystemModelsIds]);
+
 
     const removeGaussianMixtureSystemModelRequest = useCallback((model_id) => {
         fetch(
@@ -411,7 +416,7 @@ const SystemModels = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -424,7 +429,7 @@ const SystemModels = (props) => {
                 fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchSystemModelsIds, navigate, port, ip, props.sessionData.token, setSessionData]);
 
     const removeEmpiricalSystemModelRequest = useCallback((model_id) => {
         fetch(
@@ -440,7 +445,7 @@ const SystemModels = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -453,7 +458,7 @@ const SystemModels = (props) => {
                 fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, []);
+    }, [alert, fetchSystemModelsIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeGpSystemModelRequest = useCallback((model_id) => {
         fetch(
@@ -469,7 +474,7 @@ const SystemModels = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -482,7 +487,7 @@ const SystemModels = (props) => {
                 fetchSystemModelsIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchSystemModelsIds, ip, navigate, port, props]);
+    }, [alert, fetchSystemModelsIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeModel = (model) => {
         setLoading(true)

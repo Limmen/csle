@@ -39,6 +39,7 @@ const TrainingResults = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
     const fetchExperiment = useCallback((experiment_id) => {
         fetch(
@@ -54,7 +55,7 @@ const TrainingResults = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -68,7 +69,7 @@ const TrainingResults = (props) => {
                 setLoadingSelectedExperiment(false)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
 
 
     const fetchExperiments = useCallback(() => {
@@ -85,7 +86,7 @@ const TrainingResults = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -114,7 +115,7 @@ const TrainingResults = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchExperiment, ip, navigate, port, props]);
+    }, [alert, fetchExperiment, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeExperimentRequest = useCallback((experiment_id) => {
         fetch(
@@ -130,7 +131,7 @@ const TrainingResults = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -143,7 +144,7 @@ const TrainingResults = (props) => {
                 fetchExperiments()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchExperiments, ip, navigate, port, props]);
+    }, [alert, fetchExperiments, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeAllExperimentsRequest = useCallback(() => {
         fetch(
@@ -159,7 +160,7 @@ const TrainingResults = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -172,7 +173,7 @@ const TrainingResults = (props) => {
                 fetchExperiments()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchExperiments, ip, navigate, port, props]);
+    }, [alert, fetchExperiments, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeExperiment = (experiment) => {
         setLoading(true)

@@ -54,6 +54,7 @@ const Traces = (props) => {
     const port = serverPort
     const alert = useAlert();
     const navigate = useNavigate();
+    const setSessionData = props.setSessionData
 
     const wrapper = createRef();
 
@@ -71,7 +72,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -85,7 +86,7 @@ const Traces = (props) => {
                 setLoadingSelectedEmulationTrace(false)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, props, navigate]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
     const fetchSimulationTrace = useCallback((trace_id) => {
         fetch(
@@ -101,7 +102,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -115,7 +116,7 @@ const Traces = (props) => {
                 setLoadingSelectedSimulationTrace(false)
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, props, navigate]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
     const fetchEmulationTracesIds = useCallback(() => {
         fetch(
@@ -131,7 +132,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -159,7 +160,7 @@ const Traces = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchEmulationTrace, ip, navigate, port, props]);
+    }, [alert, fetchEmulationTrace, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const fetchSimulationTracesIds = useCallback(() => {
         fetch(
@@ -175,7 +176,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -203,7 +204,7 @@ const Traces = (props) => {
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchSimulationTrace, ip, navigate, port, props]);
+    }, [alert, fetchSimulationTrace, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     useEffect(() => {
         setLoadingEmulationTraces(true)
@@ -226,7 +227,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -239,7 +240,7 @@ const Traces = (props) => {
                 fetchSimulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [fetchSimulationTracesIds, ip, navigate, port, props, alert]);
+    }, [fetchSimulationTracesIds, ip, navigate, port, alert, props.sessionData.token, setSessionData]);
 
     const removeSimulationTrace = (simulationTrace) => {
         setLoadingSimulationTraces(true)
@@ -262,7 +263,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -275,7 +276,7 @@ const Traces = (props) => {
                 fetchEmulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchEmulationTracesIds, ip, navigate, port, props]);
+    }, [alert, fetchEmulationTracesIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeAllEmulationTracesRequest = useCallback(() => {
         fetch(
@@ -291,7 +292,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -304,7 +305,7 @@ const Traces = (props) => {
                 fetchEmulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [fetchEmulationTracesIds, ip, navigate, port, props, alert]);
+    }, [fetchEmulationTracesIds, ip, navigate, port, alert, props.sessionData.token, setSessionData]);
 
     const removeAllSimulationTracesRequest = useCallback(() => {
         fetch(
@@ -320,7 +321,7 @@ const Traces = (props) => {
             .then(res => {
                 if(res.status === 401) {
                     alert.show("Session token expired. Please login again.")
-                    props.setSessionData(null)
+                    setSessionData(null)
                     navigate(`/${LOGIN_PAGE_RESOURCE}`);
                     return null
                 }
@@ -333,7 +334,7 @@ const Traces = (props) => {
                 fetchSimulationTracesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, fetchSimulationTracesIds, ip, navigate, port, props]);
+    }, [alert, fetchSimulationTracesIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     const removeEmulationTrace = (emulationTrace) => {
         setLoadingEmulationTraces(true)
