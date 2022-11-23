@@ -435,16 +435,12 @@ def snort_ids_logs():
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
-        sftp_client = emulation_env_config.get_connection(ip=ip).open_sftp()
-        remote_file = sftp_client.open(path)
+        cmd = f"{constants.COMMANDS.TAIL} -200 {path}"
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
         data = []
-        try:
-            data = remote_file.read()
-            data = data.decode()
-            data = data.split("\n")
-            data = data[-100:]
-        finally:
-            remote_file.close()
+        for line in o.decode().split("\n"):
+            a_str = line.replace("\n", "")
+            data.append(a_str)
 
         data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
         response = jsonify(data_dict)

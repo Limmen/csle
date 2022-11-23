@@ -750,6 +750,7 @@ class COMMANDS:
     """
     CHANNEL_WHOAMI = "whoami\n"
     BASH = "bash"
+    TAIL = "tail"
     CHANNEL_SU_ROOT = "su root\n"
     CHANNEL_ROOT = "root\n"
     LIST_CACHE = "ls -1 "
