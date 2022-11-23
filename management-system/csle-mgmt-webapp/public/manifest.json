@@ -1,10 +1,10 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "CSLE Management System",
+  "name": "Management System of the Cyber Security Learning Environment (CSLE)",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "256x256 128x128 96x96 64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
   ],
