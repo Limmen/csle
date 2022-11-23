@@ -12,6 +12,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Modal from 'react-bootstrap/Modal'
 import Tooltip from 'react-bootstrap/Tooltip';
 import Spinner from 'react-bootstrap/Spinner'
+import { confirmAlert } from 'react-confirm-alert';
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import parseLogs from "../../../Common/parseLogs";
@@ -138,6 +139,54 @@ const ExecutionControlPlane = (props) => {
         addLoadingEntity(entity + "-" + ip)
         props.startOrStopEntity(props.execution.ip_first_octet, props.execution.emulation_name,
             start, stop, entity, name, ip)
+    }
+
+    const startOrStopConfirm = (start, stop, entity, name, ip) => {
+        confirmAlert({
+            title: 'Confirm action',
+            message: ('Are you sure you want to ' + (start ? "start": "stop") + 'the ' + entity + " with IP: " + ip + "?"),
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => startOrStop(start, stop, entity, name, ip)
+                },
+                {
+                    label: 'No'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+            keyCodeForClose: [8, 32],
+            overlayClassName: "remove-confirm",
+            customUI: ({ onClose }) => {
+                return (
+                    <div id="react-confirm-alert" onClick={onClose}>
+                        <div className="react-confirm-alert-overlay">
+                            <div className="react-confirm-alert" onClick={onClose}>
+                                <div className="react-confirm-alert-body">
+                                    <h1>Confirm deletion</h1>
+                                    Are you sure you want to  {start ? "start": "stop"} the {entity} with IP: {ip}?
+                                    <div className="react-confirm-alert-button-group">
+                                        <Button className="remove-confirm-button"
+                                                onClick={() => {
+                                                    startOrStop(start, stop, entity, name, ip)
+                                                    onClose()
+                                                }}
+                                        >
+                                            <span className="remove-confirm-button-text">Yes, perform the action.</span>
+                                        </Button>
+                                        <Button className="remove-confirm-button"
+                                                onClick={onClose}>
+                                            <span className="remove-confirm-button-text">No</span>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        })
     }
 
     const SpinnerOrLogs = (props) => {
@@ -269,7 +318,7 @@ const ExecutionControlPlane = (props) => {
                         overlay={renderStopTooltip}
                     >
                         <Button variant="warning" className="startButton" size="sm"
-                                onClick={() => startOrStop(false, true, props.entity, props.name, props.ip)}>
+                                onClick={() => startOrStopConfirm(false, true, props.entity, props.name, props.ip)}>
                             <i className="fa fa-stop-circle-o startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -282,7 +331,7 @@ const ExecutionControlPlane = (props) => {
                         overlay={renderStartTooltip}
                     >
                         <Button variant="success" className="startButton" size="sm"
-                                onClick={() => startOrStop(true, false, props.entity, props.name, props.ip)}>
+                                onClick={() => startOrStopConfirm(true, false, props.entity, props.name, props.ip)}>
                             <i className="fa fa-play startStopIcon" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
