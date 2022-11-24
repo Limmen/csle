@@ -1,8 +1,6 @@
-from typing import Union
 import argparse
 import os
 import numpy as np
-import csle_common.constants.constants as constants
 from csle_common.controllers.simulation_env_controller import SimulationEnvController
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.util.experiment_util import ExperimentUtil
@@ -27,16 +25,14 @@ from csle_common.dao.simulation_config.initial_state_distribution_config import 
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
-from csle_common.logging.log import Logger
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.random_policy import RandomPolicy
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 
 
-def default_config(name: str, version: str = "0.0.2", min_alerts_weighted_by_priority :int = 0,
-                   max_alerts_weighted_by_priority :int = 100) -> SimulationEnvConfig:
+def default_config(name: str, version: str = "0.0.2", min_alerts_weighted_by_priority: int = 0,
+                   max_alerts_weighted_by_priority: int = 100) -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
 
@@ -70,8 +66,8 @@ def default_config(name: str, version: str = "0.0.2", min_alerts_weighted_by_pri
         initial_state_distribution_config=initial_state_distribution_config,
         attacker_action_space_config=joint_action_space_config.action_spaces[1])
     env_parameters_config = default_env_parameters_config()
-    descr="A POMDP based on the optimal stopping formulation of intrusion prevention from " \
-          "(Hammar and Stadler 2021, https://arxiv.org/abs/2111.00289)."
+    descr = "A POMDP based on the optimal stopping formulation of intrusion prevention from " \
+            "(Hammar and Stadler 2021, https://arxiv.org/abs/2111.00289)."
     simulation_env_config = SimulationEnvConfig(
         name=name, version=version, descr=descr,
         players_config=players_config, state_space_config=state_space_config,
@@ -85,6 +81,7 @@ def default_config(name: str, version: str = "0.0.2", min_alerts_weighted_by_pri
         plot_transition_probabilities=True, plot_observation_function=True, plot_reward_function=True
     )
     return simulation_env_config
+
 
 def default_env_parameters_config() -> EnvParametersConfig:
     """
@@ -108,9 +105,7 @@ def default_players_config() -> PlayersConfig:
         PlayerConfig(name="defender", id=1, descr="The defender which tries to detect, prevent, "
                                                   "and interrupt intrusions for the infrastructure")
     ]
-    players_config = PlayersConfig(
-        player_configs=player_configs
-    )
+    players_config = PlayersConfig(player_configs=player_configs)
     return players_config
 
 
@@ -145,8 +140,7 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
                     id=1, descr="Stop action, it means that the defender takes an active defensive action"
                 )
             ],
-            player_id = 1,
-            action_type=ValueType.INTEGER
+            player_id=1, action_type=ValueType.INTEGER
         ),
         ActionSpaceConfig(
             actions=[
@@ -159,19 +153,16 @@ def default_joint_action_space_config() -> JointActionSpaceConfig:
                                 "progress and otherwise it starts the intrusion"
                 )
             ],
-            player_id = 2,
-            action_type=ValueType.INTEGER
+            player_id=2, action_type=ValueType.INTEGER
         )
     ]
-    joint_action_sapce_config = JointActionSpaceConfig(
-        action_spaces=action_spaces
-    )
+    joint_action_sapce_config = JointActionSpaceConfig(action_spaces=action_spaces)
     return joint_action_sapce_config
 
 
 def default_joint_observation_space_config(
-        min_alerts_weighted_by_priority :int = 0,
-        max_alerts_weighted_by_priority :int = 100) -> JointObservationSpaceConfig:
+        min_alerts_weighted_by_priority: int = 0, max_alerts_weighted_by_priority: int = 100) \
+        -> JointObservationSpaceConfig:
     """
     Gets the default joint observation space configuration of the simulation
 
@@ -207,8 +198,8 @@ def default_joint_observation_space_config(
             player_id=2,
             descr="The observation space of the attacker. The attacker has inside information in the infrastructure "
                   "and observes the same metrics as the defender",
-            observation_id_to_observation_id_vector= observation_id_to_observation_id_vector,
-            observation_component_name_to_index = observation_component_name_to_index,
+            observation_id_to_observation_id_vector=observation_id_to_observation_id_vector,
+            observation_component_name_to_index=observation_component_name_to_index,
             component_observations=component_observations,
             observation_id_to_observation_vector=observation_id_to_observation_vector
         )
@@ -224,8 +215,7 @@ def default_reward_function_config() -> RewardFunctionConfig:
     :return: the default reward function configuration
     """
     reward_function_config = RewardFunctionConfig(
-        reward_tensor=list(StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3))
-    )
+        reward_tensor=list(StoppingGameUtil.reward_tensor(R_INT=-5, R_COST=-5, R_SLA=1, R_ST=5, L=3)))
     return reward_function_config
 
 
@@ -234,15 +224,14 @@ def default_transition_operator_config() -> TransitionOperatorConfig:
     :return: the default transition tensor configuration
     """
     transition_operator_config = TransitionOperatorConfig(
-        transition_tensor=list(StoppingGameUtil.transition_tensor(L=3, p=0.01))
-    )
+        transition_tensor=list(StoppingGameUtil.transition_tensor(L=3, p=0.01)))
     return transition_operator_config
 
 
 def default_observation_function_config(
         defender_obs_space: ObservationSpaceConfig,
         joint_action_space: JointActionSpaceConfig, state_space: StateSpaceConfig,
-        min_alerts_weighted_by_priority :int = 0, max_alerts_weighted_by_priority :int = 100) \
+        min_alerts_weighted_by_priority: int = 0, max_alerts_weighted_by_priority: int = 100) \
         -> ObservationFunctionConfig:
     """
     The default observation function configuration
@@ -268,8 +257,7 @@ def default_initial_state_distribution_config() -> InitialStateDistributionConfi
     :return: the default initial state distribution configuration
     """
     initial_state_distribution_config = InitialStateDistributionConfig(
-        initial_state_distribution=list(StoppingGameUtil.b1())
-    )
+        initial_state_distribution=list(StoppingGameUtil.b1()))
     return initial_state_distribution_config
 
 
@@ -278,8 +266,7 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
                          transition_tensor_config: TransitionOperatorConfig,
                          observation_function_config: ObservationFunctionConfig,
                          initial_state_distribution_config: InitialStateDistributionConfig,
-                         attacker_action_space_config: ActionSpaceConfig
-                         ) -> SimulationEnvInputConfig:
+                         attacker_action_space_config: ActionSpaceConfig) -> SimulationEnvInputConfig:
     """
     Gets the input configuration to the openai gym environment
 
@@ -291,13 +278,13 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     :param attacker_action_space_config: the attacker's action space config
     :return: The default input configuration to the OpenAI gym environment
     """
-    L=3
+    L = 3
     R_INT = -5
     R_COST = -5
     R_SLA = 1
     R_ST = 5
 
-    attacker_stage_strategy = np.zeros((3,2))
+    attacker_stage_strategy = np.zeros((3, 2))
     attacker_stage_strategy[0][0] = 0.9
     attacker_stage_strategy[0][1] = 0.1
     attacker_stage_strategy[1][0] = 0.9
@@ -305,21 +292,21 @@ def default_input_config(defender_observation_space_config: ObservationSpaceConf
     attacker_stage_strategy[2] = attacker_stage_strategy[1]
 
     stopping_game_config = StoppingGameConfig(
-        A1 = StoppingGameUtil.attacker_actions(), A2= StoppingGameUtil.defender_actions(), L=L, R_INT=R_INT,
+        A1=StoppingGameUtil.attacker_actions(), A2=StoppingGameUtil.defender_actions(), L=L, R_INT=R_INT,
         R_COST=R_COST,
-        R_SLA=R_SLA, R_ST =R_ST,b1=np.array(initial_state_distribution_config.initial_state_distribution),
+        R_SLA=R_SLA, R_ST=R_ST, b1=np.array(initial_state_distribution_config.initial_state_distribution),
         save_dir=ExperimentUtil.default_output_dir() + "/results",
         T=np.array(transition_tensor_config.transition_tensor),
         O=np.array(list(defender_observation_space_config.observation_id_to_observation_vector.keys())),
         Z=np.array(observation_function_config.observation_tensor),
         R=np.array(reward_function_config.reward_tensor),
-        S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq= 100000,
+        S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq=100000,
         gamma=1)
     config = StoppingGameDefenderPomdpConfig(
         stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-        attacker_strategy=RandomPolicy(
-        actions=attacker_action_space_config.actions,
-        player_type=PlayerType.ATTACKER, stage_policy_tensor=list(attacker_stage_strategy)),
+        attacker_strategy=RandomPolicy(actions=attacker_action_space_config.actions,
+                                       player_type=PlayerType.ATTACKER,
+                                       stage_policy_tensor=list(attacker_stage_strategy)),
         env_name="csle-stopping-game-pomdp-defender-v1")
     return config
 
