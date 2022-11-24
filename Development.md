@@ -11,7 +11,8 @@ python -m pip install flake8
 
 ### Python: 
 ```bash
-flake8 simulation-system/python/
+flake8 simulation-system/
+flake8 csle-cli
 ```
 
 ### JavaScript:

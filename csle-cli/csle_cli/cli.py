@@ -8,6 +8,7 @@ from typing import List, Tuple, Union
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 import click
 
+
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
 def commands() -> None:
     """
@@ -79,10 +80,11 @@ def attacker_shell_complete(ctx, param, incomplete) -> List[str]:
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations
 
+
 @click.command("attacker", help="emulation-name id")
 @click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", type=str, shell_complete=attacker_shell_complete)
-def attacker(emulation : str, id: int = -1) -> None:
+def attacker(emulation: str, id: int = -1) -> None:
     """
     Opens an attacker shell in the given emulation
 
@@ -128,6 +130,7 @@ def emulation_shell_complete(ctx, param, incomplete) -> List[str]:
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations + ["emulation", "--host", "--stats", "--kafka", "--clients"]
 
+
 @click.option('--host', is_flag=True, help='Check the status of the Host managers')
 @click.option('--stats', is_flag=True, help='Check the status of the stats manager')
 @click.option('--kafka', is_flag=True, help='Check the status of the Kafka manager')
@@ -136,7 +139,7 @@ def emulation_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.option('--executions', is_flag=True, help='Check the executions')
 @click.argument('emulation', default="", type=str, shell_complete=emulation_shell_complete)
 @click.command("em", help="emulation-name")
-def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool, host: bool, executions: bool) -> None:
+def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, host: bool, executions: bool) -> None:
     """
     Extracts status information of a given emulation
 
@@ -177,8 +180,10 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
                     click.secho("Producer process " + f" {click.style('[active]', fg='green')}", bold=False)
                 else:
                     click.secho("Producer process " + f" {click.style('[inactive]', fg='red')}", bold=False)
-                click.secho(f"Clients time-step length: {clients_dto.clients_time_step_len_seconds} seconds", bold=False)
-                click.secho(f"Producer time-step length: {clients_dto.producer_time_step_len_seconds} seconds", bold=False)
+                click.secho(f"Clients time-step length: "
+                            f"{clients_dto.clients_time_step_len_seconds} seconds", bold=False)
+                click.secho(f"Producer time-step length: "
+                            f"{clients_dto.producer_time_step_len_seconds} seconds", bold=False)
         if snortids:
             for exec in executions:
                 snort_ids_monitors_statuses = SnortIDSController.get_snort_idses_monitor_threads_statuses(
@@ -187,9 +192,11 @@ def em(emulation : str, clients: bool, snortids: bool, kafka: bool, stats: bool,
                     click.secho(f"Snort IDS monitor status for execution {exec.ip_first_octet} of {emulation}",
                                 fg="magenta", bold=True)
                     if snort_ids_monitor_status.running:
-                        click.secho("Snort IDS monitor status: " + f" {click.style('[running]', fg='green')}", bold=False)
+                        click.secho("Snort IDS monitor status: "
+                                    + f" {click.style('[running]', fg='green')}", bold=False)
                     else:
-                        click.secho("Snort IDS monitor status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
+                        click.secho("Snort IDS monitor status: "
+                                    + f" {click.style('[stopped]', fg='red')}", bold=False)
         if kafka:
             for exec in executions:
                 kafka_dto = KafkaController.get_kafka_status(emulation_env_config=exec.emulation_env_config)
@@ -239,6 +246,7 @@ def start_traffic_shell_complete(ctx, param, incomplete) -> List[str]:
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations + ["--mu", "--lamb", "--t", "--nc"]
 
+
 @click.option('--psf', default=None, type=float)
 @click.option('--tsf', default=None, type=float)
 @click.option('--nc', default=None, type=int)
@@ -248,7 +256,7 @@ def start_traffic_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", type=str, shell_complete=start_traffic_shell_complete)
 @click.command("start_traffic", help="emulation-name execution-id")
-def start_traffic(emulation : str, id: int, mu: float, lamb: float, t: int,
+def start_traffic(emulation: str, id: int, mu: float, lamb: float, t: int,
                   nc: int, tsf: float, psf: float) -> None:
     """
     Starts the traffic and client population on a given emulation
@@ -300,10 +308,11 @@ def stop_traffic_shell_complete(ctx, param, incomplete) -> List[str]:
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     return emulations
 
+
 @click.argument('id', default=-1, type=int)
 @click.argument('emulation', default="", shell_complete=stop_traffic_shell_complete)
 @click.command("stop_traffic", help="emulation-name execution-id")
-def stop_traffic(emulation : str, id: int) -> None:
+def stop_traffic(emulation: str, id: int) -> None:
     """
     Stops the traffic and client population on a given emulation
 
@@ -337,6 +346,7 @@ def shell_shell_complete(ctx, param, incomplete) -> List[str]:
     containers = list(map(lambda x: x[0], containers))
     return containers
 
+
 @click.argument('container', default="", shell_complete=shell_shell_complete)
 @click.command("shell", help="container-name")
 def shell(container: str) -> None:
@@ -348,7 +358,7 @@ def shell(container: str) -> None:
     """
     from csle_common.controllers.container_controller import ContainerController
 
-    running_containers= ContainerController.list_all_running_containers()
+    running_containers = ContainerController.list_all_running_containers()
     container_found = False
     for rc in running_containers:
         if rc[0] == container:
@@ -379,7 +389,7 @@ def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, 
                                                       no_traffic=no_traffic, no_clients=no_clients)
 
 
-def separate_running_and_stopped_emulations(emulations : List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
+def separate_running_and_stopped_emulations(emulations: List["EmulationEnvConfig"]) -> Tuple[List[str], List[str]]:
     """
     Partitions the set of emulations into a set of running emulations and a set of stopped emulations
 
@@ -632,11 +642,13 @@ def trainingjob(id: int) -> None:
     training_job = MetastoreFacade.get_training_job_config(id=id)
     TrainingJobManager.run_training_job(job_config=training_job)
 
+
 def systemidentificationjob_shell_complete(ctx, param, incomplete):
     from csle_common.metastore.metastore_facade import MetastoreFacade
     sys_id_jobs = MetastoreFacade.list_system_identification_jobs()
     sys_id_jobs_ids = list(map(lambda x: x.id, sys_id_jobs))
     return sys_id_jobs_ids
+
 
 @click.argument('id', default=None, type=int, shell_complete=systemidentificationjob_shell_complete)
 @click.command("systemidentificationjob", help="id")
@@ -680,7 +692,7 @@ def datacollectionjob(id: int) -> None:
 
 
 def start_docker_stats_manager(port: int = 50046, log_file: str = "docker_stats_manager.log",
-                               log_dir: str = "/var/log/csle", max_workers :int = 10) -> None:
+                               log_dir: str = "/var/log/csle", max_workers: int = 10) -> None:
     """
     Starts the stats manager as a daemon
 
@@ -718,12 +730,11 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
     stopped_containers = ContainerController.list_all_stopped_containers()
     containers = stopped_containers
     containers = list(map(lambda x: x[0], containers))
-    image_names=ContainerController.list_all_images()
+    image_names = ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
-    return ["prometheus", "node_exporter", "grafana", "cadvisor", "managementsystem",
-            "all",
-            "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"] + emulations + \
-           containers + image_names
+    return (["prometheus", "node_exporter", "grafana", "cadvisor", "managementsystem", "all",
+             "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"]
+            + emulations + containers + image_names)
 
 
 @click.argument('max_workers', default=10, type=int, shell_complete=start_shell_complete)
@@ -739,8 +750,8 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.command("start", help="prometheus | node_exporter | grafana | cadvisor | managementsystem | "
                              "container-name | emulation-name | all | statsmanager | training_job "
                              "| system_id_job ")
-def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
-          log_file: str, log_dir: str, max_workers : int) -> None:
+def start(entity: str, no_traffic: bool, name: str, id: int, no_clients: bool, no_network: bool, port: int,
+          log_file: str, log_dir: str, max_workers: int) -> None:
     """
     Starts a container or all containers
 
@@ -767,7 +778,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
     elif entity == "statsmanager":
         start_docker_stats_manager(port=port, log_file=log_file, log_dir=log_dir, max_workers=max_workers)
     elif entity == "node_exporter":
-         ManagementSystemController.start_node_exporter()
+        ManagementSystemController.start_node_exporter()
     elif entity == "prometheus":
         ManagementSystemController.start_prometheus()
     elif entity == "cadvisor":
@@ -782,7 +793,7 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
         DataCollectionJobManager.start_data_collection_job_in_background(
             data_collection_job=system_id_job)
     elif entity == "managementsystem":
-        ManagementSystemController.start_management_system()    
+        ManagementSystemController.start_management_system()
     else:
         container_started = ContainerController.start_container(name=entity)
         if not container_started:
@@ -791,14 +802,14 @@ def start(entity : str, no_traffic: bool, name: str, id: int, no_clients: bool, 
                 run_emulation(emulation_env_config, no_traffic=no_traffic, no_clients=no_clients)
                 emulation_started = True
             else:
-                emulation_started =False
+                emulation_started = False
             if not emulation_started:
                 image_started = run_image(image=entity, name=name, create_network=(not no_network))
                 if not image_started:
                     click.secho(f"name: {entity} not recognized", fg="red", bold=True)
 
 
-def run_image(image: str, name: str, create_network : bool = True) -> bool:
+def run_image(image: str, name: str, create_network: bool = True) -> bool:
     """
     Runs a container with a given image
 
@@ -811,7 +822,7 @@ def run_image(image: str, name: str, create_network : bool = True) -> bool:
     try:
         EmulationEnvController.run_container(image=image, name=name, create_network=create_network)
         return True
-    except Exception as _:
+    except Exception:
         return False
 
 
@@ -831,15 +842,15 @@ def rm_shell_complete(ctx, param, incomplete) -> List[str]:
     stopped_containers = ContainerController.list_all_stopped_containers()
     containers = running_containers + stopped_containers
     containers = list(map(lambda x: x[0], containers))
-    image_names=ContainerController.list_all_images()
+    image_names = ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
-    return ["network-name", "container-name", "image-name", "networks", "images", "containers"] + emulations + \
-           containers + image_names
+    return (["network-name", "container-name", "image-name", "networks", "images", "containers"] +
+            emulations + containers + image_names)
 
 
 @click.argument('entity', default="", shell_complete=rm_shell_complete)
 @click.command("rm", help="network-name | container-name | image-name | networks | images | containers")
-def rm(entity : str) -> None:
+def rm(entity: str) -> None:
     """
     Removes a container, a network, an image, all networks, all images, or all containers
 
@@ -877,11 +888,12 @@ def clean_shell_complete(ctx, param, incomplete) -> List[str]:
     return ["all", "containers", "emulations", "emulation_traces", "simulation_traces", "emulation_statistics",
             "name", "emulation_executions"] + emulations + containers
 
+
 @click.argument('id', default=-1)
 @click.argument('entity', default="", shell_complete=clean_shell_complete)
 @click.command("clean", help="all | containers | emulations | emulation_traces | simulation_traces "
                              "| emulation_statistics | emulation_executions | name")
-def clean(entity : str, id: int = -1) -> None:
+def clean(entity: str, id: int = -1) -> None:
     """
     Removes a container, a network, an image, all networks, all images, all containers, all traces, or all statistics
 
@@ -928,7 +940,7 @@ def install_shell_complete(ctx, param, incomplete) -> List[str]:
     from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
-    image_names=ContainerController.list_all_images()
+    image_names = ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
     return ["emulations", "simulations", "derived_images",
             "base_images", "metastore", "all"] + emulations + image_names + simulations
@@ -937,7 +949,7 @@ def install_shell_complete(ctx, param, incomplete) -> List[str]:
 @click.argument('entity', default="", shell_complete=install_shell_complete)
 @click.command("install", help="emulations | simulations | <emulation_name> | <simulation_name> | derived_images | "
                                "base_images | metastore | all")
-def install(entity : str) -> None:
+def install(entity: str) -> None:
     """
     Installs emulations and simulations in the metastore and creates Docker images
 
@@ -991,16 +1003,16 @@ def uninstall_shell_complete(ctx, param, incomplete) -> List[str]:
     from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
-    image_names=ContainerController.list_all_images()
+    image_names = ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
     return ["emulations", "simulations", "derived_images", "base_images",
             "metastore", "all"] + emulations + image_names + simulations
 
 
 @click.argument('entity', default="", shell_complete=uninstall_shell_complete)
-@click.command("uninstall", help="emulations | simulations | <emulation_name> | <simulation_name> | derived_images | "
-                               "base_images | metastore | all")
-def uninstall(entity : str) -> None:
+@click.command("uninstall", help="emulations | simulations | <emulation_name> | <simulation_name> | "
+                                 "derived_images | base_images | metastore | all")
+def uninstall(entity: str) -> None:
     """
     Uninstall emulations and simulations from the metastore and removes Docker images
 
@@ -1060,21 +1072,22 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     stopped_containers = ContainerController.list_all_stopped_containers()
     containers = running_containers + stopped_containers
     containers = list(map(lambda x: x[0], containers))
-    image_names=ContainerController.list_all_images()
+    image_names = ContainerController.list_all_images()
     image_names = list(map(lambda x: x[0], image_names))
     active_networks_names = ContainerController.list_all_networks()
-    return ["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
-            "cadvisor", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations + containers \
-           + image_names + active_networks_names + simulations
+    return (["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
+            "cadvisor", "managementsystem", "statsmanager", "--all", "--running", "--stopped"] + emulations
+            + containers + image_names + active_networks_names + simulations)
 
 
-@click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus | node_exporter "
-                    "| cadvisor | statsmanager | managementsystem | simulations | emulation_executions")
+@click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
+                          "| node_exporter | cadvisor | statsmanager | managementsystem | "
+                          "simulations | emulation_executions")
 @click.argument('entity', default='all', type=str, shell_complete=ls_shell_complete)
 @click.option('--all', is_flag=True, help='list all')
 @click.option('--running', is_flag=True, help='list running only (default)')
 @click.option('--stopped', is_flag=True, help='list stopped only')
-def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
+def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
     """
     Lists the set of containers, networks, images, or emulations, or all
 
@@ -1113,7 +1126,7 @@ def ls(entity :str, all: bool, running: bool, stopped: bool) -> None:
     elif entity == "grafana":
         list_grafana()
     elif entity == "managementsystem":
-        list_management_system()    
+        list_management_system()
     elif entity == "statsmanager":
         list_statsmanager()
     elif entity == "simulations":
@@ -1198,7 +1211,7 @@ def print_img(img: Tuple[str, str, str, str, str]) -> None:
     click.secho(f"name:{img[0]}, size:{img[4]}B", bold=False)
 
 
-def list_all(all: bool = False, running : bool = True, stopped: bool = False) -> None:
+def list_all(all: bool = False, running: bool = True, stopped: bool = False) -> None:
     """
     Lists all containers, images, networks, and emulations
 
@@ -1220,7 +1233,7 @@ def list_all(all: bool = False, running : bool = True, stopped: bool = False) ->
     list_cadvisor()
     list_grafana()
     list_statsmanager()
-    list_management_system()    
+    list_management_system()
 
 
 def list_statsmanager() -> None:
@@ -1282,7 +1295,7 @@ def list_management_system() -> None:
 
     if ManagementSystemController.is_management_system_running():
         click.secho("Management system status: " + f" {click.style('[running]', fg='green')} "
-                                         f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
+                                                   f"port:{constants.COMMANDS.MANAGEMENT_SYSTEM_PORT}", bold=False)
     else:
         click.secho("Management system status: " + f" {click.style('[stopped]', fg='red')}", bold=False)
 
@@ -1512,12 +1525,12 @@ def list_images() -> None:
     from csle_common.controllers.container_controller import ContainerController
 
     click.secho("CSLE Docker images:", fg="magenta", bold=True)
-    image_names=ContainerController.list_all_images()
+    image_names = ContainerController.list_all_images()
     for img in image_names:
         print_img(img)
 
 
-def get_image(name: str) -> Union[None, Tuple[str,str,str,str,str]]:
+def get_image(name: str) -> Union[None, Tuple[str, str, str, str, str]]:
     """
     Utility function for getting metadata of a docker image
     :param name: the name of the image to get
@@ -1525,7 +1538,7 @@ def get_image(name: str) -> Union[None, Tuple[str,str,str,str,str]]:
     """
     from csle_common.controllers.container_controller import ContainerController
 
-    image_names=ContainerController.list_all_images()
+    image_names = ContainerController.list_all_images()
     for img in image_names:
         if img == name:
             return img
@@ -1576,7 +1589,7 @@ def clean_name(name: str) -> None:
                 for exec in executions:
                     EmulationEnvController.clean_emulation_execution(
                         emulation_env_config=exec.emulation_env_config, execution_id=exec.ip_first_octet)
-            except:
+            except Exception:
                 click.secho(f"name: {name} not recognized", fg="red", bold=True)
 
 
@@ -1625,9 +1638,9 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
         for rc in emulation_env_config.resources_config.node_resources_configurations:
             network_bandwidth = ""
             for i, ip_net in enumerate(rc.ips_and_network_configs):
-                ip,net = ip_net
+                ip, net = ip_net
                 interface = net.interface
-                bandwidth=net.rate_limit_mbit
+                bandwidth = net.rate_limit_mbit
                 if i > 0:
                     network_bandwidth = network_bandwidth + ", "
                 network_bandwidth = network_bandwidth + f"{interface} {bandwidth}Mbit/s"
