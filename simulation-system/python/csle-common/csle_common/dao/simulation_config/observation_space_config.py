@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Union, Tuple
+from typing import List, Dict, Any
 from csle_common.dao.simulation_config.value_type import ValueType
 from csle_common.dao.simulation_config.observation import Observation
 
@@ -31,7 +31,8 @@ class ObservationSpaceConfig:
         self.observation_component_name_to_index = observation_component_name_to_index
         self.observation_id_to_observation_id_vector = observation_id_to_observation_id_vector
         self.observation_id_to_observation_id_vector_inv = dict(zip(
-            list(map(lambda x: ",".join(list(map(lambda y: str(y), x))), self.observation_id_to_observation_id_vector.values())),
+            list(map(lambda x: ",".join(list(map(lambda y: str(y), x))),
+                     self.observation_id_to_observation_id_vector.values())),
             self.observation_id_to_observation_id_vector.keys()))
         self.observation_id_to_observation_vector = observation_id_to_observation_vector
         self.observation_id_to_observation_vector_inv = dict(
@@ -54,15 +55,15 @@ class ObservationSpaceConfig:
         :return: the created instance
         """
         component_observations = {}
-        for k,v in d["component_observations"].items():
-            component_observations[k]=list(map(lambda x: Observation.from_dict(x), v))
+        for k, v in d["component_observations"].items():
+            component_observations[k] = list(map(lambda x: Observation.from_dict(x), v))
 
         obj = ObservationSpaceConfig(
             observations=list(map(lambda x: Observation.from_dict(x), d["observations"])),
             observation_type=d["observation_type"], descr=d["descr"],
             player_id=d["player_id"], observation_component_name_to_index=d["observation_component_name_to_index"],
             observation_id_to_observation_id_vector=d["observation_id_to_observation_id_vector"],
-            observation_id_to_observation_vector = d["observation_id_to_observation_vector"],
+            observation_id_to_observation_vector=d["observation_id_to_observation_vector"],
             component_observations=component_observations
         )
         return obj
@@ -74,13 +75,13 @@ class ObservationSpaceConfig:
         d = {}
         d["observations"] = list(map(lambda x: x.to_dict(), self.observations))
         d["observation_type"] = self.observation_type
-        d["descr"]= self.descr
-        d["player_id"]= self.player_id
+        d["descr"] = self.descr
+        d["player_id"] = self.player_id
         d["observation_component_name_to_index"] = self.observation_component_name_to_index
         d["observation_id_to_observation_vector"] = self.observation_id_to_observation_vector
         d["observation_id_to_observation_id_vector"] = self.observation_id_to_observation_id_vector
         d2 = {}
-        for k,v in self.component_observations.items():
+        for k, v in self.component_observations.items():
             d2[k] = list(map(lambda x: x.to_dict(), v))
         d["component_observations"] = d2
         return d

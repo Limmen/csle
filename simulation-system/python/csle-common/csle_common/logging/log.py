@@ -32,7 +32,7 @@ class Logger(metaclass=SingletonType):
         log_dir = constants.LOGGING.DEFAULT_LOG_DIR
 
         now = datetime.datetime.now()
-        log_file_name = now.strftime("%Y-%m-%d-%H-%M")+".log"
+        log_file_name = now.strftime("%Y-%m-%d-%H-%M") + ".log"
 
         # Build Log File Full Path
         log_path = os.path.join(log_dir, (str(log_file_name)))
@@ -75,4 +75,3 @@ def handle_exception(exc_type, exc_value, exc_traceback):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
     Logger.__call__().get_logger().error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-

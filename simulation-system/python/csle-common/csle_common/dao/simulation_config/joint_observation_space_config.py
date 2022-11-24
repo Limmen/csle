@@ -4,7 +4,7 @@ from csle_common.dao.simulation_config.observation_space_config import Observati
 
 class JointObservationSpaceConfig:
 
-    def __init__(self, observation_spaces : List[ObservationSpaceConfig]):
+    def __init__(self, observation_spaces: List[ObservationSpaceConfig]):
         self.observation_spaces = observation_spaces
 
     @staticmethod

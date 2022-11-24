@@ -10,7 +10,7 @@ class DockerEnvMetadata:
     """
 
     def __init__(self, containers: List[DockerContainerMetadata], name: str, subnet_prefix: str,
-                 subnet_mask : str, level: str, config: EmulationEnvConfig, kafka_config: KafkaConfig):
+                 subnet_mask: str, level: str, config: EmulationEnvConfig, kafka_config: KafkaConfig):
         """
         Initializes the DTO
 
@@ -24,7 +24,7 @@ class DockerEnvMetadata:
         """
         self.containers = containers
         self.name = name
-        self.subnet_prefix=subnet_prefix
+        self.subnet_prefix = subnet_prefix
         self.subnet_mask = subnet_mask
         self.level = level
         self.config = config

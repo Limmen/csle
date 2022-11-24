@@ -41,4 +41,3 @@ class PlayersConfig:
         :return: a string representation of the DTO
         """
         return f"players_configs: {list(map(lambda x: str(x), self.player_configs))}"
-

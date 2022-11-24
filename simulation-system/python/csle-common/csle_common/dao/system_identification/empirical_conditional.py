@@ -19,7 +19,7 @@ class EmpiricalConditional:
         """
         self.conditional_name = conditional_name
         self.probabilities = probabilities
-        assert round(sum(probabilities),2) == 1
+        assert round(sum(probabilities), 2) == 1
         self.metric_name = metric_name
         self.sample_space = sample_space
 

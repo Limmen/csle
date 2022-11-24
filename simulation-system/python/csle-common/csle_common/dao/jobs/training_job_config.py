@@ -49,7 +49,7 @@ class TrainingJobConfig:
         d["simulation_env_name"] = self.simulation_env_name
         d["emulation_env_name"] = self.emulation_env_name
         d["experiment_config"] = self.experiment_config.to_dict()
-        d["progress_percentage"] = round(self.progress_percentage,2)
+        d["progress_percentage"] = round(self.progress_percentage, 2)
         d["pid"] = self.pid
         d["id"] = self.id
         d["experiment_result"] = self.experiment_result.to_dict()

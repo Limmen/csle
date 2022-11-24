@@ -28,8 +28,8 @@ class SimulationEnvConfig:
                  joint_observation_space_config: JointObservationSpaceConfig, time_step_type: TimeStepType,
                  reward_function_config: RewardFunctionConfig, transition_operator_config: TransitionOperatorConfig,
                  observation_function_config: ObservationFunctionConfig,
-                 initial_state_distribution_config : InitialStateDistributionConfig,
-                 env_parameters_config: EnvParametersConfig, plot_transition_probabilities : bool = False,
+                 initial_state_distribution_config: InitialStateDistributionConfig,
+                 env_parameters_config: EnvParametersConfig, plot_transition_probabilities: bool = False,
                  plot_observation_function: bool = False, plot_reward_function: bool = False
                  ):
         """
@@ -66,7 +66,7 @@ class SimulationEnvConfig:
         self.reward_function_config = reward_function_config
         self.transition_operator_config = transition_operator_config
         self.observation_function_config = observation_function_config
-        self.initial_state_distribution_config= initial_state_distribution_config
+        self.initial_state_distribution_config = initial_state_distribution_config
         self.version = version
         self.gym_env_name = gym_env_name
         self.image = None
@@ -87,13 +87,13 @@ class SimulationEnvConfig:
         input_config = None
         try:
             input_config = StoppingGameConfig.from_dict(d["simulation_env_input_config"])
-        except:
+        except Exception:
             try:
                 input_config = StoppingGameAttackerMdpConfig.from_dict(d["simulation_env_input_config"])
-            except:
+            except Exception:
                 input_config = StoppingGameDefenderPomdpConfig.from_dict(d["simulation_env_input_config"])
         obj = SimulationEnvConfig(
-            name = d["name"], descr = d["descr"],
+            name=d["name"], descr=d["descr"],
             simulation_env_input_config=input_config,
             players_config=PlayersConfig.from_dict(d["players_config"]),
             state_space_config=StateSpaceConfig.from_dict(d["state_space_config"]),
@@ -166,4 +166,3 @@ class SimulationEnvConfig:
         :return: a copy of the DTO
         """
         return self.from_dict(self.to_dict())
-

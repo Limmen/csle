@@ -32,13 +32,12 @@ class SimulationTrace:
         """
         :return: a string representation of the trace
         """
-        return "simulation_env: {}, attacker_rewards:{}, defender_rewards:{}, attacker_observations:{}, " \
-               "defender_observations:{}, " \
-               "infos:{}, dones:{}, attacker_actions:{}, defender_actions:{}, states: {}, beliefs: {}, " \
-               "infrastructure_metrics: {}, id: {}".format(self.simulation_env,
-            self.attacker_rewards, self.defender_rewards, self.attacker_observations,
-            self.defender_observations, self.infos, self.dones, self.attacker_actions,
-            self.defender_actions, self.states, self.beliefs, self.infrastructure_metrics, self.id)
+        return f"simulation_env: {self.simulation_env}, attacker_rewards:{self.attacker_rewards}, " \
+               f"defender_rewards:{self.defender_rewards}, attacker_observations:{self.attacker_observations}, " \
+               f"defender_observations:{self.defender_observations}, " \
+               f"infos:{self.infos}, dones:{self.dones}, attacker_actions:{self.attacker_actions}, " \
+               f"defender_actions:{self.defender_actions}, states: {self.states}, beliefs: {self.beliefs}, " \
+               f"infrastructure_metrics: {self.infrastructure_metrics}, id: {self.id}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -96,8 +95,7 @@ class SimulationTrace:
         return trace
 
     @staticmethod
-    def save_traces(traces_save_dir, traces : List["SimulationTrace"],
-                    traces_file : str = None) -> None:
+    def save_traces(traces_save_dir, traces: List["SimulationTrace"], traces_file: str = None) -> None:
         """
         Utility function for saving a list of traces to a json file
 
@@ -107,7 +105,7 @@ class SimulationTrace:
         :return: None
         """
         if traces_file is None:
-            traces_file =  constants.SYSTEM_IDENTIFICATION.SIMULATION_TRACES_FILE
+            traces_file = constants.SYSTEM_IDENTIFICATION.SIMULATION_TRACES_FILE
         traces = list(map(lambda x: x.to_dict(), traces))
         if not os.path.exists(traces_save_dir):
             os.makedirs(traces_save_dir)
@@ -115,7 +113,7 @@ class SimulationTrace:
             json.dump({"traces": traces}, fp, cls=NpEncoder)
 
     @staticmethod
-    def load_traces(traces_save_dir, traces_file : str = None) -> List["SimulationTrace"]:
+    def load_traces(traces_save_dir: str, traces_file: str = None) -> List["SimulationTrace"]:
         """
         Utility function for loading and parsing a list of traces from a json file
 
@@ -124,12 +122,12 @@ class SimulationTrace:
         :return: a list of the loaded traces
         """
         if traces_file is None:
-            traces_file =  constants.SYSTEM_IDENTIFICATION.SIMULATION_TRACES_FILE
+            traces_file = constants.SYSTEM_IDENTIFICATION.SIMULATION_TRACES_FILE
         path = traces_save_dir + constants.COMMANDS.SLASH_DELIM + traces_file
         if os.path.exists(path):
             with open(path, 'r') as fp:
                 d = json.load(fp)
-                traces  = d["traces"]
+                traces = d["traces"]
                 traces = list(map(lambda x: SimulationTrace.from_dict(x), traces))
                 return traces
         else:

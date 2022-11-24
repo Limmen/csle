@@ -38,7 +38,7 @@ class OVSConfig:
         """
         :return: a string representation of the object
         """
-        return f"switch_configs:{list(map(lambda x: str(s), self.switch_configs))}"
+        return f"switch_configs:{list(map(lambda x: str(x), self.switch_configs))}"
 
     def to_json_str(self) -> str:
         """

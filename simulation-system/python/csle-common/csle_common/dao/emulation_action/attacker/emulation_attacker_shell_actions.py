@@ -11,7 +11,7 @@ class EmulationAttackerShellActions:
     """
 
     @staticmethod
-    def FIND_FLAG(index : int) -> EmulationAttackerAction:
+    def FIND_FLAG(index: int) -> EmulationAttackerAction:
         """
         Searches through the file systems that have been compromised to find a flag
 
@@ -82,9 +82,8 @@ class EmulationAttackerShellActions:
                "-r /data/libbindshell-samba.so -u sambacry -p nosambanocry -P 6699 -t {}"]
         return EmulationAttackerAction(id=id, name="Sambacry Explolit", cmds=cmd,
                                        type=EmulationAttackerActionType.EXPLOIT,
-                                       descr="Uses the sambacry shell to get remote code execution and"
-                                             " then sets up a SSH backdoor "
-                            "to upgrade the channel",
+                                       descr="Uses the sambacry shell to get remote code execution and "
+                                             "then sets up a SSH backdoor to upgrade the channel",
                                        index=index,
                                        ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
                                        alt_cmds=None,
@@ -111,7 +110,8 @@ class EmulationAttackerShellActions:
                                        descr="Uses the Shellshock exploit and curl to do "
                                              "remote code execution and create a backdoor",
                                        index=index,
-                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
+                                       alt_cmds=None,
                                        vulnerability=constants.SHELLSHOCK.VULNERABILITY_NAME,
                                        backdoor=True)
 
@@ -145,17 +145,12 @@ class EmulationAttackerShellActions:
         id = EmulationAttackerActionId.CVE_2015_3306_EXPLOIT
         cmd = ["sudo /root/miniconda3/bin/python3 /cve_2015_3306_exploit.py "
                "--port 21 --path '/var/www/html/' --host {}"]
-        return EmulationAttackerAction(id=id, name="CVE-2015-3306 exploit", cmds=cmd,
-                                       type=EmulationAttackerActionType.EXPLOIT,
-                                       descr="Uses the CVE-2015-3306 vulnerability to get remote code "
-                                             "execution and then sets up a SSH backdoor "
-                            "to upgrade the channel",
-                                       index=index,
-                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
-                                       alt_cmds=None,
-                                       vulnerability=constants.CVE_2015_3306.VULNERABILITY_NAME,
-                                       backdoor=True)
-
+        return EmulationAttackerAction(
+            id=id, name="CVE-2015-3306 exploit", cmds=cmd, type=EmulationAttackerActionType.EXPLOIT,
+            descr="Uses the CVE-2015-3306 vulnerability to get remote code execution and then sets up a SSH backdoor "
+                  "to upgrade the channel", index=index, ips=[],
+            action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+            vulnerability=constants.CVE_2015_3306.VULNERABILITY_NAME, backdoor=True)
 
     @staticmethod
     def CVE_2015_1427_EXPLOIT(index: int) -> EmulationAttackerAction:
@@ -167,16 +162,12 @@ class EmulationAttackerShellActions:
         """
         id = EmulationAttackerActionId.CVE_2015_1427_EXPLOIT
         cmd = ["/cve_2015_1427_exploit.sh {}:9200"]
-        return EmulationAttackerAction(id=id, name="CVE-2015-1427 exploit", cmds=cmd,
-                                       type=EmulationAttackerActionType.EXPLOIT,
-                                       descr="Uses the CVE-2015-1427 vulnerability to get remote code execution and "
-                                             "then sets up a SSH backdoor "
-                            "to upgrade the channel",
-                                       index=index,
-                                       ips=[], action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS,
-                                       alt_cmds=None,
-                                       vulnerability=constants.CVE_2015_1427.VULNERABILITY_NAME,
-                                       backdoor=True)
+        return EmulationAttackerAction(
+            id=id, name="CVE-2015-1427 exploit", cmds=cmd, type=EmulationAttackerActionType.EXPLOIT,
+            descr="Uses the CVE-2015-1427 vulnerability to get remote code execution and then sets up a SSH backdoor "
+                  "to upgrade the channel", index=index, ips=[],
+            action_outcome=EmulationAttackerActionOutcome.SHELL_ACCESS, alt_cmds=None,
+            vulnerability=constants.CVE_2015_1427.VULNERABILITY_NAME, backdoor=True)
 
     @staticmethod
     def CVE_2016_10033_EXPLOIT(index: int) -> EmulationAttackerAction:

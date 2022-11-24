@@ -2,17 +2,18 @@ from typing import List
 import gym
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
-from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions import EmulationDefenderStoppingActions
+from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
+    import EmulationDefenderStoppingActions
 
 
 class EmulationDefenderActionConfig:
     """
     Configuration of the action space for the defender
     """
-    def __init__(self, num_indices : int, actions: List[EmulationDefenderAction] = None,
-                 stopping_action_ids : List[EmulationDefenderActionId] = None,
-                 multiple_stop_actions : List[EmulationDefenderAction] = None,
-                 multiple_stop_actions_ids : List[EmulationDefenderActionId] = None):
+    def __init__(self, num_indices: int, actions: List[EmulationDefenderAction] = None,
+                 stopping_action_ids: List[EmulationDefenderActionId] = None,
+                 multiple_stop_actions: List[EmulationDefenderAction] = None,
+                 multiple_stop_actions_ids: List[EmulationDefenderActionId] = None):
         """
         Class constructor
 
@@ -64,7 +65,6 @@ class EmulationDefenderActionConfig:
                 return i
         raise ValueError("No Continue Action in the action space")
 
-
     @staticmethod
     def all_actions_config(num_nodes: int, subnet_masks: List[str]) -> "EmulationDefenderActionConfig":
         """
@@ -78,7 +78,6 @@ class EmulationDefenderActionConfig:
 
         # Host actions
         for idx in range(num_nodes):
-            #actions.append(AttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=idx, subnet=False))
             pass
 
         # Subnet actions

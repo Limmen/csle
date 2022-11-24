@@ -10,7 +10,7 @@ class EmulationAttackerStoppingActions:
     """
 
     @staticmethod
-    def STOP(index : int) -> EmulationAttackerAction:
+    def STOP(index: int) -> EmulationAttackerAction:
         """
         Reports a detected intrusion and stops
 

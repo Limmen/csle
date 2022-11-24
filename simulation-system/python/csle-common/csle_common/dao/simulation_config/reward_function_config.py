@@ -35,11 +35,8 @@ class RewardFunctionConfig:
         d["reward_tensor"] = self.reward_tensor
         return d
 
-
     def __str__(self):
         """
         :return: a string representation of the object
         """
         return f"reward_tensor:{self.reward_tensor}"
-
-

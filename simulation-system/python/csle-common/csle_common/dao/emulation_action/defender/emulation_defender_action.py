@@ -10,11 +10,11 @@ class EmulationDefenderAction:
     Class representing an action of the defender in the environment
     """
 
-    def __init__(self, id : EmulationDefenderActionId, name :str, cmds : List[str],
+    def __init__(self, id: EmulationDefenderActionId, name: str, cmds: List[str],
                  type: EmulationDefenderActionType, descr: str,
-                 ips : List[str], index: int,
+                 ips: List[str], index: int,
                  action_outcome: EmulationDefenderActionOutcome = EmulationDefenderActionOutcome.GAME_END,
-                 alt_cmds : List[str] = None, execution_time: float = 0.0, ts : float = 0.0):
+                 alt_cmds: List[str] = None, execution_time: float = 0.0, ts: float = 0.0):
         """
         Class constructor
 
@@ -106,7 +106,6 @@ class EmulationDefenderAction:
                  f"{self.action_outcome},{'_'.join(self.alt_cmds)}"
         return record
 
-
     @staticmethod
     def from_kafka_record(record: str) -> "EmulationDefenderAction":
         """
@@ -119,7 +118,7 @@ class EmulationDefenderAction:
         obj = EmulationDefenderAction(id=EmulationDefenderActionId(int(parts[1])), ts=float(parts[0]),
                                       descr=parts[2], index=int(parts[3]),
                                       name=parts[4],
-                                      execution_time=float(parts[5]), ips = parts[6].split("_"),
+                                      execution_time=float(parts[5]), ips=parts[6].split("_"),
                                       cmds=parts[7].split("_"),
                                       type=EmulationDefenderActionType(int(parts[8])),
                                       action_outcome=EmulationDefenderActionOutcome(int(parts[9])),

@@ -15,7 +15,7 @@ class EmulationStatistics:
     DTO representing delta-statistics measured from teh emulation
     """
 
-    def __init__(self, emulation_name: str, descr: str=""):
+    def __init__(self, emulation_name: str, descr: str = ""):
         """
         Initializes the statistics DTO
 
@@ -50,7 +50,7 @@ class EmulationStatistics:
         self.metrics = []
 
     @staticmethod
-    def initialize_counters(d: Dict[str, Dict[int,int]], labels: List[str]) -> Dict[str, Dict[int,int]]:
+    def initialize_counters(d: Dict[str, Dict[int, int]], labels: List[str]) -> Dict[str, Dict[int, int]]:
         """
         Initializes counters for a given dict
         :param d: the dict to initialzie
@@ -100,9 +100,9 @@ class EmulationStatistics:
                 d[docker_stats_labels[i]][docker_stats_deltas[i]] = 1
 
         # Client metrics
-        client_population_metrics_deltas, client_population_metrics_labels = \
+        client_population_metrics_deltas, client_population_metrics_labels = (
             s.defender_obs_state.avg_client_population_metrics.get_deltas(
-            stats_prime=s_prime.defender_obs_state.avg_client_population_metrics)
+                stats_prime=s_prime.defender_obs_state.avg_client_population_metrics))
         for i in range(len(client_population_metrics_deltas)):
             if client_population_metrics_deltas[i] in d[client_population_metrics_labels[i]]:
                 d[client_population_metrics_labels[i]][client_population_metrics_deltas[i]] += 1
@@ -146,7 +146,8 @@ class EmulationStatistics:
         if f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}" not in self.conditionals_counts:
             self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"] = \
                 EmulationStatistics.initialize_counters(d={}, labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_LABELS)
-        self.update_counters(d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"], s=s, s_prime=s_prime)
+        self.update_counters(
+            d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"], s=s, s_prime=s_prime)
 
     def update_initial_statistics(self, s: EmulationEnvState) -> None:
         """
@@ -179,17 +180,23 @@ class EmulationStatistics:
         client_population_metrics_values, client_population_metrics_labels = \
             s.defender_obs_state.client_population_metrics.get_values()
         for i in range(len(client_population_metrics_values)):
-            if client_population_metrics_values[i] in self.initial_distributions_counts[client_population_metrics_labels[i]]:
-                self.initial_distributions_counts[client_population_metrics_labels[i]][client_population_metrics_values[i]] += 1
+            if (client_population_metrics_values[i] in
+                    self.initial_distributions_counts[client_population_metrics_labels[i]]):
+                self.initial_distributions_counts[
+                    client_population_metrics_labels[i]][client_population_metrics_values[i]] += 1
             else:
-                self.initial_distributions_counts[client_population_metrics_labels[i]][client_population_metrics_values[i]] = 1
+                self.initial_distributions_counts[
+                    client_population_metrics_labels[i]][client_population_metrics_values[i]] = 1
         aggregated_host_metrics_values, aggregated_host_metrics_labels = \
             s.defender_obs_state.aggregated_host_metrics.get_values()
         for i in range(len(aggregated_host_metrics_values)):
-            if aggregated_host_metrics_values[i] in self.initial_distributions_counts[aggregated_host_metrics_labels[i]]:
-                self.initial_distributions_counts[aggregated_host_metrics_labels[i]][aggregated_host_metrics_values[i]] += 1
+            if (aggregated_host_metrics_values[i] in
+                    self.initial_distributions_counts[aggregated_host_metrics_labels[i]]):
+                self.initial_distributions_counts[
+                    aggregated_host_metrics_labels[i]][aggregated_host_metrics_values[i]] += 1
             else:
-                self.initial_distributions_counts[aggregated_host_metrics_labels[i]][aggregated_host_metrics_values[i]] = 1
+                self.initial_distributions_counts[aggregated_host_metrics_labels[i]][
+                    aggregated_host_metrics_values[i]] = 1
 
     def compute_descriptive_statistics_and_distributions(self) -> None:
         """
@@ -202,19 +209,19 @@ class EmulationStatistics:
         self.num_conditions = len(self.conditions)
         for condition in self.conditionals_counts.keys():
             self.means[condition] = {}
-            self.stds[condition]= {}
-            self.mins[condition]= {}
-            self.maxs[condition]= {}
-            self.conditionals_probs[condition]= {}
+            self.stds[condition] = {}
+            self.mins[condition] = {}
+            self.maxs[condition] = {}
+            self.conditionals_probs[condition] = {}
             for metric in self.conditionals_counts[condition].keys():
                 self.conditionals_probs[condition][metric] = {}
                 observations = []
                 total_counts = sum(self.conditionals_counts[condition][metric].values())
                 self.num_measurements = self.num_measurements + total_counts
                 for value in self.conditionals_counts[condition][metric].keys():
-                    self.conditionals_probs[condition][metric][value] = \
-                        self.conditionals_counts[condition][metric][value]/total_counts
-                    observations = observations + [int(round(float(value)))]*int(
+                    tmp = self.conditionals_counts[condition][metric][value] / total_counts
+                    self.conditionals_probs[condition][metric][value] = tmp
+                    observations = observations + [int(round(float(value)))] * int(
                         round(float(self.conditionals_counts[condition][metric][value])))
                 if len(observations) == 0:
                     self.means[condition][metric] = -1
@@ -233,10 +240,10 @@ class EmulationStatistics:
             total_counts = sum(self.initial_distributions_counts[metric].values())
             observations = []
             for value in self.initial_distributions_counts[metric].keys():
-                self.initial_distributions_probs[metric][value] = \
-                    self.initial_distributions_counts[metric][value]/total_counts
-                observations = observations + [int(round(float(value)))]*int(round(float(
-                    self.initial_distributions_counts[metric][value])))
+                self.initial_distributions_probs[metric][value] = (self.initial_distributions_counts[metric][value] /
+                                                                   total_counts)
+                observations = (observations + [int(round(float(value)))] * int(round(
+                    float(self.initial_distributions_counts[metric][value]))))
             if len(observations) == 0:
                 self.initial_means[metric] = -1
                 self.initial_stds[metric] = -1
@@ -253,12 +260,12 @@ class EmulationStatistics:
             for condition2 in list(self.conditionals_counts.keys()):
                 self.conditionals_kl_divergences[condition1][condition2] = {}
                 for metric in self.conditionals_counts[condition1].keys():
-                    if len(list(self.conditionals_probs[condition1][metric].keys())) > 0 and \
-                        len(list(self.conditionals_probs[condition2][metric].keys())) > 0:
+                    if (len(list(self.conditionals_probs[condition1][metric].keys())) > 0
+                            and len(list(self.conditionals_probs[condition2][metric].keys())) > 0):
                         normalized_p_1 = []
                         normalized_p_2 = []
-                        for val in set(list(self.conditionals_probs[condition1][metric].keys()) +
-                            list(self.conditionals_probs[condition2][metric].keys())):
+                        for val in set((list(self.conditionals_probs[condition1][metric].keys()) +
+                                        list(self.conditionals_probs[condition2][metric].keys()))):
                             if val in self.conditionals_probs[condition1][metric]:
                                 normalized_p_1.append(self.conditionals_probs[condition1][metric][val])
                             else:
@@ -362,7 +369,6 @@ class EmulationStatistics:
         d["conditions"] = self.conditions
         return d
 
-
     @staticmethod
     def from_json_file(json_file_path: str) -> "EmulationStatistics":
         """
@@ -401,8 +407,8 @@ class EmulationStatistics:
 
     def get_number_of_samples(self) -> int:
         num_samples = 0
-        for k,v in self.conditionals_counts.items():
-            for k,v in v.items():
+        for k, v in self.conditionals_counts.items():
+            for k, v in v.items():
                 num_samples += v
         return num_samples
 

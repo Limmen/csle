@@ -26,9 +26,7 @@ class PlayerConfig:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = PlayerConfig(
-            name = d["name"], id=int(d["id"]), descr = d["descr"]
-        )
+        obj = PlayerConfig(name=d["name"], id=int(d["id"]), descr=d["descr"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

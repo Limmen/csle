@@ -11,9 +11,8 @@ class TransportProtocol(IntEnum):
     TCP = 0
     UDP = 1
 
-
     @staticmethod
-    def _from_str(protocol_str : str) -> "TransportProtocol":
+    def _from_str(protocol_str: str) -> "TransportProtocol":
         """
         Creates the object from a string
         :param protocol_str: the string to create the object from

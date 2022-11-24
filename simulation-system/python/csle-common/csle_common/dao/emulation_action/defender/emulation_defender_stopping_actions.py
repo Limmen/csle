@@ -10,7 +10,7 @@ class EmulationDefenderStoppingActions:
     """
 
     @staticmethod
-    def STOP(index : int) -> EmulationDefenderAction:
+    def STOP(index: int) -> EmulationDefenderAction:
         """
         Reports a detected intrusion and stops
 
@@ -37,12 +37,10 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.CONTINUE
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Continue", cmds=cmd,
-                                       type=EmulationDefenderActionType.CONTINUE,
-                                       descr="A 'continue' action, the defender chooses to not make any action",
-                                       index=index,
-                                       ips=[], action_outcome=EmulationDefenderActionOutcome.CONTINUE, alt_cmds
-                                       =alt_cmd)
+        return EmulationDefenderAction(
+            id=id, name="Continue", cmds=cmd, type=EmulationDefenderActionType.CONTINUE,
+            descr="A 'continue' action, the defender chooses to not make any action", index=index, ips=[],
+            action_outcome=EmulationDefenderActionOutcome.CONTINUE, alt_cmds=alt_cmd)
 
     @staticmethod
     def RESET_USERS(index: int) -> EmulationDefenderAction:
@@ -56,13 +54,11 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.RESET_USERS
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Reset Users", cmds=cmd,
-                                       type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
-                                       descr="A non terminal stop action the defender resets all user accounts, "
-                                    "which means that password vulnerabilities are mitigated",
-                                       index=index,
-                                       ips=[], action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
-                                       alt_cmds=alt_cmd)
+        return EmulationDefenderAction(
+            id=id, name="Reset Users", cmds=cmd, type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
+            descr="A non terminal stop action the defender resets all user accounts, which means that "
+                  "password vulnerabilities are mitigated", index=index, ips=[],
+            action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM, alt_cmds=alt_cmd)
 
     @staticmethod
     def ENABLE_DPI(index: int) -> EmulationDefenderAction:
@@ -94,12 +90,10 @@ class EmulationDefenderStoppingActions:
         id = EmulationDefenderActionId.BLACKLIST_IPS
         cmd = []
         alt_cmd = []
-        return EmulationDefenderAction(id=id, name="Blacklist IPs", cmds=cmd,
-                                       type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
-                                       descr="A non terminal stop action, the defender blacklists all IPs that generate "
-                                    "IDS alerts that exceed a threshold, the blacklist is implemented "
-                                    "using the firewall.",
-                                       index=index,
-                                       ips=[],
-                                       action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
-                                       alt_cmds=alt_cmd)
+        return EmulationDefenderAction(
+            id=id, name="Blacklist IPs", cmds=cmd,
+            type=EmulationDefenderActionType.ADD_DEFENSIVE_MECHANISM,
+            descr="A non terminal stop action, the defender blacklists all IPs that generate "
+                  "IDS alerts that exceed a threshold, the blacklist is implemented using the firewall.",
+            index=index, ips=[], action_outcome=EmulationDefenderActionOutcome.ADD_DEFENSIVE_MECHANISM,
+            alt_cmds=alt_cmd)

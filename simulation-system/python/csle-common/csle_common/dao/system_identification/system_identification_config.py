@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 
@@ -34,10 +34,10 @@ class SystemIdentificationConfig:
         if d is None:
             return None
         h_d = {}
-        for k,v in d["hparams"].items():
+        for k, v in d["hparams"].items():
             h_d[k] = HParam.from_dict(v)
         obj = SystemIdentificationConfig(hparams=h_d, model_type=d["model_type"], output_dir=d["output_dir"],
-                                         title= d["title"], log_every=d["log_every"])
+                                         title=d["title"], log_every=d["log_every"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -46,7 +46,7 @@ class SystemIdentificationConfig:
         """
         d = {}
         d_h = {}
-        for k,v in self.hparams.items():
+        for k, v in self.hparams.items():
             d_h[k] = v.to_dict()
         d["hparams"] = d_h
         d["model_type"] = self.model_type

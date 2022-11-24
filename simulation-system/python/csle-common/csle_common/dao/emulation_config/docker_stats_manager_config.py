@@ -6,9 +6,10 @@ class DockerStatsManagerConfig:
     Represents the configuration of the docker stats managers in a CSLE emulation
     """
 
-    def __init__(self, docker_stats_manager_log_file: str, docker_stats_manager_log_dir : str,
-                 docker_stats_manager_max_workers : int,
-                 time_step_len_seconds = 15, docker_stats_manager_port = 50046, version: str = "0.0.1") -> None:
+    def __init__(self, docker_stats_manager_log_file: str, docker_stats_manager_log_dir: str,
+                 docker_stats_manager_max_workers: int,
+                 time_step_len_seconds: int = 15, docker_stats_manager_port: int = 50046,
+                 version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
@@ -58,7 +59,8 @@ class DockerStatsManagerConfig:
         """
         :return: a string representation of the object
         """
-        return f"docker_stats_manager_port: {self.docker_stats_manager_port}, time_step_len_seconds: {self.time_step_len_seconds}," \
+        return f"docker_stats_manager_port: {self.docker_stats_manager_port}, " \
+               f"time_step_len_seconds: {self.time_step_len_seconds}," \
                f" version: {self.version}, docker_stats_manager_log_dir: {self.docker_stats_manager_log_dir}, " \
                f"docker_stats_manager_log_file: {self.docker_stats_manager_log_file}, " \
                f"docker_stats_manager_max_workers: {self.docker_stats_manager_max_workers}"
@@ -107,5 +109,5 @@ class DockerStatsManagerConfig:
         :return: get the schema of the DTO
         """
         return DockerStatsManagerConfig(docker_stats_manager_log_file="docker_stats_manager.log",
-                                        docker_stats_manager_log_dir="/var/log/csle/", docker_stats_manager_port=10)
-
+                                        docker_stats_manager_log_dir="/var/log/csle/", docker_stats_manager_port=50046,
+                                        docker_stats_manager_max_workers=10)

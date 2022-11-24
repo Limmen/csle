@@ -24,7 +24,6 @@ class KafkaTopic:
         self.attributes = attributes
         self.retention_time_hours = retention_time_hours
 
-
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "KafkaTopic":
         """
@@ -33,10 +32,8 @@ class KafkaTopic:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj= KafkaTopic(
-            name=d["name"], num_replicas=d["num_replicas"], num_partitions=d["num_partitions"],
-            attributes=d["attributes"], retention_time_hours=d["retention_time_hours"]
-        )
+        obj = KafkaTopic(name=d["name"], num_replicas=d["num_replicas"], num_partitions=d["num_partitions"],
+                         attributes=d["attributes"], retention_time_hours=d["retention_time_hours"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

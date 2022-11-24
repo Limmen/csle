@@ -4,10 +4,13 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action import 
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions
 from csle_common.dao.emulation_action.attacker.emulation_attacker_nikto_actions import EmulationAttackerNIKTOActions
-from csle_common.dao.emulation_action.attacker.emulation_attacker_masscan_actions import EmulationAttackerMasscanActions
-from csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions import EmulationAttackerNetworkServiceActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_masscan_actions \
+    import EmulationAttackerMasscanActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions \
+    import EmulationAttackerNetworkServiceActions
 from csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions import EmulationAttackerShellActions
-from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions import EmulationAttackerStoppingActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions \
+    import EmulationAttackerStoppingActions
 
 
 class EmulationAttackerActionConfig:
@@ -18,7 +21,8 @@ class EmulationAttackerActionConfig:
     def __init__(self, num_indices: int, actions: List[EmulationAttackerAction] = None,
                  nmap_action_ids: List[EmulationAttackerActionId] = None,
                  network_service_action_ids: List[EmulationAttackerActionId] = None,
-                 shell_action_ids: List[EmulationAttackerActionId] = None, nikto_action_ids: List[EmulationAttackerActionId] = None,
+                 shell_action_ids: List[EmulationAttackerActionId] = None,
+                 nikto_action_ids: List[EmulationAttackerActionId] = None,
                  masscan_action_ids: List[EmulationAttackerActionId] = None,
                  stopping_action_ids: List[EmulationAttackerActionId] = None):
         """
@@ -49,8 +53,8 @@ class EmulationAttackerActionConfig:
         self.nikto_action_ids = nikto_action_ids
         self.masscan_action_ids = masscan_action_ids
         self.stopping_action_ids = stopping_action_ids
-        self.action_ids = self.nmap_action_ids + self.network_service_action_ids + self.shell_action_ids \
-                          + self.nikto_action_ids + self.masscan_action_ids + self.stopping_action_ids
+        self.action_ids = (self.nmap_action_ids + self.network_service_action_ids + self.shell_action_ids
+                           + self.nikto_action_ids + self.masscan_action_ids + self.stopping_action_ids)
         self.num_node_specific_actions = len(self.action_ids)
         self.m_action_space = gym.spaces.Discrete(self.num_node_specific_actions)
         self.ar_action_converter = {}

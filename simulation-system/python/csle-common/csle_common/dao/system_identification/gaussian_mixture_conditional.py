@@ -1,6 +1,5 @@
 from typing import List, Dict, Any
 from sklearn.mixture import GaussianMixture
-from scipy.stats import multivariate_normal
 from scipy.stats import norm
 import numpy as np
 
@@ -41,7 +40,7 @@ class GaussianMixtureConditional:
         self.sample_space.sort()
         dists = []
         for weight, mean, covar in zip(self.mixture_weights, self.mixtures_means, self.mixtures_covariance_matrix):
-            dists.append(list(weight*norm.pdf(self.sample_space, mean, np.sqrt(covar)).ravel()))
+            dists.append(list(weight * norm.pdf(self.sample_space, mean, np.sqrt(covar)).ravel()))
         self.weighted_mixture_distributions = dists
         combined_dist = np.zeros(len(self.sample_space))
         for dist in dists:
@@ -49,11 +48,11 @@ class GaussianMixtureConditional:
             combined_dist = combined_dist + d_arr
         self.combined_distribution = list(combined_dist)
 
-    def generate_distributions_for_samples(self, samples, normalize = False):
+    def generate_distributions_for_samples(self, samples, normalize: bool = False):
         samples.sort()
         dists = []
         for weight, mean, covar in zip(self.mixture_weights, self.mixtures_means, self.mixtures_covariance_matrix):
-            density_dist = list(weight*norm.pdf(samples, mean, np.sqrt(covar)).ravel())
+            density_dist = list(weight * norm.pdf(samples, mean, np.sqrt(covar)).ravel())
             dists.append(density_dist)
         combined_density_dist = np.zeros(len(samples))
         for density_dist in dists:
@@ -61,7 +60,7 @@ class GaussianMixtureConditional:
             combined_density_dist = combined_density_dist + d_arr
         combined_density_dist = list(combined_density_dist)
         if normalize:
-            combined_prob_dist = list(np.array(combined_density_dist)*(1/sum(combined_density_dist)))
+            combined_prob_dist = list(np.array(combined_density_dist) * (1 / sum(combined_density_dist)))
         else:
             combined_prob_dist = combined_density_dist
         return combined_prob_dist
@@ -106,7 +105,8 @@ class GaussianMixtureConditional:
         """
         return f"conditional_name:{self.conditional_name}, num_mixture_components: {self.num_mixture_components}, " \
                f"dim: {self.dim}, mixtures_means: {self.mixtures_means}, " \
-               f"mixtures_covariance_matrix: {self.mixtures_covariance_matrix}, mixture_weights: {self.mixture_weights}," \
+               f"mixtures_covariance_matrix: {self.mixtures_covariance_matrix}, " \
+               f"mixture_weights: {self.mixture_weights}," \
                f"metric_name: {self.metric_name}, sample space: {self.sample_space}, " \
                f"combined distribution: {self.combined_distribution}"
 
@@ -153,5 +153,4 @@ class GaussianMixtureConditional:
         return GaussianMixtureConditional(
             conditional_name=conditional_name, metric_name=metric_name, num_mixture_components=num_components,
             mixtures_means=means, mixtures_covariance_matrix=covariances, mixture_weights=mixture_weights, dim=dim,
-            sample_space=sample_space
-        )
+            sample_space=sample_space)

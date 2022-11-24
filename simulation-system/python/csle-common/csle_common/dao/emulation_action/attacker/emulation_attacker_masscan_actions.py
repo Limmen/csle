@@ -12,7 +12,7 @@ class EmulationAttackerMasscanActions:
     """
 
     @staticmethod
-    def MASSCAN_HOST_SCAN(index: int, ips: List[str] = None, host_ip : str = "") -> EmulationAttackerAction:
+    def MASSCAN_HOST_SCAN(index: int, ips: List[str] = None, host_ip: str = "") -> EmulationAttackerAction:
         """
         Action for running a MASSCAN network scan
 

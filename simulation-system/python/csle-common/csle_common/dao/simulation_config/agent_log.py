@@ -10,7 +10,6 @@ class AgentLog:
         """
         self.log = []
 
-
     def add_entry(self, msg) -> None:
         """
         Adds an entry to the log

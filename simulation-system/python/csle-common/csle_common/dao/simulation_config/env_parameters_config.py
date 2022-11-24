@@ -23,9 +23,7 @@ class EnvParametersConfig:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = EnvParametersConfig(
-            parameters= list(map(lambda x: EnvParameter.from_dict(x), d["parameters"]))
-        )
+        obj = EnvParametersConfig(parameters=list(map(lambda x: EnvParameter.from_dict(x), d["parameters"])))
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

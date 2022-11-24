@@ -19,14 +19,14 @@ class SystemModel(ABC):
         self.model_type = model_type
 
     @abstractmethod
-    def to_dict(self)-> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         pass
 
     @staticmethod
     @abstractmethod
-    def from_dict(d: Dict[str, Any])-> "SystemModel":
+    def from_dict(d: Dict[str, Any]) -> "SystemModel":
         pass
 
     @abstractmethod
-    def copy(self)-> "SystemModel":
+    def copy(self) -> "SystemModel":
         pass

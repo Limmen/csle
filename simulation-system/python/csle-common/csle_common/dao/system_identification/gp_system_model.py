@@ -21,7 +21,7 @@ class GPSystemModel(SystemModel):
         :param conditional_metric_distributions: the list of conditional distributions
         :param descr: description of the model
         """
-        super(GPSystemModel, self).__init__(descr=descr, model_type= SystemModelType.GAUSSIAN_PROCESS)
+        super(GPSystemModel, self).__init__(descr=descr, model_type=SystemModelType.GAUSSIAN_PROCESS)
         self.conditional_metric_distributions = conditional_metric_distributions
         complete_sample_space = set()
         for conds in self.conditional_metric_distributions:
@@ -50,14 +50,15 @@ class GPSystemModel(SystemModel):
                     metric_distributions_condition_2[0].conditional_name] = {}
                 for i, metric_dist in enumerate(metric_distributions_condition_1):
                     self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
-                        metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name] = \
-                            float(round(sum(rel_entr(metric_dist.distribution,
-                                                     metric_distributions_condition_2[i].distribution)), 3))
-                    if math.isinf(self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
-                                      metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name]):
+                        metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name] = float(
+                        round(sum(rel_entr(metric_dist.distribution,
+                                           metric_distributions_condition_2[i].distribution)), 3))
+                    if math.isinf(
+                            self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
+                                metric_distributions_condition_2[0].conditional_name][metric_dist.metric_name]):
                         self.conditionals_kl_divergences[metric_distributions_condition_1[0].conditional_name][
                             metric_distributions_condition_2[0].conditional_name][
-                            metric_dist.metric_name]="inf"
+                            metric_dist.metric_name] = "inf"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "GPSystemModel":
@@ -84,7 +85,7 @@ class GPSystemModel(SystemModel):
         """
         d = {}
         d["conditional_metric_distributions"] = list(map(lambda x: list(map(lambda y: y.to_dict(), x)),
-                                                  self.conditional_metric_distributions))
+                                                         self.conditional_metric_distributions))
         d["emulation_env_name"] = self.emulation_env_name
         d["emulation_statistic_id"] = self.emulation_statistic_id
         d["descr"] = self.descr
@@ -98,7 +99,8 @@ class GPSystemModel(SystemModel):
         :return: a string representation of the DTO
         """
         return f"conditional_distributions: {self.conditional_metric_distributions}, " \
-               f"emulation_env_name: {self.emulation_env_name}, emulation_statistic_id: {self.emulation_statistic_id}," \
+               f"emulation_env_name: {self.emulation_env_name}, " \
+               f"emulation_statistic_id: {self.emulation_statistic_id}," \
                f"descr: {self.descr}, conditionals_kl_divergences: {self.conditionals_kl_divergences}, " \
                f"model_type: {self.model_type}"
 

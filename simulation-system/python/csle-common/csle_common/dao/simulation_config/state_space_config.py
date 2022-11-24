@@ -15,7 +15,6 @@ class StateSpaceConfig:
         """
         self.states = states
 
-
     def states_ids(self) -> List[int]:
         """
         :return: list of state ids
@@ -30,9 +29,7 @@ class StateSpaceConfig:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = StateSpaceConfig(
-            states = list(map(lambda x: State.from_dict(x), d["states"]))
-        )
+        obj = StateSpaceConfig(states=list(map(lambda x: State.from_dict(x), d["states"])))
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

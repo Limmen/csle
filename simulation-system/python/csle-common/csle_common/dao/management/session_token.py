@@ -77,4 +77,4 @@ class SessionToken:
         :param valid_length_hours: the number of hours that a token is valid
         :return: True if the token has expired otherwise False
         """
-        return ((time.time() - self.timestamp)/(60)/(60)) > valid_length_hours
+        return ((time.time() - self.timestamp) / (60) / (60)) > valid_length_hours

@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from abc import ABC, abstractmethod, abstractstaticmethod
+from abc import ABC, abstractmethod
 
 
 class SimulationEnvInputConfig(ABC):
@@ -8,10 +8,10 @@ class SimulationEnvInputConfig(ABC):
         pass
 
     @abstractmethod
-    def to_dict(self)-> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         pass
 
     @staticmethod
     @abstractmethod
-    def from_dict(d: Dict[str, Any])-> "SimulationEnvInputConfig":
+    def from_dict(d: Dict[str, Any]) -> "SimulationEnvInputConfig":
         pass

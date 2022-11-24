@@ -6,10 +6,10 @@ class DockerContainerMetadata:
     DTO Object representing a running or stopped Docker container
     """
 
-    def __init__(self, name: str, status: str, short_id : str, image_short_id : str, image_tags: list, id: str,
+    def __init__(self, name: str, status: str, short_id: str, image_short_id: str, image_tags: list, id: str,
                  created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
-                 name2: str, level: str, hostname: str, image_name : str, net: str,
-                 dir: str, config_path : str, container_handle : str, emulation: str, kafka_container: str):
+                 name2: str, level: str, hostname: str, image_name: str, net: str,
+                 dir: str, config_path: str, container_handle: str, emulation: str, kafka_container: str):
         """
         Intializes the DTO
 
@@ -45,20 +45,19 @@ class DockerContainerMetadata:
         self.created = created
         self.ip = ip
         self.network_id = network_id
-        self.gateway=gateway
+        self.gateway = gateway
         self.mac = mac
         self.ip_prefix_len = ip_prefix_len
         self.name2 = name2
         self.level = level
         self.hostname = hostname
-        self.image_name =image_name
+        self.image_name = image_name
         self.net = net
-        self.dir=dir
+        self.dir = dir
         self.config_path = config_path
         self.container_handle = container_handle
         self.emulation = emulation
         self.kafka_container = kafka_container
-
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "DockerContainerMetadata":
@@ -120,7 +119,6 @@ class DockerContainerMetadata:
         d["emulation"] = self.emulation
         d["kafka_container"] = self.kafka_container
         return d
-
 
     def __str__(self):
         """

@@ -9,9 +9,9 @@ class DataCollectionJobConfig:
     DTO representing the configuration of a data collection job
     """
 
-    def __init__(self, emulation_env_name: str, num_collected_steps : int,
+    def __init__(self, emulation_env_name: str, num_collected_steps: int,
                  progress_percentage: float, attacker_sequence: List[EmulationAttackerAction], pid: int,
-                 repeat_times: int, emulation_statistic_id: int, num_sequences_completed : int,
+                 repeat_times: int, emulation_statistic_id: int, num_sequences_completed: int,
                  traces: List[EmulationTrace], save_emulation_traces_every: int, num_cached_traces: int,
                  defender_sequence: List[EmulationDefenderAction], log_file_path: str,
                  descr: str = ""):
@@ -32,7 +32,7 @@ class DataCollectionJobConfig:
         :param num_cached_traces: the number of emulation traces to keep with the job metadata
         """
         self.emulation_env_name = emulation_env_name
-        self.progress_percentage = round(progress_percentage,3)
+        self.progress_percentage = round(progress_percentage, 3)
         self.pid = pid
         self.num_collected_steps = num_collected_steps
         self.progress_percentage = self.progress_percentage
@@ -55,7 +55,7 @@ class DataCollectionJobConfig:
         """
         d = {}
         d["emulation_env_name"] = self.emulation_env_name
-        d["progress_percentage"] = round(self.progress_percentage,2)
+        d["progress_percentage"] = round(self.progress_percentage, 2)
         d["pid"] = self.pid
         d["num_collected_steps"] = self.num_collected_steps
         d["progress_percentage"] = self.progress_percentage
@@ -88,8 +88,8 @@ class DataCollectionJobConfig:
             defender_sequence=list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_sequence"])),
             descr=d["descr"], repeat_times=d["repeat_times"], emulation_statistic_id=d["emulation_statistic_id"],
             traces=list(map(lambda x: EmulationTrace.from_dict(x), d["traces"])),
-            num_sequences_completed = d["num_sequences_completed"],
-            save_emulation_traces_every = d["save_emulation_traces_every"], num_cached_traces = d["num_cached_traces"],
+            num_sequences_completed=d["num_sequences_completed"],
+            save_emulation_traces_every=d["save_emulation_traces_every"], num_cached_traces=d["num_cached_traces"],
             log_file_path=d["log_file_path"]
         )
         obj.id = d["id"]

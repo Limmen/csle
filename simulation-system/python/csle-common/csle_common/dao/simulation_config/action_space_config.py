@@ -8,7 +8,7 @@ class ActionSpaceConfig:
     DTO Class representing the action space configuration of a player in a simulation environment
     """
 
-    def __init__(self, actions: List[Action], player_id: int, action_type : ValueType, descr: str = ""):
+    def __init__(self, actions: List[Action], player_id: int, action_type: ValueType, descr: str = ""):
         """
         Initializes the DTO
 
@@ -57,6 +57,5 @@ class ActionSpaceConfig:
         """
         :return: a string representation of the object
         """
-        return f"actions:{list(map(lambda x: str(x), self.actions))}, action_type: {self.action_type}, descr: {self.descr}, " \
-               f"player_id: {self.player_id}"
-
+        return f"actions:{list(map(lambda x: str(x), self.actions))}, action_type: {self.action_type}, " \
+               f"descr: {self.descr}, player_id: {self.player_id}"

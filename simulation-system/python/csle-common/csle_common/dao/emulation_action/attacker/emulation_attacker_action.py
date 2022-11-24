@@ -11,12 +11,11 @@ class EmulationAttackerAction:
     """
     Class representing an action of the attacker in the emulation
     """
-    def __init__(self, id : EmulationAttackerActionId, name :str, cmds : List[str],
-                 type: EmulationAttackerActionType, descr: str,
-                 ips :List[str], index: int,
+    def __init__(self, id: EmulationAttackerActionId, name: str, cmds: List[str],
+                 type: EmulationAttackerActionType, descr: str, ips: List[str], index: int,
                  action_outcome: EmulationAttackerActionOutcome = EmulationAttackerActionOutcome.INFORMATION_GATHERING,
-                 vulnerability: str = None, alt_cmds : List[str] = None, backdoor: bool = False,
-                 execution_time : float = 0, ts: float = None):
+                 vulnerability: str = None, alt_cmds: List[str] = None, backdoor: bool = False,
+                 execution_time: float = 0, ts: float = None):
         """
         Class constructor
 
@@ -55,7 +54,6 @@ class EmulationAttackerAction:
         self.backdoor = backdoor
         self.execution_time = execution_time
         self.ts = ts
-
 
     def nmap_cmds(self, machine_ips: List[str] = None) -> Tuple[List[str], List[str]]:
         """
@@ -125,7 +123,7 @@ class EmulationAttackerAction:
         :return: the created instance
         """
         obj = EmulationAttackerAction(
-            type = d["type"], id=d["id"], name=d["name"], cmds=d["cmds"], descr=d["descr"], index=d["index"],
+            type=d["type"], id=d["id"], name=d["name"], cmds=d["cmds"], descr=d["descr"], index=d["index"],
             ips=d["ips"], vulnerability=d["vulnerability"], action_outcome=d["action_outcome"],
             backdoor=d["backdoor"], alt_cmds=d["alt_cmds"], execution_time=d["execution_time"], ts=d["ts"]
         )
@@ -192,7 +190,6 @@ class EmulationAttackerAction:
                  f"{'_'.join(alt_cmds)},{self.backdoor}"
         return record
 
-
     @staticmethod
     def from_kafka_record(record: str) -> "EmulationAttackerAction":
         """
@@ -205,7 +202,7 @@ class EmulationAttackerAction:
         obj = EmulationAttackerAction(id=EmulationAttackerActionId(int(parts[1])), ts=float(parts[0]),
                                       descr=parts[2], index=int(parts[3]),
                                       name=parts[4],
-                                      execution_time=float(parts[5]), ips = parts[6].split("_"),
+                                      execution_time=float(parts[5]), ips=parts[6].split("_"),
                                       cmds=parts[7].split("_"),
                                       type=EmulationAttackerActionType(int(parts[8])),
                                       action_outcome=EmulationAttackerActionOutcome(int(parts[9])),
