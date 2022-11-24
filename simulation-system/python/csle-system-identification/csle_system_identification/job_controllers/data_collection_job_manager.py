@@ -42,4 +42,4 @@ class DataCollectionJobManager:
         """
         cmd = constants.COMMANDS.START_SYSTEM_IDENTIFICATION_JOB.format(data_collection_job.id)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()

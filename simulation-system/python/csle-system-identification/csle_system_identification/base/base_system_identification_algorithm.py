@@ -27,14 +27,14 @@ class BaseSystemIdentificationAlgorithm(ABC):
         self.system_identification_config = system_identification_config
         self.emulation_statistics = emulation_statistics
         ts = time.time()
-        if self.system_identification_config.output_dir[-1]== "/":
+        if self.system_identification_config.output_dir[-1] == "/":
             self.system_identification_config.output_dir = self.system_identification_config.output_dir[0:-1]
         self.system_identification_config.output_dir = self.system_identification_config.output_dir + f"_{ts}/"
         try:
             if not os.path.exists(self.system_identification_config.output_dir):
                 os.makedirs(self.system_identification_config.output_dir)
-        except:
-            Logger.__call__().get_logger().info(f"There was an error creating log dirs.")
+        except Exception as e:
+            Logger.__call__().get_logger().info(f"There was an error creating log dirs: {str(e)}, {repr(e)}")
 
     @abstractmethod
     def fit(self) -> SystemModel:

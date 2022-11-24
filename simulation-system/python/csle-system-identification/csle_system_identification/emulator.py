@@ -31,11 +31,11 @@ class Emulator:
     def run_action_sequences(
             emulation_env_config: EmulationEnvConfig, attacker_sequence: List[EmulationAttackerAction],
             defender_sequence: List[EmulationDefenderAction],
-            repeat_times:int = 1, sleep_time : int = 1, save_dir: str = None,
+            repeat_times: int = 1, sleep_time: int = 1, save_dir: str = None,
             emulation_statistics: EmulationStatistics = None, descr: str = "", save: bool = True,
             data_collection_job: Optional[DataCollectionJobConfig] = None,
-            save_emulation_traces_every : int = 10,
-            emulation_traces_to_save_with_data_collection_job : int = 3,
+            save_emulation_traces_every: int = 10,
+            emulation_traces_to_save_with_data_collection_job: int = 3,
             intrusion_start_p: float = 0.1, intrusion_continue: float = 0.3) -> None:
         """
         Runs an attacker and defender sequence in the emulation <repeat_times> times
@@ -52,8 +52,10 @@ class Emulator:
         :param data_collection_job: the system identification job configuration
         :param save_emulation_traces_every: how frequently to save emulation traces
         :param emulation_traces_to_save_with_data_collection_job: num traces to save with the job
-        :param intrusion_start_p: the p parameter for the geometric distribution that determines when an intrusion starts
-        :param intrusion_continue: the p parameter for the geometric distribution that determines when an intrusion continues
+        :param intrusion_start_p: the p parameter for the geometric distribution that determines
+                                  when an intrusion starts
+        :param intrusion_continue: the p parameter for the geometric distribution that determines
+                                   when an intrusion continues
         :return: None
         """
         logger = Logger.__call__().get_logger()
@@ -91,8 +93,8 @@ class Emulator:
             data_collection_job.num_collected_steps = 0
             data_collection_job.progress_percentage = 0.0
             data_collection_job.num_sequences_completed = 0
-            data_collection_job.traces=[]
-            data_collection_job.log_file_path=Logger.__call__().get_log_file_path()
+            data_collection_job.traces = []
+            data_collection_job.log_file_path = Logger.__call__().get_log_file_path()
             MetastoreFacade.update_data_collection_job(data_collection_job=data_collection_job,
                                                        id=data_collection_job.id)
 
@@ -112,17 +114,17 @@ class Emulator:
                 wait_steps = [EmulationAttackerStoppingActions.CONTINUE(index=-1)]*num_wait_steps
                 full_attacker_sequence = full_attacker_sequence + wait_steps
                 full_attacker_sequence = full_attacker_sequence + [attacker_sequence[i]]
-                full_defender_sequence = full_defender_sequence + \
-                                         [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * (num_wait_steps+1)
+                full_defender_sequence = full_defender_sequence + [
+                    EmulationDefenderStoppingActions.CONTINUE(index=-1)] * (num_wait_steps+1)
             T = len(full_attacker_sequence)
-            assert  len(full_defender_sequence) == len(full_attacker_sequence)
+            assert len(full_defender_sequence) == len(full_attacker_sequence)
             logger.info(f"Starting execution of static action sequences, iteration:{i}, T:{T}, "
                         f"I_t:{intrusion_start_time}")
             sys.stdout.flush()
             s.reset()
             emulation_trace = EmulationTrace(initial_attacker_observation_state=s.attacker_obs_state,
-                                   initial_defender_observation_state=s.defender_obs_state,
-                                   emulation_name=emulation_env_config.name)
+                                             initial_defender_observation_state=s.defender_obs_state,
+                                             emulation_name=emulation_env_config.name)
             s.defender_obs_state.reset_metric_lists()
             time.sleep(sleep_time)
             s.defender_obs_state.average_metric_lists()
@@ -144,13 +146,13 @@ class Emulator:
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
                 total_steps = (1/intrusion_start_p)*repeat_times
                 collected_steps += 1
-                data_collection_job.num_collected_steps=collected_steps
+                data_collection_job.num_collected_steps = collected_steps
                 data_collection_job.progress_percentage = (round(collected_steps / total_steps, 2))
                 data_collection_job.num_sequences_completed = i
                 data_collection_job.traces[-1] = emulation_trace
                 logger.debug(f"job updated, steps collected: {data_collection_job.num_collected_steps}, "
-                            f"progress: {data_collection_job.progress_percentage}, "
-                            f"sequences completed: {i}/{repeat_times}")
+                             f"progress: {data_collection_job.progress_percentage}, "
+                             f"sequences completed: {i}/{repeat_times}")
                 sys.stdout.flush()
                 MetastoreFacade.update_data_collection_job(data_collection_job=data_collection_job,
                                                            id=data_collection_job.id)
@@ -172,7 +174,7 @@ class Emulator:
     def run_actions(emulation_env_config: EmulationEnvConfig, attacker_action: EmulationAttackerAction,
                     s: EmulationEnvState,
                     defender_action: EmulationDefenderAction, trace: EmulationTrace,
-                    sleep_time : int = 1) -> Tuple[EmulationTrace, EmulationEnvState]:
+                    sleep_time: int = 1) -> Tuple[EmulationTrace, EmulationEnvState]:
         """
         Runs a pair of actions in the emulation and updates a provided trace
 

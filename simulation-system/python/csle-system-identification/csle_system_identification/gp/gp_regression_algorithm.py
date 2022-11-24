@@ -20,7 +20,6 @@ class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
     Class that implements the system identification procedure using EM
     """
 
-
     def __init__(self, emulation_env_config: EmulationEnvConfig, emulation_statistics: EmulationStatistics,
                  system_identification_config: SystemIdentificationConfig,
                  system_identification_job: Optional[SystemIdentificationJobConfig] = None):
@@ -65,7 +64,6 @@ class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
             MetastoreFacade.update_system_identification_job(system_identification_job=self.system_identification_job,
                                                              id=self.system_identification_job.id)
 
-
         # Run the GP regression algorithm for each conditional and metric
         conditionals = self.system_identification_config.hparams[
             system_identification_constants.SYSTEM_IDENTIFICATION.CONDITIONAL_DISTRIBUTIONS].value
@@ -80,7 +78,7 @@ class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
         for i, conditional in enumerate(conditionals):
             for j, metric in enumerate(metrics):
                 counts = self.emulation_statistics.conditionals_counts[conditional][metric]
-                for val,count in counts.items():
+                for val, count in counts.items():
                     if val > max_val:
                         max_val = val
         sample_space = list(range(0, max_val))
@@ -91,14 +89,15 @@ class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
             for j, metric in enumerate(metrics):
                 observed_x = []
                 observed_y = []
-                for val,prob in self.emulation_statistics.conditionals_probs[conditional][metric].items():
+                for val, prob in self.emulation_statistics.conditionals_probs[conditional][metric].items():
                     observed_x.append(val)
                     observed_y.append(prob)
 
                 observed_x_tensor = torch.tensor(observed_x)
                 observed_y_tensor = torch.tensor(observed_y)
 
-                # initialize likelihood and model, the Gaussian likelihood assumes observed data points have zero mean gaussian noise
+                # initialize likelihood and model, the Gaussian likelihood assumes observed data points
+                # have zero mean gaussian noise
                 likelihood = gpytorch.likelihoods.GaussianLikelihood()
                 model = GPRegressionModelWithGaussianNoise(observed_x_tensor, observed_y_tensor, likelihood)
 
@@ -117,7 +116,8 @@ class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
                 training_iter = self.system_identification_config.hparams[
                     system_identification_constants.GAUSSIAN_PROCESS_REGRESSION.TRAINING_ITERATIONS].value
 
-                # Find optimal model hyperparameters by minimizing the negative marignal likelihood loss through gradient descent.
+                # Find optimal model hyperparameters by minimizing the negative marignal likelihood loss
+                # through gradient descent.
                 for i in range(training_iter):
                     # Zero gradients from previous iteration
                     optimizer.zero_grad()
@@ -143,11 +143,10 @@ class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
             gp_conditionals.append(gp_conditionals_metrics)
 
         model_descr = f"Model fitted through GP regression, " \
-                f"emulation:{self.emulation_env_config.name}, statistic id: {self.emulation_statistics.id}"
-        model = GPSystemModel(emulation_env_name=self.emulation_env_config.name,
-                                           emulation_statistic_id=self.emulation_statistics.id,
-                                           conditional_metric_distributions=gp_conditionals,
-                                           descr=model_descr)
+                      f"emulation:{self.emulation_env_config.name}, statistic id: {self.emulation_statistics.id}"
+        model = GPSystemModel(
+            emulation_env_name=self.emulation_env_config.name, emulation_statistic_id=self.emulation_statistics.id,
+            conditional_metric_distributions=gp_conditionals, descr=model_descr)
         self.system_identification_job.system_model = model
         self.system_identification_job.progress_percentage = 100
         MetastoreFacade.update_system_identification_job(system_identification_job=self.system_identification_job,

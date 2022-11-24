@@ -2,7 +2,8 @@ import subprocess
 import csle_common.constants.constants as constants
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_system_identification.expectation_maximization.expectation_maximization_algorithm import ExpectationMaximizationAlgorithm
+from csle_system_identification.expectation_maximization.expectation_maximization_algorithm import \
+    ExpectationMaximizationAlgorithm
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 
 
@@ -26,10 +27,10 @@ class SystemIdentificationJobManager:
         if job_config.emulation_statistics_id is not None:
             emulation_statistic = MetastoreFacade.get_emulation_statistic(id=job_config.emulation_statistics_id)
         if job_config.system_identification_config.model_type == SystemModelType.GAUSSIAN_MIXTURE:
-            algorithm = ExpectationMaximizationAlgorithm(emulation_env_config=emulation_env_config,
-                               emulation_statistics=emulation_statistic,
-                               system_identification_config=job_config.system_identification_config,
-                               system_identification_job=job_config)
+            algorithm = ExpectationMaximizationAlgorithm(
+                emulation_env_config=emulation_env_config, emulation_statistics=emulation_statistic,
+                system_identification_config=job_config.system_identification_config,
+                system_identification_job=job_config)
             algorithm.fit()
 
     @staticmethod
@@ -43,4 +44,4 @@ class SystemIdentificationJobManager:
         """
         cmd = constants.COMMANDS.START_SYSTEM_IDENTIFICATION_JOB.format(system_identification_job.id)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
