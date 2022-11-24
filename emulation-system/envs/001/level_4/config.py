@@ -153,7 +153,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH1,
@@ -181,7 +182,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH1,
@@ -209,7 +211,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH1,
@@ -246,7 +249,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH2,
@@ -274,7 +278,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH1,
@@ -302,7 +307,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
                                      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                                 f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH1,
@@ -1028,9 +1034,11 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
         os=constants.CONTAINER_OS.KAFKA_1_OS,
         ips_and_networks=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
              ContainerNetwork(
-                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                      f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
                  subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                              f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                              f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
@@ -1047,7 +1055,8 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
         num_cpus=1, available_memory_gb=4,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
              None)])
 
     firewall_config = NodeFirewallConfig(
@@ -1138,35 +1147,35 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
             name=collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
             num_replicas=1,
             num_partitions=1,
-            retention_time_hours = 240,
+            retention_time_hours=240,
             attributes=collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_ATTRIBUTES
         )
     ]
@@ -1452,6 +1461,7 @@ def default_docker_stats_manager_config(network_id: int, level: int, version: st
                                       docker_stats_manager_log_dir="/", docker_stats_manager_max_workers=10)
     return config
 
+
 def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
     """
     Generates the default ELK configuration
@@ -1466,9 +1476,11 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
         os=constants.CONTAINER_OS.ELK_1_OS,
         ips_and_networks=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}.{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}",
              ContainerNetwork(
-                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                 name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                      f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}",
                  subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                              f"{network_id}.{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}"
                              f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
@@ -1516,10 +1528,10 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
         forward_accept=set([]),
         output_drop=set(), input_drop=set(), forward_drop=set(), routes=set())
 
-    config =  ElkConfig(version=version, time_step_len_seconds=15, elastic_port=9200, kibana_port=5601,
-                        logstash_port=5044, elk_manager_port=50045, container=container,
-                        resources=resources, firewall_config=firewall_config,
-                        elk_manager_log_file="elk_manager.log", elk_manager_log_dir="/", elk_manager_max_workers=10)
+    config = ElkConfig(version=version, time_step_len_seconds=15, elastic_port=9200, kibana_port=5601,
+                       logstash_port=5044, elk_manager_port=50045, container=container,
+                       resources=resources, firewall_config=firewall_config,
+                       elk_manager_log_file="elk_manager.log", elk_manager_log_dir="/", elk_manager_max_workers=10)
     return config
 
 
