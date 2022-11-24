@@ -4,7 +4,7 @@ class NmapVulscan:
     DTO representing the result of a NMAP Vulscan
     """
 
-    def __init__(self, output : str):
+    def __init__(self, output: str):
         """
         Intializes the DTO
 
@@ -16,4 +16,4 @@ class NmapVulscan:
         """
         :return: a string representation of the object
         """
-        return "output:{}".format(self.output)
+        return f"output:{self.output}"

@@ -21,11 +21,9 @@ class NiktoScanResult:
         self.ip = ip
         self.sitename = sitename
 
-
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return "ip:{}, port:{}, sitename:{}, vulnerabilities:{}".format(
-            self.ip, self.port, self.sitename,
-            " ".join(list(map(lambda x: str(x), self.vulnerabilities))))
+        return f"ip:{self.ip}, port:{self.port}, sitename:{self.sitename}, " \
+               f"vulnerabilities:{' '.join(list(map(lambda x: str(x), self.vulnerabilities)))}"

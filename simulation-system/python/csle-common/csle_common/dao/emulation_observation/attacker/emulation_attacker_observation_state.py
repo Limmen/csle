@@ -11,7 +11,7 @@ class EmulationAttackerObservationState:
     Represents the attacker's agent's current belief state of the emulation
     """
 
-    def __init__(self, catched_flags : int, agent_reachable : Set[str] = None):
+    def __init__(self, catched_flags: int, agent_reachable: Set[str] = None):
         """
         Initializes the state
 
@@ -19,13 +19,12 @@ class EmulationAttackerObservationState:
         :param catched_flags: the number of catched flags
         :param agent_reachable: whether this node is reachable from the agent
         """
-        self.machines : List[EmulationAttackerMachineObservationState] = []
+        self.machines: List[EmulationAttackerMachineObservationState] = []
         self.catched_flags = catched_flags
-        self.actions_tried : Set[Tuple[int, int, str]] = set()
-        self.agent_reachable : Set[str] = agent_reachable
+        self.actions_tried: Set[Tuple[int, int, str]] = set()
+        self.agent_reachable: Set[str] = agent_reachable
         if agent_reachable is None:
             self.agent_reachable = set()
-
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationAttackerObservationState":
@@ -61,7 +60,6 @@ class EmulationAttackerObservationState:
         """
         self.machines = sorted(self.machines, key=lambda x: int(x.ips[0].rsplit(".", 1)[-1]), reverse=False)
 
-
     def cleanup(self) -> None:
         """
         Cleanup machine states
@@ -71,7 +69,7 @@ class EmulationAttackerObservationState:
         for m in self.machines:
             m.cleanup()
 
-    def get_action_ips(self, a : EmulationAttackerAction, emulation_env_config: EmulationEnvConfig) -> List[str]:
+    def get_action_ips(self, a: EmulationAttackerAction, emulation_env_config: EmulationEnvConfig) -> List[str]:
         """
         Returns the ip of the machine that the action targets
 
@@ -98,39 +96,39 @@ class EmulationAttackerObservationState:
         # Known issue with subnet attacks and NMAP: https://github.com/nmap/nmap/issues/1321
         if m is not None:
             if (a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST):
+                    or a.id == EmulationAttackerActionId.SSH_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.ssh_brute_tried
 
             if (a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST):
+                    or a.id == EmulationAttackerActionId.TELNET_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.telnet_brute_tried
 
             if (a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST):
+                    or a.id == EmulationAttackerActionId.FTP_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.ftp_brute_tried
 
             if (a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST):
+                    or a.id == EmulationAttackerActionId.CASSANDRA_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.cassandra_brute_tried
 
             if (a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST):
+                    or a.id == EmulationAttackerActionId.IRC_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.irc_brute_tried
 
             if (a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST):
+                    or a.id == EmulationAttackerActionId.MONGO_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.mongo_brute_tried
 
             if (a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST):
+                    or a.id == EmulationAttackerActionId.MYSQL_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.mysql_brute_tried
 
-            if (a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_ALL or
+                    a.id == EmulationAttackerActionId.SMTP_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.smtp_brute_tried
 
-            if (a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL
-                or a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST):
+            if (a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_ALL or
+                    a.id == EmulationAttackerActionId.POSTGRES_SAME_USER_PASS_DICTIONARY_HOST):
                 return m.postgres_brute_tried
 
             if a.id == EmulationAttackerActionId.SAMBACRY_EXPLOIT:
@@ -174,12 +172,12 @@ class EmulationAttackerObservationState:
         :param machine: the machine
         :return: true if some exploit have been launched, false otherwise
         """
-        if (machine.telnet_brute_tried or machine.ssh_brute_tried
-                or machine.ftp_brute_tried or machine.cassandra_brute_tried or machine.irc_brute_tried
-            or machine.mongo_brute_tried or machine.mysql_brute_tried or machine.smtp_brute_tried or
-            machine.postgres_brute_tried or machine.sambacry_tried or machine.shellshock_tried or
-            machine.dvwa_sql_injection_tried or machine.cve_2015_3306_tried or machine.cve_2015_1427_tried
-            or machine.cve_2016_10033_tried or machine.cve_2010_0426_tried or machine.cve_2015_5602_tried):
+        if (machine.telnet_brute_tried or machine.ssh_brute_tried or machine.ftp_brute_tried or
+                machine.cassandra_brute_tried or machine.irc_brute_tried or machine.mongo_brute_tried or
+                machine.mysql_brute_tried or machine.smtp_brute_tried or machine.postgres_brute_tried or
+                machine.sambacry_tried or machine.shellshock_tried or machine.dvwa_sql_injection_tried or
+                machine.cve_2015_3306_tried or machine.cve_2015_1427_tried or
+                machine.cve_2016_10033_tried or machine.cve_2010_0426_tried or machine.cve_2015_5602_tried):
             return True
         return False
 
@@ -187,8 +185,8 @@ class EmulationAttackerObservationState:
         """
         :return: a copy of the state
         """
-        c = EmulationAttackerObservationState(catched_flags = self.catched_flags,
-                                              agent_reachable = self.agent_reachable.copy())
+        c = EmulationAttackerObservationState(catched_flags=self.catched_flags,
+                                              agent_reachable=self.agent_reachable.copy())
         c.actions_tried = self.actions_tried.copy()
         for m in self.machines:
             c.machines.append(m.copy())
@@ -198,8 +196,8 @@ class EmulationAttackerObservationState:
         """
         :return: a string representation of the state
         """
-        return  "Found flags:{},".format(self.catched_flags) \
-                + "\n" + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
+        return f"Found flags:{self.catched_flags}," + "\n" + "\n".join(
+            [str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
 
     def to_json_str(self) -> str:
         """
@@ -229,7 +227,7 @@ class EmulationAttackerObservationState:
         """
         num_attributes = 3
         if len(self.machines) > 0:
-            num_attributes = num_attributes + len(self.machines)*self.machines[0].num_attributes()
+            num_attributes = num_attributes + len(self.machines) * self.machines[0].num_attributes()
         return num_attributes
 
     @staticmethod
@@ -239,6 +237,6 @@ class EmulationAttackerObservationState:
         """
         dto = EmulationAttackerObservationState(catched_flags=0, agent_reachable=set())
         dto.agent_reachable.add("")
-        dto.actions_tried.add((-1,-1,""))
+        dto.actions_tried.add((-1, -1, ""))
         dto.machines = [EmulationAttackerMachineObservationState.schema()]
         return dto

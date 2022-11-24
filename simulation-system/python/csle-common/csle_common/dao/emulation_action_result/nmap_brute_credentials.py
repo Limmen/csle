@@ -7,7 +7,7 @@ class NmapBruteCredentials:
     A DTO representing credentials found with NMAP Brute-Force Scans
     """
 
-    def __init__(self, username : str, pw: str, state: str, port: int, protocol: TransportProtocol, service: str):
+    def __init__(self, username: str, pw: str, state: str, port: int, protocol: TransportProtocol, service: str):
         """
         Initializes the DTO
 
@@ -55,4 +55,4 @@ class NmapBruteCredentials:
         :return: the created Credential Object
         """
         return Credential(username=self.username, pw=self.pw, port=int(self.port), service=self.service,
-                                          protocol=self.protocol)
+                          protocol=self.protocol)

@@ -9,7 +9,7 @@ class NiktoVuln:
     DTO representing a vulnerability found with a Nikto scan
     """
 
-    def __init__(self, id : str, osvdb_id : Union[int,None], method: str, iplink: str,
+    def __init__(self, id: str, osvdb_id: Union[int, None], method: str, iplink: str,
                  namelink: str, uri: str, description: str):
         """
         Initializes the object
@@ -39,12 +39,12 @@ class NiktoVuln:
         vuln = EmulationVulnerabilityObservationState(name="nikto_" + str(self.osvdb_id), port=None,
                                                       protocol=TransportProtocol.TCP,
                                                       cvss=0, osvdbid=self.osvdb_id, description=self.description,
-                                                      service = "http")
+                                                      service="http")
         return vuln
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return "id:{}, osvdb_id:{}, method:{}, iplink:{}, namelink:{}, uri:{}, descr:{}".format(
-            self.id, self.osvdb_id, self.method, self.iplink, self.namelink, self.uri, self.description)
+        return f"id:{self.id}, osvdb_id:{self.osvdb_id}, method:{self.method}, iplink:{self.iplink}, " \
+               f"namelink:{self.namelink}, uri:{self.uri}, descr:{self.description}"

@@ -7,7 +7,7 @@ class NmapTrace:
     DTO Representing an NMAP Trace
     """
 
-    def __init__(self, hops : List[NmapHop]):
+    def __init__(self, hops: List[NmapHop]):
         """
         Initializes the DTO
 

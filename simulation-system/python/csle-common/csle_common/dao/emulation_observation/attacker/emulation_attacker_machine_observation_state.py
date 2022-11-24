@@ -8,7 +8,6 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_action_result.nmap_host_result import NmapHostResult
 from csle_common.dao.emulation_action_result.nmap_trace import NmapTrace
-from csle_common.dao.emulation_config.flag import Flag
 
 
 class EmulationAttackerMachineObservationState:
@@ -16,7 +15,7 @@ class EmulationAttackerMachineObservationState:
     Represent's the attacker's belief state of a component in the emulation
     """
 
-    def __init__(self, ips : List[str]):
+    def __init__(self, ips: List[str]):
         """
         Initializes the state
 
@@ -24,25 +23,25 @@ class EmulationAttackerMachineObservationState:
         """
         assert ips is not None and len(ips) > 0
         self.ips = ips
-        self.os="unknown"
-        self.ports : List[EmulationPortObservationState] = []
-        self.cve_vulns : List[EmulationVulnerabilityObservationState] = []
+        self.os = "unknown"
+        self.ports: List[EmulationPortObservationState] = []
+        self.cve_vulns: List[EmulationVulnerabilityObservationState] = []
         self.osvdb_vulns: List[EmulationVulnerabilityObservationState] = []
         self.shell_access = False
-        self.shell_access_credentials : List[Credential] = []
+        self.shell_access_credentials: List[Credential] = []
         self.backdoor_credentials: List[Credential] = []
         self.logged_in = False
         self.root = False
         self.flags_found: Set[str] = set()
         self.filesystem_searched = False
         self.untried_credentials = False
-        self.ssh_connections :List[EmulationConnectionObservationState] = []
+        self.ssh_connections: List[EmulationConnectionObservationState] = []
         self.ftp_connections: List[EmulationConnectionObservationState] = []
         self.telnet_connections: List[EmulationConnectionObservationState] = []
-        self.logged_in_services : List[str] = []
-        self.root_services : List[str] = []
-        self.hostnames : List[str] = []
-        self.trace : NmapTrace = None
+        self.logged_in_services: List[str] = []
+        self.root_services: List[str] = []
+        self.hostnames: List[str] = []
+        self.trace: NmapTrace = None
         self.telnet_brute_tried = False
         self.ssh_brute_tried = False
         self.ftp_brute_tried = False
@@ -64,31 +63,35 @@ class EmulationAttackerMachineObservationState:
         self.cve_2016_10033_tried = False
         self.cve_2010_0426_tried = False
         self.cve_2015_5602_tried = False
-        self.reachable : Set[str] = set()
+        self.reachable: Set[str] = set()
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return "ips:{},os:{},shell_access:{},logged_in:{},root:{},num_ports:{},num_cve_vuln:{},num_cred:{}," \
-               "num_ssh_connections:{}," \
-               "num_ftp_connections:{},num_telnet_connections:{}, num_osvdb_vuln:{},hostnames:{},trace:{}, " \
-               "filesystem_searched:{},telnet_brute_tried:{},ssh_brute_tried:{},ftp_brute_tried:{}," \
-               "cassandra_brute_tried:{},irc_brute_tried:{},mongo_brute_tried:{},mysql_brute_tried:{}," \
-               "smtp_brute_tried:{},postgres_brute_tried:{},tools_installed:{},backdoor_installed:{}," \
-               "num_backdoor_credentials:{},num_reachable_nodes:{},backdoor_tried:{},install_tools_tried:{}," \
-               "sambacry_tried:{},shellshock_tried:{},dvwa_sql_injection_tried:{},cve_2015_3306_tried:{}," \
-               "cve_2015_1427_tried:{},cve_2016_10033_tried:{},cve_2010_0426_tried:{},cve_2015_5602_tried:{}," \
-               "flags_found:{}".format(
-            self.ips, self.os,  self.shell_access, self.logged_in, self.root, len(self.ports), len(self.cve_vulns),
-            len(self.shell_access_credentials), len(self.ssh_connections), len(self.ftp_connections),
-            len(self.telnet_connections), len(self.osvdb_vulns), self.hostnames, self.trace, self.filesystem_searched,
-            self.telnet_brute_tried, self.ssh_brute_tried, self.ftp_brute_tried, self.cassandra_brute_tried,
-            self.irc_brute_tried, self.mongo_brute_tried, self.mysql_brute_tried, self.smtp_brute_tried,
-            self.postgres_brute_tried, self.tools_installed, self.backdoor_installed, len(self.backdoor_credentials),
-            len(self.reachable), self.backdoor_tried, self.install_tools_tried, self.sambacry_tried,
-            self.shellshock_tried, self.dvwa_sql_injection_tried, self.cve_2015_3306_tried, self.cve_2015_1427_tried,
-            self.cve_2016_10033_tried, self.cve_2010_0426_tried, self.cve_2015_5602_tried, self.flags_found)
+        return f"ips:{self.ips}, os:{self.os}, shell_access:{self.shell_access}, logged_in:{self.logged_in}, " \
+               f"root:{self.root}, num_ports:{len(self.ports)}, num_cve_vuln:{len(self.cve_vulns)}, " \
+               f"num_cred:{len(self.shell_access_credentials)}," \
+               f"num_ssh_connections:{len(self.ssh_connections)}," \
+               f"num_ftp_connections:{len(self.ftp_connections)}, " \
+               f"num_telnet_connections:{len(self.telnet_connections)}, " \
+               f"num_osvdb_vuln:{len(self.osvdb_vulns)}, hostnames:{self.hostnames}, trace:{self.trace}, " \
+               f"filesystem_searched:{self.filesystem_searched}, " \
+               f"telnet_brute_tried:{self.telnet_brute_tried}, ssh_brute_tried:{self.ssh_brute_tried}, " \
+               f"ftp_brute_tried:{self.ftp_brute_tried}," \
+               f"cassandra_brute_tried:{self.cassandra_brute_tried}, irc_brute_tried:{self.irc_brute_tried}, " \
+               f"mongo_brute_tried:{self.mongo_brute_tried}, mysql_brute_tried:{self.mysql_brute_tried}," \
+               f"smtp_brute_tried:{self.smtp_brute_tried}, postgres_brute_tried:{self.postgres_brute_tried}, " \
+               f"tools_installed:{self.tools_installed}, backdoor_installed:{self.backdoor_installed}," \
+               f"num_backdoor_credentials:{len(self.backdoor_credentials)}, " \
+               f"num_reachable_nodes:{len(self.reachable)}, " \
+               f"backdoor_tried:{self.backdoor_tried}, install_tools_tried:{self.install_tools_tried}, " \
+               f"sambacry_tried:{self.sambacry_tried}, shellshock_tried:{self.shellshock_tried}, " \
+               f"dvwa_sql_injection_tried:{self.dvwa_sql_injection_tried}, " \
+               f"cve_2015_3306_tried:{self.cve_2015_3306_tried}," \
+               f"cve_2015_1427_tried:{self.cve_2015_1427_tried}, cve_2016_10033_tried:{self.cve_2016_10033_tried}, " \
+               f"cve_2010_0426_tried:{self.cve_2010_0426_tried}, cve_2015_5602_tried:{self.cve_2015_5602_tried}," \
+               f"flags_found:{self.flags_found}"
 
     def sort_ports(self) -> None:
         """
@@ -156,7 +159,6 @@ class EmulationAttackerMachineObservationState:
         for c in self.telnet_connections:
             c.cleanup()
 
-
     def copy(self) -> "EmulationAttackerMachineObservationState":
         """
         :return: a copy of the DTO
@@ -204,7 +206,6 @@ class EmulationAttackerMachineObservationState:
         m_copy.cve_2010_0426_tried = self.cve_2010_0426_tried
         m_copy.cve_2015_5602_tried = self.cve_2015_5602_tried
         return m_copy
-
 
     @staticmethod
     def from_nmap_result(nmap_host_result: NmapHostResult) -> "EmulationAttackerMachineObservationState":
@@ -301,10 +302,8 @@ class EmulationAttackerMachineObservationState:
         d["cve_vulns"] = list(map(lambda x: x.to_dict(), self.cve_vulns))
         d["osvdb_vulns"] = list(map(lambda x: x.to_dict(), self.osvdb_vulns))
         d["shell_access"] = self.shell_access
-        d["shell_access_credentials"] = list(map(lambda x: x.to_dict(),
-                                                 self.shell_access_credentials))
-        d["backdoor_credentials"] = list(map(lambda x: x.to_dict(),
-                                                 self.backdoor_credentials))
+        d["shell_access_credentials"] = list(map(lambda x: x.to_dict(), self.shell_access_credentials))
+        d["backdoor_credentials"] = list(map(lambda x: x.to_dict(), self.backdoor_credentials))
         d["logged_in"] = self.logged_in
         d["root"] = self.root
         d["flags_found"] = list(self.flags_found)
@@ -363,7 +362,6 @@ class EmulationAttackerMachineObservationState:
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
-
     def num_attributes(self) -> int:
         """
         :return: number of attributes of the DTO
@@ -387,16 +385,16 @@ class EmulationAttackerMachineObservationState:
         if len(self.ssh_connections) == 0 and len(self.ftp_connections) == 0 and len(self.telnet_connections) > 0:
             attributes_per_connection_obs_state = self.telnet_connections[0].num_attributes()
 
-        return len(self.ports)*attributes_per_emulation_port_obs_state + \
-                                 len(self.cve_vulns)*attributes_per_emulation_vuln_obs_state + \
-                                 len(self.osvdb_vulns)*attributes_per_emulation_vuln_obs_state + \
-                                 len(self.shell_access_credentials)*attributes_per_credential + \
-                                 len(self.backdoor_credentials)*attributes_per_credential + \
-                                 len(self.ssh_connections)*attributes_per_connection_obs_state + \
-                                 len(self.ftp_connections)*attributes_per_connection_obs_state + \
-                                 len(self.telnet_connections)*attributes_per_connection_obs_state + \
-                                 len(self.logged_in_services) + len(self.hostnames) + len(self.root_services) + \
-                                 len(self.hostnames) + len(self.reachable) + len(self.flags_found) + 29
+        return (len(self.ports) * attributes_per_emulation_port_obs_state +
+                len(self.cve_vulns) * attributes_per_emulation_vuln_obs_state +
+                len(self.osvdb_vulns) * attributes_per_emulation_vuln_obs_state +
+                len(self.shell_access_credentials) * attributes_per_credential +
+                len(self.backdoor_credentials) * attributes_per_credential +
+                len(self.ssh_connections) * attributes_per_connection_obs_state +
+                len(self.ftp_connections) * attributes_per_connection_obs_state +
+                len(self.telnet_connections) * attributes_per_connection_obs_state +
+                len(self.logged_in_services) + len(self.hostnames) + len(self.root_services) +
+                len(self.hostnames) + len(self.reachable) + len(self.flags_found) + 29)
 
     @staticmethod
     def schema() -> "EmulationAttackerMachineObservationState":
@@ -405,10 +403,10 @@ class EmulationAttackerMachineObservationState:
         """
         dto = EmulationAttackerMachineObservationState(ips=[""])
         dto.ports = [EmulationPortObservationState.schema()]
-        dto.cve_vulns=[EmulationVulnerabilityObservationState.schema()]
-        dto.osvdb_vulns=[EmulationVulnerabilityObservationState.schema()]
+        dto.cve_vulns = [EmulationVulnerabilityObservationState.schema()]
+        dto.osvdb_vulns = [EmulationVulnerabilityObservationState.schema()]
         dto.shell_access_credentials = [Credential.schema()]
-        dto.backdoor_credentials=[Credential.schema()]
+        dto.backdoor_credentials = [Credential.schema()]
         dto.flags_found.add("")
         dto.ssh_connections = [EmulationConnectionObservationState.schema()]
         dto.ftp_connections = [EmulationConnectionObservationState.schema()]
@@ -419,4 +417,3 @@ class EmulationAttackerMachineObservationState:
         dto.trace = NmapTrace.schema()
         dto.reachable.add("")
         return dto
-

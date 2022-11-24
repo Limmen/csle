@@ -4,7 +4,7 @@ class NmapOs:
     DTO representing the operating system found with an NMAP scan
     """
 
-    def __init__(self, name : str, vendor: str, osfamily: str, accuracy: int):
+    def __init__(self, name: str, vendor: str, osfamily: str, accuracy: int):
         """
         Initializes the DTO object
 
@@ -18,13 +18,11 @@ class NmapOs:
         self.osfamily = osfamily
         self.accuracy = accuracy
 
-
-    def __str__(self):
+    def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return "name:{}, vendor:{}, os_family:{}, accuracy:{}".format(self.name, self.vendor, self.osfamily,
-                                                                      self.accuracy)
+        return f"name:{self.name}, vendor:{self.vendor}, os_family:{self.osfamily}, accuracy:{self.accuracy}"
 
     @staticmethod
     def get_best_match(os_matches):

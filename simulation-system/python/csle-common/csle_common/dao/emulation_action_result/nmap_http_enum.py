@@ -4,7 +4,7 @@ class NmapHttpEnum:
     DTO representing a NMAP HTTP Enum
     """
 
-    def __init__(self, output : str):
+    def __init__(self, output: str):
         """
         Initializes the DTO
 
@@ -16,4 +16,4 @@ class NmapHttpEnum:
         """
         :return: a string representation of the object
         """
-        return "output:{}".format(self.output)
+        return f"output:{self.output}"

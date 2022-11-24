@@ -6,7 +6,7 @@ class NmapHop:
     DTO representing a Nmap Hop
     """
 
-    def __init__(self, ttl : int, ipaddr: str, rtt: float, host: str):
+    def __init__(self, ttl: int, ipaddr: str, rtt: float, host: str):
         """
         Initializes the object
 
@@ -18,7 +18,7 @@ class NmapHop:
         self.ttl = ttl
         self.ipaddr = ipaddr
         self.rtt = rtt
-        self.host =host
+        self.host = host
 
     def from_dict(self, d: Dict[str, Any]) -> "NmapHop":
         """
@@ -27,9 +27,7 @@ class NmapHop:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = NmapHop(
-            ttl = d["ttl"], ipaddr=d["ipaddr"], rtt = d["rtt"], host=d["host"]
-        )
+        obj = NmapHop(ttl=d["ttl"], ipaddr=d["ipaddr"], rtt=d["rtt"], host=d["host"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

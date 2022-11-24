@@ -10,8 +10,8 @@ class NmapVuln:
     DTO representing a vulnerability found with NMAP
     """
 
-    def __init__(self, name : str, port: int, protocol: TransportProtocol, cvss: float, service: str,
-                 credentials : List[Credential] = None):
+    def __init__(self, name: str, port: int, protocol: TransportProtocol, cvss: float, service: str,
+                 credentials: List[Credential] = None):
         """
         Initializes the DTO
 
@@ -40,8 +40,8 @@ class NmapVuln:
         service = ""
         if len(self.credentials) > 0:
             service = self.credentials[0].service
-        vuln = EmulationVulnerabilityObservationState(name=self.name, port=self.port, protocol=self.protocol, cvss=self.cvss,
-                                                      credentials=self.credentials, service=service)
+        vuln = EmulationVulnerabilityObservationState(name=self.name, port=self.port, protocol=self.protocol,
+                                                      cvss=self.cvss, credentials=self.credentials, service=service)
         return vuln
 
     def __hash__(self) -> int:
@@ -64,6 +64,5 @@ class NmapVuln:
         """
         :return: a string representation of the object
         """
-        return "name:{}, port:{}, protocol:{}, cvss:{}, service:{}, credentials:{}".format(
-            self.name, self.port, self.protocol, self.cvss, self.service,
-            list(map(lambda x: str(x), self.credentials)))
+        return f"name:{self.name}, port:{self.port}, protocol:{self.protocol}, cvss:{self.cvss}, " \
+               f"service:{self.service}, credentials:{list(map(lambda x: str(x), self.credentials))}"

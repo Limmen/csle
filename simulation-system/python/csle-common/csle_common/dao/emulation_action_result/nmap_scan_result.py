@@ -33,4 +33,4 @@ class NmapScanResult:
         hosts = []
         for host in self.hosts:
             hosts.append(host.copy())
-        return NmapScanResult(hosts = hosts, ips= self.ips)
+        return NmapScanResult(hosts=hosts, ips=self.ips)

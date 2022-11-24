@@ -16,8 +16,8 @@ class EmulationDefenderMachineObservationState:
     Represents the defender's belief state of a component in the emulation
     """
 
-    def __init__(self, ips : List[str], kafka_config: KafkaConfig,
-                 host_metrics : HostMetrics = None, docker_stats: DockerStats = None):
+    def __init__(self, ips: List[str], kafka_config: KafkaConfig,
+                 host_metrics: HostMetrics = None, docker_stats: DockerStats = None):
         """
         Initializes the DTO
 
@@ -27,9 +27,9 @@ class EmulationDefenderMachineObservationState:
         :param docker_stats: the docker stats object
         """
         self.ips = ips
-        self.os="unknown"
-        self.ports : List[EmulationPortObservationState] = []
-        self.ssh_connections :List[EmulationConnectionObservationState] = []
+        self.os = "unknown"
+        self.ports: List[EmulationPortObservationState] = []
+        self.ssh_connections: List[EmulationConnectionObservationState] = []
         self.kafka_config = kafka_config
         self.host_metrics = host_metrics
         if self.host_metrics is None:
@@ -47,12 +47,11 @@ class EmulationDefenderMachineObservationState:
         :return: None
         """
         self.host_metrics_consumer_thread = HostMetricsConsumerThread(
-            host_ip=self.ips[0],  kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.get_ips()[0],
             kafka_port=self.kafka_config.kafka_port, host_metrics=self.host_metrics)
         self.docker_stats_consumer_thread = DockerHostStatsConsumerThread(
-            host_ip=self.ips[0],  kafka_server_ip=self.kafka_config.container.get_ips()[0],
-            kafka_port=self.kafka_config.kafka_port, docker_stats=self.docker_stats
-        )
+            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_port=self.kafka_config.kafka_port, docker_stats=self.docker_stats)
         self.host_metrics_consumer_thread.start()
         self.docker_stats_consumer_thread.start()
 
@@ -83,8 +82,9 @@ class EmulationDefenderMachineObservationState:
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
             docker_stats=DockerStats.from_dict(d["docker_stats"]))
         obj.os = d["os"]
-        obj.ports=list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
-        obj.ssh_connections=list(map(lambda x: EmulationConnectionObservationState.from_dict(x), d["ssh_connections"]))
+        obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
+        obj.ssh_connections = list(map(lambda x: EmulationConnectionObservationState.from_dict(x),
+                                       d["ssh_connections"]))
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -168,7 +168,6 @@ class EmulationDefenderMachineObservationState:
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
 
-
     def num_attributes(self) -> int:
         """
         :return: The number of attribute of the DTO
@@ -179,11 +178,9 @@ class EmulationDefenderMachineObservationState:
         if self.docker_stats is not None:
             num_attributes = num_attributes + self.docker_stats.num_attributes()
         if len(self.ports) > 0:
-            num_attributes = num_attributes + \
-                             len(self.ports)*self.ports[0].num_attributes()
+            num_attributes = num_attributes + len(self.ports) * self.ports[0].num_attributes()
         if len(self.ssh_connections) > 0:
-            num_attributes = num_attributes + \
-                             len(self.ports)*self.ssh_connections[0].num_attributes()
+            num_attributes = num_attributes + len(self.ports) * self.ssh_connections[0].num_attributes()
         return num_attributes
 
     @staticmethod

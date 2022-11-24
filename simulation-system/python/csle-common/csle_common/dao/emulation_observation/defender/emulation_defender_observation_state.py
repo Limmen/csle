@@ -24,12 +24,12 @@ class EmulationDefenderObservationState:
     Represents the defender's agent's current belief state of the emulation
     """
 
-    def __init__(self, kafka_config : KafkaConfig,
-                 client_population_metrics : ClientPopulationMetrics = None, docker_stats: DockerStats = None,
-                 snort_ids_alert_counters : SnortIdsAlertCounters = None,
-                 ossec_ids_alert_counters : OSSECIdsAlertCounters= None,
-                 aggregated_host_metrics: HostMetrics= None,
-                 defender_actions : List[EmulationDefenderAction] = None,
+    def __init__(self, kafka_config: KafkaConfig,
+                 client_population_metrics: ClientPopulationMetrics = None, docker_stats: DockerStats = None,
+                 snort_ids_alert_counters: SnortIdsAlertCounters = None,
+                 ossec_ids_alert_counters: OSSECIdsAlertCounters = None,
+                 aggregated_host_metrics: HostMetrics = None,
+                 defender_actions: List[EmulationDefenderAction] = None,
                  attacker_actions: List[EmulationAttackerAction] = None):
         """
         Initializes the DTO
@@ -44,7 +44,7 @@ class EmulationDefenderObservationState:
         :param aggregated_host_metrics: the aggregated host metrics
         """
         self.kafka_config = kafka_config
-        self.machines : List[EmulationDefenderMachineObservationState] = []
+        self.machines: List[EmulationDefenderMachineObservationState] = []
         self.actions_tried = set()
         self.client_population_metrics = client_population_metrics
         if self.client_population_metrics is None:
@@ -131,7 +131,7 @@ class EmulationDefenderObservationState:
             m.start_monitor_threads()
 
     @staticmethod
-    def from_dict(d: Dict[str, Any])-> "EmulationDefenderObservationState":
+    def from_dict(d: Dict[str, Any]) -> "EmulationDefenderObservationState":
         """
         Converts a dict representation of the object to an instance
 
@@ -238,7 +238,7 @@ class EmulationDefenderObservationState:
         self.avg_client_population_metrics = \
             self.client_population_consumer_thread.get_average_client_population_metrics()
 
-    def get_action_ips(self, a : EmulationDefenderAction, emulation_env_config: EmulationEnvConfig) -> List[str]:
+    def get_action_ips(self, a: EmulationDefenderAction, emulation_env_config: EmulationEnvConfig) -> List[str]:
         """
         Gets the ips of the node that a defender action is targeted for
 
@@ -292,7 +292,6 @@ class EmulationDefenderObservationState:
                f"avg_client_population_metrics: {self.avg_client_population_metrics}" \
                + "\n".join([str(i) + ":" + str(self.machines[i]) for i in range(len(self.machines))])
 
-
     def to_json_str(self) -> str:
         """
         Converts the DTO into a json string
@@ -331,9 +330,9 @@ class EmulationDefenderObservationState:
         if self.aggregated_host_metrics is not None:
             num_attributes = num_attributes + self.aggregated_host_metrics.num_attributes()
         if len(self.defender_actions) > 0:
-            num_attributes = num_attributes + len(self.defender_actions)*self.defender_actions[0].num_attributes()
+            num_attributes = num_attributes + len(self.defender_actions) * self.defender_actions[0].num_attributes()
         if len(self.attacker_actions) > 0:
-            num_attributes = num_attributes + len(self.attacker_actions)*self.attacker_actions[0].num_attributes()
+            num_attributes = num_attributes + len(self.attacker_actions) * self.attacker_actions[0].num_attributes()
         return num_attributes
 
     @staticmethod

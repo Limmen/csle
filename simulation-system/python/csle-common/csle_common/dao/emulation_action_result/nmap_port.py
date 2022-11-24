@@ -12,10 +12,10 @@ class NmapPort:
     DTO Representing a Port found with a NMAP scan
     """
 
-    def __init__(self, port_id: int, protocol : TransportProtocol, status: NmapPortStatus = NmapPortStatus.DOWN,
-                 service_name : str = "none", http_enum: NmapHttpEnum = None,
-                 http_grep: NmapHttpGrep = None, vulscan: NmapVulscan = None, service_version : str = "",
-                 service_fp : str = ""):
+    def __init__(self, port_id: int, protocol: TransportProtocol, status: NmapPortStatus = NmapPortStatus.DOWN,
+                 service_name: str = "none", http_enum: NmapHttpEnum = None,
+                 http_grep: NmapHttpGrep = None, vulscan: NmapVulscan = None, service_version: str = "",
+                 service_fp: str = ""):
         """
         Initializes the DTO
 
@@ -43,10 +43,10 @@ class NmapPort:
         """
         :return: a string representation of the object
         """
-        return "port_id:{}, protocol:{}, status:{}, service_name:{}, http_enum:{}, http_grep:{}, vulscan:{}, " \
-               "service_version:{}, service_fp:{}".format(
-            self.port_id, self.protocol, self.status, self.service_name, self.http_enum, self.http_grep, self.vulscan,
-        self.service_version, self.service_fp)
+        return f"port_id:{self.port_id}, protocol:{self.protocol}, status:{self.status}, " \
+               f"service_name:{self.service_name}, http_enum:{self.http_enum}, " \
+               f"http_grep:{self.http_grep}, vulscan:{self.vulscan}, " \
+               f"service_version:{self.service_version}, service_fp:{self.service_fp}"
 
     def __hash__(self) -> int:
         """
@@ -81,7 +81,7 @@ class NmapPort:
         vulscan = ""
         if self.vulscan is not None:
             vulscan = self.vulscan.output
-        port_obs = EmulationPortObservationState(port = self.port_id, open=open, service=self.service_name,
+        port_obs = EmulationPortObservationState(port=self.port_id, open=open, service=self.service_name,
                                                  protocol=self.protocol, http_enum=hp_enum,
                                                  http_grep=hp_grep, vulscan=vulscan, version=self.service_version,
                                                  fingerprint=self.service_fp)

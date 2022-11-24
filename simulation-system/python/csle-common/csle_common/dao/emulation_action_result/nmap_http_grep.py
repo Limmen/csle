@@ -4,7 +4,7 @@ class NmapHttpGrep:
     A DTO representing the output of a Nmap HTTP Grep
     """
 
-    def __init__(self, output : str):
+    def __init__(self, output: str):
         """
         Initializes the DTO
 
@@ -16,4 +16,4 @@ class NmapHttpGrep:
         """
         :return: a string representation of the object
         """
-        return "output:{}".format(self.output)
+        return f"output:{self.output}"

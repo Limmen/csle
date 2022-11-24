@@ -49,22 +49,19 @@ class NmapHostResult:
         """
         :return: a string representation of the object
         """
-        return "status:{}, ip_addr:{}, mac_addr:{}, hostnames:{}, ports:{}, os:{}, os_matches:{}, " \
-               "vulnerabilities:{}, credentials:{}, trace:{}".format(
-            self.status, self.ips, self.mac_addr, " ".join(self.hostnames),
-            " ".join(list(map(lambda x: str(x), self.ports))), self.os,
-            " ".join(list(map(lambda x: str(x), self.os_matches))),
-            " ".join(list(map(lambda x: str(x), self.vulnerabilities))),
-            " ".join(list(map(lambda x: str(x), self.credentials))),
-            self.trace
-        )
+        return f"status:{self.status}, ip_addr:{self.ips}, mac_addr:{self.mac_addr}, " \
+               f"hostnames:{' '.join(self.hostnames)}, " \
+               f"ports:{' '.join(list(map(lambda x: str(x), self.ports)))}, os:{self.os}, " \
+               f"os_matches:{' '.join(list(map(lambda x: str(x), self.os_matches)))}, " \
+               f"vulnerabilities:{' '.join(list(map(lambda x: str(x), self.vulnerabilities)))}, " \
+               f"credentials:{' '.join(list(map(lambda x: str(x), self.credentials)))}, " \
+               f"trace:{self.trace}"
 
     def copy(self) -> "NmapHostResult":
         """
         :return: a copy of the object
         """
         return copy.deepcopy(self)
-
 
     def ips_match(self, ips: List[str]) -> bool:
         """
