@@ -20,4 +20,4 @@ setup(name='csle_common',
           'Topic :: Scientific/Engineering :: Artificial Intelligence',
           'Programming Language :: Python :: 3.8'
       ]
-)
+      )

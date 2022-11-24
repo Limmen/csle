@@ -345,42 +345,62 @@ class NMAP:
     SPEED_ARGS = "--min-rate 100000 --max-retries 1 -T5 -n"
     FILE_ARGS = "-oX"
     TELNET_BRUTE_SUBNET = "-p 23 --script telnet-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
-                          + ",passdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",telnet-brute.timeout=8s,brute.firstonly=true"
-    TELNET_BRUTE_HOST = "-p 23 --script telnet-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
-                        + ",passdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",telnet-brute.timeout=8s,brute.firstonly=true"
-    SSH_BRUTE_SUBNET = "-p 22 --script ssh-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+                          + ",passdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                          + ",telnet-brute.timeout=8s,brute.firstonly=true"
+    TELNET_BRUTE_HOST = "-p 23 --script telnet-brute --script-args userdb=" \
+                        + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                        + ",passdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                        + ",telnet-brute.timeout=8s,brute.firstonly=true"
+    SSH_BRUTE_SUBNET = "-p 22 --script ssh-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                       + ",passdb=" \
                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",ssh-brute.timeout=8s,brute.firstonly=true"
-    SSH_BRUTE_HOST = "-p 22 --script ssh-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    SSH_BRUTE_HOST = "-p 22 --script ssh-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                     + ",passdb=" \
                      + SECLISTS.TOP_USERNAMES_SHORTLIST + ",ssh-brute.timeout=8s,brute.firstonly=true"
-    FTP_BRUTE_SUBNET = "-p 21 --script ftp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    FTP_BRUTE_SUBNET = "-p 21 --script ftp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                       + ",passdb=" \
                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",ftp-brute.timeout=8s,brute.firstonly=true"
-    FTP_BRUTE_HOST = "-p 21 --script ftp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    FTP_BRUTE_HOST = "-p 21 --script ftp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                     + ",passdb=" \
                      + SECLISTS.TOP_USERNAMES_SHORTLIST + ",ftp-brute.timeout=8s,brute.firstonly=true"
-    CASSANDRA_BRUTE_SUBNET = "-p 9160 --script cassandra-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    CASSANDRA_BRUTE_SUBNET = "-p 9160 --script cassandra-brute --script-args userdb=" \
+                             + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
                              + SECLISTS.TOP_USERNAMES_SHORTLIST + ",cassandra-brute.timeout=8s,brute.firstonly=true"
-    CASSANDRA_BRUTE_HOST = "-p 9160 --script cassandra-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    CASSANDRA_BRUTE_HOST = "-p 9160 --script cassandra-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                           + ",passdb=" \
                            + SECLISTS.TOP_USERNAMES_SHORTLIST + ",cassandra-brute.timeout=8s,brute.firstonly=true"
-    IRC_BRUTE_SUBNET = "-p 6667 --script irc-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    IRC_BRUTE_SUBNET = "-p 6667 --script irc-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                       + ",passdb=" \
                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",irc-brute.timeout=8s,brute.firstonly=true"
-    IRC_BRUTE_HOST = "-p 6667 --script irc-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    IRC_BRUTE_HOST = "-p 6667 --script irc-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                     + ",passdb=" \
                      + SECLISTS.TOP_USERNAMES_SHORTLIST + ",irc-brute.timeout=8s,brute.firstonly=true"
-    MONGO_BRUTE_SUBNET = "-p 27017 --script mongo-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    MONGO_BRUTE_SUBNET = "-p 27017 --script mongo-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                         + ",passdb=" \
                          + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mongo-brute.timeout=8s,brute.firstonly=true"
-    MONGO_BRUTE_HOST = "-p 27017 --script mongo-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    MONGO_BRUTE_HOST = "-p 27017 --script mongo-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                       + ",passdb=" \
                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mongo-brute.timeout=8s,brute.firstonly=true"
-    MYSQL_BRUTE_SUBNET = "-p 27017 --script mysql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    MYSQL_BRUTE_SUBNET = "-p 27017 --script mysql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                         + ",passdb=" \
                          + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mysql-brute.timeout=8s,brute.firstonly=true"
-    MYSQL_BRUTE_HOST = "-p 27017 --script mysql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    MYSQL_BRUTE_HOST = "-p 27017 --script mysql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                       + ",passdb=" \
                        + SECLISTS.TOP_USERNAMES_SHORTLIST + ",mysql-brute.timeout=8s,brute.firstonly=true"
-    SMTP_BRUTE_SUBNET = "-p 25 --script smtp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    SMTP_BRUTE_SUBNET = "-p 25 --script smtp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                        + ",passdb=" \
                         + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s,brute.firstonly=true"
-    SMTP_BRUTE_HOST = "-p 25 --script smtp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    SMTP_BRUTE_HOST = "-p 25 --script smtp-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                      + ",passdb=" \
                       + SECLISTS.TOP_USERNAMES_SHORTLIST + ",smtp-brute.timeout=8s,brute.firstonly=true"
-    POSTGRES_BRUTE_SUBNET = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    POSTGRES_BRUTE_SUBNET = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                            + ",passdb=" \
                             + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
-    POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST + ",passdb=" \
+    POSTGRES_BRUTE_HOST = "-p 5432 --script pgsql-brute --script-args userdb=" + SECLISTS.TOP_USERNAMES_SHORTLIST \
+                          + ",passdb=" \
                           + SECLISTS.TOP_USERNAMES_SHORTLIST + ",pgsql-brute.timeout=8s,brute.firstonly=true"
-    SAMBA_CVE_2017_7494_SCAN = "--script smb-vuln-cve-2017-7494 --script-args smb-vuln-cve-2017-7494.check-version -p445"
+    SAMBA_CVE_2017_7494_SCAN = "--script smb-vuln-cve-2017-7494 --script-args smb-vuln-cve-2017-7494.check-version " \
+                               "-p445"
     FIREWALK_HOST = "--script=firewalk --traceroute --script-args=firewalk.max-retries=1,firewalk.probe-timeout=800ms"
     HTTP_ENUM = "--script=http-enum"
     HTTP_GREP = "--script=http-grep"
@@ -503,13 +523,13 @@ class HTTPS:
     """
     SERVICE_NAME = "HTTPS"
     DEFAULT_PORT = 443
-    OK_STATUS_CODE=200
-    UNAUTHORIZED_STATUS_CODE=401
-    CREATED_STATUS_CODE=201
-    BAD_REQUEST_STATUS_CODE=400
-    CONFLICT_STATUS_CODE=409
-    NOT_FOUND_STATUS_CODE=404
-    INTERNAL_SERVER_ERROR_STATUS_CODE=500
+    OK_STATUS_CODE = 200
+    UNAUTHORIZED_STATUS_CODE = 401
+    CREATED_STATUS_CODE = 201
+    BAD_REQUEST_STATUS_CODE = 400
+    CONFLICT_STATUS_CODE = 409
+    NOT_FOUND_STATUS_CODE = 404
+    INTERNAL_SERVER_ERROR_STATUS_CODE = 500
 
 
 class RETHINKDB:
@@ -542,6 +562,7 @@ class TEAMSPEAK3:
     """
     SERVICE_NAME = "teamspeak3"
     DEFAULT_PORT = 30033
+
 
 class IRC:
     """
@@ -792,19 +813,26 @@ class COMMANDS:
     CHANGE_PERMISSION_LOG_DIRS = "sudo chmod -R 777 /var"
     UPDATE_RULESET = "/pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP"
     SNORT_PID = "/var/run//snort_eth1:eth0.pid"
-    SNORT_DUMP_STATS="kill -SIGUSR1 {}"
-    SNORT_ROTATE_STATS="kill -SIGUSR2 {}"
+    SNORT_DUMP_STATS = "kill -SIGUSR1 {}"
+    SNORT_ROTATE_STATS = "kill -SIGUSR2 {}"
     PS_AUX = "ps -aux"
     PS_AXR = "ps -axr"
     GREP = "grep"
-    START_CLIENT_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /client_manager.py --port {} --logdir {} --logfile {} --maxworkers {} &"
+    START_CLIENT_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /client_manager.py --port {} --logdir {} " \
+                           "--logfile {} --maxworkers {} &"
     SEARCH_CLIENT_MANAGER = "/root/miniconda3/bin/python3 /client_manager.py"
-    START_KAFKA_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /kafka_manager.py --port {} --logdir {} --logfile {} --maxworkers {} &"
-    START_ELK_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /elk_manager.py --port {} --logdir {} --logfile {} --maxworkers {} &"
-    START_SNORT_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /snort_ids_manager.py --port {} --logdir {} --logfile {} --maxworkers {} &"
-    START_OSSEC_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ossec_ids_manager.py --port {} --logdir {} --logfile {} --maxworkers {} &"
-    START_HOST_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /host_manager.py --port {} --logdir {} --logfile {} --maxworkers {} &"
-    START_TRAFFIC_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /traffic_manager.py --port {} --logdir {} --logfile {} --maxworkers {} &"
+    START_KAFKA_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /kafka_manager.py --port {} --logdir {} " \
+                          "--logfile {} --maxworkers {} &"
+    START_ELK_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /elk_manager.py --port {} --logdir {} --logfile {} " \
+                        "--maxworkers {} &"
+    START_SNORT_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /snort_ids_manager.py --port {} --logdir {} " \
+                              "--logfile {} --maxworkers {} &"
+    START_OSSEC_IDS_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /ossec_ids_manager.py --port {} --logdir {} " \
+                              "--logfile {} --maxworkers {} &"
+    START_HOST_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /host_manager.py --port {} --logdir {} " \
+                         "--logfile {} --maxworkers {} &"
+    START_TRAFFIC_MANAGER = "sudo nohup /root/miniconda3/bin/python3 /traffic_manager.py --port {} --logdir {} " \
+                            "--logfile {} --maxworkers {} &"
     START_SDN_CONTROLLER = "sudo nohup /root/miniconda3/bin/python3 /ryu_controller.py --port {} --webport {} " \
                            "--controller {} &"
     SEARCH_KAFKA_MANAGER = "/root/miniconda3/bin/python3 /kafka_manager.py"
@@ -835,7 +863,7 @@ class COMMANDS:
     GRAFANA_PORT = 3000
     MANAGEMENT_SYSTEM_PORT = 7777
     START_GRAFANA = f"docker run -d -p {GRAFANA_PORT}:{GRAFANA_PORT} --name grafana grafana/grafana"
-    CADVISOR_PORT=8080
+    CADVISOR_PORT = 8080
     START_CADVISOR = "docker run  -dt --volume=/:/rootfs:ro   --volume=/var/run:/var/run:ro   " \
                      "--volume=/sys:/sys:ro   " \
                      "--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   " \
@@ -992,15 +1020,15 @@ class EXPLOIT_VULNERABILITES:
     PRIVILEGE_ESC_VULNS = [CVE_2010_0426, CVE_2015_5602]
     UNKNOWN = "unknown"
     WEAK_PASSWORD_CVSS = 10.0
-    SAMBACRY_CVSS=9.8
-    SHELLSHOCK_CVSS=9.8
+    SAMBACRY_CVSS = 9.8
+    SHELLSHOCK_CVSS = 9.8
     DVWA_SQL_INJECTION_CVSS = 9.5
     CVE_2015_3306_CVSS = 9.8
     CVE_2016_10033_CVSS = 9.8
     CVE_2010_0426_CVSS = 6
     CVE_2015_5602_CVSS = 6
-    CVE_2015_1427_CVSS=9.8
-    PENGINE_EXPLOIT_CVSS=9.8
+    CVE_2015_1427_CVSS = 9.8
+    PENGINE_EXPLOIT_CVSS = 9.8
 
 
 class SUB_PROC_ENV:
@@ -1034,9 +1062,11 @@ class TRAFFIC_COMMANDS:
     GENERIC_COMMANDS = "generic_commands"
     CLIENT_1_SUBNET = "client_1_subnet"
     DEFAULT_COMMANDS = {
-        f"{CONTAINER_IMAGES.FTP_1}": ["timeout 5 ftp {} > /dev/null 2>&1",
-                                      "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                                      "timeout 5 curl {}:8080 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.FTP_1}": [
+            "timeout 5 ftp {} > /dev/null 2>&1",
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:8080 > /dev/null 2>&1"
+        ],
         f"{CONTAINER_IMAGES.SSH_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 5 curl {}:80 > /dev/null 2>&1"],
@@ -1089,7 +1119,7 @@ class TRAFFIC_COMMANDS:
         f"{CONTAINER_IMAGES.SSH_3}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 10 /irc_login_test.sh {} > /dev/null 2>&1"
-            ],
+        ],
         f"{CONTAINER_IMAGES.TELNET_2}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 5 curl {}:8080 > /dev/null 2>&1",
@@ -1098,9 +1128,10 @@ class TRAFFIC_COMMANDS:
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 5 curl {}:8080 > /dev/null 2>&1",
             "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
-        f"{CONTAINER_IMAGES.FTP_2}": ["timeout 5 ftp {} > /dev/null 2>&1",
-                                      "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
-                                      "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.FTP_2}": [
+            "timeout 5 ftp {} > /dev/null 2>&1",
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "(sleep 2; echo test; sleep 2; echo test; sleep 3;) | telnet {} > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.ROUTER_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1"],
         f"{CONTAINER_IMAGES.ROUTER_2}": [
@@ -1115,7 +1146,8 @@ class TRAFFIC_COMMANDS:
             # "sudo nmap -sF -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
             # "sudo nmap -sN -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
             # "sudo nmap -sX -p- " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
-            # "sudo nmap -O --osscan-guess --max-os-tries 1 " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
+            # "sudo nmap -O --osscan-guess --max-os-tries 1 " + NMAP.SPEED_ARGS + " --host-timeout 5 {}
+            # > /dev/null 2>&1",
             # "sudo nmap " + NMAP.HTTP_GREP + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1",
             # "sudo nmap " + NMAP.FINGER + " " + NMAP.SPEED_ARGS + " --host-timeout 5 {} > /dev/null 2>&1"
         ],
@@ -1132,7 +1164,7 @@ class TRAFFIC_COMMANDS:
             "\"src_text\": \"problem(1, [[_,_,_,_,_,_,_,_,_],[_,_,_,_,_,3,_,8,5],[_,_,1,_,2,_,_,_,_],"
             "[_,_,_,5,_,7,_,_,_],[_,_,4,_,_,_,1,_,_],[_,9,_,_,_,_,_,_,_],[5,_,_,_,_,_,_,7,3],"
             "[_,_,2,_,1,_,_,_,_],[_,_,_,_,4,_,_,_,9]]).\n\"}}' {}"
-            ],
+        ],
         f"{CONTAINER_IMAGES.CVE_2014_0160_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 5 curl {}:443 > /dev/null 2>&1"],
@@ -1140,7 +1172,7 @@ class TRAFFIC_COMMANDS:
 
 
 class AGENT:
-    USER="agent"
+    USER = "agent"
     PW = "agent"
 
 
@@ -1148,7 +1180,7 @@ class CSLE_ADMIN:
     """
     Constants related to the default csle admin account.
     """
-    SSH_USER = "csle_admin" # Should not be a simple user/pw combination since then the automated attacker will figure it out
+    SSH_USER = "csle_admin"  # Should not be a simple user/pw, the automated attacker will figure it out
     SSH_PW = "csle@admin-pw_191"
     MANAGEMENT_USER = "admin"
     MANAGEMENT_PW = "admin"
@@ -1162,7 +1194,7 @@ class CSLE_GUEST:
     """
     Constants related to the default csle guest account
     """
-    USER = "csle_guest" # Should not be a simple user/pw combination since then the automated attacker will figure it out
+    USER = "csle_guest"  # Should not be a simple user/pw combination, the automated attacker will figure it out
     PW = "csle@guest-pw_191"
     MANAGEMENT_USER = "guest"
     MANAGEMENT_PW = "guest"
@@ -1365,7 +1397,7 @@ class CSLE:
     CSLE_EDGE_BITMASK = "255.255.255.0"
     CSLE_BITMASK = "255.255.0.0"
     NON_IDS_ROUTER = "router_1"
-    LIST_OF_IP_SUBNETS = list(range(15,171)) + list(range(173,191)) + list(range(193,250))
+    LIST_OF_IP_SUBNETS = list(range(15, 171)) + list(range(173, 191)) + list(range(193, 250))
 
 
 class MANAGEMENT:
@@ -1599,9 +1631,9 @@ class RYU_CONTROLLER:
     """
     Constants related to the RYU Controller
     """
-    NETWORK_ID_THIRD_OCTET=252
-    NETWORK_ID_FOURTH_OCTET=252
-    SUFFIX="_1"
+    NETWORK_ID_THIRD_OCTET = 252
+    NETWORK_ID_FOURTH_OCTET = 252
+    SUFFIX = "_1"
     DEFAULT_PORT = 6633
     DEFAULT_TRANSPORT_PROTOCOL = "tcp"
     SUBNETMASK_SUFFIX = "/29"
