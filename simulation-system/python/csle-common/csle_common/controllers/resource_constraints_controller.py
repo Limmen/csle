@@ -37,7 +37,7 @@ class ResourceConstraintsController:
 
                     # delete existing netem rules
                     cmd = f"sudo tc qdisc del dev {net_config.interface} root netem"
-                    o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
                     # add new netem rule that implements the traffic shaping configuration
                     cmd = f"sudo tc qdisc add dev {net_config.interface} root netem " \
@@ -56,5 +56,5 @@ class ResourceConstraintsController:
                           f"gap {net_config.packet_reorder_gap} " \
                           f"rate {net_config.rate_limit_mbit:.6f}mbit " \
                           f"limit {net_config.limit_packets_queue:.6f}"
-                    o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+                    o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)

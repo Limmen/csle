@@ -96,9 +96,9 @@ class EmulationEnvController:
             cmd = collector_constants.INSTALL
             if emulation_env_config.csle_collector_version != collector_constants.LATEST_VERSION:
                 cmd = cmd + f"=={emulation_env_config.csle_collector_version}"
-            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
             time.sleep(2)
-            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
             EmulationUtil.disconnect_admin(emulation_env_config=emulation_env_config)
 
     @staticmethod
@@ -114,7 +114,7 @@ class EmulationEnvController:
         """
         steps = 29
         if no_traffic:
-            steps = steps-1
+            steps = steps - 1
         if no_clients:
             emulation_execution.emulation_env_config.traffic_config.client_population_config = \
                 emulation_execution.emulation_env_config.traffic_config.client_population_config.no_clients()
@@ -301,7 +301,7 @@ class EmulationEnvController:
         time.sleep(30)
 
     @staticmethod
-    def start_custom_traffic(emulation_env_config : EmulationEnvConfig, no_traffic: bool = True) -> None:
+    def start_custom_traffic(emulation_env_config: EmulationEnvConfig, no_traffic: bool = True) -> None:
         """
         Utility function for starting traffic generators and client population on a given emulation
 
@@ -316,7 +316,7 @@ class EmulationEnvController:
         TrafficController.start_client_producer(emulation_env_config=emulation_env_config)
 
     @staticmethod
-    def stop_custom_traffic(emulation_env_config : EmulationEnvConfig) -> None:
+    def stop_custom_traffic(emulation_env_config: EmulationEnvConfig) -> None:
         """
         Stops the traffic generators on all internal nodes and stops the arrival process of clients
 
@@ -368,7 +368,7 @@ class EmulationEnvController:
         total_subnets = constants.CSLE.LIST_OF_IP_SUBNETS
         used_subnets = list(map(lambda x: x.ip_first_octet,
                                 MetastoreFacade.list_emulation_executions_for_a_given_emulation(
-            emulation_name=emulation_env_config.name)))
+                                    emulation_name=emulation_env_config.name)))
         available_sunets = list(filter(lambda x: x not in used_subnets, total_subnets))
         ip_first_octet = available_sunets[0]
         em_config = emulation_env_config.create_execution_config(ip_first_octet=ip_first_octet)
@@ -392,12 +392,12 @@ class EmulationEnvController:
         # Start regular containers
         for c in emulation_env_config.containers_config.containers:
             ips = c.get_ips()
-            container_resources : NodeResourcesConfig = None
+            container_resources: NodeResourcesConfig = None
             for r in emulation_env_config.resources_config.node_resources_configurations:
                 for ip_net_resources in r.ips_and_network_configs:
                     ip, net_resources = ip_net_resources
                     if ip in ips:
-                        container_resources : NodeResourcesConfig = r
+                        container_resources: NodeResourcesConfig = r
                         break
             if container_resources is None:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
@@ -415,7 +415,7 @@ class EmulationEnvController:
 
         # Start the kafka container
         c = emulation_env_config.kafka_config.container
-        container_resources : NodeResourcesConfig = emulation_env_config.kafka_config.resources
+        container_resources: NodeResourcesConfig = emulation_env_config.kafka_config.resources
         name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
@@ -429,7 +429,7 @@ class EmulationEnvController:
 
         # Start the ELK container
         c = emulation_env_config.elk_config.container
-        container_resources : NodeResourcesConfig = emulation_env_config.elk_config.resources
+        container_resources: NodeResourcesConfig = emulation_env_config.elk_config.resources
         name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
         Logger.__call__().get_logger().info(f"Starting container:{name}")
         cmd = f"docker container run -dt --name {name} " \
@@ -444,7 +444,7 @@ class EmulationEnvController:
         if emulation_env_config.sdn_controller_config is not None:
             # Start the SDN controller container
             c = emulation_env_config.sdn_controller_config.container
-            container_resources : NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
+            container_resources: NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
             name = f"{constants.CSLE.NAME}-{c.name}{c.suffix}-level{c.level}-{c.execution_ip_first_octet}"
             Logger.__call__().get_logger().info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
@@ -464,28 +464,27 @@ class EmulationEnvController:
         :param emulation_execution: the execution DTO
         :return: None
         """
-        path = ExperimentUtil.default_output_dir()
         emulation_env_config = emulation_execution.emulation_env_config
 
         # Start regular containers
         for c in emulation_env_config.containers_config.containers:
-            ContainerController.start_container(name = c.get_full_name())
+            ContainerController.start_container(name=c.get_full_name())
 
         # Start the kafka container
         c = emulation_env_config.kafka_config.container
-        ContainerController.start_container(name = c.get_full_name())
+        ContainerController.start_container(name=c.get_full_name())
 
         # Start the ELK container
         c = emulation_env_config.elk_config.container
-        ContainerController.start_container(name = c.get_full_name())
+        ContainerController.start_container(name=c.get_full_name())
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start the SDN controller container
             c = emulation_env_config.sdn_controller_config.container
-            ContainerController.start_container(name = c.get_full_name())
+            ContainerController.start_container(name=c.get_full_name())
 
     @staticmethod
-    def run_container(image: str, name: str, memory : int = 4, num_cpus: int = 1, create_network : bool = True) -> None:
+    def run_container(image: str, name: str, memory: int = 4, num_cpus: int = 1, create_network: bool = True) -> None:
         """
         Runs a given container
 
@@ -499,8 +498,8 @@ class EmulationEnvController:
         Logger.__call__().get_logger().info(f"Starting container with image:{image} and name:csle-{name}-001")
         if create_network:
             net_id = random.randint(128, 254)
-            sub_net_id= random.randint(2, 254)
-            host_id= random.randint(2, 254)
+            sub_net_id = random.randint(2, 254)
+            host_id = random.randint(2, 254)
             net_name = f"csle_custom_net_{name}_{net_id}"
             ip = f"55.{net_id}.{sub_net_id}.{host_id}"
             ContainerController.create_network(name=net_name,
@@ -575,9 +574,10 @@ class EmulationEnvController:
             EmulationEnvController.rm_containers(execution=exec)
             try:
                 ContainerController.stop_docker_stats_thread(execution=exec)
-            except Exception as e:
+            except Exception:
                 pass
-            EmulationEnvController.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+            EmulationEnvController.delete_networks_of_emulation_env_config(
+                emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
@@ -595,9 +595,10 @@ class EmulationEnvController:
         EmulationEnvController.rm_containers(execution=execution)
         try:
             ContainerController.stop_docker_stats_thread(execution=execution)
-        except Exception as e:
+        except Exception:
             pass
-        EmulationEnvController.delete_networks_of_emulation_env_config(emulation_env_config=execution.emulation_env_config)
+        EmulationEnvController.delete_networks_of_emulation_env_config(
+            emulation_env_config=execution.emulation_env_config)
         MetastoreFacade.remove_emulation_execution(emulation_execution=execution)
 
     @staticmethod
@@ -614,16 +615,17 @@ class EmulationEnvController:
             EmulationEnvController.rm_containers(execution=exec)
             try:
                 ContainerController.stop_docker_stats_thread(execution=exec)
-            except Exception as e:
+            except Exception:
                 pass
-            EmulationEnvController.delete_networks_of_emulation_env_config(emulation_env_config=exec.emulation_env_config)
+            EmulationEnvController.delete_networks_of_emulation_env_config(
+                emulation_env_config=exec.emulation_env_config)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
     def rm_containers(execution: EmulationExecution) -> None:
         """
         Remove containers in the emulation env config for a given execution
-        
+
         :param execution: the execution to remove
         :return: None
         """
@@ -689,7 +691,7 @@ class EmulationEnvController:
         MetastoreFacade.uninstall_emulation(config=config)
 
     @staticmethod
-    def separate_running_and_stopped_emulations_dtos(emulations : List[EmulationEnvConfig]) \
+    def separate_running_and_stopped_emulations_dtos(emulations: List[EmulationEnvConfig]) \
             -> Tuple[List[EmulationEnvConfig], List[EmulationEnvConfig]]:
         """
         Partitions the set of emulations into a set of running emulations and a set of stopped emulations
@@ -815,13 +817,13 @@ class EmulationEnvController:
         config = Config.get_current_confg()
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        conn.connect(execution.emulation_env_config.elk_config.container.get_ips()[0], 
+        conn.connect(execution.emulation_env_config.elk_config.container.get_ips()[0],
                      username=config.ssh_admin_username, password=config.ssh_admin_password)
         conn.get_transport().set_keepalive(5)
         agent_transport = conn.get_transport()
         tunnel_thread = ForwardTunnelThread(
             local_port=local_port,
-            remote_host=execution.emulation_env_config.elk_config.container.get_ips()[0], 
+            remote_host=execution.emulation_env_config.elk_config.container.get_ips()[0],
             remote_port=execution.emulation_env_config.elk_config.kibana_port, transport=agent_transport)
         tunnel_thread.start()
         tunnel_thread_dict = {}

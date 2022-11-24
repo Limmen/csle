@@ -320,41 +320,6 @@ def stop_traffic(emulation : str, id: int) -> None:
     else:
         click.secho(f"execution {id} of emulation {emulation} not recognized", fg="red", bold=True)
 
-def materialize_shell_complete(ctx, param, incomplete):
-    """
-    Shell completion for the materialize command
-
-    :param ctx: the command context
-    :param param: the command parameter
-    :param incomplete: the command incomplete flag
-    :return: a list of completion suggestions
-    """
-    return ["<emulation> <path>"]
-
-@click.argument('path', default="")
-@click.argument('id', default=-1)
-@click.argument('emulation', default="", shell_complete=materialize_shell_complete)
-@click.command("materialize", help="emulation execution-id path")
-def materialize(emulation: str, id: int, path: str) -> None:
-    """
-    Materializes the configuraiton of a given emulation to a given path
-
-    :param emulation: the emulation to materialize
-    :param id: the execution id
-    :param path: the path to materialize the emulation's configuration
-    :return: None
-    """
-    from csle_common.metastore.metastore_facade import MetastoreFacade
-
-    execution = MetastoreFacade.get_emulation_execution(ip_first_octet=id, emulation_name=emulation)
-    if execution is None:
-        click.secho(f"Execution {id} of emulation: {emulation} not found", fg="red", bold=True)
-    else:
-        if path != "":
-            materialize_emulation(execution.emulation_env_config, path=path)
-        else:
-            click.secho(f"No path specified", fg="red", bold=True)
-
 
 def shell_shell_complete(ctx, param, incomplete) -> List[str]:
     """
@@ -394,83 +359,6 @@ def shell(container: str) -> None:
         click.secho(f"To open a shell in container:{container}, run: '{cmd}'", bold=False)
     else:
         click.secho(f"Container: {container} not found among running containers", fg="red", bold=False)
-
-def gen_shell_complete(ctx, param, incomplete) -> List[str]:
-    """
-    Shell completion for the gen command
-
-    :param ctx: the command context
-    :param param: the command parameter
-    :param incomplete: the command incomplete flag
-    :return: a list of completion suggestions
-    """
-    return ["<name> <num_envs> <min_users> <max_users> <min_flags> <max_flags> <min_nodes> <max_flags> <min_flags> "
-            "<max_users> <min_users> <num_envs> <name> <gen>"]
-
-@click.argument('max_mem', default=4, type=int)
-@click.argument('min_mem', default=4, type=int)
-@click.argument('max_cpus', default=1, type=int)
-@click.argument('min_cpus', default=1, type=int)
-@click.argument('max_nodes', default=10, type=int)
-@click.argument('min_nodes', default=4, type=int)
-@click.argument('max_flags', default=5, type=int)
-@click.argument('min_flags', default=1, type=int)
-@click.argument('max_users', default=5, type=int)
-@click.argument('min_users', default=1, type=int)
-@click.argument('num_envs', default=1, type=int)
-@click.argument('name', default="", type=str, shell_complete=gen_shell_complete)
-@click.command("gen", help="name min_users max_users min_flags max_flags min_nodes max_nodes")
-def gen(name: str, num_envs: int, min_users: int, max_users: int, min_flags: int, max_flags: int, min_nodes: int,
-        max_nodes: int, min_cpus: int, max_cpus: int, min_mem: int, max_mem: int) -> None:
-    """
-    Generates a new random emulation
-
-    :param name: the name of the generated emulation
-    :param num_envs: the number of environments for the generation
-    :param min_users: the minimum number of users for the generation
-    :param max_users: the maximum number of users for the generation
-    :param min_flags: the minimum number of flags for the generation
-    :param max_flags: the maximum number of flags for the generation
-    :param min_nodes: the minimum number of nodes for the generation
-    :param max_nodes: the maximum number of nodes for the generation
-    :param min_cpus: the minimum number of CPUs for the generation
-    :param max_cpus: the maximum number of CPUs for the generation
-    :param min_mem: the minimum memory for the generation
-    :param max_mem: the maximum memory for the generation
-    :return: None
-    """
-
-    from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
-    from csle_common.dao.emulation_config.emulation_env_generation_config import EmulationEnvGenerationConfig
-    from csle_common.util.experiment_util import ExperimentUtil
-    import csle_common.constants.constants as constants
-
-    if name == "":
-        click.secho(f"Please specify a name of the emulation to generate", fg="red", bold=False)
-        return
-
-    click.secho(f"Generating a random emulation configuration with {min_nodes}-{max_nodes} nodes, "
-                f"{min_users}-{max_users} users, and {min_flags}-{max_flags} flags", bold=False)
-    container_env_config = EmulationEnvGenerationConfig(
-        min_num_users=min_users, max_num_users=max_users, min_num_flags=min_flags,
-        max_num_flags=max_flags, min_num_nodes=min_nodes, max_num_nodes=max_nodes,
-        container_pool=constants.CONTAINER_POOLS.CONTAINER_POOL,
-        gw_vuln_compatible_containers=constants.CONTAINER_POOLS.GW_VULN_CONTAINERS,
-        pw_vuln_compatible_containers=constants.CONTAINER_POOLS.PW_VULN_CONTAINERS,
-        rce_vuln_compatible_containers=constants.CONTAINER_POOLS.RCE_CONTAINERS,
-        sql_injection_vuln_compatible_containers=constants.CONTAINER_POOLS.SQL_INJECTION_CONTAINERS,
-        priv_esc_vuln_compatible_containers=constants.CONTAINER_POOLS.PRIV_ESC_CONTAINERS,
-        agent_containers=constants.CONTAINER_POOLS.AGENT_CONTAINERS,
-        router_containers=constants.CONTAINER_POOLS.ROUTER_CONTAINERS,
-        path=ExperimentUtil.default_output_dir(), subnet_id_blacklist=set(),
-        subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}", min_cpus=min_cpus, max_cpus=max_cpus,
-        min_mem_G=min_mem, max_mem_G=max_mem
-    )
-    created_emulations = EmulationEnvConfigGenerator.generate_envs(container_env_config, name=name, num_envs=num_envs)
-    for em in created_emulations:
-        click.secho(f"Successfully created emulation with name: {em.name} and configuration:",
-                    fg="green", bold=True)
-        print_emulation_config(emulation_env_config=em)
 
 
 def run_emulation(emulation_env_config: "EmulationEnvConfig", no_traffic: bool, no_clients: bool) -> None:
@@ -627,24 +515,6 @@ def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execut
 
     click.secho(f"Cleaning execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
     EmulationEnvController.clean_emulation_execution(emulation_env_config, execution_id)
-
-
-def materialize_emulation(emulation_env_config: "EmulationEnvConfig", path: str) -> None:
-    """
-    Materializes the emulation with the given config to a given path
-
-    :param emulation_env_config: the config of the emulation
-    :param path: the path to materialize the emulation to
-    :return: None
-    """
-    from csle_common.domain_randomization.emulation_env_config_generator import EmulationEnvConfigGenerator
-    import csle_common.constants.constants as constants
-    import os
-
-    path = os.path.join(os.getcwd(), path + constants.COMMANDS.SLASH_DELIM)
-    click.secho(f"Materialize emulation {emulation_env_config.name} to path:{path}{emulation_env_config.name}",
-                bold=False)
-    EmulationEnvConfigGenerator.materialize_emulation_env_config(emulation_env_config=emulation_env_config)
 
 
 def stop_shell_complete(ctx, param, incomplete) -> List[str]:
@@ -1810,9 +1680,7 @@ commands.add_command(ls)
 commands.add_command(rm)
 commands.add_command(stop)
 commands.add_command(start)
-commands.add_command(materialize)
 commands.add_command(shell)
-commands.add_command(gen)
 commands.add_command(clean)
 commands.add_command(start_traffic)
 commands.add_command(stop_traffic)
