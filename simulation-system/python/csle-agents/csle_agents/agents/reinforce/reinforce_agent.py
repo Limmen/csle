@@ -30,7 +30,7 @@ class ReinforceAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig],
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the Reinforce Agent
 
@@ -85,7 +85,8 @@ class ReinforceAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+            exp_result.all_metrics[seed][
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -112,8 +113,8 @@ class ReinforceAgent(BaseAgent):
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
         self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
-                                            emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr, log_file_path=self.training_job.log_file_path)
+                                                 emulation_name=emulation_name, simulation_name=simulation_name,
+                                                 descr=descr, log_file_path=self.training_job.log_file_path)
         if self.save_to_metastore:
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
             self.exp_execution.id = exp_execution_id
@@ -152,7 +153,8 @@ class ReinforceAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
@@ -226,10 +228,10 @@ class ReinforceAgent(BaseAgent):
                              f" not recognized")
 
         # Setup LR decay
-        if self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_EXP_DECAY].value:
-            lr_decay = torch.optim.lr_scheduler.ExponentialLR(
-                optimizer=optimizer,
-                gamma=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_DECAY_RATE].value)
+        # if self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_EXP_DECAY].value:
+        #     lr_decay = torch.optim.lr_scheduler.ExponentialLR(
+        #         optimizer=optimizer,
+        #         gamma=self.experiment_config.hparams[agents_constants.COMMON.LEARNING_RATE_DECAY_RATE].value)
 
         for i in range(N):
             rewards_batch = []
@@ -267,7 +269,7 @@ class ReinforceAgent(BaseAgent):
                     log_probs.append(log_prob)
 
                     # Move to the next state
-                    o=o_prime
+                    o = o_prime
 
                 # Accumulate batch
                 rewards_batch.append(rewards)
@@ -319,7 +321,8 @@ class ReinforceAgent(BaseAgent):
             # Log baseline returns
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
                 round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+            exp_result.all_metrics[seed][
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
                 round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
 
             if i % self.experiment_config.log_every == 0 and i > 0:
@@ -412,13 +415,14 @@ class ReinforceAgent(BaseAgent):
         """
         return list(map(lambda x: round(x, 3), vec))
 
-    def training_step(self, saved_rewards : List[List[float]], saved_log_probs : List[List[torch.Tensor]],
+    def training_step(self, saved_rewards: List[List[float]], saved_log_probs: List[List[torch.Tensor]],
                       policy_network: FNNwithSoftmax, optimizer: torch.optim.Optimizer, gamma: float) -> torch.Tensor:
         """
         Performs a training step of the REINFORCE algorithm
 
-        :param saved_rewards list of rewards encountered in the latest episode trajectory
-        :param saved_log_probs list of log-action probabilities (log p(a|s)) encountered in the latest episode trajectory
+        :param saved_rewards: list of rewards encountered in the latest episode trajectory
+        :param saved_log_probs: list of log-action probabilities (log p(a|s)) encountered in the latest
+                                episode trajectory
         :param policy_network: the policy network
         :param optimizer: the optimizer for updating the weights
         :param gamma: the discount factor
@@ -457,7 +461,7 @@ class ReinforceAgent(BaseAgent):
         optimizer.zero_grad()
         # expected loss over the batch
         policy_loss_total = torch.stack(policy_loss).sum()
-        policy_loss = policy_loss_total/num_batches
+        policy_loss = policy_loss_total / num_batches
         # perform backprop
         policy_loss.backward()
         # maybe clip gradient

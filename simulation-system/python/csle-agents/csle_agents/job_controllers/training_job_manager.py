@@ -27,16 +27,12 @@ class TrainingJobManager:
         if job_config.simulation_env_name is not None:
             simulation_env_config = MetastoreFacade.get_simulation_by_name(name=job_config.simulation_env_name)
         if job_config.experiment_config.agent_type == AgentType.T_SPSA:
-            agent = TSPSAAgent(emulation_env_config=emulation_env_config,
-                               simulation_env_config=simulation_env_config,
-                               experiment_config=job_config.experiment_config,
-                               training_job=job_config)
+            agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+                               experiment_config=job_config.experiment_config, training_job=job_config)
             agent.train()
         elif job_config.experiment_config.agent_type == AgentType.PPO:
-            agent = PPOAgent(emulation_env_config=emulation_env_config,
-                               simulation_env_config=simulation_env_config,
-                               experiment_config=job_config.experiment_config,
-                               training_job=job_config)
+            agent = PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+                             experiment_config=job_config.experiment_config, training_job=job_config)
             experiment_execution = agent.train()
             for policy in experiment_execution.result.policies.values():
                 MetastoreFacade.save_ppo_policy(ppo_policy=policy)
@@ -53,4 +49,4 @@ class TrainingJobManager:
         """
         cmd = constants.COMMANDS.START_TRAINING_JOB.format(training_job.id)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()

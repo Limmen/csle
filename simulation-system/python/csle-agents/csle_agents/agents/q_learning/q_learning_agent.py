@@ -25,7 +25,7 @@ class QLearningAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the q-learning agent
 
@@ -82,7 +82,6 @@ class QLearningAgent(BaseAgent):
             if self.save_to_metastore:
                 MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
-
         # Initialize execution result
         ts = time.time()
         emulation_name = None
@@ -99,7 +98,6 @@ class QLearningAgent(BaseAgent):
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
             exp_result = self.q_learning(exp_result=exp_result, seed=seed)
-
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -122,8 +120,9 @@ class QLearningAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
-                                                                 confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
+                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
                     else:
@@ -170,7 +169,7 @@ class QLearningAgent(BaseAgent):
                                             f"num_states:{len(S)}, discount_factor: {discount_factor}, "
                                             f"num_actions: {len(A)}, epsilon: {epsilon}")
         avg_returns, running_avg_returns, initial_state_values, q_table, policy = self.train_q_learning(
-            A=A,S=S,gamma=discount_factor, N=N, epsilon=epsilon)
+            A=A, S=S, gamma=discount_factor, N=N, epsilon=epsilon)
         exp_result.all_metrics[seed][agents_constants.Q_LEARNING.INITIAL_STATE_VALUES] = initial_state_values
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = avg_returns
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = running_avg_returns
@@ -183,9 +182,8 @@ class QLearningAgent(BaseAgent):
         exp_result.policies[seed] = tabular_policy
         return exp_result
 
-    def train_q_learning(self, A: List, S: List,
-                         gamma: float = 0.8, N : int = 10000, epsilon: float = 0.2) \
-            -> Tuple[List[float], List[float], List[float], List[List[float]],List[List[float]]]:
+    def train_q_learning(self, A: List, S: List, gamma: float = 0.8, N: int = 10000, epsilon: float = 0.2) \
+            -> Tuple[List[float], List[float], List[float], List[List[float]], List[List[float]]]:
         """
         Runs the Q learning algorithm
 
@@ -224,9 +222,10 @@ class QLearningAgent(BaseAgent):
             if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 steps.append(i)
                 state_val = np.sum(
-                    np.dot(np.array(list(map(lambda x: sum(q_table[x]), S))),
-                           np.array(
-                               self.simulation_env_config.initial_state_distribution_config.initial_state_distribution)))
+                    np.dot(
+                        np.array(list(map(lambda x: sum(q_table[x]), S))),
+                        np.array(
+                            self.simulation_env_config.initial_state_distribution_config.initial_state_distribution)))
                 prog = float(i / N)
                 init_state_values.append(state_val)
 
@@ -254,7 +253,7 @@ class QLearningAgent(BaseAgent):
         policy = self.create_policy_from_q_table(num_states=len(S), num_actions=len(A), q_table=q_table)
         return average_returns, running_average_returns, init_state_values, q_table, policy
 
-    def initialize_q_table(self, n_states :int = 256, n_actions :int = 5) -> np.ndarray:
+    def initialize_q_table(self, n_states: int = 256, n_actions: int = 5) -> np.ndarray:
         """
         Initializes the Q table
 
@@ -265,7 +264,7 @@ class QLearningAgent(BaseAgent):
         q_table = np.zeros((n_states, n_actions))
         return q_table
 
-    def initialize_count_table(self, n_states :int = 256, n_actions :int = 5) -> np.ndarray:
+    def initialize_count_table(self, n_states: int = 256, n_actions: int = 5) -> np.ndarray:
         """
         Initializes the count table
 
@@ -276,7 +275,7 @@ class QLearningAgent(BaseAgent):
         count_table = np.zeros((n_states, n_actions))
         return count_table
 
-    def eps_greedy(self, q_table: np.ndarray, A: List, s : int, epsilon : float = 0.2) -> int:
+    def eps_greedy(self, q_table: np.ndarray, A: List, s: int, epsilon: float = 0.2) -> int:
         """
         Selects an action according to the epsilon-greedy strategy
 
@@ -299,10 +298,10 @@ class QLearningAgent(BaseAgent):
         :param n: the iteration
         :return: the step size
         """
-        return float(1)/math.pow(n, 2/3)
+        return float(1) / math.pow(n, 2 / 3)
 
     def q_learning_update(self, q_table: np.ndarray, count_table: np.ndarray,
-                          s: int, a: int, r: float, s_prime: int, gamma: float) -> Tuple[np.ndarray,np.ndarray]:
+                          s: int, a: int, r: float, s_prime: int, gamma: float) -> Tuple[np.ndarray, np.ndarray]:
         """
         Watkin's Q-learning update
 
@@ -317,9 +316,7 @@ class QLearningAgent(BaseAgent):
         """
         count_table[s][a] = count_table[s_prime][a] + 1
         alpha = self.step_size(count_table[s][a])
-        q_table[s][a] = q_table[s][a] + alpha*(
-                (r + gamma*np.max(q_table[s_prime])) - q_table[s][a]
-        )
+        q_table[s][a] = q_table[s][a] + alpha * ((r + gamma * np.max(q_table[s_prime])) - q_table[s][a])
         return q_table, count_table
 
     def create_policy_from_q_table(self, num_states: int, num_actions: int, q_table: np.ndarray) -> np.ndarray:
@@ -340,7 +337,7 @@ class QLearningAgent(BaseAgent):
             policy[s][best_action] = 1.0
         return policy
 
-    def evaluate_policy(self, policy :np.ndarray, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: np.ndarray, eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -354,7 +351,7 @@ class QLearningAgent(BaseAgent):
             s = self.env.reset()
             R = 0
             while not done:
-                s, r, done, info=self.env.step(policy)
+                s, r, done, info = self.env.step(policy)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)

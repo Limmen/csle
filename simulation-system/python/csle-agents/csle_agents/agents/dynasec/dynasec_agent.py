@@ -54,8 +54,8 @@ class DataCollectorProcess(threading.Thread):
                  defender_sequence: List[EmulationDefenderAction],
                  worker_id: int,
                  emulation_statistics_windowed: EmulationStatisticsWindowed,
-                 sleep_time : int = 30,
-                 emulation_traces_to_save_with_data_collection_job : int = 1,
+                 sleep_time: int = 30,
+                 emulation_traces_to_save_with_data_collection_job: int = 1,
                  intrusion_start_p: float = 0.1) -> None:
         """
         Initializes the thread
@@ -71,7 +71,7 @@ class DataCollectorProcess(threading.Thread):
         :param intrusion_start_p: the p parameter in the geometric distribution of the intrusion start time.
         """
         threading.Thread.__init__(self)
-        self.running =True
+        self.running = True
         self.emulation_execution = emulation_execution
         self.attacker_sequence = attacker_sequence
         self.defender_sequence = defender_sequence
@@ -115,9 +115,9 @@ class DataCollectorProcess(threading.Thread):
             full_attacker_sequence = attacker_wait_seq + self.attacker_sequence
             full_defender_sequence = defender_wait_seq + self.defender_sequence
             T = len(full_attacker_sequence)
-            assert  len(full_defender_sequence) == len(full_attacker_sequence)
-            Logger.__call__().get_logger().info(f"Worker {self.worker_id} in DynaSec "
-                        f"starting execution of static action sequences, iteration:{i}, T:{T}, "
+            assert len(full_defender_sequence) == len(full_attacker_sequence)
+            Logger.__call__().get_logger().info(f"Worker {self.worker_id} in DynaSec starting execution of "
+                                                f"static action sequences, iteration:{i}, T:{T}, "
                                                 f"I_t:{intrusion_start_time}")
             sys.stdout.flush()
             s.reset()
@@ -139,16 +139,15 @@ class DataCollectorProcess(threading.Thread):
                         attacker_action=a2, defender_action=a1,
                         sleep_time=self.sleep_time, trace=emulation_trace, s=s)
                     s.defender_obs_state.average_metric_lists()
-                except:
-                    print(f"error in worker: {self.worker_id}")
+                except Exception:
+                    Logger.__call__().get_logger().info(f"error in worker: {self.worker_id}")
                     raise Exception(f"error in worker: {self.worker_id}")
-                # Logger.__call__().get_logger().info(f"Worker {self.worker_id}, t:{t}, o:{s.defender_obs_state.avg_ids_alert_counters.alerts_weighted_by_priority}, a1: {a1}, a2: {a2}")
                 self.emulation_statistics_windowed.add_state_transition(s=old_state.copy(), s_prime=s.copy(),
                                                                         a1=a1.copy(), a2=a2.copy())
                 self.emulation_statistics_windowed.update_emulation_statistics()
                 total_steps = 10000
                 collected_steps += 1
-                self.data_collection_job.num_collected_steps=collected_steps
+                self.data_collection_job.num_collected_steps = collected_steps
                 self.data_collection_job.progress_percentage = (round(collected_steps / total_steps, 2))
                 self.data_collection_job.num_sequences_completed = i
                 Logger.__call__().get_logger().debug(
@@ -160,7 +159,7 @@ class DataCollectorProcess(threading.Thread):
                 try:
                     MetastoreFacade.update_data_collection_job(data_collection_job=self.data_collection_job,
                                                                id=self.data_collection_job.id)
-                except:
+                except Exception:
                     pass
 
             self.emulation_traces = self.emulation_traces + [emulation_trace]
@@ -169,7 +168,7 @@ class DataCollectorProcess(threading.Thread):
                     self.emulation_traces[-self.data_collection_job.num_cached_traces:]
             else:
                 self.data_collection_job.traces = self.emulation_traces
-            i+=1
+            i += 1
             self.completed_episodes += 1
 
 
@@ -194,7 +193,7 @@ class SystemIdentificationProcess(threading.Thread):
         self.emulation_env_config = emulation_env_config
         self.emulation_statistics = emulation_statistics
         threading.Thread.__init__(self)
-        self.running =True
+        self.running = True
         self.system_model = None
         self.periodic = periodic
         self.sleep_time = sleep_time
@@ -213,7 +212,7 @@ class SystemIdentificationProcess(threading.Thread):
                     system_identification_config=self.system_identification_config)
                 self.system_model = self.algorithm.fit()
                 MetastoreFacade.save_gaussian_mixture_system_model(gaussian_mixture_system_model=self.system_model)
-                time.sleep(self.sleep_time*3)
+                time.sleep(self.sleep_time * 3)
         else:
             self.algorithm = ExpectationMaximizationAlgorithm(
                 emulation_env_config=self.emulation_env_config, emulation_statistics=self.emulation_statistics,
@@ -253,7 +252,7 @@ class PolicyOptimizationProcess(threading.Thread):
         self.experiment_config = experiment_config
         self.simulation_env_config = simulation_env_config
         self.experiment_execution = None
-        self.running =True
+        self.running = True
         self.periodic = periodic
         self.sleep_time = sleep_time
         self.training_job = None
@@ -292,7 +291,7 @@ class PolicyOptimizationProcess(threading.Thread):
                 # for policy in self.experiment_execution.result.policies.values():
                 #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
                 self.policy = list(self.experiment_execution.result.policies.values())[0]
-                time.sleep(self.sleep_time*3)
+                time.sleep(self.sleep_time * 3)
 
 
 class EmulationMonitorThread(threading.Thread):
@@ -314,7 +313,7 @@ class EmulationMonitorThread(threading.Thread):
         self.exp_result = exp_result
         self.emulation_env_config = emulation_env_config
         self.sleep_time_minutes = sleep_time_minutes
-        self.running =True
+        self.running = True
         self.seed = seed
 
     def run(self) -> None:
@@ -359,7 +358,7 @@ class EmulationStatisticsThread(threading.Thread):
         self.exp_result = exp_result
         self.emulation_env_config = emulation_env_config
         self.sleep_time = sleep_time
-        self.running =True
+        self.running = True
         self.seed = seed
         self.new_traces = []
         self.data_collector_processes = data_collector_processes
@@ -412,7 +411,7 @@ class PolicyEvaluationThread(threading.Thread):
         self.exp_result = exp_result
         self.emulation_env_config = emulation_env_config
         self.sleep_time = sleep_time
-        self.running =True
+        self.running = True
         self.seed = seed
         self.policy = policy
         self.baseline_policy = baseline_policy
@@ -424,8 +423,7 @@ class PolicyEvaluationThread(threading.Thread):
         self.simulation_env_config = simulation_env_config
         self.env = env
 
-    def record_metrics(self, exp_result :ExperimentResult, seed: int,
-                       metrics_dict: Dict,
+    def record_metrics(self, exp_result: ExperimentResult, seed: int, metrics_dict: Dict,
                        eval: bool = False, baseline: bool = False):
         if not eval and baseline:
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
@@ -460,7 +458,7 @@ class PolicyEvaluationThread(threading.Thread):
                     exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                                  env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     metrics_dict[seed][
@@ -513,7 +511,7 @@ class PolicyEvaluationThread(threading.Thread):
                     exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                                  env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
-            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                              env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                     metrics_dict[seed][
@@ -535,17 +533,20 @@ class PolicyEvaluationThread(threading.Thread):
                     env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN])
         return exp_result
 
-    def eval_traces(self, traces: List[EmulationTrace], defender_policy: Policy, max_steps : int,
-                    system_model: GaussianMixtureSystemModel, baseline: bool =False):
+    def eval_traces(self, traces: List[EmulationTrace], defender_policy: Policy, max_steps: int,
+                    system_model: GaussianMixtureSystemModel, baseline: bool = False):
         sample_space = self.simulation_env_config.simulation_env_input_config.stopping_game_config.O.tolist()
         old_Z = self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z.copy()
         self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z, int_mean, no_int_mean = \
             DynaSecAgent.get_Z_from_system_model(system_model=system_model, sample_space=sample_space)
         if baseline:
-            self.exp_result.all_metrics[self.seed][agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN_BASELINE].append(no_int_mean)
-            self.exp_result.all_metrics[self.seed][agents_constants.DYNASEC.INTRUSION_ALERTS_MEAN_BASELINE].append(int_mean)
+            self.exp_result.all_metrics[self.seed][
+                agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN_BASELINE].append(no_int_mean)
+            self.exp_result.all_metrics[self.seed][
+                agents_constants.DYNASEC.INTRUSION_ALERTS_MEAN_BASELINE].append(int_mean)
         else:
-            self.exp_result.all_metrics[self.seed][agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN].append(no_int_mean)
+            self.exp_result.all_metrics[self.seed][
+                agents_constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN].append(no_int_mean)
             self.exp_result.all_metrics[self.seed][agents_constants.DYNASEC.INTRUSION_ALERTS_MEAN].append(int_mean)
         metrics = {}
         for trace in traces:
@@ -616,7 +617,7 @@ class DynaSecAgent(BaseAgent):
                  attacker_sequence: List[EmulationAttackerAction], defender_sequence: List[EmulationDefenderAction],
                  system_identification_config: SystemIdentificationConfig,
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the DynaSec agent
 
@@ -647,7 +648,7 @@ class DynaSecAgent(BaseAgent):
         """
         :return: the experiment configuration for SPSA training
         """
-        hparams= {
+        hparams = {
             agents_constants.T_SPSA.N: self.experiment_config.hparams[agents_constants.T_SPSA.N],
             agents_constants.T_SPSA.c: self.experiment_config.hparams[agents_constants.T_SPSA.c],
             agents_constants.T_SPSA.a: self.experiment_config.hparams[agents_constants.T_SPSA.a],
@@ -748,8 +749,7 @@ class DynaSecAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.BASELINE_PREFIX +
                                        env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN)
 
-
-        for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+        for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
             exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_running_average_{l}")
             exp_result.plot_metrics.append(agents_constants.COMMON.EVAL_PREFIX +
@@ -787,11 +787,11 @@ class DynaSecAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
             if self.experiment_config.player_type == PlayerType.DEFENDER:
-                for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+                for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
                     exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER + f"_l={l}"] = []
             else:
                 for s in self.simulation_env_config.state_space_config.states:
-                    for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+                    for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
                         exp_result.all_metrics[seed][agents_constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER
                                                      + f"_l={l}_s={s.id}"] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
@@ -801,7 +801,8 @@ class DynaSecAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+            exp_result.all_metrics[seed][
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
 
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
@@ -817,8 +818,9 @@ class DynaSecAgent(BaseAgent):
                                          env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
                                          env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
-                                         env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+            exp_result.all_metrics[seed][
+                agents_constants.COMMON.EVAL_PREFIX +
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
 
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START] = []
@@ -834,10 +836,11 @@ class DynaSecAgent(BaseAgent):
                                          env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
-            exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
-                                         env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+            exp_result.all_metrics[seed][
+                agents_constants.COMMON.BASELINE_PREFIX +
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
 
-            for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+            for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"] = []
                 exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"] = []
                 exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX +
@@ -873,9 +876,9 @@ class DynaSecAgent(BaseAgent):
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
-        self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
-                                            emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr, log_file_path=self.training_job.log_file_path)
+        self.exp_execution = ExperimentExecution(
+            result=exp_result, config=self.experiment_config, timestamp=ts, emulation_name=emulation_name,
+            simulation_name=simulation_name, descr=descr, log_file_path=self.training_job.log_file_path)
         if self.save_to_metastore:
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
             self.exp_execution.id = exp_execution_id
@@ -914,17 +917,17 @@ class DynaSecAgent(BaseAgent):
             )
             data_collector_process.start()
             data_collector_processes.append(data_collector_process)
-            time.sleep(sleep_time/10)
+            time.sleep(sleep_time / 10)
 
         # Start emulation monitor
         emulation_monitor_process = EmulationMonitorThread(
-            exp_result=exp_result,  emulation_env_config=self.emulation_executions[0].emulation_env_config,
+            exp_result=exp_result, emulation_env_config=self.emulation_executions[0].emulation_env_config,
             sleep_time_minutes=emulation_monitor_sleep_time, seed=seed)
         emulation_monitor_process.start()
 
         # Start stats aggregation thread
         statistic_aggregation_process = EmulationStatisticsThread(
-            exp_result=exp_result,  emulation_env_config=self.emulation_executions[0].emulation_env_config,
+            exp_result=exp_result, emulation_env_config=self.emulation_executions[0].emulation_env_config,
             sleep_time=sleep_time, seed=seed, data_collector_processes=data_collector_processes)
         statistic_aggregation_process.start()
 
@@ -937,7 +940,8 @@ class DynaSecAgent(BaseAgent):
                         emulation_execution=dpc.emulation_execution, attacker_sequence=dpc.attacker_sequence,
                         defender_sequence=dpc.defender_sequence, worker_id=dpc.worker_id, sleep_time=dpc.sleep_time,
                         emulation_statistics_windowed=dpc.emulation_statistics_windowed,
-                        emulation_traces_to_save_with_data_collection_job=dpc.emulation_traces_to_save_with_data_collection_job,
+                        emulation_traces_to_save_with_data_collection_job=(
+                            dpc.emulation_traces_to_save_with_data_collection_job),
                         intrusion_start_p=dpc.intrusion_start_p
                     )
                     data_collector_processes[i].start()
@@ -945,7 +949,7 @@ class DynaSecAgent(BaseAgent):
             Logger.__call__().get_logger().info(f"[DynaSec] [warmup] "
                                                 f" completed episodes: "
                                                 f"{completed_warmup_episodes}/{warmup_episodes}")
-            time.sleep(sleep_time/2)
+            time.sleep(sleep_time / 2)
         sys_id_process = SystemIdentificationProcess(
             system_identification_config=self.system_identification_config,
             emulation_statistics=windowed_emulation_statistics.emulation_statistics,
@@ -956,7 +960,7 @@ class DynaSecAgent(BaseAgent):
         initial_system_model = sys_id_process.system_model
 
         policy_optimization_process = PolicyOptimizationProcess(
-            system_model=initial_system_model,  experiment_config=spsa_experiment_config,
+            system_model=initial_system_model, experiment_config=spsa_experiment_config,
             emulation_env_config=self.emulation_executions[0].emulation_env_config,
             simulation_env_config=self.simulation_env_config, periodic=False, sleep_time=sleep_time)
         policy_optimization_process.start()
@@ -975,7 +979,7 @@ class DynaSecAgent(BaseAgent):
         # Start policy evaluation thread
         policy_evaluation_thread = PolicyEvaluationThread(
             exp_result=exp_result, emulation_env_config=self.emulation_executions[0].emulation_env_config,
-            sleep_time=sleep_time, seed = seed, policy=policy,
+            sleep_time=sleep_time, seed=seed, policy=policy,
             emulation_statistics_thread=statistic_aggregation_process, system_model=system_model,
             baseline_system_model=initial_system_model, max_steps=max_steps,
             experiment_config=self.experiment_config, simulation_env_config=self.simulation_env_config, env=self.env,
@@ -994,12 +998,11 @@ class DynaSecAgent(BaseAgent):
 
         # Start policy optimization process
         policy_optimization_process = PolicyOptimizationProcess(
-            system_model=system_model,  experiment_config=spsa_experiment_config,
+            system_model=system_model, experiment_config=spsa_experiment_config,
             emulation_env_config=self.emulation_executions[0].emulation_env_config,
             simulation_env_config=self.simulation_env_config, periodic=True, sleep_time=sleep_time)
         policy_optimization_process.policy = initial_policy.copy()
         policy_optimization_process.start()
-
 
         # Parameter server
         training_epoch = 0
@@ -1020,23 +1023,29 @@ class DynaSecAgent(BaseAgent):
                         emulation_execution=dpc.emulation_execution, attacker_sequence=dpc.attacker_sequence,
                         defender_sequence=dpc.defender_sequence, worker_id=dpc.worker_id, sleep_time=dpc.sleep_time,
                         emulation_statistics_windowed=dpc.emulation_statistics_windowed,
-                        emulation_traces_to_save_with_data_collection_job=dpc.emulation_traces_to_save_with_data_collection_job,
+                        emulation_traces_to_save_with_data_collection_job=(
+                            dpc.emulation_traces_to_save_with_data_collection_job),
                         intrusion_start_p=dpc.intrusion_start_p
                     )
                     data_collector_processes[i].start()
             if random.random() < 0.1:
-                attacker_type = random.randint(0,2)
+                attacker_type = random.randint(0, 2)
             policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.DYNASEC.STATIC_ATTACKER_TYPE].append(
                 attacker_type)
 
-            if training_epoch % self.experiment_config.log_every == 0 and training_epoch > 0 \
-                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN]) > 0 \
-                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN]) > 0 \
-                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.AVERAGE_RETURN]) > 0 \
-                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN]) > 0 \
-                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.AVERAGE_RETURN]) > 0 \
-                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN]) > 0:
-
+            if training_epoch % self.experiment_config.log_every == 0 and (
+                    training_epoch > 0 and len(policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.AVERAGE_RETURN]) > 0
+                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN]) > 0
+                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.AVERAGE_RETURN]) > 0
+                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN]) > 0
+                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.AVERAGE_RETURN]) > 0
+                    and len(policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN]) > 0):
 
                 # Update emulation statistics for system identification
                 sys_id_process.emulation_statistics = windowed_emulation_statistics.emulation_statistics
@@ -1049,7 +1058,6 @@ class DynaSecAgent(BaseAgent):
                 # Update policy and model for evaluation
                 policy_evaluation_thread.policy = policy_optimization_process.policy
                 policy_evaluation_thread.system_model = sys_id_process.system_model
-
 
                 # Update training job
                 total_iterations = training_epochs
@@ -1071,24 +1079,43 @@ class DynaSecAgent(BaseAgent):
                 if self.save_to_metastore:
                     MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
                                                                 id=self.exp_execution.id)
-
+                J_train = policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.AVERAGE_RETURN][-1]
+                J_train_avg = policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
+                J_eval = policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.AVERAGE_RETURN][-1]
+                J_eval_avg = policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
+                J_baseline = policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.AVERAGE_RETURN][-1]
+                J_baseline_avg = policy_evaluation_thread.exp_result.all_metrics[seed][
+                    agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
                 Logger.__call__().get_logger().info(
                     f"[DynaSec] i: {training_epoch}, "
                     f"policy:{policy_evaluation_thread.policy.thresholds()} "
                     f"baseline policy:{policy_evaluation_thread.baseline_policy.thresholds()}"
-                    f"J_train:{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN][-1]}, "
+                    f"J_train:{J_train}, "
                     f"J_train_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-                    f"{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]}, "
-                    f"J_eval:{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.AVERAGE_RETURN][-1]}, "
+                    f"{J_train_avg}, "
+                    f"J_eval:{J_eval}, "
                     f"J_eval_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-                    f"{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.EVAL_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]}, "
-                    f"J_baseline:{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.AVERAGE_RETURN][-1]}, "
+                    f"{J_eval_avg}, "
+                    f"J_baseline:{J_baseline}, "
                     f"J_baseline_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}:"
-                    f"{policy_evaluation_thread.exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX + agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]}, "
+                    f"{J_baseline_avg}, "
                     f"progress: {round(progress*100,2)}%")
         return self.exp_execution
 
-    def record_metrics(self, exp_result :ExperimentResult, seed: int, metrics_dict: Dict):
+    def record_metrics(self, exp_result: ExperimentResult, seed: int, metrics_dict: Dict) -> ExperimentResult:
+        """
+        Utility function for recording the metrics of a metrics dict and importing them into the experiment result
+
+        :param exp_result: the experiment result to update
+        :param seed: the random seed of the experiment
+        :param metrics_dict: the metrics dict with the new metrics
+        :return: the updated experiment result
+        """
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(
             metrics_dict[seed][
                 agents_constants.COMMON.AVERAGE_RETURN][-1])
@@ -1116,7 +1143,7 @@ class DynaSecAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON].append(
             metrics_dict[seed][
                 agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON][-1])
-        for l in range(1,self.experiment_config.hparams[agents_constants.T_SPSA.L].value+1):
+        for l in range(1, self.experiment_config.hparams[agents_constants.T_SPSA.L].value + 1):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
                 metrics_dict[seed][
                     env_constants.ENV_METRICS.STOP + f"_{l}"][-1])
@@ -1151,8 +1178,8 @@ class DynaSecAgent(BaseAgent):
                     no_intrusion_dist[0] = sum(metric_cond.generate_distributions_for_samples(
                         samples=list(range(-len(sample_space), 1))))
                     no_intrusion_dist[1:] = metric_cond.generate_distributions_for_samples(samples=sample_space[1:])
-        intrusion_dist = list(np.array(intrusion_dist)*(1/sum(intrusion_dist)))
-        no_intrusion_dist = list(np.array(no_intrusion_dist)*(1/sum(no_intrusion_dist)))
+        intrusion_dist = list(np.array(intrusion_dist) * (1 / sum(intrusion_dist)))
+        no_intrusion_dist = list(np.array(no_intrusion_dist) * (1 / sum(no_intrusion_dist)))
         int_mean = DynaSecAgent.mean(intrusion_dist)
         no_int_mean = DynaSecAgent.mean(no_intrusion_dist)
         Z = np.array(
@@ -1189,7 +1216,7 @@ class DynaSecAgent(BaseAgent):
     def mean(prob_vector):
         m = 0
         for i in range(len(prob_vector)):
-            m += prob_vector[i]*i
+            m += prob_vector[i] * i
         return m
 
     def hparam_names(self) -> List[str]:

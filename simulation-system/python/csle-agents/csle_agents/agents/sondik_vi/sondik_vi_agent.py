@@ -27,7 +27,7 @@ class SondikVIAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the Sondik-VI agent
 
@@ -87,7 +87,6 @@ class SondikVIAgent(BaseAgent):
             if self.save_to_metastore:
                 MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
-
         # Initialize execution result
         ts = time.time()
         emulation_name = None
@@ -126,8 +125,9 @@ class SondikVIAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
-                                                                 confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
+                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
                     else:
@@ -177,14 +177,14 @@ class SondikVIAgent(BaseAgent):
         S = self.experiment_config.hparams[agents_constants.SONDIK_VI.STATE_SPACE].value
         A = self.experiment_config.hparams[agents_constants.SONDIK_VI.ACTION_SPACE].value
         b0 = self.experiment_config.hparams[agents_constants.SONDIK_VI.INITIAL_BELIEF].value
-        use_pruning = number_of_simulations = self.experiment_config.hparams[agents_constants.SONDIK_VI.USE_PRUNING].value
+        use_pruning = \
+            self.experiment_config.hparams[agents_constants.SONDIK_VI.USE_PRUNING].value
         planning_horizon = self.experiment_config.hparams[agents_constants.SONDIK_VI.PLANNING_HORIZON].value
         Logger.__call__().get_logger().info(f"Starting Sondik's value iteration,"
                                             f"discount_factor: {discount_factor}, pruning: {use_pruning}, b0: {b0}")
         alpha_vectors, num_alpha_vectors, initial_belief_values, avg_returns, running_avg_returns = \
-            self.sondik_vi(
-            P=np.array(T), R=np.array(R), n_obs=len(O), n_states=len(S), Z=np.array(Z), n_actions=len(A),
-            b0=b0, T = planning_horizon, gamma=discount_factor, eval_batch_size=eval_batch_size)
+            self.sondik_vi(P=np.array(T), R=np.array(R), n_obs=len(O), n_states=len(S), Z=np.array(Z), n_actions=len(A),
+                           b0=b0, T=planning_horizon, gamma=discount_factor, eval_batch_size=eval_batch_size)
         exp_result.all_metrics[seed][agents_constants.SONDIK_VI.INITIAL_BELIEF_VALUES] = initial_belief_values
         exp_result.all_metrics[seed][agents_constants.SONDIK_VI.NUM_ALPHA_VECTORS] = num_alpha_vectors
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = avg_returns
@@ -218,9 +218,8 @@ class SondikVIAgent(BaseAgent):
         x = list(range(n_alpha_vectors_t_plus_one))
         return [p for p in product(x, repeat=n_obs)]
 
-
     def sondik_vi(self, P, Z, R, T, gamma, n_states, n_actions, n_obs, b0, eval_batch_size: int,
-                  use_pruning = True) \
+                  use_pruning: bool = True) \
             -> Tuple[List[float], List[float], List[float], List[float], List[float]]:
         """
 
@@ -238,7 +237,8 @@ class SondikVIAgent(BaseAgent):
         :return:
         """
         alepth_t_plus_1 = set()
-        zero_alpha_vec = (-1, tuple(np.zeros(n_states))) # an alpha vector is associated with an action and a set of values
+        zero_alpha_vec = (-1, tuple(np.zeros(n_states)))  # an alpha vector is associated with an action and
+        # a set of values
         alepth_t_plus_1.add(zero_alpha_vec)
         first = True
         num_alpha_vectors = []
@@ -255,7 +255,8 @@ class SondikVIAgent(BaseAgent):
             # New set of alpha vectors which will be constructed from the previous (backwards) set aleph_t+1.
             aleph_t = set()
 
-            # Weight the alpha vectors in aleph_t by the transition probabilities alpha(s)*Z(s'|s,o)*P(s'|s,a) forall a,o,s,s'
+            # Weight the alpha vectors in aleph_t by the transition probabilities alpha(s)*Z(s'|s,o)*P(s'|s,a)
+            # forall a,o,s,s'
             # alpha'(s) = alpha(s)*Z(s'|s,o)*P(s'|s,a) forall a,o,s,s'
             alpha_new = np.zeros(shape=(len(alepth_t_plus_1), n_actions, n_obs, n_states))
             n_alpha_vectors = 0
@@ -264,11 +265,12 @@ class SondikVIAgent(BaseAgent):
                     for o in range(n_obs):
                         for s in range(n_states):
                             for s_prime in range(n_states):
-                                # Half of Sondik's one-pass DP backup, alpha'_(a,o)(s)=alpha(s')*Z(s'|s,o)*P(s'|s,a) forall a,o,s,s'
+                                # Half of Sondik's one-pass DP backup, alpha'_(a,o)(s)=alpha(s')*Z(s'|s,o)*P(s'|s,a)
+                                # forall a,o,s,s'
                                 # note that alpha(s) is a representation of $V(s)$
                                 alpha_new[n_alpha_vectors][a][o][s] += \
                                     np.array(old_alpha_vec[1][s_prime]) * Z[a][s_prime][o] * P[a][s][s_prime]
-                n_alpha_vectors +=1
+                n_alpha_vectors += 1
 
             # Compute the new alpha vectors by adding the discounted immediate rewards and the expected
             # alpha vectors at time t+1
@@ -289,7 +291,8 @@ class SondikVIAgent(BaseAgent):
                         for s in range(n_states):
                             # Second half of Sondik's one-pass DP backup,
                             # alpha_(a,o,beta)'(s) = gamma*(R(a,s) alpha_beta(s)*Z(s'|s,o)*P(s'|s,a) forall a,o,s,s')
-                            temp[s] = gamma * (R[a][s] + alpha_new[conditional_plan_to_follow_when_observing_o][a][o][s])
+                            temp[s] = gamma * (R[a][s] +
+                                               alpha_new[conditional_plan_to_follow_when_observing_o][a][o][s])
                         aleph_t.add((a, tuple(temp)))
 
             alepth_t_plus_1.update(aleph_t)
@@ -301,20 +304,18 @@ class SondikVIAgent(BaseAgent):
                 first = False
 
             if use_pruning:
-                alepth_t_plus_1 = self.prune(n_states, alepth_t_plus_1) # remove dominated alpha vectors
+                alepth_t_plus_1 = self.prune(n_states, alepth_t_plus_1)  # remove dominated alpha vectors
 
             # The optimal value function is implicitly represented by aleph^0. Note that aleph^0 is a much larger set of
             # elements than the set of states. To compute the optimal value function V^*(b0) given an initial belief b0,
             # compute
-            #V^*(b) = max_alpha b0*alpha for all alpha in aleph^0
+            # V^*(b) = max_alpha b0*alpha for all alpha in aleph^0
             max_v = -np.inf
-            best_belief_weighted_alpha = None
             for alpha in aleph_t:
                 v = np.dot(np.array(alpha[1]), b0)
 
                 if v > max_v:
                     max_v = v
-                    best_belief_weighted_alpha = alpha
             initial_values.append(max_v)
             avg_R = -1
             if len(average_returns) > 0:
@@ -333,9 +334,8 @@ class SondikVIAgent(BaseAgent):
                 average_returns, self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
             average_running_returns.append(running_avg_J)
 
-        return list(map(lambda x: x[1], list(aleph_t))), num_alpha_vectors, initial_values, average_returns, \
-               average_running_returns
-
+        return (list(map(lambda x: x[1], list(aleph_t))), num_alpha_vectors, initial_values, average_returns,
+                average_running_returns)
 
     def prune(self, n_states, aleph):
         """
@@ -396,7 +396,6 @@ class SondikVIAgent(BaseAgent):
                     Q.update({best})
         return Q
 
-
     def check_duplicate(self, a, av):
         """
         Check whether alpha vector av is already in set a
@@ -413,8 +412,7 @@ class SondikVIAgent(BaseAgent):
             if av_i[1][1] == av[1][1] and av_i[1][0] > av[1][0]:
                 return True
 
-
-    def evaluate_policy(self, policy : AlphaVectorsPolicy, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: AlphaVectorsPolicy, eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -429,9 +427,9 @@ class SondikVIAgent(BaseAgent):
             R = 0
             while not done:
                 b1 = o[1]
-                b = [1-b1, b1, 0]
+                b = [1 - b1, b1, 0]
                 a = policy.action(b)
-                o, r, done, info=self.env.step(a)
+                o, r, done, info = self.env.step(a)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)

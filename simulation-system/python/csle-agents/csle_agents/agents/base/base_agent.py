@@ -27,20 +27,18 @@ class BaseAgent(ABC):
         self.emulation_env_config = emulation_env_config
         self.experiment_config = experiment_config
         ts = time.time()
-        if self.experiment_config.output_dir[-1]== "/":
+        if self.experiment_config.output_dir[-1] == "/":
             self.experiment_config.output_dir = self.experiment_config.output_dir[0:-1]
         self.experiment_config.output_dir = self.experiment_config.output_dir + f"_{ts}/"
         try:
             if not os.path.exists(self.experiment_config.output_dir):
                 os.makedirs(self.experiment_config.output_dir)
-        except:
+        except Exception:
             Logger.__call__().get_logger().info(f"There was an error creating log dirs.")
-
 
     @abstractmethod
     def train(self) -> ExperimentExecution:
         pass
-
 
     @abstractmethod
     def hparam_names(self) -> List[str]:

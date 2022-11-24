@@ -25,7 +25,7 @@ class VIAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the value iteration agent
 
@@ -82,7 +82,6 @@ class VIAgent(BaseAgent):
             if self.save_to_metastore:
                 MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
-
         # Initialize execution result
         ts = time.time()
         emulation_name = None
@@ -99,7 +98,6 @@ class VIAgent(BaseAgent):
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
             exp_result = self.value_iteration(exp_result=exp_result, seed=seed)
-
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -122,8 +120,9 @@ class VIAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
-                                                                 confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
+                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
                     else:
@@ -244,20 +243,20 @@ class VIAgent(BaseAgent):
 
             avg_return = -1
             if iteration % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
-                policy = self.create_policy_from_value_function(num_states=num_states, num_actions=num_actions, V=V, T=T,
-                                                                discount_factor=discount_factor, R=R)
+                policy = self.create_policy_from_value_function(num_states=num_states, num_actions=num_actions, V=V,
+                                                                T=T, discount_factor=discount_factor, R=R)
                 avg_return = self.evaluate_policy(policy=policy, eval_batch_size=self.experiment_config.hparams[
                     agents_constants.COMMON.EVAL_BATCH_SIZE].value)
                 average_returns.append(avg_return)
-                running_avg_J = ExperimentUtil.running_average(average_returns,
+                running_avg_J = ExperimentUtil.running_average(
+                    average_returns,
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
                 running_average_returns.append(running_avg_J)
 
-
             if iteration % self.experiment_config.log_every == 0 and iteration > 0:
-                Logger.__call__().get_logger().info(f"[VI] i:{iteration}, delta: {delta}, theta: {theta}, "
-                                                    f"avg_return: {avg_return}")
-            iteration+=1
+                Logger.__call__().get_logger().info(f"[VI] i:{iteration}, delta: {delta}, "
+                                                    f"theta: {theta}, avg_return: {avg_return}")
+            iteration += 1
 
             # Check if we can stop
             if delta < theta:
@@ -267,7 +266,7 @@ class VIAgent(BaseAgent):
                                                         discount_factor=discount_factor, R=R)
         return V, policy, deltas, average_returns, running_average_returns
 
-    def evaluate_policy(self, policy :np.ndarray, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: np.ndarray, eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -281,7 +280,7 @@ class VIAgent(BaseAgent):
             s = self.env.reset()
             R = 0
             while not done:
-                s, r, done, info=self.env.step(policy)
+                s, r, done, info = self.env.step(policy)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)

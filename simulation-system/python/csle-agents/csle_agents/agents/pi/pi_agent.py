@@ -25,7 +25,7 @@ class PIAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the value iteration agent
 
@@ -81,7 +81,6 @@ class PIAgent(BaseAgent):
             if self.save_to_metastore:
                 MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
-
         # Initialize execution result
         ts = time.time()
         emulation_name = None
@@ -98,7 +97,6 @@ class PIAgent(BaseAgent):
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
             exp_result = self.policy_iteration(exp_result=exp_result, seed=seed)
-
 
         # Calculate average and std metrics
         exp_result.avg_metrics = {}
@@ -121,8 +119,9 @@ class PIAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
-                                                                 confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
+                        confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
                     else:
@@ -190,18 +189,20 @@ class PIAgent(BaseAgent):
         Assumes a deterministic policy (probability 1 of selecting an action in a state)
 
         Args:
-            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :P: the state transition probabilities for all actions in the MDP
+                (tensor num_actions x num_states x num_states)
             :policy: the policy (matrix num_states x num_actions)
             :num_states: the number of states
 
         Returns:
-               :P_pi: the transition probabilities in the MDP under the given policy (dimensions num_states x num_states)
+               :P_pi: the transition probabilities in the MDP under the given policy
+                      (dimensions num_states x num_states)
         """
-        P_pi = np.zeros((num_states,num_states))
+        P_pi = np.zeros((num_states, num_states))
         for i in range(0, num_states):
             action = np.where(policy[i] == 1)[0]
             P_pi[i] = P[action, i]
-            assert sum(P_pi[i]) == 1 # stochastic
+            assert sum(P_pi[i]) == 1  # stochastic
         return P_pi
 
     def expected_reward_under_policy(self, P: np.ndarray, R: np.ndarray, policy: np.ndarray, num_states: int,
@@ -211,7 +212,8 @@ class PIAgent(BaseAgent):
         in the MDP given a policy.
 
         Args:
-            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :P: the state transition probabilities for all actions in the MDP
+                (tensor num_actions x num_states x num_states)
             :policy: the policy (matrix num_states x num_actions)
             :R: the reward function in the MDP (tensor num_actions x num_states x num_states)
             :num_states: the number of states
@@ -223,8 +225,8 @@ class PIAgent(BaseAgent):
         r = np.zeros((num_states))
         for k in range(0, num_states):
             r[k] = sum(
-                [policy[k][x]*sum([np.dot(P[x][y],[R[x][y]]*num_states)
-                                   for y in range(0, num_states)])for x in range(0, num_actions)])
+                [policy[k][x] * sum([np.dot(P[x][y], [R[x][y]] * num_states)
+                                     for y in range(0, num_states)])for x in range(0, num_actions)])
         return r
 
     def policy_evaluation(self, P: np.ndarray, policy: np.ndarray, R: np.ndarray, gamma: float,
@@ -234,7 +236,8 @@ class PIAgent(BaseAgent):
         Uses the linear algebra interpretation of policy evaluation, solving it as a linear system.
 
         Args:
-            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :P: the state transition probabilities for all actions in the MDP
+                (tensor num_actions x num_states x num_states)
             :policy: the policy (matrix num_states x num_actions)
             :gamma: the discount factor
             :num_states: the number of states
@@ -246,7 +249,7 @@ class PIAgent(BaseAgent):
         P_pi = self.transition_probability_under_policy(P, policy, num_states=num_states)
         r_pi = self.expected_reward_under_policy(P, R, policy, num_states=num_states, num_actions=num_actions)
         I = np.identity(num_states)
-        v = np.dot(np.linalg.inv(I-(np.dot(gamma, P_pi))),r_pi)
+        v = np.dot(np.linalg.inv(I - (np.dot(gamma, P_pi))), r_pi)
         return v
 
     def policy_improvement(self, P: np.ndarray, R: np.ndarray, gamma: float, v: np.ndarray,
@@ -255,7 +258,8 @@ class PIAgent(BaseAgent):
         Implements the policy improvement step in the policy iteration dynamic programming algorithm.
 
         Args:
-            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :P: the state transition probabilities for all actions in the MDP
+                (tensor num_actions x num_states x num_states)
             :R: the reward function in the MDP (tensor num_actions x num_states x num_states)
             :gamma: the discount factor
             :v: the state values (dimension NUM_STATES)
@@ -266,48 +270,49 @@ class PIAgent(BaseAgent):
         Returns:
                :pi_prime: a new updated policy (dimensions num_states x num_actions)
         """
-        pi_prime = np.zeros((num_states,num_actions))
+        pi_prime = np.zeros((num_states, num_actions))
         for s in range(0, num_states):
             action_values = np.zeros(num_actions)
             for a in range(0, num_actions):
                 for s_prime in range(0, num_states):
-                    action_values[a] += P[a][s][s_prime]*(R[a][s] + gamma*v[s_prime])
+                    action_values[a] += P[a][s][s_prime] * (R[a][s] + gamma * v[s_prime])
             if(max(action_values) == 0.0):
-                pi_prime[s,np.argmax(pi[s])] = 1
+                pi_prime[s, np.argmax(pi[s])] = 1
             else:
                 best_action = np.argmax(action_values)
                 pi_prime[s][best_action] = 1
         return pi_prime
 
-    def pi(self, P: np.ndarray, policy: np.ndarray, N: int, gamma: float,
-                         R: np.ndarray, num_states: int, num_actions: int) \
-            -> Tuple[np.ndarray, np.ndarray, List[float], List[float]]:
+    def pi(self, P: np.ndarray, policy: np.ndarray, N: int, gamma: float, R: np.ndarray, num_states: int,
+           num_actions: int) -> Tuple[np.ndarray, np.ndarray, List[float], List[float]]:
         """
         The policy iteration algorithm, interleaves policy evaluation and policy improvement for N iterations.
         Guaranteed to converge to the optimal policy and value function.
 
         Args:
-            :P: the state transition probabilities for all actions in the MDP (tensor num_actions x num_states x num_states)
+            :P: the state transition probabilities for all actions in the MDP
+            (tensor num_actions x num_states x num_states)
             :policy: the policy (matrix num_states x num_actions)
             :N: the number of iterations (scalar)
             :gamma: the discount factor
             :R: the reward function in the MDP (tensor num_actions x num_states x num_states)
 
         Returns:
-               a tuple of (v, policy) where v is the state values after N iterations and policy is the policy after N iterations.
+               a tuple of (v, policy) where v is the state values after N iterations and policy is the policy
+               after N iterations.
         """
         average_returns = []
         running_average_returns = []
         for i in range(0, N):
             v = self.policy_evaluation(P, policy, R, gamma, num_states=num_states, num_actions=num_actions)
-            policy = self.policy_improvement(P, R, gamma,v, policy, num_states=num_states, num_actions=num_actions)
+            policy = self.policy_improvement(P, R, gamma, v, policy, num_states=num_states, num_actions=num_actions)
 
             if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 avg_return = self.evaluate_policy(policy=policy, eval_batch_size=self.experiment_config.hparams[
                     agents_constants.COMMON.EVAL_BATCH_SIZE].value)
                 average_returns.append(avg_return)
-                running_avg_J = ExperimentUtil.running_average(average_returns,
-                                                               self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
+                running_avg_J = ExperimentUtil.running_average(
+                    average_returns, self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
                 running_average_returns.append(running_avg_J)
 
             if i % self.experiment_config.log_every == 0 and i > 0:
@@ -315,7 +320,7 @@ class PIAgent(BaseAgent):
 
         return policy, v, average_returns, running_average_returns
 
-    def evaluate_policy(self, policy :np.ndarray, eval_batch_size: int) -> float:
+    def evaluate_policy(self, policy: np.ndarray, eval_batch_size: int) -> float:
         """
         Evalutes a tabular policy
 
@@ -329,7 +334,7 @@ class PIAgent(BaseAgent):
             s = self.env.reset()
             R = 0
             while not done:
-                s, r, done, info=self.env.step(policy)
+                s, r, done, info = self.env.step(policy)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)

@@ -28,7 +28,7 @@ class FictitiousPlayAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
                  emulation_env_config: Union[None, EmulationEnvConfig] = None,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the Fictitious play agent
 
@@ -80,7 +80,8 @@ class FictitiousPlayAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+            exp_result.all_metrics[seed][
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -106,9 +107,9 @@ class FictitiousPlayAgent(BaseAgent):
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
-        self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
-                                            emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr, log_file_path=self.training_job.log_file_path)
+        self.exp_execution = ExperimentExecution(
+            result=exp_result, config=self.experiment_config, timestamp=ts, emulation_name=emulation_name,
+            simulation_name=simulation_name, descr=descr, log_file_path=self.training_job.log_file_path)
         if self.save_to_metastore:
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
             self.exp_execution.id = exp_execution_id
@@ -148,7 +149,8 @@ class FictitiousPlayAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
@@ -280,7 +282,7 @@ class FictitiousPlayAgent(BaseAgent):
                                  avg_R=J,
                                  agent_type=AgentType.FICTITIOUS_PLAY)
         exp_result.policies[seed] = p1_policy
-        exp_result.policies[seed+1] = p2_policy
+        exp_result.policies[seed + 1] = p2_policy
         # Save policy
         if self.save_to_metastore:
             MetastoreFacade.save_vector_policy(vector_policy=p1_policy)
@@ -297,10 +299,10 @@ class FictitiousPlayAgent(BaseAgent):
         s = []
         counts_sum = sum(counts)
         for i in range(len(counts)):
-            s.append(counts[i]/counts_sum)
+            s.append(counts[i] / counts_sum)
         return s
 
-    def best_response(self, p: List[float], A: np.ndarray, maximize : bool = True) -> Tuple[np.ndarray, float]:
+    def best_response(self, p: List[float], A: np.ndarray, maximize: bool = True) -> Tuple[np.ndarray, float]:
         """
         Computes a best response against p
 
