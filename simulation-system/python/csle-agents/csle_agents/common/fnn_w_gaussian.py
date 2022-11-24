@@ -87,6 +87,7 @@ class FNNwithGaussian(torch.nn.Module):
         sigma = self.sigma_output(self.sigma_pre_output(y))
         return mu, sigma
 
+
 def test() -> None:
     """
     A basic test-case to verify that the model can fit some randomly generated data
@@ -118,7 +119,8 @@ def test() -> None:
         cov_mat = torch.diag_embed(action_std)
         dist = MultivariateNormal(action_mean, cov_mat)
         actions = dist.sample()
-        y_pred=action_mean
+        print(f"actins: {actions}")
+        y_pred = action_mean
 
         # Compute and print loss
         y = torch.tensor([0.2, 0.9])

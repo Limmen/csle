@@ -104,6 +104,7 @@ class T_FP:
     AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "average_best_response_attacker_return"
     RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "running_average_best_response_attacker_return"
 
+
 class VI:
     """
     String constants related to VI
@@ -114,6 +115,7 @@ class VI:
     NUM_STATES = "num_states"
     NUM_ACTIONS = "num_actions"
     DELTA = "delta"
+
 
 class HSVI:
     """
@@ -313,6 +315,7 @@ class SHAPLEY_ITERATION:
     ACTION_SPACE_PLAYER_1 = "action_space_player_1"
     ACTION_SPACE_PLAYER_2 = "action_space_player_2"
 
+
 class HSVI_OS_POSG:
     """
     String constants related to the HSVI algorithm for OS-POSGs
@@ -331,6 +334,7 @@ class HSVI_OS_POSG:
     WIDTHS = "widths"
     EXCESSES = "excesses"
 
+
 class FICTITIOUS_PLAY:
     """
     String constants related to fictitious play
@@ -339,6 +343,7 @@ class FICTITIOUS_PLAY:
     N = "N"
     PLAYER_1_PRIOR = "player_1_prior"
     PLAYER_2_PRIOR = "player_2_prior"
+
 
 class LP_FOR_NF_GAMES:
     """

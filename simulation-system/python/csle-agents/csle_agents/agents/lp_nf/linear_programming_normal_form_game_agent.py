@@ -29,7 +29,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig, env: Optional[gym.Env] = None,
                  emulation_env_config: Union[None, EmulationEnvConfig] = None,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore : bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
         """
         Initializes the Linar programming agent for normal-form games
 
@@ -81,7 +81,8 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON] = []
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = []
-            exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
+            exp_result.all_metrics[seed][
+                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = []
 
         # Initialize training job
         if self.training_job is None:
@@ -107,9 +108,9 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
-        self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
-                                            emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr, log_file_path=self.training_job.log_file_path)
+        self.exp_execution = ExperimentExecution(
+            result=exp_result, config=self.experiment_config, timestamp=ts, emulation_name=emulation_name,
+            simulation_name=simulation_name, descr=descr, log_file_path=self.training_job.log_file_path)
         if self.save_to_metastore:
             exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
             self.exp_execution.id = exp_execution_id
@@ -119,8 +120,9 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
-            exp_result = self.linear_programming_normal_form(exp_result=exp_result, seed=seed, training_job=self.training_job,
-                                                             random_seeds=self.experiment_config.random_seeds)
+            exp_result = self.linear_programming_normal_form(
+                exp_result=exp_result, seed=seed, training_job=self.training_job,
+                random_seeds=self.experiment_config.random_seeds)
 
             # Save latest trace
             if self.save_to_metastore:
@@ -149,7 +151,8 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[0]
                     if not math.isnan(avg):
                         avg_metrics.append(avg)
-                    ci = ExperimentUtil.mean_confidence_interval(data=seed_values,
+                    ci = ExperimentUtil.mean_confidence_interval(
+                        data=seed_values,
                         confidence=self.experiment_config.hparams[agents_constants.COMMON.CONFIDENCE_INTERVAL].value)[1]
                     if not math.isnan(ci):
                         std_metrics.append(ci)
@@ -199,7 +202,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
         A2 = np.array(self.experiment_config.hparams[agents_constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2].value)
 
         maximin_strategy, minimax_strategy, val = self.compute_equilibrium_strategies_in_matrix_game(
-            A=payoff_matrix,A1=A1, A2=A2)
+            A=payoff_matrix, A1=A1, A2=A2)
         # Log average return
         J = val
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
@@ -241,7 +244,7 @@ class LinearProgrammingNormalFormGameAgent(BaseAgent):
                                  avg_R=J,
                                  agent_type=AgentType.LINEAR_PROGRAMMING_NORMAL_FORM)
         exp_result.policies[seed] = p1_policy
-        exp_result.policies[seed+1] = p2_policy
+        exp_result.policies[seed + 1] = p2_policy
         # Save policy
         if self.save_to_metastore:
             MetastoreFacade.save_vector_policy(vector_policy=p1_policy)

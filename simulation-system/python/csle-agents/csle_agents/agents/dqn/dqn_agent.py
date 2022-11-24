@@ -33,7 +33,8 @@ class DQNAgent(BaseAgent):
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None):
-        super(DQNAgent, self).__init__(simulation_env_config=simulation_env_config, emulation_env_config=emulation_env_config,
+        super(DQNAgent, self).__init__(simulation_env_config=simulation_env_config,
+                                       emulation_env_config=emulation_env_config,
                                        experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.DQN
         self.training_job = training_job
@@ -69,9 +70,10 @@ class DQNAgent(BaseAgent):
         if self.emulation_env_config is not None:
             emulation_name = self.emulation_env_config.name
         simulation_name = self.simulation_env_config.name
-        self.exp_execution = ExperimentExecution(result=exp_result, config=self.experiment_config, timestamp=ts,
-                                            emulation_name=emulation_name, simulation_name=simulation_name,
-                                            descr=descr, log_file_path=self.training_job.log_file_path)
+        self.exp_execution = ExperimentExecution(
+            result=exp_result, config=self.experiment_config, timestamp=ts,
+            emulation_name=emulation_name, simulation_name=simulation_name,
+            descr=descr, log_file_path=self.training_job.log_file_path)
         exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id
 
@@ -98,19 +100,20 @@ class DQNAgent(BaseAgent):
                 seed=seed, exp_result=exp_result, simulation_name=self.simulation_env_config.name,
                 player_type=self.experiment_config.player_type,
                 states=self.simulation_env_config.state_space_config.states,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                                         self.experiment_config.player_idx].actions,
+                actions=(
+                    self.simulation_env_config.joint_action_space_config.action_spaces[
+                        self.experiment_config.player_idx].actions),
                 save_every=self.experiment_config.hparams[agents_constants.COMMON.SAVE_EVERY].value,
                 save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution,
                 env=orig_env, experiment_config=self.experiment_config,
                 L=self.experiment_config.hparams[agents_constants.COMMON.L].value,
-                gym_env_name = self.simulation_env_config.gym_env_name
+                gym_env_name=self.simulation_env_config.gym_env_name
             )
 
             # Create DQN Agent
             policy_kwargs = dict(
                 net_arch=[self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value
-                          ]*self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value)
+                          ] * self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value)
             model = DQN(
                 agents_constants.DQN.MLP_POLICY, env, verbose=0, policy_kwargs=policy_kwargs,
                 batch_size=self.experiment_config.hparams[agents_constants.DQN.DQN_BATCH_SIZE].value,
@@ -118,14 +121,15 @@ class DQNAgent(BaseAgent):
                 seed=seed, device=self.experiment_config.hparams[agents_constants.COMMON.DEVICE].value,
                 gamma=self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value,
                 exploration_fraction=self.experiment_config.hparams[agents_constants.DQN.EXPLORATION_FRACTION].value,
-                exploration_final_eps=
-                self.experiment_config.hparams[agents_constants.DQN.EXPLORATION_FINAL_EPS].value,
-                exploration_initial_eps=
-                self.experiment_config.hparams[agents_constants.DQN.EXPLORATION_INITIAL_EPS].value,
+                exploration_final_eps=(
+                    self.experiment_config.hparams[agents_constants.DQN.EXPLORATION_FINAL_EPS].value),
+                exploration_initial_eps=(
+                    self.experiment_config.hparams[agents_constants.DQN.EXPLORATION_INITIAL_EPS].value),
                 learning_starts=self.experiment_config.hparams[agents_constants.DQN.LEARNING_STARTS].value,
                 max_grad_norm=self.experiment_config.hparams[agents_constants.DQN.MAX_GRAD_NORM].value,
                 gradient_steps=self.experiment_config.hparams[agents_constants.DQN.GRADIENT_STEPS].value,
-                target_update_interval=self.experiment_config.hparams[agents_constants.DQN.TARGET_UPDATE_INTERVAL].value,
+                target_update_interval=(
+                    self.experiment_config.hparams[agents_constants.DQN.TARGET_UPDATE_INTERVAL].value),
                 buffer_size=self.experiment_config.hparams[agents_constants.DQN.BUFFER_SIZE].value
             )
             if self.experiment_config.player_type == PlayerType.ATTACKER:
@@ -136,7 +140,7 @@ class DQNAgent(BaseAgent):
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS].value, callback=cb)
 
             # Save policy
-            exp_result=cb.exp_result
+            exp_result = cb.exp_result
             ts = time.time()
             save_path = f"{self.experiment_config.output_dir}/dqn_policy_seed_{seed}_{ts}.zip"
             model.save(save_path)
@@ -161,7 +165,6 @@ class DQNAgent(BaseAgent):
         exp_result.avg_metrics = {}
         exp_result.std_metrics = {}
         for metric in exp_result.all_metrics[self.experiment_config.random_seeds[0]].keys():
-            running_avg = 100
             value_vectors = []
             for seed in self.experiment_config.random_seeds:
                 value_vectors.append(exp_result.all_metrics[seed][metric])
@@ -326,8 +329,8 @@ class DQNTrainingCallback(BaseCallback):
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
                     o, r, done, info = self.env.step(a)
-                    cumulative_reward +=r
-                    t+= 1
+                    cumulative_reward += r
+                    t += 1
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
                 avg_rewards.append(cumulative_reward)
 
@@ -339,9 +342,9 @@ class DQNTrainingCallback(BaseCallback):
             self.env.reset()
 
             # Update training job
-            total_steps_done = len(self.random_seeds)*self.max_steps
-            steps_done = (self.random_seeds.index(self.seed))*self.max_steps + self.num_timesteps
-            progress = round(steps_done/total_steps_done,2)
+            total_steps_done = len(self.random_seeds) * self.max_steps
+            steps_done = (self.random_seeds.index(self.seed)) * self.max_steps + self.num_timesteps
+            progress = round(steps_done / total_steps_done, 2)
             self.training_job.progress_percentage = progress
             self.training_job.experiment_result = self.exp_result
             self.training_job.simulation_traces.append(self.env.get_traces()[-1])

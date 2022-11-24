@@ -3,14 +3,15 @@ from torch.distributions import MultivariateNormal
 from fnn_w_gaussian import FNNwithGaussian
 from fnn_w_linear import FNNwithLinear
 
+
 class ActorCriticNet(torch.nn.Module):
     """
     Implements an Actor Critic with parameterizable actor and critic and number of shared layers/dim.
 
     Sub-classing the torch.nn.Module to be able to use high-level API for creating the custom network
     """
-    def __init__(self, input_dim : int, output_dim : int, hidden_dim : int, num_hidden_layers :int = 2,
-                 hidden_activation : str = "ReLU", actor: torch.nn.Module = None, critic: torch.nn.Module = None):
+    def __init__(self, input_dim: int, output_dim: int, hidden_dim: int, num_hidden_layers: int = 2,
+                 hidden_activation: str = "ReLU", actor: torch.nn.Module = None, critic: torch.nn.Module = None):
         """
         Builds the model
 
@@ -29,7 +30,7 @@ class ActorCriticNet(torch.nn.Module):
         self.num_layers = num_hidden_layers + 2
         self.hidden_activation = hidden_activation
         self.actor = actor
-        self.critic= critic
+        self.critic = critic
 
         # Define layers of FNN
         self.layers = torch.nn.ModuleList()
@@ -45,7 +46,6 @@ class ActorCriticNet(torch.nn.Module):
 
         # Shared Output layer
         self.layers.append(torch.nn.Linear(hidden_dim, self.output_dim))
-
 
     def get_hidden_activation(self):
         """
@@ -70,7 +70,7 @@ class ActorCriticNet(torch.nn.Module):
         else:
             raise ValueError("Activation type: {} not recognized".format(self.hidden_activation))
 
-    def forward(self, x, actor_only = True):
+    def forward(self, x, actor_only=True):
         """
         Forward propagation
 
@@ -110,20 +110,16 @@ def test() -> None:
     critic_activation = "ReLU"
 
     # Create model
-    actor = FNNwithGaussian(shared_output_dim, actor_output_dim,
-                                          actor_hidden_dim,
-                                          num_hidden_layers=actor_hidden_layers,
-                                          hidden_activation=actor_activation)
-    critic = FNNwithLinear(shared_output_dim, critic_output_dim,
-                                       critic_hidden_dim,
-                                       num_hidden_layers=critic_hidden_layers,
-                                       hidden_activation=critic_activation)
+    actor = FNNwithGaussian(shared_output_dim, actor_output_dim, actor_hidden_dim,
+                            num_hidden_layers=actor_hidden_layers, hidden_activation=actor_activation)
+    critic = FNNwithLinear(shared_output_dim, critic_output_dim, critic_hidden_dim,
+                           num_hidden_layers=critic_hidden_layers, hidden_activation=critic_activation)
     model = ActorCriticNet(input_dim, shared_output_dim, shared_hidden_dim, num_hidden_layers=shared_hidden_layers,
                            actor=actor, critic=critic)
 
     # Create random Tensors to hold inputs and outputs
     x = torch.randn(batch_size, input_dim)
-    y = torch.randn(batch_size, shared_output_dim)
+    # y = torch.randn(batch_size, shared_output_dim)
 
     # Construct our loss function and an Optimizer. The call to model.parameters()
     # in the SGD constructor will contain the learnable parameters of the layers in the model
@@ -137,6 +133,7 @@ def test() -> None:
         cov_mat = torch.diag_embed(action_std)
         dist = MultivariateNormal(action_mean, cov_mat)
         actions = dist.sample()
+        print(f"actions: {actions}")
         actor_pred = action_mean
 
         # Compute and print loss
@@ -146,7 +143,8 @@ def test() -> None:
         critic_loss = criterion(values, y_critic)
         total_loss = actor_loss + critic_loss
         if t % 100 == 99:
-            print("step: {}, actor loss:{}, critic loss:{}, total loss:{}".format(t, actor_loss.item(), critic_loss.item(), total_loss.item()))
+            print(f"step: {t}, actor loss:{actor_loss.item()}, critic loss:{critic_loss.item()}, "
+                  f"total loss:{total_loss.tiem()}")
 
         # Zero gradients, perform a backward pass, and update the weights.
         optimizer.zero_grad()
@@ -156,4 +154,3 @@ def test() -> None:
 
 if __name__ == '__main__':
     test()
-
