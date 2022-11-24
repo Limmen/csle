@@ -36,7 +36,7 @@ def simulations():
         return simulation_ids()
     all_simulations = MetastoreFacade.list_simulations()
     all_images = MetastoreFacade.list_simulation_images()
-    simulations_dicts= {}
+    simulations_dicts = {}
     for sim in all_simulations:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             for sim_name_img in all_images:
@@ -99,4 +99,3 @@ def get_simulation(simulation_id: int):
             SimulationEnvController.uninstall_simulation(simulation)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
-

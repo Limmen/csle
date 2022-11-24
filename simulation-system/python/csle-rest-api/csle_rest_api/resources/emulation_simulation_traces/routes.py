@@ -15,7 +15,7 @@ emulation_simulation_traces_bp = Blueprint(
 
 
 @emulation_simulation_traces_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def emulation_simulation_traces():
     """
     The /emulation-traces resource.
@@ -68,7 +68,7 @@ def emulation_simulation_traces_ids():
 
 
 @emulation_simulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def emulation_trace(trace_id: int):
     """
     The /emulation-traces/id resource.

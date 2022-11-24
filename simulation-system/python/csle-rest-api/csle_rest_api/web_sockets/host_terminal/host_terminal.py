@@ -1,6 +1,6 @@
 from flask import request
 import csle_rest_api.util.rest_api_util as rest_api_util
-from flask_socketio import SocketIO, ConnectionRefusedError
+from flask_socketio import ConnectionRefusedError
 from flask import Blueprint
 import os
 import pty
@@ -22,7 +22,7 @@ def get_host_terminal_bp(app):
     :return: the blue print
     """
 
-    def set_host_terminal_winsize(fd: int, row: int, col: int, xpix :int =0, ypix: int =0) -> None:
+    def set_host_terminal_winsize(fd: int, row: int, col: int, xpix: int = 0, ypix: int = 0) -> None:
         """
         Set shell window size of the host terminal
 
@@ -47,7 +47,8 @@ def get_host_terminal_bp(app):
             socketio.sleep(0.01)
             if app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]:
                 timeout_sec = 0
-                (data_ready, _, _) = select.select([app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]], [], [], timeout_sec)
+                (data_ready, _, _) = select.select([app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]],
+                                                   [], [], timeout_sec)
                 if data_ready:
                     output = os.read(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD], max_read_bytes).decode(
                         errors="ignore")
@@ -70,7 +71,6 @@ def get_host_terminal_bp(app):
             os.write(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD],
                      data[api_constants.MGMT_WEBAPP.INPUT_PROPERTY].encode())
 
-
     @socketio.on(api_constants.MGMT_WEBAPP.WS_RESIZE_MSG,
                  namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
     def host_terminal_resize(data) -> None:
@@ -82,11 +82,12 @@ def get_host_terminal_bp(app):
         :return: None
         """
         if app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD]:
-            set_host_terminal_winsize(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD], data[api_constants.MGMT_WEBAPP.ROWS_PROPERTY],
-                        data[api_constants.MGMT_WEBAPP.COLS_PROPERTY])
+            set_host_terminal_winsize(app.config[api_constants.MGMT_WEBAPP.HOST_TERMINAL_FD],
+                                      data[api_constants.MGMT_WEBAPP.ROWS_PROPERTY],
+                                      data[api_constants.MGMT_WEBAPP.COLS_PROPERTY])
 
-    @socketio.on(api_constants.MGMT_WEBAPP.WS_CONNECT_MSG, namespace=f"{constants.COMMANDS.SLASH_DELIM}"
-                                                                     f"{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
+    @socketio.on(api_constants.MGMT_WEBAPP.WS_CONNECT_MSG,
+                 namespace=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE}")
     def host_terminal_connect() -> None:
         """
         Handler for new websocket connection requests for the /host-terminal namespace.

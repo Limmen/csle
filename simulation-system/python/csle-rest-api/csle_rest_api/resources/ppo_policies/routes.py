@@ -15,7 +15,7 @@ ppo_policies_bp = Blueprint(
 
 
 @ppo_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def ppo_policies():
     """
     The /ppo-policies resource.
@@ -66,7 +66,7 @@ def ppo_policies_ids():
 
 
 @ppo_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def ppo_policy(policy_id: int):
     """
     The /ppo-policies/id resource.

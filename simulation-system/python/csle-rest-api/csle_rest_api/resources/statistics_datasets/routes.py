@@ -17,7 +17,7 @@ statistics_datasets_bp = Blueprint(
 
 
 @statistics_datasets_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def statistics_datasets():
     """
     The /statistics-datasets resource.
@@ -67,7 +67,7 @@ def statistics_datasets_ids():
 
 
 @statistics_datasets_bp.route("/<statistics_dataset_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def statistics_dataset(statistics_dataset_id: int):
     """
     The /statistics-datasets/id resource.
@@ -118,5 +118,3 @@ def download_dataset_file(statistics_dataset: StatisticsDataset):
     else:
         response = jsonify({})
         return response, constants.HTTPS.NOT_FOUND_STATUS_CODE
-
-

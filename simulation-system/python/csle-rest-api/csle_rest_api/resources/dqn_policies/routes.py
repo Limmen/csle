@@ -15,7 +15,7 @@ dqn_policies_bp = Blueprint(
 
 
 @dqn_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def dqn_policies():
     """
     The /dqn-policies resource.
@@ -66,7 +66,7 @@ def dqn_policies_ids():
 
 
 @dqn_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def dqn_policy(policy_id: int):
     """
     The /dqn-policies/id resource.
@@ -91,5 +91,3 @@ def dqn_policy(policy_id: int):
             MetastoreFacade.remove_dqn_policy(dqn_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response
-
-

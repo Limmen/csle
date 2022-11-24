@@ -19,7 +19,7 @@ system_identification_jobs_bp = Blueprint(
 
 
 @system_identification_jobs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def system_identification_jobs():
     """
     The /system-identification-jobs resource.
@@ -79,8 +79,8 @@ def system_identification_jobs_ids():
 
 
 @system_identification_jobs_bp.route("/<job_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-                                              api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+                                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+                                                           api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def system_identification_policy(job_id: int):
     """
     The /system-identification-jobs/id resource.

@@ -19,7 +19,7 @@ data_collection_jobs_bp = Blueprint(
 
 
 @data_collection_jobs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def data_collection_jobs():
     """
     The /data-collection-jobs resource.
@@ -78,8 +78,8 @@ def data_collection_jobs_ids():
 
 
 @data_collection_jobs_bp.route("/<job_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-                                              api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+                                                     api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+                                                     api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def data_collection_policy(job_id: int):
     """
     The /data-collection-jobs/id resource.

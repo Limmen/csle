@@ -12,8 +12,9 @@ policy_examination_page_bp = Blueprint(api_constants.MGMT_WEBAPP.POLICY_EXAMINAT
                                        url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                                   f"{api_constants.MGMT_WEBAPP.POLICY_EXAMINATION_PAGE_RESOURCE}",
                                        static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
-                                               f'{api_constants.MGMT_WEBAPP.POLICY_EXAMINATION_PAGE_RESOURCE}'
-                                               f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
+                                                       f'{api_constants.MGMT_WEBAPP.POLICY_EXAMINATION_PAGE_RESOURCE}'
+                                                       f'{constants.COMMANDS.SLASH_DELIM}'
+                                                       f'{api_constants.MGMT_WEBAPP.STATIC}',
                                        static_folder="../../../../../../management-system/csle-mgmt-webapp/build")
 
 

@@ -66,7 +66,7 @@ def docker_stats_manager_logs():
         with open(path, 'r') as fp:
             data = fp.readlines()
             tail = data[-100:]
-            data=tail
+            data = tail
     data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -94,7 +94,7 @@ def prometheus_logs():
         with open(path, 'r') as fp:
             data = fp.readlines()
             tail = data[-100:]
-            data=tail
+            data = tail
     data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -122,7 +122,7 @@ def node_exporter_logs():
         with open(path, 'r') as fp:
             data = fp.readlines()
             tail = data[-100:]
-            data=tail
+            data = tail
     data_dict = {api_constants.MGMT_WEBAPP.LOGS_PROPERTY: data}
     response = jsonify(data_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -230,10 +230,10 @@ def client_manager_logs():
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
     if emulation is not None:
-        emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, 
+        emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
-        path = emulation_env_config.traffic_config.client_population_config.client_manager_log_dir \
-               + emulation_env_config.traffic_config.client_population_config.client_manager_log_file
+        path = (emulation_env_config.traffic_config.client_population_config.client_manager_log_dir +
+                emulation_env_config.traffic_config.client_population_config.client_manager_log_file)
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
         sftp_client = emulation_env_config.get_connection(ip=ip).open_sftp()
@@ -258,7 +258,7 @@ def client_manager_logs():
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
-                   methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+               methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
 def kafka_manager_logs():
     """
     The /logs/kafka-manager resource.
@@ -281,8 +281,8 @@ def kafka_manager_logs():
     if emulation is not None:
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
-        path = emulation_env_config.kafka_config.kafka_manager_log_dir \
-               + emulation_env_config.kafka_config.kafka_manager_log_file
+        path = (emulation_env_config.kafka_config.kafka_manager_log_dir +
+                emulation_env_config.kafka_config.kafka_manager_log_file)
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
@@ -380,8 +380,8 @@ def snort_ids_manager_logs():
     if emulation is not None and ip is not None and execution_id is not None:
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
-        path = emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_dir \
-               + emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_file
+        path = (emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_dir +
+                emulation_env_config.snort_ids_manager_config.snort_ids_manager_log_file)
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
@@ -476,8 +476,8 @@ def ossec_ids_manager_logs():
     if emulation is not None and ip is not None and execution_id is not None:
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
-        path = emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_dir \
-               + emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_file
+        path = (emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_dir +
+                emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_log_file)
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
@@ -525,7 +525,7 @@ def ossec_ids_logs():
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
     if emulation is not None and ip is not None and execution_id is not None:
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
-                                                                       emulation_name=emulation).emulation_env_config        
+                                                                       emulation_name=emulation).emulation_env_config
         path = collector_constants.OSSEC.OSSEC_LOG_FILE
 
         # Connect
@@ -550,7 +550,7 @@ def ossec_ids_logs():
     else:
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE    
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
@@ -577,9 +577,8 @@ def host_ids_manager_logs():
     if emulation is not None and ip is not None and execution_id is not None:
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
-        path = emulation_env_config.host_manager_config.host_manager_log_dir \
-               + emulation_env_config.host_manager_config.host_manager_log_file
-
+        path = (emulation_env_config.host_manager_config.host_manager_log_dir +
+                emulation_env_config.host_manager_config.host_manager_log_file)
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
         sftp_client = emulation_env_config.get_connection(ip=ip).open_sftp()
@@ -627,8 +626,8 @@ def traffic_manager_logs():
     if emulation is not None and ip is not None and execution_id is not None:
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
-        path = emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip).traffic_manager_log_dir \
-               + emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip).traffic_manager_log_file
+        path = (emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip).traffic_manager_log_dir +
+                emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip).traffic_manager_log_file)
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
@@ -677,8 +676,8 @@ def elk_manager_logs():
     if emulation is not None and ip is not None and execution_id is not None:
         emulation_env_config = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                                        emulation_name=emulation).emulation_env_config
-        path = emulation_env_config.elk_config.elk_manager_log_dir \
-               + emulation_env_config.elk_config.elk_manager_log_file
+        path = (emulation_env_config.elk_config.elk_manager_log_dir +
+                emulation_env_config.elk_config.elk_manager_log_file)
 
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)

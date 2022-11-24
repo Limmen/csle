@@ -67,7 +67,7 @@ def traces_datasets_ids():
 
 
 @traces_datasets_bp.route("/<traces_dataset_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def traces_dataset(traces_dataset_id: int):
     """
     The /traces-datasets/id resource.
@@ -118,5 +118,3 @@ def download_dataset_file(traces_dataset: TracesDataset):
     else:
         response = jsonify({})
         return response, constants.HTTPS.NOT_FOUND_STATUS_CODE
-
-

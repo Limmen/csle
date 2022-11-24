@@ -142,6 +142,7 @@ def emulation_by_id(emulation_id: int):
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response
 
+
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
                      f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}',
                      methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -203,8 +204,7 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
                      f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}'
                      f'{constants.COMMANDS.SLASH_DELIM}<execution_id>'
                      f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
-                     f'{constants.COMMANDS.SLASH_DELIM}<minutes>',
-           methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+                     f'{constants.COMMANDS.SLASH_DELIM}<minutes>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
     """
     The /emulations/id/executions/id/monitor/minutes resource. Fetches monitoring data from Kafka.
@@ -294,7 +294,8 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
                                             f"{ryu_constants.RYU.STATS_TABLE_FEATURES_RESOURCE}/{dpid}")
                     tablefeatures = json.loads(response.content)[str(dpid)]
-                    tablefeatures = list(filter(lambda x: x[api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY] in filtered_table_ids, tablefeatures))
+                    tablefeatures = list(filter(
+                        lambda x: x[api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY] in filtered_table_ids, tablefeatures))
                     sw_dict[api_constants.MGMT_WEBAPP.TABLE_FEATURES_PROPERTY] = tablefeatures
                     response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
@@ -315,7 +316,8 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
                                             f"{ryu_constants.RYU.STATS_QUEUE_CONFIG_RESOURCE}/{dpid}")
-                    sw_dict[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] = json.loads(response.content)[str(dpid)][0]
+                    sw_dict[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] = \
+                        json.loads(response.content)[str(dpid)][0]
                     response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
@@ -330,7 +332,8 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
                                             f"{ryu_constants.RYU.STATS_GROUP_FEATURES_RESOURCE}/{dpid}")
-                    sw_dict[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] = json.loads(response.content)[str(dpid)][0]
+                    sw_dict[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] = \
+                        json.loads(response.content)[str(dpid)][0]
                     response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
@@ -340,12 +343,14 @@ def get_sdn_switches_of_execution(emulation_id: int, exec_id: int):
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
                                             f"{ryu_constants.RYU.STATS_METER_CONFIG_RESOURCE}/{dpid}")
-                    sw_dict[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] = json.loads(response.content)[str(dpid)]
+                    sw_dict[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] = \
+                        json.loads(response.content)[str(dpid)]
                     response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"
                                             f"{ryu_constants.RYU.STATS_METER_FEATURES_RESOURCE}/{dpid}")
-                    sw_dict[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] = json.loads(response.content)[str(dpid)][0]
+                    sw_dict[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] = \
+                        json.loads(response.content)[str(dpid)][0]
                     response = requests.get(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                                             f"{exec.emulation_env_config.sdn_controller_config.container.get_ips()[0]}:"
                                             f"{exec.emulation_env_config.sdn_controller_config.controller_web_api_port}"

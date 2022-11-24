@@ -14,7 +14,7 @@ emulation_statistics_bp = Blueprint(
 
 
 @emulation_statistics_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def emulation_statistics():
     """
     The /emulation-statistics resource.
@@ -65,7 +65,7 @@ def emulation_statistics_ids():
 
 
 @emulation_statistics_bp.route("/<statistics_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def emulation_statistic(statistics_id: int):
     """
     The /emulation-statistics/id resource.

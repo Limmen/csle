@@ -15,7 +15,7 @@ fnn_w_softmax_policies_bp = Blueprint(
 
 
 @fnn_w_softmax_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def fnn_w_softmax_policies():
     """
     The /fnn-w-softmax-policies resource.
@@ -30,7 +30,8 @@ def fnn_w_softmax_policies():
         return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-        # Check if ids query parameter is True, then only return the ids and not the whole list of FNN-w-softmax policies
+        # Check if ids query parameter is True, then only return the ids and not the whole
+        # list of FNN-w-softmax policies
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return fnn_w_softmax_policies_ids()
@@ -66,7 +67,7 @@ def fnn_w_softmax_policies_ids():
 
 
 @fnn_w_softmax_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                          api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def fnn_w_softmax_policy(policy_id: int):
     """
     The /fnn-w-softmax-policies/id resource.
@@ -91,4 +92,3 @@ def fnn_w_softmax_policy(policy_id: int):
             MetastoreFacade.remove_fnn_w_softmax_policy(fnn_w_softmax_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
-

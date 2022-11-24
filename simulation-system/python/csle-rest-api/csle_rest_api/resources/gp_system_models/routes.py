@@ -15,7 +15,7 @@ gp_system_models_bp = Blueprint(
 
 
 @gp_system_models_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def gp_system_models():
     """
     The /gp-system-models resource.
@@ -67,7 +67,7 @@ def gp_system_models_ids():
 
 
 @gp_system_models_bp.route("/<model_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                          api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def gp_system_model(model_id: int):
     """
     The /system-models/id resource.

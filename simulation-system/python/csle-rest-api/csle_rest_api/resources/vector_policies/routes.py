@@ -15,7 +15,7 @@ vector_policies_bp = Blueprint(
 
 
 @vector_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def vector_policies():
     """
     The /vector-policies resource.

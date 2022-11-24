@@ -15,7 +15,7 @@ multi_threshold_policies_bp = Blueprint(
 
 
 @multi_threshold_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def multi_threshold_policies():
     """
     The /multi-threshold-policies resource.
@@ -67,7 +67,7 @@ def multi_threshold_policies_ids():
 
 
 @multi_threshold_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def multi_threshold_policy(policy_id: int):
     """
     The /multi-threshold-policies/id resource.
@@ -89,4 +89,3 @@ def multi_threshold_policy(policy_id: int):
             MetastoreFacade.remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
-

@@ -25,7 +25,7 @@ def images():
     if authorized is not None:
         return authorized
 
-    images=ContainerController.list_all_images()
+    images = ContainerController.list_all_images()
     images_dicts = []
     for img in images:
         images_dicts.append(

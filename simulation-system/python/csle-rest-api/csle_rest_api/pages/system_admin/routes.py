@@ -9,10 +9,10 @@ import csle_rest_api.constants.constants as api_constants
 # Creates a blueprint "sub application" of the main REST app
 system_admin_page_bp = Blueprint(api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE, __name__,
                                  url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
-                                       f"{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}",
+                                            f"{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}",
                                  static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
-                                            f'{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}'
-                                            f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
+                                                 f'{api_constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE}'
+                                                 f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
                                  static_folder="../../../../../../management-system/csle-mgmt-webapp/build")
 
 

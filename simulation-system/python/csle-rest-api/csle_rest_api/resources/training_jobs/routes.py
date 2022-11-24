@@ -19,7 +19,7 @@ training_jobs_bp = Blueprint(
 
 
 @training_jobs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                     api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def training_jobs():
     """
     The /training-jobs resource.

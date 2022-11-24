@@ -12,7 +12,7 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 # Creates a blueprint "sub application" of the main REST app
 node_exporter_bp = Blueprint(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE, __name__,
                              url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
-                                     f"{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}")
+                                        f"{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}")
 
 
 @node_exporter_bp.route("",

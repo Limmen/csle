@@ -66,7 +66,7 @@ def tabular_policies_ids():
 
 
 @tabular_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def tabular_policy(policy_id: int):
     """
     The /tabular-policies/id resource.

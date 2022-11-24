@@ -15,7 +15,7 @@ simulation_traces_bp = Blueprint(
 
 
 @simulation_traces_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                         api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def simulation_traces():
     """
     The /simulation-traces resource.
@@ -66,7 +66,7 @@ def simulation_traces_ids():
 
 
 @simulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def simulation_trace(trace_id: int):
     """
     The /simulation-traces/id resource.

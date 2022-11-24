@@ -12,13 +12,9 @@ emulations_page_bp = Blueprint(api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURC
                                url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                           f"{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}",
                                static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
-                                       f'{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}'
-                                       f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
+                                               f'{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}'
+                                               f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
                                static_folder="../../../../../../management-system/csle-mgmt-webapp/build")
-
-
-def get_bp():
-    pass
 
 
 @emulations_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])

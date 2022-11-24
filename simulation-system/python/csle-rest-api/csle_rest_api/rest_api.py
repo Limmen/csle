@@ -72,13 +72,17 @@ def create_app(static_folder: str):
     app = Flask(__name__, static_url_path='', static_folder=static_folder)
 
     app.register_blueprint(emulations_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE}")
     app.register_blueprint(simulations_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SIMULATIONS_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.SIMULATIONS_PAGE_RESOURCE}")
     app.register_blueprint(traces_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE}")
     app.register_blueprint(monitoring_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE}")
     app.register_blueprint(emulation_statistics_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}")
@@ -99,7 +103,8 @@ def create_app(static_folder: str):
     app.register_blueprint(grafana_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}")
     app.register_blueprint(images_page_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE}")
     app.register_blueprint(jobs_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.JOBS_PAGE_RESOURCE}")
     app.register_blueprint(node_exporter_bp,
@@ -112,7 +117,8 @@ def create_app(static_folder: str):
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.POLICY_EXAMINATION_PAGE_RESOURCE}")
     app.register_blueprint(prometheus_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}")
     app.register_blueprint(training_page_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.TRAINING_PAGE_RESOURCE}")
@@ -141,12 +147,14 @@ def create_app(static_folder: str):
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE}")
     app.register_blueprint(emulations_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
     app.register_blueprint(emulation_executions_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}")
     app.register_blueprint(simulations_bp,
-                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}")
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}")
     app.register_blueprint(images_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}")
     app.register_blueprint(emulation_traces_bp,
@@ -261,8 +269,8 @@ def start_server(static_folder: str, port: int = 7777, num_threads: int = 100, h
     :return: None
     """
     # from subprocess import run
-    # run(f"gunicorn -b {host}:{port} 'csle_rest_api.rest_api:create_app() --workers 4 --threads {num_threads}'".split(' '))
-    #gunicorn -b 0.0.0.0:5000 --workers 4 --threads num_threads module:app
+    # run(f"gunicorn -b {host}:{port} 'csle_rest_api.rest_api:create_app() --workers 4 --threads
+    # {num_threads}'".split(' '))
+    # gunicorn -b 0.0.0.0:5000 --workers 4 --threads num_threads module:app
     app = create_app(static_folder=static_folder)
     socketio.run(app, debug=False, port=port, host=host)
-

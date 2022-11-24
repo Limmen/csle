@@ -64,8 +64,9 @@ def alpha_vec_policies_ids():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@alpha_vec_policies_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                      api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@alpha_vec_policies_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<policy_id>",
+                             methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                      api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def alpha_vec_policy(policy_id: int):
     """
     The /alpha=vec-policies/id resource.

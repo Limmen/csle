@@ -237,7 +237,6 @@ def start_stop_client_population(execution_id: int):
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -287,7 +286,6 @@ def start_stop_client_producer(execution_id: int):
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -456,6 +454,7 @@ def start_stop_kafka_manager(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
 
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
@@ -818,7 +817,8 @@ def start_stop_ossec_ids_monitor(execution_id: int):
                 Logger.__call__().get_logger().info(
                     f"Stopping OSSEC IDS monitors with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
+                OSSECIDSController.stop_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config,
+                                                                 ip=ip)
         if start:
             if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
                 Logger.__call__().get_logger().info(
@@ -830,7 +830,8 @@ def start_stop_ossec_ids_monitor(execution_id: int):
                 Logger.__call__().get_logger().info(
                     f"Starting OSSEC IDS monitor with IP: {ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config, ip=ip)
+                OSSECIDSController.start_ossec_ids_monitor_thread(emulation_env_config=execution.emulation_env_config,
+                                                                  ip=ip)
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -1055,7 +1056,6 @@ def start_stop_elk_manager(execution_id: int):
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -1105,7 +1105,6 @@ def start_stop_elk_stack(execution_id: int):
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -1157,7 +1156,6 @@ def start_stop_elastic(execution_id: int):
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -1179,7 +1177,6 @@ def start_stop_elastic(execution_id: int):
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-
 
 
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
@@ -1209,7 +1206,6 @@ def start_stop_logstash(execution_id: int):
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -1260,7 +1256,6 @@ def start_stop_kibana(execution_id: int):
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
-        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
         stop = json_data[api_constants.MGMT_WEBAPP.STOP_PROPERTY]
         if stop:
@@ -1324,8 +1319,10 @@ def start_stop_traffic_manager(execution_id: int):
                 Logger.__call__().get_logger().info(
                     f"Stopping traffic manager with ip: {ip} on emulation: {execution.emulation_env_config.name}, "
                     f"execution id: {execution.ip_first_octet}")
-                TrafficController.stop_traffic_manager(emulation_env_config=execution.emulation_env_config,
-                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip))
+                TrafficController.stop_traffic_manager(
+                    emulation_env_config=execution.emulation_env_config,
+                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                        ip=ip))
         if start:
             if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
                 Logger.__call__().get_logger().info(
@@ -1338,7 +1335,8 @@ def start_stop_traffic_manager(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 TrafficController.start_traffic_manager(
                     emulation_env_config=execution.emulation_env_config,
-                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip))
+                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                        ip=ip))
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -1391,7 +1389,8 @@ def start_stop_traffic_generator(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 TrafficController.stop_internal_traffic_generator(
                     emulation_env_config=execution.emulation_env_config,
-                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip))
+                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                        ip=ip))
         if start:
             if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
                 Logger.__call__().get_logger().info(
@@ -1404,7 +1403,8 @@ def start_stop_traffic_generator(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 TrafficController.start_internal_traffic_generator(
                     emulation_env_config=execution.emulation_env_config,
-                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(ip=ip),
+                    node_traffic_config=execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                        ip=ip),
                     container=execution.emulation_env_config.containers_config.get_container_from_ip(ip=ip))
         execution_info = EmulationEnvController.get_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
