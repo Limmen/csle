@@ -1,13 +1,13 @@
 from typing import Tuple, Union, Dict, Any
 import csle_collector.constants.constants as constants
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
-import csle_collector.docker_stats_manager.docker_stats_manager_pb2
+from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 
 
 class DockerStatsUtil:
 
     @staticmethod
-    def calculate_cpu_percent(stats_dict : dict) -> float:
+    def calculate_cpu_percent(stats_dict: dict) -> float:
         """
         Calculates the CPU utilization percentage
 
@@ -17,18 +17,18 @@ class DockerStatsUtil:
         cpu_count = len(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
                             constants.DOCKER_STATS.PERCPU_USAGE])
         cpu_percent = 0.0
-        cpu_delta = float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
-                              constants.DOCKER_STATS.TOTAL_USAGE]) - \
-                    float(stats_dict[constants.DOCKER_STATS.PRECPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
-                              constants.DOCKER_STATS.TOTAL_USAGE])
-        system_delta = float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE]) - \
-                       float(stats_dict[constants.DOCKER_STATS.PRECPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE])
+        cpu_delta = (float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
+                               constants.DOCKER_STATS.TOTAL_USAGE]) -
+                     float(stats_dict[constants.DOCKER_STATS.PRECPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
+                               constants.DOCKER_STATS.TOTAL_USAGE]))
+        system_delta = (float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE]) -
+                        float(stats_dict[constants.DOCKER_STATS.PRECPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE]))
         if system_delta > 0.0:
             cpu_percent = cpu_delta / system_delta * 100.0 * cpu_count
         return cpu_percent
 
     @staticmethod
-    def calculate_cpu_percent2(stats_dict: dict, previous_cpu :float, previous_system: float) \
+    def calculate_cpu_percent2(stats_dict: dict, previous_cpu: float, previous_system: float) \
             -> Tuple[Union[float, any], float, float]:
         """
         Calculates the CPU utilization percentage when precpu is broken in later versions of Docker
@@ -49,8 +49,8 @@ class DockerStatsUtil:
             online_cpus = stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.ONLINE_CPUS]
         else:
             if constants.DOCKER_STATS.CPU_USAGE in stats_dict[constants.DOCKER_STATS.CPU_STATS]:
-                if constants.DOCKER_STATS.PERCPU_USAGE in stats_dict[
-                    constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]:
+                if constants.DOCKER_STATS.PERCPU_USAGE in \
+                        stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]:
                     online_cpus = len(stats_dict[constants.DOCKER_STATS.CPU_STATS][
                                           constants.DOCKER_STATS.CPU_USAGE][constants.DOCKER_STATS.PERCPU_USAGE])
         if system_delta > 0.0:
@@ -97,7 +97,7 @@ class DockerStatsUtil:
         return r, t
 
     @staticmethod
-    def graceful_chain_get(stats_dict : dict, *args, default=None):
+    def graceful_chain_get(stats_dict: dict, *args, default=None):
         """
         Wrapper to handle errors
 
@@ -110,7 +110,7 @@ class DockerStatsUtil:
         for a in args:
             try:
                 t = t[a]
-            except (KeyError, ValueError, TypeError) as ex:
+            except (KeyError, ValueError, TypeError):
                 return default
         return t
 
@@ -132,7 +132,8 @@ class DockerStatsUtil:
         mem_total = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.LIMIT]
         mem_total = round(mem_total/1000000, 1)
         try:
-            cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total, cpu_system)
+            cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total,
+                                                                                        cpu_system)
         except KeyError:
             cpu_percent = DockerStatsUtil.calculate_cpu_percent(stats_dict)
 
@@ -152,9 +153,7 @@ class DockerStatsUtil:
         return DockerStats.from_dict(parsed_stats_dict)
 
     @staticmethod
-    def docker_stats_monitor_dto_to_dict(
-            docker_stats_monitor_dto: csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO) \
-            -> Dict[str, Any]:
+    def docker_stats_monitor_dto_to_dict(docker_stats_monitor_dto: DockerStatsMonitorDTO) -> Dict[str, Any]:
         """
         Converts a docker_stats_monitor_dto to a dict
 
@@ -174,26 +173,24 @@ class DockerStatsUtil:
         return d
 
     @staticmethod
-    def docker_stats_monitor_dto_from_dict(d: Dict[str, Any]) \
-            -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
+    def docker_stats_monitor_dto_from_dict(d: Dict[str, Any]) -> DockerStatsMonitorDTO:
         """
         Converts a dict representation of a DockerStatsMonitorDTO to a DTO
 
         :param d: the dict to convert
         :return: the converted DTO
         """
-        docker_stats_monitor_dto = csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO()
+        docker_stats_monitor_dto = DockerStatsMonitorDTO()
         docker_stats_monitor_dto.num_monitors = d["num_monitors"]
         docker_stats_monitor_dto.emulations = d["emulations"]
         docker_stats_monitor_dto.emulation_executions = d["emulation_executions"]
         return docker_stats_monitor_dto
 
     @staticmethod
-    def docker_stats_monitor_dto_empty() \
-            -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
+    def docker_stats_monitor_dto_empty() -> DockerStatsMonitorDTO:
         """
         :return: an empty DockerStatsMonitorDTO
         """
-        docker_stats_monitor_dto = csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO()
+        docker_stats_monitor_dto = DockerStatsMonitorDTO()
         docker_stats_monitor_dto.num_monitors = 0
         return docker_stats_monitor_dto

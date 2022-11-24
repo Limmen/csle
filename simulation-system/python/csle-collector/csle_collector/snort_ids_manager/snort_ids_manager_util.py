@@ -6,6 +6,7 @@ from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAl
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.constants.constants as constants
 
+
 class SnortIdsManagerUtil:
     """
     Class with utility functions related to the Snort IDS Manager
@@ -44,7 +45,7 @@ class SnortIdsManagerUtil:
         fast_logs = []
         year = datetime.datetime.now().year
         for line in output.decode().split("\n"):
-            if line != None and line != "" and line != " ":
+            if line is not None and line != "" and line != " ":
                 a_str = line.replace("\n", "")
                 fast_logs.append(SnortIdsAlert.fast_log_parse(a_str, year=year))
         return fast_logs
@@ -65,7 +66,7 @@ class SnortIdsManagerUtil:
         alerts = []
         year = datetime.datetime.now().year
         for line in output.decode().split("\n"):
-            if line != "" and line != None and line != " ":
+            if line != "" and line is not None and line != " ":
                 a_str = line.replace("\n", "")
                 alerts.append(SnortIdsAlert.parse_from_str(a_str, year=year))
         if len(alerts) == 0:
@@ -75,7 +76,7 @@ class SnortIdsManagerUtil:
             p.wait()
             alerts = []
             for line in output.decode().split("\n"):
-                if line != "" and line != None and line != " ":
+                if line != "" and line is not None and line != " ":
                     a_str = line.replace("\n", "")
                     alerts.append(SnortIdsAlert.parse_from_str(a_str, year=year))
             if len(alerts) == 0:
@@ -86,7 +87,7 @@ class SnortIdsManagerUtil:
             return alerts[0].timestamp
 
     @staticmethod
-    def read_snort_ids_data(episode_last_alert_ts : datetime) -> SnortIdsAlertCounters:
+    def read_snort_ids_data(episode_last_alert_ts: datetime) -> SnortIdsAlertCounters:
         """
         Measures metrics from the Snort ids
 
@@ -270,7 +271,7 @@ class SnortIdsManagerUtil:
         snort_ids_log_dto.attempted_dos_alerts = 0
         snort_ids_log_dto.attempted_recon_alerts = 0
         snort_ids_log_dto.bad_unknown_alerts = 0
-        snort_ids_log_dto.default_login_attempt_alerts =0
+        snort_ids_log_dto.default_login_attempt_alerts = 0
         snort_ids_log_dto.denial_of_service_alerts = 0
         snort_ids_log_dto.misc_attack_alerts = 0
         snort_ids_log_dto.non_standard_protocol_alerts = 0
@@ -309,4 +310,3 @@ class SnortIdsManagerUtil:
         snort_ids_monitor_dto.monitor_running = False
         snort_ids_monitor_dto.snort_ids_running = False
         return snort_ids_monitor_dto
-

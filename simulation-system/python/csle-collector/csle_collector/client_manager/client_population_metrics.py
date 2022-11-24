@@ -8,7 +8,7 @@ class ClientPopulationMetrics:
     DTO representing information about the client population
     """
 
-    def __init__(self, ip: str= "", ts: float = time.time(), num_clients: int = 0, rate: float = 20):
+    def __init__(self, ip: str = "", ts: float = time.time(), num_clients: int = 0, rate: float = 20):
         """
         Initializes the DTO
 
@@ -31,7 +31,7 @@ class ClientPopulationMetrics:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = ClientPopulationMetrics(ts = float(parts[0]), ip=parts[1], num_clients=int(parts[2]),
+        obj = ClientPopulationMetrics(ts=float(parts[0]), ip=parts[1], num_clients=int(parts[2]),
                                       rate=float(parts[3]))
         return obj
 
@@ -44,9 +44,9 @@ class ClientPopulationMetrics:
         """
         parts = record.split(",")
         self.ts = float(parts[0])
-        self.ip=parts[1]
-        self.num_clients=int(parts[2])
-        self.rate=float(parts[3])
+        self.ip = parts[1]
+        self.num_clients = int(parts[2])
+        self.rate = float(parts[3])
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ClientPopulationMetrics":
@@ -104,7 +104,7 @@ class ClientPopulationMetrics:
         :param stats_prime: the stats object to compare with
         :return: the deltas and the labels
         """
-        deltas = [int(stats_prime.num_clients- self.num_clients), float(stats_prime.rate-self.rate)]
+        deltas = [int(stats_prime.num_clients - self.num_clients), float(stats_prime.rate-self.rate)]
         labels = ["num_clients", "rate"]
         return deltas, labels
 

@@ -52,19 +52,17 @@ class DockerStats:
         :param parsed_stats_dict: the dict to parse
         :return: the parsed DockerStats object
         """
-        return DockerStats(
-            pids = parsed_stats_dict[constants.DOCKER_STATS.PIDS],
-            timestamp=parsed_stats_dict[constants.DOCKER_STATS.TIMESTAMP],
-            cpu_percent=parsed_stats_dict[constants.DOCKER_STATS.CPU_PERCENT],
-            mem_current=parsed_stats_dict[constants.DOCKER_STATS.MEM_CURRENT],
-            mem_total=parsed_stats_dict[constants.DOCKER_STATS.MEM_TOTAL],
-            mem_percent=parsed_stats_dict[constants.DOCKER_STATS.MEM_PERCENT],
-            blk_read=parsed_stats_dict[constants.DOCKER_STATS.BLK_READ],
-            blk_write=parsed_stats_dict[constants.DOCKER_STATS.BLK_WRITE],
-            net_rx=parsed_stats_dict[constants.DOCKER_STATS.NET_RX],
-            net_tx=parsed_stats_dict[constants.DOCKER_STATS.NET_TX],
-            container_name = parsed_stats_dict[constants.DOCKER_STATS.CONTAINER_NAME]
-        )
+        return DockerStats(pids=parsed_stats_dict[constants.DOCKER_STATS.PIDS],
+                           timestamp=parsed_stats_dict[constants.DOCKER_STATS.TIMESTAMP],
+                           cpu_percent=parsed_stats_dict[constants.DOCKER_STATS.CPU_PERCENT],
+                           mem_current=parsed_stats_dict[constants.DOCKER_STATS.MEM_CURRENT],
+                           mem_total=parsed_stats_dict[constants.DOCKER_STATS.MEM_TOTAL],
+                           mem_percent=parsed_stats_dict[constants.DOCKER_STATS.MEM_PERCENT],
+                           blk_read=parsed_stats_dict[constants.DOCKER_STATS.BLK_READ],
+                           blk_write=parsed_stats_dict[constants.DOCKER_STATS.BLK_WRITE],
+                           net_rx=parsed_stats_dict[constants.DOCKER_STATS.NET_RX],
+                           net_tx=parsed_stats_dict[constants.DOCKER_STATS.NET_TX],
+                           container_name=parsed_stats_dict[constants.DOCKER_STATS.CONTAINER_NAME])
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -93,9 +91,8 @@ class DockerStats:
                f"blk_read: {self.blk_read}MB, blk_write: {self.blk_write}MB, net_rx: {self.net_rx}MB, " \
                f"net_tx: {self.net_tx}MB, container_name: {self.container_name}"
 
-
     @staticmethod
-    def compute_averages(stats_list : List["DockerStats"]) -> "DockerStats":
+    def compute_averages(stats_list: List["DockerStats"]) -> "DockerStats":
         """
         Compute average stats from a list
 
@@ -138,7 +135,7 @@ class DockerStats:
         avg_net_tx = float("{:.1f}".format(float(sum_net_tx / len(stats_list))))
 
         ts = stats_list[0].timestamp
-        container_name=stats_list[0].container_name
+        container_name = stats_list[0].container_name
 
         return DockerStats(pids=avg_pids, timestamp=ts, cpu_percent=avg_cpu_percent, mem_current=avg_mem_current,
                            mem_total=avg_mem_total, mem_percent=avg_mem_percent,
@@ -154,12 +151,10 @@ class DockerStats:
         :return: the created DTO
         """
         parts = record.split(",")
-        obj= DockerStats(
-            ts=float(parts[0]), ip=parts[1], cpu_percent=float(parts[2]), mem_current=float(parts[3]),
-            mem_total = float(parts[4]), mem_percent=float(parts[5]), blk_read=float(parts[6]),
-            blk_write=float(parts[7]), net_rx=float(parts[8]), net_tx=float(parts[9]),
-            container_name="", pids=int(round(float(parts[10]))), timestamp=str(parts[0])
-        )
+        obj = DockerStats(ts=float(parts[0]), ip=parts[1], cpu_percent=float(parts[2]), mem_current=float(parts[3]),
+                          mem_total=float(parts[4]), mem_percent=float(parts[5]), blk_read=float(parts[6]),
+                          blk_write=float(parts[7]), net_rx=float(parts[8]), net_tx=float(parts[9]), container_name="",
+                          pids=int(round(float(parts[10]))), timestamp=str(parts[0]))
         return obj
 
     def update_with_kafka_record(self, record: str) -> None:
@@ -170,19 +165,19 @@ class DockerStats:
         :return: None
         """
         parts = record.split(",")
-        self.ts=float(parts[0])
-        self.ip=parts[1]
-        self.cpu_percent=float(parts[2])
-        self.mem_current=float(parts[3])
+        self.ts = float(parts[0])
+        self.ip = parts[1]
+        self.cpu_percent = float(parts[2])
+        self.mem_current = float(parts[3])
         self.mem_total = float(parts[4])
-        self.mem_percent=float(parts[5])
-        self.blk_read=float(parts[6])
-        self.blk_write=float(parts[7])
-        self.net_rx=float(parts[8])
-        self.net_tx=float(parts[9])
-        self.container_name=""
-        self.pids=int(round(float(parts[10])))
-        self.timestamp=str(parts[0])
+        self.mem_percent = float(parts[5])
+        self.blk_read = float(parts[6])
+        self.blk_write = float(parts[7])
+        self.net_rx = float(parts[8])
+        self.net_tx = float(parts[9])
+        self.container_name = ""
+        self.pids = int(round(float(parts[10])))
+        self.timestamp = str(parts[0])
 
     def update_with_kafka_record_ip(self, record: str, ip: str) -> None:
         """
@@ -194,19 +189,19 @@ class DockerStats:
         """
         parts = record.split(",")
         if parts[1] == ip:
-            self.ts=float(parts[0])
-            self.ip=parts[1]
-            self.cpu_percent=float(parts[2])
-            self.mem_current=float(parts[3])
+            self.ts = float(parts[0])
+            self.ip = parts[1]
+            self.cpu_percent = float(parts[2])
+            self.mem_current = float(parts[3])
             self.mem_total = float(parts[4])
-            self.mem_percent=float(parts[5])
-            self.blk_read=float(parts[6])
-            self.blk_write=float(parts[7])
-            self.net_rx=float(parts[8])
-            self.net_tx=float(parts[9])
-            self.container_name=""
-            self.pids=int(round(float(parts[10])))
-            self.timestamp=str(parts[0])
+            self.mem_percent = float(parts[5])
+            self.blk_read = float(parts[6])
+            self.blk_write = float(parts[7])
+            self.net_rx = float(parts[8])
+            self.net_tx = float(parts[9])
+            self.container_name = ""
+            self.pids = int(round(float(parts[10])))
+            self.timestamp = str(parts[0])
 
     def to_kafka_record(self, ip: str) -> str:
         """
@@ -228,9 +223,8 @@ class DockerStats:
         """
         c = DockerStats(
             pids=self.pids, timestamp=self.timestamp, cpu_percent=self.cpu_percent, mem_current=self.mem_current,
-            mem_total=self.mem_total, mem_percent=self.mem_percent, blk_read = self.blk_read, blk_write=self.blk_write,
-            net_rx=self.net_rx, net_tx = self.net_tx, container_name=self.container_name, ip=self.ip, ts=self.ts
-        )
+            mem_total=self.mem_total, mem_percent=self.mem_percent, blk_read=self.blk_read, blk_write=self.blk_write,
+            net_rx=self.net_rx, net_tx=self.net_tx, container_name=self.container_name, ip=self.ip, ts=self.ts)
         return c
 
     def get_deltas(self, stats_prime: "DockerStats") -> Tuple[List[float], List[str]]:

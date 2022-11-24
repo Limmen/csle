@@ -20,7 +20,7 @@ def get_ossec_ids_monitor_status(
 
 
 def start_ossec_ids_monitor(stub: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub,
-                            kafka_ip : str, kafka_port: int, log_file_path: str, time_step_len_seconds: int,
+                            kafka_ip: str, kafka_port: int, log_file_path: str, time_step_len_seconds: int,
                             timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
     """

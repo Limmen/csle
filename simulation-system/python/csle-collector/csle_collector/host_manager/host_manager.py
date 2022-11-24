@@ -93,7 +93,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         return host_metrics_dto
 
     def startHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StartHostMonitorMsg,
-                     context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
+                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
         """
         Starts the Host monitor thread
 
@@ -107,13 +107,11 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         if self.host_monitor_thread is not None:
             self.host_monitor_thread.running = False
         self.host_monitor_thread = HostMonitorThread(kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
-                                                   ip=self.ip, hostname=self.hostname,
-                                                   time_step_len_seconds=request.time_step_len_seconds)
+                                                     ip=self.ip, hostname=self.hostname,
+                                                     time_step_len_seconds=request.time_step_len_seconds)
         self.host_monitor_thread.start()
         logging.info(f"Started the HostMonitor thread")
-        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(
-            running = True
-        )
+        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=True)
 
     def stopHostMonitor(self, request: csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg,
                         context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
@@ -126,12 +124,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         """
         if self.host_monitor_thread is not None:
             self.host_monitor_thread.running = False
-        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(
-            running = False
-        )
+        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=False)
 
     def getHostMonitorStatus(self, request: csle_collector.host_manager.host_manager_pb2.GetHostMonitorStatusMsg,
-                            context: grpc.ServicerContext) \
+                             context: grpc.ServicerContext) \
             -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
         """
         Gets the status of the Host Monitor thread
@@ -143,12 +139,10 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         running = False
         if self.host_monitor_thread is not None:
             running = self.host_monitor_thread.running
-        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(
-            running = running
-        )
+        return csle_collector.host_manager.host_manager_pb2.HostMonitorDTO(running=running)
 
 
-def serve(port : int = 50049, log_dir: str = "/", max_workers: int = 10,
+def serve(port: int = 50049, log_dir: str = "/", max_workers: int = 10,
           log_file_name: str = "host_manager.log") -> None:
     """
     Starts the gRPC server for managing clients

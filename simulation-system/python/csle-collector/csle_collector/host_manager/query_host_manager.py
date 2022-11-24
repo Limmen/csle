@@ -21,7 +21,8 @@ def get_host_monitor_status(
 
 
 def start_host_monitor(stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
-        kafka_ip : str, kafka_port: int, time_step_len_seconds: int, timeout=constants.GRPC.TIMEOUT_SECONDS) \
+                       kafka_ip: str, kafka_port: int, time_step_len_seconds: int,
+                       timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_collector.host_manager.host_manager_pb2.HostMonitorDTO:
     """
     Sends a request to the Host manager to start the Host monitor thread

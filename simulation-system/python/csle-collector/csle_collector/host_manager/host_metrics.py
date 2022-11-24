@@ -40,15 +40,9 @@ class HostMetrics:
         """
         ts = time.time()
         return csle_collector.host_manager.host_manager_pb2.HostMetricsDTO(
-            num_logged_in_users = self.num_logged_in_users,
-            num_failed_login_attempts = self.num_failed_login_attempts,
-            num_open_connections = self.num_open_connections,
-            num_login_events = self.num_login_events,
-            num_processes = self.num_processes,
-            num_users = self.num_users,
-            ip = ip,
-            timestamp = ts
-        )
+            num_logged_in_users=self.num_logged_in_users, num_failed_login_attempts=self.num_failed_login_attempts,
+            num_open_connections=self.num_open_connections, num_login_events=self.num_login_events,
+            num_processes=self.num_processes, num_users=self.num_users, ip=ip, timestamp=ts)
 
     def to_kafka_record(self, ip: str) -> str:
         """
@@ -72,11 +66,9 @@ class HostMetrics:
         """
         parts = record.split(",")
         obj = HostMetrics(
-            ip = parts[1], ts=float(parts[0]),
-            num_logged_in_users=int(parts[2]), num_failed_login_attempts=int(parts[3]),
-            num_open_connections=int(parts[4]),
-            num_login_events=int(parts[5]), num_processes=int(parts[6]), num_users=int(parts[7])
-        )
+            ip=parts[1], ts=float(parts[0]), num_logged_in_users=int(parts[2]), num_failed_login_attempts=int(parts[3]),
+            num_open_connections=int(parts[4]), num_login_events=int(parts[5]), num_processes=int(parts[6]),
+            num_users=int(parts[7]))
         return obj
 
     def update_with_kafka_record(self, record: str, ip: str) -> None:
@@ -90,13 +82,13 @@ class HostMetrics:
         parts = record.split(",")
         if parts[1] == ip:
             self.ip = parts[1]
-            self.ts=float(parts[0]),
-            self.num_logged_in_users=int(parts[2])
-            self.num_failed_login_attempts=int(parts[3])
-            self.num_open_connections=int(parts[4])
-            self.num_login_events=int(parts[5])
-            self.num_processes=int(parts[6])
-            self.num_users=int(parts[7])
+            self.ts = float(parts[0]),
+            self.num_logged_in_users = int(parts[2])
+            self.num_failed_login_attempts = int(parts[3])
+            self.num_open_connections = int(parts[4])
+            self.num_login_events = int(parts[5])
+            self.num_processes = int(parts[6])
+            self.num_users = int(parts[7])
 
     def __str__(self) -> str:
         """
@@ -154,7 +146,6 @@ class HostMetrics:
         )
         return c
 
-
     def get_deltas(self, stats_prime: "HostMetrics") -> Tuple[List[float], List[str]]:
         """
         Get the deltas between two stats objects
@@ -165,7 +156,7 @@ class HostMetrics:
         """
         deltas = [
             int(stats_prime.num_logged_in_users - self.num_logged_in_users),
-            int(stats_prime.num_failed_login_attempts -self.num_failed_login_attempts),
+            int(stats_prime.num_failed_login_attempts - self.num_failed_login_attempts),
             int(stats_prime.num_open_connections - self.num_open_connections),
             int(stats_prime.num_login_events - self.num_login_events),
             int(stats_prime.num_processes - self.num_processes),
@@ -174,7 +165,6 @@ class HostMetrics:
         labels = ["num_logged_in_users", "num_failed_login_attempts", "num_open_connections",
                   "num_login_events", "num_processes", "num_users"]
         return deltas, labels
-
 
     def get_values(self) -> Tuple[List[float], List[str]]:
         """
@@ -206,4 +196,3 @@ class HostMetrics:
         :return: get the schema of the DTO
         """
         return HostMetrics()
-

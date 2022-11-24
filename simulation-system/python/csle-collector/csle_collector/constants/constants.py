@@ -3,14 +3,16 @@ Constants for csle collector
 """
 import re
 
-LATEST_VERSION  = "latest"
+LATEST_VERSION = "latest"
 INSTALL = "sudo /root/miniconda3/bin/pip install -U csle-collector"
+
 
 class GRPC:
     """
     Constants related to GRPC
     """
     TIMEOUT_SECONDS = 30
+
 
 class LOG_FILES:
     """
@@ -120,26 +122,30 @@ class OSSEC:
     OSSEC_ALERT_RULE_ID_TO_DESCR[6] = "Low relevance attack - They indicate a worm or a virus that have no affect to " \
                                       "the system (like code red for apache servers, etc). " \
                                       "They also include frequently IDS events and frequently errors."
-    OSSEC_ALERT_RULE_ID_TO_DESCR[7] = "'Bad word' matching. They include words like 'bad', 'error', etc. These events " \
+    OSSEC_ALERT_RULE_ID_TO_DESCR[7] = "'Bad word' matching. They include words like 'bad', " \
+                                      "'error', etc. These events " \
                                       "are most of the time unclassified and may have some security relevance."
     OSSEC_ALERT_RULE_ID_TO_DESCR[8] = "First time seen - Include first time seen events. First time an IDS event is " \
                                       "fired or the first time an user logged in. If you just started using OSSEC " \
                                       "HIDS these messages will probably be frequently. After a while they should " \
-                                      "go away, It also includes security relevant actions (like the starting of a sniffer or something like that)."
+                                      "go away, It also includes security relevant actions " \
+                                      "(like the starting of a sniffer or something like that)."
     OSSEC_ALERT_RULE_ID_TO_DESCR[9] = "Error from invalid source - Include attempts to login as an unknown user or " \
                                       "from an invalid source. May have security relevance (specially if repeated). " \
                                       "They also include errors regarding the “admin” (root) account."
-    OSSEC_ALERT_RULE_ID_TO_DESCR[10] = "Multiple user generated errors - They include multiple bad passwords, multiple " \
-                                       "failed logins, etc. They may indicate an attack or may just be that a user " \
+    OSSEC_ALERT_RULE_ID_TO_DESCR[10] = "Multiple user generated errors - They include multiple bad passwords, " \
+                                       "multiple failed logins, etc. " \
+                                       "They may indicate an attack or may just be that a user " \
                                        "just forgot his credentials."
-    OSSEC_ALERT_RULE_ID_TO_DESCR[11] = "Integrity checking warning - They include messages regarding the modification " \
-                                       "" \
-                                       "of binaries or the presence of rootkits (by rootcheck). If you just modified " \
-                                       "your system configuration you should be fine regarding the “syscheck” messages. " \
+    OSSEC_ALERT_RULE_ID_TO_DESCR[11] = "Integrity checking warning - They include messages regarding the " \
+                                       "modification of binaries or the presence of rootkits (by rootcheck). " \
+                                       "If you just modified your system configuration you should be fine " \
+                                       "regarding the “syscheck” messages. " \
                                        "They may indicate a successful attack. Also included IDS events that " \
                                        "will be ignored (high number of repetitions)."
     OSSEC_ALERT_RULE_ID_TO_DESCR[12] = "High importancy event - They include error or warning messages from the " \
-                                       "system, kernel, etc. They may indicate an attack against a specific application."
+                                       "system, kernel, etc. They may indicate an attack against a " \
+                                       "specific application."
     OSSEC_ALERT_RULE_ID_TO_DESCR[13] = "Unusual error (high importance) - Most of the times it matches a " \
                                        "common attack pattern."
     OSSEC_ALERT_RULE_ID_TO_DESCR[14] = "High importance security event. Most of the times done with correlation and " \
@@ -256,6 +262,7 @@ class SNORT_IDS_ROUTER:
     CHECK_IF_SNORT_IS_RUNNING_CMD = "ps -aux | grep snort.conf"
     SEARCH_SNORT_RUNNING = "/etc/snort/snort.conf"
 
+
 class HOST_METRICS:
     """
     Constants related to the defender's sensor commands
@@ -272,18 +279,18 @@ class ELK_CONFIG:
     """
     Constants related to the ELK container configuration
     """
-    NETWORK_ID_THIRD_OCTET=253
-    NETWORK_ID_FOURTH_OCTET=252
-    SUFFIX="_1"
+    NETWORK_ID_THIRD_OCTET = 253
+    NETWORK_ID_FOURTH_OCTET = 252
+    SUFFIX = "_1"
 
 
 class KAFKA_CONFIG:
     """
     Constants related to the kafka container configuration
     """
-    NETWORK_ID_THIRD_OCTET=253
-    NETWORK_ID_FOURTH_OCTET=253
-    SUFFIX="_1"
+    NETWORK_ID_THIRD_OCTET = 253
+    NETWORK_ID_FOURTH_OCTET = 253
+    SUFFIX = "_1"
     CLIENT_POPULATION_TOPIC_NAME = "client_population"
     SNORT_IDS_LOG_TOPIC_NAME = "snort_ids_log"
     OSSEC_IDS_LOG_TOPIC_NAME = "ossec_ids_log"
@@ -299,27 +306,28 @@ class KAFKA_CONFIG:
     DEFENDER_ACTIONS_TOPIC_NAME = "defender_actions"
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients", "rate"]
     SNORT_IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
-                                "inappropriate-content", "policy-violation", "shellcode-detect", "successful-admin",
-                                "successful-user", "trojan-activity", "unsuccessful-user", "web-application-attack",
-                                "attempted-dos", "attempted-recon", "bad-unknown", "default-login-attempt",
-                                "denial-of-service", "misc-attack", "non-standard-protocol", "rpc-portmap-decode",
-                                "successful-dos", "successful-recon-largescale", "successful-recon-limited",
-                                "suspicious-filename-detect", "suspicious-login", "system-call-detect",
-                                "unusual-client-port-connection", "web-application-activity", "icmp-event",
-                                "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
-                                "string-detect",
-                                "unknown", "tcp-connection", "priority_1", "priority_2", "priority_3", "priority_4",
-                                      "alerts_weighted_by_priority", "total_alerts, severe_alerts", "warning_alerts"]
-    OSSEC_IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip",
-        "total_alerts", "warning_alerts", "severe_alerts", "alerts_weighted_by_level",
-        "level_0_alerts", "level_1_alerts",
-        "level_2_alerts", "level_3_alerts", "level_4_alerts", "level_5_alerts", "level_6_alerts", "level_7_alerts",
-        "level_8_alerts", "level_9_alerts", "level_10_alerts", "level_11_alerts", "level_12_alerts",
-        "level_13_alerts", "level_14_alerts", "level_15_alerts",
-        "invalid_login_alerts", "authentication_success_alerts", "authentication_failed_alerts",
-        "connection_attempt_alerts", "attacks_alerts", "adduser_alerts", "sshd_alerts", "ids_alerts",
-        "firewall_alerts", "squid_alerts", "apache_alerts", "syslog_alerts"
-    ]
+                                      "inappropriate-content", "policy-violation", "shellcode-detect",
+                                      "successful-admin",  "successful-user", "trojan-activity", "unsuccessful-user",
+                                      "web-application-attack", "attempted-dos", "attempted-recon", "bad-unknown",
+                                      "default-login-attempt", "denial-of-service", "misc-attack",
+                                      "non-standard-protocol", "rpc-portmap-decode", "successful-dos",
+                                      "successful-recon-largescale", "successful-recon-limited",
+                                      "suspicious-filename-detect", "suspicious-login", "system-call-detect",
+                                      "unusual-client-port-connection", "web-application-activity", "icmp-event",
+                                      "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
+                                      "string-detect", "unknown", "tcp-connection", "priority_1", "priority_2",
+                                      "priority_3",  "priority_4", "alerts_weighted_by_priority", "total_alerts",
+                                      "severe_alerts", "warning_alerts"]
+    OSSEC_IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "total_alerts", "warning_alerts", "severe_alerts",
+                                      "alerts_weighted_by_level", "level_0_alerts", "level_1_alerts",
+                                      "level_2_alerts", "level_3_alerts", "level_4_alerts", "level_5_alerts",
+                                      "level_6_alerts", "level_7_alerts", "level_8_alerts", "level_9_alerts",
+                                      "level_10_alerts", "level_11_alerts", "level_12_alerts", "level_13_alerts",
+                                      "level_14_alerts", "level_15_alerts", "invalid_login_alerts",
+                                      "authentication_success_alerts", "authentication_failed_alerts",
+                                      "connection_attempt_alerts", "attacks_alerts", "adduser_alerts", "sshd_alerts",
+                                      "ids_alerts",  "firewall_alerts", "squid_alerts",
+                                      "apache_alerts", "syslog_alerts"]
     HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
@@ -340,13 +348,12 @@ class KAFKA_CONFIG:
                                                 "total_num_flows"]
     AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES = [
         "timestamp", "datapath_id",  "total_num_packets", "total_num_bytes", "avg_duration_nanoseconds",
-        "avg_duration_seconds",
-        "avg_hard_timeout", "avg_idle_timeout", "avg_priority", "avg_cookie"]
+        "avg_duration_seconds", "avg_hard_timeout", "avg_idle_timeout", "avg_priority", "avg_cookie"]
     AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES = [
-        "timestamp", "datapath_id", "total_num_received_packets", "total_num_received_bytes", "total_num_received_errors",
-        "total_num_transmitted_packets", "total_num_transmitted_bytes", "total_num_transmitted_errors",
-        "total_num_received_dropped",
-        "total_num_transmitted_dropped", "total_num_received_frame_errors", "total_num_received_overrun_errors",
+        "timestamp", "datapath_id", "total_num_received_packets", "total_num_received_bytes",
+        "total_num_received_errors", "total_num_transmitted_packets", "total_num_transmitted_bytes",
+        "total_num_transmitted_errors", "total_num_received_dropped", "total_num_transmitted_dropped",
+        "total_num_received_frame_errors", "total_num_received_overrun_errors",
         "total_num_received_crc_errors", "total_num_collisions", "avg_duration_nanoseconds", "avg_duration_seconds"]
 
     SNORT_IDS_ALERTS_LABELS = [
@@ -390,10 +397,10 @@ class KAFKA_CONFIG:
         "cpu_percent", "cpu_percent"
     ]
     CLIENT_POPULATION_METRIC_LABELS = ["num_clients", "rate"]
-    ALL_DELTA_LABELS = SNORT_IDS_ALERTS_LABELS + HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + \
-                       DOCKER_STATS_PERCENT_LABELS + CLIENT_POPULATION_METRIC_LABELS + OSSEC_IDS_ALERTS_LABELS
-    ALL_INITIAL_LABELS = HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + DOCKER_STATS_PERCENT_LABELS \
-                         + CLIENT_POPULATION_METRIC_LABELS + SNORT_IDS_ALERTS_LABELS + OSSEC_IDS_ALERTS_LABELS
+    ALL_DELTA_LABELS = (SNORT_IDS_ALERTS_LABELS + HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS +
+                        DOCKER_STATS_PERCENT_LABELS + CLIENT_POPULATION_METRIC_LABELS + OSSEC_IDS_ALERTS_LABELS)
+    ALL_INITIAL_LABELS = (HOST_METRICS_LABELS + DOCKER_STATS_COUNTER_LABELS + DOCKER_STATS_PERCENT_LABELS +
+                          CLIENT_POPULATION_METRIC_LABELS + SNORT_IDS_ALERTS_LABELS + OSSEC_IDS_ALERTS_LABELS)
 
 
 class KAFKA:
@@ -427,4 +434,3 @@ class ELK:
     ELASTICSEARCH_STATUS = "service elasticsearch status"
     KIBANA_STATUS = "service kibana status"
     LOGSTASH_STATUS = "service logstash status"
-

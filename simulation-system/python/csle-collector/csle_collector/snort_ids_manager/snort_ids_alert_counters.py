@@ -54,8 +54,10 @@ class SnortIdsAlertCounters:
                 self.class_alerts[a.class_id] += 1
 
         self.total_alerts = len(alerts)
-        self.severe_alerts = sum(self.priority_alerts[0:constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD])
-        self.warning_alerts = sum(self.priority_alerts[constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD:])
+        self.severe_alerts = sum(
+            self.priority_alerts[0:constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD])
+        self.warning_alerts = sum(
+            self.priority_alerts[constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD:])
         self.alerts_weighted_by_priority = 0
         for idx in range(len(self.priority_alerts)):
             priority = (5-idx+1)
@@ -118,8 +120,7 @@ class SnortIdsAlertCounters:
         """
         ts = time.time()
         total_counters = [ts, ip, self.total_alerts, self.warning_alerts, self.severe_alerts,
-                          self.alerts_weighted_by_priority] \
-                         + self.class_alerts + self.priority_alerts
+                          self.alerts_weighted_by_priority] + self.class_alerts + self.priority_alerts
         record_str = ",".join(list(map(lambda x: str(x), total_counters)))
         return record_str
 
@@ -175,7 +176,7 @@ class SnortIdsAlertCounters:
             total_alerts=self.total_alerts,
             warning_alerts=self.warning_alerts,
             severe_alerts=self.severe_alerts,
-            alerts_weighted_by_priority = self.alerts_weighted_by_priority
+            alerts_weighted_by_priority=self.alerts_weighted_by_priority
         )
 
     def __str__(self) -> str:

@@ -81,7 +81,7 @@ class DockerStatsThread(threading.Thread):
                     record = aggregated_stats.to_kafka_record(ip=self.ip)
                     self.producer.produce(constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME, record)
                     self.producer.poll(0)
-                    for k,v in avg_stats_dict.items():
+                    for k, v in avg_stats_dict.items():
                         ip = self.get_ip(k)
                         record = v.to_kafka_record(ip=ip)
                         self.producer.produce(constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME, record)
@@ -96,7 +96,8 @@ class DockerStatsThread(threading.Thread):
                         self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
                     self.stats_queues[parsed_stats.container_name].append(parsed_stats)
             except BaseException as e:
-                logging.warning(f"Exception in monitor thread for emulation: {self.emulation}, exception: {str(e)}, {repr(e)}")
+                logging.warning(f"Exception in monitor thread for emulation: "
+                                f"{self.emulation}, exception: {str(e)}, {repr(e)}")
 
     def get_ip(self, container_name: str) -> str:
         """
@@ -117,7 +118,7 @@ class DockerStatsThread(threading.Thread):
         """
         avg_stats = {}
         avg_stats_l = []
-        for k,v in self.stats_queues.items():
+        for k, v in self.stats_queues.items():
             avg_stat = DockerStats.compute_averages(list(v))
             avg_stats[k] = avg_stat
             avg_stats_l.append(avg_stat)
@@ -132,8 +133,8 @@ class DockerStatsThread(threading.Thread):
         return aggregated_stats, avg_stats
 
 
-class DockerStatsManagerServicer(
-    csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerServicer):
+class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.
+                                 DockerStatsManagerServicer):
     """
     gRPC server for managing a the docker statsm monitor server.
     Allows to start/stop the docker stats monitor remotely and also to query the
@@ -176,9 +177,8 @@ class DockerStatsManagerServicer(
         emulation_executions = list(set(emulation_executions))
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
         docker_stats_monitor_dto = csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(
-            num_monitors = len(self.docker_stats_monitor_threads),
-            emulations=emulations, emulation_executions= emulation_executions
-        )
+            num_monitors=len(self.docker_stats_monitor_threads), emulations=emulations,
+            emulation_executions=emulation_executions)
         return docker_stats_monitor_dto
 
     def stopDockerStatsMonitor(
@@ -195,15 +195,15 @@ class DockerStatsManagerServicer(
 
         new_docker_stats_monitor_threads = []
         for dsmt in self.docker_stats_monitor_threads:
-            if dsmt.emulation == request.emulation and dsmt.execution_first_ip_octet == request.execution_first_ip_octet:
+            if dsmt.emulation == request.emulation \
+                    and dsmt.execution_first_ip_octet == request.execution_first_ip_octet:
                 dsmt.stopped = True
             else:
                 if dsmt.is_alive() and not dsmt.stopped:
                     new_docker_stats_monitor_threads.append(dsmt)
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
         return csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(
-            num_monitors = len(self.docker_stats_monitor_threads)
-        )
+            num_monitors=len(self.docker_stats_monitor_threads))
 
     def startDockerStatsMonitor(
             self, request: csle_collector.docker_stats_manager.docker_stats_manager_pb2.StartDockerStatsMonitorMsg,
@@ -221,7 +221,8 @@ class DockerStatsManagerServicer(
         # Stop any existing thread with the same name
         new_docker_stats_monitor_threads = []
         for dsmt in self.docker_stats_monitor_threads:
-            if dsmt.emulation == request.emulation and dsmt.execution_first_ip_octet == request.execution_first_ip_octet:
+            if dsmt.emulation == request.emulation and \
+                    dsmt.execution_first_ip_octet == request.execution_first_ip_octet:
                 dsmt.stopped = True
             else:
                 if dsmt.is_alive():
@@ -240,8 +241,7 @@ class DockerStatsManagerServicer(
                 new_docker_stats_monitor_threads.append(dsmt)
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
         return csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO(
-            num_monitors = len(self.docker_stats_monitor_threads)
-        )
+            num_monitors=len(self.docker_stats_monitor_threads))
 
 
 def serve(port: int = 50046, log_dir: str = "/var/log/csle/", max_workers: int = 10,

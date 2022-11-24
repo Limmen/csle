@@ -44,8 +44,8 @@ class ClientThread(threading.Thread):
         while not done:
             cmd = self.commands[cmd_index]
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
-            p_status = p.wait()
+            p.communicate()
+            p.wait()
             time.sleep(self.time_step_len_seconds)
             time_lapsed = time.time() - start
             if time_lapsed >= self.service_time:
@@ -64,7 +64,7 @@ class ArrivalThread(threading.Thread):
 
     def __init__(self, commands: List[str], time_step_len_seconds: float = 1, lamb: float = 10, mu: float = 0.1,
                  num_commands: int = 2, sine_modulated: bool = False,
-                 time_scaling_factor : float = 0.01, period_scaling_factor: float = 20):
+                 time_scaling_factor: float = 0.01, period_scaling_factor: float = 20):
         """
         Initializes the arrival thread
 
@@ -191,8 +191,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         logging.basicConfig(filename=f"{constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE}", level=logging.INFO)
 
-    def getClients(self, request: csle_collector.client_manager.client_manager_pb2.GetClientsMsg, context: grpc.ServicerContext) \
-            -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+    def getClients(self, request: csle_collector.client_manager.client_manager_pb2.GetClientsMsg,
+                   context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Gets the state of the clients
 
@@ -215,14 +215,10 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             producer_active = True
             producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
 
-
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
-            num_clients = num_clients,
-            client_process_active = client_process_active,
-            producer_active=producer_active,
-            clients_time_step_len_seconds = clients_time_step_len_seconds,
-            producer_time_step_len_seconds = producer_time_step_len_seconds
-        )
+            num_clients=num_clients, client_process_active=client_process_active, producer_active=producer_active,
+            clients_time_step_len_seconds=clients_time_step_len_seconds,
+            producer_time_step_len_seconds=producer_time_step_len_seconds)
         return clients_dto
 
     def stopClients(self, request: csle_collector.client_manager.client_manager_pb2.StopClientsMsg,
@@ -250,12 +246,9 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
 
         return csle_collector.client_manager.client_manager_pb2.ClientsDTO(
-            num_clients = 0,
-            client_process_active = False,
-            producer_active = producer_active,
-            clients_time_step_len_seconds = clients_time_step_len_seconds,
-            producer_time_step_len_seconds = producer_time_step_len_seconds
-        )
+            num_clients=0, client_process_active=False, producer_active=producer_active,
+            clients_time_step_len_seconds=clients_time_step_len_seconds,
+            producer_time_step_len_seconds=producer_time_step_len_seconds)
 
     def startClients(self, request: csle_collector.client_manager.client_manager_pb2.StartClientsMsg,
                      context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
@@ -280,8 +273,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         if request.time_step_len_seconds <= 0:
             request.time_step_len_seconds = 1
 
-        arrival_thread = ArrivalThread(commands = request.commands,
-                                       time_step_len_seconds=request.time_step_len_seconds,
+        arrival_thread = ArrivalThread(commands=request.commands, time_step_len_seconds=request.time_step_len_seconds,
                                        lamb=request.lamb, mu=request.mu, sine_modulated=request.sine_modulated,
                                        time_scaling_factor=request.time_scaling_factor,
                                        period_scaling_factor=request.period_scaling_factor)
@@ -295,16 +287,13 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
 
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
-            num_clients = len(self.arrival_thread.client_threads),
-            client_process_active = True,
-            producer_active = producer_active,
-            clients_time_step_len_seconds = clients_time_step_len_seconds,
-            producer_time_step_len_seconds = producer_time_step_len_seconds
-        )
+            num_clients=len(self.arrival_thread.client_threads), client_process_active=True,
+            producer_active=producer_active, clients_time_step_len_seconds=clients_time_step_len_seconds,
+            producer_time_step_len_seconds=producer_time_step_len_seconds)
         return clients_dto
 
     def startProducer(self, request: csle_collector.client_manager.client_manager_pb2.StartProducerMsg,
-                     context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+                      context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Starts/Restarts the producer thread that pushes data to Kafka
 
@@ -337,16 +326,13 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
 
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
-            num_clients = num_clients,
-            client_process_active = client_process_active,
-            producer_active = True,
-            clients_time_step_len_seconds = clients_time_step_len_seconds,
-            producer_time_step_len_seconds = request.time_step_len_seconds
-        )
+            num_clients=num_clients, client_process_active=client_process_active, producer_active=True,
+            clients_time_step_len_seconds=clients_time_step_len_seconds,
+            producer_time_step_len_seconds=request.time_step_len_seconds)
         return clients_dto
 
     def stopProducer(self, request: csle_collector.client_manager.client_manager_pb2.StopProducerMsg,
-                      context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+                     context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Stops the producer thread that pushes data to Kafka
 
@@ -371,16 +357,12 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
 
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
-            num_clients = num_clients,
-            client_process_active = client_process_active,
-            producer_active = False,
-            clients_time_step_len_seconds = clients_time_step_len_seconds,
-            producer_time_step_len_seconds = 0
-        )
+            num_clients=num_clients, client_process_active=client_process_active, producer_active=False,
+            clients_time_step_len_seconds=clients_time_step_len_seconds, producer_time_step_len_seconds=0)
         return clients_dto
 
 
-def serve(port : int = 50044, log_dir: str = "/", log_file_name: str = "client_manager.log",
+def serve(port: int = 50044, log_dir: str = "/", log_file_name: str = "client_manager.log",
           max_workers: int = 10) -> None:
     """
     Starts the gRPC server for managing clients
@@ -405,4 +387,3 @@ def serve(port : int = 50044, log_dir: str = "/", log_file_name: str = "client_m
 # Program entrypoint
 if __name__ == '__main__':
     serve()
-

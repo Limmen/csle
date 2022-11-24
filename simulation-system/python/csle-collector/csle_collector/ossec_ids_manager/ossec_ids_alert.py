@@ -21,8 +21,8 @@ class OSSECIDSAlert:
         :param user: the user of the alert
         """
         self.timestamp = timestamp
-        self.groups= groups
-        self.group_ids= list(map(lambda x: self.get_group_id(x), groups))
+        self.groups = groups
+        self.group_ids = list(map(lambda x: self.get_group_id(x), groups))
         self.host = host
         self.ip = ip
         self.rule_id = rule_id
@@ -48,8 +48,8 @@ class OSSECIDSAlert:
         :return: a string representation of the DTO
         """
         return f"ts: {self.timestamp}, groups: {self.groups}, host: {self.host}, ip: {self.ip}, " \
-               f"rule_id: {self.rule_id}, level: {self.level}, descr: {self.descr}, src: {self.src}, user: {self.user}," \
-               f"group_ids: {self.group_ids}"
+               f"rule_id: {self.rule_id}, level: {self.level}, descr: {self.descr}, src: {self.src}, " \
+               f"user: {self.user}, group_ids: {self.group_ids}"
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "OSSECIDSAlert":
@@ -84,6 +84,3 @@ class OSSECIDSAlert:
         :return: a copy of the DTO
         """
         return OSSECIDSAlert.from_dict(self.to_dict())
-
-
-

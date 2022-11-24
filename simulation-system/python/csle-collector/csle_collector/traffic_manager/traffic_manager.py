@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import List
 import logging
 import os
 import subprocess
@@ -93,7 +93,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
             f.write(script_file)
 
     def getTrafficStatus(self, request: csle_collector.traffic_manager.traffic_manager_pb2.GetTrafficStatusMsg,
-                       context: grpc.ServicerContext) \
+                         context: grpc.ServicerContext) \
             -> csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO:
         """
         Gets the state of the traffic manager
@@ -136,7 +136,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
                      f"commands:{request.commands}")
         commands = request.commands
         sleep_time = request.sleepTime
-        self._create_traffic_script(commands = commands, sleep_time=sleep_time)
+        self._create_traffic_script(commands=commands, sleep_time=sleep_time)
         cmd = constants.TRAFFIC_GENERATOR.START_TRAFFIC_GENERATOR_CMD
         os.system(cmd)
         script_file_str = self._read_traffic_script()
@@ -145,7 +145,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         return traffic_dto
 
 
-def serve(port : int = 50043, log_dir: str = "/", max_workers: int = 10,
+def serve(port: int = 50043, log_dir: str = "/", max_workers: int = 10,
           log_file_name: str = "traffic_manager.log") -> None:
     """
     Starts the gRPC server for managing traffic scripts

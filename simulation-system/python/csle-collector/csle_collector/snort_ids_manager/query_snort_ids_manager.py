@@ -21,7 +21,7 @@ def get_snort_ids_monitor_status(
 
 
 def start_snort_ids_monitor(stub: csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub,
-                            kafka_ip : str, kafka_port: int, log_file_path: str, time_step_len_seconds: int,
+                            kafka_ip: str, kafka_port: int, log_file_path: str, time_step_len_seconds: int,
                             timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
     """

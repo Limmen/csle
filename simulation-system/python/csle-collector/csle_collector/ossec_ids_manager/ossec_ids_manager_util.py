@@ -34,7 +34,7 @@ class OSSecManagerUtil:
         desc = " "
         src = " "
         user = " "
-        linesmatched=0
+        linesmatched = 0
         for line in output.decode().split("\n"):
             linematched = 0
 
@@ -101,7 +101,7 @@ class OSSecManagerUtil:
         return alerts
 
     @staticmethod
-    def read_ossec_ids_data(episode_last_alert_ts : float) -> OSSECIdsAlertCounters:
+    def read_ossec_ids_data(episode_last_alert_ts: float) -> OSSECIdsAlertCounters:
         """
         Measures metrics from the OSSEC ids
 
@@ -244,7 +244,6 @@ class OSSecManagerUtil:
         ossec_ids_log_dto.apache_alerts = d["apache_alerts"]
         ossec_ids_log_dto.syslog_alerts = d["syslog_alerts"]
         return ossec_ids_log_dto
-
 
     @staticmethod
     def ossec_ids_log_dto_empty() \

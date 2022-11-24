@@ -82,7 +82,8 @@ class OSSECIdsAlertCounters:
         for i in range(6, len(set(constants.OSSEC.OSSEC_ALERT_RULE_ID_TO_DESCR.keys())) + 6):
             obj.level_alerts.append(int(round(float(parts[i]))))
         for i in range(len(set(constants.OSSEC.OSSEC_ALERT_RULE_ID_TO_DESCR.keys())) + 6,
-                       len(set(constants.OSSEC.OSSEC_IDS_ALERT_GROUP_ID.values())) + len(set(constants.OSSEC.OSSEC_ALERT_RULE_ID_TO_DESCR.keys())) + 6):
+                       len(set(constants.OSSEC.OSSEC_IDS_ALERT_GROUP_ID.values())) +
+                       len(set(constants.OSSEC.OSSEC_ALERT_RULE_ID_TO_DESCR.keys())) + 6):
             obj.group_alerts.append(int(round(float(parts[i]))))
         return obj
 
@@ -119,8 +120,7 @@ class OSSECIdsAlertCounters:
         """
         ts = time.time()
         total_counters = [ts, ip, self.total_alerts, self.warning_alerts, self.severe_alerts,
-                          self.alerts_weighted_by_level] \
-                         + self.group_alerts + self.level_alerts
+                          self.alerts_weighted_by_level] + self.group_alerts + self.level_alerts
         record_str = ",".join(list(map(lambda x: str(x), total_counters)))
         return record_str
 
@@ -138,7 +138,7 @@ class OSSECIdsAlertCounters:
             total_alerts=self.total_alerts,
             warning_alerts=self.warning_alerts,
             severe_alerts=self.severe_alerts,
-            alerts_weighted_by_level = self.alerts_weighted_by_level,
+            alerts_weighted_by_level=self.alerts_weighted_by_level,
             level_0_alerts=self.level_alerts[0],
             level_1_alerts=self.level_alerts[1],
             level_2_alerts=self.level_alerts[2],

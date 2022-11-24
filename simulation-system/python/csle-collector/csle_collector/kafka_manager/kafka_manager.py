@@ -28,7 +28,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         self.hostname = socket.gethostname()
         self.ip = socket.gethostbyname(self.hostname)
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
-                constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
+                     constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
         logging.info(f"Setting up KafkaManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_kafka_status_and_topics(self) -> Tuple[bool, List[str]]:
@@ -47,7 +47,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
             client = confluent_kafka.admin.AdminClient(self.conf)
             try:
                 cluster_metadata = client.list_topics(timeout=1)
-                for k,v in cluster_metadata.topics.items():
+                for k, v in cluster_metadata.topics.items():
                     topics.append(k)
             except Exception as e:
                 logging.info(f"There was an exception listing the Kafka topics: {str(e)}, {repr(e)}")
@@ -64,14 +64,11 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :return: a clients DTO with the state of the kafka server
         """
         running, topics = self._get_kafka_status_and_topics()
-        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
-            running = running,
-            topics = topics
-        )
+        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running=running, topics=topics)
         return kafka_dto
 
     def stopKafka(self, request: csle_collector.kafka_manager.kafka_manager_pb2.StopKafkaMsg,
-                    context: grpc.ServicerContext):
+                  context: grpc.ServicerContext):
         """
         Stops the kafka server
 
@@ -81,13 +78,10 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         """
         logging.info("Stopping kafka")
         os.system(constants.KAFKA.KAFKA_STOP)
-        return csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
-            running = False,
-            topics = []
-        )
+        return csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running=False, topics=[])
 
     def startKafka(self, request: csle_collector.kafka_manager.kafka_manager_pb2.StartKafkaMsg,
-                     context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
+                   context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Starts the kafka server
 
@@ -97,10 +91,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         """
         logging.info(f"Starting kafka")
         os.system(constants.KAFKA.KAFKA_START)
-        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
-            running = True,
-            topics = []
-        )
+        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running=True, topics=[])
         return kafka_dto
 
     def hours_to_ms(self, hours: int) -> float:
@@ -113,7 +104,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         return int((((hours*1000)*60)*60))
 
     def createTopic(self, request: csle_collector.kafka_manager.kafka_manager_pb2.CreateTopicMsg,
-                   context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
+                    context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Creates a new Kafka topic
 
@@ -130,16 +121,14 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         new_topic = confluent_kafka.admin.NewTopic(
             request.name, request.partitions, request.replicas,
             config=config)
-        client.create_topics([new_topic,])
+        client.create_topics([new_topic])
         time.sleep(5)
-        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(
-            running = True,
-            topics = topics + [request.name]
-        )
+        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running=True,
+                                                                            topics=topics + [request.name])
         return kafka_dto
 
 
-def serve(port : int = 50051, log_dir: str = "/", max_workers: int = 10,
+def serve(port: int = 50051, log_dir: str = "/", max_workers: int = 10,
           log_file_name: str = "kafka_manager.log") -> None:
     """
     Starts the gRPC server for managing clients
@@ -159,7 +148,6 @@ def serve(port : int = 50051, log_dir: str = "/", max_workers: int = 10,
     server.start()
     logging.info(f"KafkaManager Server Started, Listening on port: {port}")
     server.wait_for_termination()
-
 
 
 # Program entrypoint

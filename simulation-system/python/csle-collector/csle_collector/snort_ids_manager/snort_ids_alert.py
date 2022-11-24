@@ -59,9 +59,8 @@ class SnortIdsAlert:
         self.icmp_seq = None
         self.priority = None
 
-
     @staticmethod
-    def parse_from_str(csv_str_record : str, year: int) -> "SnortIdsAlert":
+    def parse_from_str(csv_str_record: str, year: int) -> "SnortIdsAlert":
         """
         Parses the IDS alert from a string
 
@@ -80,7 +79,7 @@ class SnortIdsAlert:
                 try:
                     alert_dao.timestamp = datetime.datetime.strptime(alert_dao.timestamp.strip(),
                                                                      '%Y %m/%d-%H:%M:%S.%f').timestamp()
-                except:
+                except Exception:
                     alert_dao.timestamp = datetime.datetime.strptime("2010 04/20-08:46:14.094913",
                                                                      '%Y %m/%d-%H:%M:%S.%f').timestamp()
             else:
@@ -144,7 +143,7 @@ class SnortIdsAlert:
         alert_dao.priority = 1
         return alert_dao
 
-    def set_priority(self, priority : int) -> None:
+    def set_priority(self, priority: int) -> None:
         """
         Sets the priority of the alert DTO
 
@@ -183,10 +182,9 @@ class SnortIdsAlert:
                 ts = str(year) + " " + ts
                 try:
                     ts = datetime.datetime.strptime(ts.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
-                except:
+                except Exception:
                     ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
             else:
                 ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
         fast_log_alert = SnortIdsFastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id)
         return fast_log_alert
-

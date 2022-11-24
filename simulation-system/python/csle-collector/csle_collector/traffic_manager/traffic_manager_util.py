@@ -8,7 +8,8 @@ class TrafficManagerUtil:
     """
 
     @staticmethod
-    def traffic_dto_to_dict(traffic_dto: csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO) -> Dict[str, Any]:
+    def traffic_dto_to_dict(traffic_dto: csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO) \
+            -> Dict[str, Any]:
         """
         Converts a TrafficDTO to a dict
 

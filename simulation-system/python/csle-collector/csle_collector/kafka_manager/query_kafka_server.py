@@ -1,4 +1,3 @@
-from typing import List
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.constants.constants as constants

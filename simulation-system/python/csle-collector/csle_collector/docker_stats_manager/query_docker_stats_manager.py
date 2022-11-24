@@ -23,7 +23,7 @@ def get_docker_stats_manager_status(
 
 def start_docker_stats_monitor(
         stub: csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub,
-        emulation: str, execution_first_ip_octet: int, kafka_ip: str, stats_queue_maxsize : int,
+        emulation: str, execution_first_ip_octet: int, kafka_ip: str, stats_queue_maxsize: int,
         time_step_len_seconds: int, kafka_port: int,
         containers: List[csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp],
         timeout=constants.GRPC.TIMEOUT_SECONDS) \

@@ -34,7 +34,7 @@ def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cli
 
 
 def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
-                  mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int=2,
+                  mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int = 2,
                   sine_modulated: bool = False, time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
                   timeout=constants.GRPC.TIMEOUT_SECONDS):
     """
@@ -92,4 +92,3 @@ def start_producer(stub: csle_collector.client_manager.client_manager_pb2_grpc.C
     )
     clients_dto = stub.startProducer(start_producer_msg, timeout=timeout)
     return clients_dto
-

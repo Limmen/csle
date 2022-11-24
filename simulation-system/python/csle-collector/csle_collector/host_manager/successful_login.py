@@ -14,9 +14,8 @@ class SuccessfulLogin:
         self.ip = ""
         self.user = ""
 
-
     @staticmethod
-    def parse_from_str(login_attempt_str : str, year: int):
+    def parse_from_str(login_attempt_str: str, year: int):
         """
         Parses a login event from a string
 

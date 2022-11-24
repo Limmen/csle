@@ -18,7 +18,7 @@ class HostManagerUtil:
         :return: the number of recently failed login attempts
         """
         try:
-            cmd=constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
+            cmd = constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             (output, err) = p.communicate()
             p.wait()
@@ -26,10 +26,10 @@ class HostManagerUtil:
             login_attempts = login_attempts_str.split("\n")
             login_attempts = list(filter(lambda x: x != "" and len(x) > 14, login_attempts))
             year = datetime.datetime.now().year
-            parsed_ts = FailedLoginAttempt.parse_from_str(str(year) + " "+
+            parsed_ts = FailedLoginAttempt.parse_from_str(str(year) + " " +
                                                           " ".join(login_attempts[-1][0:15].split())).timestamp
             return parsed_ts
-        except:
+        except Exception:
             return datetime.datetime.now().timestamp()
 
     @staticmethod
@@ -40,7 +40,7 @@ class HostManagerUtil:
         :param emulation_config: configuration to connect to the node in the emulation
         :return: the number of recently failed login attempts
         """
-        cmd=constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
+        cmd = constants.HOST_METRICS.LIST_FAILED_LOGIN_ATTEMPTS
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p.wait()
@@ -49,7 +49,7 @@ class HostManagerUtil:
         login_attempts = list(filter(lambda x: x != "" and len(x) > 14, login_attempts))
         year = datetime.datetime.now().year
         login_attempts = list(map(lambda x: FailedLoginAttempt.parse_from_str(
-            str(year) + " "+ " ".join(x[0:15].split())), login_attempts))
+            str(year) + " " + " ".join(x[0:15].split())), login_attempts))
         login_attempts = list(filter(lambda x: x.timestamp > failed_auth_last_ts, login_attempts))
         return len(login_attempts)
 
@@ -61,7 +61,7 @@ class HostManagerUtil:
         :return: the number of recently failed login attempts
         """
         try:
-            cmd=constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
+            cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             (output, err) = p.communicate()
             p.wait()
@@ -70,7 +70,7 @@ class HostManagerUtil:
             logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
             year = datetime.datetime.now().year
             return SuccessfulLogin.parse_from_str(" ".join(logins[0].split()), year=year).timestamp
-        except:
+        except Exception:
             return datetime.datetime.now().timestamp()
 
     @staticmethod
@@ -81,7 +81,7 @@ class HostManagerUtil:
         :param login_last_ts: the timestamp to use when filtering logins
         :return: the number of recently failed login attempts
         """
-        cmd=constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
+        cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p.wait()
@@ -89,12 +89,10 @@ class HostManagerUtil:
         logins = logins.split("\n")
         logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
         year = datetime.datetime.now().year
-        successful_logins = list(map(lambda x: SuccessfulLogin.parse_from_str(" ".join(x.split()), year=year),
-                                     logins))
-        successful_logins = list(filter(lambda x: x.timestamp != None, successful_logins))
+        successful_logins = list(map(lambda x: SuccessfulLogin.parse_from_str(" ".join(x.split()), year=year), logins))
+        successful_logins = list(filter(lambda x: x.timestamp is not None, successful_logins))
         successful_logins = list(filter(lambda x: x.timestamp > login_last_ts, successful_logins))
         return len(successful_logins)
-
 
     @staticmethod
     def read_open_connections() -> int:
@@ -103,7 +101,7 @@ class HostManagerUtil:
 
         :return: the number of open connections
         """
-        cmd=constants.HOST_METRICS.LIST_OPEN_CONNECTIONS_CMD
+        cmd = constants.HOST_METRICS.LIST_OPEN_CONNECTIONS_CMD
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p.wait()
@@ -123,7 +121,7 @@ class HostManagerUtil:
 
         :return: the number of user accounts
         """
-        cmd=constants.HOST_METRICS.LIST_USER_ACCOUNTS
+        cmd = constants.HOST_METRICS.LIST_USER_ACCOUNTS
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p.wait()
@@ -138,7 +136,7 @@ class HostManagerUtil:
 
         :return: the number of logged in users
         """
-        cmd=constants.HOST_METRICS.LIST_LOGGED_IN_USERS_CMD
+        cmd = constants.HOST_METRICS.LIST_LOGGED_IN_USERS_CMD
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         p.wait()
@@ -156,16 +154,15 @@ class HostManagerUtil:
         :return: the number of processes
         """
         try:
-            cmd=constants.HOST_METRICS.LIST_NUMBER_OF_PROCESSES
+            cmd = constants.HOST_METRICS.LIST_NUMBER_OF_PROCESSES
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
             (output, err) = p.communicate()
             p.wait()
             processes_str = output.decode()
             num_processes = int(processes_str)
-        except:
+        except Exception:
             num_processes = -1
         return num_processes
-
 
     @staticmethod
     def read_host_metrics(failed_auth_last_ts: float, login_last_ts: float) -> HostMetrics:
@@ -285,4 +282,3 @@ class HostManagerUtil:
         host_monitor_dto = csle_collector.host_manager.host_manager_pb2.HostMonitorDTO()
         host_monitor_dto.running = False
         return host_monitor_dto
-

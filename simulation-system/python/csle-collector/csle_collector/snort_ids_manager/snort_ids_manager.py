@@ -52,7 +52,7 @@ class SnortIDSMonitorThread(threading.Thread):
         while self.running:
             time.sleep(self.time_step_len_seconds)
             alert_counters = SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
-            record = alert_counters.to_kafka_record(ip = self.ip)
+            record = alert_counters.to_kafka_record(ip=self.ip)
             self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME, record)
             self.producer.poll(0)
             self.latest_ts = time.time()
@@ -83,16 +83,17 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
 
         :return: status and list of topics
         """
-        p = subprocess.Popen(constants.SNORT_IDS_ROUTER.CHECK_IF_SNORT_IS_RUNNING_CMD, stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(constants.SNORT_IDS_ROUTER.CHECK_IF_SNORT_IS_RUNNING_CMD, stdout=subprocess.PIPE,
+                             shell=True)
         (output, err) = p.communicate()
         p.wait()
         status_output = output.decode()
         running = constants.SNORT_IDS_ROUTER.SEARCH_SNORT_RUNNING in status_output
         return running
 
-    def getSnortIdsAlerts(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsAlertsMsg,
-                     context: grpc.ServicerContext) \
-            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO:
+    def getSnortIdsAlerts(
+            self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsAlertsMsg,
+            context: grpc.ServicerContext) -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO:
         """
         Gets the statistics of the IDS log from a given timestamp
 
@@ -104,9 +105,9 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         ids_log_dto = alert_counters.to_dto(ip=self.ip)
         return ids_log_dto
 
-    def startSnortIdsMonitor(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMonitorMsg,
-                     context: grpc.ServicerContext) \
-            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
+    def startSnortIdsMonitor(
+            self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMonitorMsg,
+            context: grpc.ServicerContext) -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
         Starts the Snort IDS monitor thread
 
@@ -127,11 +128,10 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         self.ids_monitor_thread.start()
         logging.info(f"Started the SnortIDSMonitor thread")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
-            monitor_running = True, snort_ids_running = snort_running
-        )
+            monitor_running=True, snort_ids_running=snort_running)
 
     def startSnortIds(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMsg,
-                             context: grpc.ServicerContext) \
+                      context: grpc.ServicerContext) \
             -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
         Starts the Snort IDS
@@ -155,11 +155,10 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
             p.wait()
         logging.info(f"Started the SnortIDS")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
-            monitor_running = monitor_running, snort_ids_running = True
-        )
+            monitor_running=monitor_running, snort_ids_running=True)
 
     def stopSnortIds(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMsg,
-                      context: grpc.ServicerContext) \
+                     context: grpc.ServicerContext) \
             -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
         Stops the Snort IDS
@@ -177,11 +176,11 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         p.wait()
         logging.info(f"Stopped the SnortIDS")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
-            monitor_running = monitor_running, snort_ids_running = False
-        )
+            monitor_running=monitor_running, snort_ids_running=False)
 
-    def stopSnortIdsMonitor(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StopSnortIdsMonitorMsg,
-                        context: grpc.ServicerContext) \
+    def stopSnortIdsMonitor(self,
+                            request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.StopSnortIdsMonitorMsg,
+                            context: grpc.ServicerContext) \
             -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
         Stops the Snort IDS monitor thread if it is running
@@ -194,12 +193,11 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
             self.ids_monitor_thread.running = False
         snort_running = self._is_snort_running()
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
-            monitor_running = False, snort_ids_running = snort_running
-        )
+            monitor_running=False, snort_ids_running=snort_running)
 
-    def getSnortIdsMonitorStatus(self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsMonitorStatusMsg,
-                            context: grpc.ServicerContext) \
-            -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
+    def getSnortIdsMonitorStatus(
+            self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsMonitorStatusMsg,
+            context: grpc.ServicerContext) -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
         Gets the status of the Snort IDS Monitor thread
 
@@ -212,11 +210,10 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
             running = self.ids_monitor_thread.running
         snort_running = self._is_snort_running()
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
-            monitor_running = running, snort_ids_running = snort_running
-        )
+            monitor_running=running, snort_ids_running=snort_running)
 
 
-def serve(port : int = 50048, log_dir: str = "/", max_workers: int = 10,
+def serve(port: int = 50048, log_dir: str = "/", max_workers: int = 10,
           log_file_name: str = "snort_ids_manager.log") -> None:
     """
     Starts the gRPC server for managing clients

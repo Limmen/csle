@@ -26,7 +26,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         self.ip = socket.gethostbyname(self.hostname)
         logging.info(f"Setting up ElkManager hostname: {self.hostname} ip: {self.ip}")
 
-    def _get_elk_status(self) -> Tuple[bool,bool,bool]:
+    def _get_elk_status(self) -> Tuple[bool, bool, bool]:
         """
         Utility method to get the status of the ELK stack
 
@@ -50,7 +50,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         return elasticsearch_running, kibana_running, logstash_running
 
     def getElkStatus(self, request: csle_collector.elk_manager.elk_manager_pb2.GetElkStatusMsg,
-                       context: grpc.ServicerContext) \
+                     context: grpc.ServicerContext) \
             -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Gets the state of the ELK server
@@ -60,14 +60,13 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         :return: an ElkDTO with the state of the ELK stack server
         """
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = elasticsearch_running,
-            kibanaRunning = kibana_running, logstashRunning = logstash_running
-        )
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
+                                                                    kibanaRunning=kibana_running,
+                                                                    logstashRunning=logstash_running)
         return elk_dto
 
-    def stopElk(self, request: csle_collector.elk_manager.elk_manager_pb2.StopElkMsg,
-                    context: grpc.ServicerContext):
+    def stopElk(self, request: csle_collector.elk_manager.elk_manager_pb2.StopElkMsg, context: grpc.ServicerContext) \
+            -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Stops the ELK stack
 
@@ -82,12 +81,11 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         os.system(constants.ELK.LOGSTASH_STOP)
         logging.info("Stopping elasticsearch")
         os.system(constants.ELK.ELASTICSEARCH_STOP)
-        return csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = False, kibanaRunning = False, logstashRunning = False
-        )
+        return csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=False, kibanaRunning=False,
+                                                                 logstashRunning=False)
 
     def startElk(self, request: csle_collector.elk_manager.elk_manager_pb2.StartElkMsg,
-                     context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+                 context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Starts the ELK stack
 
@@ -97,12 +95,12 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         """
         logging.info(f"Starting ELK")
         os.system(constants.ELK.ELK_START)
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = True, kibanaRunning = True, logstashRunning = True)
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=True, kibanaRunning=True,
+                                                                    logstashRunning=True)
         return elk_dto
 
     def startElastic(self, request: csle_collector.elk_manager.elk_manager_pb2.StartElasticMsg,
-                 context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+                     context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Starts elasticsearch
 
@@ -113,12 +111,12 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.info(f"Starting Elasticsearch")
         os.system(constants.ELK.ELASTICSEARCH_START)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = True, kibanaRunning = kibana_running, logstashRunning = logstash_running)
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=True, kibanaRunning=kibana_running,
+                                                                    logstashRunning=logstash_running)
         return elk_dto
 
     def startKibana(self, request: csle_collector.elk_manager.elk_manager_pb2.StartKibanaMsg,
-                     context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+                    context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Starts Kibana
 
@@ -129,12 +127,13 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.info(f"Starting Kibana")
         os.system(constants.ELK.KIBANA_START)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = elasticsearch_running, kibanaRunning = True, logstashRunning = logstash_running)
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
+                                                                    kibanaRunning=True,
+                                                                    logstashRunning=logstash_running)
         return elk_dto
 
     def startLogstash(self, request: csle_collector.elk_manager.elk_manager_pb2.StartLogstashMsg,
-                    context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+                      context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Starts Logstash
 
@@ -145,12 +144,13 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.info(f"Starting Logstash")
         os.system(constants.ELK.LOGSTASH_START)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = elasticsearch_running, kibanaRunning = kibana_running, logstashRunning =True)
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
+                                                                    kibanaRunning=kibana_running,
+                                                                    logstashRunning=True)
         return elk_dto
 
     def stopElastic(self, request: csle_collector.elk_manager.elk_manager_pb2.StartElasticMsg,
-                     context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+                    context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Stops elasticsearch
 
@@ -161,12 +161,12 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.info(f"Stops Elasticsearch")
         os.system(constants.ELK.ELASTICSEARCH_STOP)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = False, kibanaRunning = kibana_running, logstashRunning = logstash_running)
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=False, kibanaRunning=kibana_running,
+                                                                    logstashRunning=logstash_running)
         return elk_dto
 
     def stopKibana(self, request: csle_collector.elk_manager.elk_manager_pb2.StopKibanaMsg,
-                    context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+                   context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Stops Kibana
 
@@ -177,12 +177,13 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.info(f"Stops Kibana")
         os.system(constants.ELK.KIBANA_STOP)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = elasticsearch_running, kibanaRunning = False, logstashRunning = logstash_running)
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
+                                                                    kibanaRunning=False,
+                                                                    logstashRunning=logstash_running)
         return elk_dto
 
     def stopLogstash(self, request: csle_collector.elk_manager.elk_manager_pb2.StopLogstashMsg,
-                      context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+                     context: grpc.ServicerContext) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Stops Logstash
 
@@ -193,12 +194,13 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.info(f"Stopping Logstash")
         os.system(constants.ELK.LOGSTASH_STOP)
         elasticsearch_running, kibana_running, logstash_running = self._get_elk_status()
-        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
-            elasticRunning = elasticsearch_running, kibanaRunning = kibana_running, logstashRunning =False)
+        elk_dto = csle_collector.elk_manager.elk_manager_pb2.ElkDTO(elasticRunning=elasticsearch_running,
+                                                                    kibanaRunning=kibana_running,
+                                                                    logstashRunning=False)
         return elk_dto
 
 
-def serve(port : int = 50045, log_dir: str = "/", max_workers: int = 10,
+def serve(port: int = 50045, log_dir: str = "/", max_workers: int = 10,
           log_file_name: str = "elk_manager.log") -> None:
     """
     Starts the gRPC server for managing the ELK stack
