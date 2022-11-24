@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="docs/csle_logo.png" width="30%", height="30%">
+<img src="docs/csle_logo.png" width="40%", height="40%">
 </p>
 
 <p align="center">
