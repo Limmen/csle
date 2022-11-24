@@ -13,6 +13,7 @@ python -m pip install flake8
 ```bash
 flake8 simulation-system/
 flake8 csle-cli
+flake8 emulation-system/envs
 ```
 
 ### JavaScript:
