@@ -3325,7 +3325,6 @@ class MetastoreFacade:
                                    records))
                 return records
 
-
     @staticmethod
     def get_statistics_dataset_metadata(id: int) -> Union[None, StatisticsDataset]:
         """
