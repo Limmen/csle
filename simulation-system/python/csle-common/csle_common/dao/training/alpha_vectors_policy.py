@@ -34,7 +34,7 @@ class AlphaVectorsPolicy(Policy):
         self.simulation_name = simulation_name
         self.id = -1
         self.avg_R = avg_R
-        self.transition_tensor=transition_tensor
+        self.transition_tensor = transition_tensor
         self.reward_tensor = reward_tensor
         self.states = states
 
@@ -45,20 +45,21 @@ class AlphaVectorsPolicy(Policy):
         :param o: the belief
         :return: the next action and its probability
         """
-        b=o
+        b = o
         max_a_v = -np.inf
         max_a = 0
         for a in self.actions:
             v_a = 0
             for s in self.states:
                 for s_prime in self.states:
-                    transition_prob = b[s.id]*self.reward_tensor[a.id][s.id]*self.transition_tensor[a.id][s.id][s_prime.id]
+                    transition_prob = (b[s.id] * self.reward_tensor[a.id][s.id] *
+                                       self.transition_tensor[a.id][s.id][s_prime.id])
                     max_alpha_v = -np.inf
                     for alpha in self.alpha_vectors:
                         v = np.dot(np.array(alpha), np.array(b[0:len(alpha)]))
                         if v > max_alpha_v:
                             max_alpha_v = v
-                    v_a += max_alpha_v*transition_prob
+                    v_a += max_alpha_v * transition_prob
             if v_a > max_a_v:
                 max_a_v = v_a
                 max_a = a
@@ -104,9 +105,9 @@ class AlphaVectorsPolicy(Policy):
         d["simulation_name"] = self.simulation_name
         d["id"] = self.id
         d["avg_R"] = self.avg_R
-        d["transition_tensor"]=self.transition_tensor
-        d["states"]=list(map(lambda x: x.to_dict(), self.states))
-        d["reward_tensor"]=self.reward_tensor
+        d["transition_tensor"] = self.transition_tensor
+        d["states"] = list(map(lambda x: x.to_dict(), self.states))
+        d["reward_tensor"] = self.reward_tensor
         return d
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -149,7 +150,6 @@ class AlphaVectorsPolicy(Policy):
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
-
 
     def copy(self) -> "AlphaVectorsPolicy":
         """

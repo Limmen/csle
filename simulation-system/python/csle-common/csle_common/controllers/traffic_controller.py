@@ -37,11 +37,11 @@ class TrafficController:
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
 
             # Connect
-            TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config, 
+            TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
                                                     node_traffic_config=node_traffic_config)
 
     @staticmethod
-    def start_traffic_manager(emulation_env_config: EmulationEnvConfig, 
+    def start_traffic_manager(emulation_env_config: EmulationEnvConfig,
                               node_traffic_config: NodeTrafficConfig) -> None:
         """
         Utility method for starting traffic manager on a specific container
@@ -49,24 +49,23 @@ class TrafficController:
         :param emulation_env_config: the emulation env config
         :param node_traffic_config: traffic config of the container
         :return: None
-        """        
+        """
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=node_traffic_config.ip)
 
         # Check if traffic_manager is already running
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM
+               + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                 conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
 
-        if not constants.COMMANDS.SEARCH_TRAFFIC_MANAGER in str(o):
+        if constants.COMMANDS.SEARCH_TRAFFIC_MANAGER not in str(o):
 
             Logger.__call__().get_logger().info(f"Starting traffic manager on node {node_traffic_config.ip}")
 
             # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
+            cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+                   constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
 
@@ -89,7 +88,7 @@ class TrafficController:
         """
         for node_traffic_config in emulation_env_config.traffic_config.node_traffic_configs:
             TrafficController.stop_traffic_manager(emulation_env_config=emulation_env_config,
-                                                    node_traffic_config=node_traffic_config)
+                                                   node_traffic_config=node_traffic_config)
 
     @staticmethod
     def stop_traffic_manager(emulation_env_config: EmulationEnvConfig, node_traffic_config: NodeTrafficConfig) -> None:
@@ -105,11 +104,10 @@ class TrafficController:
         Logger.__call__().get_logger().info(f"Stopping traffic manager on node {node_traffic_config.ip}")
 
         # Stop old background job if running
-        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME
-        o, e, _ = EmulationUtil.execute_ssh_cmd(
-            cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
+        cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME)
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
+                                                conn=emulation_env_config.get_connection(ip=node_traffic_config.ip))
 
     @staticmethod
     def start_client_manager(emulation_env_config: EmulationEnvConfig) -> None:
@@ -124,21 +122,20 @@ class TrafficController:
                                     ip=emulation_env_config.traffic_config.client_population_config.ip)
 
         # Check if client_manager is already running
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
 
-        if not constants.COMMANDS.SEARCH_CLIENT_MANAGER in str(o):
+        if constants.COMMANDS.SEARCH_CLIENT_MANAGER not in str(o):
             Logger.__call__().get_logger().info(f"Starting client manager on node "
                                                 f"{emulation_env_config.traffic_config.client_population_config.ip}")
 
             # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME
+            cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+                   constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.traffic_config.client_population_config.ip))
 
@@ -169,9 +166,8 @@ class TrafficController:
                                             f"{emulation_env_config.traffic_config.client_population_config.ip}")
 
         # Stop old background job if running
-        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.CLIENT_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(
             ip=emulation_env_config.traffic_config.client_population_config.ip))
 
@@ -184,7 +180,7 @@ class TrafficController:
         :return: None
         """
         Logger.__call__().get_logger().info(f"Stopping client population on container: "
-              f"{emulation_env_config.traffic_config.client_population_config.ip}")
+                                            f"{emulation_env_config.traffic_config.client_population_config.ip}")
 
         TrafficController.start_client_manager(emulation_env_config=emulation_env_config)
 
@@ -267,15 +263,15 @@ class TrafficController:
         :param emulation_env_config: the emulation environment configuration
         :return: None
         """
-        Logger.__call__().get_logger().info(f"Starting client population on container:"
-              f" {emulation_env_config.traffic_config.client_population_config.ip}")
+        Logger.__call__().get_logger().info(f"Starting client population on container: "
+                                            f"{emulation_env_config.traffic_config.client_population_config.ip}")
         commands = []
         reachable_containers = []
 
         # Collect commands and reachable containers
         for container in emulation_env_config.containers_config.containers:
             match = False
-            for ip,net in container.ips_and_networks:
+            for ip, net in container.ips_and_networks:
                 for net2 in emulation_env_config.traffic_config.client_population_config.networks:
                     if net.name == net2.name:
                         match = True
@@ -316,11 +312,11 @@ class TrafficController:
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
                     ClientPopulationProcessType.SINE_MODULATED_POISSON):
                 sine_modulated = True
+            time_step_len = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
             csle_collector.client_manager.query_clients.start_clients(
                 stub=stub, mu=emulation_env_config.traffic_config.client_population_config.mu,
                 lamb=emulation_env_config.traffic_config.client_population_config.lamb,
-                time_step_len_seconds=
-                emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds,
+                time_step_len_seconds=time_step_len,
                 commands=commands,
                 num_commands=emulation_env_config.traffic_config.client_population_config.num_commands,
                 sine_modulated=sine_modulated,
@@ -328,9 +324,8 @@ class TrafficController:
                 period_scaling_factor=emulation_env_config.traffic_config.client_population_config.period_scaling_factor
             )
 
-
     @staticmethod
-    def get_num_active_clients(emulation_env_config : EmulationEnvConfig) \
+    def get_num_active_clients(emulation_env_config: EmulationEnvConfig) \
             -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Gets the number of active clients
@@ -377,7 +372,7 @@ class TrafficController:
 
     @staticmethod
     def stop_internal_traffic_generator(emulation_env_config: EmulationEnvConfig,
-                                         node_traffic_config: NodeTrafficConfig) -> None:
+                                        node_traffic_config: NodeTrafficConfig) -> None:
         """
         Utility function for stopping a specific internal traffic generator
 
@@ -440,11 +435,11 @@ class TrafficController:
         subnet_masks = []
         reachable_containers = []
         for ip_net1 in container.ips_and_networks:
-            ip,net1 = ip_net1
+            ip, net1 = ip_net1
             subnet_masks.append(net1.subnet_mask)
         for c in emulation_env_config.containers_config.containers:
             for ip_net1 in c.ips_and_networks:
-                ip,net1 = ip_net1
+                ip, net1 = ip_net1
                 if net1.subnet_mask in subnet_masks and ip not in container.get_ips():
                     reachable_containers.append((ip, c.get_ips()))
 
@@ -568,7 +563,8 @@ class TrafficController:
         return ports
 
     @staticmethod
-    def get_traffic_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> TrafficManagersInfo:
+    def get_traffic_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) \
+            -> TrafficManagersInfo:
         """
         Extracts the information of the traffic managers for a given emulation
 
@@ -591,8 +587,8 @@ class TrafficController:
                         port=node_traffic_config.traffic_manager_port, ip=node_traffic_config.ip)
                     running = True
                 except Exception as e:
-                    Logger.__call__().get_logger().debug(
-                        f"Could not fetch traffic manager status on IP:{node_traffic_config}, error: {str(e)}, {repr(e)}")
+                    Logger.__call__().get_logger().debug(f"Could not fetch traffic manager status on IP"
+                                                         f":{node_traffic_config}, error: {str(e)}, {repr(e)}")
                 if status is not None:
                     traffic_managers_statuses.append(status)
                 else:

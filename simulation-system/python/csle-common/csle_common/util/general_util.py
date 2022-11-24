@@ -15,5 +15,3 @@ class GeneralUtil:
         """
         index_of_first_octet_end = ip.find(".")
         return str(ip_first_octet) + ip[index_of_first_octet_end:]
-
-

@@ -55,7 +55,7 @@ class OSSECIDSController:
         """
         OSSECIDSController.start_ossec_ids_manager(emulation_env_config=emulation_env_config, ip=ip)
         ids_monitor_dto = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = ip)
+            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
         if not ids_monitor_dto.ossec_ids_running:
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -77,7 +77,7 @@ class OSSECIDSController:
         """
         OSSECIDSController.start_ossec_ids_manager(emulation_env_config=emulation_env_config, ip=ip)
         ids_monitor_dto = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = ip)
+            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
         if ids_monitor_dto.ossec_ids_running:
             # Open a gRPC session
             with grpc.insecure_channel(
@@ -115,20 +115,18 @@ class OSSECIDSController:
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
         # Check if ids_manager is already running
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
-        t = constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER
 
-        if not constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER in str(o):
+        if constants.COMMANDS.SEARCH_OSSEC_IDS_MANAGER not in str(o):
 
             Logger.__call__().get_logger().info(f"Starting OSSEC IDS manager on node {ip}")
 
             # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME
+            cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+                   constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
@@ -170,9 +168,8 @@ class OSSECIDSController:
 
         Logger.__call__().get_logger().info(f"Stopping OSSEC IDS manager on node {ip}")
 
-        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.OSSEC_IDS_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
@@ -207,7 +204,7 @@ class OSSECIDSController:
         """
         OSSECIDSController.start_ossec_ids_manager(emulation_env_config=emulation_env_config, ip=ip)
         ids_monitor_dto = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = ip)
+            port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=ip)
         if not ids_monitor_dto.monitor_running:
             Logger.__call__().get_logger().info(
                 f"OSSEC IDS monitor thread is not running on {ip}, starting it.")
@@ -259,7 +256,8 @@ class OSSECIDSController:
     def get_ossec_idses_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig) -> \
             List[csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO]:
         """
-        A method that sends a request to the OSSECIDSManager on every container to get the status of the IDS monitor thread
+        A method that sends a request to the OSSECIDSManager on every container to get the status of the
+        IDS monitor thread
 
         :param emulation_env_config: the emulation config
         :return: List of monitor thread statuses
@@ -271,7 +269,7 @@ class OSSECIDSController:
             for ids_image in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES:
                 if ids_image in c.name:
                     status = OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port(
-                        port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip = c.get_ips()[0])
+                        port=emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port, ip=c.get_ips()[0])
                     statuses.append(status)
         return statuses
 
@@ -351,7 +349,8 @@ class OSSECIDSController:
             return status
 
     @staticmethod
-    def get_ossec_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> OSSECIDSManagersInfo:
+    def get_ossec_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) \
+            -> OSSECIDSManagersInfo:
         """
         Extracts the information of the OSSEC IDS managers for a given emulation
 
@@ -359,7 +358,8 @@ class OSSECIDSController:
         :param active_ips: list of active IPs
         :return: a DTO with the status of the OSSEC IDS managers
         """
-        ossec_ids_managers_ips = OSSECIDSController.get_ossec_idses_managers_ips(emulation_env_config=emulation_env_config)
+        ossec_ids_managers_ips = \
+            OSSECIDSController.get_ossec_idses_managers_ips(emulation_env_config=emulation_env_config)
         ossec_ids_managers_ports = \
             OSSECIDSController.get_ossec_idses_managers_ports(emulation_env_config=emulation_env_config)
         ossec_ids_managers_statuses = []
@@ -379,9 +379,8 @@ class OSSECIDSController:
             if status is not None:
                 ossec_ids_managers_statuses.append(status)
             else:
-                ossec_ids_managers_statuses.append(
-                    csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil.
-                        ossec_ids_monitor_dto_empty())
+                util = csle_collector.ossec_ids_manager.ossec_ids_manager_util.OSSecManagerUtil
+                ossec_ids_managers_statuses.append(util.ossec_ids_monitor_dto_empty())
             ossec_ids_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name

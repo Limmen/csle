@@ -9,7 +9,7 @@ class ExperimentConfig:
     DTO representing the configuration of an experiment
     """
 
-    def __init__(self, output_dir:str, title: str, random_seeds: List[int], agent_type: AgentType,
+    def __init__(self, output_dir: str, title: str, random_seeds: List[int], agent_type: AgentType,
                  hparams: Dict[str, HParam], log_every: int, player_type: PlayerType, player_idx: int,
                  br_log_every: int = 10):
         """
@@ -46,7 +46,7 @@ class ExperimentConfig:
         if d is None:
             return None
         h_d = {}
-        for k,v in d["hparams"].items():
+        for k, v in d["hparams"].items():
             h_d[k] = HParam.from_dict(v)
         obj = ExperimentConfig(
             output_dir=d["output_dir"], title=d["title"], random_seeds=d["random_seeds"],
@@ -65,7 +65,7 @@ class ExperimentConfig:
         d["random_seeds"] = self.random_seeds
         d["agent_type"] = self.agent_type
         d_h = {}
-        for k,v in self.hparams.items():
+        for k, v in self.hparams.items():
             d_h[k] = v.to_dict()
         d["hparams"] = d_h
         d["log_every"] = self.log_every

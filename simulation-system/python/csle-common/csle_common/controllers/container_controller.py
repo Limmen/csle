@@ -44,7 +44,6 @@ class ContainerController:
             Logger.__call__().get_logger().info("Stopping container: {}".format(c.name))
             c.stop()
 
-
     @staticmethod
     def stop_container(name: str) -> bool:
         """
@@ -78,7 +77,6 @@ class ContainerController:
             Logger.__call__().get_logger().info(f"Removing container: {c.name}")
             c.remove()
 
-
     @staticmethod
     def rm_container(container_name: str) -> bool:
         """
@@ -95,7 +93,6 @@ class ContainerController:
                 return True
         return False
 
-
     @staticmethod
     def rm_all_images() -> None:
         """
@@ -106,16 +103,16 @@ class ContainerController:
         client_1 = docker.from_env()
         images = client_1.images.list()
         images = list(filter(lambda x: constants.CSLE.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
-        non_base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
-                                                not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), images))
+        non_base_images = list(
+            filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
+                              not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), images))
         base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
                                              in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), images))
-        non_os_base_images = list(filter(lambda x: not
-        (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
-         or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),
-                                         base_images))
-        os_base_images = list(filter(lambda x: constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
-                                               or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]),
+        non_os_base_images = list(filter(
+            lambda x: not (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
+                           or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), base_images))
+        os_base_images = list(filter(lambda x: (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
+                                                or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),
                                      base_images))
         for img in non_base_images:
             Logger.__call__().get_logger().info("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
@@ -126,7 +123,6 @@ class ContainerController:
         for img in os_base_images:
             Logger.__call__().get_logger().info("Removing image: {}".format(img.attrs[constants.DOCKER.REPO_TAGS]))
             client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
-
 
     @staticmethod
     def rm_image(name) -> bool:
@@ -139,17 +135,17 @@ class ContainerController:
         client_1 = docker.from_env()
         images = client_1.images.list()
         images = list(filter(lambda x: constants.CSLE.NAME in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]), images))
-        non_base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
-                                                 not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),images))
+        non_base_images = list(filter(
+            lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE not in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),
+            images))
         base_images = list(filter(lambda x: (constants.DOCKER.BASE_CONTAINER_TYPE
-                                             in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),images))
-        non_os_base_images = list(filter(lambda x: not
-        (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
-         or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])),
-                                         base_images))
-        os_base_images = list(filter(lambda x: constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])
-                                               or constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]),
-                                     base_images))
+                                             in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), images))
+        non_os_base_images = list(
+            filter(lambda x: not (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]) or
+                                  constants.OS.KALI in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), base_images))
+        os_base_images = list(
+            filter(lambda x: (constants.OS.UBUNTU in ",".join(x.attrs[constants.DOCKER.REPO_TAGS]) or constants.OS.KALI
+                              in ",".join(x.attrs[constants.DOCKER.REPO_TAGS])), base_images))
         for img in non_base_images:
             if img == name:
                 client_1.images.remove(image=img.attrs[constants.DOCKER.REPO_TAGS][0], force=True)
@@ -195,8 +191,7 @@ class ContainerController:
         networks = list(map(lambda x: x.split(), networks))
         networks = list(filter(lambda x: len(x) > 1, networks))
         networks = list(map(lambda x: x[1], networks))
-        networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x),
-                                        networks))
+        networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x), networks))
         network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),
                                networks))
         return networks, network_ids
@@ -210,7 +205,6 @@ class ContainerController:
         """
         networks, network_ids = ContainerController.list_docker_networks()
         return networks
-
 
     @staticmethod
     def start_all_stopped_containers() -> None:
@@ -257,8 +251,8 @@ class ContainerController:
         parsed_envs = DockerUtil.parse_runnning_emulation_infos()
         container_name_image_ip = []
         for env in parsed_envs:
-            container_name_image_ip = container_name_image_ip + \
-                                      list(map(lambda x: (x.name, x.image_name, x.ip), env.containers))
+            container_name_image_ip = (container_name_image_ip +
+                                       list(map(lambda x: (x.name, x.image_name, x.ip), env.containers)))
         return container_name_image_ip
 
     @staticmethod
@@ -416,7 +410,8 @@ class ContainerController:
             ip, net = ip_net
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
-            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
+                                                f"with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
@@ -440,7 +435,8 @@ class ContainerController:
             ip, net = ip_net
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
-            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
+            Logger.__call__().get_logger().info(f"Connecting container:{container_name} to network:{net.name} "
+                                                f"with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
@@ -461,7 +457,9 @@ class ContainerController:
             time.sleep(5)
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        print(f"connecting to: {ip}:{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}")
+        Logger.__call__().get_logger().info(
+            f"connecting to: {ip}:"
+            f"{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}")
         with grpc.insecure_channel(
                 f'{ip}:'
                 f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}') as channel:
@@ -472,7 +470,7 @@ class ContainerController:
                 ip = c.get_ips()[0]
                 container_ip_dtos.append(csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp(
                     ip=ip, container=name))
-            print("connected")
+            Logger.__call__().get_logger().info("connected")
 
             csle_collector.docker_stats_manager.query_docker_stats_manager.start_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name,
@@ -506,7 +504,7 @@ class ContainerController:
                 as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
-                stub=stub, emulation=execution.emulation_name, execution_first_ip_octet = execution.ip_first_octet)
+                stub=stub, emulation=execution.emulation_name, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
     def get_docker_stats_manager_status(kafka_config: KafkaConfig) \
@@ -519,8 +517,8 @@ class ContainerController:
         """
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
-        docker_stats_monitor_dto = ContainerController.get_docker_stats_manager_status_by_ip_and_port(ip=ip,
-                                                                                                      port=kafka_config.kafka_manager_port)
+        docker_stats_monitor_dto = ContainerController.get_docker_stats_manager_status_by_ip_and_port(
+            ip=ip, port=kafka_config.kafka_manager_port)
         return docker_stats_monitor_dto
 
     @staticmethod
@@ -570,7 +568,7 @@ class ContainerController:
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
     @staticmethod
-    def create_network_from_dto(network_dto: ContainerNetwork, existing_network_names = None) -> None:
+    def create_network_from_dto(network_dto: ContainerNetwork, existing_network_names=None) -> None:
         """
         Creates a network from a given DTO representing the network
 
@@ -581,7 +579,7 @@ class ContainerController:
                                            existing_network_names=existing_network_names)
 
     @staticmethod
-    def create_network(name: str, subnetmask: str, driver: str = "bridge", existing_network_names : List = None) -> None:
+    def create_network(name: str, subnetmask: str, driver: str = "bridge", existing_network_names: List = None) -> None:
         """
         Creates a network
 
@@ -624,7 +622,7 @@ class ContainerController:
                 Logger.__call__().get_logger().info(f"Removing network: {net.name}")
                 try:
                     net.remove()
-                except:
+                except Exception:
                     pass
 
     @staticmethod
@@ -642,7 +640,7 @@ class ContainerController:
                 Logger.__call__().get_logger().info(f"Removing network: {net.name}")
                 try:
                     net.remove()
-                except:
+                except Exception:
                     pass
 
     @staticmethod
@@ -657,8 +655,7 @@ class ContainerController:
         networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
         for net in networks:
             Logger.__call__().get_logger().info(f"Removing network:{net.name}")
-            ContainerController.remove_network(name = net.name)
-
+            ContainerController.remove_network(name=net.name)
 
     @staticmethod
     def rm_network(name) -> bool:
@@ -672,7 +669,7 @@ class ContainerController:
         networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
         for net in networks:
             if net == name:
-                ContainerController.remove_network(name = net.name)
+                ContainerController.remove_network(name=net.name)
                 return True
         return False
 
@@ -709,7 +706,6 @@ class ContainerController:
             ContainerController.rm_all_networks()
         else:
             raise ValueError("Command: {} not recognized".format(cmd))
-
 
     @staticmethod
     def get_docker_stats_managers_ips(emulation_env_config: EmulationEnvConfig) -> List[str]:
@@ -763,8 +759,8 @@ class ContainerController:
             if status is not None:
                 docker_stats_managers_statuses.append(status)
             else:
-                docker_stats_managers_statuses.append(
-                    csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_empty())
+                stats_util = csle_collector.docker_stats_manager.docker_stats_util.DockerStatsUtil
+                docker_stats_managers_statuses.append(stats_util.docker_stats_monitor_dto_empty())
             docker_stats_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
@@ -773,4 +769,3 @@ class ContainerController:
             execution_id=execution_id, emulation_name=emulation_name,
             docker_stats_managers_statuses=docker_stats_managers_statuses, ports=docker_stats_managers_ports)
         return docker_stats_manager_info_dto
-

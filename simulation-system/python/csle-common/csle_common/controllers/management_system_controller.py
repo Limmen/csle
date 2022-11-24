@@ -33,10 +33,9 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
         if pid == -1:
             return False
-        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM \
-              + constants.COMMANDS.SPACE_DELIM\
-              + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + "prometheus"
+        cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
+               constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP
+               + constants.COMMANDS.SPACE_DELIM + "prometheus")
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         output = str(output)
@@ -52,10 +51,9 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
         if pid == -1:
             return False
-        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SEARCH_NODE_EXPORTER
+        cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
+               constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.COMMANDS.SEARCH_NODE_EXPORTER)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         output = str(output)
@@ -71,10 +69,9 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
         if pid == -1:
             return False
-        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SEARCH_MONITOR
+        cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
+               constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.COMMANDS.SEARCH_MONITOR)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         output = str(output)
@@ -91,7 +88,7 @@ class ManagementSystemController:
             return False
         cmd = constants.COMMANDS.START_NODE_EXPORTER
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         return True
 
     @staticmethod
@@ -108,23 +105,23 @@ class ManagementSystemController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
         cmd = constants.COMMANDS.START_MONITOR
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         pid = p.pid + 1
 
         cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         return True
 
     @staticmethod
@@ -139,7 +136,7 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         return True
 
     @staticmethod
@@ -154,9 +151,8 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.MANAGEMENT_SYSTEM_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         return True
-
 
     @staticmethod
     def start_prometheus() -> bool:
@@ -169,7 +165,7 @@ class ManagementSystemController:
             return False
         cmd = constants.COMMANDS.START_PROMETHEUS
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         return True
 
     @staticmethod
@@ -184,7 +180,7 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         return True
 
     @staticmethod
@@ -289,10 +285,9 @@ class ManagementSystemController:
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
         if pid == -1:
             return False
-        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
-              constants.COMMANDS.SPACE_DELIM\
-              + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER
+        cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
+               constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         output = str(output)
@@ -300,7 +295,7 @@ class ManagementSystemController:
 
     @staticmethod
     def start_docker_stats_manager(log_file: str = "docker_stats_manager.log",
-                                   log_dir: str = "/var/log/csle", max_workers :int = 10,
+                                   log_dir: str = "/var/log/csle", max_workers: int = 10,
                                    port: int = 50046) -> bool:
         """
         Starts the docker stats manager on the docker host if it is not already started
@@ -341,9 +336,8 @@ class ManagementSystemController:
         :param pid: the pid to check
         :return: True if it is running, false otherwise
         """
-        cmd = constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM + \
-              constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + str(pid)
+        cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
+               constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM + str(pid))
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         output = str(output)
@@ -361,5 +355,5 @@ class ManagementSystemController:
             return False
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
-        (output, err) = p.communicate()
+        p.communicate()
         return True

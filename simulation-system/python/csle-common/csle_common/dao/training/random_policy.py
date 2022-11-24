@@ -43,7 +43,7 @@ class RandomPolicy(Policy):
         :param a: the action
         :return: p(a|o)
         """
-        return 1/len(self.actions)
+        return 1 / len(self.actions)
 
     @staticmethod
     def from_dict(d: Dict) -> "RandomPolicy":
@@ -54,7 +54,7 @@ class RandomPolicy(Policy):
         :return: the created instance
         """
         return RandomPolicy(actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
-                    stage_policy_tensor=d["stage_policy_tensor"], player_type=d["player_type"])
+                            stage_policy_tensor=d["stage_policy_tensor"], player_type=d["player_type"])
 
     def to_dict(self) -> Dict:
         """

@@ -8,8 +8,8 @@ class EmulationPortObservationState:
     DTO Representation a port observation in the emulation
     """
 
-    def __init__(self, port : int, open : bool, service : int, protocol : TransportProtocol, http_enum: str = "",
-                 http_grep: str = "", vulscan: str = "", version : str = "", fingerprint: str = ""):
+    def __init__(self, port: int, open: bool, service: int, protocol: TransportProtocol, http_enum: str = "",
+                 http_grep: str = "", vulscan: str = "", version: str = "", fingerprint: str = ""):
         """
         Initializes the DTO
 
@@ -76,10 +76,9 @@ class EmulationPortObservationState:
         """
         :return: a string representation of the object
         """
-        return "port:{}, open:{}, service:{}, protocol:{}, http_enum:{}, http_grep:{}, vulscan:{}, version:{}, " \
-               "fingerprint:{}".format(
-            self.port, self.open,  self.service, self.protocol, self.http_enum, self.http_grep, self.vulscan,
-            self.version, self.fingerprint)
+        return f"port:{self.port}, open:{self.open}, service:{self.service}, protocol:{self.protocol}, " \
+               f"http_enum:{self.http_enum}, http_grep:{self.http_grep}, vulscan:{self.vulscan}, " \
+               f"version:{self.version}, fingerprint:{self.fingerprint}"
 
     def to_network_service(self) -> NetworkService:
         """
@@ -151,5 +150,5 @@ class EmulationPortObservationState:
         """
         :return: get the schema of the DTO
         """
-        return EmulationPortObservationState(port=-1, open=True, service = -1, protocol = TransportProtocol.TCP,
+        return EmulationPortObservationState(port=-1, open=True, service=-1, protocol=TransportProtocol.TCP,
                                              http_enum="", http_grep="", vulscan="", version="", fingerprint="")

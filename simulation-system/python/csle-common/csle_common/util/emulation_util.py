@@ -1,6 +1,5 @@
 from typing import Tuple, List, Union
 import time
-import os
 import paramiko
 import psutil
 import csle_collector.constants.constants as collector_constants
@@ -26,7 +25,7 @@ class EmulationUtil:
     """
 
     @staticmethod
-    def execute_ssh_cmds(cmds: List[str], conn, wait_for_completion :bool = True) -> List[Tuple[bytes, bytes, float]]:
+    def execute_ssh_cmds(cmds: List[str], conn, wait_for_completion: bool = True) -> List[Tuple[bytes, bytes, float]]:
         """
         Executes a list of commands over an ssh connection to the emulation
 
@@ -38,7 +37,7 @@ class EmulationUtil:
         return SSHUtil.execute_ssh_cmds(cmds=cmds, conn=conn, wait_for_completion=wait_for_completion)
 
     @staticmethod
-    def execute_ssh_cmd(cmd: str, conn, wait_for_completion :bool = True) -> Tuple[bytes, bytes, float]:
+    def execute_ssh_cmd(cmd: str, conn, wait_for_completion: bool = True) -> Tuple[bytes, bytes, float]:
         """
         Executes an action on the emulation over a ssh connection,
         this is a synchronous operation that waits for the completion of the action before returning
@@ -159,7 +158,7 @@ class EmulationUtil:
         :param root: whether it is a root connection or not
         :return: the new connection
         """
-        cr = Credential(username=user, pw=pw, root=root, protocol = TransportProtocol.TCP,
+        cr = Credential(username=user, pw=pw, root=root, protocol=TransportProtocol.TCP,
                         service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT)
         agent_addr = (source_ip, port)
         target_addr = (target_ip, port)
@@ -179,9 +178,8 @@ class EmulationUtil:
             Logger.__call__().get_logger().warning(f"Custom connection setup failed: {str(e)}, {repr(e)}")
             return None
 
-
     @staticmethod
-    def write_remote_file(conn, file_name : str, contents : str , write_mode : str ="w") -> None:
+    def write_remote_file(conn, file_name: str, contents: str, write_mode: str = "w") -> None:
         """
         Utility function for writing contents to a file
 
@@ -199,7 +197,6 @@ class EmulationUtil:
             Logger.__call__().get_logger().warning(f"Exception writing file: {str(e)}, {repr(e)}")
         finally:
             remote_file.close()
-
 
     @staticmethod
     def connect_admin(emulation_env_config: EmulationEnvConfig, ip: str,
@@ -265,7 +262,6 @@ class EmulationUtil:
         output_str = constants.NMAP.SHELL_ESCAPE.sub("", output_str)
         return output_str
 
-
     @staticmethod
     def is_emulation_defense_action_legal(defense_action_id: int, env_config: EmulationEnvConfig,
                                           env_state: EmulationEnvState) -> bool:
@@ -295,7 +291,7 @@ class EmulationUtil:
             return False
 
         action = env_state.attacker_action_config.actions[attack_action_id]
-        ip = env_state.attacker_obs_state.get_action_ips(action)
+        ip = env_state.attacker_obs_state.get_action_ips(action, emulation_env_config=env_config)
 
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=env_config, s=env_state)
         if (action.id, action.index, logged_in_ips_str) in env_state.attacker_obs_state.actions_tried:
@@ -316,7 +312,6 @@ class EmulationUtil:
 
         machine_discovered = False
         target_machine = None
-        target_machines = []
         logged_in = False
         unscanned_filesystems = False
         untried_credentials = False
@@ -359,8 +354,8 @@ class EmulationUtil:
             machine_discovered = True
 
         # Privilege escalation only legal if machine discovered and logged in and not root
-        if action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION and (not machine_discovered or not machine_logged_in
-                                                                                      or machine_root_login):
+        if (action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION and
+                (not machine_discovered or not machine_logged_in or machine_root_login)):
             return False
 
         # Exploit only legal if we have not already compromised the node
@@ -368,8 +363,9 @@ class EmulationUtil:
             return False
 
         # Shell-access Exploit only legal if we do not already have untried credentials
-        if action.type == EmulationAttackerActionType.EXPLOIT and action.action_outcome == EmulationAttackerActionOutcome.SHELL_ACCESS \
-                and target_untried_credentials:
+        if (action.type == EmulationAttackerActionType.EXPLOIT
+                and action.action_outcome == EmulationAttackerActionOutcome.SHELL_ACCESS
+                and target_untried_credentials):
             return False
 
         # Priv-Esc Exploit only legal if we are already logged in and do not have root
@@ -379,8 +375,9 @@ class EmulationUtil:
             return False
 
         # If IP is discovered, then IP specific action without other prerequisites is legal
-        if machine_discovered and (action.type == EmulationAttackerActionType.RECON or action.type == EmulationAttackerActionType.EXPLOIT
-                                   or action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION):
+        if (machine_discovered and (action.type == EmulationAttackerActionType.RECON or
+                                    action.type == EmulationAttackerActionType.EXPLOIT or
+                                    action.type == EmulationAttackerActionType.PRIVILEGE_ESCALATION)):
             if action.index == -1 and target_machine is None:
                 return True
             else:
@@ -402,7 +399,8 @@ class EmulationUtil:
             return False
 
         # Pivot recon possible if logged in on pivot machine with tools installed
-        if machine_discovered and action.type == EmulationAttackerActionType.POST_EXPLOIT and logged_in and machine_w_tools:
+        if (machine_discovered and action.type == EmulationAttackerActionType.POST_EXPLOIT and
+                logged_in and machine_w_tools):
             return True
 
         # If IP is discovered, and credentials are found and shell access, then post-exploit actions are legal
@@ -437,5 +435,5 @@ class EmulationUtil:
         """
         try:
             return psutil.Process(pid).is_running()
-        except:
+        except Exception:
             return False

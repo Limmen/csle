@@ -22,7 +22,7 @@ class ClientPopulationConsumerThread(threading.Thread):
         :param auto_offset_reset: the offset for kafka to start reading from
         """
         threading.Thread.__init__(self)
-        self.running =True
+        self.running = True
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.client_population_metrics = client_population_metrics
@@ -66,14 +66,13 @@ class ClientPopulationConsumerThread(threading.Thread):
             return self.client_population_metrics_list[0].copy()
         avg_client_population_metrics = ClientPopulationMetrics()
         for i in range(len(self.client_population_metrics_list)):
-            avg_client_population_metrics.num_clients = avg_client_population_metrics.num_clients + \
-                                                        self.client_population_metrics_list[i].num_clients
-            avg_client_population_metrics.rate = avg_client_population_metrics.rate + \
-                                                        self.client_population_metrics_list[i].rate
+            avg_client_population_metrics.num_clients = (avg_client_population_metrics.num_clients +
+                                                         self.client_population_metrics_list[i].num_clients)
+            avg_client_population_metrics.rate = (avg_client_population_metrics.rate +
+                                                  self.client_population_metrics_list[i].rate)
 
         avg_client_population_metrics.num_clients = int(round(
-            avg_client_population_metrics.num_clients/len(self.client_population_metrics_list)))
+            avg_client_population_metrics.num_clients / len(self.client_population_metrics_list)))
         avg_client_population_metrics.rate = float(round(
-            avg_client_population_metrics.rate/len(self.client_population_metrics_list)))
+            avg_client_population_metrics.rate / len(self.client_population_metrics_list)))
         return avg_client_population_metrics
-

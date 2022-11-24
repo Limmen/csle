@@ -1,7 +1,5 @@
 from typing import Union, List, Dict, Any
 
-import numpy as np
-
 
 class HParam:
     """
@@ -32,9 +30,7 @@ class HParam:
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "HParam":
-        obj = HParam(
-            value = d["value"], name=d["name"], descr=d["descr"]
-        )
+        obj = HParam(value=d["value"], name=d["name"], descr=d["descr"])
         return obj
 
     def to_json_str(self) -> str:

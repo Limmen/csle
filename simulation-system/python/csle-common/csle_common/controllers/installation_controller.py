@@ -18,15 +18,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def install_emulation(emulation_name: str) -> None:
@@ -41,12 +40,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -63,15 +62,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def uninstall_all_emulations() -> None:
@@ -84,12 +82,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -104,12 +102,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -125,15 +123,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def uninstall_simulation(simulation_name: str) -> None:
@@ -147,12 +144,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -167,12 +164,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -187,15 +184,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def install_derived_image(image_name: str) -> None:
@@ -209,12 +205,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -229,15 +225,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def uninstall_derived_image(image_name: str) -> None:
@@ -251,12 +246,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -271,15 +266,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def install_base_image(image_name: str) -> None:
@@ -293,12 +287,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -313,12 +307,12 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
 
@@ -334,15 +328,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def uninstall_metastore() -> None:
@@ -355,15 +348,14 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()
-
 
     @staticmethod
     def install_metastore() -> None:
@@ -376,11 +368,11 @@ class InstallationController:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
-            if p.poll() != None:
+            if p.poll() is not None:
                 break
             if out != '':
                 try:
                     sys.stdout.write(out.decode("utf-8"))
-                except:
+                except Exception:
                     pass
                 sys.stdout.flush()

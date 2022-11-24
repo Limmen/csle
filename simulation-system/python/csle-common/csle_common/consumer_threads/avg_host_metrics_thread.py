@@ -21,7 +21,7 @@ class AvgHostMetricsThread(threading.Thread):
         """
         threading.Thread.__init__(self)
         self.machines = machines
-        self.running =True
+        self.running = True
         self.host_metrics = host_metrics
         self.sleep_time = sleep_time
 
@@ -46,12 +46,12 @@ class AvgHostMetricsThread(threading.Thread):
                 total_num_login_events += m.host_metrics.num_login_events
                 total_num_processes += m.host_metrics.num_processes
                 total_num_users += m.host_metrics.num_users
-            avg_num_logged_in_users = int(total_num_logged_in_users/len(self.machines))
-            avg_num_failed_login_attempts = int(total_num_failed_login_attempts/len(self.machines))
-            avg_num_open_connections = int(total_num_open_connections/len(self.machines))
-            avg_num_login_events = int(total_num_login_events/len(self.machines))
-            avg_num_processes = int(total_num_processes/len(self.machines))
-            avg_num_users = int(total_num_users/len(self.machines))
+            avg_num_logged_in_users = int(total_num_logged_in_users / len(self.machines))
+            avg_num_failed_login_attempts = int(total_num_failed_login_attempts / len(self.machines))
+            avg_num_open_connections = int(total_num_open_connections / len(self.machines))
+            avg_num_login_events = int(total_num_login_events / len(self.machines))
+            avg_num_processes = int(total_num_processes / len(self.machines))
+            avg_num_users = int(total_num_users / len(self.machines))
             self.host_metrics.num_logged_in_users = avg_num_logged_in_users
             self.host_metrics.num_failed_login_attempts = avg_num_failed_login_attempts
             self.host_metrics.num_open_connections = avg_num_open_connections

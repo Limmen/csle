@@ -8,8 +8,8 @@ class ExperimentExecution:
     DTO representing an experiment execution
     """
 
-    def __init__(self, config: ExperimentConfig, result: ExperimentResult, timestamp: float, emulation_name :str,
-                 simulation_name : str, descr: str, log_file_path: str):
+    def __init__(self, config: ExperimentConfig, result: ExperimentResult, timestamp: float, emulation_name: str,
+                 simulation_name: str, descr: str, log_file_path: str):
         """
         Initializes the DTO
 

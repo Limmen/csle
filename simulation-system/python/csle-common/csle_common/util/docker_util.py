@@ -48,12 +48,11 @@ class DockerUtil:
         :return: list of parsed containers
         """
         containers = client_1.containers.list(all=True)
-        stopped_containers = list(filter(lambda x: (x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
-                                                   or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS),
-                                                    containers))
+        stopped_containers = list(filter(
+            lambda x: (x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
+                       or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         parsed_containers = DockerUtil.parse_containers(containers=stopped_containers, client2=client2)
         return parsed_containers
-
 
     @staticmethod
     def parse_running_emulation_envs(emulations: List[str], containers: List[DockerContainerMetadata]) \
@@ -78,7 +77,7 @@ class DockerUtil:
                 config = em_record
 
             p_env = DockerEnvMetadata(containers=em_containers, name=em, subnet_prefix=subnet_mask,
-                                      subnet_mask=subnet_mask, level= em_containers[0].level, config=config,
+                                      subnet_mask=subnet_mask, level=em_containers[0].level, config=config,
                                       kafka_config=None)
             parsed_envs.append(p_env)
         return parsed_envs
@@ -134,7 +133,7 @@ class DockerUtil:
                         constants.DOCKER.IP_PREFIX_LEN_INFO]
                 parsed_c = DockerContainerMetadata(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
-                    image_tags = c.image.tags, id=c.id,
+                    image_tags=c.image.tags, id=c.id,
                     created=inspect_info[constants.DOCKER.CREATED_INFO],
                     ip=ip,
                     network_id=network_id,

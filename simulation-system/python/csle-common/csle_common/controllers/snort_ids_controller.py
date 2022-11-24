@@ -114,19 +114,16 @@ class SnortIDSController:
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
         # Check if ids_manager is already running
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME
-        o, e, _ = EmulationUtil.execute_ssh_cmd(
-            cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME)
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
-        if not constants.COMMANDS.SEARCH_SNORT_IDS_MANAGER in str(o):
-
+        if constants.COMMANDS.SEARCH_SNORT_IDS_MANAGER not in str(o):
             Logger.__call__().get_logger().info(f"Starting Snort IDS manager on node {ip}")
 
             # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME
+            cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+                   constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
@@ -166,11 +163,9 @@ class SnortIDSController:
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
         Logger.__call__().get_logger().info(f"Stopping Snort IDS manager on node {ip}")
 
-        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME
-        o, e, _ = EmulationUtil.execute_ssh_cmd(
-            cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
+        cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME)
+        o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
         time.sleep(2)
 
@@ -215,8 +210,7 @@ class SnortIDSController:
                     stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
                     kafka_port=emulation_env_config.kafka_config.kafka_port,
                     log_file_path=csle_collector_constants.SNORT_IDS_ROUTER.SNORT_FAST_LOG_FILE,
-                    time_step_len_seconds=
-                    emulation_env_config.snort_ids_manager_config.time_step_len_seconds)
+                    time_step_len_seconds=emulation_env_config.snort_ids_manager_config.time_step_len_seconds)
 
     @staticmethod
     def stop_snort_idses_monitor_threads(emulation_env_config: EmulationEnvConfig) -> None:
@@ -258,7 +252,8 @@ class SnortIDSController:
                                                  start_if_stopped: bool = True) -> \
             List[csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO]:
         """
-        A method that sends a request to the SnortIDSManager on every container to get the status of the IDS monitor thread
+        A method that sends a request to the SnortIDSManager on every container to get the status of the
+        IDS monitor thread
 
         :param emulation_env_config: the emulation config
         :param start_if_stopped: whether to start the IDS monitor if it is stopped
@@ -353,7 +348,8 @@ class SnortIDSController:
         return ports
 
     @staticmethod
-    def get_snort_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) -> SnortIdsManagersInfo:
+    def get_snort_managers_info(emulation_env_config: EmulationEnvConfig, active_ips: List[str]) \
+            -> SnortIdsManagersInfo:
         """
         Extracts the information of the Snort managers for a given emulation
 
@@ -361,7 +357,8 @@ class SnortIDSController:
         :param active_ips: list of active IPs
         :return: a DTO with the status of the Snort managers
         """
-        snort_ids_managers_ips = SnortIDSController.get_snort_ids_managers_ips(emulation_env_config=emulation_env_config)
+        snort_ids_managers_ips = SnortIDSController.get_snort_ids_managers_ips(
+            emulation_env_config=emulation_env_config)
         snort_ids_managers_ports = \
             SnortIDSController.get_snort_idses_managers_ports(emulation_env_config=emulation_env_config)
         snort_managers_statuses = []
@@ -381,15 +378,13 @@ class SnortIDSController:
             if status is not None:
                 snort_managers_statuses.append(status)
             else:
-                snort_managers_statuses.append(
-                    csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.
-                        snort_ids_monitor_dto_empty())
+                util = csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil
+                snort_managers_statuses.append(util.snort_ids_monitor_dto_empty())
             snort_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
         snort_manager_info_dto = SnortIdsManagersInfo(
-            snort_ids_managers_running=snort_managers_running,  ips=snort_ids_managers_ips, ports=snort_ids_managers_ports,
-            execution_id=execution_id, emulation_name=emulation_name, snort_ids_managers_statuses=snort_managers_statuses)
+            snort_ids_managers_running=snort_managers_running, ips=snort_ids_managers_ips,
+            ports=snort_ids_managers_ports, execution_id=execution_id, emulation_name=emulation_name,
+            snort_ids_managers_statuses=snort_managers_statuses)
         return snort_manager_info_dto
-
-

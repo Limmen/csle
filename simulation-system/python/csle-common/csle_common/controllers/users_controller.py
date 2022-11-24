@@ -19,8 +19,8 @@ class UsersController:
         for users_conf in emulation_env_config.users_config.users_configs:
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=users_conf.ip)
 
-            cmd="ls /home"
-            o,e,_ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.ip])
+            cmd = "ls /home"
+            o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.ip])
             users_w_home = o.decode().split("\n")
             users_w_home = list(filter(lambda x: x != '', users_w_home))
 
@@ -37,7 +37,7 @@ class UsersController:
                           "\"$(openssl passwd -1 '{}')\" {}".format(user.username, user.pw, user.username)
                 else:
                     cmd = "sudo useradd -rm  -d /home/{} -s /bin/bash -g {}" \
-                          "-p \"$(openssl passwd -1 '{}')\" {}".format(user.username, user.username,user.pw,
+                          "-p \"$(openssl passwd -1 '{}')\" {}".format(user.username, user.username, user.pw,
                                                                        user.username)
                 o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.connections[users_conf.ip])
 
@@ -51,7 +51,7 @@ class UsersController:
                           "\"$(openssl passwd -1 '{}')\" {}".format(cr.username, cr.pw, cr.username)
                 else:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g {} " \
-                          "-p \"$(openssl passwd -1 '{}')\" {}".format(cr.username, cr.username,cr.pw,cr.username)
+                          "-p \"$(openssl passwd -1 '{}')\" {}".format(cr.username, cr.username, cr.pw, cr.username)
                 o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                         conn=emulation_env_config.get_connection(ip=vuln.ip))
 

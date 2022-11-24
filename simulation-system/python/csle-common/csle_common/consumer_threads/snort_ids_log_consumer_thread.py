@@ -12,7 +12,7 @@ class SnortIdsLogConsumerThread(threading.Thread):
     Thread that polls the Snort IDS log to get the latest metrics
     """
 
-    def __init__(self, kafka_server_ip: str, kafka_port: int, snort_ids_alert_counters : SnortIdsAlertCounters,
+    def __init__(self, kafka_server_ip: str, kafka_port: int, snort_ids_alert_counters: SnortIdsAlertCounters,
                  auto_offset_reset: str = "latest") -> None:
         """
         Initializes the thread
@@ -23,15 +23,15 @@ class SnortIdsLogConsumerThread(threading.Thread):
         :param auto_offset_reset: the offset for kafka to start reading from
         """
         threading.Thread.__init__(self)
-        self.running =True
+        self.running = True
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.snort_ids_alert_counters = snort_ids_alert_counters
-        self.snort_ids_alert_counters_list : List[SnortIdsAlertCounters] = []
+        self.snort_ids_alert_counters_list: List[SnortIdsAlertCounters] = []
         self.ts = time.time()
         self.kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_server_ip}:{self.kafka_port}",
-            collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"ids_log_consumer_thread_{self.ts}",
+            collector_constants.KAFKA.GROUP_ID_PROPERTY: f"ids_log_consumer_thread_{self.ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME])

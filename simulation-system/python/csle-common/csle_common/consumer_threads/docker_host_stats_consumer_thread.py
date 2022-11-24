@@ -24,14 +24,14 @@ class DockerHostStatsConsumerThread(threading.Thread):
         """
         threading.Thread.__init__(self)
         self.host_ip = host_ip
-        self.running =True
+        self.running = True
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.docker_stats = docker_stats
         self.ts = time.time()
         self.kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_server_ip}:{self.kafka_port}",
-            collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"docker_host_stats_consumer_thread_{self.host_ip}_{self.ts}",
+            collector_constants.KAFKA.GROUP_ID_PROPERTY: f"docker_host_stats_consumer_thread_{self.host_ip}_{self.ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME])

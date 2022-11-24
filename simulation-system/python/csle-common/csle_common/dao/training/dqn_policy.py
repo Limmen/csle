@@ -17,7 +17,7 @@ class DQNPolicy(Policy):
     A neural network policy learned with DQN
     """
 
-    def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states : List[State],
+    def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
                  actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
@@ -37,7 +37,7 @@ class DQNPolicy(Policy):
         self.save_path = save_path
         if self.model is None:
             try:
-                self.model = DQN.load(path = self.save_path)
+                self.model = DQN.load(path=self.save_path)
             except Exception as e:
                 Logger.__call__().get_logger().warning(
                     f"There was an exception loading the model from path: {self.save_path}, "
@@ -81,7 +81,7 @@ class DQNPolicy(Policy):
         d["save_path"] = self.save_path
         if self.model is not None:
             d["policy_kwargs"] = self.model.policy_kwargs
-            self.model.save(path = self.save_path)
+            self.model.save(path=self.save_path)
         else:
             d["policy_kwargs"] = {}
             d["policy_kwargs"]["net_arch"] = []
@@ -146,7 +146,7 @@ class DQNPolicy(Policy):
             stop_prob = 1
         else:
             stop_prob = 0
-        return [1-stop_prob, stop_prob]
+        return [1 - stop_prob, stop_prob]
 
     def __str__(self) -> str:
         """
@@ -183,4 +183,3 @@ class DQNPolicy(Policy):
         :return: a copy of the DTO
         """
         return self.from_dict(self.to_dict())
-

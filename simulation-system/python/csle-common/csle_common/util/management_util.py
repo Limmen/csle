@@ -33,8 +33,8 @@ class ManagementUtil:
                                   email=constants.CSLE_ADMIN.MANAGEMENT_EMAIL)
             MetastoreFacade.save_management_user(management_user=user)
         else:
-            Logger.__call__().get_logger().info(f"Management account with username: {constants.CSLE_ADMIN.MANAGEMENT_USER} "
-                                                f"already exists")
+            Logger.__call__().get_logger().info(f"Management account with username: "
+                                                f"{constants.CSLE_ADMIN.MANAGEMENT_USER} already exists")
 
     @staticmethod
     def create_default_management_guest_account() -> None:
@@ -62,4 +62,3 @@ class ManagementUtil:
             Logger.__call__().get_logger().info(f"Management account with username: "
                                                 f"{constants.CSLE_GUEST.MANAGEMENT_USER} "
                                                 f"already exists")
-

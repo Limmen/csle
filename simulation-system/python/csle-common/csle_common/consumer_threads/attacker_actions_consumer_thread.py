@@ -12,7 +12,7 @@ class AttackerActionsConsumerThread(threading.Thread):
     Thread that polls Kafka to get the latest attacker actions
     """
 
-    def __init__(self, kafka_server_ip: str, kafka_port: int, attacker_actions : List[EmulationAttackerAction],
+    def __init__(self, kafka_server_ip: str, kafka_port: int, attacker_actions: List[EmulationAttackerAction],
                  auto_offset_reset: str = "latest") -> None:
         """
         Initializes the thread
@@ -22,14 +22,14 @@ class AttackerActionsConsumerThread(threading.Thread):
         :param auto_offset_reset: the offset for kafka to start reading from
         """
         threading.Thread.__init__(self)
-        self.running =True
+        self.running = True
         self.kafka_server_ip = kafka_server_ip
         self.kafka_port = kafka_port
         self.ts = time.time()
         self.auto_offset_reset = auto_offset_reset
         self.kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_server_ip}:{self.kafka_port}",
-            collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"attacker_actions_consumer_thread_{self.ts}",
+            collector_constants.KAFKA.GROUP_ID_PROPERTY: f"attacker_actions_consumer_thread_{self.ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: auto_offset_reset}
         self.consumer = Consumer(**self.kafka_conf)
         self.consumer.subscribe([collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME])

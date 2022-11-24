@@ -2,7 +2,6 @@ from typing import List, Dict, Union, Tuple
 import numpy as np
 import torch
 import math
-import time
 from torch.distributions import Categorical
 from csle_agents.common.fnn_w_softmax import FNNwithSoftmax
 import csle_agents.constants.constants as agents_constants
@@ -22,7 +21,7 @@ class FNNWithSoftmaxPolicy(Policy):
     """
 
     def __init__(self, policy_network, simulation_name: str, save_path: str,
-                 player_type: PlayerType, states : List[State],
+                 player_type: PlayerType, states: List[State],
                  actions: List[Action], experiment_config: ExperimentConfig, avg_R: float, input_dim: int,
                  output_dim: int):
         """
@@ -52,7 +51,8 @@ class FNNWithSoftmaxPolicy(Policy):
                 self.policy_network = FNNwithSoftmax(
                     input_dim=input_dim,
                     output_dim=output_dim,
-                    hidden_dim=self.experiment_config.hparams[agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value,
+                    hidden_dim=self.experiment_config.hparams[
+                        agents_constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER].value,
                     num_hidden_layers=self.experiment_config.hparams[agents_constants.COMMON.NUM_HIDDEN_LAYERS].value,
                     hidden_activation=self.experiment_config.hparams[agents_constants.COMMON.ACTIVATION_FUNCTION].value
                 )
@@ -201,13 +201,14 @@ class FNNWithSoftmaxPolicy(Policy):
         :return: the conditional ation distribution
         """
         obs = np.array([obs])
-        actions, values, log_prob = self.policy_network.policy.forward(obs=torch.tensor(obs).to(self.policy_network.device))
+        actions, values, log_prob = self.policy_network.policy.forward(
+            obs=torch.tensor(obs).to(self.policy_network.device))
         action = actions[0]
         if action == 1:
             stop_prob = math.exp(log_prob)
         else:
-            stop_prob = 1-math.exp(log_prob)
-        return [1-stop_prob, stop_prob]
+            stop_prob = 1 - math.exp(log_prob)
+        return [1 - stop_prob, stop_prob]
 
     def __str__(self) -> str:
         """

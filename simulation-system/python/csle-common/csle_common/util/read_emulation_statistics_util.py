@@ -24,7 +24,7 @@ from csle_common.logging.log import Logger
 class ReadEmulationStatisticsUtil:
 
     @staticmethod
-    def read_all(emulation_env_config: EmulationEnvConfig, time_window_minutes : int = 100) \
+    def read_all(emulation_env_config: EmulationEnvConfig, time_window_minutes: int = 100) \
             -> EmulationMetricsTimeSeries:
         """
         Reads all time series data from the kafka log
@@ -83,14 +83,15 @@ class ReadEmulationStatisticsUtil:
         kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:
                 f"{emulation_env_config.kafka_config.container.get_ips()[0]}:"
-                                           f"{emulation_env_config.kafka_config.kafka_port}",
-            collector_constants.KAFKA.GROUP_ID_PROPERTY:  f"attacker_actions_consumer_thread_{start_consume_ts}",
+                f"{emulation_env_config.kafka_config.kafka_port}",
+            collector_constants.KAFKA.GROUP_ID_PROPERTY: f"attacker_actions_consumer_thread_{start_consume_ts}",
             collector_constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY: collector_constants.KAFKA.EARLIEST_OFFSET}
         consumer = Consumer(**kafka_conf)
         start_consume_ts = int(datetime.datetime.timestamp(datetime.datetime.now()
                                                            - datetime.timedelta(minutes=time_window_minutes)))
-        start_consume_ts=int(start_consume_ts*1e3) # convert to ms
-        topic_partitions = list(map(lambda x: TopicPartition(topic=x, partition=0, offset=start_consume_ts), topic_names))
+        start_consume_ts = int(start_consume_ts * 1e3)  # convert to ms
+        topic_partitions = list(map(lambda x: TopicPartition(topic=x, partition=0, offset=start_consume_ts),
+                                    topic_names))
         time_offsets_partitions = consumer.offsets_for_times(partitions=topic_partitions, timeout=20)
 
         def on_assign(consumer, partitions):
@@ -107,7 +108,7 @@ class ReadEmulationStatisticsUtil:
         while not done:
             msg = consumer.poll(timeout=1.0)
             if msg is not None:
-                num_msg+= 1
+                num_msg += 1
                 if msg.error():
                     if msg.error().code() == KafkaError._PARTITION_EOF:
                         Logger.__call__().get_logger.warning(
@@ -147,20 +148,22 @@ class ReadEmulationStatisticsUtil:
                         openflow_flow_stats.append(flow_metrics_record)
                         if str(flow_metrics_record.datapath_id) not in openflow_flow_metrics_per_switch:
                             openflow_flow_metrics_per_switch[str(flow_metrics_record.datapath_id)] = []
-                        openflow_flow_metrics_per_switch[str(flow_metrics_record.datapath_id)].append(flow_metrics_record)
+                        openflow_flow_metrics_per_switch[str(flow_metrics_record.datapath_id)].append(
+                            flow_metrics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME:
                         port_metrics_record = PortStatistic.from_kafka_record(record=msg.value().decode())
                         openflow_port_stats.append(port_metrics_record)
                         if str(port_metrics_record.datapath_id) not in openflow_port_metrics_per_switch:
                             openflow_port_metrics_per_switch[str(port_metrics_record.datapath_id)] = []
                         openflow_port_metrics_per_switch[str(port_metrics_record.datapath_id)].append(
-                                port_metrics_record)
+                            port_metrics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME:
                         avg_flow_statistics_record = AvgFlowStatistic.from_kafka_record(record=msg.value().decode())
                         avg_openflow_flow_stats.append(avg_flow_statistics_record)
                         if str(avg_flow_statistics_record.datapath_id) not in openflow_flow_avg_metrics_per_switch:
                             openflow_flow_avg_metrics_per_switch[str(avg_flow_statistics_record.datapath_id)] = []
-                        openflow_flow_avg_metrics_per_switch[str(avg_flow_statistics_record.datapath_id)].append(avg_flow_statistics_record)
+                        openflow_flow_avg_metrics_per_switch[str(avg_flow_statistics_record.datapath_id)].append(
+                            avg_flow_statistics_record)
                     elif topic == collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME:
                         avg_port_statistics_record = AvgPortStatistic.from_kafka_record(record=msg.value().decode())
                         avg_openflow_port_stats.append(avg_port_statistics_record)
@@ -188,7 +191,7 @@ class ReadEmulationStatisticsUtil:
                         ossec_host_metrics_counter = 0
                         total_ossec_metrics = []
             else:
-                done=True
+                done = True
         consumer.close()
         dto = EmulationMetricsTimeSeries(
             client_metrics=client_metrics, aggregated_docker_stats=agg_docker_stats, host_metrics=host_metrics,
@@ -198,10 +201,10 @@ class ReadEmulationStatisticsUtil:
             ossec_host_alert_counters=ossec_host_ids_metrics,
             avg_openflow_flow_stats=avg_openflow_flow_stats, avg_openflow_port_stats=avg_openflow_port_stats,
             openflow_port_stats=openflow_port_stats, openflow_flow_stats=openflow_flow_stats,
-            openflow_flow_metrics_per_switch = openflow_flow_metrics_per_switch,
-            openflow_port_metrics_per_switch = openflow_port_metrics_per_switch,
-            openflow_flow_avg_metrics_per_switch = openflow_flow_avg_metrics_per_switch,
-            openflow_port_avg_metrics_per_switch = openflow_port_avg_metrics_per_switch,
+            openflow_flow_metrics_per_switch=openflow_flow_metrics_per_switch,
+            openflow_port_metrics_per_switch=openflow_port_metrics_per_switch,
+            openflow_flow_avg_metrics_per_switch=openflow_flow_avg_metrics_per_switch,
+            openflow_port_avg_metrics_per_switch=openflow_port_avg_metrics_per_switch,
             agg_openflow_flow_stats=agg_openflow_flow_stats,
             agg_openflow_flow_metrics_per_switch=agg_openflow_flow_metrics_per_switch
         )

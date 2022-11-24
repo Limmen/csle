@@ -35,11 +35,11 @@ class ExperimentUtil:
         :param seed: the random seed
         :return: the directory path
         """
-        return output_dir + constants.COMMANDS.SLASH_DELIM + results_dir + constants.COMMANDS.SLASH_DELIM + subdir \
-               + constants.COMMANDS.SLASH_DELIM + str(seed) + constants.COMMANDS.SLASH_DELIM
+        return (output_dir + constants.COMMANDS.SLASH_DELIM + results_dir + constants.COMMANDS.SLASH_DELIM + subdir
+                + constants.COMMANDS.SLASH_DELIM + str(seed) + constants.COMMANDS.SLASH_DELIM)
 
     @staticmethod
-    def create_artifact_dirs(output_dir: str, random_seed : int) -> None:
+    def create_artifact_dirs(output_dir: str, random_seed: int) -> None:
         """
         Creates artifact directories if they do not already exist
 
@@ -77,7 +77,7 @@ class ExperimentUtil:
                                                   constants.EXPERIMENT.ENV_DATA_DIR, random_seed))
 
     @staticmethod
-    def setup_experiment_logger(name: str, logdir: str, time_str = None):
+    def setup_experiment_logger(name: str, logdir: str, time_str: str = None):
         """
         Configures the logger for writing log-data of training
 
@@ -98,15 +98,15 @@ class ExperimentUtil:
         # log to file
         if time_str is None:
             time_str = str(time.time())
-        fh = logging.FileHandler(logdir + constants.COMMANDS.SLASH_DELIM + time_str + constants.COMMANDS.UNDERSCORE_DELIM
-                                 + name + constants.FILE_PATTERNS.LOG_SUFFIX, mode="w")
+        fh = logging.FileHandler(logdir + constants.COMMANDS.SLASH_DELIM + time_str +
+                                 constants.COMMANDS.UNDERSCORE_DELIM +
+                                 name + constants.FILE_PATTERNS.LOG_SUFFIX, mode="w")
         fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
 
         # add the handlers to the logger
         logger.addHandler(fh)
         return logger
-
 
     @staticmethod
     def write_emulation_config_file(emulation_env_config: EmulationEnvConfig, path: str) -> None:
@@ -221,7 +221,7 @@ class ExperimentUtil:
         return script_dir
 
     @staticmethod
-    def default_emulation_config_path(out_dir : str = None) -> str:
+    def default_emulation_config_path(out_dir: str = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to emulation config file
@@ -235,7 +235,7 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_simulation_config_path(out_dir : str = None) -> str:
+    def default_simulation_config_path(out_dir: str = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to simulatio config file
@@ -249,21 +249,20 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_emulation_picture_path(out_dir : str = None) -> str:
+    def default_emulation_picture_path(out_dir: str = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to emulation img file
         """
         if out_dir is None:
-            img_path = os.path.join(ExperimentUtil.default_output_dir(), constants.COMMANDS.DOT_DELIM
-                                       + constants.DOCKER.EMULATION_ENV_IMAGE)
+            img_path = os.path.join(ExperimentUtil.default_output_dir(), (constants.COMMANDS.DOT_DELIM +
+                                                                          constants.DOCKER.EMULATION_ENV_IMAGE))
         else:
-            img_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM
-                                       + constants.DOCKER.EMULATION_ENV_IMAGE)
+            img_path = os.path.join(out_dir, constants.COMMANDS.DOT_DELIM + constants.DOCKER.EMULATION_ENV_IMAGE)
         return img_path
 
     @staticmethod
-    def default_simulation_picture_path(out_dir : str = None) -> str:
+    def default_simulation_picture_path(out_dir: str = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to simulatio img file
@@ -277,7 +276,7 @@ class ExperimentUtil:
         return img_path
 
     @staticmethod
-    def default_containers_folders_path(out_dir : str = None) -> str:
+    def default_containers_folders_path(out_dir: str = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to container folders
@@ -291,7 +290,7 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_makefile_template_path(out_dir : str = None) -> str:
+    def default_makefile_template_path(out_dir: str = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to makefile tempalte
@@ -306,7 +305,7 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_makefile_path(out_dir : str = None) -> str:
+    def default_makefile_path(out_dir: str = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to makefile tempalte
@@ -329,10 +328,10 @@ class ExperimentUtil:
             N = len(x)
         if len(x) >= N:
             y = np.copy(x)
-            y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+            y[N - 1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
         else:
             y = np.zeros_like(x)
-        return round(y[-1],2)
+        return round(y[-1], 2)
 
     @staticmethod
     def running_average_list(x, N):
@@ -343,7 +342,7 @@ class ExperimentUtil:
             N = len(x)
         if len(x) >= N:
             y = np.copy(x)
-            y[N-1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
+            y[N - 1:] = np.convolve(x, np.ones((N, )) / N, mode='valid')
         else:
             y = np.zeros_like(x)
         return y
@@ -360,7 +359,7 @@ class ExperimentUtil:
         a = 1.0 * np.array(data)
         n = len(a)
         m, se = np.mean(a), scipy.stats.sem(a)
-        h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+        h = se * scipy.stats.t.ppf((1 + confidence) / 2., n - 1)
         return m, h
 
     @staticmethod

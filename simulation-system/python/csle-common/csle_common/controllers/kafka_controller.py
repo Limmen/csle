@@ -29,25 +29,22 @@ class KafkaController:
                                     create_producer=False)
 
         # Check if kafka_manager is already running
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
 
-        if not constants.COMMANDS.SEARCH_KAFKA_MANAGER in str(o):
-
+        if constants.COMMANDS.SEARCH_KAFKA_MANAGER not in str(o):
             Logger.__call__().get_logger().info(f"Starting the Kafka manager on node "
                                                 f"{emulation_env_config.kafka_config.container.get_ips()[0]}")
 
             # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME
+            cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+                   constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
-                conn=
-                emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
+                conn=emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
 
             # Start the kafka_manager
             cmd = constants.COMMANDS.START_KAFKA_MANAGER.format(
@@ -57,8 +54,7 @@ class KafkaController:
                 emulation_env_config.kafka_config.kafka_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
-                conn=
-                emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
+                conn=emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
             time.sleep(2)
 
     @staticmethod
@@ -79,13 +75,11 @@ class KafkaController:
                                             f"{emulation_env_config.kafka_config.container.get_ips()[0]}")
 
         # Stop old background job if running
-        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.KAFKA_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
-            conn=
-            emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
+            conn=emulation_env_config.get_connection(ip=emulation_env_config.kafka_config.container.get_ips()[0]))
         time.sleep(2)
 
     @staticmethod
@@ -175,7 +169,6 @@ class KafkaController:
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub)
             return kafka_dto
 
-
     @staticmethod
     def start_kafka_server(emulation_env_config: EmulationEnvConfig) -> \
             csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
@@ -252,5 +245,5 @@ class KafkaController:
         kafka_manager_info_dto = KafkaManagersInfo(
             kafka_managers_running=kafka_managers_running, ips=kafka_managers_ips, execution_id=execution_id,
             emulation_name=emulation_name, kafka_managers_statuses=kafka_managers_statuses,
-            ports = kafka_managers_ports)
+            ports=kafka_managers_ports)
         return kafka_manager_info_dto

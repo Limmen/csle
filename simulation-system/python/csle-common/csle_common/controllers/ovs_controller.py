@@ -44,15 +44,15 @@ class OVSController:
                         cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} ifconfig {net.interface} 0"
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
                         time.sleep(0.2)
-                        if idx==0:
+                        if idx == 0:
                             bridge_intf = bridge_name
                         else:
                             bridge_intf = f"{bridge_name}:{idx}"
-                        cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} ifconfig {bridge_intf} {ip} " \
-                              f"netmask {net.bitmask}"
+                        cmd = f"{constants.COMMANDS.DOCKER_EXEC_COMMAND} {container_name} " \
+                              f"ifconfig {bridge_intf} {ip} netmask {net.bitmask}"
                         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
                         time.sleep(0.2)
-                        idx+=1
+                        idx += 1
 
     @staticmethod
     def apply_ovs_config(emulation_env_config: EmulationEnvConfig) -> None:

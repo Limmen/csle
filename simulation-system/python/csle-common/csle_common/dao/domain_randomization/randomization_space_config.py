@@ -7,10 +7,10 @@ class RandomizationSpaceConfig:
     DTO representing a randomization space configuratio
     """
 
-    def __init__(self, emulation_confs: List[EmulationEnvConfig], min_num_nodes : int=4,
-                 max_num_nodes : int=4, min_num_flags : int = 1, max_num_flags : int = 1,
-                 min_num_users: int = 1, max_num_users : int = 1,
-                 services = None, vulnerabilities = None, os = None,
+    def __init__(self, emulation_confs: List[EmulationEnvConfig], min_num_nodes: int = 4,
+                 max_num_nodes: int = 4, min_num_flags: int = 1, max_num_flags: int = 1,
+                 min_num_users: int = 1, max_num_users: int = 1,
+                 services=None, vulnerabilities=None, os: str = None,
                  use_base_randomization: bool = False) -> None:
         """
         Creates a randomization space config according to the given parameters
@@ -36,10 +36,9 @@ class RandomizationSpaceConfig:
         self.min_num_users = min_num_users
         self.services = services
         self.max_num_users = max_num_users
-        self.vulnerabilities=vulnerabilities
-        self.os=os
+        self.vulnerabilities = vulnerabilities
+        self.os = os
         self.use_base_randomization = use_base_randomization
-
 
     def __str__(self) -> str:
         """

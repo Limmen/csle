@@ -29,26 +29,23 @@ class ELKController:
                                     create_producer=False)
 
         # Check if elk_manager is already running
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM +
+               constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
-        t = constants.COMMANDS.SEARCH_ELK_MANAGER
 
-        if not constants.COMMANDS.SEARCH_ELK_MANAGER in str(o):
+        if constants.COMMANDS.SEARCH_ELK_MANAGER not in str(o):
 
             Logger.__call__().get_logger().info(f"Starting elk manager on node: "
                                                 f"{emulation_env_config.elk_config.container.get_ips()[0]}")
 
             # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME
+            cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+                   constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
-                conn=
-                emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+                conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
 
             # Start the elk_manager
             cmd = constants.COMMANDS.START_ELK_MANAGER.format(
@@ -57,8 +54,7 @@ class ELKController:
                 emulation_env_config.elk_config.elk_manager_max_workers)
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd,
-                conn=
-                emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
+                conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
             time.sleep(2)
 
     @staticmethod
@@ -78,9 +74,8 @@ class ELKController:
                                             f"{emulation_env_config.elk_config.container.get_ips()[0]}")
 
         # Stop background job
-        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.ELK_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(
             cmd=cmd,
             conn=emulation_env_config.get_connection(ip=emulation_env_config.elk_config.container.get_ips()[0]))
@@ -342,5 +337,5 @@ class ELKController:
         emulation_name = emulation_env_config.name
         elk_manager_info_dto = ELKManagersInfo(
             elk_managers_running=elk_managers_running, ips=elk_managers_ips, execution_id=execution_id,
-            emulation_name=emulation_name, elk_managers_statuses=elk_managers_statuses, ports = elk_managers_ports)
+            emulation_name=emulation_name, elk_managers_statuses=elk_managers_statuses, ports=elk_managers_ports)
         return elk_manager_info_dto

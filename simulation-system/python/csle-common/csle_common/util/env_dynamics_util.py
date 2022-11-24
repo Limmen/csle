@@ -23,7 +23,7 @@ class EnvDynamicsUtil:
 
     @staticmethod
     def merge_complete_obs_state(old_obs_state: EmulationAttackerObservationState,
-                                 new_obs_state : EmulationAttackerObservationState,
+                                 new_obs_state: EmulationAttackerObservationState,
                                  emulation_env_config: EmulationEnvConfig) -> EmulationAttackerObservationState:
         """
         Merges an old observation state with a new one
@@ -44,7 +44,7 @@ class EnvDynamicsUtil:
     def merge_new_obs_with_old(old_machines_obs: List[EmulationAttackerMachineObservationState],
                                new_machines_obs: List[EmulationAttackerMachineObservationState],
                                emulation_env_config: EmulationEnvConfig,
-                               action : Union[EmulationAttackerAction, None]) \
+                               action: Union[EmulationAttackerAction, None]) \
             -> List[EmulationAttackerMachineObservationState]:
         """
         Helper function for merging an old network observation with new information collected
@@ -92,7 +92,7 @@ class EnvDynamicsUtil:
         :param n_m: newly collected machine information
         :return: the merged attacker machine observation state
         """
-        if n_m == None:
+        if n_m is None:
             return o_m
 
         merged_ports, num_new_ports_found = EnvDynamicsUtil.merge_ports(o_m.ports, n_m.ports, acc=True)
@@ -102,8 +102,8 @@ class EnvDynamicsUtil:
         merged_cve_vulnerabilities, num_new_cve_vuln_found = EnvDynamicsUtil.merge_vulnerabilities(o_m.cve_vulns,
                                                                                                    n_m.cve_vulns)
         n_m.cve_vulns = merged_cve_vulnerabilities
-        merged_osvdb_vulnerabilities, num_new_osvdb_vuln_found = EnvDynamicsUtil.merge_vulnerabilities(o_m.osvdb_vulns,
-                                                                                                   n_m.osvdb_vulns)
+        merged_osvdb_vulnerabilities, num_new_osvdb_vuln_found = EnvDynamicsUtil.merge_vulnerabilities(
+            o_m.osvdb_vulns, n_m.osvdb_vulns)
         n_m.osvdb_vulns = merged_osvdb_vulnerabilities
         n_m, new_shell_access = EnvDynamicsUtil.merge_shell_access(o_m, n_m)
         n_m, num_new_logged_in = EnvDynamicsUtil.merge_logged_in(o_m, n_m)
@@ -264,8 +264,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_tools_tried(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
-            -> EmulationAttackerMachineObservationState:
+    def merge_tools_tried(o_m: EmulationAttackerMachineObservationState,
+                          n_m: EmulationAttackerMachineObservationState) -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation "tools tried" flag with new information collected
 
@@ -312,8 +312,8 @@ class EnvDynamicsUtil:
         return n_m, new_flag_points
 
     @staticmethod
-    def merge_connections(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState) \
-            -> EmulationAttackerMachineObservationState:
+    def merge_connections(o_m: EmulationAttackerMachineObservationState,
+                          n_m: EmulationAttackerMachineObservationState) -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation shell-connections with new information collected
 
@@ -327,7 +327,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_filesystem_scanned(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState,
+    def merge_filesystem_scanned(o_m: EmulationAttackerMachineObservationState,
+                                 n_m: EmulationAttackerMachineObservationState,
                                  new_root: int) -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation file-system-scanned-flag with new information collected
@@ -344,7 +345,8 @@ class EnvDynamicsUtil:
         return n_m
 
     @staticmethod
-    def merge_untried_credentials(o_m: EmulationAttackerMachineObservationState, n_m: EmulationAttackerMachineObservationState,
+    def merge_untried_credentials(o_m: EmulationAttackerMachineObservationState,
+                                  n_m: EmulationAttackerMachineObservationState,
                                   action: EmulationAttackerAction) -> EmulationAttackerMachineObservationState:
         """
         Helper function for merging an old machine observation untried-credentials-flag with new information collected
@@ -417,13 +419,13 @@ class EnvDynamicsUtil:
         :param n_os: the new machine observation
         :return: the merged machine observation with updated trace
         """
-        if n_m.trace == None:
+        if n_m.trace is None:
             n_m.trace = o_m.trace
         return n_m
 
     @staticmethod
-    def merge_ports(o_ports: List[EmulationPortObservationState], n_ports: List[EmulationPortObservationState], acc: bool = True) \
-            -> Tuple[List[EmulationPortObservationState], int]:
+    def merge_ports(o_ports: List[EmulationPortObservationState], n_ports: List[EmulationPortObservationState],
+                    acc: bool = True) -> Tuple[List[EmulationPortObservationState], int]:
         """
         Helper function for merging two port lists
 
@@ -433,7 +435,7 @@ class EnvDynamicsUtil:
         :return: the merged port list, number of new ports found
         """
         num_new_ports_found = 0
-        if n_ports == None or len(n_ports) == 0:
+        if n_ports is None or len(n_ports) == 0:
             return o_ports, num_new_ports_found
         merged_ports = n_ports
         for m_p in merged_ports:
@@ -455,7 +457,8 @@ class EnvDynamicsUtil:
         return merged_ports, num_new_ports_found
 
     @staticmethod
-    def merge_vulnerabilities(o_vuln: List[EmulationVulnerabilityObservationState], n_vuln: List[EmulationVulnerabilityObservationState],
+    def merge_vulnerabilities(o_vuln: List[EmulationVulnerabilityObservationState],
+                              n_vuln: List[EmulationVulnerabilityObservationState],
                               acc: bool = True) -> Tuple[List[EmulationVulnerabilityObservationState], int]:
         """
         Helper function for merging two vulnerability lists lists
@@ -466,7 +469,7 @@ class EnvDynamicsUtil:
         :return: the merged vulnerability list, number of new vulnerabilities detected
         """
         num_new_vuln_found = 0
-        if n_vuln == None or len(n_vuln) == 0:
+        if n_vuln is None or len(n_vuln) == 0:
             return o_vuln, num_new_vuln_found
         merged_vuln = n_vuln
         for m_v in merged_vuln:
@@ -617,7 +620,6 @@ class EnvDynamicsUtil:
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
         s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
-
     @staticmethod
     def cache_defender_action(a: EmulationDefenderAction, s: EmulationEnvState) \
             -> None:
@@ -736,10 +738,9 @@ class EnvDynamicsUtil:
             return constants.CASSANDRA.SERVICE_NAME
         return constants.EXPLOIT_VULNERABILITES.UNKNOWN
 
-
     @staticmethod
-    def merge_duplicate_machines(machines : List[EmulationAttackerMachineObservationState], action: EmulationAttackerAction) \
-            -> List[EmulationAttackerMachineObservationState]:
+    def merge_duplicate_machines(machines: List[EmulationAttackerMachineObservationState],
+                                 action: EmulationAttackerAction) -> List[EmulationAttackerMachineObservationState]:
         """
         Utility function for merging machines that are duplicates
 
@@ -748,7 +749,7 @@ class EnvDynamicsUtil:
         :return: the merged set of machines
         """
         merged_machines = []
-        ips : Set[str] = set()
+        ips: Set[str] = set()
         for m in machines:
             if not m.ips_match(list(ips)):
                 merged_m = m
@@ -758,4 +759,3 @@ class EnvDynamicsUtil:
                 merged_machines.append(merged_m)
                 ips.union(set(m.ips))
         return merged_machines
-

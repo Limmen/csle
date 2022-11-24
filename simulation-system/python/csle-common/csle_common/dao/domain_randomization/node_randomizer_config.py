@@ -10,7 +10,6 @@ class NodeRandomizerConfig:
     DTO representing domain randomization configuration of a single node
     """
 
-
     def __init__(self, ip: str, reachable: Set[str], id: int, users_config: NodeUsersConfig,
                  flags_config: NodeFlagsConfig, vulns_config: NodeVulnerabilityConfig,
                  r_space: RandomizationSpace,
@@ -39,8 +38,7 @@ class NodeRandomizerConfig:
         self.r_space = r_space
         self.router = router
         self.agent = agent
-        self.gateway=gateway
-
+        self.gateway = gateway
 
     def __str__(self) -> str:
         """

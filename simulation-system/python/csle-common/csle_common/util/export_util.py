@@ -33,7 +33,7 @@ class ExportUtil:
                                                os.path.join(dir_path, '..')))
 
     @staticmethod
-    def get_dir_size_gb(dir_path : str ='.')  -> float:
+    def get_dir_size_gb(dir_path: str = '.') -> float:
         """
         Utility method to calculate the zie of a file directory in gb
 
@@ -47,7 +47,7 @@ class ExportUtil:
                     total += entry.stat().st_size
                 elif entry.is_dir():
                     total += ExportUtil.get_dir_size(entry.path)
-        return round((float(total)/1000000000),2)
+        return round((float(total) / 1000000000), 2)
 
     @staticmethod
     def export_emulation_traces_to_disk_json(num_traces_per_file: int, output_dir: str, zip_file_output: str,
@@ -89,17 +89,15 @@ class ExportUtil:
                 num_attributes_per_time_step = tr.num_attributes_per_time_step()
             if schema is None:
                 schema = {
-                    constants.METADATA_STORE.TRACES_PROPERTY : [
+                    constants.METADATA_STORE.TRACES_PROPERTY: [
                         tr.schema().to_dict()
                     ]
                 }
 
             traces.append(tr.to_dict())
-            if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids)-1)):
+            if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids) - 1)):
                 Logger.__call__().get_logger().info(f"Exporting traces {last_export+1}-{i} to file: {file_name}")
-                traces_dict = {
-                    constants.METADATA_STORE.TRACES_PROPERTY : traces
-                }
+                traces_dict = {constants.METADATA_STORE.TRACES_PROPERTY: traces}
                 traces_str = json.dumps(traces_dict, indent=4, sort_keys=True)
                 with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
                     f.write(traces_str)
@@ -123,7 +121,6 @@ class ExportUtil:
         ExportUtil.zipdir(dir_path=output_dir, file_path=zip_file_output)
         Logger.__call__().get_logger().info(f"Export of emulation traces to disk complete, "
                                             f"output dir:{output_dir}, output zip file: {zip_file_output}")
-
 
     @staticmethod
     def extract_emulation_traces_dataset_metadata(dir_path: str, zip_file_path: str) \
@@ -155,16 +152,16 @@ class ExportUtil:
             added_by = metadata_dict[constants.DATASETS.ADDED_BY_PROPERTY]
             columns = metadata_dict[constants.DATASETS.COLUMNS_PROPERTY]
 
-        num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))])-1
-        size_compressed_gb = round(float(os.path.getsize(zip_file_path))/1000000000,2)
+        num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))]) - 1
+        size_compressed_gb = round(float(os.path.getsize(zip_file_path)) / 1000000000, 2)
         dir_size_uncompressed_gb = ExportUtil.get_dir_size_gb(dir_path=dir_path)
-        return num_files,  dir_size_uncompressed_gb, size_compressed_gb, file_format, num_traces, schema, \
-               num_traces_per_file, num_attributes_per_time_step, added_by, columns
+        return (num_files, dir_size_uncompressed_gb, size_compressed_gb, file_format, num_traces, schema,
+                num_traces_per_file, num_attributes_per_time_step, added_by, columns)
 
     @staticmethod
     def export_emulation_traces_to_disk_csv(
             num_traces_per_file: int, output_dir: str, zip_file_output: str, max_num_traces: int, max_time_steps: int,
-            max_nodes : int, max_ports : int, max_vulns : int, null_value: int = -1, added_by: str = "unknown") -> None:
+            max_nodes: int, max_ports: int, max_vulns: int, null_value: int = -1, added_by: str = "unknown") -> None:
         """
         Exports emulation traces from the metastore to disk
 
@@ -205,7 +202,7 @@ class ExportUtil:
                 columns = tr_labels
 
             traces.append(tr_values)
-            if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids)-1)):
+            if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids) - 1)):
                 Logger.__call__().get_logger().info(f"Exporting traces {last_export+1}-{i} to file: {file_name}")
                 with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
                     writer = csv.writer(f)
@@ -277,6 +274,7 @@ class ExportUtil:
         ExportUtil.zipdir(dir_path=output_dir, file_path=zip_file_output)
         Logger.__call__().get_logger().info(f"Export of emulation statistics to disk complete, "
                                             f"output dir:{output_dir}, output zip file: {zip_file_output}")
+
     @staticmethod
     def extract_emulation_statistics_dataset_metadata(dir_path: str, zip_file_path: str) \
             -> Tuple[int, float, float, str, str, int, int, str, str, int]:
@@ -306,10 +304,8 @@ class ExportUtil:
             conditions = metadata_dict[constants.DATASETS.CONDITIONS_PROPERTY]
             num_conditions = metadata_dict[constants.DATASETS.NUM_CONDITIONS_PROPERTY]
 
-        num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))])-1
-        size_compressed_gb = round(float(os.path.getsize(zip_file_path))/1000000000,2)
+        num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))]) - 1
+        size_compressed_gb = round(float(os.path.getsize(zip_file_path)) / 1000000000, 2)
         dir_size_uncompressed_gb = ExportUtil.get_dir_size_gb(dir_path=dir_path)
-        return num_files,  dir_size_uncompressed_gb, size_compressed_gb, file_format, added_by, num_measurements, \
-               num_metrics, metrics, conditions, num_conditions
-
-
+        return (num_files, dir_size_uncompressed_gb, size_compressed_gb, file_format, added_by, num_measurements,
+                num_metrics, metrics, conditions, num_conditions)

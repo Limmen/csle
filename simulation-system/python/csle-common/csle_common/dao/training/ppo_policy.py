@@ -18,7 +18,7 @@ class PPOPolicy(Policy):
     A neural network policy learned with PPO
     """
 
-    def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states : List[State],
+    def __init__(self, model, simulation_name: str, save_path: str, player_type: PlayerType, states: List[State],
                  actions: List[Action], experiment_config: ExperimentConfig, avg_R: float):
         """
         Initializes the policy
@@ -38,7 +38,7 @@ class PPOPolicy(Policy):
         self.save_path = save_path
         if self.model is None:
             try:
-                self.model = PPO.load(path = self.save_path)
+                self.model = PPO.load(path=self.save_path)
             except Exception as e:
                 Logger.__call__().get_logger().warning(
                     f"There was an exception loading the model from path: {self.save_path}, "
@@ -82,7 +82,7 @@ class PPOPolicy(Policy):
         d["save_path"] = self.save_path
         if self.model is not None:
             d["policy_kwargs"] = self.model.policy_kwargs
-            self.model.save(path = self.save_path)
+            self.model.save(path=self.save_path)
         else:
             d["policy_kwargs"] = {}
             d["policy_kwargs"]["net_arch"] = []
@@ -146,8 +146,8 @@ class PPOPolicy(Policy):
         if action == 1:
             stop_prob = math.exp(log_prob)
         else:
-            stop_prob = 1-math.exp(log_prob)
-        return [1-stop_prob, stop_prob]
+            stop_prob = 1 - math.exp(log_prob)
+        return [1 - stop_prob, stop_prob]
 
     def __str__(self) -> str:
         """
@@ -184,4 +184,3 @@ class PPOPolicy(Policy):
         :return: a copy of the DTO
         """
         return self.from_dict(self.to_dict())
-

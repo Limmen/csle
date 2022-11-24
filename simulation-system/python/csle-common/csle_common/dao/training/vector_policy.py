@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Any, Optional
+from typing import Union, List, Dict
 import numpy as np
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -116,7 +116,6 @@ class VectorPolicy(Policy):
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
-
 
     def copy(self) -> "VectorPolicy":
         """

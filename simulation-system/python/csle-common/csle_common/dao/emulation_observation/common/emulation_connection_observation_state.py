@@ -7,9 +7,9 @@ class EmulationConnectionObservationState:
     A DTO representing a connection observation in the emulation
     """
 
-    def __init__(self, conn, credential: Credential, root: bool, service: str, port: int, tunnel_thread = None,
-                 tunnel_port : int = None, interactive_shell = None,
-                 proxy : "EmulationConnectionObservationState" = None, ip = None):
+    def __init__(self, conn, credential: Credential, root: bool, service: str, port: int, tunnel_thread=None,
+                 tunnel_port: int = None, interactive_shell=None,
+                 proxy: "EmulationConnectionObservationState" = None, ip: str = None):
         """
         Intializes the DTO
 
@@ -46,12 +46,12 @@ class EmulationConnectionObservationState:
         :return: the created instance
         """
         obj = EmulationConnectionObservationState(
-            conn=None, credential=Credential.from_dict(d["credential"]), root=d["root"], port=d["port"], service=d["service"],
-            tunnel_port=d["tunnel_port"], tunnel_thread=None, interactive_shell=None, ip=d["ip"], proxy=None
-        )
+            conn=None, credential=Credential.from_dict(d["credential"]), root=d["root"], port=d["port"],
+            service=d["service"], tunnel_port=d["tunnel_port"], tunnel_thread=None, interactive_shell=None, ip=d["ip"],
+            proxy=None)
         return obj
 
-    def to_dict(self)-> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict represnetation of the object
         """
@@ -81,17 +81,15 @@ class EmulationConnectionObservationState:
             # don't attempt to compare against unrelated types
             return NotImplemented
 
-        return self.credential.username == other.credential.username and self.root == other.root \
-               and self.service == other.service \
-               and self.port == other.port and self.ip == other.ip
+        return (self.credential.username == other.credential.username and self.root == other.root
+                and self.service == other.service and self.port == other.port and self.ip == other.ip)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """
         :return: a hash representation of the object
         """
-        return hash(self.credential.username) + 31 * hash(self.root) \
-               + 31 * hash(self.service) + 31 * hash(self.port) \
-               + 31 * hash(self.ip)
+        return (hash(self.credential.username) + 31 * hash(self.root) + 31 * hash(self.service) + 31 *
+                hash(self.port) + 31 * hash(self.ip))
 
     def cleanup(self) -> None:
         """
@@ -124,7 +122,6 @@ class EmulationConnectionObservationState:
             except Exception:
                 pass
             self.proxy = None
-
 
     def to_json_str(self) -> str:
         """

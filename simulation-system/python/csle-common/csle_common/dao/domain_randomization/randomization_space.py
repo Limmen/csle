@@ -14,10 +14,8 @@ class RandomizationSpace:
         """
         self.config = config
 
-
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
         return f"config:{str(self.config)}"
-

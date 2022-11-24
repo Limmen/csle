@@ -8,7 +8,7 @@ class SSHUtil:
     """
 
     @staticmethod
-    def execute_ssh_cmds(cmds: List[str], conn, wait_for_completion :bool = True) -> List[Tuple[bytes, bytes, float]]:
+    def execute_ssh_cmds(cmds: List[str], conn, wait_for_completion: bool = True) -> List[Tuple[bytes, bytes, float]]:
         """
         Executes a list of commands over an ssh connection to the emulation
 
@@ -24,7 +24,8 @@ class SSHUtil:
         return results
 
     @staticmethod
-    def execute_ssh_cmd(cmd: str, conn, wait_for_completion :bool = True, retries: int = 2) -> Tuple[bytes, bytes, float]:
+    def execute_ssh_cmd(cmd: str, conn, wait_for_completion: bool = True, retries: int = 2) \
+            -> Tuple[bytes, bytes, float]:
         """
         Executes an action on the emulation over a ssh connection,
         this is a synchronous operation that waits for the completion of the action before returning

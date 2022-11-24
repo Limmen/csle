@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union, List
+from typing import Any, Dict
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
@@ -13,7 +13,7 @@ class ExperimentResult:
         """
         Initializes the DTO
         """
-        self.all_metrics : Dict[int, Dict[str, Any]]= {}
+        self.all_metrics: Dict[int, Dict[str, Any]] = {}
         self.policies: Dict[int, Policy] = {}
         self.plot_metrics = []
         self.avg_metrics = {}
@@ -25,7 +25,7 @@ class ExperimentResult:
         Converts a dict representation to an instance
 
         :param d: the dict to convert
-        :return: the created insatnce
+        :return: the created instance
         """
         obj = ExperimentResult()
         obj.std_metrics = d["std_metrics"]
@@ -33,14 +33,14 @@ class ExperimentResult:
         obj.all_metrics = d["all_metrics"]
         obj.plot_metrics = d["plot_metrics"]
         d2 = {}
-        for k,v in d["policies"].items():
+        for k, v in d["policies"].items():
             try:
                 d2[k] = MultiThresholdStoppingPolicy.from_dict(v)
-            except:
+            except Exception:
                 pass
             try:
                 d2[k] = PPOPolicy.from_dict(v)
-            except:
+            except Exception:
                 pass
         obj.policies = d2
         return obj
@@ -52,7 +52,7 @@ class ExperimentResult:
         d = {}
         d["all_metrics"] = self.all_metrics
         d2 = {}
-        for k,v in self.policies.items():
+        for k, v in self.policies.items():
             d2[k] = v.to_dict()
         d["policies"] = d2
         d["plot_metrics"] = self.plot_metrics

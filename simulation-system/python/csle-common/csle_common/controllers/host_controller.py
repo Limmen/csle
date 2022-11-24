@@ -42,19 +42,17 @@ class HostController:
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
 
         # Check if host_manager is already running
-        cmd = constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP \
-              + constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.PS_AUX + " | " + constants.COMMANDS.GREP +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                 conn=emulation_env_config.get_connection(ip=ip))
 
-        if not constants.COMMANDS.SEARCH_HOST_MANAGER in str(o):
-
+        if constants.COMMANDS.SEARCH_HOST_MANAGER not in str(o):
             Logger.__call__().get_logger().info(f"Starting host manager on node {ip}")
 
             # Stop old background job if running
-            cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-                  constants.COMMANDS.SPACE_DELIM \
-                  + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
+            cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+                   constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME)
             o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                     conn=emulation_env_config.get_connection(ip=ip))
 
@@ -94,9 +92,8 @@ class HostController:
         Logger.__call__().get_logger().info(f"Stopping host manager on node {ip}")
 
         # Stop old background job if running
-        cmd = constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL + \
-              constants.COMMANDS.SPACE_DELIM \
-              + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME
+        cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
+               constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.HOST_MANAGER_FILE_NAME)
         o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
                                                 conn=emulation_env_config.get_connection(ip=ip))
 
@@ -110,7 +107,7 @@ class HostController:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config,ip=c.get_ips()[0])
+            HostController.start_host_monitor_thread(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
     @staticmethod
     def start_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -147,7 +144,7 @@ class HostController:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config,ip=c.get_ips()[0])
+            HostController.stop_host_monitor_thread(emulation_env_config=emulation_env_config, ip=c.get_ips()[0])
 
     @staticmethod
     def stop_host_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
@@ -288,9 +285,8 @@ class HostController:
             host_managers_running.append(running)
         execution_id = emulation_env_config.execution_id
         emulation_name = emulation_env_config.name
-        host_manager_info_dto = HostManagersInfo(
-            host_managers_running=host_managers_running, ips=host_managers_ips, execution_id=execution_id, emulation_name=emulation_name,
-            host_managers_statuses=host_managers_statuses, ports=host_managers_ports)
+        host_manager_info_dto = HostManagersInfo(host_managers_running=host_managers_running, ips=host_managers_ips,
+                                                 execution_id=execution_id, emulation_name=emulation_name,
+                                                 host_managers_statuses=host_managers_statuses,
+                                                 ports=host_managers_ports)
         return host_manager_info_dto
-
-

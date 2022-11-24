@@ -158,9 +158,8 @@ class ConnectionUtil:
 
         # If not logged in and there are credentials, setup a new connection
         agent_cr = Credential(
-            username=constants.AGENT.USER, pw = constants.AGENT.PW, root=True,
-            protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT
-        )
+            username=constants.AGENT.USER, pw=constants.AGENT.PW, root=True,
+            protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT)
         proxy_connections = [EmulationConnectionObservationState(
             conn=s.emulation_env_config.get_hacker_connection(), credential=agent_cr,
             root=True, port=22, service=constants.SSH.SERVICE_NAME, proxy=None,
@@ -356,21 +355,20 @@ class ConnectionUtil:
                     if cr.service == constants.TELNET.SERVICE_NAME:
                         try:
                             forward_port = s.emulation_env_config.get_port_forward_port()
-                            agent_addr = (proxy_conn.ip, cr.port)
-                            target_addr = (ip, cr.port)
                             agent_transport = proxy_conn.conn.get_transport()
                             tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                                 remote_host=ip, remote_port=cr.port,
                                                                 transport=agent_transport)
                             tunnel_thread.start()
-                            target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port, timeout=3)
+                            target_conn = telnetlib.Telnet(host=constants.TELNET.LOCALHOST, port=forward_port,
+                                                           timeout=3)
                             target_conn.read_until(constants.TELNET.LOGIN_PROMPT, timeout=3)
                             target_conn.write((cr.username + "\n").encode())
                             target_conn.read_until(constants.TELNET.PASSWORD_PROMPT, timeout=3)
                             target_conn.write((cr.pw + "\n").encode())
                             response = target_conn.read_until(constants.TELNET.PROMPT, timeout=3)
                             response = response.decode()
-                            if not constants.TELNET.INCORRECT_LOGIN in response and response != "":
+                            if constants.TELNET.INCORRECT_LOGIN not in response and response != "":
                                 connection_setup_dto.connected = True
                                 connection_setup_dto.credentials.append(cr)
                                 connection_setup_dto.target_connections.append(target_conn)
@@ -489,15 +487,14 @@ class ConnectionUtil:
                                 time.sleep(0.5)
                                 # clear output
                                 if shell.recv_ready():
-                                    o = shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
+                                    shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
                                 connection_setup_dto.interactive_shells.append(shell)
                                 connection_setup_dto.non_failed_credentials.append(cr)
                                 break
                         except Exception as e:
                             Logger.__call__().get_logger().warning(f"FTP exception: {str(e)}, {repr(e)}")
                             Logger.__call__().get_logger().warning(
-                                f"Target ip in agent reacahble " 
-                                f"{a.ips_match(s.attacker_obs_state.agent_reachable)}")
+                                f"Target ip in agent reacahble {a.ips_match(s.attacker_obs_state.agent_reachable)}")
                             Logger.__call__().get_logger().warning(f"Agent reachable: "
                                                                    f"{s.attacker_obs_state.agent_reachable}")
                     else:
@@ -512,7 +509,7 @@ class ConnectionUtil:
 
     @staticmethod
     def _ftp_finalize_connection(target_machine: EmulationAttackerMachineObservationState, i: int,
-                                 connection_setup_dto : ConnectionSetupDTO) -> Tuple[bool, float]:
+                                 connection_setup_dto: ConnectionSetupDTO) -> Tuple[bool, float]:
         """
         Helper function for creating the connection DTO for FTP
 
@@ -533,7 +530,6 @@ class ConnectionUtil:
         target_machine.ftp_connections.append(connection_dto)
         return root, 0
 
-
     @staticmethod
     def find_jump_host_connection(ip, s: EmulationEnvState) -> EmulationConnectionObservationState:
         """
@@ -547,9 +543,8 @@ class ConnectionUtil:
 
         if ip in s.attacker_obs_state.agent_reachable:
             cr = Credential(
-                username=constants.AGENT.USER, pw = constants.AGENT.PW, root=True,
-                protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT
-            )
+                username=constants.AGENT.USER, pw=constants.AGENT.PW, root=True,
+                protocol=TransportProtocol.TCP, service=constants.SSH.SERVICE_NAME, port=constants.SSH.DEFAULT_PORT)
             c = EmulationConnectionObservationState(
                 conn=s.emulation_env_config.get_hacker_connection(), credential=cr,
                 root=True, port=constants.SSH.DEFAULT_PORT, service=constants.SSH.SERVICE_NAME,
@@ -619,7 +614,8 @@ class ConnectionUtil:
         return c
 
     @staticmethod
-    def reconnect_telnet(c: EmulationConnectionObservationState, forward_port = 9000) -> EmulationConnectionObservationState:
+    def reconnect_telnet(c: EmulationConnectionObservationState, forward_port: int = 9000) \
+            -> EmulationConnectionObservationState:
         """
         Reconnects the given Telnet connection if it has died for some reason
 
@@ -643,7 +639,7 @@ class ConnectionUtil:
                 target_conn.write((c.credential.pw + "\n").encode())
                 response = target_conn.read_until(constants.TELNET.PROMPT, timeout=3)
                 response = response.decode()
-                if not constants.TELNET.INCORRECT_LOGIN in response and response != "":
+                if constants.TELNET.INCORRECT_LOGIN not in response and response != "":
                     c.conn = target_conn
             except Exception as e:
                 Logger.__call__().get_logger().warning(f"telnet exception:{str(e)}, {repr(e)}")
