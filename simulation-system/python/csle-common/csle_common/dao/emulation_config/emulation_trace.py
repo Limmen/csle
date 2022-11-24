@@ -19,7 +19,7 @@ class EmulationTrace:
     """
 
     def __init__(self, initial_attacker_observation_state: EmulationAttackerObservationState,
-                 initial_defender_observation_state: EmulationDefenderObservationState, emulation_name : str):
+                 initial_defender_observation_state: EmulationDefenderObservationState, emulation_name: str):
         """
         Initializes the DTO
 
@@ -29,10 +29,10 @@ class EmulationTrace:
         """
         self.initial_attacker_observation_state = initial_attacker_observation_state
         self.initial_defender_observation_state = initial_defender_observation_state
-        self.attacker_observation_states : List[EmulationAttackerObservationState] = []
-        self.defender_observation_states : List[EmulationDefenderObservationState] = []
-        self.attacker_actions : List[EmulationAttackerAction] = []
-        self.defender_actions : List[EmulationDefenderAction] = []
+        self.attacker_observation_states: List[EmulationAttackerObservationState] = []
+        self.defender_observation_states: List[EmulationDefenderObservationState] = []
+        self.attacker_actions: List[EmulationAttackerAction] = []
+        self.defender_actions: List[EmulationDefenderAction] = []
         self.emulation_name = emulation_name
         self.id = -1
 
@@ -68,8 +68,7 @@ class EmulationTrace:
                                                    d["attacker_observation_states"]))
         obj.defender_observation_states = list(map(lambda x: EmulationDefenderObservationState.from_dict(x),
                                                    d["defender_observation_states"]))
-        obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x),
-                                                   d["attacker_actions"]))
+        obj.attacker_actions = list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"]))
         obj.defender_actions = list(map(lambda x: EmulationDefenderAction.from_dict(x),
                                         d["defender_actions"]))
         return obj
@@ -90,8 +89,7 @@ class EmulationTrace:
         return d
 
     @staticmethod
-    def save_traces_to_disk(traces_save_dir, traces : List["EmulationTrace"],
-                            traces_file : str = None) -> None:
+    def save_traces_to_disk(traces_save_dir, traces: List["EmulationTrace"], traces_file: str = None) -> None:
         """
         Utility function for saving a list of traces to a json file
 
@@ -102,14 +100,14 @@ class EmulationTrace:
         """
         traces = list(map(lambda x: x.to_dict(), traces))
         if traces_file is None:
-            traces_file =  constants.SYSTEM_IDENTIFICATION.EMULATION_TRACES_FILE
+            traces_file = constants.SYSTEM_IDENTIFICATION.EMULATION_TRACES_FILE
         if not os.path.exists(traces_save_dir):
             os.makedirs(traces_save_dir)
         with open(traces_save_dir + "/" + traces_file, 'w') as fp:
             json.dump({"traces": traces}, fp, cls=NpEncoder)
 
     @staticmethod
-    def load_traces_from_disk(traces_save_dir, traces_file : str = None) -> List["EmulationTrace"]:
+    def load_traces_from_disk(traces_save_dir, traces_file: str = None) -> List["EmulationTrace"]:
         """
         Utility function for loading and parsing a list of traces from a json file
 
@@ -118,12 +116,12 @@ class EmulationTrace:
         :return: a list of the loaded traces
         """
         if traces_file is None:
-            traces_file =  constants.SYSTEM_IDENTIFICATION.TRACES_FILE
+            traces_file = constants.SYSTEM_IDENTIFICATION.TRACES_FILE
         path = traces_save_dir + constants.COMMANDS.SLASH_DELIM + traces_file
         if os.path.exists(path):
             with open(path, 'r') as fp:
                 d = json.load(fp)
-                traces  = d["traces"]
+                traces = d["traces"]
                 traces = list(map(lambda x: EmulationTrace.from_dict(x), traces))
                 return traces
         else:
@@ -183,14 +181,14 @@ class EmulationTrace:
         :return: approximately the number of attributes recorded per time-step of the trace
         """
         num_attributes = 2
-        num_attributes = num_attributes + (1+len(self.attacker_observation_states))*\
-                         self.initial_attacker_observation_state.num_attributes()
-        num_attributes = num_attributes + (1+len(self.defender_observation_states))* \
-                         self.initial_defender_observation_state.num_attributes()
+        num_attributes = (num_attributes + (1 + len(self.attacker_observation_states))
+                          * self.initial_attacker_observation_state.num_attributes())
+        num_attributes = (num_attributes + (1 + len(self.defender_observation_states))
+                          * self.initial_defender_observation_state.num_attributes())
         if len(self.defender_actions) > 0:
-            num_attributes = num_attributes + len(self.defender_actions)* self.defender_actions[0].num_attributes()
+            num_attributes = num_attributes + len(self.defender_actions) * self.defender_actions[0].num_attributes()
         if len(self.attacker_actions) > 0:
-            num_attributes = num_attributes + len(self.attacker_actions)* self.attacker_actions[0].num_attributes()
+            num_attributes = num_attributes + len(self.attacker_actions) * self.attacker_actions[0].num_attributes()
         return num_attributes
 
     @staticmethod
@@ -207,7 +205,7 @@ class EmulationTrace:
         dto.defender_actions = [EmulationDefenderAction.schema()]
         return dto
 
-    def to_csv_record(self, max_time_steps: int, max_nodes : int, max_ports : int, max_vulns : int,
+    def to_csv_record(self, max_time_steps: int, max_nodes: int, max_ports: int, max_vulns: int,
                       null_value: int = -1) -> Tuple[List[str], List[Union[str, int, float]]]:
         """
         Converts the trace into a csv row
@@ -235,113 +233,113 @@ class EmulationTrace:
                 values.append(null_value)
 
             labels.append(f"{t}_attacker_action_id")
-            if (len(self.attacker_actions)+1) > t:
+            if (len(self.attacker_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.attacker_actions[t-1].id)
+                    values.append(self.attacker_actions[t - 1].id)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_attacker_action_name")
-            if (len(self.attacker_actions)+1) > t:
+            if (len(self.attacker_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.attacker_actions[t-1].name)
+                    values.append(self.attacker_actions[t - 1].name)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_attacker_action_type")
-            if (len(self.attacker_actions)+1) > t:
+            if (len(self.attacker_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.attacker_actions[t-1].type)
+                    values.append(self.attacker_actions[t - 1].type)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_attacker_action_ips")
-            if (len(self.attacker_actions)+1) > t:
+            if (len(self.attacker_actions) + 1) > t:
                 if t > 0:
-                    values.append("-".join(self.attacker_actions[t-1].ips))
+                    values.append("-".join(self.attacker_actions[t - 1].ips))
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_attacker_action_index")
-            if (len(self.attacker_actions)+1) > t:
+            if (len(self.attacker_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.attacker_actions[t-1].index)
+                    values.append(self.attacker_actions[t - 1].index)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_attacker_action_outcome")
-            if (len(self.attacker_actions)+1) > t:
+            if (len(self.attacker_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.attacker_actions[t-1].action_outcome)
+                    values.append(self.attacker_actions[t - 1].action_outcome)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_attacker_action_execution_time")
-            if (len(self.attacker_actions)+1) > t:
+            if (len(self.attacker_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.attacker_actions[t-1].execution_time)
+                    values.append(self.attacker_actions[t - 1].execution_time)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_action_id")
-            if (len(self.defender_actions)+1) > t:
+            if (len(self.defender_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.defender_actions[t-1].id)
+                    values.append(self.defender_actions[t - 1].id)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_action_name")
-            if (len(self.defender_actions)+1) > t:
+            if (len(self.defender_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.defender_actions[t-1].name)
+                    values.append(self.defender_actions[t - 1].name)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_action_type")
-            if (len(self.defender_actions)+1) > t:
+            if (len(self.defender_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.defender_actions[t-1].type)
+                    values.append(self.defender_actions[t - 1].type)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_action_ips")
-            if (len(self.defender_actions)+1) > t:
+            if (len(self.defender_actions) + 1) > t:
                 if t > 0:
-                    values.append("-".join(self.defender_actions[t-1].ips))
+                    values.append("-".join(self.defender_actions[t - 1].ips))
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_action_index")
-            if (len(self.defender_actions)+1) > t:
+            if (len(self.defender_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.defender_actions[t-1].index)
+                    values.append(self.defender_actions[t - 1].index)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_action_outcome")
-            if (len(self.defender_actions)+1) > t:
+            if (len(self.defender_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.defender_actions[t-1].action_outcome)
+                    values.append(self.defender_actions[t - 1].action_outcome)
                 else:
                     values.append(null_value)
             else:
                 values.append(null_value)
             labels.append(f"{t}_defender_action_execution_time")
-            if (len(self.defender_actions)+1) > t:
+            if (len(self.defender_actions) + 1) > t:
                 if t > 0:
-                    values.append(self.defender_actions[t-1].execution_time)
+                    values.append(self.defender_actions[t - 1].execution_time)
                 else:
                     values.append(null_value)
             else:

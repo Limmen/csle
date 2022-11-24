@@ -6,9 +6,10 @@ class OSSECIDSManagerConfig:
     Represents the configuration of the OSSEC IDS managers in a CSLE emulation
     """
 
-    def __init__(self, ossec_ids_manager_log_file : str, ossec_ids_manager_log_dir: str,
+    def __init__(self, ossec_ids_manager_log_file: str, ossec_ids_manager_log_dir: str,
                  ossec_ids_manager_max_workers: int,
-                 time_step_len_seconds = 15, ossec_ids_manager_port = 50047, version: str = "0.0.1") -> None:
+                 time_step_len_seconds: int = 15, ossec_ids_manager_port: int = 50047,
+                 version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
@@ -109,4 +110,3 @@ class OSSECIDSManagerConfig:
         """
         return OSSECIDSManagerConfig(ossec_ids_manager_log_file="ossec_ids_manager.log", ossec_ids_manager_log_dir="/",
                                      ossec_ids_manager_max_workers=10)
-

@@ -8,7 +8,7 @@ class ServicesConfig:
     A DTO object representing the services configuration of an emulation environment
     """
 
-    def __init__(self, services_configs : List[NodeServicesConfig]):
+    def __init__(self, services_configs: List[NodeServicesConfig]):
         """
         Initializes the DTO
 

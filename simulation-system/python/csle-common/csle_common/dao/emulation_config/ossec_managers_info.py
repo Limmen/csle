@@ -11,7 +11,8 @@ class OSSECIDSManagersInfo:
 
     def __init__(
             self, ips: List[str], ports: List[int], emulation_name: str, execution_id: int,
-            ossec_ids_managers_statuses: List[csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO],
+            ossec_ids_managers_statuses: List[
+                csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO],
             ossec_ids_managers_running: List[bool]):
         """
         Initializes the DTO
@@ -64,9 +65,9 @@ class OSSECIDSManagersInfo:
         :return: a dto representation of the object
         """
         dto = OSSECIDSManagersInfo(
-            ossec_ids_managers_running=d["ossec_ids_managers_running"],  ips=d["ips"],
+            ossec_ids_managers_running=d["ossec_ids_managers_running"], ips=d["ips"],
             emulation_name=d["emulation_name"], ports=d["ports"], execution_id=d["execution_id"],
-            ossec_ids_managers_statuses=
-            list(map(lambda x: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO.from_dict(x),
-                     d["ossec_ids_managers_statuses"])))
+            ossec_ids_managers_statuses=list(
+                map(lambda x: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO.from_dict(x),
+                    d["ossec_ids_managers_statuses"])))
         return dto

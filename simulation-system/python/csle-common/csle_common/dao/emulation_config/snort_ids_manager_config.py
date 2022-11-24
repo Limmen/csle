@@ -6,9 +6,9 @@ class SnortIDSManagerConfig:
     Represents the configuration of the Snort IDS managers in a CSLE emulation
     """
 
-    def __init__(self, snort_ids_manager_log_file : str, snort_ids_manager_log_dir: str,
-                 snort_ids_manager_max_workers : int,
-                 time_step_len_seconds = 15, snort_ids_manager_port = 50048, version: str = "0.0.1") -> None:
+    def __init__(self, snort_ids_manager_log_file: str, snort_ids_manager_log_dir: str,
+                 snort_ids_manager_max_workers: int,
+                 time_step_len_seconds: int = 15, snort_ids_manager_port: int = 50048, version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
@@ -35,7 +35,7 @@ class SnortIDSManagerConfig:
         """
         obj = SnortIDSManagerConfig(time_step_len_seconds=d["time_step_len_seconds"],
                                     version=d["version"], snort_ids_manager_port=d["snort_ids_manager_port"],
-                                    snort_ids_manager_max_workers = d["snort_ids_manager_max_workers"],
+                                    snort_ids_manager_max_workers=d["snort_ids_manager_max_workers"],
                                     snort_ids_manager_log_dir=d["snort_ids_manager_log_dir"],
                                     snort_ids_manager_log_file=d["snort_ids_manager_log_file"])
         return obj
@@ -108,4 +108,3 @@ class SnortIDSManagerConfig:
         """
         return SnortIDSManagerConfig(snort_ids_manager_log_file="snort_ids_manager.log", snort_ids_manager_log_dir="/",
                                      snort_ids_manager_max_workers=10)
-

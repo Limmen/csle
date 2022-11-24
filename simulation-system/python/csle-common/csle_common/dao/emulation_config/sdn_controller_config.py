@@ -14,7 +14,7 @@ class SDNControllerConfig:
                  firewall_config: NodeFirewallConfig,
                  controller_port: int,
                  controller_type: SDNControllerType, controller_module_name: str, controller_web_api_port: int,
-                 time_step_len_seconds = 15, version: str = "0.0.1"):
+                 time_step_len_seconds: int = 15, version: str = "0.0.1"):
         """
         Initializes the DTO
 
@@ -28,7 +28,7 @@ class SDNControllerConfig:
         :param controller_web_api_port: the port to run the controller's web API
         :param version: the version
         """
-        self.container= container
+        self.container = container
         self.resources = resources
         self.firewall_config = firewall_config
         self.controller_port = controller_port
@@ -53,7 +53,7 @@ class SDNControllerConfig:
             resources=NodeResourcesConfig.from_dict(d["resources"]),
             time_step_len_seconds=d["time_step_len_seconds"],
             version=d["version"], controller_type=d["controller_type"], controller_port=d["controller_port"],
-            controller_web_api_port = d["controller_web_api_port"], controller_module_name=d["controller_module_name"],
+            controller_web_api_port=d["controller_web_api_port"], controller_module_name=d["controller_module_name"],
             firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"])
         )
         return obj
@@ -124,4 +124,3 @@ class SDNControllerConfig:
         config.resources = config.resources.create_execution_config(ip_first_octet=ip_first_octet)
         config.firewall_config = config.firewall_config.create_execution_config(ip_first_octet=ip_first_octet)
         return config
-

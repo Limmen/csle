@@ -2,6 +2,7 @@ from typing import List, Dict, Any
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.util.general_util import GeneralUtil
 
+
 class NodeFlagsConfig:
     """
     A DTO object representing the set of flags at a specific container in an emulation environment
@@ -27,7 +28,7 @@ class NodeFlagsConfig:
         return d
 
     @staticmethod
-    def from_dict(d: Dict[str,Any]) -> "NodeFlagsConfig":
+    def from_dict(d: Dict[str, Any]) -> "NodeFlagsConfig":
         """
         Converts a dict representation of the object to an instance
 

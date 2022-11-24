@@ -55,7 +55,7 @@ class ELKManagersInfo:
         d["execution_id"] = self.execution_id
         d["local_kibana_port"] = self.local_kibana_port
         d["elk_managers_statuses"] = list(map(
-            lambda x: elk_manager_util.ElkManagerUtil.elk_dto_to_dict(x),self.elk_managers_statuses))
+            lambda x: elk_manager_util.ElkManagerUtil.elk_dto_to_dict(x), self.elk_managers_statuses))
         return d
 
     @staticmethod
@@ -66,8 +66,8 @@ class ELKManagersInfo:
         :return: a dto representation of the object
         """
         dto = ELKManagersInfo(elk_managers_running=d["elk_managers_running"], ips=d["ips"], ports=d["ports"],
-                                emulation_name=d["emulation_name"],
-                                execution_id=d["execution_id"], elk_managers_statuses=list(map(
-                lambda x: elk_manager_util.ElkManagerUtil.elk_dto_to_dict(x),
-                d["elk_managers_statuses"])), local_kibana_port=d["local_kibana_port"])
+                              emulation_name=d["emulation_name"], execution_id=d["execution_id"],
+                              elk_managers_statuses=list(map(
+                                  lambda x: elk_manager_util.ElkManagerUtil.elk_dto_to_dict(x),
+                                  d["elk_managers_statuses"])), local_kibana_port=d["local_kibana_port"])
         return dto

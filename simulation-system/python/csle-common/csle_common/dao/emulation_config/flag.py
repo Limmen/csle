@@ -6,7 +6,7 @@ class Flag:
     Class that represents a flag in the environment
     """
 
-    def __init__(self, name:str, dir: str, id:int, path:str, requires_root : bool = False, score: int = 1):
+    def __init__(self, name: str, dir: str, id: int, path: str, requires_root: bool = False, score: int = 1):
         """
         Initializes the DTO
 
@@ -45,7 +45,6 @@ class Flag:
             score=d["score"]
         )
         return obj
-
 
     def to_dict(self) -> Dict[str, Any]:
         """

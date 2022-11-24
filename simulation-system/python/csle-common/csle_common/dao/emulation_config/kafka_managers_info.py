@@ -63,10 +63,9 @@ class KafkaManagersInfo:
 
         :return: a dto representation of the object
         """
-        dto = KafkaManagersInfo(kafka_managers_running=d["kafka_managers_running"], ips=d["ips"],
-                                ports=d["ports"],
-                                emulation_name=d["emulation_name"],
-                                execution_id=d["execution_id"], kafka_managers_statuses=list(map(
-                lambda x: kafka_manager_util.KafkaManagerUtil.kafka_dto_from_dict(x),
-                d["kafka_managers_statuses"])))
+        dto = KafkaManagersInfo(
+            kafka_managers_running=d["kafka_managers_running"], ips=d["ips"], ports=d["ports"],
+            emulation_name=d["emulation_name"], execution_id=d["execution_id"],
+            kafka_managers_statuses=list(map(
+                lambda x: kafka_manager_util.KafkaManagerUtil.kafka_dto_from_dict(x), d["kafka_managers_statuses"])))
         return dto

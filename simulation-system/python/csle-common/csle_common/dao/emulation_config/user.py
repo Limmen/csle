@@ -43,7 +43,6 @@ class User:
         d["root"] = self.root
         return d
 
-
     def __str__(self) -> str:
         """
         :return: a string representation of the object

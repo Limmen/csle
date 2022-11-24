@@ -8,7 +8,7 @@ class PacketDelayDistributionType(IntEnum):
     """
     Enum representing the different types of delay distributions to emulate on a container
     """
-    UNIFORM=0
-    NORMAL=1
-    PARETO=2
-    PARETONORMAL=2
+    UNIFORM = 0
+    NORMAL = 1
+    PARETO = 2
+    PARETONORMAL = 2

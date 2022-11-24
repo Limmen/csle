@@ -11,9 +11,9 @@ class ElkConfig:
 
     def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig,
                  firewall_config: NodeFirewallConfig,
-                 elk_manager_log_file :str, elk_manager_log_dir :str, elk_manager_max_workers : int,
-                 elastic_port: int= 9200, kibana_port = 5601, logstash_port = 5044,
-                 time_step_len_seconds = 15, elk_manager_port = 50045, version: str = "0.0.1") -> None:
+                 elk_manager_log_file: str, elk_manager_log_dir: str, elk_manager_max_workers: int,
+                 elastic_port: int = 9200, kibana_port: int = 5601, logstash_port: int = 5044,
+                 time_step_len_seconds: int = 15, elk_manager_port: int = 50045, version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
@@ -60,7 +60,7 @@ class ElkConfig:
             elk_manager_port=d["elk_manager_port"],
             version=d["version"],
             firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"]),
-            elk_manager_max_workers = d["elk_manager_max_workers"],
+            elk_manager_max_workers=d["elk_manager_max_workers"],
             elk_manager_log_dir=d["elk_manager_log_dir"],
             elk_manager_log_file=d["elk_manager_log_file"]
         )
@@ -145,6 +145,5 @@ class ElkConfig:
         :return: get the schema of the DTO
         """
         return ElkConfig(container=NodeContainerConfig.schema(), resources=NodeResourcesConfig.schema(),
-                             firewall_config=NodeFirewallConfig.schema(), elk_manager_log_file="elk_manager.log",
+                         firewall_config=NodeFirewallConfig.schema(), elk_manager_log_file="elk_manager.log",
                          elk_manager_log_dir="/", elk_manager_max_workers=10)
-

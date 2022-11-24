@@ -8,7 +8,7 @@ class NodeTrafficConfig:
     """
 
     def __init__(self, ip: str, commands: List[str], traffic_manager_log_file: str, traffic_manager_log_dir: str,
-                 traffic_manager_max_workers : int, traffic_manager_port : int = 50043):
+                 traffic_manager_max_workers: int, traffic_manager_port: int = 50043):
         """
         Creates a NodeTrafficConfig DTO Object
 
@@ -34,7 +34,7 @@ class NodeTrafficConfig:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj= NodeTrafficConfig(
+        obj = NodeTrafficConfig(
             ip=d["ip"], commands=d["commands"], traffic_manager_port=d["traffic_manager_port"],
             traffic_manager_max_workers=d["traffic_manager_max_workers"],
             traffic_manager_log_file=d["traffic_manager_log_file"],

@@ -73,7 +73,5 @@ class EmulationStatisticsWindowed:
             self.emulation_statistics.id = self.statistics_id
             MetastoreFacade.update_emulation_statistic(emulation_statistics=self.emulation_statistics,
                                                        id=self.statistics_id)
-        except:
+        except Exception:
             pass
-
-

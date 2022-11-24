@@ -51,7 +51,7 @@ class NodeContainerConfig:
         if "execution_ip_first_octet" in d:
             execution_ip_first_octet = d["execution_ip_first_octet"]
         obj = NodeContainerConfig(
-            name = d["name"],
+            name=d["name"],
             ips_and_networks=list(map(lambda x: (x[0], ContainerNetwork.from_dict(x[1])), d["ips_and_networks"])),
             version=d["version"], level=d["level"],
             restart_policy=d["restart_policy"], suffix=d["suffix"], os=d["os"],
@@ -140,9 +140,9 @@ class NodeContainerConfig:
         """
         config = self.copy()
         config.execution_ip_first_octet = ip_first_octet
-        config.ips_and_networks = list(map(lambda x: (GeneralUtil.replace_first_octet_of_ip(
-            ip=x[0], ip_first_octet=ip_first_octet), x[1].create_execution_config(ip_first_octet=ip_first_octet)),
-                                           config.ips_and_networks))
+        config.ips_and_networks = list(map(lambda x: (
+            GeneralUtil.replace_first_octet_of_ip(ip=x[0], ip_first_octet=ip_first_octet),
+            x[1].create_execution_config(ip_first_octet=ip_first_octet)), config.ips_and_networks))
         return config
 
     @staticmethod

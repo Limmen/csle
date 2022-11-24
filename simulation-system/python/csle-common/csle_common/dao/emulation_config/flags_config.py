@@ -8,7 +8,7 @@ class FlagsConfig:
     A DTO representing the set of flags in an emulation environment
     """
 
-    def __init__(self, node_flag_configs : List[NodeFlagsConfig]):
+    def __init__(self, node_flag_configs: List[NodeFlagsConfig]):
         """
         Initializes the DTO
 

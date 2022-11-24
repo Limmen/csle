@@ -17,7 +17,7 @@ class NodeNetworkConfig:
                  packet_delay_jitter_ms: float = 0.025,
                  packet_delay_correlation_percentage: float = 25,
                  packet_delay_distribution: PacketDelayDistributionType = PacketDelayDistributionType.PARETO,
-                 packet_loss_type : PacketLossType = PacketLossType.GEMODEL,
+                 packet_loss_type: PacketLossType = PacketLossType.GEMODEL,
                  packet_loss_rate_random_percentage: float = 2,
                  packet_loss_random_correlation_percentage: float = 25,
                  loss_state_markov_chain_p13: float = 0.1, loss_state_markov_chain_p31: float = 0.1,
@@ -40,14 +40,17 @@ class NodeNetworkConfig:
                                     quite large (FIFO by default)
         :param packet_delay_ms: a delay that is added to outgoing packets (specified in ms)
         :param packet_delay_jitter_ms: the jitter of the dealy added to outgoing packets (specified in ms)
-        :param packet_delay_correlation_percentage: the amount of correlation in delay of outgoing packets (specified in %)
-                                               for example delay 100ms jitter=10ms correlation=25% causes delay to be
-                                               100ms +- 10ms with successive packets depending 25% on each other
+        :param packet_delay_correlation_percentage: the amount of correlation in delay of outgoing packets
+                                                   (specified in %)
+                                                   for example delay 100ms jitter=10ms correlation=25% causes delay
+                                                   to be 100ms +- 10ms with successive packets depending 25%
+                                                   on each other
         :param packet_delay_distribution: the delay distribution, defaults to Gaussian, but can also be uniform,
                                                 normal, pareto, or paretonormal
         :param packet_loss_type: the type of packet loss (random, state, or gemodel)
         :param packet_loss_rate_random_percentage: The packet loss percent when using the random packet loss type
-        :param packet_loss_random_correlation_percentage: The packet loss correlation when using the random packet loss type
+        :param packet_loss_random_correlation_percentage: The packet loss correlation when using the random
+                                                          packet loss type
         :param loss_state_markov_chain_p13: The 1->3 transition probability when using the 2-state Markov
                                             chain state loss type
         :param loss_state_markov_chain_p31: The 3->1 transition probability when using the 2,3,or 4-state

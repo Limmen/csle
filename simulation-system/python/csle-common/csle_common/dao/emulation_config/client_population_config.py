@@ -10,10 +10,10 @@ class ClientPopulationConfig:
     """
 
     def __init__(self, ip: str, networks: List[ContainerNetwork], client_process_type: ClientPopulationProcessType,
-                 lamb: float, mu: float, client_manager_port: int, client_manager_log_file: str, 
-                 client_manager_log_dir: str, client_manager_max_workers: int, 
+                 lamb: float, mu: float, client_manager_port: int, client_manager_log_file: str,
+                 client_manager_log_dir: str, client_manager_max_workers: int,
                  num_commands: int = 5,
-                 client_time_step_len_seconds: int = 1, time_scaling_factor : float = 0.01,
+                 client_time_step_len_seconds: int = 1, time_scaling_factor: float = 0.01,
                  period_scaling_factor: float = 20):
         """
         Creates a ClientPopulationConfig DTO Object
@@ -53,12 +53,12 @@ class ClientPopulationConfig:
         :return: the created instance
         """
         obj = ClientPopulationConfig(
-            ip = d["ip"],
+            ip=d["ip"],
             networks=list(map(lambda x: ContainerNetwork.from_dict(x), d["networks"])),
             client_process_type=d["client_process_type"],
             lamb=d["lamb"], mu=d["mu"], client_manager_port=d["client_manager_port"],
             num_commands=d["num_commands"], client_time_step_len_seconds=d["client_time_step_len_seconds"],
-            period_scaling_factor = d["period_scaling_factor"], time_scaling_factor=d["time_scaling_factor"],
+            period_scaling_factor=d["period_scaling_factor"], time_scaling_factor=d["time_scaling_factor"],
             client_manager_log_dir=d["client_manager_log_dir"], client_manager_log_file=d["client_manager_log_file"],
             client_manager_max_workers=d["client_manager_max_workers"]
         )
@@ -69,12 +69,12 @@ class ClientPopulationConfig:
         :return: A version of the config with no clients
         """
         return ClientPopulationConfig(
-            ip = self.ip,
+            ip=self.ip,
             networks=self.networks,
             client_process_type=self.client_process_type,
             lamb=0, mu=0, client_manager_port=self.client_manager_port,
             num_commands=0, client_time_step_len_seconds=self.client_time_step_len_seconds,
-            period_scaling_factor = self.period_scaling_factor, time_scaling_factor=self.time_scaling_factor,
+            period_scaling_factor=self.period_scaling_factor, time_scaling_factor=self.time_scaling_factor,
             client_manager_log_file="client_manager.log", client_manager_log_dir="/", client_manager_max_workers=10
         )
 

@@ -9,8 +9,8 @@ class NodeResourcesConfig:
     """
 
     def __init__(self, container_name: str,
-                 num_cpus: int, available_memory_gb :int,
-                 ips_and_network_configs : List[Tuple[str, NodeNetworkConfig]]):
+                 num_cpus: int, available_memory_gb: int,
+                 ips_and_network_configs: List[Tuple[str, NodeNetworkConfig]]):
         """
         Initializes the DTO
 
@@ -24,13 +24,11 @@ class NodeResourcesConfig:
         self.available_memory_gb = available_memory_gb
         self.ips_and_network_configs = ips_and_network_configs
 
-
     def get_ips(self) -> List[str]:
         """
         :return: a list of ips
         """
         return list(map(lambda x: x[0], self.ips_and_network_configs))
-
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NodeResourcesConfig":
@@ -55,11 +53,10 @@ class NodeResourcesConfig:
         d = {}
         d["container_name"] = self.container_name
         d["ips_and_network_configs"] = list(map(lambda x: (x[0], None if x[1] is None else x[1].to_dict()),
-                                                       self.ips_and_network_configs))
+                                                self.ips_and_network_configs))
         d["num_cpus"] = self.num_cpus
         d["available_memory_gb"] = self.available_memory_gb
         return d
-
 
     def __str__(self) -> str:
         """

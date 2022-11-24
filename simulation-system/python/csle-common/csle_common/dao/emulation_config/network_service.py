@@ -9,7 +9,7 @@ class NetworkService:
     DTO Class representing a serice in the network
     """
 
-    def __init__(self, protocol: TransportProtocol, port : int, name : str, credentials : List[Credential] = None):
+    def __init__(self, protocol: TransportProtocol, port: int, name: str, credentials: List[Credential] = None):
         """
         Initializes the DTO
 
@@ -44,7 +44,6 @@ class NetworkService:
         d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
         return d
 
-
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "NetworkService":
         """
@@ -52,11 +51,9 @@ class NetworkService:
 
         :return: a dto representation of the object
         """
-        dto = NetworkService(name = d["name"], port = d["port"],
-                             protocol=d["protocol"],
+        dto = NetworkService(name=d["name"], port=d["port"], protocol=d["protocol"],
                              credentials=list(map(lambda x: Credential.from_dict(x), d["credentials"])))
         return dto
-
 
     def copy(self) -> "NetworkService":
         """
@@ -92,7 +89,6 @@ class NetworkService:
 
         return self.name == other.name and self.protocol == other.protocol and self.port == other.port
 
-
     @staticmethod
     def from_credential(credential: Credential) -> "NetworkService":
         """
@@ -126,4 +122,3 @@ class NetworkService:
         json_str = self.to_json_str()
         with io.open(json_file_path, 'w', encoding='utf-8') as f:
             f.write(json_str)
-

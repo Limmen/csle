@@ -23,7 +23,6 @@ class ContainerNetwork:
         self.subnet_prefix = subnet_prefix
         self.interface = interface
 
-
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ContainerNetwork":
         """
@@ -33,9 +32,8 @@ class ContainerNetwork:
         :return: the created instance
         """
         obj = ContainerNetwork(
-            name = d["name"], subnet_mask=d["subnet_mask"], subnet_prefix=d["subnet_prefix"], interface=d["interface"],
-            bitmask=d["bitmask"]
-        )
+            name=d["name"], subnet_mask=d["subnet_mask"], subnet_prefix=d["subnet_prefix"],
+            interface=d["interface"], bitmask=d["bitmask"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -95,7 +93,7 @@ class ContainerNetwork:
         config = self.copy()
         config.name = config.name + f"_{ip_first_octet}"
         config.subnet_mask = GeneralUtil.replace_first_octet_of_ip(ip=config.subnet_mask,
-                                                                     ip_first_octet=ip_first_octet)
+                                                                   ip_first_octet=ip_first_octet)
         config.subnet_prefix = GeneralUtil.replace_first_octet_of_ip(ip=config.subnet_mask,
                                                                      ip_first_octet=ip_first_octet)
         return config

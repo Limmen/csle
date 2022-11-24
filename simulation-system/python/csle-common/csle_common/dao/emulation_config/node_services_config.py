@@ -8,7 +8,7 @@ class NodeServicesConfig:
     A DTO object representing the services configuration of a node in an emulation environment
     """
 
-    def __init__(self, ip: str, services : List[NetworkService]):
+    def __init__(self, ip: str, services: List[NetworkService]):
         """
         Initializes the DTO
 
@@ -33,7 +33,7 @@ class NodeServicesConfig:
 
         :return: a dto representation of the object
         """
-        dto = NodeServicesConfig(ip = d["ip"],
+        dto = NodeServicesConfig(ip=d["ip"],
                                  services=list(map(lambda x: NetworkService.from_dict(x), d["services"])))
         return dto
 

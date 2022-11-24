@@ -8,6 +8,6 @@ class PacketLossType(IntEnum):
     """
     Enum representing the different types of packet losses to emulate on a container
     """
-    RANDOM=0
-    STATE=1
-    GEMODEL=2
+    RANDOM = 0
+    STATE = 1
+    GEMODEL = 2

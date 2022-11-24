@@ -7,7 +7,7 @@ class VulnerabilitiesConfig:
     A DTO class representing the vulnerabilities configuration of an emulation environment
     """
 
-    def __init__(self, node_vulnerability_configs : List[NodeVulnerabilityConfig]):
+    def __init__(self, node_vulnerability_configs: List[NodeVulnerabilityConfig]):
         """
         Initializes the DTO
 

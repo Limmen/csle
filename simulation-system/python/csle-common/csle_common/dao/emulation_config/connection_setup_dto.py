@@ -10,12 +10,12 @@ class ConnectionSetupDTO:
     DTO class containing information for setting up connections in the emulation
     """
 
-    def __init__(self, connected : bool = False, credentials : List[Credential] = None,
-                 target_connections  : List = None,
-                 tunnel_threads : List[ForwardTunnelThread] = None, forward_ports : List[int] = None,
-                 ports : List[int] = None, interactive_shells : List = None, total_time : float = 0.0,
-                 non_failed_credentials : List[Credential] = None,
-                 proxies : List[EmulationConnectionObservationState] = None, ip: str = None):
+    def __init__(self, connected: bool = False, credentials: List[Credential] = None,
+                 target_connections: List = None,
+                 tunnel_threads: List[ForwardTunnelThread] = None, forward_ports: List[int] = None,
+                 ports: List[int] = None, interactive_shells: List = None, total_time: float = 0.0,
+                 non_failed_credentials: List[Credential] = None,
+                 proxies: List[EmulationConnectionObservationState] = None, ip: str = None):
         """
         Initializes the DTO
 
@@ -65,22 +65,22 @@ class ConnectionSetupDTO:
         """
         :return: a string represetation of the object
         """
-        return "connected:{},total_time:{},credentials:{},target_connections:{},tunnel_threads:{},forward_ports:{}," \
-               "ports:{},interactive_shells:{},non_failed_credentials:{},proxies:{},ip:{}".format(
-            self.connected, self.total_time, list(map(lambda x: str(x), self.credentials)),
-            list(map(lambda x: str(x), self.target_connections)), list(map(lambda x: str(x), self.tunnel_threads)),
-            list(map(lambda x: str(x), self.forward_ports)), list(map(lambda x: str(x), self.ports)),
-            list(map(lambda x: str(x), self.interactive_shells)),
-            list(map(lambda x: str(x), self.non_failed_credentials)),
-            list(map(lambda x: str(x), self.proxies)), self.ip)
-
+        return f"connected:{self.connected}, total_time:{self.total_time}, " \
+               f"credentials:{list(map(lambda x: str(x), self.credentials))}, " \
+               f"target_connections:{list(map(lambda x: str(x), self.target_connections))}, " \
+               f"tunnel_threads:{list(map(lambda x: str(x), self.tunnel_threads))}, " \
+               f"forward_ports:{list(map(lambda x: str(x), self.forward_ports))}, " \
+               f"ports:{list(map(lambda x: str(x), self.ports))}, " \
+               f"interactive_shells:{list(map(lambda x: str(x), self.interactive_shells))}, " \
+               f"non_failed_credentials:{list(map(lambda x: str(x), self.non_failed_credentials))}, " \
+               f"proxies:{list(map(lambda x: str(x), self.proxies))}, ip:{self.ip}"
 
     def copy(self) -> "ConnectionSetupDTO":
         """
         :return: a copy of the object
         """
         return ConnectionSetupDTO(
-            connected=self.connected, credentials= self.credentials, target_connections=self.target_connections,
+            connected=self.connected, credentials=self.credentials, target_connections=self.target_connections,
             tunnel_threads=self.tunnel_threads, forward_ports=self.forward_ports, ports=self.ports,
             interactive_shells=self.interactive_shells, total_time=self.total_time,
             non_failed_credentials=self.non_failed_credentials, proxies=self.proxies, ip=self.ip

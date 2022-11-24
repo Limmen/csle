@@ -1,10 +1,14 @@
 from typing import Union
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
-from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state import EmulationAttackerObservationState
-from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state import EmulationDefenderObservationState
-from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state import EmulationAttackerMachineObservationState
-from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state import EmulationDefenderMachineObservationState
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state \
+    import EmulationAttackerObservationState
+from csle_common.dao.emulation_observation.defender.emulation_defender_observation_state \
+    import EmulationDefenderObservationState
+from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
+    import EmulationAttackerMachineObservationState
+from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state \
+    import EmulationDefenderMachineObservationState
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_config import EmulationAttackerActionConfig
 from csle_common.dao.emulation_action.defender.emulation_defender_action_config import EmulationDefenderActionConfig
 
@@ -15,7 +19,7 @@ class EmulationEnvState:
     including both the attacker's and the defender's states.
     """
 
-    def __init__(self, emulation_env_config : EmulationEnvConfig):
+    def __init__(self, emulation_env_config: EmulationEnvConfig):
         """
         Initializes the state
 
@@ -24,22 +28,21 @@ class EmulationEnvState:
         :param defender_agent_config: the configuration of the defender agent
         """
         self.emulation_env_config = emulation_env_config
-        self.attacker_action_config=EmulationAttackerActionConfig.all_actions_config(
+        self.attacker_action_config = EmulationAttackerActionConfig.all_actions_config(
             num_nodes=len(self.emulation_env_config.containers_config.containers),
-            subnet_masks= self.emulation_env_config.topology_config.subnetwork_masks,
+            subnet_masks=self.emulation_env_config.topology_config.subnetwork_masks,
             hacker_ip=self.emulation_env_config.containers_config.agent_ip)
-        self.defender_action_config=EmulationDefenderActionConfig.all_actions_config(
+        self.defender_action_config = EmulationDefenderActionConfig.all_actions_config(
             num_nodes=len(self.emulation_env_config.containers_config.containers),
-            subnet_masks=self.emulation_env_config.topology_config.subnetwork_masks
-        )
+            subnet_masks=self.emulation_env_config.topology_config.subnetwork_masks)
         self.vuln_lookup = constants.VULNERABILITIES.vuln_lookup
         self.vuln_lookup_inv = {v: k for k, v in self.vuln_lookup.items()}
         self.service_lookup = constants.SERVICES.service_lookup
         self.service_lookup_inv = {v: k for k, v in self.service_lookup.items()}
         self.os_lookup = constants.OS.os_lookup
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
-        self.attacker_obs_state : Union[EmulationAttackerObservationState, None] = None
-        self.defender_obs_state : Union[EmulationDefenderObservationState, None] = None
+        self.attacker_obs_state: Union[EmulationAttackerObservationState, None] = None
+        self.defender_obs_state: Union[EmulationDefenderObservationState, None] = None
         self.attacker_cached_ssh_connections = {}
         self.attacker_cached_telnet_connections = {}
         self.attacker_cached_ftp_connections = {}
@@ -155,4 +158,3 @@ class EmulationEnvState:
         """
         return f"Attacker observation state: {self.attacker_obs_state}" \
                f"Defender observation state: {self.defender_obs_state}"
-

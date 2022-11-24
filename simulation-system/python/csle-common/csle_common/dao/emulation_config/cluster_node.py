@@ -32,7 +32,7 @@ class ClusterNode:
 
         :return: a dto representation of the object
         """
-        dto = ClusterNode(ip=d["ip"], master = d["master"])
+        dto = ClusterNode(ip=d["ip"], master=d["master"])
         return dto
 
     def __str__(self) -> str:

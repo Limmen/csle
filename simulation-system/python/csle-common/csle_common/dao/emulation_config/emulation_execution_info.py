@@ -39,7 +39,7 @@ class EmulationExecutionInfo:
         :param stopped_containers: information about the stopped containers
         :param active_networks: information about the active networks
         :param inactive_networks: information about the inactive networks
-        :param elk_managers_info: information about the ELK managers        
+        :param elk_managers_info: information about the ELK managers
         """
         self.emulation_name = emulation_name
         self.execution_id = execution_id

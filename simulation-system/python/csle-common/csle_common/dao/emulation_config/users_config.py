@@ -6,7 +6,8 @@ class UsersConfig:
     """
     A DTO object representing the users configuration of an emulation environment
     """
-    def __init__(self, users_configs : List[NodeUsersConfig]):
+
+    def __init__(self, users_configs: List[NodeUsersConfig]):
         """
         Initializes the DTO
 
@@ -40,7 +41,6 @@ class UsersConfig:
         :return: a string representation of the object
         """
         return "users:{}".format(",".join(list(map(lambda x: str(x), self.users_configs))))
-
 
     def get_root_usernames(self, ips: List[str]) -> List[str]:
         """

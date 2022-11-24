@@ -39,7 +39,7 @@ class EmulationEnvConfig:
                  host_manager_config: HostManagerConfig, snort_ids_manager_config: SnortIDSManagerConfig,
                  ossec_ids_manager_config: OSSECIDSManagerConfig,
                  docker_stats_manager_config: DockerStatsManagerConfig, elk_config: ElkConfig,
-                 level: int, version: str, execution_id : int,
+                 level: int, version: str, execution_id: int,
                  csle_collector_version: str = collector_constants.LATEST_VERSION):
         """
         Initializes the object
@@ -107,12 +107,12 @@ class EmulationEnvConfig:
         :return: the created instance
         """
         static_attacker_sequences = {}
-        for k,v in d["static_attacker_sequences"].items():
+        for k, v in d["static_attacker_sequences"].items():
             static_attacker_sequences[k] = list(map(lambda x: EmulationAttackerAction.from_dict(x), v))
         obj = EmulationEnvConfig(
-            name = d["name"], containers_config=ContainersConfig.from_dict(d["containers_config"]),
+            name=d["name"], containers_config=ContainersConfig.from_dict(d["containers_config"]),
             users_config=UsersConfig.from_dict(d["users_config"]),
-            flags_config = FlagsConfig.from_dict(d["flags_config"]),
+            flags_config=FlagsConfig.from_dict(d["flags_config"]),
             vuln_config=VulnerabilitiesConfig.from_dict(d["vuln_config"]),
             topology_config=TopologyConfig.from_dict(d["topology_config"]),
             traffic_config=TrafficConfig.from_dict(d["traffic_config"]),
@@ -127,7 +127,7 @@ class EmulationEnvConfig:
             ossec_ids_manager_config=OSSECIDSManagerConfig.from_dict(d["ossec_ids_manager_config"]),
             snort_ids_manager_config=SnortIDSManagerConfig.from_dict(d["snort_ids_manager_config"]),
             docker_stats_manager_config=DockerStatsManagerConfig.from_dict(d["docker_stats_manager_config"]),
-            elk_config=ElkConfig.from_dict(d["elk_config"]), csle_collector_version = d["csle_collector_version"]
+            elk_config=ElkConfig.from_dict(d["elk_config"]), csle_collector_version=d["csle_collector_version"]
         )
         obj.running = d["running"]
         obj.image = d["image"]
@@ -163,7 +163,7 @@ class EmulationEnvConfig:
         else:
             d["sdn_controller_config"] = None
         d2 = {}
-        for k,v in self.static_attacker_sequences.items():
+        for k, v in self.static_attacker_sequences.items():
             d2[k] = list(map(lambda x: x.to_dict(), v))
         d["static_attacker_sequences"] = d2
         d["host_manager_config"] = self.host_manager_config.to_dict()
@@ -226,9 +226,9 @@ class EmulationEnvConfig:
                 and self.connections[hacker_ip].get_transport() is not None \
                 and self.connections[hacker_ip].get_transport().is_active():
             try:
-                SSHUtil.execute_ssh_cmds(cmds = ["ls > /dev/null"], conn=self.connections[hacker_ip])
-            except Exception as _:
-                Logger.__call__().get_logger().info(f"Reconnecting attacker")
+                SSHUtil.execute_ssh_cmds(cmds=["ls > /dev/null"], conn=self.connections[hacker_ip])
+            except Exception as e:
+                Logger.__call__().get_logger().info(f"Reconnecting attacker, {str(e), repr(e)}")
                 self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
         else:
             self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=True)
@@ -256,7 +256,7 @@ class EmulationEnvConfig:
         Closes the emulation connection
         :return: None
         """
-        for k,v in self.connections.items():
+        for k, v in self.connections.items():
             v.close()
         self.connections = {}
 
@@ -276,7 +276,7 @@ class EmulationEnvConfig:
         """
         :return: the next port to use for forwarding
         """
-        self.port_forward_port+=1
+        self.port_forward_port += 1
         return self.port_forward_port
 
     def ids(self) -> bool:
@@ -378,7 +378,7 @@ class EmulationEnvConfig:
             config.sdn_controller_config = config.sdn_controller_config.create_execution_config(
                 ip_first_octet=ip_first_octet)
         static_attacker_sequences = {}
-        for k,v in config.static_attacker_sequences.items():
+        for k, v in config.static_attacker_sequences.items():
             static_attacker_sequences[k] = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
                                                     config.static_attacker_sequences[k]))
         config.static_attacker_sequences = static_attacker_sequences

@@ -49,17 +49,16 @@ class Credential:
 
         :return: a dto representation of the object
         """
-        dto = Credential(username = d["username"], port = d["port"],
-                         protocol=TransportProtocol._from_str(d["protocol"]), pw=d["pw"], service=d["service"],
-                         root = d["root"])
+        dto = Credential(username=d["username"], port=d["port"], protocol=TransportProtocol._from_str(d["protocol"]),
+                         pw=d["pw"], service=d["service"], root=d["root"])
         return dto
 
     def __str__(self) -> str:
         """
         :return: a string representation of the credential
         """
-        return "username:{},pw:{},port:{},protocol:{},service:{},root:{}".format(self.username, self.pw, self.port,
-                                                                         self.protocol, self.service, self.root)
+        return f"username:{self.username}, pw:{self.pw}, port:{self.port}, protocol:{self.protocol}, " \
+               f"service:{self.service}, root:{self.root}"
 
     def __eq__(self, other) -> bool:
         """
@@ -78,7 +77,7 @@ class Credential:
         """
         :return: a hash representation of the object
         """
-        return hash(self.username) + 31 * hash(self.pw)+ + 31 * hash(self.service)
+        return hash(self.username) + 31 * hash(self.pw) + 31 * hash(self.service)
 
     def to_json_str(self) -> str:
         """

@@ -36,10 +36,9 @@ class DefaultNetworkFirewallConfig:
         :return: the created instance
         """
         obj = DefaultNetworkFirewallConfig(
-            ip = d["ip"], default_gw=d["default_gw"], default_input=d["default_input"],
+            ip=d["ip"], default_gw=d["default_gw"], default_input=d["default_input"],
             default_output=d["default_output"], default_forward=d["default_forward"],
-            network=ContainerNetwork.from_dict(d["network"])
-        )
+            network=ContainerNetwork.from_dict(d["network"]))
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -101,7 +100,8 @@ class DefaultNetworkFirewallConfig:
         if config.ip is not None:
             config.ip = GeneralUtil.replace_first_octet_of_ip(ip=config.ip, ip_first_octet=ip_first_octet)
         if config.default_gw is not None:
-            config.default_gw = GeneralUtil.replace_first_octet_of_ip(ip=config.default_gw, ip_first_octet=ip_first_octet)
+            config.default_gw = GeneralUtil.replace_first_octet_of_ip(ip=config.default_gw,
+                                                                      ip_first_octet=ip_first_octet)
         config.network = config.network.create_execution_config(ip_first_octet=ip_first_octet)
         return config
 

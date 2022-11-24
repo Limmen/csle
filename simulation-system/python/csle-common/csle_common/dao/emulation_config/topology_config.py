@@ -45,8 +45,8 @@ class TopologyConfig:
         """
         :return: a string representation of the object
         """
-        return "node configs:{}, subnetwork_masks:{}".format(",".join(list(map(lambda x: str(x), self.node_configs))),
-                                                       ",".join(self.subnetwork_masks))
+        return f"node configs:{','.join(list(map(lambda x: str(x), self.node_configs)))}, " \
+               f"subnetwork_masks:{','.join(self.subnetwork_masks)}"
 
     def to_json_str(self) -> str:
         """
@@ -89,4 +89,3 @@ class TopologyConfig:
         config.node_configs = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
                                        config.node_configs))
         return config
-

@@ -9,9 +9,9 @@ class ContainersConfig:
     A DTO representing the configuration of the containers that make up an emulation environment
     """
 
-    def __init__(self, containers : List[NodeContainerConfig], agent_ip : str, router_ip : str,
-                 networks: List[ContainerNetwork],
-                 ids_enabled :bool, vulnerable_nodes = None, agent_reachable_nodes = None):
+    def __init__(self, containers: List[NodeContainerConfig], agent_ip: str, router_ip: str,
+                 networks: List[ContainerNetwork], ids_enabled: bool,
+                 vulnerable_nodes=None, agent_reachable_nodes=None):
         """
         Initializes the DTO
 
@@ -153,9 +153,9 @@ class ContainersConfig:
         """
         config = self.copy()
         config.containers = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
-                              config.containers))
+                                     config.containers))
         config.networks = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
-                              config.networks))
+                                   config.networks))
         config.agent_ip = GeneralUtil.replace_first_octet_of_ip(ip=config.agent_ip, ip_first_octet=ip_first_octet)
         config.router_ip = GeneralUtil.replace_first_octet_of_ip(ip=config.router_ip, ip_first_octet=ip_first_octet)
         config.vulnerable_nodes = list(map(lambda x: GeneralUtil.replace_first_octet_of_ip(

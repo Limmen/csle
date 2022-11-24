@@ -36,7 +36,6 @@ class NodeFirewallConfig:
         self.forward_drop = forward_drop
         self.routes = routes
 
-
     def get_ips(self):
         """
         :return: list of ip addresses

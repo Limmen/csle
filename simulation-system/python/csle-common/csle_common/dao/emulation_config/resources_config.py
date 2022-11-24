@@ -7,7 +7,7 @@ class ResourcesConfig:
     A DTO representing the resources assigned to the containers in an emulation environment
     """
 
-    def __init__(self, node_resources_configurations : List[NodeResourcesConfig]):
+    def __init__(self, node_resources_configurations: List[NodeResourcesConfig]):
         """
         Initializes the DTO
 

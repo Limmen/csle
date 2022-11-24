@@ -13,8 +13,8 @@ class KafkaConfig:
     def __init__(self, container: NodeContainerConfig, resources: NodeResourcesConfig,
                  firewall_config: NodeFirewallConfig,
                  topics: List[KafkaTopic],
-                 kafka_manager_log_file : str, kafka_manager_log_dir: str, kafka_manager_max_workers : int,
-                 kafka_port: int= 9092, time_step_len_seconds = 15, kafka_manager_port = 50051,
+                 kafka_manager_log_file: str, kafka_manager_log_dir: str, kafka_manager_max_workers: int,
+                 kafka_port: int = 9092, time_step_len_seconds: int = 15, kafka_manager_port: int = 50051,
                  version: str = "0.0.1") -> None:
         """
         Initializes the DTO
@@ -55,12 +55,12 @@ class KafkaConfig:
         obj = KafkaConfig(
             container=NodeContainerConfig.from_dict(d["container"]),
             resources=NodeResourcesConfig.from_dict(d["resources"]),
-            topics = list(map(lambda x: KafkaTopic.from_dict(x), d["topics"])),
+            topics=list(map(lambda x: KafkaTopic.from_dict(x), d["topics"])),
             kafka_port=d["kafka_port"], time_step_len_seconds=d["time_step_len_seconds"],
             kafka_manager_port=d["kafka_manager_port"],
             version=d["version"],
             firewall_config=NodeFirewallConfig.from_dict(d["firewall_config"]),
-            kafka_manager_log_file = d["kafka_manager_log_file"],
+            kafka_manager_log_file=d["kafka_manager_log_file"],
             kafka_manager_log_dir=d["kafka_manager_log_dir"],
             kafka_manager_max_workers=d["kafka_manager_max_workers"]
         )
@@ -147,4 +147,3 @@ class KafkaConfig:
                            firewall_config=NodeFirewallConfig.schema(), topics=[KafkaTopic.schema()],
                            kafka_manager_max_workers=10, kafka_manager_log_dir="/",
                            kafka_manager_log_file="kafka_manager.log")
-

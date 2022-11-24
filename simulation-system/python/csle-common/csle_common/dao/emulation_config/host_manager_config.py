@@ -6,8 +6,8 @@ class HostManagerConfig:
     Represents the configuration of the Host managers in a CSLE emulation
     """
 
-    def __init__(self, host_manager_log_file : str, host_manager_log_dir : str, host_manager_max_workers :int,
-                 time_step_len_seconds = 15, host_manager_port = 50049, version: str = "0.0.1") -> None:
+    def __init__(self, host_manager_log_file: str, host_manager_log_dir: str, host_manager_max_workers: int,
+                 time_step_len_seconds: int = 15, host_manager_port: int = 50049, version: str = "0.0.1") -> None:
         """
         Initializes the DTO
 
@@ -21,7 +21,7 @@ class HostManagerConfig:
         self.time_step_len_seconds = time_step_len_seconds
         self.version = version
         self.host_manager_port = host_manager_port
-        self.host_manager_log_dir=host_manager_log_dir
+        self.host_manager_log_dir = host_manager_log_dir
         self.host_manager_log_file = host_manager_log_file
         self.host_manager_max_workers = host_manager_max_workers
 
@@ -107,4 +107,3 @@ class HostManagerConfig:
         """
         return HostManagerConfig(host_manager_log_file="host_manager.log", host_manager_log_dir="/",
                                  host_manager_max_workers=10)
-

@@ -41,7 +41,8 @@ class Config:
         :param management_guest_first_name_default: teh default first name of the guest user in the management system
         :param management_guest_last_name_default: the default last name of the guest user in the management system
         :param management_guest_email_default: the default email of the guest user in the management system
-        :param management_guest_organization_default: the default organization of the guest user in the management system
+        :param management_guest_organization_default: the default organization of the guest user
+                                                      in the management system
         :param ssh_admin_username: the default SSH admin username to containers in emulation environments
         :param ssh_admin_password: the default SSH admin password to containers in emulation environments
         :param ssh_agent_username: the default SSH agent username to containers in emulation environments
@@ -73,7 +74,7 @@ class Config:
         self.management_admin_username_default = management_admin_username_default
         self.management_admin_password_default = management_admin_password_default
         self.management_admin_first_name_default = management_admin_first_name_default
-        self.management_admin_last_name_default= management_admin_last_name_default
+        self.management_admin_last_name_default = management_admin_last_name_default
         self.management_admin_email_default = management_admin_email_default
         self.management_admin_organization_default = management_admin_organization_default
         self.management_guest_username_default = management_guest_username_default
@@ -84,15 +85,15 @@ class Config:
         self.management_guest_organization_default = management_guest_organization_default
         self.ssh_admin_username = ssh_admin_username
         self.ssh_admin_password = ssh_admin_password
-        self.ssh_agent_username= ssh_agent_username
-        self.ssh_agent_password= ssh_agent_password
-        self.metastore_user= metastore_user
-        self.metastore_password= metastore_password
+        self.ssh_agent_username = ssh_agent_username
+        self.ssh_agent_password = ssh_agent_password
+        self.metastore_user = metastore_user
+        self.metastore_password = metastore_password
         self.metastore_database_name = metastore_database_name
         self.metastore_ip = metastore_ip
-        self.node_exporter_port= node_exporter_port
+        self.node_exporter_port = node_exporter_port
         self.grafana_port = grafana_port
-        self.management_system_port= management_system_port
+        self.management_system_port = management_system_port
         self.cadvisor_port = cadvisor_port
         self.prometheus_port = prometheus_port
         self.node_exporter_pid_file = node_exporter_pid_file
@@ -315,7 +316,7 @@ class Config:
                 "param": "grafana_port",
                 "value": self.grafana_port
             }
-        )        
+        )
         d["parameters"].append(
             {
                 "id": 23,
@@ -438,45 +439,45 @@ class Config:
 
         :return: a dto representation of the object
         """
-        dto = Config(management_admin_username_default = d["management_admin_username_default"],
-                     management_admin_password_default = d["management_admin_password_default"],
-                     management_admin_first_name_default = d["management_admin_first_name_default"],
-                     management_admin_last_name_default = d["management_admin_last_name_default"],
-                     management_admin_email_default = d["management_admin_email_default"],
-                     management_admin_organization_default = d["management_admin_organization_default"],
-                     management_guest_username_default = d["management_guest_username_default"],
-                     management_guest_password_default = d["management_guest_password_default"],
-                     management_guest_first_name_default = d["management_guest_first_name_default"],
-                     management_guest_last_name_default = d["management_guest_last_name_default"],
-                     management_guest_email_default = d["management_guest_email_default"],
-                     management_guest_organization_default = d["management_guest_organization_default"],
-                     ssh_admin_username = d["ssh_admin_username"],
-                     ssh_admin_password = d["ssh_admin_password"],
-                     ssh_agent_username = d["ssh_agent_username"],
-                     ssh_agent_password = d["ssh_agent_password"],
-                     metastore_user = d["metastore_user"],
-                     metastore_password = d["metastore_password"],
-                     metastore_database_name = d["metastore_database_name"],
-                     metastore_ip = d["metastore_ip"],
-                     node_exporter_port = d["node_exporter_port"],
-                     grafana_port = d["grafana_port"],
-                     management_system_port = d["management_system_port"],
-                     cadvisor_port = d["cadvisor_port"],
-                     prometheus_port = d["prometheus_port"],
-                     node_exporter_pid_file = d["node_exporter_pid_file"],
-                     management_system_pid_file = d["management_system_pid_file"],
-                     docker_stats_manager_log_file = d["docker_stats_manager_log_file"],
-                     docker_stats_manager_log_dir = d["docker_stats_manager_log_dir"],
-                     docker_stats_manager_port = d["docker_stats_manager_port"],
-                     docker_stats_manager_max_workers = d["docker_stats_manager_max_workers"],
-                     docker_stats_manager_outfile = d["docker_stats_manager_outfile"],
-                     docker_stats_manager_pidfile = d["docker_stats_manager_pidfile"],
-                     prometheus_pid_file = d["prometheus_pid_file"],
-                     prometheus_log_file = d["prometheus_log_file"],
-                     prometheus_config_file = d["prometheus_config_file"],
-                     default_log_dir = d["default_log_dir"],
-                     cluster_config = ClusterConfig.from_dict(d["cluster_config"]),
-                     node_exporter_log_file = d["node_exporter_log_file"])
+        dto = Config(management_admin_username_default=d["management_admin_username_default"],
+                     management_admin_password_default=d["management_admin_password_default"],
+                     management_admin_first_name_default=d["management_admin_first_name_default"],
+                     management_admin_last_name_default=d["management_admin_last_name_default"],
+                     management_admin_email_default=d["management_admin_email_default"],
+                     management_admin_organization_default=d["management_admin_organization_default"],
+                     management_guest_username_default=d["management_guest_username_default"],
+                     management_guest_password_default=d["management_guest_password_default"],
+                     management_guest_first_name_default=d["management_guest_first_name_default"],
+                     management_guest_last_name_default=d["management_guest_last_name_default"],
+                     management_guest_email_default=d["management_guest_email_default"],
+                     management_guest_organization_default=d["management_guest_organization_default"],
+                     ssh_admin_username=d["ssh_admin_username"],
+                     ssh_admin_password=d["ssh_admin_password"],
+                     ssh_agent_username=d["ssh_agent_username"],
+                     ssh_agent_password=d["ssh_agent_password"],
+                     metastore_user=d["metastore_user"],
+                     metastore_password=d["metastore_password"],
+                     metastore_database_name=d["metastore_database_name"],
+                     metastore_ip=d["metastore_ip"],
+                     node_exporter_port=d["node_exporter_port"],
+                     grafana_port=d["grafana_port"],
+                     management_system_port=d["management_system_port"],
+                     cadvisor_port=d["cadvisor_port"],
+                     prometheus_port=d["prometheus_port"],
+                     node_exporter_pid_file=d["node_exporter_pid_file"],
+                     management_system_pid_file=d["management_system_pid_file"],
+                     docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
+                     docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
+                     docker_stats_manager_port=d["docker_stats_manager_port"],
+                     docker_stats_manager_max_workers=d["docker_stats_manager_max_workers"],
+                     docker_stats_manager_outfile=d["docker_stats_manager_outfile"],
+                     docker_stats_manager_pidfile=d["docker_stats_manager_pidfile"],
+                     prometheus_pid_file=d["prometheus_pid_file"],
+                     prometheus_log_file=d["prometheus_log_file"],
+                     prometheus_config_file=d["prometheus_config_file"],
+                     default_log_dir=d["default_log_dir"],
+                     cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
+                     node_exporter_log_file=d["node_exporter_log_file"])
         return dto
 
     @staticmethod
@@ -491,45 +492,45 @@ class Config:
         for param_value in d2["parameters"]:
             d[param_value["param"]] = param_value["value"]
 
-        dto = Config(management_admin_username_default = d["management_admin_username_default"],
-                     management_admin_password_default = d["management_admin_password_default"],
-                     management_admin_first_name_default = d["management_admin_first_name_default"],
-                     management_admin_last_name_default = d["management_admin_last_name_default"],
-                     management_admin_email_default = d["management_admin_email_default"],
-                     management_admin_organization_default = d["management_admin_organization_default"],
-                     management_guest_username_default = d["management_guest_username_default"],
-                     management_guest_password_default = d["management_guest_password_default"],
-                     management_guest_first_name_default = d["management_guest_first_name_default"],
-                     management_guest_last_name_default = d["management_guest_last_name_default"],
-                     management_guest_email_default = d["management_guest_email_default"],
-                     management_guest_organization_default = d["management_guest_organization_default"],
-                     ssh_admin_username = d["ssh_admin_username"],
-                     ssh_admin_password = d["ssh_admin_password"],
-                     ssh_agent_username = d["ssh_agent_username"],
-                     ssh_agent_password = d["ssh_agent_password"],
-                     metastore_user = d["metastore_user"],
-                     metastore_password = d["metastore_password"],
-                     metastore_database_name = d["metastore_database_name"],
-                     metastore_ip = d["metastore_ip"],
-                     node_exporter_port = d["node_exporter_port"],
-                     grafana_port = d["grafana_port"],
-                     management_system_port = d["management_system_port"],
-                     cadvisor_port = d["cadvisor_port"],
-                     prometheus_port = d["prometheus_port"],
-                     node_exporter_pid_file = d["node_exporter_pid_file"],
-                     management_system_pid_file = d["management_system_pid_file"],
-                     docker_stats_manager_log_file = d["docker_stats_manager_log_file"],
-                     docker_stats_manager_log_dir = d["docker_stats_manager_log_dir"],
-                     docker_stats_manager_port = d["docker_stats_manager_port"],
-                     docker_stats_manager_max_workers = d["docker_stats_manager_max_workers"],
-                     docker_stats_manager_outfile = d["docker_stats_manager_outfile"],
-                     docker_stats_manager_pidfile = d["docker_stats_manager_pidfile"],
-                     prometheus_pid_file = d["prometheus_pid_file"],
-                     prometheus_log_file = d["prometheus_log_file"],
-                     prometheus_config_file = d["prometheus_config_file"],
-                     default_log_dir = d["default_log_dir"],
-                     cluster_config = ClusterConfig.from_dict(d["cluster_config"]),                     
-                     node_exporter_log_file = d["node_exporter_log_file"])
+        dto = Config(management_admin_username_default=d["management_admin_username_default"],
+                     management_admin_password_default=d["management_admin_password_default"],
+                     management_admin_first_name_default=d["management_admin_first_name_default"],
+                     management_admin_last_name_default=d["management_admin_last_name_default"],
+                     management_admin_email_default=d["management_admin_email_default"],
+                     management_admin_organization_default=d["management_admin_organization_default"],
+                     management_guest_username_default=d["management_guest_username_default"],
+                     management_guest_password_default=d["management_guest_password_default"],
+                     management_guest_first_name_default=d["management_guest_first_name_default"],
+                     management_guest_last_name_default=d["management_guest_last_name_default"],
+                     management_guest_email_default=d["management_guest_email_default"],
+                     management_guest_organization_default=d["management_guest_organization_default"],
+                     ssh_admin_username=d["ssh_admin_username"],
+                     ssh_admin_password=d["ssh_admin_password"],
+                     ssh_agent_username=d["ssh_agent_username"],
+                     ssh_agent_password=d["ssh_agent_password"],
+                     metastore_user=d["metastore_user"],
+                     metastore_password=d["metastore_password"],
+                     metastore_database_name=d["metastore_database_name"],
+                     metastore_ip=d["metastore_ip"],
+                     node_exporter_port=d["node_exporter_port"],
+                     grafana_port=d["grafana_port"],
+                     management_system_port=d["management_system_port"],
+                     cadvisor_port=d["cadvisor_port"],
+                     prometheus_port=d["prometheus_port"],
+                     node_exporter_pid_file=d["node_exporter_pid_file"],
+                     management_system_pid_file=d["management_system_pid_file"],
+                     docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
+                     docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
+                     docker_stats_manager_port=d["docker_stats_manager_port"],
+                     docker_stats_manager_max_workers=d["docker_stats_manager_max_workers"],
+                     docker_stats_manager_outfile=d["docker_stats_manager_outfile"],
+                     docker_stats_manager_pidfile=d["docker_stats_manager_pidfile"],
+                     prometheus_pid_file=d["prometheus_pid_file"],
+                     prometheus_log_file=d["prometheus_log_file"],
+                     prometheus_config_file=d["prometheus_config_file"],
+                     default_log_dir=d["default_log_dir"],
+                     cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
+                     node_exporter_log_file=d["node_exporter_log_file"])
         return dto
 
     def __str__(self) -> str:

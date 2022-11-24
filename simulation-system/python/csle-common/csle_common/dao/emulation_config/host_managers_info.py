@@ -63,9 +63,10 @@ class HostManagersInfo:
 
         :return: a dto representation of the object
         """
-        dto = HostManagersInfo(host_managers_running=d["host_managers_running"], ips=d["ips"], ports = d["ports"],
-                               emulation_name=d["emulation_name"],
-                               execution_id=d["execution_id"], host_managers_statuses=list(map(
-                lambda x: host_manager_util.HostManagerUtil.host_monitor_dto_from_dict(x),
-                d["host_managers_statuses"])))
+        dto = HostManagersInfo(
+            host_managers_running=d["host_managers_running"], ips=d["ips"], ports=d["ports"],
+            emulation_name=d["emulation_name"], execution_id=d["execution_id"],
+            host_managers_statuses=list(
+                map(lambda x: host_manager_util.HostManagerUtil.host_monitor_dto_from_dict(x),
+                    d["host_managers_statuses"])))
         return dto
