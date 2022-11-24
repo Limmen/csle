@@ -252,8 +252,7 @@ class ShellUtil:
         :param result: the result to check
         :return: True if sucessful otherwise False
         """
-        return (
-                "will be installed" in result or "already installed" in result
+        return ("will be installed" in result or "already installed" in result
                 or "already the newest version" in result)
 
     @staticmethod
@@ -550,7 +549,7 @@ class ShellUtil:
 
                 total_cost += telnet_cost
         attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
-            s.attacker_obs_state.machines,  new_machines_obs, emulation_env_config=s.emulation_env_config, action=a)
+            s.attacker_obs_state.machines, new_machines_obs, emulation_env_config=s.emulation_env_config, action=a)
         s_prime = s
         s_prime.attacker_obs_state.machines = attacker_machine_observations
 

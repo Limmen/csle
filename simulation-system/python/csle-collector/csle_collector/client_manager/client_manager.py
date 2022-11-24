@@ -51,7 +51,7 @@ class ClientThread(threading.Thread):
             if time_lapsed >= self.service_time:
                 done = True
             else:
-                if cmd_index < len(self.commands)-1:
+                if cmd_index < len(self.commands) - 1:
                     cmd_index += 1
                 else:
                     cmd_index = 0
@@ -99,7 +99,7 @@ class ArrivalThread(threading.Thread):
         :param t: the time-step
         :return: the rate
         """
-        return self.lamb + self.period_scaling_factor*math.sin(self.time_scaling_factor*math.pi*t)
+        return self.lamb + self.period_scaling_factor * math.sin(self.time_scaling_factor * math.pi * t)
 
     def run(self) -> None:
         """
@@ -122,7 +122,7 @@ class ArrivalThread(threading.Thread):
                 new_clients = poisson.rvs(self.lamb, size=1)[0]
             for nc in range(new_clients):
                 commands = random.sample(self.commands, self.num_commands)
-                service_time = expon.rvs(scale=(self.mu*self.time_step_len_seconds), loc=0, size=1)[0]
+                service_time = expon.rvs(scale=(self.mu * self.time_step_len_seconds), loc=0, size=1)[0]
                 thread = ClientThread(service_time=service_time, commands=commands,
                                       time_step_len_seconds=self.time_step_len_seconds)
                 thread.start()

@@ -8,7 +8,6 @@ from csle_common.dao.training.mixed_multi_threshold_stopping_policy import Mixed
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
-import csle_agents.constants.constants as agent_constants
 import gym_csle_stopping_game.constants.constants as env_constants
 
 
@@ -48,7 +47,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, pi2 : Union[List[List[float]], int, float, np.int64, np.float]) \
+    def step(self, pi2: Union[List[List[float]], int, float, np.int64, np.float]) \
             -> Tuple[np.ndarray, int, bool, dict]:
         """
         Takes a step in the environment by executing the given action
@@ -62,13 +61,13 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         else:
             if self.model is not None:
                 pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-                a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+                a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
             else:
                 pi2 = np.array(pi2)
                 if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
-                    or not pi2.shape[1] == len(self.config.stopping_game_config.A1)) and self.model is not None:
+                        or pi2.shape[1] != len(self.config.stopping_game_config.A1)) and self.model is not None:
                     pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-                a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+                a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
 
         # a2 = pi2
         # pi2 = np.array([
@@ -89,11 +88,12 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         attacker_obs = o[1]
 
         info[env_constants.ENV_METRICS.RETURN] = -info[env_constants.ENV_METRICS.RETURN]
-        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = -info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]
+        info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = \
+            -info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]
 
         return attacker_obs, r[1], d, info
 
-    def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
+    def reset(self, soft: bool = False) -> Tuple[np.ndarray, np.ndarray]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -121,21 +121,11 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :param o: the observation
         :return: the stage policy
         """
-        # return np.array([
-        #     [0.5,0.5],
-        #     [0.5,0.5],
-        #     [0.5,0.5]
-        # ])
         if self.model is None:
-            # return np.array([
-            #     [0.5,0.5],
-            #     [0.5,0.5],
-            #     [0.5,0.5]
-            # ])
             stage_policy = []
             for s in self.config.stopping_game_config.S:
                 if s != 2:
-                    dist = [0,0]
+                    dist = [0, 0]
                     dist[a2] = 1
                     stage_policy.append(dist)
                 else:
@@ -170,8 +160,8 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         if action == 1:
             stop_prob = math.exp(log_prob)
         else:
-            stop_prob = 1-math.exp(log_prob)
-        return [1-stop_prob, stop_prob]
+            stop_prob = 1 - math.exp(log_prob)
+        return [1 - stop_prob, stop_prob]
 
     def render(self, mode: str = 'human'):
         """
@@ -184,7 +174,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :param mode: the rendering mode
         :return: True (if human mode) otherwise an rgb array
         """
-        raise NotImplemented("Rendering is not implemented for this environment")
+        raise NotImplementedError("Rendering is not implemented for this environment")
 
     def is_defense_action_legal(self, defense_action_id: int) -> bool:
         """
@@ -257,4 +247,3 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
             else:
                 action_idx = int(raw_input)
                 _, _, done, _ = self.step(pi2=action_idx)
-

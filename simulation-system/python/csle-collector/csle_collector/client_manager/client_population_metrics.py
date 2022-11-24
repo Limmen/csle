@@ -104,7 +104,7 @@ class ClientPopulationMetrics:
         :param stats_prime: the stats object to compare with
         :return: the deltas and the labels
         """
-        deltas = [int(stats_prime.num_clients - self.num_clients), float(stats_prime.rate-self.rate)]
+        deltas = [int(stats_prime.num_clients - self.num_clients), float(stats_prime.rate - self.rate)]
         labels = ["num_clients", "rate"]
         return deltas, labels
 

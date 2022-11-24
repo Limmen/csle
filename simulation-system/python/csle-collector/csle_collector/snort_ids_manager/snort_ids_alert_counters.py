@@ -60,8 +60,8 @@ class SnortIdsAlertCounters:
             self.priority_alerts[constants.SNORT_IDS_ROUTER.SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD:])
         self.alerts_weighted_by_priority = 0
         for idx in range(len(self.priority_alerts)):
-            priority = (5-idx+1)
-            self.alerts_weighted_by_priority += priority*self.priority_alerts[idx]
+            priority = (5 - idx + 1)
+            self.alerts_weighted_by_priority += priority * self.priority_alerts[idx]
 
     @staticmethod
     def from_kafka_record(record: str) -> "SnortIdsAlertCounters":
@@ -246,12 +246,9 @@ class SnortIdsAlertCounters:
         """
         deltas_priority = list(np.array(counters_prime.priority_alerts).astype(int).tolist())
         deltas_class = list(np.array(counters_prime.class_alerts).astype(int).tolist())
-        deltas = [
-                     int(counters_prime.total_alerts),
-                     int(counters_prime.warning_alerts),
-                     int(counters_prime.severe_alerts),
-                     int(counters_prime.alerts_weighted_by_priority)
-                 ] + deltas_priority + deltas_class
+        deltas = ([int(counters_prime.total_alerts), int(counters_prime.warning_alerts),
+                  int(counters_prime.severe_alerts), int(counters_prime.alerts_weighted_by_priority)]
+                  + deltas_priority + deltas_class)
         labels = constants.KAFKA_CONFIG.SNORT_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels

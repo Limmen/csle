@@ -111,7 +111,7 @@ class HostManagerUtil:
             parts2 = parts[0].split("State")
             if len(parts2) > 1:
                 parts3 = parts2[1].split("\n")
-                return len(parts3)-1
+                return len(parts3) - 1
         return -1
 
     @staticmethod

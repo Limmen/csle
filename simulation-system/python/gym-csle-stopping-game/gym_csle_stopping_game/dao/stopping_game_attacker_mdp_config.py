@@ -40,10 +40,10 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
         defender_strategy = None
         try:
             defender_strategy = MultiThresholdStoppingPolicy.from_dict(d["defender_strategy"])
-        except:
+        except Exception:
             try:
                 defender_strategy = RandomPolicy.from_dict(d["defender_strategy"])
-            except:
+            except Exception:
                 defender_strategy = PPOPolicy.from_dict(d["defender_strategy"])
         obj = StoppingGameAttackerMdpConfig(
             stopping_game_config=StoppingGameConfig.from_dict(d["stopping_game_config"]),

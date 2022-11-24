@@ -124,7 +124,7 @@ class DockerStats:
             sum_net_rx = sum_net_rx + stats_list[i].net_rx
             sum_net_tx = sum_net_tx + stats_list[i].net_tx
 
-        avg_pids = float("{:.1f}".format(float(sum_pids/len(stats_list))))
+        avg_pids = float("{:.1f}".format(float(sum_pids / len(stats_list))))
         avg_cpu_percent = float("{:.1f}".format(float(sum_cpu_percent / len(stats_list))))
         avg_mem_current = float("{:.1f}".format(float(sum_mem_current / len(stats_list))))
         avg_mem_total = float("{:.1f}".format(float(sum_mem_total / len(stats_list))))

@@ -307,7 +307,7 @@ class KAFKA_CONFIG:
     CLIENT_POPULATION_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_clients", "rate"]
     SNORT_IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "attempted-admin", "attempted-user",
                                       "inappropriate-content", "policy-violation", "shellcode-detect",
-                                      "successful-admin",  "successful-user", "trojan-activity", "unsuccessful-user",
+                                      "successful-admin", "successful-user", "trojan-activity", "unsuccessful-user",
                                       "web-application-attack", "attempted-dos", "attempted-recon", "bad-unknown",
                                       "default-login-attempt", "denial-of-service", "misc-attack",
                                       "non-standard-protocol", "rpc-portmap-decode", "successful-dos",
@@ -316,7 +316,7 @@ class KAFKA_CONFIG:
                                       "unusual-client-port-connection", "web-application-activity", "icmp-event",
                                       "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
                                       "string-detect", "unknown", "tcp-connection", "priority_1", "priority_2",
-                                      "priority_3",  "priority_4", "alerts_weighted_by_priority", "total_alerts",
+                                      "priority_3", "priority_4", "alerts_weighted_by_priority", "total_alerts",
                                       "severe_alerts", "warning_alerts"]
     OSSEC_IDS_LOG_TOPIC_ATTRIBUTES = ["timestamp", "ip", "total_alerts", "warning_alerts", "severe_alerts",
                                       "alerts_weighted_by_level", "level_0_alerts", "level_1_alerts",
@@ -326,7 +326,7 @@ class KAFKA_CONFIG:
                                       "level_14_alerts", "level_15_alerts", "invalid_login_alerts",
                                       "authentication_success_alerts", "authentication_failed_alerts",
                                       "connection_attempt_alerts", "attacks_alerts", "adduser_alerts", "sshd_alerts",
-                                      "ids_alerts",  "firewall_alerts", "squid_alerts",
+                                      "ids_alerts", "firewall_alerts", "squid_alerts",
                                       "apache_alerts", "syslog_alerts"]
     HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
@@ -344,10 +344,10 @@ class KAFKA_CONFIG:
                                             "num_transmitted_dropped", "num_received_frame_errors",
                                             "num_received_overrun_errors", "num_received_crc_errors", "num_collisions",
                                             "duration_nanoseconds", "duration_seconds"]
-    OPENFLOW_AGG_FLOW_STATS_TOPIC_ATTRIBUTES = ["timestamp", "datapath_id",  "total_num_packets", "total_num_bytes",
+    OPENFLOW_AGG_FLOW_STATS_TOPIC_ATTRIBUTES = ["timestamp", "datapath_id", "total_num_packets", "total_num_bytes",
                                                 "total_num_flows"]
     AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_ATTRIBUTES = [
-        "timestamp", "datapath_id",  "total_num_packets", "total_num_bytes", "avg_duration_nanoseconds",
+        "timestamp", "datapath_id", "total_num_packets", "total_num_bytes", "avg_duration_nanoseconds",
         "avg_duration_seconds", "avg_hard_timeout", "avg_idle_timeout", "avg_priority", "avg_cookie"]
     AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_ATTRIBUTES = [
         "timestamp", "datapath_id", "total_num_received_packets", "total_num_received_bytes",

@@ -12,7 +12,6 @@ from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 
 
 class StoppingGamePomdpDefenderEnv(BaseEnv):
@@ -58,7 +57,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step((a1, (pi2, a2)))
@@ -66,7 +65,6 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         defender_obs = o[0]
 
         return defender_obs, r[0], d, info
-
 
     def step_test(self, a1: int, sample_Z) -> Tuple[np.ndarray, int, bool, dict]:
         """
@@ -77,7 +75,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
-        a2 = StoppingGameUtil.sample_attacker_action(pi2 = pi2, s=self.stopping_game_env.state.s)
+        a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
 
         # Step the game
         o, r, d, info = self.stopping_game_env.step_test((a1, (pi2, a2)), sample_Z=sample_Z)
@@ -86,8 +84,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
 
         return defender_obs, r[0], d, info
 
-
-    def reset(self, soft : bool = False) -> np.ndarray:
+    def reset(self, soft: bool = False) -> np.ndarray:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -109,7 +106,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :param mode: the rendering mode
         :return: True (if human mode) otherwise an rgb array
         """
-        raise NotImplemented("Rendering is not implemented for this environment")
+        raise NotImplementedError("Rendering is not implemented for this environment")
 
     def step_trace(self, trace: EmulationTrace, a1: int) -> Tuple[np.ndarray, int, bool, dict]:
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
@@ -117,7 +114,6 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
         return defender_obs, r[0], d, info
-
 
     @staticmethod
     def emulation_evaluation(env: "StoppingGamePomdpDefenderEnv",
@@ -128,7 +124,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         return StoppingGameEnv.emulation_evaluation(
             env=env.stopping_game_env, n_episodes=n_episodes, intrusion_seq=intrusion_seq,
             defender_policy=defender_policy, attacker_policy=env.static_attacker_strategy,
-            emulation_env_config=emulation_env_config,  simulation_env_config=simulation_env_config)
+            emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config)
 
     def is_defense_action_legal(self, defense_action_id: int) -> bool:
         """

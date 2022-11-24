@@ -58,7 +58,7 @@ class StoppingGameEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, action_profile : Tuple[int, Tuple[np.ndarray, int]]) \
+    def step(self, action_profile: Tuple[int, Tuple[np.ndarray, int]]) \
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         """
         Takes a step in the environment by executing the given action
@@ -91,7 +91,7 @@ class StoppingGameEnv(BaseEnv):
                                                         l=self.state.l, a2=a2)
 
         # Update stops remaining
-        self.state.l = self.state.l-a1
+        self.state.l = self.state.l - a1
 
         # Update time-step
         self.state.t += 1
@@ -124,10 +124,9 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        return (defender_obs, attacker_obs), (r,-r), done, info
+        return (defender_obs, attacker_obs), (r, -r), done, info
 
-
-    def step_test(self, action_profile : Tuple[int, Tuple[np.ndarray, int]], sample_Z) \
+    def step_test(self, action_profile: Tuple[int, Tuple[np.ndarray, int]], sample_Z) \
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         """
         Takes a step in the environment by executing the given action
@@ -158,9 +157,8 @@ class StoppingGameEnv(BaseEnv):
             self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
                                                         config=self.config,
                                                         l=self.state.l, a2=a2)
-
         # Update stops remaining
-        self.state.l = self.state.l-a1
+        self.state.l = self.state.l - a1
 
         # Update time-step
         self.state.t += 1
@@ -193,15 +191,14 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        return (defender_obs, attacker_obs), (r,-r), done, info
+        return (defender_obs, attacker_obs), (r, -r), done, info
 
     def step_trace(self, trace: EmulationTrace, a1: int, pi2: np.ndarray) \
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
         done = False
         info = {}
-        old_state = self.state.s
-        if (self.state.t-1) < len(trace.attacker_actions):
-            a2_emulation_action = trace.attacker_actions[self.state.t-1]
+        if (self.state.t - 1) < len(trace.attacker_actions):
+            a2_emulation_action = trace.attacker_actions[self.state.t - 1]
             a2 = 0
             if a2_emulation_action.type != EmulationAttackerActionType.CONTINUE and self.state.s == 0:
                 a2 = 1
@@ -216,21 +213,21 @@ class StoppingGameEnv(BaseEnv):
             if self.state.s == 2:
                 done = True
             else:
-                o = trace.defender_observation_states[self.state.t-1].avg_snort_ids_alert_counters.warning_alerts
+                o = trace.defender_observation_states[self.state.t - 1].avg_snort_ids_alert_counters.warning_alerts
                 if o >= len(self.config.O):
-                    o = len(self.config.O)-1
+                    o = len(self.config.O) - 1
                 self.state.b = StoppingGameUtil.next_belief(o=o, a1=a1, b=self.state.b, pi2=pi2,
                                                             config=self.config,
                                                             l=self.state.l, a2=a2)
 
             # Update stops remaining
-            self.state.l = self.state.l-a1
+            self.state.l = self.state.l - a1
         else:
             self.state.s = 2
-            done= True
-            a2=0
-            o=0
-            r=0
+            done = True
+            a2 = 0
+            o = 0
+            r = 0
 
         # Update time-step
         self.state.t += 1
@@ -263,12 +260,12 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        return (defender_obs, attacker_obs), (r,-r), done, info
+        return (defender_obs, attacker_obs), (r, -r), done, info
 
     def mean(self, prob_vector):
         m = 0
         for i in range(len(prob_vector)):
-            m += prob_vector[i]*i
+            m += prob_vector[i] * i
         return m
 
     def weighted_intrusion_prediction_distance(self, intrusion_start: int, first_stop: int):
@@ -280,9 +277,9 @@ class StoppingGameEnv(BaseEnv):
         :return: the weighted distance
         """
         if first_stop <= intrusion_start:
-            return 1-(10/10)
+            return 1 - (10 / 10)
         else:
-            return 1-(min(10, (first_stop - (intrusion_start+1)))/2)/10
+            return 1 - (min(10, (first_stop - (intrusion_start + 1))) / 2) / 10
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
@@ -292,11 +289,11 @@ class StoppingGameEnv(BaseEnv):
         """
         R = 0
         for i in range(len(self.trace.defender_rewards)):
-            R+= self.trace.defender_rewards[i]*math.pow(self.config.gamma, i)
+            R += self.trace.defender_rewards[i] * math.pow(self.config.gamma, i)
         info[env_constants.ENV_METRICS.RETURN] = sum(self.trace.defender_rewards)
         info[env_constants.ENV_METRICS.TIME_HORIZON] = len(self.trace.defender_actions)
         stop = self.config.L
-        for i in range(1, self.config.L+1):
+        for i in range(1, self.config.L + 1):
             info[f"{env_constants.ENV_METRICS.STOP}_{i}"] = len(self.trace.states)
         for i in range(len(self.trace.defender_actions)):
             if self.trace.defender_actions[i] == 1:
@@ -310,8 +307,8 @@ class StoppingGameEnv(BaseEnv):
         intrusion_end = len(self.trace.attacker_actions)
         info[env_constants.ENV_METRICS.INTRUSION_START] = intrusion_start
         info[env_constants.ENV_METRICS.INTRUSION_END] = intrusion_end
-        info[env_constants.ENV_METRICS.START_POINT_CORRECT] = int(intrusion_start ==
-                                                                  (info[f"{env_constants.ENV_METRICS.STOP}_1"]+1))
+        info[env_constants.ENV_METRICS.START_POINT_CORRECT] = \
+            int(intrusion_start == (info[f"{env_constants.ENV_METRICS.STOP}_1"] + 1))
         info[env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = \
             self.weighted_intrusion_prediction_distance(intrusion_start=intrusion_start,
                                                         first_stop=info[f"{env_constants.ENV_METRICS.STOP}_1"])
@@ -319,32 +316,32 @@ class StoppingGameEnv(BaseEnv):
         upper_bound_return = 0
         defender_baseline_stop_on_first_alert_return = 0
         upper_bound_stops_remaining = self.config.L
-        defender_baseline_stop_on_first_alert_stops_remaining =self.config.L
+        defender_baseline_stop_on_first_alert_stops_remaining = self.config.L
         for i in range(len(self.trace.states)):
             if defender_baseline_stop_on_first_alert_stops_remaining > 0:
                 if self.trace.infrastructure_metrics[i] > 0:
                     defender_baseline_stop_on_first_alert_return += self.config.R[
                         int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][1][
-                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
                     defender_baseline_stop_on_first_alert_stops_remaining -= 1
                 else:
                     defender_baseline_stop_on_first_alert_return += self.config.R[
                         int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][0][
-                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
             if upper_bound_stops_remaining > 0:
                 if self.trace.states[i] == 0:
                     upper_bound_return += self.config.R[int(upper_bound_stops_remaining) - 1][0][
-                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
                 else:
                     upper_bound_return += self.config.R[int(upper_bound_stops_remaining) - 1][1][
-                        self.trace.attacker_actions[i]][self.trace.states[i]]*math.pow(self.config.gamma, i)
+                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
                     upper_bound_stops_remaining -= 1
         info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
         info[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = \
             defender_baseline_stop_on_first_alert_return
         return info
 
-    def reset(self, soft : bool = False) -> Tuple[np.ndarray, np.ndarray]:
+    def reset(self, soft: bool = False) -> Tuple[np.ndarray, np.ndarray]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -386,7 +383,7 @@ class StoppingGameEnv(BaseEnv):
             while not done:
                 a1 = defender_policy.action(d_obs)
                 a2 = attacker_policy.action(a_obs)
-                o, r, done, info = env.step((a1,a2))
+                o, r, done, info = env.step((a1, a2))
                 (d_obs, a_obs) = o
                 r_1, r_2 = r
                 logger.debug(f"a1:{a1}, a2:{a2}, d_obs:{d_obs}, a_obs:{a_obs}, r:{r}, done:{done}, info: {info}")
@@ -411,8 +408,10 @@ class StoppingGameEnv(BaseEnv):
                                 s.defender_obs_state.aggregated_host_metrics.num_failed_login_attempts]
                 o_components_str = ",".join(list(map(lambda x: str(x), o_components)))
                 logger.debug(f"o_components:{o_components}")
-                logger.debug(f"observation_id_to_observation_vector_inv:{defender_obs_space.observation_id_to_observation_vector_inv}")
-                logger.debug(f"observation_id_to_observation_vector_inv:{o_components_str in defender_obs_space.observation_id_to_observation_vector_inv}")
+                logger.debug(f"observation_id_to_observation_vector_inv:"
+                             f"{defender_obs_space.observation_id_to_observation_vector_inv}")
+                logger.debug(f"observation_id_to_observation_vector_inv:"
+                             f"{o_components_str in defender_obs_space.observation_id_to_observation_vector_inv}")
                 if o_components_str in defender_obs_space.observation_id_to_observation_vector_inv:
                     o = defender_obs_space.observation_id_to_observation_vector_inv[o_components_str]
                 else:
@@ -447,7 +446,7 @@ class StoppingGameEnv(BaseEnv):
         :param mode: the rendering mode
         :return: True (if human mode) otherwise an rgb array
         """
-        raise NotImplemented("Rendering is not implemented for this environment")
+        raise NotImplementedError("Rendering is not implemented for this environment")
 
     def is_defense_action_legal(self, defense_action_id: int) -> bool:
         """
@@ -525,10 +524,10 @@ class StoppingGameEnv(BaseEnv):
                 stage_policy = []
                 for s in self.config.S:
                     if s != 2:
-                        dist = [0,0]
+                        dist = [0, 0]
                         dist[a2] = 1
                         stage_policy.append(dist)
                     else:
                         stage_policy.append([0.5, 0.5])
                 stage_policy = np.array(stage_policy)
-                _, _, done, _ = self.step(action_profile=(a1,(stage_policy,a2)))
+                _, _, done, _ = self.step(action_profile=(a1, (stage_policy, a2)))

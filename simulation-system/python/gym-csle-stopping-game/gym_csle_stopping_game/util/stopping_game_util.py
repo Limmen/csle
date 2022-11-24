@@ -70,7 +70,7 @@ class StoppingGameUtil:
                 # Defender stops
                 [
                     # Attacker continues
-                    [R_COST / l, R_ST /l, 0],
+                    [R_COST / l, R_ST / l, 0],
                     # Attacker stops
                     [R_COST / l, R_SLA, 0]
                 ]
@@ -94,7 +94,7 @@ class StoppingGameUtil:
                         # Attacker continues
                         [
                             [1, 0, 0],  # No intrusion
-                            [0, 1 - 1/(2*l), 1/(2*l)],  # Intrusion
+                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ],
                         # Attacker stops
@@ -128,7 +128,7 @@ class StoppingGameUtil:
                         # Attacker continues
                         [
                             [1, 0, 0],  # No intrusion
-                            [0, 1 - 1/(2*l), 1/(2*l)],  # Intrusion
+                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ],
                         # Attacker stops
@@ -144,7 +144,7 @@ class StoppingGameUtil:
                         # Attacker continues
                         [
                             [1, 0, 0],  # No intrusion
-                            [0, 1 - 1/(2*l), 1/(2*l)],  # Intrusion
+                            [0, 1 - 1 / (2 * l), 1 / (2 * l)],  # Intrusion
                             [0, 0, 1]  # Terminal
                         ],
                         # Attacker stops
@@ -159,12 +159,12 @@ class StoppingGameUtil:
         T = np.array(T_l)
         return T
 
-
     @staticmethod
-    def observation_tensor_from_emulation_statistics(
-            emulation_statistic: EmulationStatistics,
-            observation_space_defender: ObservationSpaceConfig, joint_action_space: JointActionSpaceConfig,
-            state_space: StateSpaceConfig) -> Tuple[np.ndarray, Dict[str, List]]:
+    def observation_tensor_from_emulation_statistics(emulation_statistic: EmulationStatistics,
+                                                     observation_space_defender: ObservationSpaceConfig,
+                                                     joint_action_space: JointActionSpaceConfig,
+                                                     state_space: StateSpaceConfig) \
+            -> Tuple[np.ndarray, Dict[str, List]]:
         """
         Returns an observation tensor based on measured emulation statistics
 
@@ -180,13 +180,13 @@ class StoppingGameUtil:
         norm = sum(emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"].values())
         for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
             count = emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"][severe_alert_obs.id]
-            intrusion_severe_alerts_probabilities.append(count/norm)
+            intrusion_severe_alerts_probabilities.append(count / norm)
         for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
             count = emulation_statistic.conditionals_counts["intrusion"]["warning_alerts"][warning_alert_obs.id]
-            intrusion_warning_alerts_probabilities.append(count/norm)
+            intrusion_warning_alerts_probabilities.append(count / norm)
         for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
             count = emulation_statistic.conditionals_counts["intrusion"]["login_attempts"][login_attempt_obs.id]
-            intrusion_login_attempts_probabilities.append(count/norm)
+            intrusion_login_attempts_probabilities.append(count / norm)
 
         no_intrusion_severe_alerts_probabilities = []
         no_intrusion_warning_alerts_probabilities = []
@@ -194,19 +194,19 @@ class StoppingGameUtil:
         norm = sum(emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"].values())
         for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
             count = emulation_statistic.conditionals_counts["no_intrusion"]["severe_alerts"][severe_alert_obs.id]
-            no_intrusion_severe_alerts_probabilities.append(count/norm)
+            no_intrusion_severe_alerts_probabilities.append(count / norm)
         for warning_alert_obs in observation_space_defender.component_observations["warning_alerts"]:
             count = emulation_statistic.conditionals_counts["no_intrusion"]["warning_alerts"][warning_alert_obs.id]
-            no_intrusion_warning_alerts_probabilities.append(count/norm)
+            no_intrusion_warning_alerts_probabilities.append(count / norm)
         for login_attempt_obs in observation_space_defender.component_observations["login_attempts"]:
             count = emulation_statistic.conditionals_counts["no_intrusion"]["login_attempts"][login_attempt_obs.id]
-            no_intrusion_login_attempts_probabilities.append(count/norm)
+            no_intrusion_login_attempts_probabilities.append(count / norm)
 
         component_observation_tensors = {}
         observation_tensor = []
-        severe_alerts_tensor=[]
-        warning_alerts_tensor=[]
-        login_attempts_tensor=[]
+        severe_alerts_tensor = []
+        warning_alerts_tensor = []
+        login_attempts_tensor = []
         for a1 in range(len(joint_action_space.action_spaces[0].actions)):
             a1_a2_s_o_dist = []
             severe_alerts_a1_a2_s_o_dist = []
@@ -228,16 +228,16 @@ class StoppingGameUtil:
                             severe_alerts_s_o_dist.append(no_intrusion_severe_alerts_probabilities[obs_vector[0]])
                             warning_alerts_s_o_dist.append(no_intrusion_warning_alerts_probabilities[obs_vector[0]])
                             login_attempts_s_o_dist.append(no_intrusion_login_attempts_probabilities[obs_vector[0]])
-                            p = no_intrusion_severe_alerts_probabilities[obs_vector[0]]*\
-                                no_intrusion_warning_alerts_probabilities[obs_vector[1]]*\
-                                no_intrusion_login_attempts_probabilities[obs_vector[2]]
+                            p = (no_intrusion_severe_alerts_probabilities[obs_vector[0]] *
+                                 no_intrusion_warning_alerts_probabilities[obs_vector[1]] *
+                                 no_intrusion_login_attempts_probabilities[obs_vector[2]])
                         else:
                             severe_alerts_s_o_dist.append(intrusion_severe_alerts_probabilities[obs_vector[0]])
                             warning_alerts_s_o_dist.append(intrusion_warning_alerts_probabilities[obs_vector[0]])
                             login_attempts_s_o_dist.append(intrusion_login_attempts_probabilities[obs_vector[0]])
-                            p = intrusion_severe_alerts_probabilities[obs_vector[0]]* \
-                                intrusion_warning_alerts_probabilities[obs_vector[1]]* \
-                                intrusion_login_attempts_probabilities[obs_vector[2]]
+                            p = (intrusion_severe_alerts_probabilities[obs_vector[0]] *
+                                 intrusion_warning_alerts_probabilities[obs_vector[1]] *
+                                 intrusion_login_attempts_probabilities[obs_vector[2]])
                         s_o_dist.append(p)
                     a2_s_o_dist.append(s_o_dist)
                     severe_alerts_a2_s_o_dist.append(severe_alerts_s_o_dist)
@@ -251,9 +251,9 @@ class StoppingGameUtil:
             severe_alerts_tensor.append(severe_alerts_a1_a2_s_o_dist)
             warning_alerts_tensor.append(warning_alerts_a1_a2_s_o_dist)
             login_attempts_tensor.append(login_attempts_a1_a2_s_o_dist)
-        component_observation_tensors["severe_alerts"]=severe_alerts_tensor
-        component_observation_tensors["warning_alerts"]=warning_alerts_tensor
-        component_observation_tensors["login_attempts"]=login_attempts_tensor
+        component_observation_tensors["severe_alerts"] = severe_alerts_tensor
+        component_observation_tensors["warning_alerts"] = warning_alerts_tensor
+        component_observation_tensors["login_attempts"] = login_attempts_tensor
         return np.array(observation_tensor), component_observation_tensors
 
     @staticmethod

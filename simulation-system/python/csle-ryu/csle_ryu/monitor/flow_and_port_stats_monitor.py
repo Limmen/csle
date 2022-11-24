@@ -198,7 +198,7 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 num_received_bytes=port.rx_bytes, num_received_errors=port.rx_errors,
                 num_transmitted_packets=port.tx_packets, num_transmitted_bytes=port.tx_bytes,
                 num_transmitted_errors=port.tx_errors, num_received_dropped=port.rx_dropped,
-                num_transmitted_dropped=port.tx_dropped,  num_received_frame_errors=port.rx_frame_err,
+                num_transmitted_dropped=port.tx_dropped, num_received_frame_errors=port.rx_frame_err,
                 num_received_overrun_errors=port.rx_over_err, num_received_crc_errors=port.rx_crc_err,
                 num_collisions=port.collisions, duration_nanoseconds=port.duration_nsec,
                 duration_seconds=port.duration_sec

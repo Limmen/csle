@@ -108,7 +108,7 @@ def download_dataset_file(statistics_dataset: StatisticsDataset):
         dir_filename = os.path.split(statistics_dataset.file_path)
         dir = dir_filename[0]
         filename = dir_filename[1]
-        statistics_dataset.download_count = statistics_dataset.download_count+1
+        statistics_dataset.download_count = statistics_dataset.download_count + 1
         MetastoreFacade.update_statistics_dataset(statistics_dataset=statistics_dataset, id=statistics_dataset.id)
         try:
             return send_from_directory(dir, filename, as_attachment=True)

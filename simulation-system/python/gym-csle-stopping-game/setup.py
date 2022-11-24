@@ -21,4 +21,4 @@ setup(name='gym_csle_stopping_game',
           'Topic :: Scientific/Engineering :: Artificial Intelligence',
           'Programming Language :: Python :: 3.8'
       ]
-)
+      )

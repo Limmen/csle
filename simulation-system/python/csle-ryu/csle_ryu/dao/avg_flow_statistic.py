@@ -191,11 +191,11 @@ class AvgFlowStatistic:
             timestamp=timestamp, datapath_id=datapath_id,
             total_num_packets=total_num_packets,
             total_num_bytes=total_num_bytes,
-            avg_duration_nanoseconds=int(total_duration_nanoseconds/num_flows),
-            avg_duration_seconds=int(total_duration_seconds/num_flows),
-            avg_hard_timeout=int(total_hard_timeout/num_flows),
-            avg_idle_timeout=int(total_idle_timeout/num_flows),
-            avg_priority=int(total_priority/num_flows),
-            avg_cookie=int(total_cookie/num_flows)
+            avg_duration_nanoseconds=int(total_duration_nanoseconds / num_flows),
+            avg_duration_seconds=int(total_duration_seconds / num_flows),
+            avg_hard_timeout=int(total_hard_timeout / num_flows),
+            avg_idle_timeout=int(total_idle_timeout / num_flows),
+            avg_priority=int(total_priority / num_flows),
+            avg_cookie=int(total_cookie / num_flows)
         )
         return aggregated_flow_statistics_dto

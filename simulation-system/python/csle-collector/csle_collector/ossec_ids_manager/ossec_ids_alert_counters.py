@@ -236,12 +236,9 @@ class OSSECIdsAlertCounters:
         """
         deltas_level = list(np.array(counters_prime.level_alerts).astype(int).tolist())
         deltas_group = list(np.array(counters_prime.group_alerts).astype(int).tolist())
-        deltas = [
-                     int(counters_prime.total_alerts),
-                     int(counters_prime.warning_alerts),
-                     int(counters_prime.severe_alerts),
-                     int(counters_prime.alerts_weighted_by_level)
-                 ] + deltas_level + deltas_group
+        deltas = ([int(counters_prime.total_alerts), int(counters_prime.warning_alerts),
+                  int(counters_prime.severe_alerts), int(counters_prime.alerts_weighted_by_level)] +
+                  deltas_level + deltas_group)
         labels = constants.KAFKA_CONFIG.OSSEC_IDS_ALERTS_LABELS
         assert len(labels) == len(deltas)
         return list(deltas), labels

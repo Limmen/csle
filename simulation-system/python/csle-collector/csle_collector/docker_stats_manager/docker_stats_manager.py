@@ -11,6 +11,7 @@ from confluent_kafka import Producer
 from collections import deque
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
+from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import ContainerIp
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.docker_stats_manager.docker_stats_util import DockerStatsUtil
 import csle_collector.constants.constants as constants
@@ -21,11 +22,8 @@ class DockerStatsThread(threading.Thread):
     Thread that collects performance statistics of Docker containers
     """
 
-    def __init__(self, container_names_and_ips: List[
-        csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp],
-                 emulation: str, execution_first_ip_octet: int, kafka_ip: str,
-                 stats_queue_maxsize: int,
-                 time_step_len_seconds: int, kafka_port: int):
+    def __init__(self, container_names_and_ips: List[ContainerIp], emulation: str, execution_first_ip_octet: int,
+                 kafka_ip: str, stats_queue_maxsize: int, time_step_len_seconds: int, kafka_port: int) -> None:
         """
         Initializes the thread
 
@@ -76,7 +74,7 @@ class DockerStatsThread(threading.Thread):
         while not self.stopped:
             time.sleep(5)
             try:
-                if time.time()-start >= self.time_step_len_seconds:
+                if time.time() - start >= self.time_step_len_seconds:
                     aggregated_stats, avg_stats_dict = self.compute_averages()
                     record = aggregated_stats.to_kafka_record(ip=self.ip)
                     self.producer.produce(constants.KAFKA_CONFIG.DOCKER_STATS_TOPIC_NAME, record)
@@ -123,7 +121,7 @@ class DockerStatsThread(threading.Thread):
             avg_stats[k] = avg_stat
             avg_stats_l.append(avg_stat)
         aggregated_stats = DockerStats.compute_averages(avg_stats_l)
-        aggregated_stats.pids = float("{:.1f}".format(aggregated_stats.pids*len(avg_stats_l)))
+        aggregated_stats.pids = float("{:.1f}".format(aggregated_stats.pids * len(avg_stats_l)))
         aggregated_stats.mem_current = float("{:.1f}".format(aggregated_stats.mem_current * len(avg_stats_l)))
         aggregated_stats.mem_total = float("{:.1f}".format(aggregated_stats.mem_total * len(avg_stats_l)))
         aggregated_stats.blk_read = float("{:.1f}".format(aggregated_stats.blk_read * len(avg_stats_l)))

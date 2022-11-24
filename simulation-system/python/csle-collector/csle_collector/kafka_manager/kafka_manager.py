@@ -101,7 +101,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         :param hours: the hours to convert
         :return: the ms
         """
-        return int((((hours*1000)*60)*60))
+        return int((((hours * 1000) * 60) * 60))
 
     def createTopic(self, request: csle_collector.kafka_manager.kafka_manager_pb2.CreateTopicMsg,
                     context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:

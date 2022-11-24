@@ -86,10 +86,10 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         :return: the created instance
         """
         obj = StoppingGameConfig(
-            T = np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
+            T=np.array(d["T"]), O=np.array(d["O"]), Z=np.array(d["Z"]), R=np.array(d["R"]), S=np.array(d["S"]),
             A1=np.array(d["A1"]), A2=np.array(d["A2"]), L=d["L"], R_INT=d["R_INT"],
             R_COST=d["R_COST"], R_SLA=d["R_SLA"], R_ST=d["R_ST"], b1=np.array(d["b1"]), save_dir=d["save_dir"],
-            env_name = d["env_name"], checkpoint_traces_freq = d["checkpoint_traces_freq"], gamma=d["gamma"]
+            env_name=d["env_name"], checkpoint_traces_freq=d["checkpoint_traces_freq"], gamma=d["gamma"]
         )
         return obj
 
@@ -106,14 +106,13 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         """
         :return: the attacker's observation space
         """
-        return gym.spaces.Box(low=np.array([0,0,0]), high=np.array([self.L,1,2]), dtype=np.float32, shape=(3,))
+        return gym.spaces.Box(low=np.array([0, 0, 0]), high=np.array([self.L, 1, 2]), dtype=np.float32, shape=(3, ))
 
     def defender_observation_space(self) -> gym.spaces.Box:
         """
         :return: the defender's observation space
         """
-        return gym.spaces.Box(low=np.array([0,0]), high=np.array([self.L,1]), dtype=np.float32,
-                              shape=(2,))
+        return gym.spaces.Box(low=np.array([0, 0]), high=np.array([self.L, 1]), dtype=np.float32, shape=(2, ))
 
     def attacker_action_space(self) -> gym.spaces.Discrete:
         """

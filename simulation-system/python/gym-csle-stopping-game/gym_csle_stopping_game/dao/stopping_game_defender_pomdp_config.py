@@ -41,13 +41,13 @@ class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
         attacker_strategy = None
         try:
             attacker_strategy = MultiThresholdStoppingPolicy.from_dict(d["attacker_strategy"])
-        except:
+        except Exception:
             try:
                 attacker_strategy = RandomPolicy.from_dict(d["attacker_strategy"])
-            except:
+            except Exception:
                 try:
                     attacker_strategy = PPOPolicy.from_dict(d["attacker_strategy"])
-                except:
+                except Exception:
                     attacker_strategy = TabularPolicy.from_dict(d["attacker_strategy"])
 
         obj = StoppingGameDefenderPomdpConfig(

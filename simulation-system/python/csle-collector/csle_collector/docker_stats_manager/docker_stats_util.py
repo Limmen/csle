@@ -14,13 +14,12 @@ class DockerStatsUtil:
         :param stats_dict: the stats dict from the Docker API
         :return: the CPU percentage
         """
-        cpu_count = len(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
-                            constants.DOCKER_STATS.PERCPU_USAGE])
         cpu_percent = 0.0
-        cpu_delta = (float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
-                               constants.DOCKER_STATS.TOTAL_USAGE]) -
-                     float(stats_dict[constants.DOCKER_STATS.PRECPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
-                               constants.DOCKER_STATS.TOTAL_USAGE]))
+        cpu_usage = stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]
+        precpu_usage = stats_dict[constants.DOCKER_STATS.PRECPU_STATS][constants.DOCKER_STATS.CPU_USAGE]
+        cpu_count = len(cpu_usage[constants.DOCKER_STATS.PERCPU_USAGE])
+        cpu_delta = (float(cpu_usage[constants.DOCKER_STATS.TOTAL_USAGE]) -
+                     float(precpu_usage[constants.DOCKER_STATS.TOTAL_USAGE]))
         system_delta = (float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE]) -
                         float(stats_dict[constants.DOCKER_STATS.PRECPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE]))
         if system_delta > 0.0:
@@ -39,8 +38,8 @@ class DockerStatsUtil:
         :return: the CPU percentage
         """
         cpu_percent = 0.0
-        cpu_total = float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE][
-                              constants.DOCKER_STATS.TOTAL_USAGE])
+        cpu_usage = stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]
+        cpu_total = float(cpu_usage[constants.DOCKER_STATS.TOTAL_USAGE])
         cpu_delta = cpu_total - previous_cpu
         cpu_system = float(stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.SYSTEM_CPU_USAGE])
         system_delta = cpu_system - previous_system
@@ -49,10 +48,10 @@ class DockerStatsUtil:
             online_cpus = stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.ONLINE_CPUS]
         else:
             if constants.DOCKER_STATS.CPU_USAGE in stats_dict[constants.DOCKER_STATS.CPU_STATS]:
-                if constants.DOCKER_STATS.PERCPU_USAGE in \
-                        stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]:
-                    online_cpus = len(stats_dict[constants.DOCKER_STATS.CPU_STATS][
-                                          constants.DOCKER_STATS.CPU_USAGE][constants.DOCKER_STATS.PERCPU_USAGE])
+                if (constants.DOCKER_STATS.PERCPU_USAGE in
+                        stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]):
+                    cpu_usage = stats_dict[constants.DOCKER_STATS.CPU_STATS][constants.DOCKER_STATS.CPU_USAGE]
+                    online_cpus = len(cpu_usage[constants.DOCKER_STATS.PERCPU_USAGE])
         if system_delta > 0.0:
             cpu_percent = (cpu_delta / system_delta) * online_cpus * 100.0
         return cpu_percent, cpu_system, cpu_total
@@ -74,8 +73,8 @@ class DockerStatsUtil:
                 r += s[constants.DOCKER_STATS.VALUE]
             elif s[constants.DOCKER_STATS.OP] == constants.DOCKER_STATS.WRITE:
                 w += s[constants.DOCKER_STATS.VALUE]
-        r = round(r/1000000, 1)
-        w = round(w/1000000, 1)
+        r = round(r / 1000000, 1)
+        w = round(w / 1000000, 1)
         return r, w
 
     @staticmethod
@@ -92,8 +91,8 @@ class DockerStatsUtil:
         for if_name, data in networks.items():
             r += data[constants.DOCKER_STATS.RX_BYTES]
             t += data[constants.DOCKER_STATS.TX_BYTES]
-        r = round(r/1000000, 1)
-        t = round(t/1000000, 1)
+        r = round(r / 1000000, 1)
+        t = round(t / 1000000, 1)
         return r, t
 
     @staticmethod
@@ -128,9 +127,9 @@ class DockerStatsUtil:
         blk_read, blk_write = DockerStatsUtil.calculate_blkio_mb(stats_dict)
         net_r, net_w = DockerStatsUtil.calculate_network_mb(stats_dict)
         mem_current = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.USAGE]
-        mem_current = round(mem_current/1000000, 1)
+        mem_current = round(mem_current / 1000000, 1)
         mem_total = stats_dict[constants.DOCKER_STATS.MEMORY_STATS][constants.DOCKER_STATS.LIMIT]
-        mem_total = round(mem_total/1000000, 1)
+        mem_total = round(mem_total / 1000000, 1)
         try:
             cpu_percent, cpu_system, cpu_total = DockerStatsUtil.calculate_cpu_percent2(stats_dict, cpu_total,
                                                                                         cpu_system)
